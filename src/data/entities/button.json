@@ -1,0 +1,33 @@
+/*
+ * 
+ */
+{
+	"id": "button",
+	"assets": [
+		{"id": "mookie-standing", "src": "../../images/mookie.png"}
+	],
+	"components":[
+		{"id": "entity-controller"},
+		{"id": "logic-button"},
+		{"id": "render-button"},
+		{"id": "render-debug"}
+	],
+	"properties":{
+		"debug-events": ["go-left", "go-right"],
+		"state": false,
+		"x": 10,
+		"y": 10,
+		"width": 24,
+		"height": 24
+	},
+	"settings":{
+		"controlMap":{
+			"key:a":              "go-left",
+			"key:left-arrow":     "go-left",
+			"key:d":              "go-right",
+			"key:right-arrow":    "go-right",
+			"mouse:left-button":  "go-left",
+			"mouse:right-button": "go-right"
+		}
+	}
+}

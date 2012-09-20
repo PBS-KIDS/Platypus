@@ -1,0 +1,10 @@
+{
+	"id": "tile",
+	"components":[
+		{
+			"id": "render-tile",
+			"spritesheet": "import"
+		}//,
+		//{"id": "render-debug"}
+	]
+}

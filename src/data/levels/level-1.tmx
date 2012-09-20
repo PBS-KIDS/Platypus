@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="20" tilewidth="24" tileheight="24">
+ <properties>
+  <property name="timer" value="12"/>
+ </properties>
+ <tileset firstgid="1" name="tilemap" tilewidth="24" tileheight="24">
+  <image source="../../images/tile-map.png" width="144" height="96"/>
+  <tile id="5">
+   <properties>
+    <property name="entity" value="gem"/>
+   </properties>
+  </tile>
+  <tile id="11">
+   <properties>
+    <property name="entity" value="sign"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="entity" value="enemy"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="entity" value="mookie"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="entity" value="flower"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="25" name="test" tilewidth="24" tileheight="24">
+  <image source="../../images/test.png" width="48" height="48"/>
+  <tile id="3">
+   <properties>
+    <property name="a" value="b"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="background" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBzFo5hIzERlzEFlzEdlLDKKR/EoxokB2icSDQ==
+  </data>
+ </layer>
+ <layer name="map" width="20" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztk7sOgCAMRUnAARZhsPz/nwoJTSoppYijTc7gg8Ot1GS+q7OQP/Rdv2/bB4VISJu+1XxB6auzExkSeZ6Ij3sfFvPlhXyaAiN/X84n7T9zas+332O0RtvvLDPNdwgO3whKp5QPfaHjbT7bwLmzhFE5hQ978ITR+TrznFHa08hX8+LM+A5uXrh/CJhrbl29dwNJFQhX
+  </data>
+ </layer>
+ <objectgroup name="guys" width="20" height="20">
+  <object type="hero" gid="19" x="49" y="144"/>
+  <object gid="6" x="257" y="156"/>
+  <object gid="6" x="281" y="142"/>
+  <object gid="6" x="306" y="152"/>
+  <object gid="6" x="363" y="266"/>
+  <object gid="6" x="47" y="272"/>
+  <object gid="6" x="142" y="328"/>
+  <object gid="6" x="251" y="449"/>
+  <object gid="6" x="424" y="428"/>
+  <object gid="12" x="167" y="192"/>
+  <object gid="18" x="409" y="191"/>
+  <object gid="18" x="409" y="166"/>
+  <object gid="24" x="364" y="193"/>
+  <object gid="28" x="96" y="262"/>
+  <object x="419" y="64" width="35" height="37"/>
+  <object x="73" y="402" width="46" height="29"/>
+ </objectgroup>
+</map>

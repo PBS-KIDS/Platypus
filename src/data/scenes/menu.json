@@ -1,0 +1,19 @@
+{
+	"layers":[
+		{
+			"id": "buttons",
+			"components": [
+				{"id": "lc-logic"},
+				{"id": "lc-render"},
+				{"id": "layer-controller"}
+			],
+			"entities": [
+				{
+				 "type": "button", 
+				 "properties": {},
+				 "settings": {"upImg":"sky", "downImg":"ground"}
+			 	}
+			]
+		}
+	]
+}

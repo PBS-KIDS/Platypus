@@ -1,0 +1,13 @@
+{
+	"layers":[
+		{
+			"id": "action",
+			"components": [
+				{"id": "lc-logic"},
+				{"type": "lc-render"},
+				{"id": "layer-controller"},
+				{"type": "tiled-loader", "level": "level-1"}
+			]
+		}
+	]
+}

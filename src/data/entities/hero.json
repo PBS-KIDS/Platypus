@@ -1,0 +1,42 @@
+/*
+ * mookie.json
+ *
+ * Example protagonist entity
+ */
+{
+	"id": "hero",
+	"properties":{
+		"debug-events": ["go-left", "go-right"],
+		"width": 24,
+		"height": 24
+	},
+	"components":[
+		{
+			"id": "entity-controller",
+			"controlMap":{
+				"key:a":              "go-left",
+				"key:left-arrow":     "go-left",
+				"key:d":              "go-right",
+				"key:right-arrow":    "go-right",
+				"mouse:left-button":  "go-left",
+				"mouse:right-button": "go-right"
+			}
+		},
+		{"id": "logic-button"},
+		{
+			"id": "render-tile",
+			"state": "standing",
+			"spritesheet":{
+	    		"images": ['i/tile-map.png'],
+	    		"frames": {
+	    			"width":  24,
+	    			"height": 24,
+	    			"regY":   24
+	    		},
+				"animations": {
+					"standing": 18
+				}
+	    	}
+		}
+	]
+}
