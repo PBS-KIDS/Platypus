@@ -2,7 +2,6 @@ gws.components['render-tile'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
-		this.controllerEvents = undefined;
 		this.spriteSheet = new createjs.SpriteSheet(definition.spritesheet);
 		
 		this.state = definition.state || 'tile';
@@ -24,10 +23,6 @@ gws.components['render-tile'] = (function(){
 		this.shape = new createjs.BitmapAnimation(this.spriteSheet);
 		this.stage.addChild(this.shape);
 		this.shape.gotoAndPlay(this.state);
-		
-		if(this.controllerEvents){
-			this['controller:input-handler'](this.controllerEvents);
-		}
 	};
 	
 	

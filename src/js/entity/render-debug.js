@@ -23,14 +23,14 @@ gws.components['render-debug'] = (function(){
 		y      = this.owner.y      = this.owner.y || 0,
 		width  = this.owner.width  = this.owner.width  || 300,
 		height = this.owner.height = this.owner.height || 100,
-		comps = gws.settings.entities[this.owner.entityType]?(gws.settings.entities[this.owner.entityType].components || []):[],
+		comps = gws.settings.entities[this.owner.type]?(gws.settings.entities[this.owner.type].components || []):[],
 		components = [];
 		
-		for (var i in comps) components[i] = comps[i].id;
+		for (var i in comps) components[i] = comps[i].type;
 		
 		this.stage = resp.stage;
 		
-		this.txt   = new createjs.Text(this.owner.entityType + '\n(' + components.join(', ') + ')');
+		this.txt   = new createjs.Text(this.owner.type + '\n(' + components.join(', ') + ')');
 		this.txt.x = x + width / 2;
 		this.txt.y = y + height / 2;
 		this.txt.textAlign = "center";

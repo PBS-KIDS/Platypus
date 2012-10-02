@@ -1,17 +1,46 @@
 CACHE MANIFEST
-# Version 134815648
+# Version 134913986
 
 CACHE:
-j/compressed134815648.js
-s/compressed134815648.css
 
-i/tile-map.png
+# large:
+
+
+# ogg:
+
+a/powerup.ogg
+j/compressed134913986.js
+s/compressed134913986.css
+
+
+# assets:
+
 i/test.png
 i/mookie.png
+i/tile-map.png
+i/test-animation.png
+
+# classes:
+
+
+# components:
+
+
+# entities:
+
+
+# includes:
+
 http://code.createjs.com/easeljs-0.5.0.min.js
 http://code.createjs.com/tweenjs-0.3.0.min.js
 http://code.createjs.com/soundjs-0.3.0.min.js
 http://code.createjs.com/preloadjs-0.2.0.min.js
+
+# scenes:
+
+
+# levels:
+
 
 FALLBACK:
 

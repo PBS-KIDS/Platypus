@@ -7,10 +7,19 @@
 		{"id": "mookie-standing", "src": "../../images/mookie.png"}
 	],
 	"components":[
-		{"id": "entity-controller"},
-		{"id": "logic-button"},
-		{"id": "render-button"},
-		{"id": "render-debug"}
+		{"type": "entity-controller",
+			"controlMap":{
+				"key:a":              "go-left",
+				"key:left-arrow":     "go-left",
+				"key:d":              "go-right",
+				"key:right-arrow":    "go-right",
+				"mouse:left-button":  "go-left",
+				"mouse:right-button": "go-right"
+			}
+		},
+		{"type": "logic-button"},
+		{"type": "render-button"},
+		{"type": "render-debug"}
 	],
 	"properties":{
 		"debug-events": ["go-left", "go-right"],
@@ -19,15 +28,5 @@
 		"y": 10,
 		"width": 24,
 		"height": 24
-	},
-	"settings":{
-		"controlMap":{
-			"key:a":              "go-left",
-			"key:left-arrow":     "go-left",
-			"key:d":              "go-right",
-			"key:right-arrow":    "go-right",
-			"mouse:left-button":  "go-left",
-			"mouse:right-button": "go-right"
-		}
 	}
 }

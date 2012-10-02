@@ -1,7 +1,32 @@
+/*
+ * Load Dependencies
+ */
+var include = function(path){
+	var file = undefined,
+	line     = '',
+	text     = '';
+	if (typeof ActiveXObject != 'undefined'){
+		file = new ActiveXObject("Scripting.FileSystemObject").OpenTextFile(path);
+		text = file.ReadAll();
+		file.Close();
+	} else {
+    	file = new java.io.BufferedReader(new java.io.FileReader(path));
+    	while ((line = file.readLine()) != null) {
+		  text += new String(line) + '\n';
+		}
+    	file.close();
+	}
+	eval(text);
+};
+include('js/file-io.js');  // Including support for either ActiveX or Rhino file and shell support.
+include('js/json2.js');    // Including json2.js to support JSON if it doesn't exist.
+
+/*
+ * Compile JavaScript files into a single file and move server-side files to builds folder
+ */
+
 (function(){
    var namespace = 'gws',
-   shell      = new ActiveXObject("wscript.shell"),
-   fileSystem = new ActiveXObject("Scripting.FileSystemObject"),
    alert      = function(val){shell.Popup(val);},
    getText    = function(path){
 	   var file = undefined,
@@ -19,7 +44,6 @@
 	   }
 	   return text;
    },
-   include    = function(path){eval(getText(path));},
    getJSON    = function(path){return eval('(' + getText(path) + ')');}, //Using "eval" to allow comments in JSON definition files
    setText    = function(path, text){
 	   var file = fileSystem.CreateTextFile(path, true);
@@ -29,10 +53,12 @@
    },
    checkPush  = function(list, item){
 	   var itIsThere = false;
-	   for (var index in list){
-		   if(list[index] === item) itIsThere = true;
+	   if(list){
+		   for (var index in list){
+			   if(list[index] === item) itIsThere = true;
+		   }
+		   if(!itIsThere) list.push(item);
 	   }
-	   if(!itIsThere) list.push(item);
 	   return item;
    },
    hypPath    = function(path){
@@ -48,10 +74,77 @@
 	   }
 	   return path;
    },
-    buildGame = function(build, scripts, styles, html, manifest, timestamp){
+    buildGame = function(build, config, html, manifest, timestamp){
 	    var jsFile = 'combined',
-	    cssFile    = 'combined';
+	    cssFile    = 'combined',
+	    result     = {
+    	    scripts: '',
+    	    styles: '',
+    	    extStyles: '',
+    	    extScripts: ''
+	    },
+	    game       = eval('(' + config + ')'),
+	    source     = game.source,
+	    aspects    = {"default": []},
+	    section    = undefined,
+	    sectionId  = '',
+	    asset      = undefined,
+	    assetId    = 0,
+	    srcId      = '',
+	    i          = 0,
+	    j          = 0;
 
+	    delete game.builds;
+
+	    if(build.aspects){ // Prepare multiple manifest files
+	    	for (i in build.aspects) for (j in build.aspects[i]){
+		    	aspects[build.aspects[i][j]] = ['\n# ' + build.aspects[i][j] + ':\n'];
+	    	}
+	    }
+	    
+	    //Fix up relative paths on Game Assets
+	    //Combine JavaScript and CSS Assets
+	    for(sectionId in source){
+	    	if((sectionId === 'components') || (sectionId === 'classes')){
+	    		result.scripts += namespace + '.' + sectionId + ' = {};\n';
+	    	}
+	    	aspects["default"].push('\n# ' + sectionId + ':\n');
+	    	section = source[sectionId];
+	    	if(sectionId === 'assets') {
+	    		game[sectionId] = [];
+	    	} else {
+	    		game[sectionId] = {};
+	    	}
+		    for (assetId in section){
+		    	asset = section[assetId];
+			    try {
+				    if(asset.src){
+				    	if((typeof asset.src) == 'string'){
+				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], result);
+				    	} else {
+				    		for(srcId in asset.src){
+				    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], result);
+				    		}
+				    	}
+				    }
+				    srcId = '';
+			    } catch(e) {
+				    alert('Error in processing ' + (srcId || 'default') + ' asset: "' + sectionId + ' ' + assetId + '": ' + e.description);
+			    }
+		    	if(sectionId === 'assets'){
+			    	game[sectionId].push(asset);
+		    	} else {
+		    		game[sectionId][asset.id] = asset;
+		    	}
+		    }
+	    }
+	    delete game.source;
+
+	    result.scripts  = namespace + ' = this.' + namespace + ' || {};\n' + namespace + '.settings = ' + JSON.stringify(game) + ';\n' + result.scripts;
+	 
+	    manifest = manifest.replace('CACHE:', 'CACHE:\n' + aspects["default"].join('\n'));
+	    manifest = manifest.replace('# Version', '# Version ' + timestamp);
+	    
 	    if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
 	    if (!fileSystem.FolderExists(buildDir + build.id + '/')) fileSystem.CreateFolder(buildDir + build.id + '/');
 	    if (!fileSystem.FolderExists(buildDir + build.id + '/j/')) fileSystem.CreateFolder(buildDir + build.id + '/j/');
@@ -64,7 +157,7 @@
 		fileSystem.CopyFile(workingDir + 'server/*.*', buildDir + build.id + '/');
 
 		// create JS file
-	    setText('combined.js', scripts);   
+	    setText('combined.js', result.scripts);   
 	    if(build.jsCompression){
 	    	shell.Run("java -jar yui/yui.jar combined.js -o combined.js",   7, true);
 	    	jsFile = 'compressed';
@@ -73,7 +166,7 @@
 	    fileSystem.MoveFile("combined.js", buildDir + build.id + '/j/' + jsFile + timestamp + '.js');
 
 	    // create CSS file
-	    setText('combined.css', styles);   
+	    setText('combined.css', result.styles);   
 	    if(build.cssCompression){
 	    	shell.Run("java -jar yui/yui.jar combined.css -o combined.css", 7, true);
 	    	cssFile = 'compressed';
@@ -85,14 +178,43 @@
 	    if(build.manifest){
 	    	html     = html.replace('<html>', '<html manifest="cache.manifest">');
 	    	manifest = manifest.replace('CACHE:', 'CACHE:\nj\/' + jsFile + timestamp + '.js\ns\/' + cssFile + timestamp + '.css\n');
-		    setText('cache.manifest', manifest);
-		    fileSystem.MoveFile("cache.manifest", buildDir + build.id + '/cache.manifest');
+
+		    if(build.aspects){ // Prepare multiple manifest files
+		    	var aspectVariations = build.aspects[0], tempArray = [];
+		    	
+		    	for (var i = 1; i < build.aspects.length; i++){
+		    		options = build.aspects[i];
+	    			tempArray = [];
+		    		for (j in options){
+		    			for (k in aspectVariations){
+		    				tempArray.push(aspectVariations[k] + '-' + options[j]);
+		    			}
+		    		}
+		    		aspectVariations = tempArray;
+		    	}
+		    	
+		    	for (i in aspectVariations){
+			    	var tempMan = manifest;
+			    	var arr2 = aspectVariations[i].split('-');
+			    	for (j in arr2){
+			    		tempMan = tempMan.replace('CACHE:', 'CACHE:\n' + aspects[arr2[j]].join('\n'));
+			    	}
+				    setText(aspectVariations[i] + '.manifest', tempMan);
+				    try {fileSystem.DeleteFile(buildDir + build.id + '/' + aspectVariations[i] + '.manifest');} catch(e) {}
+				    fileSystem.MoveFile(aspectVariations[i] + '.manifest', buildDir + build.id + '/' + aspectVariations[i] + '.manifest');
+		    	}
+		    } else {
+			    setText('cache.manifest', manifest);
+			    try {fileSystem.DeleteFile(buildDir + build.id + '/cache.manifest');} catch(e) {}
+			    fileSystem.MoveFile("cache.manifest", buildDir + build.id + '/cache.manifest');
+		    }
 	    }
 	    
 	    // setup index from template
 	    html = html.replace(/js\/default\.js/,   'j/' + jsFile  + timestamp + '.js');
 	    html = html.replace(/css\/default\.css/, 's/' + cssFile + timestamp + '.css');
-    	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + extScripts);
+    	html = html.replace('</head>', result.extStyles + '</head>');
+    	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
 	    setText('index.html', html);
 	    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
    },
@@ -116,99 +238,43 @@
 	   var check = path.substring(path.length - 3).toLowerCase();
 	   return (check === '.js');
    },
+   handleAsset = function(id, src, assets, result){
+		if(src.substring(0,4).toLowerCase() !== 'http'){
+			if(isImage(src) || isAudio(src) || isFont(src)){
+				return checkPush(assets, putInFolder(hypPath(src)));
+			} else if(isCSS(src)) {
+				result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
+				result.styles  += getText(src) + '\n';
+		 	    return src;
+			} else if(isJS(src)) {
+				result.scripts += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
+				result.scripts += getText(src) + '\n';
+		 	    return src;
+			}
+		} else {
+			if(isImage(src) || isAudio(src) || isFont(src)){
+				return checkPush(assets, src);
+			} else if(isCSS(src)) {
+				result.extStyles += '  <link rel="stylesheet" href="' + checkPush(assets, src) + '" type="text\/css" \/>\n';
+		 	    return src;
+			} else if(isJS(src)) {
+				result.extScripts += '  <script type="text\/javascript" src="' + checkPush(assets, src) + '"><\/script>\n';
+		 	    return src;
+			}
+		}
+   },
    timestamp  = ((new Date().getTime()) + '').substring(0, 9),
-   game       = getJSON('config.json');
-   scripts    = '',
-   styles     = '',
-   extScripts = '',
+   gameConfig = getText('config.json');
+   game       = eval('(' + gameConfig + ')');
    workingDir = '../src/',
    buildDir   = '../builds/',
-   subDir     = '',
    html       = getText(workingDir + 'template.html'),
    manifest   = getText(workingDir + 'template.manifest'),
-   scenes     = game.scenes,
-   levels     = game.levels,
-   entities   = game.entities,
-   components = game.components,
-   includes   = game.includes,
    builds     = game.builds,
-   buildIndex = 0,
-   obj        = undefined,
-   assets     = [];
-   
-    delete game.builds;
-    delete game.components;
-    delete game.includes;
-   
-    // Including json2.js to support JSON if it doesn't exist. - DDD
-    include('js/json2.js');
-   
-    //Fix up relative paths on Game Assets
-    if(scenes){
-	    for (var scene in scenes){
-		    obj = scenes[scene];
-		    if(obj.assets) for (var asset in obj.assets){
-			    if(obj.assets[asset].src) obj.assets[asset].src = checkPush(assets, putInFolder(hypPath(obj.assets[asset].src)));
-		    }
-	    }
-    }
-    if(levels){
-	    for (var level in levels){
-		    obj = levels[level];
-		    if(obj.tilesets) for (var asset in obj.tilesets){
-			    if(obj.tilesets[asset].image) obj.tilesets[asset].image = checkPush(assets, putInFolder(hypPath(obj.tilesets[asset].image)));
-		    }
-	    }
-    }
-    if(entities){
-	    for (var entity in entities){
-		    obj = entities[entity];
-		    if(obj.assets) for (var asset in obj.assets){
-		 	    if(obj.assets[asset].src) obj.assets[asset].src = checkPush(assets, putInFolder(hypPath(obj.assets[asset].src)));
-		    }
-	    }
-    }
-    if (game.assets) for (var asset in game.assets){
- 	    if(game.assets[asset].src) game.assets[asset].src = checkPush(assets, putInFolder(hypPath(game.assets[asset].src)));
-    }
-
-    //Combine JavaScript and CSS Assets
-    scripts += namespace + ' = this.' + namespace + ' || {};\n';
-   
-    if (components){
-	    scripts += '\n\n\/*==================================================\n' + namespace.toUpperCase() + ' COMPONENTS:\n*\/\n' + namespace + '.components = [];\n';
-	    for (var asset in components){
-		    if(components[asset] && components[asset].src){
-			    scripts += '\n\/*--------------------------------------------------\n' + components[asset].id + ' - ' + components[asset].src + '\n*\/\n';
-			    scripts += getText(components[asset].src) + '\n';
-	 	    }
-	    }
-    }
-    
-    if (includes){
-	    scripts += '\n\n\/*==================================================\n' + namespace.toUpperCase() + ' CLASSES\n*\/\n' + namespace + '.classes = {};\n';
-	    for (var asset in includes){
-		    if(includes[asset].src && (includes[asset].src.substring(0,4).toLowerCase() !== 'http')){
-			    if(isJS(includes[asset].src)){
-				    scripts += '\n\/*--------------------------------------------------\n' + includes[asset].id + ' - ' + includes[asset].src + '\n*\/\n';
-				    scripts += getText(includes[asset].src) + '\n';
-			    } else if(isCSS(includes[asset].src)){
-			 	    styles += '\n\/*--------------------------------------------------\n' + includes[asset].id + ' - ' + includes[asset].src + '\n*\/\n';
-			 	    styles += getText(includes[asset].src) + '\n';
-			    }
-		    } else if(includes[asset].src) {
-		 	    extScripts += '  <script type="text\/javascript" src="' + checkPush(assets, includes[asset].src) + '"><\/script>\n';
-		    }
-	    }
-    }
-   
-    scripts += namespace + '.settings = ' + JSON.stringify(game) + ';\n';
- 
-    manifest = manifest.replace('CACHE:', 'CACHE:\n' + assets.join('\n'));
-    manifest = manifest.replace('# Version', '# Version ' + timestamp);
+   buildIndex = 0;
    
     //Create builds
     for (buildIndex in builds){
-    	buildGame(builds[buildIndex], scripts, styles, html, manifest, timestamp);
+    	buildGame(builds[buildIndex], gameConfig, html, manifest, timestamp);
 	}
 })();

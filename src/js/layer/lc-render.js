@@ -6,7 +6,7 @@ gws.components['lc-render'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		this.tickMessages = ['render'];
-		this.addListeners(['entity-added','render']);
+		this.addListeners(['entity-added','render', 'camera-update']);
 		
 		this.canvas = document.createElement('canvas');
 		this.owner.rootElement.appendChild(this.canvas);
@@ -45,6 +45,11 @@ gws.components['lc-render'] = (function(){
 			
 		}
 		this.stage.update();
+	};
+	
+	proto['camera-update'] = function(cameraInfo){
+		this.stage.setTransform(-cameraInfo.x, -cameraInfo.y);
+		
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

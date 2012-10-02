@@ -11,7 +11,7 @@ gws.classes.entity = (function(){
 		
 		self.components = [];
 		self.messages   = [];
-		self.entityType = def.id;
+		self.type = def.id;
 
 		for (index in defaultProperties){ // This takes the list of properties in the JSON definition and appends them directly to the object.
 			self[index] = defaultProperties[index];
@@ -22,10 +22,10 @@ gws.classes.entity = (function(){
 		
 		for (index in componentDefinitions){
 			componentDefinition = componentDefinitions[index];
-			if(gws.components[componentDefinition.id]){
-				self.addComponent(new gws.components[componentDefinition.id](self, componentDefinition));
+			if(gws.components[componentDefinition.type]){
+				self.addComponent(new gws.components[componentDefinition.type](self, componentDefinition));
 			} else {
-				console.warn("Component '" + componentDefinition.id + "' is not defined.", componentDefinition);
+				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
 			}
 		}
 		

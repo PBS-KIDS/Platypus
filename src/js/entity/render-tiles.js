@@ -1,0 +1,73 @@
+gws.components['render-tiles'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		this.controllerEvents = undefined;
+		this.spriteSheet = new createjs.SpriteSheet(definition.spritesheet);
+		this.imageMap    = definition.imageMap   || [];
+		this.tileWidth   = definition.tileWidth  || this.owner.tileWidth  || 10;
+		this.tileHeight  = definition.tileHeight || this.owner.tileHeight || 10;
+		
+		this.state = definition.state || 'tile';
+		
+		// Messages that this component listens for
+		this.listeners = [];
+		this.addListeners(['layer:render', 'layer:render-load']);
+	};
+	var proto = component.prototype;
+
+	proto['layer:render'] = function(stage){
+	};
+
+	proto['layer:render-load'] = function(resp){
+		var x = 0,
+		y     = 0,
+		stage = this.stage = resp.stage;
+		tile  = undefined;
+		
+		
+		for(x = 0; x < this.imageMap.length; x++){
+			for (y = 0; y < this.imageMap[x].length; y++){
+				//TODO: Test speed of this - would non-animations perform better?
+				tile = new createjs.BitmapAnimation(this.spriteSheet);
+				tile.x = x * this.tileWidth;
+				tile.y = y * this.tileHeight;
+				stage.addChild(tile);
+				tile.gotoAndPlay(this.imageMap[x][y]);
+			}
+		}
+	};
+	
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+	
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();

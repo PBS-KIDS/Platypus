@@ -48,7 +48,26 @@ window.addEventListener('load', function(){
 		createjs.Ticker.addListener(root.game);
 	};
 	
-	loader.loadManifest(gws.settings.assets);
 	
+	gws.browser = gws.browserCheck();
+	for(var i in gws.settings.assets){
+		if(typeof gws.settings.assets[i].src !== 'string'){
+			for(var j in gws.settings.assets[i].src){
+				if(gws.browser[j]){
+					gws.settings.assets[i].src = gws.settings.assets[i].src[j];
+					break;
+				}
+			}
+			if(typeof gws.settings.assets[i].src !== 'string'){
+				if(gws.settings.assets[i].src['default']){
+					gws.settings.assets[i].src = gws.settings.assets[i].src['default'];
+				} else {
+					console.warning('Asset has no valid source for this browser.', gws.settings.assets[i]);
+				}
+			}
+		}
+	}
+	
+	loader.loadManifest(gws.settings.assets);
 	gws.assets = [];
 });

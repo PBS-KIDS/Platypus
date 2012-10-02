@@ -26,10 +26,10 @@ gws.components['lc-logic'] = (function(){
 		}
 	};
 
-	proto['logic'] = function(){
+	proto['logic'] = function(deltaT){
 		for (var x = 0; x < this.entities.length; x++)
 		{
-			this.entities[x].trigger('layer:logic');
+			this.entities[x].trigger('layer:logic', deltaT);
 		}
 	};
 	

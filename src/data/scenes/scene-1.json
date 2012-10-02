@@ -3,9 +3,11 @@
 		{
 			"id": "action",
 			"components": [
-				{"id": "lc-logic"},
+				{"type": "lc-logic"},
+				{"type": "lc-basic-collision"},
 				{"type": "lc-render"},
-				{"id": "layer-controller"},
+				{"type": "layer-controller"},
+				{"type": "entity-container"},
 				{"type": "tiled-loader", "level": "level-1"}
 			]
 		}

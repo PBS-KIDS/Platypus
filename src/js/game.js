@@ -13,11 +13,27 @@ gws.classes.game = (function(){
 		this.input = new gws.classes.input(function(eventId, event){
 			self.currentScene.triggerInputEvent(eventId, event);
 		});
+		
+		this.prevTime = 0;
+		this.timingFunction = false;
+		if (performance && performance.webkitNow)
+		{
+			this.timingFunction = function() {return performance.webkitNow();};
+		} else if (performance && performance.now) {
+			this.timingFunction = function() {return performance.now();};
+		} else {
+			this.date = new Date();
+			this.timingFunction = function() {return this.date.getTime();};
+		}
+		this.prevTime = this.timingFunction();
 	},
 	proto = game.prototype;
 	
 	proto.tick = function(){
-		if(this.currentScene) this.currentScene.tick();
+		var now = this.timingFunction();
+		var deltaT = now - this.prevTime; 
+		this.prevTime = now;
+		if(this.currentScene) this.currentScene.tick(deltaT);
 	};
 	
 	proto.loadScene = function(sceneName){

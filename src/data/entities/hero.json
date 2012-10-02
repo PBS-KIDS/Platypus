@@ -1,42 +1,54 @@
 /*
- * mookie.json
- *
- * Example protagonist entity
+ * 
  */
 {
 	"id": "hero",
-	"properties":{
-		"debug-events": ["go-left", "go-right"],
-		"width": 24,
-		"height": 24
-	},
 	"components":[
-		{
-			"id": "entity-controller",
-			"controlMap":{
-				"key:a":              "go-left",
-				"key:left-arrow":     "go-left",
-				"key:d":              "go-right",
-				"key:right-arrow":    "go-right",
-				"mouse:left-button":  "go-left",
-				"mouse:right-button": "go-right"
+		{"type": "entity-controller",
+		 "controlMap":{
+			"key:w": 			"key-up",
+			"key:up-arrow": 	"key-up",
+			"key:a": 			"key-left",
+			"key:left-arrow": 	"key-left",
+			"key:s": 			"key-down",
+			"key:down-arrow": 	"key-down",
+			"key:d": 			"key-right",
+			"key:right-arrow": 	"key-right"
+		  }	
+		},
+		{"type": "logic-hero"},
+		{"type": "collision-hero",
+		 "AABB": [0, 0, 24, 24],
+		 "collisionType": "hero",
+		 "collidesWith": ["solid"]},
+		{"type": "render-hero", 
+		 "spriteSheet": {
+				"images": ["test-animation"],
+				"frames": {
+					"width": 24,
+					"height": 24
+				  },
+				"animations": {
+					"standing-north": [0],
+					"standing-east":  [3],
+					"standing-south": [6],
+					"standing-west":  [9],
+					"walking-north": {frames:[0,1,2,1], 	frequency:4},
+					"walking-east":  {frames:[3,4,5,4], 	frequency:4},
+					"walking-south": {frames:[6,7,8,7], 	frequency:4},
+					"walking-west":  {frames:[9,10,11,10],  frequency:4}
+				  }
 			}
 		},
-		{"id": "logic-button"},
-		{
-			"id": "render-tile",
-			"state": "standing",
-			"spritesheet":{
-	    		"images": ['i/tile-map.png'],
-	    		"frames": {
-	    			"width":  24,
-	    			"height": 24,
-	    			"regY":   24
-	    		},
-				"animations": {
-					"standing": 18
-				}
-	    	}
-		}
-	]
+		{"type": "render-debug"}
+	],
+	"properties":{
+		"debug-events": ["key:a:up", "key:a:down", "go-left"],
+		"x": 10,
+		"y": 10,
+		"width": 24,
+		"height": 24,
+		"state": "standing",
+		"heading": "south"
+	}
 }

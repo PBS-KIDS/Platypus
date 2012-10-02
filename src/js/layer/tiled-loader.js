@@ -9,6 +9,7 @@ gws.components['tiled-loader'] = (function(){
 
 		this.level = gws.settings.levels[definition.level];
 		this.tileEntityId = definition.tileEntityId || 'tile';
+		this.tileLayerEntityId = definition.tileLayerEntityId || 'tile-layer';
 	},
 	proto = component.prototype; 
 
@@ -36,12 +37,11 @@ gws.components['tiled-loader'] = (function(){
 		entityType     = '',
 		tileset        = undefined,
 		properties     = undefined,
-		tileDefinition = gws.settings.entities[this.tileEntityId];
+		tileDefinition = undefined,
+		importAnimation= undefined,
+		importCollision= undefined,
+		importRender   = undefined;
 
-		tileDefinition.properties        = tileDefinition.properties || {};
-		tileDefinition.properties.width  = tileWidth;
-		tileDefinition.properties.height = tileHeight;
-		
 		for (x = 0; x < tilesets.length; x++){
 			if(gws.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
 				images.push(gws.assets[tilesets[x].name]);
@@ -49,26 +49,52 @@ gws.components['tiled-loader'] = (function(){
 				images.push(tilesets[x].image);
 			}
 		}
-		for (x = 0; x < tileDefinition.components.length; x++){
-			if(tileDefinition.components[x].spritesheet == 'import'){
-				tileDefinition.components[x].spritesheet = {
-					images: images,
-					frames: {
-						width:  tileWidth,
-						height: tileHeight
-					}
-				};
-			}
-		}
 		if(layer.type == 'tilelayer'){
-			for (y = 0; y < height; y++){
-				for (x = 0; x < height; x++){
-					tileDefinition.components[0].spritesheet.animations = {
-						tile: +layer.data[x + y * width] - 1
+			//TODO: a bit of a hack to copy an object instead of overwrite values
+			tileDefinition  = JSON.parse(JSON.stringify(gws.settings.entities[this.tileLayerEntityId]));
+
+			importAnimation = {};
+			importCollision = [];
+			importRender    = [];
+
+			tileDefinition.properties            = tileDefinition.properties || {};
+			tileDefinition.properties.width      = tileWidth  * width;
+			tileDefinition.properties.height     = tileHeight * height;
+			tileDefinition.properties.columns    = width;
+			tileDefinition.properties.rows       = height;
+			tileDefinition.properties.tileWidth  = tileWidth;
+			tileDefinition.properties.tileHeight = tileHeight;
+
+			for (x = 0; x < height; x++){
+				importCollision[x] = [];
+				importRender[x]    = [];
+				for (y = 0; y < height; y++){
+					if(typeof importAnimation['tile' + (+layer.data[x + y * width] - 1)] == 'undefined'){
+						importAnimation['tile' + (+layer.data[x + y * width] - 1)] = +layer.data[x + y * width] - 1;
 					};
-					this.owner.addEntity(new gws.classes.entity(tileDefinition, {properties:{x:x * tileWidth, y:y * tileHeight}}));
+					importCollision[x][y] = +layer.data[x + y * width] - 1;
+					importRender[x][y] = 'tile' + (+layer.data[x + y * width] - 1);
 				}
 			}
+			for (x = 0; x < tileDefinition.components.length; x++){
+				if(tileDefinition.components[x].spritesheet == 'import'){
+					tileDefinition.components[x].spritesheet = {
+						images: images,
+						frames: {
+							width:  tileWidth,
+							height: tileHeight
+						},
+						animations: importAnimation
+					};
+				}
+				if(tileDefinition.components[x].collisionMap == 'import'){
+					tileDefinition.components[x].collisionMap = importCollision;
+				}
+				if(tileDefinition.components[x].imageMap == 'import'){
+					tileDefinition.components[x].imageMap = importRender;
+				}
+			}
+			this.owner.addEntity(new gws.classes.entity(tileDefinition, {properties:{}}));
 		} else if(layer.type == 'objectgroup'){
 			for (obj = 0; obj < layer.objects.length; obj++){
 				entity = layer.objects[obj];

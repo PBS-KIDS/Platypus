@@ -14,7 +14,12 @@
 			"cssCompression": true,
 			"jsCompression": true,
 			"manifest": true,      // Determines whether this build uses Application Cache.
-			"pngCompression": 256  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"pngCompression": 256,  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"aspects": [["ogg", "mp3", "m4a"], ["small", "large"]], //Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client. Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
+			"paths": {
+				"components": "http://localhost/gopherwood/2DGE/builds/game/", //paths are relative by default, but if specified here, absolute paths are used for the include sections as referenced below
+				"assets": "http://localhost/gopherwood/2DGE/builds/game/"
+			}
 		},{
 			"id": "debug",         // This is the id of the build and is matched to a folder name in the "builds/" folder.
 			"cssCompression": false,
@@ -23,56 +28,76 @@
 			"pngCompression": 256  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
 		}
 	],
-	"assets": [ // Assets such as images and audio
-		{
-			"id":  "alpha",
-			"src": "../images/test.png",
-			"data": {
-				"rows": 2,
-				"columns": 2,
-				"ids": [
-					["horizon", "sky" ],
-					["ground",  "rock"]
-				]
-			}
-		},
-		{"id": "beta", "src": "../images/mookie.png"},
-		{"id": "tilemap", "src": "../images/tile-map.png"}
-	],
-	"components": [ // JavaScript files defining component modules
-		{"id": "entity-controller", "src": "../js/entity/entity-controller.js"},
-		{"id": "layer-controller", "src": "../js/layer/layer-controller.js"},
-		{"id": "tiled-loader",      "src": "../js/layer/tiled-loader.js"},
-		{"id": "lc-render",       "src": "../js/layer/lc-render.js"},
-		{"id": "lc-logic",       "src": "../js/layer/lc-logic.js"},
-		{"id": "render-debug",    "src": "../js/entity/render-debug.js"},
-		{"id": "render-tile",    "src": "../js/entity/render-tile.js"},
-		{"id": "render-button",    "src": "../js/entity/render-button.js"},
-		{"id": "logic-button",    "src": "../js/entity/logic-button.js"}
-	],
-	"entities": [ // JSON files describing entities
-		{"id": "tile", "src": "entities/tile.json"}, // If "src" key is included, this will be replaced by the actual JSON structure in the linked file.
-		{"id": "button", "src": "entities/button.json"},
-		{"id": "hero", "src": "entities/hero.json"}
-	],
-	"includes": [ // Order is important here: files are loaded in this order on page load, with the exception that all external resources precede all local resources.
-		{"id": "EaselJS",   "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
-		{"id": "TweenJS",   "src": "http://code.createjs.com/tweenjs-0.3.0.min.js"},
-		{"id": "SoundJS",   "src": "http://code.createjs.com/soundjs-0.3.0.min.js"},
-		{"id": "PreloadJS", "src": "http://code.createjs.com/preloadjs-0.2.0.min.js"},
-		{"id": "Game",      "src": "../js/game.js"},
-		{"id": "Input",     "src": "../js/input.js"},
-		{"id": "Entity",    "src": "../js/entity.js"},
-		{"id": "Layer",     "src": "../js/layer.js"},
-		{"id": "Scene",     "src": "../js/scene.js"},
-		{"id": "Main",      "src": "../js/main.js"},
-		{"id": "GameCSS",   "src": "../css/game.css"}
-	],
-	"scenes": [ // JSON files describing scenes
-		{"id": "scene-menu", "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the actual JSON structure in the linked file.
-		{"id": "scene-1", "src": "scenes/scene-1.json"}
-	],
-	"levels": [ // JSON files describing levels
-		{"id": "level-1", "src": "levels/level-1.json"} // If "src" key is included, this will be replaced by the actual JSON structure in the linked file.
-	]
+	"source": { 
+		"assets": [ // Assets such as images and audio
+			{"id": "powerup", "src": {
+					"ogg": "../audio/powerup.ogg",
+					"mp3": "../audio/powerup.mp3"
+				}
+			},
+			{"id":  "alpha",
+				"src": "../images/test.png",
+				"data": {
+					"rows": 2,
+					"columns": 2,
+					"ids": [
+						["horizon", "sky" ],
+						["ground",  "rock"]
+					]
+				}
+			},
+			{"id": "beta", "src": "../images/mookie.png"},
+			{"id": "tilemap", "src": "../images/tile-map.png"},
+			{"id": "test", "src": "../images/test.png"},
+			{"id": "test-animation", "src": "../images/test-animation.png"}
+		],
+		"classes": [
+			{"id": "Game",      "src": "../js/game.js"},
+			{"id": "Input",     "src": "../js/input.js"},
+			{"id": "Entity",    "src": "../js/entity.js"},
+			{"id": "Layer",     "src": "../js/layer.js"},
+			{"id": "Scene",     "src": "../js/scene.js"}
+		],
+		"components": [ // JavaScript files defining component modules
+			{"id": "entity-container",   "src": "../js/entity/entity-container.js"},
+			{"id": "entity-controller",  "src": "../js/entity/entity-controller.js"},
+			{"id": "layer-controller",   "src": "../js/layer/layer-controller.js"},
+			{"id": "tiled-loader",       "src": "../js/layer/tiled-loader.js"},
+			{"id": "lc-render",          "src": "../js/layer/lc-render.js"},
+			{"id": "lc-logic",           "src": "../js/layer/lc-logic.js"},
+			{"id": "lc-camera",          "src": "../js/layer/lc-camera.js"},
+			{"id": "lc-basic-collision", "src": "../js/layer/lc-basic-collision.js"},
+			{"id": "render-debug",       "src": "../js/entity/render-debug.js"},
+			{"id": "render-tile",        "src": "../js/entity/render-tile.js"},
+			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},
+			{"id": "render-button",      "src": "../js/entity/render-button.js"},
+			{"id": "render-hero",        "src": "../js/entity/render-hero.js"},
+			{"id": "logic-button",       "src": "../js/entity/logic-button.js"},
+			{"id": "logic-hero",         "src": "../js/entity/logic-hero.js"},
+			{"id": "collision-hero",     "src": "../js/entity/collision-hero.js"}
+		],
+		"entities": [ // JSON files describing entities
+			{"id": "tile",       "src": "entities/tile.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+			{"id": "tile-layer", "src": "entities/tile-layer.json"},
+			{"id": "button",     "src": "entities/button.json"},
+			{"id": "hero",       "src": "entities/hero.json"},
+			{"id": "block",      "src": "entities/block.json"}
+		],
+		"includes": [
+			{"id": "EaselJS",   "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
+			{"id": "TweenJS",   "src": "http://code.createjs.com/tweenjs-0.3.0.min.js"},
+			{"id": "SoundJS",   "src": "http://code.createjs.com/soundjs-0.3.0.min.js"},
+			{"id": "PreloadJS", "src": "http://code.createjs.com/preloadjs-0.2.0.min.js"},
+			{"id": "Browser",   "src": "../js/browser.js"},
+			{"id": "Main",      "src": "../js/main.js"},
+			{"id": "GameCSS",   "src": "../css/game.css"}
+		],
+		"scenes": [ // JSON files describing scenes
+			{"id": "scene-menu", "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+			{"id": "scene-1", "src": "scenes/scene-1.json"}
+		],
+		"levels": [ // JSON files describing levels
+			{"id": "level-1", "src": "levels/level-1.json"} // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+		]
+	}
 }
