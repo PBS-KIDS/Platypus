@@ -5,9 +5,8 @@
 	"id": "block",
 	"components":[
 		{"type": "collision-hero", 
-		
 		 "AABB": [0, 0, 24, 24]},
-		{"type": "render-debug"}
+		{"type": "render-debug", "regY": 24}
 	],
 	"properties":{
 		"debug-events": ["key:a:up", "key:a:down", "go-left"],

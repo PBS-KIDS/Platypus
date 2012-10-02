@@ -8,17 +8,20 @@
 		"fps": 60,
 		"rootElement": "root"
 	},
-	"builds": [ // Builds and their respective settings
+	"builds": [                         // Builds and their respective settings
 		{
-			"id": "game",          // This is the id of the build and is matched to a folder name in the "builds/" folder.
+			"id": "game",               // This is the id of the build and is matched to a folder name in the "builds/" folder.
 			"cssCompression": true,
 			"jsCompression": true,
-			"manifest": true,      // Determines whether this build uses Application Cache.
-			"pngCompression": 256,  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
-			"aspects": [["ogg", "mp3", "m4a"], ["small", "large"]], //Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client. Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
+			"manifest": true,           // Determines whether this build uses Application Cache.
+			"pngCompression": 256,      // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"aspects": [                //Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client.
+				["ogg", "mp3", "m4a"],  //    Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
+				["small", "large"]      //    For example, a mobile client might request the "m4a-small.manifest" cache manifest in order to use m4a audio files and small images.
+			],
 			"paths": {
-				"components": "http://localhost/gopherwood/2DGE/builds/game/", //paths are relative by default, but if specified here, absolute paths are used for the include sections as referenced below
-				"assets": "http://localhost/gopherwood/2DGE/builds/game/"
+				"default": "http://localhost/gopherwood/2DGE/builds/game/", //If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
+				"assets": "http://localhost/gopherwood/2DGE/builds/game/"   //The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
 			}
 		},{
 			"id": "debug",         // This is the id of the build and is matched to a folder name in the "builds/" folder.

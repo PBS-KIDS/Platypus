@@ -112,11 +112,13 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    	if((typeof asset.src) == 'string'){
 			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
 				    		if(isJSON(asset.src)){
-			    			    retainId = asset.id;
+				    			retainId = asset.id;
 							    subDir = workingDir + getSubDir(asset.src);
 							    asset  = getJSON(workingDir + asset.src);
-			 				    if(asset.tilesets) for (var ts in asset.tilesets){
-			 					    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
+							    if(asset.tilesets){
+			 				    	for (var ts in asset.tilesets){
+									    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
+								    }
 			 				    }
 			 				    asset.id = asset.id || retainId;
 				    		} else {

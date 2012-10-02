@@ -4,6 +4,9 @@ gws.components['render-debug'] = (function(){
 		
 		this.controllerEvents = undefined;
 		
+		this.regX = definition.regX || 0;
+		this.regY = definition.regY || 0;
+		
 		// Messages that this component listens for
 		this.listeners = [];
 		this.addListeners(['layer:render', 'layer:render-load', 'controller:input-handler']);
@@ -11,10 +14,10 @@ gws.components['render-debug'] = (function(){
 	var proto = component.prototype;
 
 	proto['layer:render'] = function(stage){
-		this.shape.x = this.owner.x;
-		this.shape.y = this.owner.y;
-		this.txt.x = this.owner.x + (this.owner.width / 2);
-		this.txt.y = this.owner.y + (this.owner.height / 2);
+		this.shape.x = this.owner.x	- this.regX;
+		this.shape.y = this.owner.y	- this.regY;
+		this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
+		this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
 		
 	};
 

@@ -132,6 +132,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 				    alert('Error in processing ' + (srcId || 'default') + ' asset: "' + sectionId + ' ' + assetId + '": ' + e.description);
 			    }
 		    	if(sectionId === 'assets'){
+		    		if((typeof asset.data) === 'string'){
+		    			asset.data = getJSON(workingDir + asset.data);
+		    		}
 			    	game[sectionId].push(asset);
 		    	} else {
 		    		game[sectionId][asset.id] = asset;
