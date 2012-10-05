@@ -3,9 +3,6 @@ this.shell = (function(){
 		return new ActiveXObject("wscript.shell");
 	} else {
 		var shell = {
-		    Popup: function(str){
-			    print(str);
-		    },
 		    Run: function(cmd, num, pause){
 		    	var args = cmd.split(' ');
 		    	return runCommand.apply(this,args);
@@ -15,6 +12,12 @@ this.shell = (function(){
 		return shell;
 	};
 })();
+
+if(typeof print === 'undefined'){
+   	print = function(txt){
+   		WScript.Echo(txt);
+   	};
+}
 
 this.fileSystem = (function(){
 	if (typeof ActiveXObject != 'undefined'){

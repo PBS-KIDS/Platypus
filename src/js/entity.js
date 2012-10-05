@@ -1,4 +1,4 @@
-gws.classes.entity = (function(){
+platformer.classes.entity = (function(){
 	var entity = function(definition, instanceDefinition){
 		var self             = this,
 		index                = undefined,
@@ -22,8 +22,8 @@ gws.classes.entity = (function(){
 		
 		for (index in componentDefinitions){
 			componentDefinition = componentDefinitions[index];
-			if(gws.components[componentDefinition.type]){
-				self.addComponent(new gws.components[componentDefinition.type](self, componentDefinition));
+			if(platformer.components[componentDefinition.type]){
+				self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
 			} else {
 				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
 			}

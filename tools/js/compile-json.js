@@ -26,7 +26,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
  */
 
 (function(){
-   var alert  = function(val){shell.Popup(val);},
+   var alert  = function(val){print(val);},
    getText    = function(path){
 	   var file = undefined,
 	   text     = '';
@@ -100,8 +100,11 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    assetId    = 0,
    retainId   = '',
    srcId      = '';
-   
+    
+    print('Composing full config.json from /data/config.json.');
+    
     for(sectionId in source){
+    	print('..Handling "' + sectionId + '" section.');
     	section = source[sectionId];
     	source[sectionId] = {};
     	
@@ -112,6 +115,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    	if((typeof asset.src) == 'string'){
 			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
 				    		if(isJSON(asset.src)){
+				    			print('....Filling in data for "' + asset.id + '" from "' + asset.src + '"');
 				    			retainId = asset.id;
 							    subDir = workingDir + getSubDir(asset.src);
 							    asset  = getJSON(workingDir + asset.src);
@@ -142,4 +146,5 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    
     //insert entities and scenes into compiled config file
     setJSON('config.json', game);
+    print('Completed full config.json.');
 })();

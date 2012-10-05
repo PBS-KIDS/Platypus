@@ -1,4 +1,4 @@
-gws.components['tiled-loader'] = (function(){
+platformer.components['tiled-loader'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -7,9 +7,8 @@ gws.components['tiled-loader'] = (function(){
 		this.listeners = [];
 		this.addListeners(['load']);
 
-		this.level = gws.settings.levels[definition.level];
+		this.level = platformer.settings.levels[definition.level];
 		this.tileEntityId = definition.tileEntityId || 'tile';
-		this.tileLayerEntityId = definition.tileLayerEntityId || 'tile-layer';
 	},
 	proto = component.prototype; 
 
@@ -40,18 +39,35 @@ gws.components['tiled-loader'] = (function(){
 		tileDefinition = undefined,
 		importAnimation= undefined,
 		importCollision= undefined,
-		importRender   = undefined;
+		importRender   = undefined,
+		followEntity   = undefined;
 
 		for (x = 0; x < tilesets.length; x++){
-			if(gws.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
-				images.push(gws.assets[tilesets[x].name]);
+			if(platformer.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
+				images.push(platformer.assets[tilesets[x].name]);
 			} else {
 				images.push(tilesets[x].image);
 			}
 		}
 		if(layer.type == 'tilelayer'){
+			// First determine which type of entity this layer should behave as:
+			entity = 'tile-layer'; // default
+			if(layer.properties.entity){
+				entity = layer.properties.entity;
+			} else { // If not explicitly defined, try using the name of the layer
+				switch(layer.name){
+				case "background":
+				case "foreground":
+					entity = 'render-layer';
+					break;
+				case "collision":
+					entity = 'collision-layer';
+					break;
+				}
+			}
+			
 			//TODO: a bit of a hack to copy an object instead of overwrite values
-			tileDefinition  = JSON.parse(JSON.stringify(gws.settings.entities[this.tileLayerEntityId]));
+			tileDefinition  = JSON.parse(JSON.stringify(platformer.settings.entities[entity]));
 
 			importAnimation = {};
 			importCollision = [];
@@ -94,7 +110,7 @@ gws.components['tiled-loader'] = (function(){
 					tileDefinition.components[x].imageMap = importRender;
 				}
 			}
-			this.owner.addEntity(new gws.classes.entity(tileDefinition, {properties:{}}));
+			this.owner.addEntity(new platformer.classes.entity(tileDefinition, {properties:{}}));
 		} else if(layer.type == 'objectgroup'){
 			for (obj = 0; obj < layer.objects.length; obj++){
 				entity = layer.objects[obj];
@@ -129,10 +145,20 @@ gws.components['tiled-loader'] = (function(){
 					properties.width  = entity.width  || tileWidth;
 					properties.height = entity.height || tileHeight;
 					
-					this.owner.addEntity(new gws.classes.entity(gws.settings.entities[entityType], {properties:properties}));
+					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
+					if(entity){
+						if(entity.follow){
+							followEntity = {entity: entity, mode: entity.follow}; //used by camera
+						}
+					}
 				}
 			}
 		}
+		this.owner.trigger('world-loaded', {
+			width:  width  * tileWidth,
+			height: height * tileHeight,
+			follow: followEntity
+		});
 	};
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

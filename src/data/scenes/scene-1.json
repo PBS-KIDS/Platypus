@@ -3,6 +3,7 @@
 		{
 			"id": "action",
 			"components": [
+				{"type": "lc-camera"},
 				{"type": "lc-logic"},
 				{"type": "lc-basic-collision"},
 				{"type": "lc-render"},

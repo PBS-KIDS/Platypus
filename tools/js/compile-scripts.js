@@ -26,8 +26,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
  */
 
 (function(){
-   var namespace = 'gws',
-   alert      = function(val){shell.Popup(val);},
+   var alert  = function(val){print(val);},
    getText    = function(path){
 	   var file = undefined,
 	   text     = '';
@@ -77,14 +76,20 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     buildGame = function(build, config, html, manifest, timestamp){
 	    var jsFile = 'combined',
 	    cssFile    = 'combined',
+	    game       = eval('(' + config + ')'),
+	    namespace  = build.namespace || 'PBS.KIDS.platformer',
+	    nsArray    = namespace.split('.'),
+	    nsName     = '',
+	    scripts    = '',
 	    result     = {
     	    scripts: '',
     	    styles: '',
     	    extStyles: '',
     	    extScripts: ''
 	    },
-	    game       = eval('(' + config + ')'),
 	    source     = game.source,
+	    paths      = build.paths || {},
+	    path       = '',
 	    aspects    = {"default": []},
 	    section    = undefined,
 	    sectionId  = '',
@@ -92,38 +97,43 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    assetId    = 0,
 	    srcId      = '',
 	    i          = 0,
-	    j          = 0;
+	    j          = 0,
+	    divider    = '';
 
 	    delete game.builds;
 
 	    if(build.aspects){ // Prepare multiple manifest files
+		    print('...Creating arrays to store cache.manifest file versions.');
+		    game.aspects = build.aspects;
 	    	for (i in build.aspects) for (j in build.aspects[i]){
 		    	aspects[build.aspects[i][j]] = ['\n# ' + build.aspects[i][j] + ':\n'];
 	    	}
 	    }
 	    
-	    //Fix up relative paths on Game Assets
-	    //Combine JavaScript and CSS Assets
+	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
 	    for(sectionId in source){
-	    	if((sectionId === 'components') || (sectionId === 'classes')){
-	    		result.scripts += namespace + '.' + sectionId + ' = {};\n';
-	    	}
-	    	aspects["default"].push('\n# ' + sectionId + ':\n');
+		    print('....Handling "' + sectionId + '" section.');
 	    	section = source[sectionId];
+	    	if((sectionId === 'components') || (sectionId === 'classes')){
+	    		result.scripts += 'platformer.' + sectionId + ' = {};\n';
+	    	}
 	    	if(sectionId === 'assets') {
 	    		game[sectionId] = [];
+	    		path = paths["assets"] || paths["default"] || '';
 	    	} else {
 	    		game[sectionId] = {};
+	    		path = paths["default"] || '';
 	    	}
 		    for (assetId in section){
 		    	asset = section[assetId];
+			    print('.....Adding "' + asset.id + '".');
 			    try {
 				    if(asset.src){
 				    	if((typeof asset.src) == 'string'){
-				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], result);
+				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result);
 				    	} else {
 				    		for(srcId in asset.src){
-				    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], result);
+				    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result);
 				    		}
 				    	}
 				    }
@@ -143,7 +153,17 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
 	    delete game.source;
 
-	    result.scripts  = namespace + ' = this.' + namespace + ' || {};\n' + namespace + '.settings = ' + JSON.stringify(game) + ';\n' + result.scripts;
+	    for(i = 0; i < nsArray.length - 1; i++){
+	    	nsName = '';
+	    	divider = '';
+	    	for(j = 0; j <= i; j++){
+	    		nsName += divider + nsArray[j];
+	    		divider = '.';
+	    	}
+	    	scripts += '  ' + nsName + ' = this.' + nsName + ' || {};\n';
+	    }
+	    scripts += '  ' + namespace + ' = platformer;\n\n';
+	    result.scripts = '(function(){\n  var platformer = {};\n\n' + scripts + 'platformer.settings = ' + JSON.stringify(game) + ';\n' + result.scripts + '})();';
 	 
 	    manifest = manifest.replace('CACHE:', 'CACHE:\n' + aspects["default"].join('\n'));
 	    manifest = manifest.replace('# Version', '# Version ' + timestamp);
@@ -178,9 +198,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    fileSystem.MoveFile("combined.css", buildDir + build.id + '/s/' + cssFile + timestamp + '.css');
 
 	    // setup manifest from template
+		path = paths["default"] || '';
 	    if(build.manifest){
 	    	html     = html.replace('<html>', '<html manifest="cache.manifest">');
-	    	manifest = manifest.replace('CACHE:', 'CACHE:\nj\/' + jsFile + timestamp + '.js\ns\/' + cssFile + timestamp + '.css\n');
+	    	manifest = manifest.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + jsFile + timestamp + '.js\n' + path + 's\/' + cssFile + timestamp + '.css\n');
 
 		    if(build.aspects){ // Prepare multiple manifest files
 		    	var aspectVariations = build.aspects[0], tempArray = [];
@@ -214,8 +235,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
 	    
 	    // setup index from template
-	    html = html.replace(/js\/default\.js/,   'j/' + jsFile  + timestamp + '.js');
-	    html = html.replace(/css\/default\.css/, 's/' + cssFile + timestamp + '.css');
+	    html = html.replace(/js\/default\.js/,   path + 'j/' + jsFile  + timestamp + '.js');
+	    html = html.replace(/css\/default\.css/, path + 's/' + cssFile + timestamp + '.css');
     	html = html.replace('</head>', result.extStyles + '</head>');
     	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
 	    setText('index.html', html);
@@ -241,10 +262,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   var check = path.substring(path.length - 3).toLowerCase();
 	   return (check === '.js');
    },
-   handleAsset = function(id, src, assets, result){
+   handleAsset = function(id, src, assets, absolutePath, result){
 		if(src.substring(0,4).toLowerCase() !== 'http'){
 			if(isImage(src) || isAudio(src) || isFont(src)){
-				return checkPush(assets, putInFolder(hypPath(src)));
+				return checkPush(assets, absolutePath + putInFolder(hypPath(src)));
 			} else if(isCSS(src)) {
 				result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
 				result.styles  += getText(src) + '\n';
@@ -277,7 +298,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    buildIndex = 0;
    
     //Create builds
+    print('Preparing to compile scripts.');
     for (buildIndex in builds){
+    	print('..Compiling scripts for build "' + builds[buildIndex].id + '".');
     	buildGame(builds[buildIndex], gameConfig, html, manifest, timestamp);
 	}
+    print('Completed script compilation. Hurrah!');
 })();

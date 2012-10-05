@@ -1,7 +1,4 @@
 window.addEventListener('load', function(){
-	//gws.settings.assets
-	var root = this;
-	
 	loader = new createjs.PreloadJS();
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
@@ -25,16 +22,16 @@ window.addEventListener('load', function(){
 				});
 				for (j = 0; j < data.rows; j++) for (i = 0; i < data.columns; i++){
 					if(data.ids && data.ids[i] && data.ids[i][j]){
-						gws.assets[data.ids[i][j]] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
+						platformer.assets[data.ids[i][j]] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
 					} else {
-						gws.assets[event.id + '-' + i + '_' + j] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
+						platformer.assets[event.id + '-' + i + '_' + j] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
 					}
 				}
 				return ;
 			}
 		}
 		
-		gws.assets[event.id] = result;
+		platformer.assets[event.id] = result;
 	};
 	
 	loader.onError = function (event) {
@@ -43,31 +40,30 @@ window.addEventListener('load', function(){
 	
 	loader.onComplete = function (event) {
 		
-		root.game = new gws.classes.game(gws.settings);
-		createjs.Ticker.setFPS(gws.settings.global.fps);
-		createjs.Ticker.addListener(root.game);
+		platformer.game = new platformer.classes.game(platformer.settings);
+		createjs.Ticker.setFPS(platformer.settings.global.fps);
+		createjs.Ticker.addListener(platformer.game);
 	};
 	
 	
-	gws.browser = gws.browserCheck();
-	for(var i in gws.settings.assets){
-		if(typeof gws.settings.assets[i].src !== 'string'){
-			for(var j in gws.settings.assets[i].src){
-				if(gws.browser[j]){
-					gws.settings.assets[i].src = gws.settings.assets[i].src[j];
+	for(var i in platformer.settings.assets){
+		if(typeof platformer.settings.assets[i].src !== 'string'){
+			for(var j in platformer.settings.assets[i].src){
+				if(platformer.settings.aspects[j] && platformer.settings.assets[i].src[j]){
+					platformer.settings.assets[i].src = platformer.settings.assets[i].src[j];
 					break;
 				}
 			}
-			if(typeof gws.settings.assets[i].src !== 'string'){
-				if(gws.settings.assets[i].src['default']){
-					gws.settings.assets[i].src = gws.settings.assets[i].src['default'];
+			if(typeof platformer.settings.assets[i].src !== 'string'){
+				if(platformer.settings.assets[i].src['default']){
+					platformer.settings.assets[i].src = platformer.settings.assets[i].src['default'];
 				} else {
-					console.warning('Asset has no valid source for this browser.', gws.settings.assets[i]);
+					console.warn('Asset has no valid source for this browser.', platformer.settings.assets[i]);
 				}
 			}
 		}
 	}
 	
-	loader.loadManifest(gws.settings.assets);
-	gws.assets = [];
+	loader.loadManifest(platformer.settings.assets);
+	platformer.assets = [];
 });

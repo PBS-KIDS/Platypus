@@ -1,4 +1,4 @@
-gws.classes.layer = (function(){
+platformer.classes.layer = (function(){
 	var layer = function(definition, rootElement){
 		var componentDefinitions = definition.components,
 		componentDefinition = undefined;
@@ -10,7 +10,7 @@ gws.classes.layer = (function(){
 		
 		for (var index in componentDefinitions){
 			componentDefinition = componentDefinitions[index];
-			this.addComponent(new gws.components[componentDefinition.type || componentDefinition.id](this, componentDefinition));
+			this.addComponent(new platformer.components[componentDefinition.type || componentDefinition.id](this, componentDefinition));
 		}
 		
 		this.trigger('load');

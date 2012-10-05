@@ -1,7 +1,7 @@
 /***********************************
  TODO: Change the component name!
  **********************************/
-gws.components['ec-template'] = (function(){
+platformer.components['ec-template'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		

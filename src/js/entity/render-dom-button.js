@@ -16,7 +16,7 @@
  */
 
 
-gws.components['render-dom-button'] = (function(){
+platformer.components['render-dom-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -38,7 +38,7 @@ gws.components['render-dom-button'] = (function(){
 		var buttonId = this.definition.buttonId || '';
 		var buttonClass = this.definition.buttonClass + ' button' || 'button'; //add in the default button class allows us to do onHover effects generically.
 		
-		this.base = gws.createElement(this.parent, 'div', buttonClass, buttonId);
+		this.base = platformer.createElement(this.parent, 'div', buttonClass, buttonId);
 		
 		for (var x = 0; x < layerDefs.length; x++)
 		{
@@ -48,7 +48,7 @@ gws.components['render-dom-button'] = (function(){
 			def.specificStyle = def.specificStyle || '';
 			def.textStyle = def.textStyle || 'button-text';
 			
-			this.layers[def.id] = gws.utils.createElement(this.base, 'div', def.generalStyle, def.specificStyle);
+			this.layers[def.id] = platformer.utils.createElement(this.base, 'div', def.generalStyle, def.specificStyle);
 			if(def.image) {
 				var img = def.image;
 				img.style.width = '100%';
@@ -56,7 +56,7 @@ gws.components['render-dom-button'] = (function(){
 				this.layers[def.id].appendChild(img);
 			}
 			if(def.altText) this.layers[def.id].setAttribute('title', def.altText);
-			if(def.text) this.layers[def.id].textElement = gws.utils.createTextBlock(this.layers[def.id], def.textStyle, false, def.text); 
+			if(def.text) this.layers[def.id].textElement = platformer.utils.createTextBlock(this.layers[def.id], def.textStyle, false, def.text); 
 			if(def.onClick) this.layers[def.id].onclick = def.onClick;
 			if(def.onMouseOver) this.layers[def.id].onmouseover = def.onMouseOver;
 			if(def.onMouseOut) this.layers[def.id].onmouseout = def.onMouseOut;
@@ -95,7 +95,7 @@ gws.components['render-dom-button'] = (function(){
 		{
 			this.layers[resp.layer].textElement.innerHTML = resp.text;
 		} else {
-			this.layers[resp.layer].textElement = gws.createTextBlock(this.layers[resp.layer], 'div', false, false, resp.text);
+			this.layers[resp.layer].textElement = platformer.createTextBlock(this.layers[resp.layer], 'div', false, false, resp.text);
 		}
 	};
 	

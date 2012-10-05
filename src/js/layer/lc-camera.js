@@ -1,4 +1,4 @@
-gws.components['lc-camera'] = (function(){
+platformer.components['lc-camera'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -7,8 +7,7 @@ gws.components['lc-camera'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['camera'];
-		this.addListeners(['resize', 'camera', 'load']);  
-		
+		this.addListeners(['resize', 'camera', 'load', 'world-loaded']);  
 		
 		//The dimensions of the camera in the window
 		this.portalTop = this.owner.rootElement.innerTop;
@@ -17,12 +16,27 @@ gws.components['lc-camera'] = (function(){
 		this.portalHeight = this.owner.rootElement.offsetHeight;
 		
 		//The dimensions of the camera in the game world
-		this.width = definition.width; 
-		this.height = definition.height;
-		this.left = 0;
-		this.top = 0; 
+		this.width       = definition.width       || 0; 
+		this.height      = definition.height      || 0;
+		this.aspectRatio = definition.aspectRatio || 0;
+		this.left        = definition.left        || 0;
+		this.top         = definition.top         || 0;
 		
-		this.worldWidth = 0; //definition.worldWidth;
+		if(this.width && this.height){
+			this.aspectRatio = this.aspectRatio || (this.height      / this.width); 
+		} else {
+			this.aspectRatio = this.aspectRatio || (this.portalHeight / this.portalWidth);
+			if (this.width || this.height){
+				this.width       = this.width       || (this.height      / this.aspectRatio); 
+				this.height      = this.height      || (this.aspectRatio / this.width); 
+			} else {
+				this.width       = this.portalWidth;
+				this.height      = this.aspectRatio * this.width;
+			}
+		}
+		
+		// The dimensions of the entire world
+		this.worldWidth  = 0; //definition.worldWidth;
 		this.worldHeight = 0; //definition.worldHeight;
 		
 		this.worldPerScreenUnitWidth = this.width / this.portalWidth;
@@ -48,8 +62,14 @@ gws.components['lc-camera'] = (function(){
 	var proto = component.prototype; 
 
 	proto['load'] = function(){
-		this.worldWidth = this.owner.worldWidth || 2048;
-		this.worldHeight = this.owner.worldHeight || 768;		
+	};
+
+	proto['world-loaded'] = function(values){
+		this.worldWidth   = this.owner.worldWidth  = values.width;
+		this.worldHeight  = this.owner.worldHeight = values.height;
+		if(values.follow){
+			this.follow(values.follow);
+		}
 	};
 	
 	proto['camera'] = function(deltaT){
@@ -64,14 +84,12 @@ gws.components['lc-camera'] = (function(){
 			if (this.direction)
 			{
 				this.move(this.left + speed, this.top);
-				if (this.left == this.worldWidth - this.width)
-				{
+				if (this.worldWidth && (this.left == this.worldWidth - this.width)) {
 					this.direction = !this.direction;
 				}
 			} else {
 				this.move(this.left - speed, this.top);
-				if (this.left == 0)
-				{
+				if (this.worldWidth && (this.left == 0)) {
 					this.direction = !this.direction;
 				}
 			}
@@ -98,43 +116,49 @@ gws.components['lc-camera'] = (function(){
 		this.screenPerWorldUnitHeight =  this.portalHeight/ this.height;
 	};
 	
-	proto['follow'] = function (mode, entity, def)
+	proto['follow'] = function (def)
 	{
-		switch (mode)
+		switch (def.mode)
 		{
 		case 'locked':
-			this.following = entity;
+			this.state = 'following';
+			this.following = def.entity;
 			this.followingFunction = this.lockedFollow;
+			break;
 		case 'bounding':
-			this.following = entity;
+			this.state = 'following';
+			this.following = def.entity;
 			this.setBoundingArea(def.top, def.left, def.width, def.height);
 			this.followingFunction = this.boundingFollow;
+			break;
 		case 'custom':
-			this.following = entity;
+			this.state = 'following';
+			this.following = def.entity;
 			this.followingFunction = def.followingFunction;
+			break;
 		case 'static':
 		default:
+			this.state = 'static';
 			this.following = undefined;
 			this.followingFunction = undefined;
+			break;
 		}
 		
 	};
 	
 	proto.move = function (newleft, newtop)
 	{
-		if (newleft + this.width > this.worldWidth)
-		{
+		if (this.worldWidth && (newleft + this.width > this.worldWidth)) {
 			this.left = this.worldWidth - this.width;
-		} else if (newleft < 0) {
+		} else if (this.worldWidth && (newleft < 0)) {
 			this.left = 0; 
 		} else {
 			this.left = newleft;
 		}
 		
-		if (newtop + this.height > this.worldHeight)
-		{
+		if (this.worldHeight && (newtop + this.height > this.worldHeight)) {
 			this.top = this.worldHeight - this.height;
-		} else if (newtop < 0) {
+		} else if (this.worldHeight && (newtop < 0)) {
 			this.top = 0; 
 		} else {
 			this.top = newtop;

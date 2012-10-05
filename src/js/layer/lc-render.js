@@ -1,4 +1,4 @@
-gws.components['lc-render'] = (function(){
+platformer.components['lc-render'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -12,8 +12,8 @@ gws.components['lc-render'] = (function(){
 		this.owner.rootElement.appendChild(this.canvas);
 		this.canvas.style.width = '100%';
 		this.canvas.style.height = '100%';
-		this.canvas.width = 1024;
-		this.canvas.height = 768;
+		this.canvas.width  = 300; //TODO: figure out where to specify this
+		this.canvas.height = 200;
 		this.stage = new createjs.Stage(this.canvas);
 		
 	};

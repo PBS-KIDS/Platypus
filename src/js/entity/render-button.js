@@ -1,4 +1,4 @@
-gws.components['render-button'] = (function(){
+platformer.components['render-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -7,8 +7,8 @@ gws.components['render-button'] = (function(){
 
 		this.addListeners(['layer:render-load', 'layer:render', 'controller:input']);
 		this.stage = undefined;
-		this.upBitmap = new createjs.Bitmap(gws.assets[definition.upImg]);
-		this.downBitmap = new createjs.Bitmap(gws.assets[definition.downImg]);
+		this.upBitmap = new createjs.Bitmap(platformer.assets[definition.upImg]);
+		this.downBitmap = new createjs.Bitmap(platformer.assets[definition.downImg]);
 		//this.shape = new createjs.Shape();;
 	};
 	var proto = component.prototype;

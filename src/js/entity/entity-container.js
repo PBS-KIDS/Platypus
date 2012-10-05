@@ -1,4 +1,4 @@
-gws.components['entity-container'] = (function(){
+platformer.components['entity-container'] = (function(){
 	var component = function(owner, definition){
 		var self = this,
 		x        = 0;
@@ -12,7 +12,7 @@ gws.components['entity-container'] = (function(){
 		this.definedEntities = definition.entities; //saving for load message
 		
 		this.owner.entities     = self.entities;
-		this.owner.addEntity    = function(entity){self.addEntity(entity);};
+		this.owner.addEntity    = function(entity){return self.addEntity(entity);};
 		this.owner.removeEntity = function(){return self.removeEntity();};
 		
 		this.addListeners(['load', 'add-entity', 'remove-entity']);
@@ -29,7 +29,7 @@ gws.components['entity-container'] = (function(){
 		if(entities){
 			for (x = 0; x < entities.length; x++)
 			{
-				 this.addEntity(new gws.classes.entity(gws.settings.entities[entities[x].type], entities[x]));
+				 this.addEntity(new platformer.classes.entity(platformer.settings.entities[entities[x].type], entities[x]));
 			}
 		}
 	};
@@ -37,6 +37,7 @@ gws.components['entity-container'] = (function(){
 	proto.addEntity = proto['add-entity'] = function (entity) {
 		this.entities.push(entity);
 		this.owner.trigger('entity-added', entity);
+		return entity;
 	};
 	
 	proto.removeEntity = proto['remove-entity'] = function (entity) {

@@ -45,13 +45,19 @@
   </tile>
  </tileset>
  <layer name="background" width="20" height="20">
+  <properties>
+   <property name="entity" value="render-layer"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJxjZGBgYBzFo5hIzERlzEFlzEdlLDKKR/EoxokB2icSDQ==
   </data>
  </layer>
- <layer name="map" width="20" height="20">
+ <layer name="action" width="20" height="20">
+  <properties>
+   <property name="entity" value="tile-layer"/>
+  </properties>
   <data encoding="base64" compression="zlib">
-   eJztk7sKwCAMRQXt4FQdmv7/n1bBQJAkbXxsFe6g0cPNw+zWrbPoXsi7ft40D4oSUZ7k7cq3zk5ilEmceufug9Hf211rvuD0+o7UT2OO9ld6s6O/hxKPTRae5s/CQp7kzzfh3HkiaYUPPMwhEkk9C07OV+JVvzgzsRM3L9wfAmbPvatnDwl+B60=
+   eJzVk7sOgCAMRZugA5MwWP//T5VIk8a0lSIMNrkDr5PbBxnGxXbpGMjbHbw0mNcSf+Ah3LUh5Y+8WfmW2UmCMjvn3qX76PT3dtebL4Jd3576Wcze/mpvZvR3Nc5jlYdn+fOwiKf5C1U0d4FJi6WBRzlEJq1nC+j5arzil2YmPiTNi/SHUFhL78reCWD+B70=
   </data>
  </layer>
  <objectgroup name="guys" width="20" height="20">
@@ -87,5 +93,6 @@
   <object gid="10" x="288" y="216"/>
   <object gid="10" x="288" y="192"/>
   <object gid="10" x="96" y="144"/>
+  <object gid="10" x="360" y="72"/>
  </objectgroup>
 </map>

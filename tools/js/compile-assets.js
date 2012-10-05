@@ -25,7 +25,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
  */
 
 (function(){
-   var alert  = function(val){shell.Popup(val);},
+   var alert  = function(val){print(val);},
    getText    = function(path){
 	   var file = fileSystem.OpenTextFile(path),
 	   text     = file.ReadAll();
@@ -56,6 +56,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 		    	fileName = hypPath(asset);
 		        if(compression && (asset.substring(asset.length - 4).toLowerCase() === '.png')){
 	                if(!fileSystem.FileExists('../src/images/compressed/q' + compression + '-' + fileName)){
+				    	print('....Compressing "' + asset + '".');
 	                 	if(shell.isBash){
 	                 		shell.Run("pngquant/pngquant -ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	} else {
@@ -63,8 +64,10 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	                 	}
 		                fileSystem.MoveFile(asset.substring(0, asset.length - 4) + '-q' + compression + '.png', '../src/images/compressed/q' + compression + '-' + fileName);
 	                }
+			    	print('....Copying compressed asset to "' + destination + fileName + '".');
 	                fileSystem.CopyFile('../src/images/compressed/q' + compression + '-' + fileName, destination + fileName);
 		        } else {
+			    	print('....Copying asset to "' + destination + fileName + '".');
 					fileSystem.CopyFile(asset, destination + fileName); 
 		        }
 		    }
@@ -97,6 +100,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
    assetId    = 0,
    srcId      = '';
    
+    print('Compiling list of assets.');
     for(sectionId in source){
     	section = source[sectionId];
 	    for (assetId in section){
@@ -121,24 +125,27 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	    }
     }
    
-   for (var asset in assets){
-	   if(isImage(assets[asset])){
-		   images.push(assets[asset]);
-	   } else if(isAudio(assets[asset])){
-		   audio.push(assets[asset]);
-	   } else if(isFont(assets[asset])){
-		   fonts.push(assets[asset]);
-	   }
-   }
+    print('Separating asset types.');
+    for (var asset in assets){
+	    if(isImage(assets[asset])){
+	 	    images.push(assets[asset]);
+	    } else if(isAudio(assets[asset])){
+		    audio.push(assets[asset]);
+	    } else if(isFont(assets[asset])){
+		    fonts.push(assets[asset]);
+	    }
+    }
    
-    //Create builds
+    print('Copying assets to build folders.');
     if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
     for (buildIndex in builds){
-	    if (!fileSystem.FolderExists(buildDir + game.builds[buildIndex].id + '/')) fileSystem.CreateFolder(buildDir + game.builds[buildIndex].id + '/');
-	    if (game.builds[buildIndex].pngCompression && !fileSystem.FolderExists('../src/images/compressed/')) fileSystem.CreateFolder('../src/images/compressed/');
-    	copyFiles(images, buildDir + game.builds[buildIndex].id + '/i/', game.builds[buildIndex].pngCompression);
-    	copyFiles(audio,  buildDir + game.builds[buildIndex].id + '/a/');
-    	copyFiles(fonts,  buildDir + game.builds[buildIndex].id + '/f/');
+        print('..Copying assets to build "' + builds[buildIndex].id + '".');
+	    if (!fileSystem.FolderExists(buildDir + builds[buildIndex].id + '/')) fileSystem.CreateFolder(buildDir + builds[buildIndex].id + '/');
+	    if (builds[buildIndex].pngCompression && !fileSystem.FolderExists('../src/images/compressed/')) fileSystem.CreateFolder('../src/images/compressed/');
+    	copyFiles(images, buildDir + builds[buildIndex].id + '/i/', builds[buildIndex].pngCompression);
+    	copyFiles(audio,  buildDir + builds[buildIndex].id + '/a/');
+    	copyFiles(fonts,  buildDir + builds[buildIndex].id + '/f/');
 	}
-   
+    
+    print('Completed asset compilation.');
 })();

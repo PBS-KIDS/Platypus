@@ -4,31 +4,36 @@
  */
 {
 	"global": { // Settings for the entire game (Entities and component settings are generally found in their respective files.)
-		"initialScene": "scene-1",//"scene-menu",
+		"initialScene": "scene-1", //"scene-menu",
 		"fps": 60,
 		"rootElement": "root"
 	},
-	"builds": [                         // Builds and their respective settings
+	"builds": [                                  // Builds and their respective settings
 		{
-			"id": "game",               // This is the id of the build and is matched to a folder name in the "builds/" folder.
+			"id": "game",                        // This is the id of the build and is matched to a folder name in the "builds/" folder.
+		    "namespace": "PBS.KIDS.platformer",  // Optional namespace for the platformer - defaults to "PBS.KIDS.platformer"
 			"cssCompression": true,
 			"jsCompression": true,
-			"manifest": true,           // Determines whether this build uses Application Cache.
-			"pngCompression": 256,      // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
-			"aspects": [                //Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client.
-				["ogg", "mp3", "m4a"],  //    Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
-				["small", "large"]      //    For example, a mobile client might request the "m4a-small.manifest" cache manifest in order to use m4a audio files and small images.
+			"manifest": true,                    // Determines whether this build uses Application Cache.
+			"pngCompression": 256,               // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"aspects": [                         // Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client.
+				["ogg", "mp3", "m4a"],           //    Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
+				["mobile", "desktop"]            //    For example, a mobile client might request the "m4a-mobile.manifest" cache manifest in order to use m4a audio files and small images.
 			],
 			"paths": {
-				"default": "http://localhost/gopherwood/2DGE/builds/game/", //If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
-				"assets": "http://localhost/gopherwood/2DGE/builds/game/"   //The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
+				"default": "http://localhost/gopherwood/2DGE/builds/game/", // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
+				"assets":  "http://localhost/gopherwood/2DGE/builds/game/"  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
 			}
 		},{
-			"id": "debug",         // This is the id of the build and is matched to a folder name in the "builds/" folder.
+			"id": "debug",          // This is the id of the build and is matched to a folder name in the "builds/" folder.
 			"cssCompression": false,
 			"jsCompression": false,
 			"manifest": false,      // Determines whether this build uses Application Cache.
-			"pngCompression": 256  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"pngCompression": 256,  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"aspects": [                         // Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client.
+				["ogg", "mp3", "m4a"],           //    Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
+				["mobile", "desktop"]            //    For example, a mobile client might request the "m4a-mobile.manifest" cache manifest in order to use m4a audio files and small images.
+			]
 		}
 	],
 	"source": { 
@@ -49,7 +54,7 @@
 					]
 				}
 			},
-			{"id": "beta", "src": "../images/mookie.png"},
+			{"id": "mookie-walk", "src": "../images/mookie.png"},
 			{"id": "tilemap", "src": "../images/tile-map.png"},
 			{"id": "test", "src": "../images/test.png"},
 			{"id": "test-animation", "src": "../images/test-animation.png"}
@@ -59,7 +64,8 @@
 			{"id": "Input",     "src": "../js/input.js"},
 			{"id": "Entity",    "src": "../js/entity.js"},
 			{"id": "Layer",     "src": "../js/layer.js"},
-			{"id": "Scene",     "src": "../js/scene.js"}
+			{"id": "Scene",     "src": "../js/scene.js"},
+			{"id": "Collision-Shape",	"src": "../js/collision-shape.js"},
 		],
 		"components": [ // JavaScript files defining component modules
 			{"id": "entity-container",   "src": "../js/entity/entity-container.js"},
@@ -74,14 +80,17 @@
 			{"id": "render-tile",        "src": "../js/entity/render-tile.js"},
 			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},
 			{"id": "render-button",      "src": "../js/entity/render-button.js"},
-			{"id": "render-hero",        "src": "../js/entity/render-hero.js"},
+			{"id": "render-animation",   "src": "../js/entity/render-animation.js"},
 			{"id": "logic-button",       "src": "../js/entity/logic-button.js"},
 			{"id": "logic-hero",         "src": "../js/entity/logic-hero.js"},
-			{"id": "collision-hero",     "src": "../js/entity/collision-hero.js"}
+			{"id": "collision-hero",     "src": "../js/entity/collision-hero.js"},
+			{"id": "collision-tiles",    "src": "../js/entity/collision-tiles.js"}
 		],
 		"entities": [ // JSON files describing entities
 			{"id": "tile",       "src": "entities/tile.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
 			{"id": "tile-layer", "src": "entities/tile-layer.json"},
+			{"id": "render-layer", "src": "entities/render-layer.json"},
+			{"id": "collision-layer", "src": "entities/collision-layer.json"},
 			{"id": "button",     "src": "entities/button.json"},
 			{"id": "hero",       "src": "entities/hero.json"},
 			{"id": "block",      "src": "entities/block.json"}

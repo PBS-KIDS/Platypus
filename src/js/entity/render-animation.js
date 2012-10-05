@@ -1,5 +1,10 @@
-gws.components['render-hero'] = (function(){
+platformer.components['render-animation'] = (function(){
 	var component = function(owner, definition){
+		var spriteSheet = {
+			images: definition.spriteSheet.images.slice(),
+			frames: definition.spriteSheet.frames,
+			animations: definition.spriteSheet.animations
+		};
 		this.owner = owner;
 		
 		// Messages that this component listens for
@@ -7,13 +12,16 @@ gws.components['render-hero'] = (function(){
 
 		this.addListeners(['layer:render-load','layer:render', 'logical-state']);
 		this.stage = undefined;
-		for (var x = 0; x < definition.spriteSheet.images.length; x++)
+		for (var x = 0; x < spriteSheet.images.length; x++)
 		{
-			definition.spriteSheet.images[x] = gws.assets[definition.spriteSheet.images[x]];
+			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
-		var spriteSheet = new createjs.SpriteSheet(definition.spriteSheet);
+		var spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
-		this.currentAnimation = '';
+		this.currentAnimation = definition.state || this.owner.state || '';
+		if(this.currentAnimation){
+			this.anim.gotoAndPlay(this.currentAnimation);
+		}
 	};
 	var proto = component.prototype;
 	

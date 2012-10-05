@@ -1,4 +1,4 @@
-gws.components['entity-controller'] = (function(){
+platformer.components['entity-controller'] = (function(){
 	var state = function(){
 		this.current = false;
 		this.last    = false;

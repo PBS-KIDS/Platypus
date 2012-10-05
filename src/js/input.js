@@ -2,7 +2,7 @@
  * INPUT
  */
 
-gws.classes.input = (function(){
+platformer.classes.input = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};},
 	input = function (eventCallback){
 		this.mouseX = 0;

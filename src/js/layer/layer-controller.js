@@ -1,4 +1,4 @@
-gws.components['layer-controller'] = (function(){
+platformer.components['layer-controller'] = (function(){
 	var keyMap = {
 		kc0:   'unknown',         
 		kc8:   'backspace',

@@ -4,44 +4,52 @@
 {
 	"id": "hero",
 	"components":[
-		{"type": "entity-controller",
-		 "controlMap":{
-			"key:w": 			"key-up",
-			"key:up-arrow": 	"key-up",
-			"key:a": 			"key-left",
-			"key:left-arrow": 	"key-left",
-			"key:s": 			"key-down",
-			"key:down-arrow": 	"key-down",
-			"key:d": 			"key-right",
-			"key:right-arrow": 	"key-right"
-		  }	
-		},
-		{"type": "logic-hero"},
-		{"type": "collision-hero",
-		 "AABB": [0, 0, 24, 24],
-		 "collisionType": "hero",
-		 "collidesWith": ["solid"]},
-		{"type": "render-hero", 
-		 "spriteSheet": {
-				"images": ["test-animation"],
+		{
+			"type": "entity-controller",
+			"controlMap":{
+				"key:w": 			"key-up",
+				"key:up-arrow": 	"key-up",
+				"key:a": 			"key-left",
+				"key:left-arrow": 	"key-left",
+				"key:s": 			"key-down",
+				"key:down-arrow": 	"key-down",
+				"key:d": 			"key-right",
+				"key:right-arrow": 	"key-right"
+			}	
+		},{
+			"type": "logic-hero",
+			"speed": 0.1
+		},{
+			"type": "collision-hero",
+		 	"shape":{
+		 		"offset": [12,-12],
+		 		"type": "rectangle",
+		 		"points": [[-8,-12],[8, 12]]
+	 		},
+			"collisionType": "hero",
+			"collidesWith": ["solid"]
+		},{
+			"type": "render-animation",
+			"spriteSheet": {
+				"images": ["mookie-walk"],
 				"frames": {
-					"width":  24,
-					"height": 24,
-					"regY":   24
-				  },
+					"width":  26,
+					"height": 27,
+					"regY":   26
+				},
 				"animations": {
 					"standing-north": [0],
-					"standing-east":  [3],
-					"standing-south": [6],
-					"standing-west":  [9],
-					"walking-north": {frames:[0,1,2,1], 	frequency:4},
-					"walking-east":  {frames:[3,4,5,4], 	frequency:4},
-					"walking-south": {frames:[6,7,8,7], 	frequency:4},
-					"walking-west":  {frames:[9,10,11,10],  frequency:4}
-				  }
+					"standing-east":  [0],
+					"standing-south": [7],
+					"standing-west":  [7],
+					"walking-north": {frames:[0,1,2,3], 	frequency:4},
+					"walking-east":  {frames:[0,1,2,3], 	frequency:4},
+					"walking-south": {frames:[7,6,5,4], 	frequency:4},
+					"walking-west":  {frames:[7,6,5,4], 	frequency:4}
+				}
 			}
-		},
-		{"type": "render-debug", "regY": 24}
+		}//,
+		//{"type": "render-debug", "regY": 24}
 	],
 	"properties":{
 		"debug-events": ["key:a:up", "key:a:down", "go-left"],
@@ -50,6 +58,7 @@
 		"width": 24,
 		"height": 24,
 		"state": "standing",
-		"heading": "south"
+		"heading": "south",
+		"follow": "locked"
 	}
 }

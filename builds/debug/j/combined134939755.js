@@ -1,23 +1,29 @@
-gws = this.gws || {};
-gws.settings = {"global":{"initialScene":"scene-1","fps":60,"rootElement":"root"},"assets":[{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3"}},{"id":"alpha","src":"i/test.png","data":{"rows":2,"columns":2,"ids":[["horizon","sky"],["ground","rock"]]}},{"id":"beta","src":"i/mookie.png"},{"id":"tilemap","src":"i/tile-map.png"},{"id":"test","src":"i/test.png"},{"id":"test-animation","src":"i/test-animation.png"}],"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Input":{"id":"Input","src":"../src/js/input.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"}},"components":{"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"lc-render":{"id":"lc-render","src":"../src/js/layer/lc-render.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tile":{"id":"render-tile","src":"../src/js/entity/render-tile.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-button":{"id":"render-button","src":"../src/js/entity/render-button.js"},"render-hero":{"id":"render-hero","src":"../src/js/entity/render-hero.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"}},"entities":{"tile":{"id":"tile","components":[{"type":"render-tile","spritesheet":"import"}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"button":{"id":"button","assets":[{"id":"mookie-standing","src":"../../images/mookie.png"}],"components":[{"type":"entity-controller","controlMap":{"key:a":"go-left","key:left-arrow":"go-left","key:d":"go-right","key:right-arrow":"go-right","mouse:left-button":"go-left","mouse:right-button":"go-right"}},{"type":"logic-button"},{"type":"render-button"},{"type":"render-debug"}],"properties":{"debug-events":["go-left","go-right"],"state":false,"x":10,"y":10,"width":24,"height":24}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"key:w":"key-up","key:up-arrow":"key-up","key:a":"key-left","key:left-arrow":"key-left","key:s":"key-down","key:down-arrow":"key-down","key:d":"key-right","key:right-arrow":"key-right"}},{"type":"logic-hero"},{"type":"collision-hero","AABB":[0,0,24,24],"collisionType":"hero","collidesWith":["solid"]},{"type":"render-hero","spriteSheet":{"images":["test-animation"],"frames":{"width":24,"height":24,"regY":24},"animations":{"standing-north":[0],"standing-east":[3],"standing-south":[6],"standing-west":[9],"walking-north":{"frames":[0,1,2,1],"frequency":4},"walking-east":{"frames":[3,4,5,4],"frequency":4},"walking-south":{"frames":[6,7,8,7],"frequency":4},"walking-west":{"frames":[9,10,11,10],"frequency":4}}}},{"type":"render-debug","regY":24}],"properties":{"debug-events":["key:a:up","key:a:down","go-left"],"x":10,"y":10,"width":24,"height":24,"state":"standing","heading":"south"}},"block":{"id":"block","components":[{"type":"collision-hero","AABB":[0,0,24,24]},{"type":"render-debug","regY":24}],"properties":{"debug-events":["key:a:up","key:a:down","go-left"],"x":50,"y":50,"width":24,"height":24}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"scene-menu":{"layers":[{"id":"buttons","components":[{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button"}]}]}],"id":"scene-menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1"}]}],"id":"scene-1"}},"levels":{"level-1":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20],"height":20,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,15,16,16,16,16,16,17,0,15,17,0,0,15,16,16,16,16,22,23,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,22,16,16,16,17,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,3,3,15,17,3,3,3,0,0,0,0,0,0,4,5,0,0,0,0,0,3,3,21,23,9,9,9,17,0,0,0,0,0,4,23,0,0,0,0,0,3,3,21,23,9,9,15,22,17,9,9,9,9,21,22,16,16,16,16,16,16,16,22,22,16,16,22,22,22,16,16,16,16,22],"height":20,"name":"map","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"guys","objects":[{"gid":19,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":49,"y":144},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":257,"y":156},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":281,"y":142},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":306,"y":152},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":363,"y":266},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":47,"y":272},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":142,"y":328},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":251,"y":449},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":424,"y":428},{"gid":12,"height":0,"name":"","properties":{},"type":"","width":0,"x":167,"y":192},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":191},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":166},{"gid":24,"height":0,"name":"","properties":{},"type":"","width":0,"x":364,"y":193},{"gid":28,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":384},{"height":37,"name":"","properties":{},"type":"","width":35,"x":419,"y":64},{"height":29,"name":"","properties":{},"type":"","width":46,"x":73,"y":402},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":408},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":192},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":144}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{"timer":"12"},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tile-map.png","imageheight":96,"imagewidth":144,"margin":0,"name":"tilemap","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"11":{"entity":"sign"},"17":{"entity":"enemy"},"18":{"entity":"mookie"},"23":{"entity":"flower"},"5":{"entity":"gem"},"9":{"entity":"block"}},"tilewidth":24},{"firstgid":25,"image":"../src/images/test.png","imageheight":48,"imagewidth":48,"margin":0,"name":"test","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"3":{"a":"b"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-1"}}};
-gws.classes = {};
+(function(){
+  var platformer = {};
+
+  PBS = this.PBS || {};
+  PBS.KIDS = this.PBS.KIDS || {};
+  PBS.KIDS.platformer = platformer;
+
+platformer.settings = {"global":{"initialScene":"scene-1","fps":60,"rootElement":"root"},"aspects":[["ogg","mp3","m4a"],["mobile","desktop"]],"assets":[{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3"}},{"id":"alpha","src":"i/test.png","data":{"rows":2,"columns":2,"ids":[["horizon","sky"],["ground","rock"]]}},{"id":"mookie-walk","src":"i/mookie.png"},{"id":"tilemap","src":"i/tile-map.png"},{"id":"test","src":"i/test.png"},{"id":"test-animation","src":"i/test-animation.png"}],"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Input":{"id":"Input","src":"../src/js/input.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"}},"components":{"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"lc-render":{"id":"lc-render","src":"../src/js/layer/lc-render.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tile":{"id":"render-tile","src":"../src/js/entity/render-tile.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-button":{"id":"render-button","src":"../src/js/entity/render-button.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile":{"id":"tile","components":[{"type":"render-tile","spritesheet":"import"}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button":{"id":"button","assets":[{"id":"mookie-standing","src":"../../images/mookie.png"}],"components":[{"type":"entity-controller","controlMap":{"key:a":"go-left","key:left-arrow":"go-left","key:d":"go-right","key:right-arrow":"go-right","mouse:left-button":"go-left","mouse:right-button":"go-right"}},{"type":"logic-button"},{"type":"render-button"},{"type":"render-debug"}],"properties":{"debug-events":["go-left","go-right"],"state":false,"x":10,"y":10,"width":24,"height":24}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"key:w":"key-up","key:up-arrow":"key-up","key:a":"key-left","key:left-arrow":"key-left","key:s":"key-down","key:down-arrow":"key-down","key:d":"key-right","key:right-arrow":"key-right"}},{"type":"logic-hero","speed":0.1},{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-8,-12],[8,12]]},"collisionType":"hero","collidesWith":["solid"]},{"type":"render-animation","spriteSheet":{"images":["mookie-walk"],"frames":{"width":26,"height":27,"regY":26},"animations":{"standing-north":[0],"standing-east":[0],"standing-south":[7],"standing-west":[7],"walking-north":{"frames":[0,1,2,3],"frequency":4},"walking-east":{"frames":[0,1,2,3],"frequency":4},"walking-south":{"frames":[7,6,5,4],"frequency":4},"walking-west":{"frames":[7,6,5,4],"frequency":4}}}}],"properties":{"debug-events":["key:a:up","key:a:down","go-left"],"x":10,"y":10,"width":24,"height":24,"state":"standing","heading":"south","follow":"locked"}},"block":{"id":"block","components":[{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-12,-12],[12,12]]},"collisionType":"solid"},{"type":"render-animation","spriteSheet":{"images":["tilemap"],"frames":{"width":24,"height":24,"regY":24},"animations":{"tile":9}},"state":"tile"}],"properties":{"x":50,"y":50,"width":24,"height":24}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"scene-menu":{"layers":[{"id":"buttons","components":[{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button"}]}]}],"id":"scene-menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1"}]}],"id":"scene-1"}},"levels":{"level-1":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20],"height":20,"name":"background","opacity":1,"properties":{"entity":"render-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,15,16,16,16,16,16,17,0,15,17,0,0,15,16,16,16,16,22,23,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,22,16,16,16,17,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,3,3,15,17,3,3,3,0,0,0,0,0,0,4,5,0,0,0,0,0,3,3,21,23,9,9,9,17,0,0,0,0,0,4,23,0,0,0,0,0,3,3,21,23,9,9,15,22,17,9,9,9,9,21,22,16,16,16,16,16,16,16,22,22,16,16,22,22,22,16,16,16,16,22],"height":20,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"guys","objects":[{"gid":19,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":49,"y":144},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":257,"y":156},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":281,"y":142},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":306,"y":152},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":363,"y":266},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":47,"y":272},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":142,"y":328},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":251,"y":449},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":424,"y":428},{"gid":12,"height":0,"name":"","properties":{},"type":"","width":0,"x":167,"y":192},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":191},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":166},{"gid":24,"height":0,"name":"","properties":{},"type":"","width":0,"x":364,"y":193},{"gid":28,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":384},{"height":37,"name":"","properties":{},"type":"","width":35,"x":419,"y":64},{"height":29,"name":"","properties":{},"type":"","width":46,"x":73,"y":402},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":408},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":192},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":144},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":72}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{"timer":"12"},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tile-map.png","imageheight":96,"imagewidth":144,"margin":0,"name":"tilemap","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"11":{"entity":"sign"},"17":{"entity":"enemy"},"18":{"entity":"mookie"},"23":{"entity":"flower"},"5":{"entity":"gem"},"9":{"entity":"block"}},"tilewidth":24},{"firstgid":25,"image":"../src/images/test.png","imageheight":48,"imagewidth":48,"margin":0,"name":"test","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"3":{"a":"b"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-1"}}};
+platformer.classes = {};
 
 /*--------------------------------------------------
  *   Game - ../src/js/game.js
  */
-gws.classes.game = (function(){
+platformer.classes.game = (function(){
 	
 	var game = function (definition){
 		this.currentScene = undefined;
 		this.settings = definition;
 		this.rootElement = document.createElement('div');
-		this.rootElement.id = gws.settings.global.rootElement;
+		this.rootElement.id = definition.global.rootElement;
 		document.getElementsByTagName('body')[0].appendChild(this.rootElement);
 		
 		this.loadScene(definition.global.initialScene);
 
 		var self = this;
-		this.input = new gws.classes.input(function(eventId, event){
+		this.input = new platformer.classes.input(function(eventId, event){
 			self.currentScene.triggerInputEvent(eventId, event);
 		});
 		
@@ -44,7 +50,7 @@ gws.classes.game = (function(){
 	};
 	
 	proto.loadScene = function(sceneName){
-		this.currentScene = new gws.classes.scene(this.settings.scenes[sceneName], this.rootElement);
+		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneName], this.rootElement);
 	};
 	
 	return game;
@@ -57,7 +63,7 @@ gws.classes.game = (function(){
  * INPUT
  */
 
-gws.classes.input = (function(){
+platformer.classes.input = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};},
 	input = function (eventCallback){
 		this.mouseX = 0;
@@ -91,7 +97,7 @@ gws.classes.input = (function(){
 /*--------------------------------------------------
  *   Entity - ../src/js/entity.js
  */
-gws.classes.entity = (function(){
+platformer.classes.entity = (function(){
 	var entity = function(definition, instanceDefinition){
 		var self             = this,
 		index                = undefined,
@@ -115,8 +121,8 @@ gws.classes.entity = (function(){
 		
 		for (index in componentDefinitions){
 			componentDefinition = componentDefinitions[index];
-			if(gws.components[componentDefinition.type]){
-				self.addComponent(new gws.components[componentDefinition.type](self, componentDefinition));
+			if(platformer.components[componentDefinition.type]){
+				self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
 			} else {
 				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
 			}
@@ -189,7 +195,7 @@ gws.classes.entity = (function(){
 /*--------------------------------------------------
  *   Layer - ../src/js/layer.js
  */
-gws.classes.layer = (function(){
+platformer.classes.layer = (function(){
 	var layer = function(definition, rootElement){
 		var componentDefinitions = definition.components,
 		componentDefinition = undefined;
@@ -201,7 +207,7 @@ gws.classes.layer = (function(){
 		
 		for (var index in componentDefinitions){
 			componentDefinition = componentDefinitions[index];
-			this.addComponent(new gws.components[componentDefinition.type || componentDefinition.id](this, componentDefinition));
+			this.addComponent(new platformer.components[componentDefinition.type || componentDefinition.id](this, componentDefinition));
 		}
 		
 		this.trigger('load');
@@ -275,13 +281,13 @@ gws.classes.layer = (function(){
 /*--------------------------------------------------
  *   Scene - ../src/js/scene.js
  */
-gws.classes.scene = (function(){
+platformer.classes.scene = (function(){
 	var scene = function(definition, rootElement){
 		var layers = definition.layers;
 		this.rootElement = rootElement;
 		this.layers = [];
 		for(var layer in layers){
-			this.layers.push(new gws.classes.layer(layers[layer], this.rootElement));
+			this.layers.push(new platformer.classes.layer(layers[layer], this.rootElement));
 		}
 	};
 	var proto = scene.prototype;
@@ -301,12 +307,122 @@ gws.classes.scene = (function(){
 	return scene;
 })();
 
-gws.components = {};
+
+/*--------------------------------------------------
+ *   Collision-Shape - ../src/js/collision-shape.js
+ */
+platformer.classes.collisionShape = (function(){
+	var collisionShape = function(location, type, points, offset, radius){
+		this.x = location[0];
+		this.y = location[1];
+		this.prevX = location[0];
+		this.prevY = location[1];
+		this.offset = offset || [0,0];
+		this.type = type || 'rectangle';
+		this.subType = '';
+		this.points = points; //Points should distributed as if the 0,0 is the focal point of the object.
+		this.radius = radius || 0;
+		this.aABB = {};
+		this.aABBPos = {};
+		switch (this.type)
+		{
+		case 'rectangle': //need TL and BR points
+			this.aABB.left = this.points[0][0];
+			this.aABB.right = this.points[1][0];
+			this.aABB.top = this.points[0][1];
+			this.aABB.bottom = this.points[1][1];
+			break;
+		case 'circle': //need Center point
+			this.aABB.left = this.points[0][0] - this.radius;
+			this.aABB.top = this.points[0][1] - this.radius;
+			this.aABB.bottom = this.points[0][0] + this.radius;
+			this.aABB.right = this.points[0][1] + this.radius;
+			break;
+		case 'triangle': //Need three points, start with the right angle corner and go clockwise.
+			if (this.points[0][1] == this.points[1][1] && this.points[0][0] == this.points[2][0])
+			{
+				if (this.points[0][0] < this.points[1][0])
+				{
+					//TOP LEFT CORNER IS RIGHT
+					this.subType = 'tl';
+					this.aABB.left = this.points[0][0];
+					this.aABB.right = this.points[1][0];
+					this.aABB.top = this.points[0][1];
+					this.aABB.bottom = this.points[2][1];
+				} else {
+					//BOTTOM RIGHT CORNER IS RIGHT
+					this.subType = 'br';
+					this.aABB.left = this.points[1][0];
+					this.aABB.right = this.points[0][0];
+					this.aABB.top = this.points[2][1];
+					this.aABB.bottom = this.points[0][1];
+				}
+				
+			} else if (this.points[0][1] == this.points[2][1] && this.points[0][0] == this.points[1][0]) {
+				if (this.points[0][1] < this.points[1][1])
+				{
+					//TOP RIGHT CORNER IS RIGHT
+					this.subType = 'tr';
+					this.aABB.left = this.points[2][0];
+					this.aABB.right = this.points[0][0];
+					this.aABB.top = this.points[0][1];
+					this.aABB.bottom = this.points[1][1];
+				} else {
+					//BOTTOM LEFT CORNER IS RIGHT
+					this.subType = 'bl';
+					this.aABB.left = this.points[0][0];
+					this.aABB.right = this.points[2][0];
+					this.aABB.top = this.points[1][1];
+					this.aABB.bottom = this.points[0][1];
+				}
+			} 
+		}
+		this.aABB.width = (this.aABB.right - this.aABB.left);
+		this.aABB.height = (this.aABB.bottom - this.aABB.top);
+		this.aABB.halfWidth = (this.aABB.right - this.aABB.left) / 2;
+		this.aABB.halfHeight = (this.aABB.bottom - this.aABB.top) / 2;
+		this.aABBPos.left = this.aABB.left + this.x;
+		this.aABBPos.right = this.aABB.right + this.x;
+		this.aABBPos.top = this.aABB.top + this.y;
+		this.aABBPos.bottom = this.aABB.bottom + this.y;
+	};
+	var proto = collisionShape.prototype;
+	
+	proto.update = function(x, y){
+		this.prevX = this.x;
+		this.prevY = this.y;
+		this.x = x + this.offset[0];
+		this.y = y + this.offset[1];
+		this.aABBPos.left = this.aABB.left + this.x;
+		this.aABBPos.right = this.aABB.right + this.x;
+		this.aABBPos.top = this.aABB.top + this.y;
+		this.aABBPos.bottom = this.aABB.bottom + this.y;
+	};
+	
+	proto.getPrevLocation = function () {
+		return [this.prevX, this.prevY];
+	};
+	
+	proto.getAABB = function(){
+		return this.aABBPos;
+	};
+	
+	proto.getXOffset = function(){
+		return this.offset[0];
+	};
+	
+	proto.getYOffset = function(){
+		return this.offset[1];
+	};
+	
+	return collisionShape;
+})();
+platformer.components = {};
 
 /*--------------------------------------------------
  *   entity-container - ../src/js/entity/entity-container.js
  */
-gws.components['entity-container'] = (function(){
+platformer.components['entity-container'] = (function(){
 	var component = function(owner, definition){
 		var self = this,
 		x        = 0;
@@ -320,7 +436,7 @@ gws.components['entity-container'] = (function(){
 		this.definedEntities = definition.entities; //saving for load message
 		
 		this.owner.entities     = self.entities;
-		this.owner.addEntity    = function(entity){self.addEntity(entity);};
+		this.owner.addEntity    = function(entity){return self.addEntity(entity);};
 		this.owner.removeEntity = function(){return self.removeEntity();};
 		
 		this.addListeners(['load', 'add-entity', 'remove-entity']);
@@ -337,7 +453,7 @@ gws.components['entity-container'] = (function(){
 		if(entities){
 			for (x = 0; x < entities.length; x++)
 			{
-				 this.addEntity(new gws.classes.entity(gws.settings.entities[entities[x].type], entities[x]));
+				 this.addEntity(new platformer.classes.entity(platformer.settings.entities[entities[x].type], entities[x]));
 			}
 		}
 	};
@@ -345,6 +461,7 @@ gws.components['entity-container'] = (function(){
 	proto.addEntity = proto['add-entity'] = function (entity) {
 		this.entities.push(entity);
 		this.owner.trigger('entity-added', entity);
+		return entity;
 	};
 	
 	proto.removeEntity = proto['remove-entity'] = function (entity) {
@@ -400,7 +517,7 @@ gws.components['entity-container'] = (function(){
 /*--------------------------------------------------
  *   entity-controller - ../src/js/entity/entity-controller.js
  */
-gws.components['entity-controller'] = (function(){
+platformer.components['entity-controller'] = (function(){
 	var state = function(){
 		this.current = false;
 		this.last    = false;
@@ -564,7 +681,7 @@ gws.components['entity-controller'] = (function(){
 /*--------------------------------------------------
  *   layer-controller - ../src/js/layer/layer-controller.js
  */
-gws.components['layer-controller'] = (function(){
+platformer.components['layer-controller'] = (function(){
 	var keyMap = {
 		kc0:   'unknown',         
 		kc8:   'backspace',
@@ -785,7 +902,7 @@ gws.components['layer-controller'] = (function(){
 /*--------------------------------------------------
  *   tiled-loader - ../src/js/layer/tiled-loader.js
  */
-gws.components['tiled-loader'] = (function(){
+platformer.components['tiled-loader'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -794,9 +911,8 @@ gws.components['tiled-loader'] = (function(){
 		this.listeners = [];
 		this.addListeners(['load']);
 
-		this.level = gws.settings.levels[definition.level];
+		this.level = platformer.settings.levels[definition.level];
 		this.tileEntityId = definition.tileEntityId || 'tile';
-		this.tileLayerEntityId = definition.tileLayerEntityId || 'tile-layer';
 	},
 	proto = component.prototype; 
 
@@ -827,18 +943,35 @@ gws.components['tiled-loader'] = (function(){
 		tileDefinition = undefined,
 		importAnimation= undefined,
 		importCollision= undefined,
-		importRender   = undefined;
+		importRender   = undefined,
+		followEntity   = undefined;
 
 		for (x = 0; x < tilesets.length; x++){
-			if(gws.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
-				images.push(gws.assets[tilesets[x].name]);
+			if(platformer.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
+				images.push(platformer.assets[tilesets[x].name]);
 			} else {
 				images.push(tilesets[x].image);
 			}
 		}
 		if(layer.type == 'tilelayer'){
+			// First determine which type of entity this layer should behave as:
+			entity = 'tile-layer'; // default
+			if(layer.properties.entity){
+				entity = layer.properties.entity;
+			} else { // If not explicitly defined, try using the name of the layer
+				switch(layer.name){
+				case "background":
+				case "foreground":
+					entity = 'render-layer';
+					break;
+				case "collision":
+					entity = 'collision-layer';
+					break;
+				}
+			}
+			
 			//TODO: a bit of a hack to copy an object instead of overwrite values
-			tileDefinition  = JSON.parse(JSON.stringify(gws.settings.entities[this.tileLayerEntityId]));
+			tileDefinition  = JSON.parse(JSON.stringify(platformer.settings.entities[entity]));
 
 			importAnimation = {};
 			importCollision = [];
@@ -881,7 +1014,7 @@ gws.components['tiled-loader'] = (function(){
 					tileDefinition.components[x].imageMap = importRender;
 				}
 			}
-			this.owner.addEntity(new gws.classes.entity(tileDefinition, {properties:{}}));
+			this.owner.addEntity(new platformer.classes.entity(tileDefinition, {properties:{}}));
 		} else if(layer.type == 'objectgroup'){
 			for (obj = 0; obj < layer.objects.length; obj++){
 				entity = layer.objects[obj];
@@ -916,10 +1049,20 @@ gws.components['tiled-loader'] = (function(){
 					properties.width  = entity.width  || tileWidth;
 					properties.height = entity.height || tileHeight;
 					
-					this.owner.addEntity(new gws.classes.entity(gws.settings.entities[entityType], {properties:properties}));
+					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
+					if(entity){
+						if(entity.follow){
+							followEntity = {entity: entity, mode: entity.follow}; //used by camera
+						}
+					}
 				}
 			}
 		}
+		this.owner.trigger('world-loaded', {
+			width:  width  * tileWidth,
+			height: height * tileHeight,
+			follow: followEntity
+		});
 	};
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -960,7 +1103,7 @@ gws.components['tiled-loader'] = (function(){
 /*--------------------------------------------------
  *   lc-render - ../src/js/layer/lc-render.js
  */
-gws.components['lc-render'] = (function(){
+platformer.components['lc-render'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -974,8 +1117,8 @@ gws.components['lc-render'] = (function(){
 		this.owner.rootElement.appendChild(this.canvas);
 		this.canvas.style.width = '100%';
 		this.canvas.style.height = '100%';
-		this.canvas.width = 1024;
-		this.canvas.height = 768;
+		this.canvas.width  = 300; //TODO: figure out where to specify this
+		this.canvas.height = 200;
 		this.stage = new createjs.Stage(this.canvas);
 		
 	};
@@ -1055,7 +1198,7 @@ gws.components['lc-render'] = (function(){
 /*--------------------------------------------------
  *   lc-logic - ../src/js/layer/lc-logic.js
  */
-gws.components['lc-logic'] = (function(){
+platformer.components['lc-logic'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -1128,7 +1271,7 @@ gws.components['lc-logic'] = (function(){
 /*--------------------------------------------------
  *   lc-camera - ../src/js/layer/lc-camera.js
  */
-gws.components['lc-camera'] = (function(){
+platformer.components['lc-camera'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -1137,8 +1280,7 @@ gws.components['lc-camera'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['camera'];
-		this.addListeners(['resize', 'camera', 'load']);  
-		
+		this.addListeners(['resize', 'camera', 'load', 'world-loaded']);  
 		
 		//The dimensions of the camera in the window
 		this.portalTop = this.owner.rootElement.innerTop;
@@ -1147,12 +1289,27 @@ gws.components['lc-camera'] = (function(){
 		this.portalHeight = this.owner.rootElement.offsetHeight;
 		
 		//The dimensions of the camera in the game world
-		this.width = definition.width; 
-		this.height = definition.height;
-		this.left = 0;
-		this.top = 0; 
+		this.width       = definition.width       || 0; 
+		this.height      = definition.height      || 0;
+		this.aspectRatio = definition.aspectRatio || 0;
+		this.left        = definition.left        || 0;
+		this.top         = definition.top         || 0;
 		
-		this.worldWidth = 0; //definition.worldWidth;
+		if(this.width && this.height){
+			this.aspectRatio = this.aspectRatio || (this.height      / this.width); 
+		} else {
+			this.aspectRatio = this.aspectRatio || (this.portalHeight / this.portalWidth);
+			if (this.width || this.height){
+				this.width       = this.width       || (this.height      / this.aspectRatio); 
+				this.height      = this.height      || (this.aspectRatio / this.width); 
+			} else {
+				this.width       = this.portalWidth;
+				this.height      = this.aspectRatio * this.width;
+			}
+		}
+		
+		// The dimensions of the entire world
+		this.worldWidth  = 0; //definition.worldWidth;
 		this.worldHeight = 0; //definition.worldHeight;
 		
 		this.worldPerScreenUnitWidth = this.width / this.portalWidth;
@@ -1178,8 +1335,14 @@ gws.components['lc-camera'] = (function(){
 	var proto = component.prototype; 
 
 	proto['load'] = function(){
-		this.worldWidth = this.owner.worldWidth || 2048;
-		this.worldHeight = this.owner.worldHeight || 768;		
+	};
+
+	proto['world-loaded'] = function(values){
+		this.worldWidth   = this.owner.worldWidth  = values.width;
+		this.worldHeight  = this.owner.worldHeight = values.height;
+		if(values.follow){
+			this.follow(values.follow);
+		}
 	};
 	
 	proto['camera'] = function(deltaT){
@@ -1194,14 +1357,12 @@ gws.components['lc-camera'] = (function(){
 			if (this.direction)
 			{
 				this.move(this.left + speed, this.top);
-				if (this.left == this.worldWidth - this.width)
-				{
+				if (this.worldWidth && (this.left == this.worldWidth - this.width)) {
 					this.direction = !this.direction;
 				}
 			} else {
 				this.move(this.left - speed, this.top);
-				if (this.left == 0)
-				{
+				if (this.worldWidth && (this.left == 0)) {
 					this.direction = !this.direction;
 				}
 			}
@@ -1228,43 +1389,49 @@ gws.components['lc-camera'] = (function(){
 		this.screenPerWorldUnitHeight =  this.portalHeight/ this.height;
 	};
 	
-	proto['follow'] = function (mode, entity, def)
+	proto['follow'] = function (def)
 	{
-		switch (mode)
+		switch (def.mode)
 		{
 		case 'locked':
-			this.following = entity;
+			this.state = 'following';
+			this.following = def.entity;
 			this.followingFunction = this.lockedFollow;
+			break;
 		case 'bounding':
-			this.following = entity;
+			this.state = 'following';
+			this.following = def.entity;
 			this.setBoundingArea(def.top, def.left, def.width, def.height);
 			this.followingFunction = this.boundingFollow;
+			break;
 		case 'custom':
-			this.following = entity;
+			this.state = 'following';
+			this.following = def.entity;
 			this.followingFunction = def.followingFunction;
+			break;
 		case 'static':
 		default:
+			this.state = 'static';
 			this.following = undefined;
 			this.followingFunction = undefined;
+			break;
 		}
 		
 	};
 	
 	proto.move = function (newleft, newtop)
 	{
-		if (newleft + this.width > this.worldWidth)
-		{
+		if (this.worldWidth && (newleft + this.width > this.worldWidth)) {
 			this.left = this.worldWidth - this.width;
-		} else if (newleft < 0) {
+		} else if (this.worldWidth && (newleft < 0)) {
 			this.left = 0; 
 		} else {
 			this.left = newleft;
 		}
 		
-		if (newtop + this.height > this.worldHeight)
-		{
+		if (this.worldHeight && (newtop + this.height > this.worldHeight)) {
 			this.top = this.worldHeight - this.height;
-		} else if (newtop < 0) {
+		} else if (this.worldHeight && (newtop < 0)) {
 			this.top = 0; 
 		} else {
 			this.top = newtop;
@@ -1397,7 +1564,7 @@ gws.components['lc-camera'] = (function(){
 /*--------------------------------------------------
  *   lc-basic-collision - ../src/js/layer/lc-basic-collision.js
  */
-gws.components['lc-basic-collision'] = (function(){
+platformer.components['lc-basic-collision'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
@@ -1417,21 +1584,27 @@ gws.components['lc-basic-collision'] = (function(){
 		var self = this;
 		var messageIds = entity.getMessageIds(); 
 		
-		for (var x = 0; x < messageIds.length; x++)
-		{
-			if (messageIds[x] == 'layer:collision')
-			{
+		for (var x = 0; x < messageIds.length; x++){
+			if (messageIds[x] == 'layer:resolve-collision'){
 				this.entities.push(entity);
-				if(!this.collisionMatrix[entity.type])
-				{
+				if(!this.collisionMatrix[entity.type]){
 					this.collisionMatrix[entity.type] = {};
-					for (var x = 0; x < entity.collidesWith.length; x++)
-					{
+					for (var x = 0; x < entity.collidesWith.length; x++){
+						this.collisionMatrix[entity.type][entity.collidesWith[x]] = true;
+					}
+				}
+				break;
+			} else if (messageIds[x] == 'getShapes'){
+				this.entities.push(entity); // same as above for now
+				if(!this.collisionMatrix[entity.type]){
+					this.collisionMatrix[entity.type] = {};
+					for (var x = 0; x < entity.collidesWith.length; x++){
 						this.collisionMatrix[entity.type][entity.collidesWith[x]] = true;
 					}
 				}
 				break;
 			}
+
 		}
 	};
 	
@@ -1440,10 +1613,18 @@ gws.components['lc-basic-collision'] = (function(){
 	};
 	
 	proto['collision'] = function(deltaT){
+		this.prepareCollision();
 		this.checkCollision();
 		this.resolveCollisions();
 	};
 	
+	proto.prepareCollision = function ()
+	{
+		for(var x = 0; x < this.entities.length; x++)
+		{
+			this.entities[x].trigger('layer:prep-collision');
+		}
+	};
 	
 	/*
 	 * Collision Matrix is set up so that [x,y] is a check to see if X cares about Y
@@ -1457,24 +1638,33 @@ gws.components['lc-basic-collision'] = (function(){
 			{
 				if (this.collisionMatrix[this.entities[x].type][this.entities[y].collisionType] || this.collisionMatrix[this.entities[y].type][this.entities[x].collisionType])
 				{
-					if(this.AABBCollision(this.entities[x], this.entities[y]))
+					var aabbCollision = this.AABBCollision(this.entities[x], this.entities[y]); 
+					if(aabbCollision)
 					{
 						if (this.preciseCollision(this.entities[x], this.entities[y]))
 						{
 							if (this.collisionMatrix[this.entities[x].type][this.entities[y].collisionType])
 							{
-								var index = this.toResolve.length;
-								this.toResolve[index] = [];
-								this.toResolve[index][0] = this.entities[x];
-								this.toResolve[index][1] = this.entities[y];
+								this.toResolve.push({
+									entity:  this.entities[x],
+									message:{
+										entity: this.entities[y],
+										type:   this.entities[y].type,
+										shape:  aabbCollision.shapeB
+									}
+								});
 							}
 							
 							if (this.collisionMatrix[this.entities[y].type][this.entities[x].collisionType])
 							{
-								var index = this.toResolve.length;
-								this.toResolve[index] = [];
-								this.toResolve[index][0] = this.entities[y];
-								this.toResolve[index][1] = this.entities[x];
+								this.toResolve.push({
+									entity:  this.entities[y],
+									message:{
+										entity: this.entities[x],
+										type:   this.entities[x].type,
+										shape:  aabbCollision.shapeA
+									}
+								});
 							}
 						}
 					}
@@ -1485,8 +1675,7 @@ gws.components['lc-basic-collision'] = (function(){
 	
 	proto.AABBCollision = function (entityA, entityB)
 	{
-		//TODO: Find a way to not repeat this over and over each time we check this.
-		//Maybe call all the entities and have them update their AABB box locations.
+		/*
 		var aLeft = entityA.x + entityA.AABB[0];
 		var aRight = entityA.x + entityA.AABB[0] + entityA.AABB[2];
 		var aTop = entityA.y + entityA.AABB[1];
@@ -1502,6 +1691,30 @@ gws.components['lc-basic-collision'] = (function(){
 		if(aTop  > bBottom) return false;
 		if(aBottom < bTop) return false;
 		return true;
+		*/
+		var i   = 0,
+		j       = 0,
+		shapeA  = undefined,
+		shapeB  = undefined,
+		shapesA = entityA.getShapes?entityA.getShapes(entityB.getAABB()):[entityA.shape],
+		shapesB = entityB.getShapes?entityB.getShapes(entityA.getAABB()):[entityB.shape];
+		
+		for (i = 0; i < shapesA.length; i++){
+			shapeA = shapesA[i].getAABB();
+			for (j = 0; j < shapesB.length; j++){
+				shapeB = shapesB[j].getAABB();
+				if(shapeA.left   >=  shapeB.right)  break;
+				if(shapeA.right  <=  shapeB.left)   break;
+				if(shapeA.top    >=  shapeB.bottom) break;
+				if(shapeA.bottom <=  shapeB.top)    break;
+				return {
+					shapeA: shapesA[i],
+					shapeB: shapesB[j]
+				};
+			}
+		}
+		
+		return false;	
 	};
 	
 	proto.preciseCollision = function (entityX, entityY)
@@ -1514,8 +1727,9 @@ gws.components['lc-basic-collision'] = (function(){
 	{
 		for (var x = 0; x < this.toResolve.length; x++)
 		{
-			this.toResolve[x][0].trigger('layer:resolve-collision', this.toResolve[x][1]);
+			this.toResolve[x].entity.trigger('layer:resolve-collision', this.toResolve[x].message);
 		}
+		this.toResolve = [];
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -1556,7 +1770,7 @@ gws.components['lc-basic-collision'] = (function(){
 /*--------------------------------------------------
  *   render-debug - ../src/js/entity/render-debug.js
  */
-gws.components['render-debug'] = (function(){
+platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -1584,7 +1798,7 @@ gws.components['render-debug'] = (function(){
 		y      = this.owner.y      = this.owner.y || 0,
 		width  = this.owner.width  = this.owner.width  || 300,
 		height = this.owner.height = this.owner.height || 100,
-		comps = gws.settings.entities[this.owner.type]?(gws.settings.entities[this.owner.type].components || []):[],
+		comps = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
 		components = [];
 		
 		for (var i in comps) components[i] = comps[i].type;
@@ -1684,7 +1898,7 @@ gws.components['render-debug'] = (function(){
 /*--------------------------------------------------
  *   render-tile - ../src/js/entity/render-tile.js
  */
-gws.components['render-tile'] = (function(){
+platformer.components['render-tile'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -1749,7 +1963,7 @@ gws.components['render-tile'] = (function(){
 /*--------------------------------------------------
  *   render-tiles - ../src/js/entity/render-tiles.js
  */
-gws.components['render-tiles'] = (function(){
+platformer.components['render-tiles'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -1827,7 +2041,7 @@ gws.components['render-tiles'] = (function(){
 /*--------------------------------------------------
  *   render-button - ../src/js/entity/render-button.js
  */
-gws.components['render-button'] = (function(){
+platformer.components['render-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -1836,8 +2050,8 @@ gws.components['render-button'] = (function(){
 
 		this.addListeners(['layer:render-load', 'layer:render', 'controller:input']);
 		this.stage = undefined;
-		this.upBitmap = new createjs.Bitmap(gws.assets[definition.upImg]);
-		this.downBitmap = new createjs.Bitmap(gws.assets[definition.downImg]);
+		this.upBitmap = new createjs.Bitmap(platformer.assets[definition.upImg]);
+		this.downBitmap = new createjs.Bitmap(platformer.assets[definition.downImg]);
 		//this.shape = new createjs.Shape();;
 	};
 	var proto = component.prototype;
@@ -1923,10 +2137,15 @@ gws.components['render-button'] = (function(){
 
 
 /*--------------------------------------------------
- *   render-hero - ../src/js/entity/render-hero.js
+ *   render-animation - ../src/js/entity/render-animation.js
  */
-gws.components['render-hero'] = (function(){
+platformer.components['render-animation'] = (function(){
 	var component = function(owner, definition){
+		var spriteSheet = {
+			images: definition.spriteSheet.images.slice(),
+			frames: definition.spriteSheet.frames,
+			animations: definition.spriteSheet.animations
+		};
 		this.owner = owner;
 		
 		// Messages that this component listens for
@@ -1934,13 +2153,16 @@ gws.components['render-hero'] = (function(){
 
 		this.addListeners(['layer:render-load','layer:render', 'logical-state']);
 		this.stage = undefined;
-		for (var x = 0; x < definition.spriteSheet.images.length; x++)
+		for (var x = 0; x < spriteSheet.images.length; x++)
 		{
-			definition.spriteSheet.images[x] = gws.assets[definition.spriteSheet.images[x]];
+			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
-		var spriteSheet = new createjs.SpriteSheet(definition.spriteSheet);
+		var spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
-		this.currentAnimation = '';
+		this.currentAnimation = definition.state || this.owner.state || '';
+		if(this.currentAnimation){
+			this.anim.gotoAndPlay(this.currentAnimation);
+		}
 	};
 	var proto = component.prototype;
 	
@@ -1999,7 +2221,7 @@ gws.components['render-hero'] = (function(){
 /*--------------------------------------------------
  *   logic-button - ../src/js/entity/logic-button.js
  */
-gws.components['logic-button'] = (function(){
+platformer.components['logic-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -2074,7 +2296,7 @@ gws.components['logic-button'] = (function(){
 /*--------------------------------------------------
  *   logic-hero - ../src/js/entity/logic-hero.js
  */
-gws.components['logic-hero'] = (function(){
+platformer.components['logic-hero'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -2116,6 +2338,7 @@ gws.components['logic-hero'] = (function(){
 			this.owner.state = 'walking';
 		} else {
 			this.owner.state = 'standing';
+// test for gravity			vY = 0.3; //gravity!
 		}
 		
 		this.owner.x += (vX * deltaT);
@@ -2198,15 +2421,22 @@ gws.components['logic-hero'] = (function(){
 /*--------------------------------------------------
  *   collision-hero - ../src/js/entity/collision-hero.js
  */
-gws.components['collision-hero'] = (function(){
+platformer.components['collision-hero'] = (function(){
 	var component = function(owner, definition){
+		var self = this;
 		this.owner = owner;
 		
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['load', 'layer:collision']);
-		this.owner.AABB = definition.AABB || [0, 0, 16, 16]; //offsetX, offsetY, width, height
+		this.addListeners(['load','layer:prep-collision', 'layer:resolve-collision']);
+		
+		//this.owner.AABB = definition.AABB || [0, 0, 16, 16]; //offsetX, offsetY, width, height
+
+		this.owner.shape = new platformer.classes.collisionShape([this.owner.x, this.owner.y],definition.shape.type, definition.shape.points, definition.shape.offset, definition.shape.radius); 
+		this.owner.getAABB = function(){
+			return self.getAABB();
+		};
 		this.owner.collisionType = definition.collisionType || 'solid';
 		this.owner.collidesWith = definition.collidesWith || [];
 	};
@@ -2217,13 +2447,99 @@ gws.components['collision-hero'] = (function(){
 		
 	};
 	
-	proto['layer:resolve-collision'] = function(entity){
-		switch (entity.type)
+	proto['layer:prep-collision'] = function(){
+		this.owner.shape.update(this.owner.x, this.owner.y);
+		//var prevLocation = this.owner.shape.getPrevLocation();
+		//this.pX = prevLocation[0];
+		//this.pY = prevLocation[1];
+	};
+	
+	proto['layer:resolve-collision'] = function(other){
+		var x = this.owner.shape.x;
+		var y = this.owner.shape.y;
+		var pX = this.owner.shape.prevX;
+		var pY = this.owner.shape.prevY;
+		
+		var otherX = other.shape.x;
+		var otherY = other.shape.y;
+		
+		switch (other.type)
 		{
 		case 'block':
-			console.log(this.owner.type + ': There is a collision!');
+		case 'tile-layer':
+		case 'collision-layer':
+			var deltaX = x - pX; 
+			var deltaY = y - pY;
+			var m = deltaY / deltaX; 
+			var b = y - x * m;
+			var targetX = undefined; 
+			var targetY = undefined; 
+			var yAtTargetX = undefined;
+			var xAtTargetY = undefined;
+			var thisAABB = this.owner.shape.aABB;
+			var otherAABB = other.shape.aABB;
+			
+			var leftPlane = otherX - otherAABB.halfWidth - thisAABB.halfWidth;
+			var rightPlane = otherX + otherAABB.halfWidth + thisAABB.halfWidth;
+			var topPlane = otherY - otherAABB.halfHeight - thisAABB.halfHeight;
+			var bottomPlane = otherY + otherAABB.halfHeight + thisAABB.halfHeight;
+			
+			if (m !== Infinity && m !== -Infinity)
+			{
+				if (pX <= leftPlane)
+				{
+					targetX = leftPlane;
+				} else if (pX >= rightPlane) {
+					targetX = rightPlane;
+				}
+			}
+			
+			if (pY <= topPlane)
+			{
+				targetY = topPlane;
+			} else if (pY >= bottomPlane) {
+				targetY = bottomPlane;
+			}	
+			
+			
+			if (typeof targetX !== 'undefined')
+			{
+				yAtTargetX = m * targetX + b;
+			}
+			
+			if (typeof targetY !== 'undefined')
+			{
+				if (m === Infinity || m === -Infinity)
+				{
+					xAtTargetY = x;
+				} else {
+					xAtTargetY = (targetY - b) / m ;
+				}
+			}
+			
+			if (targetX && yAtTargetX >= topPlane && yAtTargetX <= bottomPlane)
+			{
+				console.warn('Collide on Side');
+				this.owner.x = targetX - this.owner.shape.getXOffset();
+				this.owner.shape.x = targetX;
+				this.owner.y = yAtTargetX - this.owner.shape.getYOffset();
+				this.owner.shape.y = yAtTargetX;
+			} else if (targetY && xAtTargetY >= leftPlane && xAtTargetY <= rightPlane){
+				console.warn('Collide on Top/Bottom');
+				this.owner.x = xAtTargetY - this.owner.shape.getXOffset();
+				this.owner.shape.x = xAtTargetY;
+				this.owner.y = targetY - this.owner.shape.getYOffset();
+				this.owner.shape.y = targetY;
+			} else {
+				console.warn('Hero is inside the block.');
+			}
+			
 			break;
 		}
+	};
+	
+	proto.getAABB = function(){
+		return this.owner.shape.getAABB();
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -2261,127 +2577,197 @@ gws.components['collision-hero'] = (function(){
 
 
 /*--------------------------------------------------
- *   Browser - ../src/js/browser.js
+ *   collision-tiles - ../src/js/entity/collision-tiles.js
  */
-/*
- * gws.browserCheck() should be called once the document is loaded to determine what's supported.
- * Ideally run it once and store the checks so it's a simple variable request when you need to
- * know whether something is supported. Like so:
- * 
- *     gws.browser = gws.browserCheck();
- *     
- *     elsewhere:
- *     
- *     if(gws.browser.transitions) {
- *         Implement something that uses transitions
- *     } else {
- *         Alternative for browsers who don't
- *     }
- *     
- * - DDD
+platformer.components['collision-tiles'] = (function(){
+	var component = function(owner, definition){
+		var self = this;
+		this.owner = owner;
+		
+		this.collisionMap   = definition.collisionMap   || [];
+		this.tileWidth      = definition.tileWidth  || this.owner.tileWidth  || 10;
+		this.tileHeight     = definition.tileHeight || this.owner.tileHeight || 10;
+		this.tileHalfWidth  = this.tileWidth  / 2;
+		this.tileHalfHeight = this.tileHeight / 2;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+		this.addListeners(['layer:prep-collision', 'getShapes']); //TODO: currently placing "getShapes" here to trigger correct handling by layer collision handler - may not be the best way to do this? - DDD
+		
+		this.owner.collisionType = definition.collisionType || 'solid';
+		this.owner.collidesWith = definition.collidesWith || [];
+		this.owner.getShapes = function(aabb){
+			return self.getShapes(aabb);
+		};
+		this.owner.getAABB = function(){
+			return self.getAABB();
+		};
+	};
+	var proto = component.prototype;
+
+	proto['layer:prep-collision'] = function(){
+		
+	};
+	
+	proto.getAABB = function(){
+		return {
+			left: 0,
+			top:  0,
+			right: this.tileWidth * this.collisionMap.length,
+			bottom: this.tileHeight * this.collisionMap.length[0]
+		};
+	};
+	
+	proto.getShapes = function(aabb){
+		var left = Math.max(Math.floor(aabb.left   / this.tileWidth),  0),
+		top      = Math.max(Math.floor(aabb.top    / this.tileHeight), 0),
+		right    = Math.min(Math.ceil(aabb.right   / this.tileWidth),  this.collisionMap.length),
+		bottom   = Math.min(Math.ceil(aabb.bottom  / this.tileHeight), this.collisionMap[0].length),
+		x        = 0,
+		y        = 0,
+		shapes   = [];
+		
+		for (x = left; x < right; x++){
+			for (y = top; y < bottom; y++){
+				if (this.collisionMap[x][y] > 0) {
+					shapes.push(new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]]));
+				}
+			}
+		}
+		
+		return shapes;
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+	
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   Browser - ../src/js/browser.js
  */
 (function(){
 	var uagent   = navigator.userAgent.toLowerCase(),
-        iPod     = (uagent.search('ipod')    > -1),
-        iPhone   = (uagent.search('iphone')  > -1),
-        iPad     = (uagent.search('ipad')    > -1),
-        safari   = (uagent.search('safari')  > -1),
-        ie       = (uagent.search('msie')    > -1),
-        android  = (uagent.search('android') > -1),
-        silk     = (uagent.search('silk')    > -1),
-	    firefox  = (uagent.search('firefox') > -1),
 	    
 	    myAudio  = document.createElement('audio'),
 	    doc      = document.documentElement,
 	    manifest = doc.getAttribute("manifest"),
+	    newManifest = '',
 	    
-	    supportsOgg = true,
-	    supportsM4a = true,
-	    
-	    supportsTouch = TouchEvent in window;
-	
-	//Turn off manifest for firefox and iOS since they show awkward pop-ups about storage - DDD
-//	if(firefox || iPad || iPod || iPhone){
-//		document.documentElement.removeAttribute("manifest");
-//	}
+	    supports = {
+			canvas:      false, // determined below
+			touch:       TouchEvent in window,
 
-	//Determine relevant aspects:
+			// specific browsers as determined above
+			iPod:      (uagent.search('ipod')    > -1),
+			iPhone:    (uagent.search('iphone')  > -1),
+			iPad:      (uagent.search('ipad')    > -1),
+			safari:    (uagent.search('safari')  > -1),
+			ie:        (uagent.search('msie')    > -1),
+		    firefox:   (uagent.search('firefox') > -1),
+			android:   (uagent.search('android') > -1),
+			silk:      (uagent.search('silk')    > -1),
+			iOS:       false, //determined below
+			mobile:    false, //determined below
+			desktop:   false, //determined below
+			
+			// audio support as determined below
+			ogg:         true,
+			m4a:         true,
+			mp3:         true
+		},
+	    aspects = platformer.settings.aspects,
+	    supportsAspects = {},
+	    i = 0,
+	    j = 0,
+	    divider = '',
+	    foundSupportedAspect = false;
+	
+	supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
+	supports.mobile  = supports.iOS  || supports.android || supports.silk;
+	supports.desktop = !supports.mobile;
+	
+	// Determine audio support
 	if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"'))){
-	    supportsOgg = false;
-	    if(ie || !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mp4'))){
-	    	supportsM4a = false; //make IE use mp3's since it doesn't like the version of m4a made for mobiles
-	        if(manifest) doc.setAttribute("manifest", manifest.replace('ogg','mp3'));
-	    } else {
-	        if(manifest) doc.setAttribute("manifest", manifest.replace('ogg','m4a'));
+	    supports.ogg = false;
+	    if(supports.ie || !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mp4'))){
+	    	supports.m4a = false; //make IE use mp3's since it doesn't like the version of m4a made for mobiles
 	    }
 	}
+
+	// Does the browser support canvas?
+	var canvas = document.createElement('canvas');
+	try	{
+		supports.canvas = !!(canvas.getContext('2d')); // S60
+	} catch(e) {
+		supports.canvas = !!(canvas.getContext); // IE
+	}
+	delete canvas;
+
+	//Turn off manifest for firefox and iOS since they show awkward pop-ups about storage - DDD
+	if(supports.firefox || supports.iOS){
+		doc.removeAttribute("manifest");
+	}
+
 	
 	/* 
-	 * Handle app cache here so we don't download assets a browser can't use.
+	 * Handle app cache here so we do not download assets a browser cannot use.
 	 */
-	if(manifest){
-		
-	}
-	
-	gws.browserCheck = function(){
-		var checks = {
-			canvas:      false,
-			mobile:      false,
-			webgl:       false,
-			transitions: false,
-			progress:    false,
-			css3dTransforms:false,
-			
-			// specific browsers as determined above
-			iPod:        iPod,
-			iPhone:      iPhone,
-			iPad:        iPad,
-			iOS:         iPod || iPhone || iPad,
-			safari:      safari,
-			ie:          ie,
-			android:     android,
-			silk:        silk,
-			
-			// audio support as determined above
-			ogg:         supportsOgg,
-			m4a:         supportsM4a,
-			
-			touch:       supportsTouch
-		};
-		
-		// Does the browser support canvas?
-		var canvas = document.createElement('canvas');
-		try
-		{
-			checks.canvas = !!(canvas.getContext('2d')); // S60
-		} catch(e) {
-			checks.canvas = !!(canvas.getContext); // IE
+
+	//Determine relevant aspects:
+	if(aspects){
+		for (i in aspects){
+		    foundSupportedAspect = false;
+			for(j in aspects[i]){
+				if(!foundSupportedAspect && supports[aspects[i][j]]){
+					supportsAspects[aspects[i][j]] = supports[aspects[i][j]];
+				    newManifest += divider + aspects[i][j];
+				    divider = '-';
+					foundSupportedAspect = true;
+				}
+			}
+		    if(!foundSupportedAspect){
+		    	console.warn('Your browser does not seem to support any of these options: ' + aspects[i].join(', '));
+		    }
 		}
-		delete canvas;
-		
-		// Does the browser support webgl?
-		checks.webgl = false;
-		if (window.WebGLRenderingContext)
-		{
-			try{if (document.createElement('canvas').getContext("webgl")) checks.webgl = true;}catch(e){}
-			try{if (document.createElement('canvas').getContext("experimental-webgl")) checks.webgl = true;}catch(e){}
-		} 
-		
-		// Are transitions supported?
-	    var div = document.createElement('div');
-	    div.setAttribute('style', 'transition:top 1s ease;-webkit-transition:top 1s ease;-moz-transition:top 1s ease;-o-transition:top 1s ease;');
-	    checks.transitions = !!((div.style.transition || div.style.webkitTransition || div.style.MozTransition || div.style.OTransition) && !(document.all)); // the last bit knocks out IE9 since it returns true for transitions support but doesn't actually support them.
-	    delete div;
-	    
-	    if(window.Modernizr) checks.css3dTransforms = Modernizr.csstransforms3d;
-	    
-	    // Does it support the progress bar?
-	    checks.progress = ('position' in document.createElement('progress'));
-	    
-	    checks.mobile = checks.android || checks.iOS || checks.silk;
-	    
-	    return checks;
-	};
+		//replace settings aspects build array with actual support of aspects
+		platformer.settings.aspects = supportsAspects;
+	} else {
+		platformer.settings.aspects = [];
+	}
+	if(manifest){
+		doc.setAttribute("manifest", newManifest + '.manifest');
+	}
+
 })();
 
 
@@ -2389,9 +2775,6 @@ gws.components['collision-hero'] = (function(){
  *   Main - ../src/js/main.js
  */
 window.addEventListener('load', function(){
-	//gws.settings.assets
-	var root = this;
-	
 	loader = new createjs.PreloadJS();
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
@@ -2415,16 +2798,16 @@ window.addEventListener('load', function(){
 				});
 				for (j = 0; j < data.rows; j++) for (i = 0; i < data.columns; i++){
 					if(data.ids && data.ids[i] && data.ids[i][j]){
-						gws.assets[data.ids[i][j]] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
+						platformer.assets[data.ids[i][j]] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
 					} else {
-						gws.assets[event.id + '-' + i + '_' + j] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
+						platformer.assets[event.id + '-' + i + '_' + j] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
 					}
 				}
 				return ;
 			}
 		}
 		
-		gws.assets[event.id] = result;
+		platformer.assets[event.id] = result;
 	};
 	
 	loader.onError = function (event) {
@@ -2433,31 +2816,31 @@ window.addEventListener('load', function(){
 	
 	loader.onComplete = function (event) {
 		
-		root.game = new gws.classes.game(gws.settings);
-		createjs.Ticker.setFPS(gws.settings.global.fps);
-		createjs.Ticker.addListener(root.game);
+		platformer.game = new platformer.classes.game(platformer.settings);
+		createjs.Ticker.setFPS(platformer.settings.global.fps);
+		createjs.Ticker.addListener(platformer.game);
 	};
 	
 	
-	gws.browser = gws.browserCheck();
-	for(var i in gws.settings.assets){
-		if(typeof gws.settings.assets[i].src !== 'string'){
-			for(var j in gws.settings.assets[i].src){
-				if(gws.browser[j]){
-					gws.settings.assets[i].src = gws.settings.assets[i].src[j];
+	for(var i in platformer.settings.assets){
+		if(typeof platformer.settings.assets[i].src !== 'string'){
+			for(var j in platformer.settings.assets[i].src){
+				if(platformer.settings.aspects[j] && platformer.settings.assets[i].src[j]){
+					platformer.settings.assets[i].src = platformer.settings.assets[i].src[j];
 					break;
 				}
 			}
-			if(typeof gws.settings.assets[i].src !== 'string'){
-				if(gws.settings.assets[i].src['default']){
-					gws.settings.assets[i].src = gws.settings.assets[i].src['default'];
+			if(typeof platformer.settings.assets[i].src !== 'string'){
+				if(platformer.settings.assets[i].src['default']){
+					platformer.settings.assets[i].src = platformer.settings.assets[i].src['default'];
 				} else {
-					console.warning('Asset has no valid source for this browser.', gws.settings.assets[i]);
+					console.warn('Asset has no valid source for this browser.', platformer.settings.assets[i]);
 				}
 			}
 		}
 	}
 	
-	loader.loadManifest(gws.settings.assets);
-	gws.assets = [];
+	loader.loadManifest(platformer.settings.assets);
+	platformer.assets = [];
 });
+})();

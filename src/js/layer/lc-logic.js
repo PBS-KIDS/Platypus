@@ -1,4 +1,4 @@
-gws.components['lc-logic'] = (function(){
+platformer.components['lc-logic'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];

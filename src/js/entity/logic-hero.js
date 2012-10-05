@@ -1,4 +1,4 @@
-gws.components['logic-hero'] = (function(){
+platformer.components['logic-hero'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -40,6 +40,7 @@ gws.components['logic-hero'] = (function(){
 			this.owner.state = 'walking';
 		} else {
 			this.owner.state = 'standing';
+// test for gravity			vY = 0.3; //gravity!
 		}
 		
 		this.owner.x += (vX * deltaT);

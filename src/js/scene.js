@@ -1,10 +1,10 @@
-gws.classes.scene = (function(){
+platformer.classes.scene = (function(){
 	var scene = function(definition, rootElement){
 		var layers = definition.layers;
 		this.rootElement = rootElement;
 		this.layers = [];
 		for(var layer in layers){
-			this.layers.push(new gws.classes.layer(layers[layer], this.rootElement));
+			this.layers.push(new platformer.classes.layer(layers[layer], this.rootElement));
 		}
 	};
 	var proto = scene.prototype;

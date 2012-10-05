@@ -1,4 +1,4 @@
-gws.components['render-tiles'] = (function(){
+platformer.components['render-tiles'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		

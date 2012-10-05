@@ -1,4 +1,4 @@
-gws.components['logic-button'] = (function(){
+platformer.components['logic-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		

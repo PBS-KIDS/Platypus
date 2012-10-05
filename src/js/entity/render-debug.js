@@ -1,4 +1,4 @@
-gws.components['render-debug'] = (function(){
+platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -26,7 +26,7 @@ gws.components['render-debug'] = (function(){
 		y      = this.owner.y      = this.owner.y || 0,
 		width  = this.owner.width  = this.owner.width  || 300,
 		height = this.owner.height = this.owner.height || 100,
-		comps = gws.settings.entities[this.owner.type]?(gws.settings.entities[this.owner.type].components || []):[],
+		comps = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
 		components = [];
 		
 		for (var i in comps) components[i] = comps[i].type;
