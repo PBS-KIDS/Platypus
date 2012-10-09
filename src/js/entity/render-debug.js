@@ -2,14 +2,24 @@ platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
-		this.controllerEvents = undefined;
+		//this.controllerEvents = undefined;
+		
+		if(definition.acceptInput){
+			this.hover = definition.acceptInput.hover || false;
+			this.click = definition.acceptInput.click || false;
+			this.touch = definition.acceptInput.touch || false;
+		} else {
+			this.hover = false;
+			this.click = false;
+			this.touch = false;
+		}
 		
 		this.regX = definition.regX || 0;
 		this.regY = definition.regY || 0;
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load', 'controller:input-handler']);
+		this.addListeners(['layer:render', 'layer:render-load']); ///TODO: removing input event for now because it's confusing this way, 'controller:input-handler']);
 	};
 	var proto = component.prototype;
 
@@ -22,12 +32,14 @@ platformer.components['render-debug'] = (function(){
 	};
 
 	proto['layer:render-load'] = function(resp){
-		var x  = this.owner.x      = this.owner.x || 0,
-		y      = this.owner.y      = this.owner.y || 0,
-		width  = this.owner.width  = this.owner.width  || 300,
-		height = this.owner.height = this.owner.height || 100,
-		comps = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
-		components = [];
+		var self = this,
+		x        = this.owner.x      = this.owner.x || 0,
+		y        = this.owner.y      = this.owner.y || 0,
+		width    = this.owner.width  = this.owner.width  || 300,
+		height   = this.owner.height = this.owner.height || 100,
+		comps    = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
+		components = [],
+		over     = false;
 		
 		for (var i in comps) components[i] = comps[i].type;
 		
@@ -48,44 +60,64 @@ platformer.components['render-debug'] = (function(){
 		this.stage.addChild(this.shape);
 		this.stage.addChild(this.txt);
 		
-		if(this.controllerEvents){
-			this['controller:input-handler'](this.controllerEvents);
-		}
-	};
-	
-	/*
-	 *  This handler appends necessary information to displayed objects to allow them to receive touches and clicks
-	 */
-	proto['controller:input-handler'] = function(events){
-		var over  = false,
-		mousedown = events.mousedown,
-		mouseup   = events.mouseup,
-		mousemove = events.mousemove;
-		//TODO: receive touch input; maybe try moving most of this to input controller if possible with a reference to the stage?
-		if(this.stage){
-			if (mousedown || mouseup || mousemove){
-				
-				this.stage.enableMouseOver();
-				this.shape.onPress     = function(event) {
-					if(mousedown){
-						mousedown(event.nativeEvent, over, event.stageX, event.stageY);
-					}
-					if(mouseup){
-						event.onMouseUp = function(event){
-							mouseup(event.nativeEvent, over, event.stageX, event.stageY);
-						};
-					}
-					if(mousemove){
-						event.onMouseMove = function(event){
-							mousemove(event.nativeEvent, over, event.stageX, event.stageY);
-						};
-					}
-				};
-				this.shape.onMouseOut  = function(){over = false;};
-				this.shape.onMouseOver = function(){over = true;};
+		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+		if(this.click || this.touch){
+			if(this.touch && createjs.Touch.isSupported()){
+				createjs.Touch.enable(this.stage);
 			}
-		} else {
-			this.controllerEvents = events; //save until we have an object to attach these events to.
+
+			this.shape.onPress     = function(event) {
+				self.owner.trigger('mousedown', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+				event.onMouseUp = function(event){
+					self.owner.trigger('mouseup', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+				event.onMouseMove = function(event){
+					self.owner.trigger('mousemove', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+			};
+			this.shape.onMouseOut  = function(){over = false;};
+			this.shape.onMouseOver = function(){over = true;};
+		}
+		if(this.hover){
+			this.stage.enableMouseOver();
+			this.shape.onMouseOut  = function(event){
+				over = false;
+				self.owner.trigger('mouseout', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
+			this.shape.onMouseOver = function(event){
+				over = true;
+				self.owner.trigger('mouseover', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
 		}
 	};
 	

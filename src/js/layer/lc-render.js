@@ -12,8 +12,8 @@ platformer.components['lc-render'] = (function(){
 		this.owner.rootElement.appendChild(this.canvas);
 		this.canvas.style.width = '100%';
 		this.canvas.style.height = '100%';
-		this.canvas.width  = 300; //TODO: figure out where to specify this
-		this.canvas.height = 200;
+		this.canvas.width  = 320; //TODO: figure out where to specify this
+		this.canvas.height = 240;
 		this.stage = new createjs.Stage(this.canvas);
 		
 	};

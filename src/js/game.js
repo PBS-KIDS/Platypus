@@ -8,19 +8,19 @@ platformer.classes.game = (function(){
 		document.getElementsByTagName('body')[0].appendChild(this.rootElement);
 		
 		this.loadScene(definition.global.initialScene);
-
+		
 		var self = this;
 		this.input = new platformer.classes.input(function(eventId, event){
-			self.currentScene.triggerInputEvent(eventId, event);
+			self.currentScene.trigger(eventId, event);
 		});
 		
 		this.prevTime = 0;
 		this.timingFunction = false;
-		if (performance && performance.webkitNow)
+		if (window.performance && window.performance.webkitNow)
 		{
-			this.timingFunction = function() {return performance.webkitNow();};
-		} else if (performance && performance.now) {
-			this.timingFunction = function() {return performance.now();};
+			this.timingFunction = function() {return window.performance.webkitNow();};
+		} else if (window.performance && window.performance.now) {
+			this.timingFunction = function() {return window.performance.now();};
 		} else {
 			this.date = new Date();
 			this.timingFunction = function() {return this.date.getTime();};

@@ -1,0 +1,40 @@
+/*
+ * 
+ */
+{
+	"id": "button-right",
+	"components":[
+		{"type": "entity-controller",
+			"controlMap":{
+				"mouse:left-button": "pressed"
+			}
+		},
+        {"type": "broadcast-events",
+            "events":{
+                "pressed": "button-right"
+            }
+        },
+        {"type": "render-animation",
+            "spriteSheet": {
+                "images": ["buttons"],
+                "frames": {
+                    "width":  46,
+                    "height": 46
+                },
+                "animations": {
+                    "default":  1
+                }
+            },
+            "state": "default",
+            "acceptInput": {"click": true, "touch": true}
+		}
+	],
+	"properties":{
+		"debug-events": ["button-right"],
+		"state": false,
+		"x": 257,
+		"y": 177,
+		"width": 46,
+		"height": 46
+	}
+}

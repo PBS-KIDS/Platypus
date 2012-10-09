@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version 134939755
+# Version 134980134
 
 CACHE:
 
@@ -8,11 +8,11 @@ CACHE:
 
 # ogg:
 
-http://localhost/gopherwood/2DGE/builds/game/a/powerup.ogg
-http://localhost/gopherwood/2DGE/builds/game/j/compressed134939755.js
-http://localhost/gopherwood/2DGE/builds/game/s/compressed134939755.css
+http://localhost/gopherwood/2DGE/builds/game/j/compressed134980134.js
+http://localhost/gopherwood/2DGE/builds/game/s/compressed134980134.css
 
 http://localhost/gopherwood/2DGE/builds/game/i/test.png
+http://localhost/gopherwood/2DGE/builds/game/i/buttons.png
 http://localhost/gopherwood/2DGE/builds/game/i/mookie.png
 http://localhost/gopherwood/2DGE/builds/game/i/tile-map.png
 http://localhost/gopherwood/2DGE/builds/game/i/test-animation.png

@@ -15,7 +15,7 @@ platformer.classes.scene = (function(){
 		}
 	};
 	
-	proto.triggerInputEvent = function(eventId, event){
+	proto.trigger = function(eventId, event){
 		for(var layer in this.layers){
 			this.layers[layer].trigger(eventId, event);
 		}

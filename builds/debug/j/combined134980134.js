@@ -5,7 +5,7 @@
   PBS.KIDS = this.PBS.KIDS || {};
   PBS.KIDS.platformer = platformer;
 
-platformer.settings = {"global":{"initialScene":"scene-1","fps":60,"rootElement":"root"},"aspects":[["ogg","mp3","m4a"],["mobile","desktop"]],"assets":[{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3"}},{"id":"alpha","src":"i/test.png","data":{"rows":2,"columns":2,"ids":[["horizon","sky"],["ground","rock"]]}},{"id":"mookie-walk","src":"i/mookie.png"},{"id":"tilemap","src":"i/tile-map.png"},{"id":"test","src":"i/test.png"},{"id":"test-animation","src":"i/test-animation.png"}],"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Input":{"id":"Input","src":"../src/js/input.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"}},"components":{"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"lc-render":{"id":"lc-render","src":"../src/js/layer/lc-render.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tile":{"id":"render-tile","src":"../src/js/entity/render-tile.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-button":{"id":"render-button","src":"../src/js/entity/render-button.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile":{"id":"tile","components":[{"type":"render-tile","spritesheet":"import"}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button":{"id":"button","assets":[{"id":"mookie-standing","src":"../../images/mookie.png"}],"components":[{"type":"entity-controller","controlMap":{"key:a":"go-left","key:left-arrow":"go-left","key:d":"go-right","key:right-arrow":"go-right","mouse:left-button":"go-left","mouse:right-button":"go-right"}},{"type":"logic-button"},{"type":"render-button"},{"type":"render-debug"}],"properties":{"debug-events":["go-left","go-right"],"state":false,"x":10,"y":10,"width":24,"height":24}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"key:w":"key-up","key:up-arrow":"key-up","key:a":"key-left","key:left-arrow":"key-left","key:s":"key-down","key:down-arrow":"key-down","key:d":"key-right","key:right-arrow":"key-right"}},{"type":"logic-hero","speed":0.1},{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-8,-12],[8,12]]},"collisionType":"hero","collidesWith":["solid"]},{"type":"render-animation","spriteSheet":{"images":["mookie-walk"],"frames":{"width":26,"height":27,"regY":26},"animations":{"standing-north":[0],"standing-east":[0],"standing-south":[7],"standing-west":[7],"walking-north":{"frames":[0,1,2,3],"frequency":4},"walking-east":{"frames":[0,1,2,3],"frequency":4},"walking-south":{"frames":[7,6,5,4],"frequency":4},"walking-west":{"frames":[7,6,5,4],"frequency":4}}}}],"properties":{"debug-events":["key:a:up","key:a:down","go-left"],"x":10,"y":10,"width":24,"height":24,"state":"standing","heading":"south","follow":"locked"}},"block":{"id":"block","components":[{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-12,-12],[12,12]]},"collisionType":"solid"},{"type":"render-animation","spriteSheet":{"images":["tilemap"],"frames":{"width":24,"height":24,"regY":24},"animations":{"tile":9}},"state":"tile"}],"properties":{"x":50,"y":50,"width":24,"height":24}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"scene-menu":{"layers":[{"id":"buttons","components":[{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button"}]}]}],"id":"scene-menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1"}]}],"id":"scene-1"}},"levels":{"level-1":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20],"height":20,"name":"background","opacity":1,"properties":{"entity":"render-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,15,16,16,16,16,16,17,0,15,17,0,0,15,16,16,16,16,22,23,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,22,16,16,16,17,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,3,3,15,17,3,3,3,0,0,0,0,0,0,4,5,0,0,0,0,0,3,3,21,23,9,9,9,17,0,0,0,0,0,4,23,0,0,0,0,0,3,3,21,23,9,9,15,22,17,9,9,9,9,21,22,16,16,16,16,16,16,16,22,22,16,16,22,22,22,16,16,16,16,22],"height":20,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"guys","objects":[{"gid":19,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":49,"y":144},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":257,"y":156},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":281,"y":142},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":306,"y":152},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":363,"y":266},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":47,"y":272},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":142,"y":328},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":251,"y":449},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":424,"y":428},{"gid":12,"height":0,"name":"","properties":{},"type":"","width":0,"x":167,"y":192},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":191},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":166},{"gid":24,"height":0,"name":"","properties":{},"type":"","width":0,"x":364,"y":193},{"gid":28,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":384},{"height":37,"name":"","properties":{},"type":"","width":35,"x":419,"y":64},{"height":29,"name":"","properties":{},"type":"","width":46,"x":73,"y":402},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":408},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":192},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":144},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":72}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{"timer":"12"},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tile-map.png","imageheight":96,"imagewidth":144,"margin":0,"name":"tilemap","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"11":{"entity":"sign"},"17":{"entity":"enemy"},"18":{"entity":"mookie"},"23":{"entity":"flower"},"5":{"entity":"gem"},"9":{"entity":"block"}},"tilewidth":24},{"firstgid":25,"image":"../src/images/test.png","imageheight":48,"imagewidth":48,"margin":0,"name":"test","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"3":{"a":"b"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-1"}}};
+platformer.settings = {"global":{"initialScene":"scene-1","fps":60,"rootElement":"root"},"aspects":[["ogg","mp3","m4a"],["mobile","desktop"]],"assets":[{"id":"alpha","src":"i/test.png","data":{"rows":2,"columns":2,"ids":[["horizon","sky"],["ground","rock"]]}},{"id":"buttons","src":"i/buttons.png"},{"id":"mookie-walk","src":"i/mookie.png"},{"id":"tilemap","src":"i/tile-map.png"},{"id":"test","src":"i/test.png"},{"id":"test-animation","src":"i/test-animation.png"}],"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Input":{"id":"Input","src":"../src/js/input.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"}},"components":{"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"lc-render":{"id":"lc-render","src":"../src/js/layer/lc-render.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tile":{"id":"render-tile","src":"../src/js/entity/render-tile.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-button":{"id":"render-button","src":"../src/js/entity/render-button.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile":{"id":"tile","components":[{"type":"render-tile","spritesheet":"import"}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-left":{"id":"button-left","components":[{"type":"entity-controller","controlMap":{"mouse:left-button":"pressed"}},{"type":"broadcast-events","events":{"pressed":"button-left"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":46,"height":46},"animations":{"default":0}},"state":"default","acceptInput":{"click":true,"touch":true}}],"properties":{"debug-events":["button-left"],"state":false,"x":17,"y":177,"width":46,"height":46}},"button-right":{"id":"button-right","components":[{"type":"entity-controller","controlMap":{"mouse:left-button":"pressed"}},{"type":"broadcast-events","events":{"pressed":"button-right"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":46,"height":46},"animations":{"default":1}},"state":"default","acceptInput":{"click":true,"touch":true}}],"properties":{"debug-events":["button-right"],"state":false,"x":257,"y":177,"width":46,"height":46}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"key:w":"key-up","key:up-arrow":"key-up","key:a":"key-left","key:left-arrow":"key-left","button-left":"key-left","key:s":"key-down","key:down-arrow":"key-down","key:d":"key-right","key:right-arrow":"key-right","button-right":"key-right"}},{"type":"logic-hero","speed":0.1},{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-8,-12],[8,12]]},"collisionType":"hero","collidesWith":["solid"]},{"type":"render-animation","spriteSheet":{"images":["mookie-walk"],"frames":{"width":26,"height":27,"regY":26},"animations":{"standing-north":[0],"standing-east":[0],"standing-south":[7],"standing-west":[7],"walking-north":{"frames":[0,1,2,3],"frequency":4},"walking-east":{"frames":[0,1,2,3],"frequency":4},"walking-south":{"frames":[7,6,5,4],"frequency":4},"walking-west":{"frames":[7,6,5,4],"frequency":4}}}}],"properties":{"debug-events":["key:a:up","key:a:down","go-left"],"x":10,"y":10,"width":24,"height":24,"state":"standing","heading":"south","follow":"locked"}},"block":{"id":"block","components":[{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-12,-12],[12,12]]},"collisionType":"solid"},{"type":"render-animation","spriteSheet":{"images":["tilemap"],"frames":{"width":24,"height":24,"regY":24},"animations":{"tile":9}},"state":"tile"}],"properties":{"x":50,"y":50,"width":24,"height":24}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"scene-menu":{"layers":[{"id":"buttons","components":[{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button"}]}]}],"id":"scene-menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1"}]},{"id":"interface","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button-left"},{"type":"button-right"}]}]}],"id":"scene-1"}},"levels":{"level-1":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20],"height":20,"name":"background","opacity":1,"properties":{"entity":"render-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,15,16,16,16,16,16,17,0,15,17,0,0,15,16,16,16,16,22,23,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,22,16,16,16,17,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,3,3,15,17,3,3,3,0,0,0,0,0,0,4,5,0,0,0,0,0,3,3,21,23,9,9,9,17,0,0,0,0,0,4,23,0,0,0,0,0,3,3,21,23,9,9,15,22,17,9,9,9,9,21,22,16,16,16,16,16,16,16,22,22,16,16,22,22,22,16,16,16,16,22],"height":20,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"guys","objects":[{"gid":19,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":49,"y":144},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":257,"y":156},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":281,"y":142},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":306,"y":152},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":363,"y":266},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":47,"y":272},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":142,"y":328},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":251,"y":449},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":424,"y":428},{"gid":12,"height":0,"name":"","properties":{},"type":"","width":0,"x":167,"y":192},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":191},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":166},{"gid":24,"height":0,"name":"","properties":{},"type":"","width":0,"x":364,"y":193},{"gid":28,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":384},{"height":37,"name":"","properties":{},"type":"","width":35,"x":419,"y":64},{"height":29,"name":"","properties":{},"type":"","width":46,"x":73,"y":402},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":408},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":192},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":144},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":72}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{"timer":"12"},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tile-map.png","imageheight":96,"imagewidth":144,"margin":0,"name":"tilemap","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"11":{"entity":"sign"},"17":{"entity":"enemy"},"18":{"entity":"mookie"},"23":{"entity":"flower"},"5":{"entity":"gem"},"9":{"entity":"block"}},"tilewidth":24},{"firstgid":25,"image":"../src/images/test.png","imageheight":48,"imagewidth":48,"margin":0,"name":"test","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"3":{"a":"b"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-1"}}};
 platformer.classes = {};
 
 /*--------------------------------------------------
@@ -21,19 +21,19 @@ platformer.classes.game = (function(){
 		document.getElementsByTagName('body')[0].appendChild(this.rootElement);
 		
 		this.loadScene(definition.global.initialScene);
-
+		
 		var self = this;
 		this.input = new platformer.classes.input(function(eventId, event){
-			self.currentScene.triggerInputEvent(eventId, event);
+			self.currentScene.trigger(eventId, event);
 		});
 		
 		this.prevTime = 0;
 		this.timingFunction = false;
-		if (performance && performance.webkitNow)
+		if (window.performance && window.performance.webkitNow)
 		{
-			this.timingFunction = function() {return performance.webkitNow();};
-		} else if (performance && performance.now) {
-			this.timingFunction = function() {return performance.now();};
+			this.timingFunction = function() {return window.performance.webkitNow();};
+		} else if (window.performance && window.performance.now) {
+			this.timingFunction = function() {return window.performance.now();};
 		} else {
 			this.date = new Date();
 			this.timingFunction = function() {return this.date.getTime();};
@@ -298,7 +298,7 @@ platformer.classes.scene = (function(){
 		}
 	};
 	
-	proto.triggerInputEvent = function(eventId, event){
+	proto.trigger = function(eventId, event){
 		for(var layer in this.layers){
 			this.layers[layer].trigger(eventId, event);
 		}
@@ -418,6 +418,65 @@ platformer.classes.collisionShape = (function(){
 	return collisionShape;
 })();
 platformer.components = {};
+
+/*--------------------------------------------------
+ *   broadcast-events - ../src/js/entity/broadcast-events.js
+ */
+platformer.components['broadcast-events'] = (function(){
+	var broadcast = function(event){
+		return function(value){
+			platformer.game.currentScene.trigger(event, value);
+		};
+	}, 
+	component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for and then broadcasts to all layers.
+		// Make sure it does not receive and broadcast matching messages or an infinite loop will result.
+		this.listeners = [];
+		if(definition.events){
+			for(var event in definition.events){
+				this[event] = broadcast(definition.events[event]);
+				this.addListener(event);
+			}
+		}
+		
+	},
+	proto = component.prototype;
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
 
 /*--------------------------------------------------
  *   entity-container - ../src/js/entity/entity-container.js
@@ -543,27 +602,20 @@ platformer.components['entity-controller'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['load', 'controller', 'controller:load', 'controller:tick']);
+		this.addListeners(['load', 'controller', 'controller:load', 'controller:tick', 'mousedown', 'mouseup', 'mousemove']);
 		
-		this.acceptMouseInput = false; //Don't accept mouse input by default
-		this.acceptTouchInput = false; //Don't accept touch input by default
 		if(definition && definition.controlMap){
+			this.owner.controlMap = definition.controlMap;
 			this.actions  = {};
 			for(key in definition.controlMap){
 				actionState = this.actions[definition.controlMap[key]]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
 				if(!actionState){                                // Otherwise create a new state storage object
 					actionState = this.actions[definition.controlMap[key]] = new state();
 				}
-				proto[key + ':up']   = createUpHandler(actionState);
-				proto[key + ':down'] = createDownHandler(actionState);
+				this[key + ':up']   = createUpHandler(actionState);
+				this[key + ':down'] = createDownHandler(actionState);
 				this.addListener(key + ':up');
 				this.addListener(key + ':down');
-				if(key.indexOf('mouse') > -1){
-					this.acceptMouseInput = true;
-				}
-				if(key.indexOf('touch') > -1){
-					this.acceptTouchInput = true;
-				}
 			}
 		}
 	},
@@ -588,22 +640,6 @@ platformer.components['entity-controller'] = (function(){
 	};
 	
 	proto['load'] = function(){
-		//TODO: make sure rendering components send along touch and click events, and turn them off appropriately
-		self  = this;
-		if(this.acceptMouseInput){
-			this.owner.trigger('controller:input-handler', {
-				mousedown: function(event, over) {self.owner.trigger('mouse:' + mouseMap[event.button] + ':down', {over: over});},
-				mouseup:   function(event, over) {self.owner.trigger('mouse:' + mouseMap[event.button] + ':up',   {over: over});},
-				mousemove: function(event, over) {self.owner.trigger('mouse:move',   {over: over});}
-			});
-		}
-		if(this.acceptTouchInput){
-			this.owner.trigger('controller:input-handler', {
-				touchdown: function(event, over) {self.owner.trigger('touch:down', {over: over});},
-				touchup:   function(event, over) {self.owner.trigger('touch:up',   {over: over});},
-				touchmove: function(event, over) {self.owner.trigger('touch:move', {over: over});}
-			});
-		}
 	};
 	
 	proto['mouse:move'] = function(value){
@@ -612,9 +648,9 @@ platformer.components['entity-controller'] = (function(){
 		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
 	};
 	
-	proto['touch:move'] = function(value){
-		if(this.actions['touch'] && (this.actions['touch'].over !== value.over))  this.actions['touch'].over = value.over;
-	};
+//	proto['touch:move'] = function(value){
+//		if(this.actions['touch'] && (this.actions['touch'].over !== value.over))  this.actions['touch'].over = value.over;
+//	};
 
 	proto['controller'] = function(){
 		
@@ -643,6 +679,30 @@ platformer.components['entity-controller'] = (function(){
 			}
 		}
 	};
+	
+	// The following translate CreateJS mouse and touch events into messages that this controller can handle in a systematic way
+	
+	proto['mousedown'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+	}; 
+		
+	proto['mouseup'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+	};
+	
+	proto['mousemove'] = function(value){
+		this.owner.trigger('mouse:move', value);
+	};
+/*
+	proto['mouseover'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button] + ':over', value.event);
+	};
+
+	proto['mouseout'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button] + ':out', value.event);
+	};
+*/
+	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
@@ -682,7 +742,15 @@ platformer.components['entity-controller'] = (function(){
  *   layer-controller - ../src/js/layer/layer-controller.js
  */
 platformer.components['layer-controller'] = (function(){
-	var keyMap = {
+	var relay = function(event, self){
+		return function(value){
+			var suffix = value.released?':up':':down';
+			for (var x = 0; x < self.entities.length; x++) {
+				self.entities[x].trigger(event + suffix, value);
+			}
+		}; 
+	},
+	keyMap = {
 		kc0:   'unknown',         
 		kc8:   'backspace',
 		kc9:   'tab',
@@ -808,6 +876,7 @@ platformer.components['layer-controller'] = (function(){
 		}
 	};
 	
+/* this has been moved to individual entities	
 	proto['mousedown'] = function(value){
 		for (var x = 0; x < this.entities.length; x++)
 		{
@@ -842,6 +911,7 @@ platformer.components['layer-controller'] = (function(){
 			this.entities[x].trigger(value.type, value);
 		}
 	};
+*/
 	
 	proto['check-inputs'] = function(resp){
 		for (var x = 0; x < this.entities.length; x++)
@@ -857,6 +927,18 @@ platformer.components['layer-controller'] = (function(){
 		{
 			if (messageIds[x] == 'controller')
 			{
+				// Check for custom input messages that should be relayed from scene.
+				if(entity.controlMap){
+					for(var y in entity.controlMap){
+						if((y.indexOf('key:') < 0) || (y.indexOf('mouse:') < 0)){
+							if(!this[y]){
+								this.addListener(y);
+								this[y] = relay(y, this);
+							}
+						}
+					}
+				}
+				
 				this.entities.push(entity);
 				entity.trigger('controller:load');
 				break;
@@ -1117,8 +1199,8 @@ platformer.components['lc-render'] = (function(){
 		this.owner.rootElement.appendChild(this.canvas);
 		this.canvas.style.width = '100%';
 		this.canvas.style.height = '100%';
-		this.canvas.width  = 300; //TODO: figure out where to specify this
-		this.canvas.height = 200;
+		this.canvas.width  = 320; //TODO: figure out where to specify this
+		this.canvas.height = 240;
 		this.stage = new createjs.Stage(this.canvas);
 		
 	};
@@ -1774,14 +1856,24 @@ platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
-		this.controllerEvents = undefined;
+		//this.controllerEvents = undefined;
+		
+		if(definition.acceptInput){
+			this.hover = definition.acceptInput.hover || false;
+			this.click = definition.acceptInput.click || false;
+			this.touch = definition.acceptInput.touch || false;
+		} else {
+			this.hover = false;
+			this.click = false;
+			this.touch = false;
+		}
 		
 		this.regX = definition.regX || 0;
 		this.regY = definition.regY || 0;
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load', 'controller:input-handler']);
+		this.addListeners(['layer:render', 'layer:render-load']); ///TODO: removing input event for now because it's confusing this way, 'controller:input-handler']);
 	};
 	var proto = component.prototype;
 
@@ -1794,12 +1886,14 @@ platformer.components['render-debug'] = (function(){
 	};
 
 	proto['layer:render-load'] = function(resp){
-		var x  = this.owner.x      = this.owner.x || 0,
-		y      = this.owner.y      = this.owner.y || 0,
-		width  = this.owner.width  = this.owner.width  || 300,
-		height = this.owner.height = this.owner.height || 100,
-		comps = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
-		components = [];
+		var self = this,
+		x        = this.owner.x      = this.owner.x || 0,
+		y        = this.owner.y      = this.owner.y || 0,
+		width    = this.owner.width  = this.owner.width  || 300,
+		height   = this.owner.height = this.owner.height || 100,
+		comps    = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
+		components = [],
+		over     = false;
 		
 		for (var i in comps) components[i] = comps[i].type;
 		
@@ -1820,44 +1914,64 @@ platformer.components['render-debug'] = (function(){
 		this.stage.addChild(this.shape);
 		this.stage.addChild(this.txt);
 		
-		if(this.controllerEvents){
-			this['controller:input-handler'](this.controllerEvents);
-		}
-	};
-	
-	/*
-	 *  This handler appends necessary information to displayed objects to allow them to receive touches and clicks
-	 */
-	proto['controller:input-handler'] = function(events){
-		var over  = false,
-		mousedown = events.mousedown,
-		mouseup   = events.mouseup,
-		mousemove = events.mousemove;
-		//TODO: receive touch input; maybe try moving most of this to input controller if possible with a reference to the stage?
-		if(this.stage){
-			if (mousedown || mouseup || mousemove){
-				
-				this.stage.enableMouseOver();
-				this.shape.onPress     = function(event) {
-					if(mousedown){
-						mousedown(event.nativeEvent, over, event.stageX, event.stageY);
-					}
-					if(mouseup){
-						event.onMouseUp = function(event){
-							mouseup(event.nativeEvent, over, event.stageX, event.stageY);
-						};
-					}
-					if(mousemove){
-						event.onMouseMove = function(event){
-							mousemove(event.nativeEvent, over, event.stageX, event.stageY);
-						};
-					}
-				};
-				this.shape.onMouseOut  = function(){over = false;};
-				this.shape.onMouseOver = function(){over = true;};
+		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+		if(this.click || this.touch){
+			if(this.touch && createjs.Touch.isSupported()){
+				createjs.Touch.enable(this.stage);
 			}
-		} else {
-			this.controllerEvents = events; //save until we have an object to attach these events to.
+
+			this.shape.onPress     = function(event) {
+				self.owner.trigger('mousedown', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+				event.onMouseUp = function(event){
+					self.owner.trigger('mouseup', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+				event.onMouseMove = function(event){
+					self.owner.trigger('mousemove', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+			};
+			this.shape.onMouseOut  = function(){over = false;};
+			this.shape.onMouseOver = function(){over = true;};
+		}
+		if(this.hover){
+			this.stage.enableMouseOver();
+			this.shape.onMouseOut  = function(event){
+				over = false;
+				self.owner.trigger('mouseout', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
+			this.shape.onMouseOver = function(event){
+				over = true;
+				self.owner.trigger('mouseover', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
 		}
 	};
 	
@@ -2148,6 +2262,16 @@ platformer.components['render-animation'] = (function(){
 		};
 		this.owner = owner;
 		
+		if(definition.acceptInput){
+			this.hover = definition.acceptInput.hover || false;
+			this.click = definition.acceptInput.click || false;
+			this.touch = definition.acceptInput.touch || false;
+		} else {
+			this.hover = false;
+			this.click = false;
+			this.touch = false;
+		}
+		
 		// Messages that this component listens for
 		this.listeners = [];
 
@@ -2157,7 +2281,7 @@ platformer.components['render-animation'] = (function(){
 		{
 			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
-		var spriteSheet = new createjs.SpriteSheet(spriteSheet);
+		spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
 		this.currentAnimation = definition.state || this.owner.state || '';
 		if(this.currentAnimation){
@@ -2167,8 +2291,71 @@ platformer.components['render-animation'] = (function(){
 	var proto = component.prototype;
 	
 	proto['layer:render-load'] = function(obj){
+		var self = this,
+		over     = false;
+		
 		this.stage = obj.stage;
 		this.stage.addChild(this.anim);
+		
+		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+		if(this.click || this.touch){
+			if(this.touch && createjs.Touch.isSupported()){
+				createjs.Touch.enable(this.stage);
+			}
+
+			this.anim.onPress     = function(event) {
+				self.owner.trigger('mousedown', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+				event.onMouseUp = function(event){
+					self.owner.trigger('mouseup', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+				event.onMouseMove = function(event){
+					self.owner.trigger('mousemove', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+			};
+			this.anim.onMouseOut  = function(){over = false;};
+			this.anim.onMouseOver = function(){over = true;};
+		}
+		if(this.hover){
+			this.stage.enableMouseOver();
+			this.anim.onMouseOut  = function(event){
+				over = false;
+				self.owner.trigger('mouseout', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
+			this.anim.onMouseOver = function(event){
+				over = true;
+				self.owner.trigger('mouseover', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
+		}
 	};
 	
 	proto['layer:render'] = function(obj){
@@ -2181,81 +2368,6 @@ platformer.components['render-animation'] = (function(){
 		{
 			this.currentAnimation = obj.state;
 			this.anim.gotoAndPlay(obj.state);
-		}
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value){
-			self[messageId](value);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
-})();
-
-
-/*--------------------------------------------------
- *   logic-button - ../src/js/entity/logic-button.js
- */
-platformer.components['logic-button'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-
-		this.addListeners(['layer:logic', 'go-left', 'go-right']);
-		
-		this.leftMax = 10;
-		this.rightMax = 100;
-		this.direction = 0;
-	};
-	var proto = component.prototype;
-	
-	proto['go-left'] = function (state) {
-		if(state.pressed){
-			this.direction = -1; 
-		} else {
-			this.direction = 0; 
-		}
-	};
-	
-	proto['go-right'] = function (state) {
-		if(state.pressed){
-			this.direction = 1; 
-		} else {
-			this.direction = 0; 
-		}
-	};
-	
-	proto['layer:logic'] = function(obj){
-		if (this.direction)
-		{
-			this.owner.x += this.direction;
 		}
 	};
 	
@@ -2775,6 +2887,7 @@ platformer.components['collision-tiles'] = (function(){
  *   Main - ../src/js/main.js
  */
 window.addEventListener('load', function(){
+	var count = 0;
 	loader = new createjs.PreloadJS();
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
@@ -2815,7 +2928,6 @@ window.addEventListener('load', function(){
 	};
 	
 	loader.onComplete = function (event) {
-		
 		platformer.game = new platformer.classes.game(platformer.settings);
 		createjs.Ticker.setFPS(platformer.settings.global.fps);
 		createjs.Ticker.addListener(platformer.game);
@@ -2842,5 +2954,6 @@ window.addEventListener('load', function(){
 	
 	loader.loadManifest(platformer.settings.assets);
 	platformer.assets = [];
-});
+
+}, false);
 })();

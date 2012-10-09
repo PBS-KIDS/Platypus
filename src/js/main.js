@@ -1,4 +1,5 @@
 window.addEventListener('load', function(){
+	var count = 0;
 	loader = new createjs.PreloadJS();
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
@@ -39,7 +40,6 @@ window.addEventListener('load', function(){
 	};
 	
 	loader.onComplete = function (event) {
-		
 		platformer.game = new platformer.classes.game(platformer.settings);
 		createjs.Ticker.setFPS(platformer.settings.global.fps);
 		createjs.Ticker.addListener(platformer.game);
@@ -66,4 +66,5 @@ window.addEventListener('load', function(){
 	
 	loader.loadManifest(platformer.settings.assets);
 	platformer.assets = [];
-});
+
+}, false);

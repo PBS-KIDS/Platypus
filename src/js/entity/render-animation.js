@@ -7,6 +7,16 @@ platformer.components['render-animation'] = (function(){
 		};
 		this.owner = owner;
 		
+		if(definition.acceptInput){
+			this.hover = definition.acceptInput.hover || false;
+			this.click = definition.acceptInput.click || false;
+			this.touch = definition.acceptInput.touch || false;
+		} else {
+			this.hover = false;
+			this.click = false;
+			this.touch = false;
+		}
+		
 		// Messages that this component listens for
 		this.listeners = [];
 
@@ -16,7 +26,7 @@ platformer.components['render-animation'] = (function(){
 		{
 			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
-		var spriteSheet = new createjs.SpriteSheet(spriteSheet);
+		spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
 		this.currentAnimation = definition.state || this.owner.state || '';
 		if(this.currentAnimation){
@@ -26,8 +36,71 @@ platformer.components['render-animation'] = (function(){
 	var proto = component.prototype;
 	
 	proto['layer:render-load'] = function(obj){
+		var self = this,
+		over     = false;
+		
 		this.stage = obj.stage;
 		this.stage.addChild(this.anim);
+		
+		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+		if(this.click || this.touch){
+			if(this.touch && createjs.Touch.isSupported()){
+				createjs.Touch.enable(this.stage);
+			}
+
+			this.anim.onPress     = function(event) {
+				self.owner.trigger('mousedown', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+				event.onMouseUp = function(event){
+					self.owner.trigger('mouseup', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+				event.onMouseMove = function(event){
+					self.owner.trigger('mousemove', {
+						event: event.nativeEvent,
+						over: over,
+						x: event.stageX,
+						y: event.stageY,
+						entity: self.owner
+					});
+				};
+			};
+			this.anim.onMouseOut  = function(){over = false;};
+			this.anim.onMouseOver = function(){over = true;};
+		}
+		if(this.hover){
+			this.stage.enableMouseOver();
+			this.anim.onMouseOut  = function(event){
+				over = false;
+				self.owner.trigger('mouseout', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
+			this.anim.onMouseOver = function(event){
+				over = true;
+				self.owner.trigger('mouseover', {
+					event: event.nativeEvent,
+					over: over,
+					x: event.stageX,
+					y: event.stageY,
+					entity: self.owner
+				});
+			};
+		}
 	};
 	
 	proto['layer:render'] = function(obj){

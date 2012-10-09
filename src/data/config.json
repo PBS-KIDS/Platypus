@@ -38,11 +38,11 @@
 	],
 	"source": { 
 		"assets": [ // Assets such as images and audio
-			{"id": "powerup", "src": {
+			/*{"id": "powerup", "src": {
 					"ogg": "../audio/powerup.ogg",
 					"mp3": "../audio/powerup.mp3"
 				}
-			},
+			},*/
 			{"id":  "alpha",
 				"src": "../images/test.png",
 				"data": {
@@ -54,6 +54,7 @@
 					]
 				}
 			},
+			{"id": "buttons", "src": "../images/buttons.png"},
 			{"id": "mookie-walk", "src": "../images/mookie.png"},
 			{"id": "tilemap", "src": "../images/tile-map.png"},
 			{"id": "test", "src": "../images/test.png"},
@@ -68,6 +69,7 @@
 			{"id": "Collision-Shape",	"src": "../js/collision-shape.js"},
 		],
 		"components": [ // JavaScript files defining component modules
+            {"id": "broadcast-events",   "src": "../js/entity/broadcast-events.js"},
 			{"id": "entity-container",   "src": "../js/entity/entity-container.js"},
 			{"id": "entity-controller",  "src": "../js/entity/entity-controller.js"},
 			{"id": "layer-controller",   "src": "../js/layer/layer-controller.js"},
@@ -81,7 +83,6 @@
 			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},
 			{"id": "render-button",      "src": "../js/entity/render-button.js"},
 			{"id": "render-animation",   "src": "../js/entity/render-animation.js"},
-			{"id": "logic-button",       "src": "../js/entity/logic-button.js"},
 			{"id": "logic-hero",         "src": "../js/entity/logic-hero.js"},
 			{"id": "collision-hero",     "src": "../js/entity/collision-hero.js"},
 			{"id": "collision-tiles",    "src": "../js/entity/collision-tiles.js"}
@@ -91,7 +92,8 @@
 			{"id": "tile-layer", "src": "entities/tile-layer.json"},
 			{"id": "render-layer", "src": "entities/render-layer.json"},
 			{"id": "collision-layer", "src": "entities/collision-layer.json"},
-			{"id": "button",     "src": "entities/button.json"},
+            {"id": "button-left", "src": "entities/button-left.json"},
+            {"id": "button-right", "src": "entities/button-right.json"},
 			{"id": "hero",       "src": "entities/hero.json"},
 			{"id": "block",      "src": "entities/block.json"}
 		],

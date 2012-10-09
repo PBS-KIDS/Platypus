@@ -1,5 +1,13 @@
 platformer.components['layer-controller'] = (function(){
-	var keyMap = {
+	var relay = function(event, self){
+		return function(value){
+			var suffix = value.released?':up':':down';
+			for (var x = 0; x < self.entities.length; x++) {
+				self.entities[x].trigger(event + suffix, value);
+			}
+		}; 
+	},
+	keyMap = {
 		kc0:   'unknown',         
 		kc8:   'backspace',
 		kc9:   'tab',
@@ -125,6 +133,7 @@ platformer.components['layer-controller'] = (function(){
 		}
 	};
 	
+/* this has been moved to individual entities	
 	proto['mousedown'] = function(value){
 		for (var x = 0; x < this.entities.length; x++)
 		{
@@ -159,6 +168,7 @@ platformer.components['layer-controller'] = (function(){
 			this.entities[x].trigger(value.type, value);
 		}
 	};
+*/
 	
 	proto['check-inputs'] = function(resp){
 		for (var x = 0; x < this.entities.length; x++)
@@ -174,6 +184,18 @@ platformer.components['layer-controller'] = (function(){
 		{
 			if (messageIds[x] == 'controller')
 			{
+				// Check for custom input messages that should be relayed from scene.
+				if(entity.controlMap){
+					for(var y in entity.controlMap){
+						if((y.indexOf('key:') < 0) || (y.indexOf('mouse:') < 0)){
+							if(!this[y]){
+								this.addListener(y);
+								this[y] = relay(y, this);
+							}
+						}
+					}
+				}
+				
 				this.entities.push(entity);
 				entity.trigger('controller:load');
 				break;

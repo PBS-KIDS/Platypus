@@ -11,6 +11,18 @@
 				{"type": "entity-container"},
 				{"type": "tiled-loader", "level": "level-1"}
 			]
+		},{
+			"id": "interface",
+			"components": [
+				{"type": "lc-camera"},
+				{"type": "lc-logic"},
+				{"type": "lc-render"},
+				{"type": "layer-controller"},
+				{"type": "entity-container", "entities": [
+                    {"type": "button-left"},
+                    {"type": "button-right"}
+				]}
+			]
 		}
 	]
 }

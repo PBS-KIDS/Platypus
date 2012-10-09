@@ -10,11 +10,13 @@
 				"key:w": 			"key-up",
 				"key:up-arrow": 	"key-up",
 				"key:a": 			"key-left",
-				"key:left-arrow": 	"key-left",
+                "key:left-arrow":   "key-left",
+                "button-left":      "key-left",
 				"key:s": 			"key-down",
 				"key:down-arrow": 	"key-down",
 				"key:d": 			"key-right",
-				"key:right-arrow": 	"key-right"
+				"key:right-arrow": 	"key-right",
+                "button-right":     "key-right"
 			}	
 		},{
 			"type": "logic-hero",

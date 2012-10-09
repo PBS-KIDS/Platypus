@@ -1,40 +1,24 @@
-platformer.components['logic-button'] = (function(){
-	var component = function(owner, definition){
+platformer.components['broadcast-events'] = (function(){
+	var broadcast = function(event){
+		return function(value){
+			platformer.game.currentScene.trigger(event, value);
+		};
+	}, 
+	component = function(owner, definition){
 		this.owner = owner;
 		
-		// Messages that this component listens for
+		// Messages that this component listens for and then broadcasts to all layers.
+		// Make sure it does not receive and broadcast matching messages or an infinite loop will result.
 		this.listeners = [];
-
-		this.addListeners(['layer:logic', 'go-left', 'go-right']);
+		if(definition.events){
+			for(var event in definition.events){
+				this[event] = broadcast(definition.events[event]);
+				this.addListener(event);
+			}
+		}
 		
-		this.leftMax = 10;
-		this.rightMax = 100;
-		this.direction = 0;
-	};
-	var proto = component.prototype;
-	
-	proto['go-left'] = function (state) {
-		if(state.pressed){
-			this.direction = -1; 
-		} else {
-			this.direction = 0; 
-		}
-	};
-	
-	proto['go-right'] = function (state) {
-		if(state.pressed){
-			this.direction = 1; 
-		} else {
-			this.direction = 0; 
-		}
-	};
-	
-	proto['layer:logic'] = function(obj){
-		if (this.direction)
-		{
-			this.owner.x += this.direction;
-		}
-	};
+	},
+	proto = component.prototype;
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

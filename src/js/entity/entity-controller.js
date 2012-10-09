@@ -24,27 +24,20 @@ platformer.components['entity-controller'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['load', 'controller', 'controller:load', 'controller:tick']);
+		this.addListeners(['load', 'controller', 'controller:load', 'controller:tick', 'mousedown', 'mouseup', 'mousemove']);
 		
-		this.acceptMouseInput = false; //Don't accept mouse input by default
-		this.acceptTouchInput = false; //Don't accept touch input by default
 		if(definition && definition.controlMap){
+			this.owner.controlMap = definition.controlMap;
 			this.actions  = {};
 			for(key in definition.controlMap){
 				actionState = this.actions[definition.controlMap[key]]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
 				if(!actionState){                                // Otherwise create a new state storage object
 					actionState = this.actions[definition.controlMap[key]] = new state();
 				}
-				proto[key + ':up']   = createUpHandler(actionState);
-				proto[key + ':down'] = createDownHandler(actionState);
+				this[key + ':up']   = createUpHandler(actionState);
+				this[key + ':down'] = createDownHandler(actionState);
 				this.addListener(key + ':up');
 				this.addListener(key + ':down');
-				if(key.indexOf('mouse') > -1){
-					this.acceptMouseInput = true;
-				}
-				if(key.indexOf('touch') > -1){
-					this.acceptTouchInput = true;
-				}
 			}
 		}
 	},
@@ -69,22 +62,6 @@ platformer.components['entity-controller'] = (function(){
 	};
 	
 	proto['load'] = function(){
-		//TODO: make sure rendering components send along touch and click events, and turn them off appropriately
-		self  = this;
-		if(this.acceptMouseInput){
-			this.owner.trigger('controller:input-handler', {
-				mousedown: function(event, over) {self.owner.trigger('mouse:' + mouseMap[event.button] + ':down', {over: over});},
-				mouseup:   function(event, over) {self.owner.trigger('mouse:' + mouseMap[event.button] + ':up',   {over: over});},
-				mousemove: function(event, over) {self.owner.trigger('mouse:move',   {over: over});}
-			});
-		}
-		if(this.acceptTouchInput){
-			this.owner.trigger('controller:input-handler', {
-				touchdown: function(event, over) {self.owner.trigger('touch:down', {over: over});},
-				touchup:   function(event, over) {self.owner.trigger('touch:up',   {over: over});},
-				touchmove: function(event, over) {self.owner.trigger('touch:move', {over: over});}
-			});
-		}
 	};
 	
 	proto['mouse:move'] = function(value){
@@ -93,9 +70,9 @@ platformer.components['entity-controller'] = (function(){
 		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
 	};
 	
-	proto['touch:move'] = function(value){
-		if(this.actions['touch'] && (this.actions['touch'].over !== value.over))  this.actions['touch'].over = value.over;
-	};
+//	proto['touch:move'] = function(value){
+//		if(this.actions['touch'] && (this.actions['touch'].over !== value.over))  this.actions['touch'].over = value.over;
+//	};
 
 	proto['controller'] = function(){
 		
@@ -124,6 +101,30 @@ platformer.components['entity-controller'] = (function(){
 			}
 		}
 	};
+	
+	// The following translate CreateJS mouse and touch events into messages that this controller can handle in a systematic way
+	
+	proto['mousedown'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+	}; 
+		
+	proto['mouseup'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+	};
+	
+	proto['mousemove'] = function(value){
+		this.owner.trigger('mouse:move', value);
+	};
+/*
+	proto['mouseover'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button] + ':over', value.event);
+	};
+
+	proto['mouseout'] = function(value){
+		this.owner.trigger('mouse:' + mouseMap[value.event.button] + ':out', value.event);
+	};
+*/
+	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
