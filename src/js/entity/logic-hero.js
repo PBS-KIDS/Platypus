@@ -52,6 +52,7 @@ platformer.components['logic-hero'] = (function(){
 		this.down = false;
 		
 		this.owner.trigger('logical-state', {state: this.owner.state + '-' + this.owner.heading});
+		this.owner.trigger(this.owner.state);
 	};
 	
 	proto['key-left'] = function (state)

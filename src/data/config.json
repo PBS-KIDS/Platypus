@@ -30,12 +30,9 @@
 	],
 	"source": { 
 		"assets": [ // Assets such as images and audio
-			{"id": "powerup", "src": {
-					"ogg": "../audio/powerup.ogg",
-                    "mp3": "../audio/powerup.mp3",
-                    "m4a": "../audio/powerup.mp3"
-				}
-			},
+            {"id": "powerup", "src": {"ogg": "../audio/powerup.ogg",  "mp3": "../audio/powerup.mp3",  "m4a": "../audio/powerup.mp3"}},
+            {"id": "walk",    "src": {"ogg": "../audio/walk.ogg",     "mp3": "../audio/walk.mp3",     "m4a": "../audio/walk.mp3"}},
+            {"id": "jump",    "src": {"ogg": "../audio/jump.ogg",     "mp3": "../audio/jump.mp3",     "m4a": "../audio/jump.mp3"}},
 			{"id":  "alpha",
 				"src": "../images/test.png",
 				"data": {
@@ -54,23 +51,24 @@
 			{"id": "test-animation", "src": "../images/test-animation.png"}
 		],
 		"classes": [
-			{"id": "Game",      "src": "../js/game.js"},
-			{"id": "Input",     "src": "../js/input.js"},
-			{"id": "Entity",    "src": "../js/entity.js"},
-			{"id": "Layer",     "src": "../js/layer.js"},
-			{"id": "Scene",     "src": "../js/scene.js"},
-			{"id": "Collision-Shape",	"src": "../js/collision-shape.js"},
+			{"id": "Game",            "src": "../js/game.js"},
+			{"id": "Input",           "src": "../js/input.js"},
+			{"id": "Entity",          "src": "../js/entity.js"},
+			{"id": "Layer",           "src": "../js/layer.js"},
+			{"id": "Scene",           "src": "../js/scene.js"},
+			{"id": "Collision-Shape", "src": "../js/collision-shape.js"},
 		],
 		"components": [ // JavaScript files defining component modules
-            {"id": "broadcast-events",   "src": "../js/entity/broadcast-events.js"},
-			{"id": "entity-container",   "src": "../js/entity/entity-container.js"},
-			{"id": "entity-controller",  "src": "../js/entity/entity-controller.js"},
 			{"id": "layer-controller",   "src": "../js/layer/layer-controller.js"},
 			{"id": "tiled-loader",       "src": "../js/layer/tiled-loader.js"},
 			{"id": "lc-render",          "src": "../js/layer/lc-render.js"},
 			{"id": "lc-logic",           "src": "../js/layer/lc-logic.js"},
 			{"id": "lc-camera",          "src": "../js/layer/lc-camera.js"},
 			{"id": "lc-basic-collision", "src": "../js/layer/lc-basic-collision.js"},
+            {"id": "audio",              "src": "../js/entity/audio.js"},
+            {"id": "broadcast-events",   "src": "../js/entity/broadcast-events.js"},
+            {"id": "entity-container",   "src": "../js/entity/entity-container.js"},
+            {"id": "entity-controller",  "src": "../js/entity/entity-controller.js"},
 			{"id": "render-debug",       "src": "../js/entity/render-debug.js"},
 			{"id": "render-tile",        "src": "../js/entity/render-tile.js"},
 			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},

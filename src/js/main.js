@@ -64,6 +64,8 @@ window.addEventListener('load', function(){
 		}
 	}
 	
+	loader.installPlugin(createjs.SoundJS);
+	loader.installPlugin(createjs.EaselJS);
 	loader.loadManifest(platformer.settings.assets);
 	platformer.assets = [];
 

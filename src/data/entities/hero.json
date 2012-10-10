@@ -50,8 +50,16 @@
 					"walking-west":  {frames:[7,6,5,4], 	frequency:4}
 				}
 			}
-		},
-		{"type": "render-debug", "regY": 24}
+		},{
+		    "type": "audio",
+		    "audioMap": {
+		        "walking": "walk",
+		        "jumping": "jump"
+		    }
+//		},{
+//		    "type": "render-debug",
+//		    "regY": 24
+		}
 	],
 	"properties":{
 		"x": 10,

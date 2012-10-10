@@ -1,8 +1,5 @@
 platformer.components['lc-render'] = (function(){
-	var canvas = false,
-	stage      = false,
-	layers     = 0,
-	component = function(owner, definition){
+	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
 		
@@ -11,18 +8,14 @@ platformer.components['lc-render'] = (function(){
 		this.tickMessages = ['render'];
 		this.addListeners(['entity-added','render', 'camera-update']);
 		
-		if(!layers){ // use the same canvas and stage across layers to allow for mouse input across layers
-			canvas = document.createElement('canvas');
-			this.owner.rootElement.appendChild(canvas);
-			canvas.style.width = '100%';
-			canvas.style.height = '100%';
-			canvas.width  = 320; //TODO: figure out where to specify this
-			canvas.height = 240;
-			stage = new createjs.Stage(canvas);
-		}
-		this.canvas = canvas;
-		this.stage  = stage;
-		layers += 1
+		this.canvas = document.createElement('canvas');
+		this.owner.rootElement.appendChild(this.canvas);
+		this.canvas.style.width = '100%';
+		this.canvas.style.height = '100%';
+		this.canvas.width  = 320; //TODO: figure out where to specify this
+		this.canvas.height = 240;
+		this.stage = new createjs.Stage(this.canvas);
+		
 	};
 	var proto = component.prototype; 
 
@@ -62,11 +55,6 @@ platformer.components['lc-render'] = (function(){
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
-		layers -= 1;
-		if (layers === 0){
-			stage = false;
-			canvas = false;
-		}
 		this.stage = undefined;
 		this.owner.rootElement.removeChild(this.canvas);
 		this.canvas = undefined;

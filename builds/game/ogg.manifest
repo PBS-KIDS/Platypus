@@ -1,13 +1,15 @@
 CACHE MANIFEST
-# Version 134988825
+# Version 134989609
 
 CACHE:
 
 # ogg:
 
 a/powerup.ogg
-j/compressed134988825.js
-s/compressed134988825.css
+a/walk.ogg
+a/jump.ogg
+j/compressed134989609.js
+s/compressed134989609.css
 
 i/test.png
 i/buttons.png

@@ -1,13 +1,15 @@
 CACHE MANIFEST
-# Version 134988825
+# Version 134989609
 
 CACHE:
 
 # mp3:
 
 a/powerup.mp3
-j/compressed134988825.js
-s/compressed134988825.css
+a/walk.mp3
+a/jump.mp3
+j/compressed134989609.js
+s/compressed134989609.css
 
 i/test.png
 i/buttons.png
