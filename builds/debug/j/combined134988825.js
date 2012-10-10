@@ -5,7 +5,7 @@
   PBS.KIDS = this.PBS.KIDS || {};
   PBS.KIDS.platformer = platformer;
 
-platformer.settings = {"global":{"initialScene":"scene-1","fps":60,"rootElement":"root"},"aspects":[["ogg","mp3","m4a"],["mobile","desktop"]],"assets":[{"id":"alpha","src":"i/test.png","data":{"rows":2,"columns":2,"ids":[["horizon","sky"],["ground","rock"]]}},{"id":"buttons","src":"i/buttons.png"},{"id":"mookie-walk","src":"i/mookie.png"},{"id":"tilemap","src":"i/tile-map.png"},{"id":"test","src":"i/test.png"},{"id":"test-animation","src":"i/test-animation.png"}],"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Input":{"id":"Input","src":"../src/js/input.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"}},"components":{"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"lc-render":{"id":"lc-render","src":"../src/js/layer/lc-render.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tile":{"id":"render-tile","src":"../src/js/entity/render-tile.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-button":{"id":"render-button","src":"../src/js/entity/render-button.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile":{"id":"tile","components":[{"type":"render-tile","spritesheet":"import"}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-left":{"id":"button-left","components":[{"type":"entity-controller","controlMap":{"mouse:left-button":"pressed"}},{"type":"broadcast-events","events":{"pressed":"button-left"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":46,"height":46},"animations":{"default":0}},"state":"default","acceptInput":{"click":true,"touch":true}}],"properties":{"debug-events":["button-left"],"state":false,"x":17,"y":177,"width":46,"height":46}},"button-right":{"id":"button-right","components":[{"type":"entity-controller","controlMap":{"mouse:left-button":"pressed"}},{"type":"broadcast-events","events":{"pressed":"button-right"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":46,"height":46},"animations":{"default":1}},"state":"default","acceptInput":{"click":true,"touch":true}}],"properties":{"debug-events":["button-right"],"state":false,"x":257,"y":177,"width":46,"height":46}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"key:w":"key-up","key:up-arrow":"key-up","key:a":"key-left","key:left-arrow":"key-left","button-left":"key-left","key:s":"key-down","key:down-arrow":"key-down","key:d":"key-right","key:right-arrow":"key-right","button-right":"key-right"}},{"type":"logic-hero","speed":0.1},{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-8,-12],[8,12]]},"collisionType":"hero","collidesWith":["solid"]},{"type":"render-animation","spriteSheet":{"images":["mookie-walk"],"frames":{"width":26,"height":27,"regY":26},"animations":{"standing-north":[0],"standing-east":[0],"standing-south":[7],"standing-west":[7],"walking-north":{"frames":[0,1,2,3],"frequency":4},"walking-east":{"frames":[0,1,2,3],"frequency":4},"walking-south":{"frames":[7,6,5,4],"frequency":4},"walking-west":{"frames":[7,6,5,4],"frequency":4}}}}],"properties":{"debug-events":["key:a:up","key:a:down","go-left"],"x":10,"y":10,"width":24,"height":24,"state":"standing","heading":"south","follow":"locked"}},"block":{"id":"block","components":[{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-12,-12],[12,12]]},"collisionType":"solid"},{"type":"render-animation","spriteSheet":{"images":["tilemap"],"frames":{"width":24,"height":24,"regY":24},"animations":{"tile":9}},"state":"tile"}],"properties":{"x":50,"y":50,"width":24,"height":24}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"scene-menu":{"layers":[{"id":"buttons","components":[{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button"}]}]}],"id":"scene-menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1"}]},{"id":"interface","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button-left"},{"type":"button-right"}]}]}],"id":"scene-1"}},"levels":{"level-1":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20],"height":20,"name":"background","opacity":1,"properties":{"entity":"render-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,15,16,16,16,16,16,17,0,15,17,0,0,15,16,16,16,16,22,23,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,22,16,16,16,17,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,3,3,15,17,3,3,3,0,0,0,0,0,0,4,5,0,0,0,0,0,3,3,21,23,9,9,9,17,0,0,0,0,0,4,23,0,0,0,0,0,3,3,21,23,9,9,15,22,17,9,9,9,9,21,22,16,16,16,16,16,16,16,22,22,16,16,22,22,22,16,16,16,16,22],"height":20,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"guys","objects":[{"gid":19,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":49,"y":144},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":257,"y":156},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":281,"y":142},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":306,"y":152},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":363,"y":266},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":47,"y":272},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":142,"y":328},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":251,"y":449},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":424,"y":428},{"gid":12,"height":0,"name":"","properties":{},"type":"","width":0,"x":167,"y":192},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":191},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":166},{"gid":24,"height":0,"name":"","properties":{},"type":"","width":0,"x":364,"y":193},{"gid":28,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":384},{"height":37,"name":"","properties":{},"type":"","width":35,"x":419,"y":64},{"height":29,"name":"","properties":{},"type":"","width":46,"x":73,"y":402},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":408},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":192},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":144},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":72}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{"timer":"12"},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tile-map.png","imageheight":96,"imagewidth":144,"margin":0,"name":"tilemap","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"11":{"entity":"sign"},"17":{"entity":"enemy"},"18":{"entity":"mookie"},"23":{"entity":"flower"},"5":{"entity":"gem"},"9":{"entity":"block"}},"tilewidth":24},{"firstgid":25,"image":"../src/images/test.png","imageheight":48,"imagewidth":48,"margin":0,"name":"test","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"3":{"a":"b"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-1"}}};
+platformer.settings = {"global":{"initialScene":"scene-1","fps":60,"rootElement":"root"},"aspects":[{"ogg":["firefox","chrome","opera"],"m4a":["ipod","ipad","iphone","android"],"mp3":["msie","safari"]}],"assets":[{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4a":"a/powerup.mp3"}},{"id":"alpha","src":"i/test.png","data":{"rows":2,"columns":2,"ids":[["horizon","sky"],["ground","rock"]]}},{"id":"buttons","src":"i/buttons.png"},{"id":"mookie-walk","src":"i/mookie.png"},{"id":"tilemap","src":"i/tile-map.png"},{"id":"test","src":"i/test.png"},{"id":"test-animation","src":"i/test-animation.png"}],"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Input":{"id":"Input","src":"../src/js/input.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"}},"components":{"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"lc-render":{"id":"lc-render","src":"../src/js/layer/lc-render.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tile":{"id":"render-tile","src":"../src/js/entity/render-tile.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-button":{"id":"render-button","src":"../src/js/entity/render-button.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile":{"id":"tile","components":[{"type":"render-tile","spritesheet":"import"}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}],"properties":{}},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-left":{"id":"button-left","components":[{"type":"entity-controller","controlMap":{"mouse:left-button":"pressed"}},{"type":"broadcast-events","events":{"pressed":"button-left"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":46,"height":46},"animations":{"default":0}},"state":"default","acceptInput":{"click":true,"touch":true}}],"properties":{"debug-events":["button-left"],"state":false,"x":17,"y":177,"width":46,"height":46}},"button-right":{"id":"button-right","components":[{"type":"entity-controller","controlMap":{"mouse:left-button":"pressed"}},{"type":"broadcast-events","events":{"pressed":"button-right"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":46,"height":46},"animations":{"default":1}},"state":"default","acceptInput":{"click":true,"touch":true}}],"properties":{"debug-events":["button-right"],"state":false,"x":257,"y":177,"width":46,"height":46}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"key:w":"key-up","key:up-arrow":"key-up","key:a":"key-left","key:left-arrow":"key-left","button-left":"key-left","key:s":"key-down","key:down-arrow":"key-down","key:d":"key-right","key:right-arrow":"key-right","button-right":"key-right"}},{"type":"logic-hero","speed":0.1},{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-8,-12],[8,12]]},"collisionType":"hero","collidesWith":["solid"]},{"type":"render-animation","spriteSheet":{"images":["mookie-walk"],"frames":{"width":26,"height":27,"regY":26},"animations":{"standing-north":[2],"standing-east":[2],"standing-south":[5],"standing-west":[5],"walking-north":{"frames":[0,1,2,3],"frequency":4},"walking-east":{"frames":[0,1,2,3],"frequency":4},"walking-south":{"frames":[7,6,5,4],"frequency":4},"walking-west":{"frames":[7,6,5,4],"frequency":4}}}},{"type":"render-debug","regY":24}],"properties":{"x":10,"y":10,"width":16,"height":24,"state":"standing","heading":"south","camera":"locked"}},"block":{"id":"block","components":[{"type":"collision-hero","shape":{"offset":[12,-12],"type":"rectangle","points":[[-12,-12],[12,12]]},"collisionType":"solid"},{"type":"render-animation","spriteSheet":{"images":["tilemap"],"frames":{"width":24,"height":24,"regY":24},"animations":{"tile":9}},"state":"tile"}],"properties":{"x":50,"y":50,"width":24,"height":24}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"scene-menu":{"layers":[{"id":"buttons","components":[{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button"}]}]}],"id":"scene-menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1"}]},{"id":"interface","components":[{"type":"lc-camera"},{"type":"lc-logic"},{"type":"lc-render"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"button-left"},{"type":"button-right"}]}]}],"id":"scene-1"}},"levels":{"level-1":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20],"height":20,"name":"background","opacity":1,"properties":{"entity":"render-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,16,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,23,0,15,16,16,16,16,16,17,0,15,17,0,0,15,16,16,16,16,22,23,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,0,21,23,0,0,0,0,0,0,0,0,0,0,0,22,17,0,0,0,0,0,21,22,16,16,16,17,0,0,0,0,0,0,0,0,22,16,16,16,17,0,21,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,0,9,9,0,0,0,0,0,0,0,0,0,0,21,23,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,21,5,0,0,0,0,0,3,3,15,17,3,3,3,0,0,0,0,0,0,4,5,0,0,0,0,0,3,3,21,23,9,9,9,17,0,0,0,0,0,4,23,0,0,0,0,0,3,3,21,23,9,9,15,22,17,9,9,9,9,21,22,16,16,16,16,16,16,16,22,22,16,16,22,22,22,16,16,16,16,22],"height":20,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"guys","objects":[{"gid":19,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":49,"y":144},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":257,"y":156},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":281,"y":142},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":306,"y":152},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":363,"y":266},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":47,"y":272},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":142,"y":328},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":251,"y":449},{"gid":6,"height":0,"name":"","properties":{},"type":"","width":0,"x":424,"y":428},{"gid":12,"height":0,"name":"","properties":{},"type":"","width":0,"x":167,"y":192},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":191},{"gid":18,"height":0,"name":"","properties":{},"type":"","width":0,"x":409,"y":166},{"gid":24,"height":0,"name":"","properties":{},"type":"","width":0,"x":364,"y":193},{"gid":28,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":384},{"height":37,"name":"","properties":{},"type":"","width":35,"x":419,"y":64},{"height":29,"name":"","properties":{},"type":"","width":46,"x":73,"y":402},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":360},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":408},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":456},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":384},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":192},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":144},{"gid":10,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":72}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{"timer":"12"},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tile-map.png","imageheight":96,"imagewidth":144,"margin":0,"name":"tilemap","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"11":{"entity":"sign"},"17":{"entity":"enemy"},"18":{"entity":"mookie"},"23":{"entity":"flower"},"5":{"entity":"gem"},"9":{"entity":"block"}},"tilewidth":24},{"firstgid":25,"image":"../src/images/test.png","imageheight":48,"imagewidth":48,"margin":0,"name":"test","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"3":{"a":"b"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-1"}}};
 platformer.classes = {};
 
 /*--------------------------------------------------
@@ -164,12 +164,17 @@ platformer.classes.entity = (function(){
 	};
 	
 	proto.trigger = function(messageId, value){
-		if(this['debug-events']) {
-			for (var i in this['debug-events']) if(this['debug-events'][i] == messageId) console.log(messageId, value);
-		}
+		var i = 0;
 		if(this.messages[messageId]){
-			for (var x in this.messages[messageId]){
-				this.messages[messageId][x](value);
+			for (i = 0; i < this.messages[messageId].length; i++){
+				this.messages[messageId][i](value);
+			}
+		}
+		if(this['debug']){
+			if(i){
+				console.log('Entity "' + this.type + '": Event "' + messageId + '" has ' + i + ' subscriber' + ((i>1)?'s':'') + '.', value);
+			} else {
+				console.warn('Entity "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
 			}
 		}
 	};
@@ -199,6 +204,8 @@ platformer.classes.layer = (function(){
 	var layer = function(definition, rootElement){
 		var componentDefinitions = definition.components,
 		componentDefinition = undefined;
+		
+		this.type = definition.id || 'layer';
 		
 		this.rootElement = rootElement;
 		this.components = [];
@@ -267,10 +274,18 @@ platformer.classes.layer = (function(){
 		}
 	};
 	
-	proto.trigger = function(message, value){
-		if(this.messages[message]){
-			for (messageIndex in this.messages[message]){
-				this.messages[message][messageIndex](value);
+	proto.trigger = function(messageId, value){
+		var i = 0;
+		if(this.messages[messageId]){
+			for (i = 0; i < this.messages[messageId].length; i++){
+				this.messages[messageId][i](value);
+			}
+		}
+		if(this['debug']){
+			if(i){
+				console.log('Layer "' + this.type + '": Event "' + messageId + '" has ' + i + ' subscriber' + ((i>1)?'s':'') + '.', value);
+			} else {
+				console.warn('Layer "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
 			}
 		}
 	};
@@ -1133,8 +1148,8 @@ platformer.components['tiled-loader'] = (function(){
 					
 					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
 					if(entity){
-						if(entity.follow){
-							followEntity = {entity: entity, mode: entity.follow}; //used by camera
+						if(entity.camera){
+							followEntity = {entity: entity, mode: entity.camera}; //used by camera
 						}
 					}
 				}
@@ -1143,7 +1158,7 @@ platformer.components['tiled-loader'] = (function(){
 		this.owner.trigger('world-loaded', {
 			width:  width  * tileWidth,
 			height: height * tileHeight,
-			follow: followEntity
+			camera: followEntity
 		});
 	};
 
@@ -1186,7 +1201,10 @@ platformer.components['tiled-loader'] = (function(){
  *   lc-render - ../src/js/layer/lc-render.js
  */
 platformer.components['lc-render'] = (function(){
-	var component = function(owner, definition){
+	var canvas = false,
+	stage      = false,
+	layers     = 0,
+	component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
 		
@@ -1195,14 +1213,18 @@ platformer.components['lc-render'] = (function(){
 		this.tickMessages = ['render'];
 		this.addListeners(['entity-added','render', 'camera-update']);
 		
-		this.canvas = document.createElement('canvas');
-		this.owner.rootElement.appendChild(this.canvas);
-		this.canvas.style.width = '100%';
-		this.canvas.style.height = '100%';
-		this.canvas.width  = 320; //TODO: figure out where to specify this
-		this.canvas.height = 240;
-		this.stage = new createjs.Stage(this.canvas);
-		
+		if(!layers){ // use the same canvas and stage across layers to allow for mouse input across layers
+			canvas = document.createElement('canvas');
+			this.owner.rootElement.appendChild(canvas);
+			canvas.style.width = '100%';
+			canvas.style.height = '100%';
+			canvas.width  = 320; //TODO: figure out where to specify this
+			canvas.height = 240;
+			stage = new createjs.Stage(canvas);
+		}
+		this.canvas = canvas;
+		this.stage  = stage;
+		layers += 1
 	};
 	var proto = component.prototype; 
 
@@ -1242,6 +1264,11 @@ platformer.components['lc-render'] = (function(){
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
+		layers -= 1;
+		if (layers === 0){
+			stage = false;
+			canvas = false;
+		}
 		this.stage = undefined;
 		this.owner.rootElement.removeChild(this.canvas);
 		this.canvas = undefined;
@@ -1422,8 +1449,8 @@ platformer.components['lc-camera'] = (function(){
 	proto['world-loaded'] = function(values){
 		this.worldWidth   = this.owner.worldWidth  = values.width;
 		this.worldHeight  = this.owner.worldHeight = values.height;
-		if(values.follow){
-			this.follow(values.follow);
+		if(values.camera){
+			this.follow(values.camera);
 		}
 	};
 	
@@ -1909,18 +1936,18 @@ platformer.components['render-debug'] = (function(){
 		this.mookieImg.x = this.owner.x;
 		this.mookieImg.y = this.owner.y;*/
 		
-		this.shape = new createjs.Shape((new createjs.Graphics()).beginStroke("#880").rect(0, 0, width, height));
+		this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
 
 		this.stage.addChild(this.shape);
 		this.stage.addChild(this.txt);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.click || this.touch){
-			if(this.touch && createjs.Touch.isSupported()){
-				createjs.Touch.enable(this.stage);
-			}
+		if(this.touch && createjs.Touch.isSupported()){
+			createjs.Touch.enable(this.stage);
+		}
 
-			this.shape.onPress     = function(event) {
+		this.shape.onPress     = function(event) {
+			if(this.click || this.touch){
 				self.owner.trigger('mousedown', {
 					event: event.nativeEvent,
 					over: over,
@@ -1946,7 +1973,12 @@ platformer.components['render-debug'] = (function(){
 						entity: self.owner
 					});
 				};
-			};
+			}
+			if(event.nativeEvent.button == 2){
+				console.log('This Entity:', self.owner);
+			}
+		};
+		if(this.click || this.touch){
 			this.shape.onMouseOut  = function(){over = false;};
 			this.shape.onMouseOver = function(){over = true;};
 		}
@@ -2791,9 +2823,6 @@ platformer.components['collision-tiles'] = (function(){
 	var uagent   = navigator.userAgent.toLowerCase(),
 	    
 	    myAudio  = document.createElement('audio'),
-	    doc      = document.documentElement,
-	    manifest = doc.getAttribute("manifest"),
-	    newManifest = '',
 	    
 	    supports = {
 			canvas:      false, // determined below
@@ -2821,8 +2850,9 @@ platformer.components['collision-tiles'] = (function(){
 	    supportsAspects = {},
 	    i = 0,
 	    j = 0,
-	    divider = '',
-	    foundSupportedAspect = false;
+	    k = 0,
+	    foundAspect = false,
+	    listAspects = '';
 	
 	supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
 	supports.mobile  = supports.iOS  || supports.android || supports.silk;
@@ -2845,39 +2875,26 @@ platformer.components['collision-tiles'] = (function(){
 	}
 	delete canvas;
 
-	//Turn off manifest for firefox and iOS since they show awkward pop-ups about storage - DDD
-	if(supports.firefox || supports.iOS){
-		doc.removeAttribute("manifest");
-	}
-
-	
-	/* 
-	 * Handle app cache here so we do not download assets a browser cannot use.
-	 */
-
-	//Determine relevant aspects:
-	if(aspects){
-		for (i in aspects){
-		    foundSupportedAspect = false;
-			for(j in aspects[i]){
-				if(!foundSupportedAspect && supports[aspects[i][j]]){
-					supportsAspects[aspects[i][j]] = supports[aspects[i][j]];
-				    newManifest += divider + aspects[i][j];
-				    divider = '-';
-					foundSupportedAspect = true;
-				}
-			}
-		    if(!foundSupportedAspect){
-		    	console.warn('Your browser does not seem to support any of these options: ' + aspects[i].join(', '));
-		    }
-		}
 		//replace settings aspects build array with actual support of aspects
 		platformer.settings.aspects = supportsAspects;
-	} else {
-		platformer.settings.aspects = [];
-	}
-	if(manifest){
-		doc.setAttribute("manifest", newManifest + '.manifest');
+	platformer.settings.aspects = {};
+	for (i in aspects){
+		foundAspect = false;
+		listAspects = '';
+		for (j in aspects[i]){
+			listAspects += ' ' + j;
+			for (k in aspects[i][j]){
+				if (uagent.search(aspects[i][j][k]) > -1){
+					platformer.settings.aspects[j] = true;
+					foundAspect = true;
+					break;
+				}
+			}
+			if(foundAspect) break;
+		}
+		if(!foundAspect){
+			console.warn('This browser doesn\'t support any of the following: ' + listAspects);
+		}
 	}
 
 })();

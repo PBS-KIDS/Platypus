@@ -16,33 +16,26 @@
 			"jsCompression": true,
 			"manifest": true,                    // Determines whether this build uses Application Cache.
 			"pngCompression": 256,               // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
-			"aspects": [                         // Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client.
-				["ogg", "mp3", "m4a"],           //    Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
-				["mobile", "desktop"]            //    For example, a mobile client might request the "m4a-mobile.manifest" cache manifest in order to use m4a audio files and small images.
-			],
 			"paths": {
-				"default": "http://localhost/gopherwood/2DGE/builds/game/", // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
-				"assets":  "http://localhost/gopherwood/2DGE/builds/game/"  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
+//				"default": "http://localhost/gopherwood/2DGE/builds/game/", // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
+//				"assets":  "http://localhost/gopherwood/2DGE/builds/game/"  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
 			}
 		},{
 			"id": "debug",          // This is the id of the build and is matched to a folder name in the "builds/" folder.
 			"cssCompression": false,
 			"jsCompression": false,
 			"manifest": false,      // Determines whether this build uses Application Cache.
-			"pngCompression": 256,  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
-			"aspects": [                         // Aspects are an array of different aspects of a build, where the build might use different file types or sizes depending on properties of the client.
-				["ogg", "mp3", "m4a"],           //    Each contained array lists mutually exclusive properties, so that a single aspect is comprised of an item from each list.
-				["mobile", "desktop"]            //    For example, a mobile client might request the "m4a-mobile.manifest" cache manifest in order to use m4a audio files and small images.
-			]
+			"pngCompression": 256   // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
 		}
 	],
 	"source": { 
 		"assets": [ // Assets such as images and audio
-			/*{"id": "powerup", "src": {
+			{"id": "powerup", "src": {
 					"ogg": "../audio/powerup.ogg",
-					"mp3": "../audio/powerup.mp3"
+                    "mp3": "../audio/powerup.mp3",
+                    "m4a": "../audio/powerup.mp3"
 				}
-			},*/
+			},
 			{"id":  "alpha",
 				"src": "../images/test.png",
 				"data": {
@@ -113,5 +106,12 @@
 		"levels": [ // JSON files describing levels
 			{"id": "level-1", "src": "levels/level-1.json"} // If "src" key is included, this will be replaced by the JSON structure in the linked file.
 		]
-	}
+	},
+	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.
+        {                //    Each contained object lists mutually exclusive properties, so that a single aspect is comprised of an item from each object list. This example includes a single object in the list, but additional objects can be appended for different aspects
+            "ogg": ["firefox", "chrome", "opera"],         // Array lists user agent checks that should load this resource type
+            "m4a": ["ipod", "ipad", "iphone", "android"],  // Order determines first valid version, so Safari on iPad will use "m4a" rather than "mp3" below
+            "mp3": ["msie", "safari"]
+        }
+	]
 }

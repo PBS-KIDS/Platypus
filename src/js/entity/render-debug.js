@@ -55,18 +55,18 @@ platformer.components['render-debug'] = (function(){
 		this.mookieImg.x = this.owner.x;
 		this.mookieImg.y = this.owner.y;*/
 		
-		this.shape = new createjs.Shape((new createjs.Graphics()).beginStroke("#880").rect(0, 0, width, height));
+		this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
 
 		this.stage.addChild(this.shape);
 		this.stage.addChild(this.txt);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.click || this.touch){
-			if(this.touch && createjs.Touch.isSupported()){
-				createjs.Touch.enable(this.stage);
-			}
+		if(this.touch && createjs.Touch.isSupported()){
+			createjs.Touch.enable(this.stage);
+		}
 
-			this.shape.onPress     = function(event) {
+		this.shape.onPress     = function(event) {
+			if(this.click || this.touch){
 				self.owner.trigger('mousedown', {
 					event: event.nativeEvent,
 					over: over,
@@ -92,7 +92,12 @@ platformer.components['render-debug'] = (function(){
 						entity: self.owner
 					});
 				};
-			};
+			}
+			if(event.nativeEvent.button == 2){
+				console.log('This Entity:', self.owner);
+			}
+		};
+		if(this.click || this.touch){
 			this.shape.onMouseOut  = function(){over = false;};
 			this.shape.onMouseOver = function(){over = true;};
 		}

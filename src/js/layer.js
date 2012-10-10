@@ -3,6 +3,8 @@ platformer.classes.layer = (function(){
 		var componentDefinitions = definition.components,
 		componentDefinition = undefined;
 		
+		this.type = definition.id || 'layer';
+		
 		this.rootElement = rootElement;
 		this.components = [];
 		this.tickMessages = [];
@@ -70,10 +72,18 @@ platformer.classes.layer = (function(){
 		}
 	};
 	
-	proto.trigger = function(message, value){
-		if(this.messages[message]){
-			for (messageIndex in this.messages[message]){
-				this.messages[message][messageIndex](value);
+	proto.trigger = function(messageId, value){
+		var i = 0;
+		if(this.messages[messageId]){
+			for (i = 0; i < this.messages[messageId].length; i++){
+				this.messages[messageId][i](value);
+			}
+		}
+		if(this['debug']){
+			if(i){
+				console.log('Layer "' + this.type + '": Event "' + messageId + '" has ' + i + ' subscriber' + ((i>1)?'s':'') + '.', value);
+			} else {
+				console.warn('Layer "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
 			}
 		}
 	};

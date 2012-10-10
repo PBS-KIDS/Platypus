@@ -40,27 +40,26 @@
 					"regY":   26
 				},
 				"animations": {
-					"standing-north": [0],
-					"standing-east":  [0],
-					"standing-south": [7],
-					"standing-west":  [7],
+					"standing-north": [2],
+					"standing-east":  [2],
+					"standing-south": [5],
+					"standing-west":  [5],
 					"walking-north": {frames:[0,1,2,3], 	frequency:4},
 					"walking-east":  {frames:[0,1,2,3], 	frequency:4},
 					"walking-south": {frames:[7,6,5,4], 	frequency:4},
 					"walking-west":  {frames:[7,6,5,4], 	frequency:4}
 				}
 			}
-		}//,
-		//{"type": "render-debug", "regY": 24}
+		},
+		{"type": "render-debug", "regY": 24}
 	],
 	"properties":{
-		"debug-events": ["key:a:up", "key:a:down", "go-left"],
 		"x": 10,
 		"y": 10,
-		"width": 24,
+		"width": 16,
 		"height": 24,
 		"state": "standing",
 		"heading": "south",
-		"follow": "locked"
+		"camera": "locked"
 	}
 }

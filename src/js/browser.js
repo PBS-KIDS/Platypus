@@ -2,9 +2,6 @@
 	var uagent   = navigator.userAgent.toLowerCase(),
 	    
 	    myAudio  = document.createElement('audio'),
-	    doc      = document.documentElement,
-	    manifest = doc.getAttribute("manifest"),
-	    newManifest = '',
 	    
 	    supports = {
 			canvas:      false, // determined below
@@ -32,8 +29,9 @@
 	    supportsAspects = {},
 	    i = 0,
 	    j = 0,
-	    divider = '',
-	    foundSupportedAspect = false;
+	    k = 0,
+	    foundAspect = false,
+	    listAspects = '';
 	
 	supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
 	supports.mobile  = supports.iOS  || supports.android || supports.silk;
@@ -56,39 +54,26 @@
 	}
 	delete canvas;
 
-	//Turn off manifest for firefox and iOS since they show awkward pop-ups about storage - DDD
-	if(supports.firefox || supports.iOS){
-		doc.removeAttribute("manifest");
-	}
-
-	
-	/* 
-	 * Handle app cache here so we do not download assets a browser cannot use.
-	 */
-
-	//Determine relevant aspects:
-	if(aspects){
-		for (i in aspects){
-		    foundSupportedAspect = false;
-			for(j in aspects[i]){
-				if(!foundSupportedAspect && supports[aspects[i][j]]){
-					supportsAspects[aspects[i][j]] = supports[aspects[i][j]];
-				    newManifest += divider + aspects[i][j];
-				    divider = '-';
-					foundSupportedAspect = true;
-				}
-			}
-		    if(!foundSupportedAspect){
-		    	console.warn('Your browser does not seem to support any of these options: ' + aspects[i].join(', '));
-		    }
-		}
 		//replace settings aspects build array with actual support of aspects
 		platformer.settings.aspects = supportsAspects;
-	} else {
-		platformer.settings.aspects = [];
-	}
-	if(manifest){
-		doc.setAttribute("manifest", newManifest + '.manifest');
+	platformer.settings.aspects = {};
+	for (i in aspects){
+		foundAspect = false;
+		listAspects = '';
+		for (j in aspects[i]){
+			listAspects += ' ' + j;
+			for (k in aspects[i][j]){
+				if (uagent.search(aspects[i][j][k]) > -1){
+					platformer.settings.aspects[j] = true;
+					foundAspect = true;
+					break;
+				}
+			}
+			if(foundAspect) break;
+		}
+		if(!foundAspect){
+			console.warn('This browser doesn\'t support any of the following: ' + listAspects);
+		}
 	}
 
 })();

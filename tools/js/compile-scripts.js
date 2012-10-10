@@ -91,6 +91,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    paths      = build.paths || {},
 	    path       = '',
 	    aspects    = {"default": []},
+	    supports   = game['client-supports'] || false,
 	    section    = undefined,
 	    sectionId  = '',
 	    asset      = undefined,
@@ -98,15 +99,17 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    srcId      = '',
 	    i          = 0,
 	    j          = 0,
+	    htaccess   = '',
 	    divider    = '';
 
 	    delete game.builds;
+	    delete game['client-supports'];
 
-	    if(build.aspects){ // Prepare multiple manifest files
+	    if(supports){ // Prepare multiple manifest files
 		    print('...Creating arrays to store cache.manifest file versions.');
-		    game.aspects = build.aspects;
-	    	for (i in build.aspects) for (j in build.aspects[i]){
-		    	aspects[build.aspects[i][j]] = ['\n# ' + build.aspects[i][j] + ':\n'];
+		    game.aspects = supports;
+	    	for (i in supports) for (j in supports[i]){
+		    	aspects[j] = ['\n# ' + j + ':\n'];
 	    	}
 	    }
 	    
@@ -200,19 +203,30 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    // setup manifest from template
 		path = paths["default"] || '';
 	    if(build.manifest){
+		    print('...Handling multiple app cache manifests.');
+
+		    htaccess = 'AddType text\/cache-manifest .manifest\n';
 	    	html     = html.replace('<html>', '<html manifest="cache.manifest">');
 	    	manifest = manifest.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + jsFile + timestamp + '.js\n' + path + 's\/' + cssFile + timestamp + '.css\n');
 
-		    if(build.aspects){ // Prepare multiple manifest files
-		    	var aspectVariations = build.aspects[0], tempArray = [];
+		    if(supports){ // Prepare multiple manifest files
+		    	var aspectVariations = [], tempArray = [], rewriteConds = {};
 		    	
-		    	for (var i = 1; i < build.aspects.length; i++){
-		    		options = build.aspects[i];
+		    	htaccess += '\nRewriteEngine on\n';
+		    	
+		    	for(var i in supports[0]){
+		    		aspectVariations.push(i);
+		    		rewriteConds[i] = supports[0][i];
+		    	}
+		    	
+		    	for (var i = 1; i < supports.length; i++){
+		    		options = supports[i];
 	    			tempArray = [];
 		    		for (j in options){
 		    			for (k in aspectVariations){
-		    				tempArray.push(aspectVariations[k] + '-' + options[j]);
+		    				tempArray.push(aspectVariations[k] + '-' + j);
 		    			}
+			    		rewriteConds[j] = options[j];
 		    		}
 		    		aspectVariations = tempArray;
 		    	}
@@ -220,9 +234,14 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		    	for (i in aspectVariations){
 			    	var tempMan = manifest;
 			    	var arr2 = aspectVariations[i].split('-');
+			    	divider = '';
+			    	htaccess += '\nRewriteCond %{HTTP_USER_AGENT} "';
 			    	for (j in arr2){
 			    		tempMan = tempMan.replace('CACHE:', 'CACHE:\n' + aspects[arr2[j]].join('\n'));
+			    		htaccess += divider + rewriteConds[arr2[j]].join('|');
+			    		divider = '|';
 			    	}
+			    	htaccess += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + aspectVariations[i] + '.manifest [L]\n';
 				    setText(aspectVariations[i] + '.manifest', tempMan);
 				    try {fileSystem.DeleteFile(buildDir + build.id + '/' + aspectVariations[i] + '.manifest');} catch(e) {}
 				    fileSystem.MoveFile(aspectVariations[i] + '.manifest', buildDir + build.id + '/' + aspectVariations[i] + '.manifest');
@@ -241,6 +260,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
 	    setText('index.html', html);
 	    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
+
+	    setText('.htaccess', htaccess);
+	    try {fileSystem.DeleteFile(buildDir + build.id + '/.htaccess');} catch(e) {}
+	    fileSystem.MoveFile('.htaccess', buildDir + build.id + '/.htaccess');
    },
    isImage    = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();

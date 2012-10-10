@@ -67,8 +67,8 @@ platformer.components['lc-camera'] = (function(){
 	proto['world-loaded'] = function(values){
 		this.worldWidth   = this.owner.worldWidth  = values.width;
 		this.worldHeight  = this.owner.worldHeight = values.height;
-		if(values.follow){
-			this.follow(values.follow);
+		if(values.camera){
+			this.follow(values.camera);
 		}
 	};
 	

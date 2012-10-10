@@ -65,12 +65,17 @@ platformer.classes.entity = (function(){
 	};
 	
 	proto.trigger = function(messageId, value){
-		if(this['debug-events']) {
-			for (var i in this['debug-events']) if(this['debug-events'][i] == messageId) console.log(messageId, value);
-		}
+		var i = 0;
 		if(this.messages[messageId]){
-			for (var x in this.messages[messageId]){
-				this.messages[messageId][x](value);
+			for (i = 0; i < this.messages[messageId].length; i++){
+				this.messages[messageId][i](value);
+			}
+		}
+		if(this['debug']){
+			if(i){
+				console.log('Entity "' + this.type + '": Event "' + messageId + '" has ' + i + ' subscriber' + ((i>1)?'s':'') + '.', value);
+			} else {
+				console.warn('Entity "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
 			}
 		}
 	};

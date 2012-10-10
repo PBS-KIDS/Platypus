@@ -147,8 +147,8 @@ platformer.components['tiled-loader'] = (function(){
 					
 					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
 					if(entity){
-						if(entity.follow){
-							followEntity = {entity: entity, mode: entity.follow}; //used by camera
+						if(entity.camera){
+							followEntity = {entity: entity, mode: entity.camera}; //used by camera
 						}
 					}
 				}
@@ -157,7 +157,7 @@ platformer.components['tiled-loader'] = (function(){
 		this.owner.trigger('world-loaded', {
 			width:  width  * tileWidth,
 			height: height * tileHeight,
-			follow: followEntity
+			camera: followEntity
 		});
 	};
 
