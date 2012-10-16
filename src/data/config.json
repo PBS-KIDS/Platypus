@@ -77,7 +77,7 @@
 			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},
 			{"id": "render-button",      "src": "../js/entity/render-button.js"},
 			{"id": "render-animation",   "src": "../js/entity/render-animation.js"},
-			{"id": "logic-hero",         "src": "../js/entity/logic-hero.js"},
+			{"id": "logic-directional-movement",         "src": "../js/entity/logic-directional-movement.js"},
 			{"id": "collision-hero",     "src": "../js/entity/collision-hero.js"},
 			{"id": "collision-tiles",    "src": "../js/entity/collision-tiles.js"}
 		],
@@ -103,8 +103,8 @@
 		],
 		"scenes": [ // JSON files describing scenes
 			{"id": "scene-menu", "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "scene-1", "src": "scenes/scene-1.json"},
-            {"id": "scene-2", "src": "scenes/scene-2.json"}
+            {"id": "scene-1",    "src": "scenes/scene-1.json"},
+            {"id": "scene-2",    "src": "scenes/scene-2.json"}
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

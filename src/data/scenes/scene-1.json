@@ -5,7 +5,7 @@
 			"components": [
 				{
 				   "type": "lc-camera",
-				   "width": 320//,
+				   "width": 3200//,
 				   //"scaleWidth":320 
 				},
 				{"type": "lc-logic"},
@@ -13,7 +13,7 @@
 				{"type": "lc-render"},
 				{"type": "layer-controller"},
 				{"type": "entity-container"},
-				{"type": "tiled-loader", "level": "level-1"}
+				{"type": "tiled-loader", "level": "level-1", "unitsPerPixel": 10}
 			]
 		},{
 			"id": "interface",

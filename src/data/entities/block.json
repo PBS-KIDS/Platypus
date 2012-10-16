@@ -7,9 +7,9 @@
 		{
 			"type": "collision-hero", 
 		 	"shape": {
-	 			"offset": [12,-12],
+	 			"offset": [0,-120],
 	 			"type": "rectangle",
-	 		   	"points": [[-12,-12],[12,12]]
+	 		   	"points": [[-120,-120],[120,120]]
 	 		},
 			"collisionType": "solid"
 		},{
@@ -19,7 +19,8 @@
 				"frames": {
 					"width":  24,
 					"height": 24,
-					"regY":   24
+                    "regX":   12,
+                    "regY":   24
 				  },
 				"animations": {
 					"tile": 9
@@ -32,7 +33,7 @@
 	"properties":{
 		"x": 50,
 		"y": 50,
-		"width": 24,
-		"height": 24
+		"width": 240,
+		"height": 240
 	}
 }

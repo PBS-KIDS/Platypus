@@ -9,6 +9,7 @@ platformer.components['tiled-loader'] = (function(){
 
 		this.level = platformer.settings.levels[definition.level];
 		this.tileEntityId = definition.tileEntityId || 'tile';
+		this.unitsPerPixel = definition.unitsPerPixel || 1;
 	},
 	proto = component.prototype; 
 
@@ -73,12 +74,14 @@ platformer.components['tiled-loader'] = (function(){
 			importRender    = [];
 
 			tileDefinition.properties            = tileDefinition.properties || {};
-			tileDefinition.properties.width      = tileWidth  * width;
-			tileDefinition.properties.height     = tileHeight * height;
+			tileDefinition.properties.width      = tileWidth  * width  * this.unitsPerPixel;
+			tileDefinition.properties.height     = tileHeight * height * this.unitsPerPixel;
 			tileDefinition.properties.columns    = width;
 			tileDefinition.properties.rows       = height;
-			tileDefinition.properties.tileWidth  = tileWidth;
-			tileDefinition.properties.tileHeight = tileHeight;
+			tileDefinition.properties.tileWidth  = tileWidth  * this.unitsPerPixel;
+			tileDefinition.properties.tileHeight = tileHeight * this.unitsPerPixel;
+			tileDefinition.properties.scaleX     = this.unitsPerPixel;
+			tileDefinition.properties.scaleY     = this.unitsPerPixel;
 
 			for (x = 0; x < width; x++){
 				importCollision[x] = [];
@@ -139,10 +142,12 @@ platformer.components['tiled-loader'] = (function(){
 					for (x in entity.properties){
 						properties[x] = entity.properties[x];
 					}
-					properties.x = entity.x;
-					properties.y = entity.y;
-					properties.width  = entity.width  || tileWidth;
-					properties.height = entity.height || tileHeight;
+					properties.width  = (entity.width  || tileWidth)  * this.unitsPerPixel;
+					properties.height = (entity.height || tileHeight) * this.unitsPerPixel;
+					properties.x = entity.x * this.unitsPerPixel + (properties.width / 2);
+					properties.y = entity.y * this.unitsPerPixel;
+					properties.scaleX = this.unitsPerPixel;
+					properties.scaleY = this.unitsPerPixel;
 					
 					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
 					if(entity){
@@ -154,8 +159,9 @@ platformer.components['tiled-loader'] = (function(){
 			}
 		}
 		this.owner.trigger('world-loaded', {
-			width:  width  * tileWidth,
-			height: height * tileHeight,
+			width:  width  * tileWidth  * this.unitsPerPixel,
+			height: height * tileHeight * this.unitsPerPixel,
+			unitsPerPixel: this.unitsPerPixel,
 			camera: followEntity
 		});
 	};

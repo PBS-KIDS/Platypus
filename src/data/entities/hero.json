@@ -7,30 +7,30 @@
 		{
 			"type": "entity-controller",
 			"controlMap":{
-				"key:w": 			"key-up",
-				"key:up-arrow": 	"key-up",
-				"key:a": 			"key-left",
-                "key:left-arrow":   "key-left",
-                "button-left":      "key-left",
-				"key:s": 			"key-down",
-				"key:down-arrow": 	"key-down",
-				"key:d": 			"key-right",
-				"key:right-arrow": 	"key-right",
-				"button-right":     "key-right",
-				"key:q": 			"key-up-left",
-				"key:e": 			"key-up-right",
-				"key:z": 			"key-down-left",
-				"key:c": 			"key-down-right"
+				"key:w": 			"go-up",
+				"key:up-arrow": 	"go-up",
+				"key:a": 			"go-left",
+                "key:left-arrow":   "go-left",
+                "button-left":      "go-left",
+				"key:s": 			"go-down",
+				"key:down-arrow": 	"go-down",
+				"key:d": 			"go-right",
+				"key:right-arrow": 	"go-right",
+				"button-right":     "go-right",
+				"key:q": 			"go-up-left",
+				"key:e": 			"go-up-right",
+				"key:z": 			"go-down-left",
+				"key:c": 			"go-down-right"
 			}
 		},{
-			"type": "logic-hero",
-			"speed": 0.1
+			"type": "logic-directional-movement",
+			"speed": 1
 		},{
 			"type": "collision-hero",
 		 	"shape":{
-		 		"offset": [12,-12],
+		 		"offset": [0,-120],
 		 		"type": "rectangle",
-		 		"points": [[-8,-12],[8, 12]]
+		 		"points": [[-80,-120],[80, 120]]
 	 		},
 			"collisionType": "hero",
 			"collidesWith": ["solid"]
@@ -41,17 +41,26 @@
 				"frames": {
 					"width":  26,
 					"height": 27,
-					"regY":   26
+					"regY":   26,
+					"regX":   13
 				},
 				"animations": {
-					"standing-north": [2],
-					"standing-east":  [2],
-					"standing-south": [5],
-					"standing-west":  [5],
-					"walking-north": {frames:[0,1,2,3], 	frequency:4},
-					"walking-east":  {frames:[0,1,2,3], 	frequency:4},
-					"walking-south": {frames:[7,6,5,4], 	frequency:4},
-					"walking-west":  {frames:[7,6,5,4], 	frequency:4}
+                    "standing-up": [2],
+                    "standing-up-right": [2],
+                    "standing-right":  [2],
+                    "standing-down-right":  [2],
+                    "standing-down": [5],
+                    "standing-down-left": [5],
+                    "standing-left":  [5],
+                    "standing-up-left":  [5],
+                    "walking-up": {frames:[0,1,2,3],    frequency:4},
+                    "walking-up-right": {frames:[0,1,2,3],    frequency:4},
+					"walking-right":  {frames:[0,1,2,3], 	frequency:4},
+                    "walking-down-right":  {frames:[0,1,2,3],    frequency:4},
+                    "walking-down": {frames:[7,6,5,4],  frequency:4},
+                    "walking-down-left": {frames:[7,6,5,4],  frequency:4},
+                    "walking-left":  {frames:[7,6,5,4],     frequency:4},
+                    "walking-up-left":  {frames:[7,6,5,4],     frequency:4}
 				}
 			}
 		},{
@@ -62,16 +71,17 @@
 		    }
 //		},{
 //		    "type": "render-debug",
-//		    "regY": 24
+//		    "regY": 24,
+//          "regX": 13
 		}
 	],
 	"properties":{
-		"x": 10,
-		"y": 10,
-		"width": 16,
-		"height": 24,
+		"x": 100,
+		"y": 100,
+		"width": 160,
+		"height": 240,
 		"state": "standing",
-		"heading": "south",
+		"heading": "left",
 		"camera": "locked"
 	}
 }

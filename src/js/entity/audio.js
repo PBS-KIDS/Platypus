@@ -36,7 +36,9 @@ platformer.components['audio'] = (function(){
 			}
 
 			if(audio.playState === 'playFailed'){
-				console.warn('Unable to play "' + sound + '".', audio);
+				if(this.owner.debug){
+					console.warn('Unable to play "' + sound + '".', audio);
+				}
 			} else {
 				if(length){ // Length is specified so we need to turn off the sound at some point.
 					this.timedAudioClips.push({length: length, progress: 0, audio: audio});

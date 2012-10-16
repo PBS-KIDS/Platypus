@@ -7,6 +7,8 @@ platformer.components['render-tiles'] = (function(){
 		this.imageMap    = definition.imageMap   || [];
 		this.tileWidth   = definition.tileWidth  || this.owner.tileWidth  || 10;
 		this.tileHeight  = definition.tileHeight || this.owner.tileHeight || 10;
+		this.scaleX      = definition.scaleX || this.owner.scaleX || 1;
+		this.scaleY      = definition.scaleY || this.owner.scaleY || 1;
 		
 		this.state = definition.state || 'tile';
 		
@@ -30,6 +32,8 @@ platformer.components['render-tiles'] = (function(){
 			for (y = 0; y < this.imageMap[x].length; y++){
 				//TODO: Test speed of this - would non-animations perform better?
 				tile = new createjs.BitmapAnimation(this.spriteSheet);
+				tile.scaleX = this.scaleX;
+				tile.scaleY = this.scaleY;
 				tile.x = x * this.tileWidth;
 				tile.y = y * this.tileHeight;
 				stage.addChild(tile);
