@@ -1,6 +1,5 @@
 window.addEventListener('load', function(){
-	var count = 0;
-	loader = new createjs.PreloadJS();
+	var loader = new createjs.PreloadJS();
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
 	};
@@ -65,7 +64,6 @@ window.addEventListener('load', function(){
 	}
 	
 	loader.installPlugin(createjs.SoundJS);
-	loader.installPlugin(createjs.EaselJS);
 	loader.loadManifest(platformer.settings.assets);
 	platformer.assets = [];
 

@@ -5,7 +5,7 @@ platformer.components['logic-hero'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down']);
+		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down', 'key-up-left', 'key-up-right', 'key-down-left', 'key-down-right']);
 		
 		this.owner.state = 'standing';
 		this.owner.heading = 'south';
@@ -14,6 +14,10 @@ platformer.components['logic-hero'] = (function(){
 		this.right = false;
 		this.up = false;
 		this.down = false;
+		this.upLeft = false;
+		this.upRight = false;
+		this.downLeft = false;
+		this.downRight = false;
 	};
 	var proto = component.prototype;
 	
@@ -38,7 +42,27 @@ platformer.components['logic-hero'] = (function(){
 			vY = this.speed;
 			this.owner.heading = 'south';
 			this.owner.state = 'walking';
-		} else {
+		} else if (this.upLeft) {
+			vX = -this.speed;
+			vY = -this.speed;
+			this.owner.heading = 'west';
+			this.owner.state = 'walking';
+		} else if (this.upRight) {
+			vY = -this.speed;
+			vX = this.speed;
+			this.owner.heading = 'east';
+			this.owner.state = 'walking';
+		} else if (this.downLeft) {
+			vY = this.speed;
+			vX = -this.speed;
+			this.owner.heading = 'west';
+			this.owner.state = 'walking';
+		} else if (this.downRight) {
+			vY = this.speed;
+			vX = this.speed;
+			this.owner.heading = 'east';
+			this.owner.state = 'walking';
+		}else {
 			this.owner.state = 'standing';
 // test for gravity			vY = 0.3; //gravity!
 		}
@@ -50,6 +74,10 @@ platformer.components['logic-hero'] = (function(){
 		this.right = false;
 		this.up = false;
 		this.down = false;
+		this.upLeft = false;
+		this.upRight = false;
+		this.downLeft = false;
+		this.downRight = false;
 		
 		this.owner.trigger('logical-state', {state: this.owner.state + '-' + this.owner.heading});
 		this.owner.trigger(this.owner.state);
@@ -84,6 +112,38 @@ platformer.components['logic-hero'] = (function(){
 		if(state.pressed)
 		{
 			this.down = true;
+		}
+	};
+	
+	proto['key-up-left'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.upLeft = true;
+		}
+	};
+	
+	proto['key-up-right'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.upRight = true;
+		}
+	};
+	
+	proto['key-down-left'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.downLeft = true;
+		}
+	};
+	
+	proto['key-down-right'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.downRight = true;
 		}
 	};
 

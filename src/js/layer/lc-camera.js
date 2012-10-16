@@ -3,47 +3,50 @@ platformer.components['lc-camera'] = (function(){
 		this.owner = owner;
 		this.entities = [];
 		
+		// on resize should the view be stretched or should the world's initial aspect ratio be maintained?
+		this.stretch = definition.stretch || false;
+		
 		// Messages that this component listens for
 		this.listeners = [];
 		
 		this.tickMessages = ['camera'];
-		this.addListeners(['resize', 'camera', 'load', 'world-loaded']);  
+		this.addListeners(['resize', 'orientationchange', 'camera', 'load', 'world-loaded']);  
 		
 		//The dimensions of the camera in the window
-		this.portalTop = this.owner.rootElement.innerTop;
-		this.portalLeft = this.owner.rootElement.innerLeft;
-		this.portalWidth = this.owner.rootElement.offsetWidth;
-		this.portalHeight = this.owner.rootElement.offsetHeight;
+		this.windowViewportTop = this.owner.rootElement.innerTop;
+		this.windowViewportLeft = this.owner.rootElement.innerLeft;
+		this.windowViewportWidth = this.owner.rootElement.offsetWidth;
+		this.windowViewportHeight = this.owner.rootElement.offsetHeight;
 		
 		//The dimensions of the camera in the game world
-		this.width       = definition.width       || 0; 
-		this.height      = definition.height      || 0;
-		this.aspectRatio = definition.aspectRatio || 0;
-		this.left        = definition.left        || 0;
-		this.top         = definition.top         || 0;
-		
-		if(this.width && this.height){
-			this.aspectRatio = this.aspectRatio || (this.height      / this.width); 
+		this.worldViewportWidth       = definition.width       || 0; 
+		this.worldViewportHeight      = definition.height      || 0;
+		this.worldViewportLeft        = definition.left        || 0;
+		this.worldViewportTop         = definition.top         || 0;
+
+		this.aspectRatio              = definition.aspectRatio || 0;
+		if(this.worldViewportWidth && this.worldViewportHeight){
+			this.aspectRatio = this.aspectRatio || (this.worldViewportHeight      / this.worldViewportWidth); 
 		} else {
-			this.aspectRatio = this.aspectRatio || (this.portalHeight / this.portalWidth);
-			if (this.width || this.height){
-				this.width       = this.width       || (this.height      / this.aspectRatio); 
-				this.height      = this.height      || (this.aspectRatio / this.width); 
+			this.aspectRatio = this.aspectRatio || (this.windowViewportHeight / this.windowViewportWidth);
+			if (this.worldViewportWidth || this.worldViewportHeight){
+				this.worldViewportWidth       = this.worldViewportWidth       || (this.worldViewportHeight      / this.aspectRatio); 
+				this.worldViewportHeight      = this.worldViewportHeight      || (this.aspectRatio / this.worldViewportWidth); 
 			} else {
-				this.width       = this.portalWidth;
-				this.height      = this.aspectRatio * this.width;
+				this.worldViewportWidth       = this.windowViewportWidth;
+				this.worldViewportHeight      = this.aspectRatio * this.worldViewportWidth;
 			}
 		}
+		
+		// on resize should the game snap to certain sizes or should it be fluid?
+		// 0 == fluid scaling
+		// set the windowWidth multiple that triggers zooming in
+		this.scaleWidth = definition.scaleWidth || 0;
+		this.resize();
 		
 		// The dimensions of the entire world
 		this.worldWidth  = 0; //definition.worldWidth;
 		this.worldHeight = 0; //definition.worldHeight;
-		
-		this.worldPerScreenUnitWidth = this.width / this.portalWidth;
-		this.worldPerScreenUnitHeight = this.height / this.portalHeight;
-		
-		this.screenPerWorldUnitWidth =  this.portalWidth / this.width;
-		this.screenPerWorldUnitHeight =  this.portalHeight/ this.height;
 		
 		this.following = undefined;
 		this.state = 'static';//'roaming';
@@ -53,8 +56,8 @@ platformer.components['lc-camera'] = (function(){
 		//--Bounding
 		this.boundingBoxLeft = 100;
 		this.boundingBoxTop = 100;
-		this.boundingBoxWidth = this.width - (2 * this.boundingBoxLeft);
-		this.boundingBoxHeight = this.height - (2 * this.boundingBoxTop);
+		this.boundingBoxWidth = this.worldViewportWidth - (2 * this.boundingBoxLeft);
+		this.boundingBoxHeight = this.worldViewportHeight - (2 * this.boundingBoxTop);
 		
 		
 		this.direction = true;  
@@ -62,6 +65,7 @@ platformer.components['lc-camera'] = (function(){
 	var proto = component.prototype; 
 
 	proto['load'] = function(){
+		
 	};
 
 	proto['world-loaded'] = function(values){
@@ -83,13 +87,13 @@ platformer.components['lc-camera'] = (function(){
 			var speed = .3 * deltaT;
 			if (this.direction)
 			{
-				this.move(this.left + speed, this.top);
-				if (this.worldWidth && (this.left == this.worldWidth - this.width)) {
+				this.move(this.worldViewportLeft + speed, this.worldViewportTop);
+				if (this.worldWidth && (this.worldViewportLeft == this.worldWidth - this.worldViewportWidth)) {
 					this.direction = !this.direction;
 				}
 			} else {
-				this.move(this.left - speed, this.top);
-				if (this.worldWidth && (this.left == 0)) {
+				this.move(this.worldViewportLeft - speed, this.worldViewportTop);
+				if (this.worldWidth && (this.worldViewportLeft == 0)) {
 					this.direction = !this.direction;
 				}
 			}
@@ -98,22 +102,29 @@ platformer.components['lc-camera'] = (function(){
 		default:
 			break;
 		}
-		this.owner.trigger('camera-update', {x: this.left, y: this.top});
+		this.owner.trigger('camera-update', {x: this.worldViewportLeft * this.windowPerWorldUnitWidth, y: this.worldViewportTop * this.windowPerWorldUnitHeight, scaleX: this.windowPerWorldUnitWidth, scaleY: this.windowPerWorldUnitHeight});
 	};
 	
-	proto['resize'] = function ()
+	proto['resize'] = proto['orientationchange'] = function ()
 	{
-		//TODO: need to call this on screen resize!!
-		this.portalTop = rootElement.innerTop;
-		this.portalLeft = rootElement.innerLeft;
-		this.portalWidth = rootElement.offsetWidth;
-		this.portalHeight = rootElement.offsetHeight;
+		//The dimensions of the camera in the window
+		this.windowViewportTop = this.owner.rootElement.innerTop;
+		this.windowViewportLeft = this.owner.rootElement.innerLeft;
+		this.windowViewportWidth = this.owner.rootElement.offsetWidth;
+		this.windowViewportHeight = this.owner.rootElement.offsetHeight;
+
+		if(this.scaleWidth){
+			this.worldViewportWidth = this.windowViewportWidth / Math.ceil(this.windowViewportWidth / this.scaleWidth);
+		}
 		
-		this.worldPerScreenUnitWidth = this.width / this.portalWidth;
-		this.worldPerScreenUnitHeight = this.height / this.portalHeight;
+		if(!this.stretch || this.scaleWidth){
+			this.worldViewportHeight = this.windowViewportHeight * this.worldViewportWidth / this.windowViewportWidth;
+		}
 		
-		this.screenPerWorldUnitWidth =  this.portalWidth / this.width;
-		this.screenPerWorldUnitHeight =  this.portalHeight/ this.height;
+		this.worldPerWindowUnitWidth  = this.worldViewportWidth / this.windowViewportWidth;
+		this.worldPerWindowUnitHeight = this.worldViewportHeight / this.windowViewportHeight;
+		this.windowPerWorldUnitWidth  = this.windowViewportWidth / this.worldViewportWidth;
+		this.windowPerWorldUnitHeight = this.windowViewportHeight/ this.worldViewportHeight;
 	};
 	
 	proto['follow'] = function (def)
@@ -148,35 +159,39 @@ platformer.components['lc-camera'] = (function(){
 	
 	proto.move = function (newleft, newtop)
 	{
-		if (this.worldWidth && (newleft + this.width > this.worldWidth)) {
-			this.left = this.worldWidth - this.width;
+		if (this.worldWidth < this.worldViewportWidth){
+			this.worldViewportLeft = (this.worldWidth - this.worldViewportWidth) / 2;
+		} else if (this.worldWidth && (newleft + this.worldViewportWidth > this.worldWidth)) {
+			this.worldViewportLeft = this.worldWidth - this.worldViewportWidth;
 		} else if (this.worldWidth && (newleft < 0)) {
-			this.left = 0; 
+			this.worldViewportLeft = 0; 
 		} else {
-			this.left = newleft;
+			this.worldViewportLeft = newleft;
 		}
 		
-		if (this.worldHeight && (newtop + this.height > this.worldHeight)) {
-			this.top = this.worldHeight - this.height;
+		if (this.worldHeight < this.worldViewportHeight){
+			this.worldViewportTop = (this.worldHeight - this.worldViewportHeight) / 2;
+		} else if (this.worldHeight && (newtop + this.worldViewportHeight > this.worldHeight)) {
+			this.worldViewportTop = this.worldHeight - this.worldViewportHeight;
 		} else if (this.worldHeight && (newtop < 0)) {
-			this.top = 0; 
+			this.worldViewportTop = 0; 
 		} else {
-			this.top = newtop;
+			this.worldViewportTop = newtop;
 		}
 		
 	};
 	
 	proto.lockedFollow = function (entity)
 	{
-		this.move(entity.x - (this.width / 2), entity.y - (this.height / 2));
+		this.move(entity.x - (this.worldViewportWidth / 2), entity.y - (this.worldViewportHeight / 2));
 	};
 	
 	proto.setBoundingArea = function (top, left, width, height)
 	{
 		this.boundingBoxTop = top || 100;
 		this.boundingBoxLeft = left || 100;
-		this.boundingBoxWidth = width || this.width - (2 * this.boundingBoxLeft);
-		this.boundingBoxHeight = height || this.height - (2 * this.boundingBoxTop);
+		this.boundingBoxWidth = width || this.worldViewportWidth - (2 * this.boundingBoxLeft);
+		this.boundingBoxHeight = height || this.worldViewportHeight - (2 * this.boundingBoxTop);
 	};
 	
 	proto.boundingFollow = function (entity)
@@ -222,7 +237,7 @@ platformer.components['lc-camera'] = (function(){
 			break;
 		case 'instant':
 		default:
-			this.move(coords.x - (this.width / 2), coords.y - (this.height / 2));
+			this.move(coords.x - (this.worldViewportWidth / 2), coords.y - (this.worldViewportHeight / 2));
 			break;
 		
 		
@@ -237,19 +252,19 @@ platformer.components['lc-camera'] = (function(){
 	};
 	*/
 	
-	proto.screenToWorld = function (sCoords)
+	proto.windowToWorld = function (sCoords)
 	{
 		var wCoords = [];
-		wCoords[0] = Math.round((sCoords[0] - this.portalLeft) * this.worldPerScreenUnitWidth);
-		wCoords[1] = Math.round((sCoords[1] - this.portalTop)  * this.worldPerScreenUnitHeight);
+		wCoords[0] = Math.round((sCoords[0] - this.windowViewportLeft) * this.worldPerWindowUnitWidth);
+		wCoords[1] = Math.round((sCoords[1] - this.windowViewportTop)  * this.worldPerWindowUnitHeight);
 		return wCoords; 
 	};
 	
-	proto.worldToScreen = function (wCoords)
+	proto.worldToWindow = function (wCoords)
 	{
 		var sCoords = [];
-		sCoords[0] = Math.round((wCoords[0] * this.screenPerWorldUnitWidth) + this.portalLeft);
-		sCoords[1] = Math.round((wCoords[1] * this.screenPerWorldUnitHeight) + this.portalTop);
+		sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.windowViewportLeft);
+		sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.windowViewportTop);
 		return sCoords;
 	};
 	

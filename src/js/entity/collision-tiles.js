@@ -11,15 +11,18 @@ platformer.components['collision-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:prep-collision', 'getShapes']); //TODO: currently placing "getShapes" here to trigger correct handling by layer collision handler - may not be the best way to do this? - DDD
+		this.addListeners(['layer:prep-collision']);
 		
 		this.owner.collisionType = definition.collisionType || 'solid';
 		this.owner.collidesWith = definition.collidesWith || [];
-		this.owner.getShapes = function(aabb){
-			return self.getShapes(aabb);
+		this.owner.getTiles = function(aabb){
+			return self.getTiles(aabb);
 		};
 		this.owner.getAABB = function(){
 			return self.getAABB();
+		};
+		this.owner.isTile = function(x, y){
+			return self.isTile(x, y);
 		};
 	};
 	var proto = component.prototype;
@@ -37,24 +40,41 @@ platformer.components['collision-tiles'] = (function(){
 		};
 	};
 	
-	proto.getShapes = function(aabb){
+	proto.isTile = function (x, y) {
+		if (x >=0 && x < this.collisionMap.length && y >=0 && y < this.collisionMap[0].length && this.collisionMap[x][y] != -1) 
+		{
+			return true;
+		} else {
+			//If there's not a tile or we're outside the map.
+			return false;
+		}
+	};
+	
+	proto.getTiles = function(aabb){
 		var left = Math.max(Math.floor(aabb.left   / this.tileWidth),  0),
 		top      = Math.max(Math.floor(aabb.top    / this.tileHeight), 0),
 		right    = Math.min(Math.ceil(aabb.right   / this.tileWidth),  this.collisionMap.length),
 		bottom   = Math.min(Math.ceil(aabb.bottom  / this.tileHeight), this.collisionMap[0].length),
 		x        = 0,
 		y        = 0,
-		shapes   = [];
+		tiles   = [];
 		
 		for (x = left; x < right; x++){
 			for (y = top; y < bottom; y++){
-				if (this.collisionMap[x][y] > 0) {
-					shapes.push(new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]]));
+				if (this.collisionMap[x][y] != -1) {
+					tiles.push({
+								gridX: x,
+								gridY: y,
+								//type: this.collisionMap[x][y],
+								shape: new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]])	
+								});
+					
+					//shapes.push(new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]]));
 				}
 			}
 		}
 		
-		return shapes;
+		return tiles;
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

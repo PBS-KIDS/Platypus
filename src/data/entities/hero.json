@@ -16,8 +16,12 @@
 				"key:down-arrow": 	"key-down",
 				"key:d": 			"key-right",
 				"key:right-arrow": 	"key-right",
-                "button-right":     "key-right"
-			}	
+				"button-right":     "key-right",
+				"key:q": 			"key-up-left",
+				"key:e": 			"key-up-right",
+				"key:z": 			"key-down-left",
+				"key:c": 			"key-down-right"
+			}
 		},{
 			"type": "logic-hero",
 			"speed": 0.1
@@ -53,7 +57,7 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
-		        "walking": "walk",
+		        "walking": {"sound": "walk", "interrupt": "none"},
 		        "jumping": "jump"
 		    }
 //		},{

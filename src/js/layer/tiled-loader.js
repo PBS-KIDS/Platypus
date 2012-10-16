@@ -13,7 +13,6 @@ platformer.components['tiled-loader'] = (function(){
 	proto = component.prototype; 
 
 	proto['load'] = function(){
-		//TODO: load tiled map into layer here
 		var actionLayer = 0;
 		
 		for(; actionLayer < this.level.layers.length; actionLayer++){
@@ -52,7 +51,7 @@ platformer.components['tiled-loader'] = (function(){
 		if(layer.type == 'tilelayer'){
 			// First determine which type of entity this layer should behave as:
 			entity = 'tile-layer'; // default
-			if(layer.properties.entity){
+			if(layer.properties && layer.properties.entity){
 				entity = layer.properties.entity;
 			} else { // If not explicitly defined, try using the name of the layer
 				switch(layer.name){
@@ -81,7 +80,7 @@ platformer.components['tiled-loader'] = (function(){
 			tileDefinition.properties.tileWidth  = tileWidth;
 			tileDefinition.properties.tileHeight = tileHeight;
 
-			for (x = 0; x < height; x++){
+			for (x = 0; x < width; x++){
 				importCollision[x] = [];
 				importRender[x]    = [];
 				for (y = 0; y < height; y++){
@@ -126,11 +125,11 @@ platformer.components['tiled-loader'] = (function(){
 				entityType = '';
 				if(entity.type !== ''){
 					entityType = entity.type;
-				} else if(tileset.tileproperties[entity.gid - 1]){
-					if(tileset.tileproperties[entity.gid - 1].entity){
-						entityType = tileset.tileproperties[entity.gid - 1].entity;
-					} else if (tileset.tileproperties[entity.gid - 1].type){
-						entityType = tileset.tileproperties[entity.gid - 1].type;
+				} else if(tileset.tileproperties[entity.gid - tileset.firstgid]){
+					if(tileset.tileproperties[entity.gid - tileset.firstgid].entity){
+						entityType = tileset.tileproperties[entity.gid - tileset.firstgid].entity;
+					} else if (tileset.tileproperties[entity.gid - tileset.firstgid].type){
+						entityType = tileset.tileproperties[entity.gid - tileset.firstgid].type;
 					}
 				}
 				

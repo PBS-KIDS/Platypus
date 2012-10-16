@@ -5,15 +5,14 @@
 			"components": [
 				{
 				   "type": "lc-camera",
-				   "width": 320//,
-				   //"scaleWidth":320 
+				   "width": 320 
 				},
 				{"type": "lc-logic"},
 				{"type": "lc-basic-collision"},
 				{"type": "lc-render"},
 				{"type": "layer-controller"},
 				{"type": "entity-container"},
-				{"type": "tiled-loader", "level": "level-1"}
+				{"type": "tiled-loader", "level": "level-2"}
 			]
 		},{
 			"id": "interface",

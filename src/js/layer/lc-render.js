@@ -38,18 +38,19 @@ platformer.components['lc-render'] = (function(){
 		}
 	};
 	
-	proto['render'] = function(){
+	proto['render'] = function(deltaT){
 		for (var x = 0; x < this.entities.length; x++)
 		{
-			this.entities[x].trigger('layer:render');
+			this.entities[x].trigger('layer:render', deltaT);
 			
 		}
 		this.stage.update();
 	};
 	
 	proto['camera-update'] = function(cameraInfo){
-		this.stage.setTransform(-cameraInfo.x, -cameraInfo.y);
-		
+		this.canvas.width  = this.canvas.offsetWidth;
+		this.canvas.height = this.canvas.offsetHeight;
+		this.stage.setTransform(-cameraInfo.x, -cameraInfo.y, cameraInfo.scaleX, cameraInfo.scaleY);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

@@ -6,7 +6,8 @@
 	"global": { // Settings for the entire game (Entities and component settings are generally found in their respective files.)
 		"initialScene": "scene-1", //"scene-menu",
 		"fps": 60,
-		"rootElement": "root"
+		"rootElement": "root",
+		"aspectRatio": 1.333
 	},
 	"builds": [                                  // Builds and their respective settings
 		{
@@ -17,8 +18,8 @@
 			"manifest": true,                    // Determines whether this build uses Application Cache.
 			"pngCompression": 256,               // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
 			"paths": {
-//				"default": "http://localhost/gopherwood/2DGE/builds/game/", // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
-//				"assets":  "http://localhost/gopherwood/2DGE/builds/game/"  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
+				//"default": "",                                  // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
+				//"assets":  "http://gopherwoodstudios.com/pbs/"  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
 			}
 		},{
 			"id": "debug",          // This is the id of the build and is matched to a folder name in the "builds/" folder.
@@ -44,19 +45,21 @@
 					]
 				}
 			},
-			{"id": "buttons", "src": "../images/buttons.png"},
-			{"id": "mookie-walk", "src": "../images/mookie.png"},
-			{"id": "tilemap", "src": "../images/tile-map.png"},
-			{"id": "test", "src": "../images/test.png"},
-			{"id": "test-animation", "src": "../images/test-animation.png"}
+			{"id": "buttons",        "src": "../images/buttons.png"},
+			{"id": "mookie-walk",    "src": "../images/mookie.png"},
+			{"id": "tilemap",        "src": "../images/tile-map.png"},
+			{"id": "test",           "src": "../images/test.png"},
+			{"id": "test-animation", "src": "../images/test-animation.png"},
+            {"id": "tiles",          "src": "../images/tiles.png"},
+            {"id": "objects",        "src": "../images/objects.png"}
 		],
 		"classes": [
 			{"id": "Game",            "src": "../js/game.js"},
-			{"id": "Input",           "src": "../js/input.js"},
 			{"id": "Entity",          "src": "../js/entity.js"},
 			{"id": "Layer",           "src": "../js/layer.js"},
 			{"id": "Scene",           "src": "../js/scene.js"},
 			{"id": "Collision-Shape", "src": "../js/collision-shape.js"},
+			{"id": "AABB", 			  "src": "../js/aabb.js"}
 		],
 		"components": [ // JavaScript files defining component modules
 			{"id": "layer-controller",   "src": "../js/layer/layer-controller.js"},
@@ -95,14 +98,17 @@
 			{"id": "PreloadJS", "src": "http://code.createjs.com/preloadjs-0.2.0.min.js"},
 			{"id": "Browser",   "src": "../js/browser.js"},
 			{"id": "Main",      "src": "../js/main.js"},
-			{"id": "GameCSS",   "src": "../css/game.css"}
+            {"id": "MainCSS",   "src": "../css/main.css"},
+            {"id": "GameCSS",   "src": "../css/game.css"}
 		],
 		"scenes": [ // JSON files describing scenes
 			{"id": "scene-menu", "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-			{"id": "scene-1", "src": "scenes/scene-1.json"}
+            {"id": "scene-1", "src": "scenes/scene-1.json"},
+            {"id": "scene-2", "src": "scenes/scene-2.json"}
 		],
 		"levels": [ // JSON files describing levels
-			{"id": "level-1", "src": "levels/level-1.json"} // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+            {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+            {"id": "level-2", "src": "levels/level-2.json"}
 		]
 	},
 	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.
