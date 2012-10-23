@@ -5,30 +5,49 @@
 			"components": [
 				{
 				   "type": "lc-camera",
-				   "width": 320 
+				   "width": 3200 
 				},
 				{"type": "lc-logic"},
 				{"type": "lc-basic-collision"},
 				{"type": "lc-render"},
 				{"type": "layer-controller"},
 				{"type": "entity-container"},
-				{"type": "tiled-loader", "level": "level-2"}
+				{"type": "tiled-loader", "level": "level-2", "unitsPerPixel": 10}
 			]
-		},{
-			"id": "interface",
-			"components": [
-				{
-				    "type": "lc-camera",
-                    "width": 320
-				},
-				{"type": "lc-logic"},
-				{"type": "lc-render"},
-				{"type": "layer-controller"},
-				{"type": "entity-container", "entities": [
+        },{
+            "id": "touch-interface",
+            "filter": {
+                "includes": ["touch"]
+            },
+            "components": [
+                {
+                    "type": "lc-camera",
+                    "width": 960
+                },
+                {"type": "lc-logic"},
+                {"type": "lc-render"},
+                {"type": "entity-container", "entities": [
                     {"type": "button-left"},
-                    {"type": "button-right"}
-				]}
-			]
+                    {"type": "button-right"},
+                    {"type": "button-mute"}
+                ]}
+            ]
+        },{
+            "id": "desktop-interface",
+            "filter": {
+                "excludes": ["touch"]
+            },
+            "components": [
+                {
+                    "type": "lc-camera",
+                    "width": 1440
+                },
+                {"type": "lc-logic"},
+                {"type": "lc-render"},
+                {"type": "entity-container", "entities": [
+                    {"type": "button-mute"}
+                ]}
+            ]
 		}
 	]
 }

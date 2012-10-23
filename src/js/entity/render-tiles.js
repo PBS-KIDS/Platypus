@@ -5,10 +5,10 @@ platformer.components['render-tiles'] = (function(){
 		this.controllerEvents = undefined;
 		this.spriteSheet = new createjs.SpriteSheet(definition.spritesheet);
 		this.imageMap    = definition.imageMap   || [];
-		this.tileWidth   = definition.tileWidth  || this.owner.tileWidth  || 10;
-		this.tileHeight  = definition.tileHeight || this.owner.tileHeight || 10;
 		this.scaleX      = definition.scaleX || this.owner.scaleX || 1;
 		this.scaleY      = definition.scaleY || this.owner.scaleY || 1;
+		this.tileWidth   = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
+		this.tileHeight  = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
 		
 		this.state = definition.state || 'tile';
 		
@@ -25,21 +25,25 @@ platformer.components['render-tiles'] = (function(){
 		var x = 0,
 		y     = 0,
 		stage = this.stage = resp.stage;
-		tile  = undefined;
-		
+		tile  = undefined,
+		tileList = new createjs.Container;
 		
 		for(x = 0; x < this.imageMap.length; x++){
 			for (y = 0; y < this.imageMap[x].length; y++){
 				//TODO: Test speed of this - would non-animations perform better?
 				tile = new createjs.BitmapAnimation(this.spriteSheet);
-				tile.scaleX = this.scaleX;
-				tile.scaleY = this.scaleY;
+				//tile.scaleX = this.scaleX;
+				//tile.scaleY = this.scaleY;
 				tile.x = x * this.tileWidth;
 				tile.y = y * this.tileHeight;
-				stage.addChild(tile);
+				tileList.addChild(tile);
 				tile.gotoAndPlay(this.imageMap[x][y]);
 			}
 		}
+		tileList.scaleX = this.scaleX;
+		tileList.scaleY = this.scaleY;
+		tileList.cache(0, 0, x * this.tileWidth, y * this.tileWidth); //TODO: set up some parameters to determine when to do this.
+		stage.addChild(tileList);
 	};
 	
 	

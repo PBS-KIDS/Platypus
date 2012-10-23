@@ -12,12 +12,42 @@ platformer.components['collision-hero'] = (function(){
 		                   'layer:resolve-solid-collision', 
 		                   'layer:relocate']);
 		
-		//this.owner.AABB = definition.AABB || [0, 0, 16, 16]; //offsetX, offsetY, width, height
-
 		this.owner.shape = new platformer.classes.collisionShape([this.owner.x, this.owner.y],definition.shape.type, definition.shape.points, definition.shape.offset, definition.shape.radius); 
 		this.owner.getAABB = function(){
 			return self.getAABB();
 		};
+		
+		this.owner.routeTileCollision = function(axis, dir, collisionInfo){
+			return self.routeTileCollision(axis, dir, collisionInfo);
+		};
+		
+		this.owner.routeSolidCollision = function(axis, dir, collisionInfo){
+			return self.routeSolidCollision(axis, dir, collisionInfo);
+		};
+		
+		this.owner.routeSoftCollision = function(collisionInfo){
+			return self.routeSoftCollision(collisionInfo);
+		};
+		
+		
+		/*
+		this.owner.resolveTileCollisionX = function(dir, collisionInfo){
+			return self.resolveTileCollisionX(dir, collisionInfo);
+		};
+		this.owner.resolveTileCollisionY = function(dir, collisionInfo){
+			return self.resolveTileCollisionY(dir, collisionInfo);
+		};
+		this.owner.resolveSolidCollisionX = function(dir, collisionInfo){
+			return self.resolveSolidCollisionX(dir, collisionInfo);
+		};
+		this.owner.resolveSolidCollisionY = function(dir, collisionInfo){
+			return self.resolveSolidCollisionY(dir, collisionInfo);
+		};
+		this.owner.resolveSoftCollision = function(collisionInfo){
+			return self.resolveSoftCollision(collisionInfo);
+		};
+		*/
+		
 		this.owner.collisionType = definition.collisionType || 'solid';
 		this.owner.collidesWith = definition.collidesWith || [];
 	};
@@ -29,23 +59,157 @@ platformer.components['collision-hero'] = (function(){
 	};
 	
 	proto['layer:prep-collision'] = function(){
-		//alert('prep-collision: x: ' + this.owner.x + ' y: ' + this.owner.x);
 		this.owner.shape.update(this.owner.x, this.owner.y);
-		//var prevLocation = this.owner.shape.getPrevLocation();
-		//this.pX = prevLocation[0];
-		//this.pY = prevLocation[1];
 	};
 	
 	proto['layer:relocate'] = function(positionXY){
 		this.owner.x = positionXY[0] - this.owner.shape.getXOffset();
-		//this.owner.shape.x = positionXY[0];
 		this.owner.y = positionXY[1] - this.owner.shape.getYOffset();
-		//this.owner.shape.y = positionXY[1];
 		this.owner.shape.setXY(positionXY[0], positionXY[1]);
 	};
 	
+	proto.getAABB = function(){
+		return this.owner.shape.getAABB();
+	};
 	
-	proto['layer:resolve-solid-collision'] = function(collisionInfo){
+	proto.routeTileCollision = function(axis, dir, collisionInfo)
+	{
+		if (this.owner.resolveTileCollision)
+		{
+			if (axis == 'x' && dir > 0)
+			{
+				return this.owner.resolveTileCollision('right', collisionInfo);
+			} else if (axis == 'x' && dir < 0)
+			{
+				return this.owner.resolveTileCollision('left', collisionInfo);
+			} else if (axis == 'y' && dir > 0)
+			{
+				return this.owner.resolveTileCollision('down', collisionInfo);
+			} else if (axis == 'y' && dir < 0)
+			{
+				return this.owner.resolveTileCollision('up', collisionInfo);
+			}
+		}
+		return false;
+	};
+	
+	proto.routeSolidCollision = function(axis, dir, collisionInfo)
+	{
+		if (this.owner.resolveSolidCollision)
+		{
+			if (axis == 'x' && dir > 0)
+			{
+				return this.owner.resolveSolidCollision('right', collisionInfo);
+			} else if (axis == 'x' && dir < 0)
+			{
+				return this.owner.resolveSolidCollision('left', collisionInfo);
+			} else if (axis == 'y' && dir > 0)
+			{
+				return this.owner.resolveSolidCollision('down', collisionInfo);
+			} else if (axis == 'y' && dir < 0)
+			{
+				return this.owner.resolveSolidCollision('up', collisionInfo);
+			}
+		}
+		return false;
+	};
+	
+	proto.routeSoftCollision = function(collisionInfo){
+		if (this.owner.resolveSoftCollision)
+		{
+			this.owner.resolveSoftCollision(collisionInfo);
+		}
+	};
+	
+	/*
+	proto.resolveTileCollisionX = function(dir, collisionInfo){
+		//TODO: Write this resolve function.
+		if (dir > 0 && this.owner.tileCollisionRight)
+		{
+			return this.owner.tileCollisionRight(collisionInfo);
+		} else if (dir > 0 && this.owner.tileCollisionLeft)
+		{
+			return this.owner.tileCollisionLeft(collisionInfo);
+		} else {
+			return collisionInfo.atX;
+		}		
+	};
+	
+	proto.resolveTileCollisionY  = function(dir, collisionInfo){
+		//TODO: Write this resolve function.
+		if (dir > 0 && this.owner.tileCollisionDown)
+		{
+			return this.owner.tileCollisionDown(collisionInfo);
+		} else if (dir > 0 && this.owner.tileCollisionUp)
+		{
+			return this.owner.tileCollisionUp(collisionInfo);
+		} else {
+			return collisionInfo.atY;
+		}
+	};
+	
+	proto.resolveSolidCollisionX = function(dir, collisionInfo){
+		//TODO: Write this resolve function.
+		if (dir > 0 && this.owner.solidCollisionRight)
+		{
+			return this.owner.solidCollisionRight(collisionInfo);
+		} else if (dir > 0 && this.owner.solidCollisionLeft)
+		{
+			return this.owner.solidCollisionLeft(collisionInfo);
+		} else {
+			return collisionInfo.atX;
+		}
+	};
+	
+	proto.resolveSolidCollisionY = function(dir, collisionInfo){
+		//TODO: Write this resolve function.
+		if (dir > 0 && this.owner.solidCollisionDown)
+		{
+			return this.owner.solidCollisionDown(collisionInfo);
+		} else if (dir > 0 && this.owner.solidCollisionUp)
+		{
+			return this.owner.solidCollisionUp(collisionInfo);
+		} else {
+			return collisionInfo.atY;
+		}
+	};
+	
+	proto.resolveSolidCollisionY = function(dir, collisionInfo){
+		//TODO: Write this resolve function.
+		if (dir > 0 && this.owner.solidCollisionDown)
+		{
+			return this.owner.solidCollisionDown(collisionInfo);
+		} else if (dir > 0 && this.owner.solidCollisionUp)
+		{
+			return this.owner.solidCollisionUp(collisionInfo);
+		} else {
+			return collisionInfo.atY;
+		}
+	};
+	*/
+	
+	/*
+	proto['layer:resolve-collision'] = function(other){
+		var x = this.owner.shape.x;
+		var y = this.owner.shape.y;
+		var pX = this.owner.shape.prevX;
+		var pY = this.owner.shape.prevY;
+		
+		var otherX = other.shape.x;
+		var otherY = other.shape.y;
+		
+		switch (other.type)
+		{
+	
+		}
+	};
+	*/
+	
+	/*
+	proto['layer:resolve-solid-collision'] = function(myShape, theirShape){
+		
+		
+		SOLID COLLISION ATTEMPT 2
 		var terrain = collisionInfo.terrain;
 		var tileCollisions = collisionInfo.tileCollisions;
 		var otherCollisions = collisionInfo.otherCollisions;
@@ -140,14 +304,6 @@ platformer.components['collision-hero'] = (function(){
 						}
 					}
 				}
-				
-				/*
-				console.warn('Collide on Side');
-				this.owner.x = targetX - this.owner.shape.getXOffset();
-				this.owner.shape.x = targetX;
-				this.owner.y = yAtTargetX - this.owner.shape.getYOffset();
-				this.owner.shape.y = yAtTargetX;
-				*/
 			} else if (targetY && xAtTargetY >= leftPlane && xAtTargetY <= rightPlane){
 				if (deltaY > 0)
 				{
@@ -170,14 +326,6 @@ platformer.components['collision-hero'] = (function(){
 						}
 					}
 				}
-				
-				/*
-				console.warn('Collide on Top/Bottom');
-				this.owner.x = xAtTargetY - this.owner.shape.getXOffset();
-				this.owner.shape.x = xAtTargetY;
-				this.owner.y = targetY - this.owner.shape.getYOffset();
-				this.owner.shape.y = targetY;
-				*/
 			}
 		}
 		
@@ -192,23 +340,7 @@ platformer.components['collision-hero'] = (function(){
 			this.owner.shape.y = y + displaceY;	
 		}
 		
-		//TODO: Handle the other solid collisions!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		
-	};
-	
-	
-	proto['layer:resolve-collision'] = function(other){
-		var x = this.owner.shape.x;
-		var y = this.owner.shape.y;
-		var pX = this.owner.shape.prevX;
-		var pY = this.owner.shape.prevY;
-		
-		var otherX = other.shape.x;
-		var otherY = other.shape.y;
-		
-		switch (other.type)
-		{
-		/*
+		SOLID COLLISION ATTEMPT 1
 		case 'solid':
 			var deltaX = x - pX; 
 			var deltaY = y - pY;
@@ -277,14 +409,10 @@ platformer.components['collision-hero'] = (function(){
 			}
 			
 			break;
-		*/
-		}
+		
 	};
-	
-	proto.getAABB = function(){
-		return this.owner.shape.getAABB();
-	};
-	
+	*/
+
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);

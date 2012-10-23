@@ -40,7 +40,8 @@ platformer.components['tiled-loader'] = (function(){
 		importAnimation= undefined,
 		importCollision= undefined,
 		importRender   = undefined,
-		followEntity   = undefined;
+		followEntity   = undefined,
+		layerCollides  = true;
 
 		for (x = 0; x < tilesets.length; x++){
 			if(platformer.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
@@ -63,6 +64,15 @@ platformer.components['tiled-loader'] = (function(){
 				case "collision":
 					entity = 'collision-layer';
 					break;
+				case "action":
+					for (x = 0; x < level.layers.length; x++){
+						if(level.layers[x].name === 'collision'){
+							layerCollides = false;
+						}
+					}
+					if(!layerCollides){
+						entity = 'render-layer';
+					}
 				}
 			}
 			

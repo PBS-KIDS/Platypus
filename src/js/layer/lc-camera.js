@@ -54,10 +54,10 @@ platformer.components['lc-camera'] = (function(){
 		//FOLLOW MODE VARIABLES
 		
 		//--Bounding
-		this.boundingBoxLeft = 100;
-		this.boundingBoxTop = 100;
-		this.boundingBoxWidth = this.worldViewportWidth - (2 * this.boundingBoxLeft);
-		this.boundingBoxHeight = this.worldViewportHeight - (2 * this.boundingBoxTop);
+		this.bBBorderX = 0;
+		this.bBBorderY = 0;
+		this.bBInnerWidth = this.worldViewportWidth - (2 * this.bBBorderX);
+		this.bBInnerHeight = this.worldViewportHeight - (2 * this.bBBorderY);
 		
 		
 		this.direction = true;  
@@ -142,11 +142,6 @@ platformer.components['lc-camera'] = (function(){
 			this.setBoundingArea(def.top, def.left, def.width, def.height);
 			this.followingFunction = this.boundingFollow;
 			break;
-		case 'custom':
-			this.state = 'following';
-			this.following = def.entity;
-			this.followingFunction = def.followingFunction;
-			break;
 		case 'static':
 		default:
 			this.state = 'static';
@@ -157,29 +152,38 @@ platformer.components['lc-camera'] = (function(){
 		
 	};
 	
-	proto.move = function (newleft, newtop)
+	proto.move = function (newLeft, newTop)
+	{
+		this.moveLeft(newLeft);
+		this.moveTop(newTop);
+	};
+	
+	proto.moveLeft = function (newLeft)
 	{
 		if (this.worldWidth < this.worldViewportWidth){
 			this.worldViewportLeft = (this.worldWidth - this.worldViewportWidth) / 2;
-		} else if (this.worldWidth && (newleft + this.worldViewportWidth > this.worldWidth)) {
+		} else if (this.worldWidth && (newLeft + this.worldViewportWidth > this.worldWidth)) {
 			this.worldViewportLeft = this.worldWidth - this.worldViewportWidth;
-		} else if (this.worldWidth && (newleft < 0)) {
+		} else if (this.worldWidth && (newLeft < 0)) {
 			this.worldViewportLeft = 0; 
 		} else {
-			this.worldViewportLeft = newleft;
+			this.worldViewportLeft = newLeft;
 		}
-		
+	};
+	
+	proto.moveTop = function (newTop)
+	{
 		if (this.worldHeight < this.worldViewportHeight){
 			this.worldViewportTop = (this.worldHeight - this.worldViewportHeight) / 2;
-		} else if (this.worldHeight && (newtop + this.worldViewportHeight > this.worldHeight)) {
+		} else if (this.worldHeight && (newTop + this.worldViewportHeight > this.worldHeight)) {
 			this.worldViewportTop = this.worldHeight - this.worldViewportHeight;
-		} else if (this.worldHeight && (newtop < 0)) {
+		} else if (this.worldHeight && (newTop < 0)) {
 			this.worldViewportTop = 0; 
 		} else {
-			this.worldViewportTop = newtop;
+			this.worldViewportTop = newTop;
 		}
-		
 	};
+	
 	
 	proto.lockedFollow = function (entity)
 	{
@@ -188,69 +192,41 @@ platformer.components['lc-camera'] = (function(){
 	
 	proto.setBoundingArea = function (top, left, width, height)
 	{
-		this.boundingBoxTop = top || 100;
-		this.boundingBoxLeft = left || 100;
-		this.boundingBoxWidth = width || this.worldViewportWidth - (2 * this.boundingBoxLeft);
-		this.boundingBoxHeight = height || this.worldViewportHeight - (2 * this.boundingBoxTop);
+		this.bBBorderY = (typeof top !== 'undefined') ? top : 500;
+		this.bBBorderX = (typeof left !== 'undefined') ? left : 500;
+		this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.worldViewportWidth - (2 * this.bBBorderX);
+		this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.worldViewportHeight - (2 * this.bBBorderY);
 	};
 	
 	proto.boundingFollow = function (entity)
 	{
-		var newLeft = 0;
-		var newTop = 0;
+		var newLeft = undefined;
+		var newTop = undefined;
 		
-		if (entity.x > this.x + this.boundingBoxLeft + this.BoundingBoxWidth) 
+		if (entity.x > this.worldViewportLeft + this.bBBorderX + this.bBInnerWidth) 
 		{
-			newLeft = entity.x -(this.boundingBoxLeft + this.BoundingBoxWidth);
-		} else if (entity.x < this.x + this.boundingBoxLeft) {
-			newLeft = entity.x - this.boundingBoxLeft;
+			newLeft = entity.x -(this.bBBorderX + this.bBInnerWidth);
+		} else if (entity.x < this.worldViewportLeft + this.bBBorderX) {
+			newLeft = entity.x - this.bBBorderX;
 		}
 		
-		if (entity.y > this.y + this.boundingBoxTop + this.BoundingBoxHeight) 
+		if (entity.y > this.worldViewportTop + this.bBBorderY + this.bBInnerHeight) 
 		{
-			newTop = entity.y - this.boundingBoxTop + this.BoundingBoxHeight;
-		} else if (entity.y < this.y + this.boundingBoxTop) {
-			newTop = entity.y - this.boundingBoxTop;
+			newTop = entity.y - (this.bBBorderY + this.bBInnerHeight);
+		} else if (entity.y < this.worldViewportTop + this.bBBorderY) {
+			newTop = entity.y - this.bBBorderY;
 		}
 		
-		this.move(newLeft, newTop);
-	};
-	
-	/*
-	proto.transition = function (coords, type, def)
-	{
-		this.state = 'transitioning';
-		switch (type)
+		if (typeof newLeft !== 'undefined')
 		{
-		case 'linear':
-			if (def.entity)
-			{
-				this.transitionEntity = def.entity;
-			} else {
-				this.transitionX = def.x;
-				this.transitionY = def.y;
-			}
-			this.transitionFunction = this.linearTransition;
-			break;
-		case 'custom':
-			this.transitionFunction = def.transitionFunction;
-			break;
-		case 'instant':
-		default:
-			this.move(coords.x - (this.worldViewportWidth / 2), coords.y - (this.worldViewportHeight / 2));
-			break;
-		
-		
+			this.moveLeft(newLeft);
 		}
 		
+		if (typeof newTop !== 'undefined')
+		{
+			this.moveTop(newTop);
+		}
 	};
-	
-	proto.linearTransition = function ()
-	{
-		
-		
-	};
-	*/
 	
 	proto.windowToWorld = function (sCoords)
 	{

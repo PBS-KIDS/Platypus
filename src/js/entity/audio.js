@@ -17,6 +17,18 @@ platformer.components['audio'] = (function(){
 			attributes = soundDefinition;
 			sound      = soundDefinition.sound;
 		}
+		if(platformer.settings.assets[sound].data){
+			if(!attributes){ // set up asset defaults
+				attributes = platformer.settings.assets[sound].data;
+			} else {         // if values are being passed in, let asset use defaults if not overridden by attributes.
+				for(var item in platformer.settings.assets[sound].data){
+					attributes[item] = attributes[item] || platformer.settings.assets[sound].data[item];
+				}
+			}
+		}
+		if(platformer.settings.assets[sound].assetId){
+			sound = platformer.settings.assets[sound].assetId;
+		}
 		return function(value){
 			var audio = undefined,
 			length    = 0;
@@ -52,7 +64,7 @@ platformer.components['audio'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListener('layer:render');
+		this.addListeners(['layer:render', 'audio-mute-toggle', 'audio-mute', 'audio-unmute']);
 
 		if(definition.audioMap){
 			for (var key in definition.audioMap){
@@ -80,6 +92,18 @@ platformer.components['audio'] = (function(){
 			}
 			this.timedAudioClips = newArray;
 		}
+	};
+	
+	proto['audio-mute-toggle'] = function(sound){
+		createjs.SoundJS.setMute(!createjs.SoundJS.muted, sound);
+	};
+	
+	proto['audio-mute'] = function(sound){
+		createjs.SoundJS.setMute(true, sound);
+	};
+	
+	proto['audio-unmute'] = function(sound){
+		createjs.SoundJS.setMute(false, sound);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

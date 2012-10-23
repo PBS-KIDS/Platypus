@@ -131,9 +131,15 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    		}
 			    	} else {
 			    		for(srcId in asset.src){
-				    		if(asset.src[srcId].substring(0,4).toLowerCase() !== 'http'){
-			    			    asset.src[srcId] = fixUpPath(workingDir + asset.src[srcId]);
-				    		}
+					    	if((typeof asset.src[srcId]) == 'string'){
+					    		if(asset.src[srcId].substring(0,4).toLowerCase() !== 'http'){
+				    			    asset.src[srcId] = fixUpPath(workingDir + asset.src[srcId]);
+					    		}
+					    	} else {
+					    		if(asset.src[srcId].src.substring(0,4).toLowerCase() !== 'http'){
+				    			    asset.src[srcId].src = fixUpPath(workingDir + asset.src[srcId].src);
+					    		}
+					    	}
 			    		}
 			    	}
 			    }

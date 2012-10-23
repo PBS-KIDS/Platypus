@@ -20,7 +20,7 @@ platformer.components['render-animation'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render-load','layer:render', 'logical-state']);
+		this.addListeners(['layer:render-load', 'layer:render', 'logical-state']);
 		this.stage = undefined;
 		for (var x = 0; x < spriteSheet.images.length; x++)
 		{
@@ -52,6 +52,7 @@ platformer.components['render-animation'] = (function(){
 
 			this.anim.onPress     = function(event) {
 				self.owner.trigger('mousedown', {
+					//debug: true,
 					event: event.nativeEvent,
 					over: over,
 					x: event.stageX,
@@ -60,6 +61,7 @@ platformer.components['render-animation'] = (function(){
 				});
 				event.onMouseUp = function(event){
 					self.owner.trigger('mouseup', {
+						//debug: true,
 						event: event.nativeEvent,
 						over: over,
 						x: event.stageX,

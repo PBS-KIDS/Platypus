@@ -19,7 +19,7 @@ platformer.components['render-debug'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load']); ///TODO: removing input event for now because it's confusing this way, 'controller:input-handler']);
+		this.addListeners(['layer:render', 'layer:render-load']);
 	};
 	var proto = component.prototype;
 
@@ -28,7 +28,6 @@ platformer.components['render-debug'] = (function(){
 		this.shape.y = this.owner.y	- this.regY;
 		this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
 		this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
-		
 	};
 
 	proto['layer:render-load'] = function(resp){
@@ -55,7 +54,15 @@ platformer.components['render-debug'] = (function(){
 		this.mookieImg.x = this.owner.x;
 		this.mookieImg.y = this.owner.y;*/
 		
-		this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
+		if(this.owner.shape && this.owner.shape.type == 'rectangle'){
+			width  = this.owner.shape.points[1][0] - this.owner.shape.points[0][0];
+			height = this.owner.shape.points[1][1] - this.owner.shape.points[0][1];
+			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,0,255,0.1)").setStrokeStyle(3).beginStroke("#f0f").rect(0, 0, width, height));
+			this.regX  = width / 2 - this.owner.shape.offset[0];
+			this.regY  = height / 2 - this.owner.shape.offset[1];
+		} else {
+			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
+		}
 
 		this.stage.addChild(this.shape);
 		this.stage.addChild(this.txt);

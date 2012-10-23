@@ -1,0 +1,41 @@
+/*
+ * 
+ */
+{
+	"id": "button-mute",
+	"components":[
+		{
+            "type":   "logic-button",
+            "toggle": true,
+            "state":  "pressed"
+        },{
+		    "type": "render-animation",
+            "spriteSheet": {
+                "images": ["buttons"],
+                "frames": {
+                    "width":  138,
+                    "height": 138
+                },
+                "animations": {
+                    "released": 3,
+                    "pressed":  7
+                }
+            },
+            "state": "pressed",
+            "acceptInput": {"click": true, "touch": true}
+		},{
+		    "type": "broadcast-events",
+            "renameEvents":{
+                "mouseup": "audio-mute-toggle"
+            }
+        },{
+            "type": "audio"
+        }
+	],
+	"properties":{
+		"x": 51,
+		"y": 51,
+		"width": 138,
+		"height": 138
+	}
+}

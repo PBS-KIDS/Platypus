@@ -1,5 +1,20 @@
 window.addEventListener('load', function(){
-	var loader = new createjs.PreloadJS();
+	var checkPush = function(asset, list){
+		var i = 0,
+		found = false;
+		for(i in list){
+			if(list[i].id === asset.id){
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			list.push(asset);
+		}
+	},
+	loader     = new createjs.PreloadJS(),
+	loadAssets = [];
+	
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
 	};
@@ -44,27 +59,54 @@ window.addEventListener('load', function(){
 		createjs.Ticker.addListener(platformer.game);
 	};
 	
-	
 	for(var i in platformer.settings.assets){
-		if(typeof platformer.settings.assets[i].src !== 'string'){
+		if(typeof platformer.settings.assets[i].src === 'string'){
+			checkPush(platformer.settings.assets[i], loadAssets);
+		} else {
 			for(var j in platformer.settings.assets[i].src){
 				if(platformer.settings.aspects[j] && platformer.settings.assets[i].src[j]){
-					platformer.settings.assets[i].src = platformer.settings.assets[i].src[j];
+					if(typeof platformer.settings.assets[i].src[j] === 'string'){
+						platformer.settings.assets[i].src  = platformer.settings.assets[i].src[j];
+						checkPush(platformer.settings.assets[i], loadAssets);
+					} else {
+						platformer.settings.assets[i].data    = platformer.settings.assets[i].src[j].data || platformer.settings.assets[i].data;
+						platformer.settings.assets[i].assetId = platformer.settings.assets[i].src[j].assetId;
+						platformer.settings.assets[i].src     = platformer.settings.assets[i].src[j].src;
+						checkPush({
+							id:  platformer.settings.assets[i].assetId || platformer.settings.assets[i].id,
+							src: platformer.settings.assets[i].src
+						}, loadAssets);
+					}
 					break;
 				}
 			}
 			if(typeof platformer.settings.assets[i].src !== 'string'){
 				if(platformer.settings.assets[i].src['default']){
-					platformer.settings.assets[i].src = platformer.settings.assets[i].src['default'];
+					if(typeof platformer.settings.assets[i].src['default'] === 'string'){
+						platformer.settings.assets[i].src  = platformer.settings.assets[i].src['default'];
+						checkPush(platformer.settings.assets[i], loadAssets);
+					} else {
+						platformer.settings.assets[i].data    = platformer.settings.assets[i].src['default'].data || platformer.settings.assets[i].data;
+						platformer.settings.assets[i].assetId = platformer.settings.assets[i].src['default'].assetId;
+						platformer.settings.assets[i].src     = platformer.settings.assets[i].src['default'].src;
+						checkPush({
+							id:  platformer.settings.assets[i].assetId || platformer.settings.assets[i].id,
+							src: platformer.settings.assets[i].src
+						}, loadAssets);
+					}
 				} else {
 					console.warn('Asset has no valid source for this browser.', platformer.settings.assets[i]);
 				}
 			}
 		}
 	}
-	
+	if(platformer.settings.supports.android){ //Android thinks HTMLAudioPlugin works, so we avoid that misconception here
+		createjs.SoundJS.registerPlugin(createjs.HTMLiOSAudioPlugin);
+	} else {
+		createjs.SoundJS.registerPlugins([createjs.HTMLAudioPlugin, createjs.HTMLiOSAudioPlugin]);
+	}
 	loader.installPlugin(createjs.SoundJS);
-	loader.loadManifest(platformer.settings.assets);
+	loader.loadManifest(loadAssets);
 	platformer.assets = [];
 
 }, false);

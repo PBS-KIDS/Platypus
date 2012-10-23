@@ -53,26 +53,10 @@ platformer.classes.game = (function(){
 		}
 		this.addEventListener(window, 'orientationchange', callback);
 		this.addEventListener(window, 'resize',            callback);
-		
-		this.prevTime = 0;
-		this.timingFunction = false;
-		if (window.performance && window.performance.webkitNow)
-		{
-			this.timingFunction = function() {return window.performance.webkitNow();};
-		} else if (window.performance && window.performance.now) {
-			this.timingFunction = function() {return window.performance.now();};
-		} else {
-			this.date = new Date();
-			this.timingFunction = function() {return this.date.getTime();};
-		}
-		this.prevTime = this.timingFunction();
 	},
 	proto = game.prototype;
 	
-	proto.tick = function(){
-		var now = this.timingFunction();
-		var deltaT = now - this.prevTime; 
-		this.prevTime = now;
+	proto.tick = function(deltaT){
 		if(this.currentScene) this.currentScene.tick(deltaT);
 	};
 	

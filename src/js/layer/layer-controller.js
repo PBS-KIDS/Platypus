@@ -1,12 +1,24 @@
 platformer.components['layer-controller'] = (function(){
-	var relay = function(event, self){
+	var relayUpDown = function(event, self){
 		return function(value){
-			var suffix = value.released?':up':':down';
+			if (value.released){
+				event += ':up';
+			} else if (value.pressed){
+				event += ':down';
+			}
 			for (var x = 0; x < self.entities.length; x++) {
-				self.entities[x].trigger(event + suffix, value);
+				self.entities[x].trigger(event, value);
 			}
 		}; 
 	},
+	relay = function(event, self){
+		return function(value){
+			for (var x = 0; x < self.entities.length; x++) {
+				self.entities[x].trigger(event, value);
+			}
+		}; 
+	},
+	
 	keyMap = {
 		kc0:   'unknown',         
 		kc8:   'backspace',
@@ -133,43 +145,6 @@ platformer.components['layer-controller'] = (function(){
 		}
 	};
 	
-/* this has been moved to individual entities	
-	proto['mousedown'] = function(value){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger('mouse:' + mouseMap[value.button] + ':down', value);
-		}
-	}; 
-		
-	proto['mouseup'] = function(value){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger('mouse:' + mouseMap[value.button] + ':up', value);
-		}
-	};
-	
-	proto['touchstart'] = function(value){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger('touch:down', value);
-		}
-	}; 
-		
-	proto['touchend'] = function(value){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger('touch:up', value);
-		}
-	};
-	
-	proto['touchmove'] = proto['touchcancel'] = proto['mousemove'] = function(value){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger(value.type, value);
-		}
-	};
-*/
-	
 	proto['check-inputs'] = function(resp){
 		for (var x = 0; x < this.entities.length; x++)
 		{
@@ -189,8 +164,10 @@ platformer.components['layer-controller'] = (function(){
 					for(var y in entity.controlMap){
 						if((y.indexOf('key:') < 0) || (y.indexOf('mouse:') < 0)){
 							if(!this[y]){
-								this.addListener(y);
-								this[y] = relay(y, this);
+								this.addListeners([y, y + ':up', y + ':down']);
+								this[y]           = relayUpDown(y,     this);
+								this[y + ':up']   = relay(y + ':up',   this);
+								this[y + ':down'] = relay(y + ':down', this);
 							}
 						}
 					}

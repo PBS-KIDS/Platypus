@@ -1,20 +1,20 @@
 CACHE MANIFEST
-# Version 135040769
+# Version 135101142
 
 CACHE:
 
 # m4a:
 
-a/powerup.mp3
-a/walk.mp3
-a/jump.mp3
-j/compressed135040769.js
-s/compressed135040769.css
+a/powerup.m4a
+a/walk.m4a
+a/jump.m4a
+j/compressed135101142.js
+s/compressed135101142.css
 
-i/test.png
 i/buttons.png
 i/mookie.png
 i/tile-map.png
+i/test.png
 i/test-animation.png
 i/tiles.png
 i/objects.png

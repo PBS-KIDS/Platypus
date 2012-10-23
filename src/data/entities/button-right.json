@@ -4,37 +4,35 @@
 {
 	"id": "button-right",
 	"components":[
-		{"type": "entity-controller",
-			"controlMap":{
-				"mouse:left-button": "pressed"
-			}
-		},
-        {"type": "broadcast-events",
-            "events":{
-                "pressed": "button-right"
+        {
+		    "type": "logic-button"
+		},{
+		    "type": "broadcast-events",
+            "events": {
+                "mousedown": "button-right:down",
+                "mouseup":   "button-right:up"
             }
         },
         {"type": "render-animation",
             "spriteSheet": {
                 "images": ["buttons"],
                 "frames": {
-                    "width":  46,
-                    "height": 46
+                    "width":  138,
+                    "height": 138
                 },
                 "animations": {
-                    "default":  1
+                    "released": 2,
+                    "pressed":  6
                 }
             },
-            "state": "default",
+            "state": "released",
             "acceptInput": {"click": true, "touch": true}
 		}
 	],
 	"properties":{
-		"debug-events": ["button-right"],
-		"state": false,
-		"x": 257,
-		"y": 177,
-		"width": 46,
-		"height": 46
+		"x": 771,
+		"y": 531,
+		"width": 138,
+		"height": 138
 	}
 }

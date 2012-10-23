@@ -7,24 +7,16 @@
 		{
 			"type": "entity-controller",
 			"controlMap":{
-				"key:w": 			"go-up",
-				"key:up-arrow": 	"go-up",
-				"key:a": 			"go-left",
-                "key:left-arrow":   "go-left",
-                "button-left":      "go-left",
-				"key:s": 			"go-down",
-				"key:down-arrow": 	"go-down",
-				"key:d": 			"go-right",
-				"key:right-arrow": 	"go-right",
-				"button-right":     "go-right",
-				"key:q": 			"go-up-left",
-				"key:e": 			"go-up-right",
-				"key:z": 			"go-down-left",
-				"key:c": 			"go-down-right"
+				"key:z": 			"key-jump",
+                "key:left-arrow":   "key-left",
+                "button-left":      "key-left",
+				"key:right-arrow": 	"key-right",
+				"button-right":     "key-right",
+				"key:up-arrow":   	"key-up",
+				"key:down-arrow":   "key-down"
 			}
 		},{
-			"type": "logic-directional-movement",
-			"speed": 1
+			"type": "logic-hero"
 		},{
 			"type": "collision-hero",
 		 	"shape":{
@@ -45,22 +37,12 @@
 					"regX":   13
 				},
 				"animations": {
-                    "standing-up": [2],
-                    "standing-up-right": [2],
-                    "standing-right":  [2],
-                    "standing-down-right":  [2],
-                    "standing-down": [5],
-                    "standing-down-left": [5],
-                    "standing-left":  [5],
-                    "standing-up-left":  [5],
-                    "walking-up": {frames:[0,1,2,3],    frequency:4},
-                    "walking-up-right": {frames:[0,1,2,3],    frequency:4},
-					"walking-right":  {frames:[0,1,2,3], 	frequency:4},
-                    "walking-down-right":  {frames:[0,1,2,3],    frequency:4},
-                    "walking-down": {frames:[7,6,5,4],  frequency:4},
-                    "walking-down-left": {frames:[7,6,5,4],  frequency:4},
-                    "walking-left":  {frames:[7,6,5,4],     frequency:4},
-                    "walking-up-left":  {frames:[7,6,5,4],     frequency:4}
+					"standing-left":  [2],
+					"standing-right":  [5],
+					"walking-left":  {frames:[3,0,1,2], 	frequency:4},
+					"walking-right":  {frames:[4,7,6,5], 	frequency:4},
+					"jumping-left":  [0],
+					"jumping-right":  [6]
 				}
 			}
 		},{
@@ -69,19 +51,19 @@
 		        "walking": {"sound": "walk", "interrupt": "none"},
 		        "jumping": "jump"
 		    }
-//		},{
-//		    "type": "render-debug",
-//		    "regY": 24,
-//          "regX": 13
+		},{
+		    "type": "render-debug",
+		    "regY": 240,
+		    "regX": 130
 		}
 	],
 	"properties":{
-		"x": 100,
-		"y": 100,
+		"x": 10,
+		"y": 10,
 		"width": 160,
 		"height": 240,
 		"state": "standing",
-		"heading": "left",
-		"camera": "locked"
+		"heading": "south",
+		"camera": "bounding"
 	}
 }

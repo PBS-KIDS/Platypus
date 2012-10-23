@@ -5,7 +5,7 @@
 	    
 	    supports = {
 			canvas:      false, // determined below
-			touch:       TouchEvent in window,
+			touch:       !!('ontouchstart' in window),
 
 			// specific browsers as determined above
 			iPod:      (uagent.search('ipod')    > -1),
@@ -75,5 +75,7 @@
 			console.warn('This browser doesn\'t support any of the following: ' + listAspects);
 		}
 	}
+
+	platformer.settings.supports = supports;
 
 })();

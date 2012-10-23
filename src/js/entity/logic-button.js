@@ -1,67 +1,50 @@
-platformer.components['render-button'] = (function(){
+platformer.components['logic-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
 		// Messages that this component listens for
 		this.listeners = [];
+		
+		// Create object to send with messages here so it's not recreated each time.
+		this.message = {
+			state: definition.state || 'released'
+		};
 
-		this.addListeners(['layer:render-load', 'layer:render', 'controller:input']);
-		this.stage = undefined;
-		this.upBitmap = new createjs.Bitmap(platformer.assets[definition.upImg]);
-		this.downBitmap = new createjs.Bitmap(platformer.assets[definition.downImg]);
-		//this.shape = new createjs.Shape();;
+		if(definition.toggle){
+			this.toggle = true;
+			this.addListener('mouseup');
+		} else {
+			this.addListeners(['mousedown','mouseup']);
+		}
+		
+		this.addListeners(['layer:logic', 'pressed', 'released']);
 	};
 	var proto = component.prototype;
 	
-	proto['controller:input-handler'] = function (settings){
-		
+	proto['mousedown'] = proto['pressed'] = function(){
+		this.message.state = 'pressed';
 	};
 	
-	proto['layer:render-load'] = function (obj) {
-		this.stage = obj.stage;
-		this.stage.addChild(this.upBitmap);
-		this.stage.addChild(this.downBitmap);
-		
-		this.upBitmap.x = this.owner.x;
-		this.downBitmap.x = this.owner.x;
-		this.upBitmap.y = this.owner.y;
-		this.downBitmap.y = this.owner.y;
-		
-		
-		/*
-		var g = this.shape.graphics;
-		if(this.owner.state)
-		{
-			g.beginFill('#333');
+	proto['mouseup'] = function(){
+		if(this.toggle){
+			this.message.state = (this.message.state === 'released')?'pressed':'released';
 		} else {
-			g.beginFill('#888');
+			this.message.state = 'released';
 		}
-		g.rect(this.owner.x, this.owner.y, this.owner.width, this.owner.height);
-		g.endFill();
-		
-		this.stage.addChild(this.shape);
-		*/
 	};
 	
-	proto['layer:render'] = function () {
-		/*
-		this.shape.x = this.owner.x;
-		*/
-		this.upBitmap.x = this.owner.x;
-		this.downBitmap.x = this.owner.x;
-		if(this.owner.state)
-		{
-			this.downBitmap.alpha = 0;
-		} else {
-			this.downBitmap.alpha = 1;
-		}
-		
+	proto['released'] = function(){
+		this.message.state = 'released';
 	};
+	
+	proto['layer:logic'] = function(deltaT){
+		this.owner.trigger('logical-state', this.message);
+	};
+
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
-		this.stage.removeChild(this.shape);
 	};
 	
 	/*********************************************************************************************************

@@ -120,11 +120,12 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    	if((sectionId === 'components') || (sectionId === 'classes')){
 	    		result.scripts += 'platformer.' + sectionId + ' = {};\n';
 	    	}
+    		game[sectionId] = {};
 	    	if(sectionId === 'assets') {
-	    		game[sectionId] = [];
+//	    		game[sectionId] = [];
 	    		path = paths["assets"] || paths["default"] || '';
 	    	} else {
-	    		game[sectionId] = {};
+//	    		game[sectionId] = {};
 	    		path = paths["default"] || '';
 	    	}
 		    for (assetId in section){
@@ -136,7 +137,11 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result);
 				    	} else {
 				    		for(srcId in asset.src){
-				    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result);
+						    	if((typeof asset.src[srcId]) == 'string'){
+					    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result);
+						    	} else {
+					    			asset.src[srcId].src = handleAsset(asset.id, asset.src[srcId].src, aspects[srcId], path, result);
+						    	}
 				    		}
 				    	}
 				    }
@@ -148,10 +153,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		    		if((typeof asset.data) === 'string'){
 		    			asset.data = getJSON(workingDir + asset.data);
 		    		}
-			    	game[sectionId].push(asset);
-		    	} else {
-		    		game[sectionId][asset.id] = asset;
+//			    	game[sectionId].push(asset);
+//		    	} else {
 		    	}
+	    		game[sectionId][asset.id] = asset;
 		    }
 	    }
 	    delete game.source;

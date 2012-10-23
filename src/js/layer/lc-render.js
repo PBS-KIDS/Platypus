@@ -8,16 +8,15 @@ platformer.components['lc-render'] = (function(){
 		this.tickMessages = ['render'];
 		this.addListeners(['entity-added','render', 'camera-update']);
 		
-		this.canvas = document.createElement('canvas');
+		this.canvas = this.owner.canvas = document.createElement('canvas');
 		this.owner.rootElement.appendChild(this.canvas);
 		this.canvas.style.width = '100%';
 		this.canvas.style.height = '100%';
 		this.canvas.width  = 320; //TODO: figure out where to specify this
 		this.canvas.height = 240;
 		this.stage = new createjs.Stage(this.canvas);
-		
-	};
-	var proto = component.prototype; 
+	},
+	proto = component.prototype; 
 
 	proto['entity-added'] = function(entity){
 		var self = this,
@@ -29,8 +28,8 @@ platformer.components['lc-render'] = (function(){
 			{
 				this.entities.push(entity);
 				entity.trigger('layer:render-load', {
-					stage: this.stage,
-					parentElement: this.owner.rootElement
+					stage: self.stage,
+					parentElement: self.owner.rootElement
 					//TODO: send along scaling functions to convert world coordinates to window coordinates // somehow get these from camera?
 				});
 				break;

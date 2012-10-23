@@ -53,7 +53,11 @@ platformer.components['logic-directional-movement'] = (function(){
 		downRight = this.downRight || (this.down && this.right),
 		upRight   = this.upRight   || (this.up   && this.right);
 		
-		if (upLeft) {
+		if (this.up && this.down){
+			this.owner.state = 'standing';
+		} else if (this.left && this.right) {
+			this.owner.state = 'standing';
+		} else if (upLeft) {
 			vX = -this.speed / 1.414;
 			vY = -this.speed / 1.414;
 			this.owner.heading = 'up-left';
@@ -98,6 +102,8 @@ platformer.components['logic-directional-movement'] = (function(){
 		
 		this.owner.trigger('logical-state', {state: this.owner.state + '-' + this.owner.heading});
 		this.owner.trigger(this.owner.state);
+		
+		if(!deltaT) console.warn('WHAT!?!');
 	};
 	
 	proto['go-down']       = proto['go-south']     = processDirection('down');

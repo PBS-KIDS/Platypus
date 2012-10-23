@@ -27,8 +27,11 @@
 				  }
 			},
 			"state": "tile"
-		}//,
-		//{"type": "render-debug", "regY": 24}
+		},{
+		    "type": "render-debug",
+            "regX": 120,
+            "regY": 240
+        }
 	],
 	"properties":{
 		"x": 50,

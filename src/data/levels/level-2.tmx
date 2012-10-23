@@ -10,6 +10,11 @@
     <property name="entity" value="hero"/>
    </properties>
   </tile>
+  <tile id="2">
+   <properties>
+    <property name="entity" value="dirt"/>
+   </properties>
+  </tile>
   <tile id="10">
    <properties>
     <property name="entity" value="block"/>
@@ -18,10 +23,13 @@
  </tileset>
  <layer name="background" width="44" height="18">
   <data encoding="base64" compression="zlib">
-   eJzFlckOgzAMRNNrrrm2vdH+/x8WJCIZa8YLuGIkC0K8vFgGWjvqUWjZfJsWwzTj3bwWK+Kttmwvsv2N9MeryxilPF7GjZTJfZbXitVciLNyBhuJsxjnnuzj2fmV9RtYR+cVrdGzivctUss7Z6TG5GXcU303JJ2zkz1Uv4trN2I0p8c7dotI+nm9GuI6jJgs75MYEtuX9Rfh25Q/Y83wev8V7xsoZdW+g9c7S+QenY/lsXh1Hi/vFf6rvB5TNXN25ip4WZ6m/NGexbPptdo7yJHljcZkeD+rfUlOFGvNeaT+v/QDCuIn9A==
+   eJztzrsSwBAQheHVatOKLvH+b4hO4XKCGZuZU3wNa/1GRIwSD+B0I3vZy1727mjNbEdtb++uNTt6g7Zm10C5t3Veg+yb6XWblP+jc19bT/hbL9GMO/EKOlBvEhR0rIrs1UEj
   </data>
  </layer>
  <layer name="action" width="44" height="18">
+  <properties>
+   <property name="entity" value="tile-layer"/>
+  </properties>
   <data encoding="base64" compression="zlib">
    eJy1llFPwzAMhK11g4cVDSHQgKeN7f//RlJRS8ftHLujnGQ1bezka+rEfTCzt9kebV2NK/vvmz3R/ZpaypuJedcW8g4F/4wl492JZ9m82D9Se0jinSXymXgPMM4A/pO9FLlQzIhttyyW3w35sm+g1rgnn5OZolxWax75jp0+l+/B6Bvw3NGcfK/is/1e4WUOv8/icJ0re23yeaZYNSbmw2mOw6tiWPJd0C/KLX+fka4snvfc7NLsOl+/7HceVHmjtepx3MPLegUf5cs53WOIOFTO/2W/RTFsnNNVXtUf7bt7eHuK2HgN35t9NvsojMPPsW9j+szaFnlZQ9A+2s//1bHDFT33vqwuLK0broi5J6xvuF4by3PGpeqgqh1qD+J5dbLbMxN5sv+Aav4q3ixW1Vl1ZvrYe7utCWpMtsinEvvf9g2OCQmx
   </data>
@@ -88,11 +96,11 @@
   <object gid="48" x="816" y="360"/>
   <object gid="48" x="1008" y="336"/>
   <object gid="48" x="744" y="96"/>
-  <object gid="56" x="744" y="72"/>
+  <object gid="56" x="744" y="72" width="24" height="48"/>
   <object gid="56" x="504" y="96"/>
-  <object gid="56" x="816" y="336"/>
-  <object gid="56" x="984" y="96"/>
-  <object gid="56" x="456" y="360"/>
+  <object gid="56" x="816" y="336" width="24" height="72"/>
+  <object gid="56" x="984" y="96" width="48" height="48"/>
+  <object gid="56" x="456" y="360" width="24" height="48"/>
   <object gid="56" x="96" y="264"/>
   <object gid="63" x="120" y="432"/>
   <object gid="63" x="144" y="432"/>
@@ -191,6 +199,7 @@
   <object gid="63" x="672" y="168"/>
   <object gid="63" x="696" y="168"/>
   <object gid="55" x="336" y="264"/>
-  <object gid="46" x="24" y="96"/>
+  <object type="hero" gid="46" x="24" y="96"/>
+  <object gid="56" x="-120" y="456"/>
  </objectgroup>
 </map>

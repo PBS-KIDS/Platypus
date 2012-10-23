@@ -113,9 +113,15 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 			    		}
 			    	} else {
 			    		for(srcId in asset.src){
-				    		if(asset.src[srcId].substring(0,4).toLowerCase() !== 'http'){
-				    			checkPush(assets, asset.src[srcId]);
-				    		}
+					    	if((typeof asset.src[srcId]) == 'string'){
+					    		if(asset.src[srcId].substring(0,4).toLowerCase() !== 'http'){
+					    			checkPush(assets, asset.src[srcId]);
+					    		}
+					    	} else {
+					    		if(asset.src[srcId].src.substring(0,4).toLowerCase() !== 'http'){
+					    			checkPush(assets, asset.src[srcId].src);
+					    		}
+					    	}
 			    		}
 			    	}
 			    }

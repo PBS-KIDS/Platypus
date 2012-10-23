@@ -3,7 +3,8 @@ platformer.classes.layer = (function(){
 		var componentDefinitions = definition.components,
 		componentDefinition = undefined;
 		
-		this.type = definition.id || 'layer';
+		this.type  = definition.id    || 'layer';
+		this.debug = definition.debug || false;
 		
 		this.rootElement = rootElement;
 		this.components = [];
@@ -74,16 +75,16 @@ platformer.classes.layer = (function(){
 	
 	proto.trigger = function(messageId, value){
 		var i = 0;
+		if(this.debug || (value && value.debug)){
+			if(this.messages[messageId] && this.messages[messageId].length){
+				console.log('Layer "' + this.type + '": Event "' + messageId + '" has ' + this.messages[messageId].length + ' subscriber' + ((this.messages[messageId].length>1)?'s':'') + '.', value);
+			} else {
+				console.warn('Layer "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
+			}
+		}
 		if(this.messages[messageId]){
 			for (i = 0; i < this.messages[messageId].length; i++){
 				this.messages[messageId][i](value);
-			}
-		}
-		if(this['debug']){
-			if(i){
-				console.log('Layer "' + this.type + '": Event "' + messageId + '" has ' + i + ' subscriber' + ((i>1)?'s':'') + '.', value);
-			} else {
-				console.warn('Layer "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
 			}
 		}
 	};
