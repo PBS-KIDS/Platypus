@@ -7,8 +7,8 @@ platformer.components['logic-hero'] = (function(){
 
 		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down','key-jump']);
 		
-		this.owner.state = 'ground';
-		this.owner.heading = 'right';
+		this.owner.state   = this.owner.state || 'ground';
+		this.owner.heading = this.owner.heading || 'right';
 		this.left = false;
 		this.right = false;
 		this.up = false;
@@ -45,21 +45,20 @@ platformer.components['logic-hero'] = (function(){
 		//this.vX = 0;
 		//this.vY = 0;
 		
-		if(this.left)
-		{
+		if(this.left) {
 			this.vX -= this.aX * deltaT;
 			if (this.vX < -this.maxVX)
 			{
 				this.vX = -this.maxVX;
 			}
-			this.owner.heading = 'right';
+			this.owner.heading = 'left';
 		} else if (this.right) {
 			this.vX += this.aX * deltaT;
 			if (this.vX > this.maxVX)
 			{
 				this.vX = this.maxVX;
 			}
-			this.owner.heading = 'left';
+			this.owner.heading = 'right';
 		} else {
 			if (this.vX > 0)
 			{

@@ -10,11 +10,18 @@ platformer.components['render-tiles'] = (function(){
 		this.tileWidth   = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
 		this.tileHeight  = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
 		
+		var buffer = (definition.buffer || this.tileWidth) * this.scaleX;
+		this.camera = {
+			x: -buffer - 1, //to force camera update
+			y: -buffer - 1,
+			buffer: buffer
+		};
+		
 		this.state = definition.state || 'tile';
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load']);
+		this.addListeners(['layer:render', 'layer:render-load', 'camera-update']);
 	};
 	var proto = component.prototype;
 
@@ -25,8 +32,9 @@ platformer.components['render-tiles'] = (function(){
 		var x = 0,
 		y     = 0,
 		stage = this.stage = resp.stage;
-		tile  = undefined,
-		tileList = new createjs.Container;
+		tile  = undefined;
+		
+		this.tileList = new createjs.Container();
 		
 		for(x = 0; x < this.imageMap.length; x++){
 			for (y = 0; y < this.imageMap[x].length; y++){
@@ -36,20 +44,34 @@ platformer.components['render-tiles'] = (function(){
 				//tile.scaleY = this.scaleY;
 				tile.x = x * this.tileWidth;
 				tile.y = y * this.tileHeight;
-				tileList.addChild(tile);
+				this.tileList.addChild(tile);
 				tile.gotoAndPlay(this.imageMap[x][y]);
 			}
 		}
-		tileList.scaleX = this.scaleX;
-		tileList.scaleY = this.scaleY;
-		tileList.cache(0, 0, x * this.tileWidth, y * this.tileWidth); //TODO: set up some parameters to determine when to do this.
-		stage.addChild(tileList);
+		this.tileList.scaleX = this.scaleX;
+		this.tileList.scaleY = this.scaleY;
+//		tileList.cache(0, 0, x * this.tileWidth, y * this.tileWidth);
+		stage.addChild(this.tileList);
 	};
 	
+	proto['camera-update'] = function(camera){
+		var buffer = this.camera.buffer / this.scaleX;
+		
+		if ((Math.abs(this.camera.x - camera.viewportLeft) > this.camera.buffer) || (Math.abs(this.camera.y - camera.viewportTop) > this.camera.buffer)){
+			this.camera.x = camera.viewportLeft;
+			this.camera.y = camera.viewportTop;
+			this.tileList.cache(camera.viewportLeft / this.scaleX - buffer, camera.viewportTop / this.scaleY - buffer, camera.viewportWidth / this.scaleX + buffer * 2, camera.viewportHeight / this.scaleY + buffer * 2);
+//			tileList.cache(buffer, buffer, camera.viewportWidth / this.scaleX - buffer, camera.viewportHeight / this.scaleY - buffer);
+		}
+	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
+		this.tileList.removeAllChildren();
+		this.stage.removeChild(this.tileList);
+		this.stage = undefined;
+		this.tileList = undefined;
 	};
 	
 	/*********************************************************************************************************

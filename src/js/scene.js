@@ -7,17 +7,18 @@ platformer.classes.scene = (function(){
 		for(var layer in layers){
 			supportedLayer = true;
 			if(layers[layer].filter){
-				if(layers[layer].filter.excludes){
-					for(var filter in layers[layer].filter.excludes){
-						if(platformer.settings.supports[layers[layer].filter.excludes[filter]]){
-							supportedLayer = false;
-						}
-					}
-				} else if(layers[layer].filter.includes){
+				if(layers[layer].filter.includes){
 					supportedLayer = false;
 					for(var filter in layers[layer].filter.includes){
 						if(platformer.settings.supports[layers[layer].filter.includes[filter]]){
 							supportedLayer = true;
+						}
+					}
+				}
+				if(layers[layer].filter.excludes){
+					for(var filter in layers[layer].filter.excludes){
+						if(platformer.settings.supports[layers[layer].filter.excludes[filter]]){
+							supportedLayer = false;
 						}
 					}
 				}
@@ -33,6 +34,13 @@ platformer.classes.scene = (function(){
 		for(var layer in this.layers){
 			this.layers[layer].tick(deltaT);
 		}
+	};
+
+	proto.destroy = function(deltaT){
+		for(var layer in this.layers){
+			this.layers[layer].destroy();
+		}
+		this.layers.length = 0;
 	};
 	
 	proto.trigger = function(eventId, event){

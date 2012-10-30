@@ -56,7 +56,7 @@ platformer.components['entity-container'] = (function(){
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
 		for (var i in this.entities){
-			entity.destroy();
+			this.entities[i].destroy();
 		}
 		this.entities.length = 0;
 	};

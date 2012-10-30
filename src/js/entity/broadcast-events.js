@@ -5,14 +5,30 @@
  */
 platformer.components['broadcast-events'] = (function(){
 	var gameBroadcast = function(event){
-		return function(value){
-			platformer.game.currentScene.trigger(event, value);
-		};
+		if(typeof event === 'string'){
+			return function(value){
+				platformer.game.currentScene.trigger(event, value);
+			};
+		} else {
+			return function(value){
+				for (var e in event){
+					platformer.game.currentScene.trigger(event[e], value);
+				}
+			};
+		}
 	},
 	entityBroadcast = function(event){
-		return function(value){
-			this.owner.trigger(event, value);
-		};
+		if(typeof event === 'string'){
+			return function(value){
+				this.owner.trigger(event, value);
+			};
+		} else {
+			return function(value){
+				for (var e in event){
+					this.owner.trigger(event[e], value);
+				}
+			};
+		}
 	},
 	component = function(owner, definition){
 		this.owner = owner;

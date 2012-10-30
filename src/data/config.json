@@ -4,10 +4,11 @@
  */
 {
 	"global": { // Settings for the entire game (Entities and component settings are generally found in their respective files.)
-		"initialScene": "scene-1", //"scene-menu",
+		"initialScene": "menu",
 		"fps": 60,
 		"rootElement": "root",
-		"aspectRatio": 1.333
+		"aspectRatio": 1.333,
+		"resizeFont": true
 	},
 	"builds": [                                  // Builds and their respective settings
 		{
@@ -48,10 +49,12 @@
             {"id": "jump",           "src": {"ogg": "../audio/jump.ogg",     "mp3": "../audio/jump.mp3",     "m4a": "../audio/jump.m4a",    "m4aCombined": {"assetId": "combined", "src": "../audio/combined.m4a", "data": {"offset": 1500, "length": 250}}}},
 			{"id": "buttons",        "src": "../images/buttons.png"},
 			{"id": "mookie-walk",    "src": "../images/mookie.png"},
-			{"id": "tilemap",        "src": "../images/tile-map.png"},
+            {"id": "tilemap",        "src": "../images/tile-map.png"},
+            {"id": "sprites",        "src": "../images/game-sprites.png"},
 			{"id": "test",           "src": "../images/test.png"},
 			{"id": "test-animation", "src": "../images/test-animation.png"},
             {"id": "tiles",          "src": "../images/tiles.png"},
+            {"id": "title-screen",   "src": "../images/title-screen.png"},
             {"id": "objects",        "src": "../images/objects.png"}
 		],
 		"classes": [
@@ -63,36 +66,46 @@
 			{"id": "AABB", 			  "src": "../js/aabb.js"}
 		],
 		"components": [ // JavaScript files defining component modules
+            {"id": "enable-ios-audio",   "src": "../js/layer/enable-ios-audio.js"},
 			{"id": "layer-controller",   "src": "../js/layer/layer-controller.js"},
 			{"id": "tiled-loader",       "src": "../js/layer/tiled-loader.js"},
-			{"id": "lc-render",          "src": "../js/layer/lc-render.js"},
+            {"id": "render-createjs",    "src": "../js/layer/render-createjs.js"},
+            {"id": "render-dom",         "src": "../js/layer/render-dom.js"},
 			{"id": "lc-logic",           "src": "../js/layer/lc-logic.js"},
 			{"id": "lc-camera",          "src": "../js/layer/lc-camera.js"},
 			{"id": "lc-basic-collision", "src": "../js/layer/lc-basic-collision.js"},
             {"id": "audio",              "src": "../js/entity/audio.js"},
             {"id": "broadcast-events",   "src": "../js/entity/broadcast-events.js"},
-            {"id": "enable-ios-audio",   "src": "../js/entity/enable-ios-audio.js"},
+            {"id": "change-scene",       "src": "../js/entity/change-scene.js"},
+            {"id": "dom-element",        "src": "../js/entity/dom-element.js"},
             {"id": "entity-container",   "src": "../js/entity/entity-container.js"},
             {"id": "entity-controller",  "src": "../js/entity/entity-controller.js"},
 			{"id": "render-debug",       "src": "../js/entity/render-debug.js"},
 			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},
-			{"id": "render-animation",   "src": "../js/entity/render-animation.js"},
+            {"id": "render-animation",   "src": "../js/entity/render-animation.js"},
+            {"id": "render-image",       "src": "../js/entity/render-image.js"},
             {"id": "logic-button",       "src": "../js/entity/logic-button.js"},
             {"id": "logic-directional-movement", "src": "../js/entity/logic-directional-movement.js"},
-            {"id": "logic-hero", 		 "src": "../js/entity/logic-hero.js"},
-			{"id": "collision-hero",     "src": "../js/entity/collision-hero.js"},
+            {"id": "logic-gravity",      "src": "../js/entity/logic-gravity.js"},
+            {"id": "logic-hero",         "src": "../js/entity/logic-hero.js"},
+            {"id": "collision-hero",     "src": "../js/entity/collision-hero.js"},
 			{"id": "collision-tiles",    "src": "../js/entity/collision-tiles.js"}
 		],
 		"entities": [ // JSON files describing entities
 			{"id": "tile-layer",      "src": "entities/tile-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
 			{"id": "render-layer",    "src": "entities/render-layer.json"},
 			{"id": "collision-layer", "src": "entities/collision-layer.json"},
+            {"id": "button-jump",     "src": "entities/button-jump.json"},
+            {"id": "button-jump-left",  "src": "entities/button-jump-left.json"},
+            {"id": "button-jump-right", "src": "entities/button-jump-right.json"},
             {"id": "button-left",     "src": "entities/button-left.json"},
+            {"id": "button-play-game","src": "entities/button-play-game.json"},
             {"id": "button-right",    "src": "entities/button-right.json"},
             {"id": "button-mute",     "src": "entities/button-mute.json"},
 			{"id": "hero",            "src": "entities/hero.json"},
             {"id": "block",           "src": "entities/block.json"},
-            {"id": "dirt",            "src": "entities/dirt.json"}
+            {"id": "dirt",            "src": "entities/dirt.json"},
+            {"id": "title-screen",    "src": "entities/title-screen.json"}
 		],
 		"includes": [
 			{"id": "EaselJS",   "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
@@ -103,13 +116,14 @@
             {"id": "iOSAudio",  "src": "../js/HTMLiOSAudioPlugin.js"},
             {"id": "SoundJSm4a","src": "../js/SoundJSm4aOverride.js"},
             {"id": "Main",      "src": "../js/main.js"},
+            {"id": "ButtonCSS", "src": "../css/button.css"},
             {"id": "MainCSS",   "src": "../css/main.css"},
             {"id": "GameCSS",   "src": "../css/game.css"}
 		],
 		"scenes": [ // JSON files describing scenes
-			{"id": "scene-menu", "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "scene-1",    "src": "scenes/scene-1.json"},
-            {"id": "scene-2",    "src": "scenes/scene-2.json"}
+			{"id": "menu",    "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+            {"id": "scene-1", "src": "scenes/scene-1.json"},
+            {"id": "scene-2", "src": "scenes/scene-2.json"}
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

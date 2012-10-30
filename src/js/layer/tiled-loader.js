@@ -10,6 +10,8 @@ platformer.components['tiled-loader'] = (function(){
 		this.level = platformer.settings.levels[definition.level];
 		this.tileEntityId = definition.tileEntityId || 'tile';
 		this.unitsPerPixel = definition.unitsPerPixel || 1;
+		this.images = definition.images || false;
+		this.imagesScale = definition.imagesScale || this.unitsPerPixel;
 	},
 	proto = component.prototype; 
 
@@ -25,7 +27,7 @@ platformer.components['tiled-loader'] = (function(){
 	proto.setupLayer = function(layer, level){
 		var width      = layer.width,
 		height         = layer.height,
-		images         = [],
+		images         = this.images || [],
 		tilesets       = level.tilesets,
 		tileWidth      = level.tilewidth,
 		tileHeight     = level.tileheight,
@@ -43,13 +45,23 @@ platformer.components['tiled-loader'] = (function(){
 		followEntity   = undefined,
 		layerCollides  = true;
 
-		for (x = 0; x < tilesets.length; x++){
-			if(platformer.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
-				images.push(platformer.assets[tilesets[x].name]);
-			} else {
-				images.push(tilesets[x].image);
+		if(images.length == 0){
+			for (x = 0; x < tilesets.length; x++){
+				if(platformer.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
+					images.push(platformer.assets[tilesets[x].name]);
+				} else {
+					images.push(tilesets[x].image);
+				}
+			}
+		} else {
+			images = images.slice(); //so we do not overwrite settings array
+			for (x = 0; x < images.length; x++){
+				if(platformer.assets[images[x]]){
+					images[x] = platformer.assets[images[x]];
+				}
 			}
 		}
+
 		if(layer.type == 'tilelayer'){
 			// First determine which type of entity this layer should behave as:
 			entity = 'tile-layer'; // default
@@ -90,8 +102,8 @@ platformer.components['tiled-loader'] = (function(){
 			tileDefinition.properties.rows       = height;
 			tileDefinition.properties.tileWidth  = tileWidth  * this.unitsPerPixel;
 			tileDefinition.properties.tileHeight = tileHeight * this.unitsPerPixel;
-			tileDefinition.properties.scaleX     = this.unitsPerPixel;
-			tileDefinition.properties.scaleY     = this.unitsPerPixel;
+			tileDefinition.properties.scaleX     = this.imagesScale;
+			tileDefinition.properties.scaleY     = this.imagesScale;
 
 			for (x = 0; x < width; x++){
 				importCollision[x] = [];
@@ -109,8 +121,8 @@ platformer.components['tiled-loader'] = (function(){
 					tileDefinition.components[x].spritesheet = {
 						images: images,
 						frames: {
-							width:  tileWidth,
-							height: tileHeight
+							width:  tileWidth * this.unitsPerPixel / this.imagesScale,
+							height: tileHeight * this.unitsPerPixel / this.imagesScale
 						},
 						animations: importAnimation
 					};

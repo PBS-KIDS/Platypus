@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version 135101142
+# Version 135155877
 
 CACHE:
 
@@ -8,15 +8,17 @@ CACHE:
 a/powerup.m4a
 a/walk.m4a
 a/jump.m4a
-j/compressed135101142.js
-s/compressed135101142.css
+j/compressed135155877.js
+s/compressed135155877.css
 
 i/buttons.png
 i/mookie.png
 i/tile-map.png
+i/game-sprites.png
 i/test.png
 i/test-animation.png
 i/tiles.png
+i/title-screen.png
 i/objects.png
 http://code.createjs.com/easeljs-0.5.0.min.js
 http://code.createjs.com/tweenjs-0.3.0.min.js

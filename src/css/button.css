@@ -1,43 +1,27 @@
-.button
-{
-	
+.menu-button {
+position: absolute;
+bottom: 3.3em;
+left: 7.5em;
+margin-left: -5em;
+width: 10em;
+height: 2.5em;
+text-align: center;
+cursor: pointer;
+background: url('../i/buttons.png') 0 66.667% no-repeat;
+background-size: 150% 400%;
+line-height: 2.5em;
+color: white;
+font-family: arial;
+font-weight: bold;
+font-size: 3.5em;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+-o-user-select: none;
+user-select: none;
 }
 
-.button:hover .button-hover
-{
-	opacity: 1;
+.menu-button:active {
+    background: url('../i/buttons.png') 0 100% no-repeat;
+    background-size: 150% 400%;
 }
-
-.button-text
-{
-	text-align: center;
-}
-
-/******************************
-	GENERAL STYLES BELOW
-******************************/
-
-.button-default
-{
-	cursor: pointer;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
-
-.button-hover
-{
-	cursor: pointer;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	opacity: 0;
-	
-	-webkit-transition: opacity .2s ease-in-out;
-	-moz-transition: opacity .2s ease-in-out;
-	-o-transition: opacity .2s ease-in-out;
-	-ms-transition: opacity .2s ease-in-out;
-	transition: opacity .2s ease-in-out;
-}
-
-

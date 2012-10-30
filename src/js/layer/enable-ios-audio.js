@@ -1,15 +1,16 @@
 platformer.components['enable-ios-audio'] = (function(){
-	var iOSAudioEnabled = false, debug = false,
+	var iOSAudioEnabled = false,
 	component = function(owner, definition){
 		var self = this;
 		
 		this.owner = owner;
 		
 		if(!iOSAudioEnabled){
-			this.touchOverlay        = document.createElement('div');
-			debug = this.touchOverlay;
-			this.touchOverlay.width  = '100%';
-			this.touchOverlay.height = '100%';
+			this.touchOverlay = document.createElement('div');
+			this.touchOverlay.style.width    = '100%';
+			this.touchOverlay.style.height   = '100%';
+			this.touchOverlay.style.position = 'absolute';
+			this.touchOverlay.style.zIndex   = '20';
 			this.owner.rootElement.appendChild(this.touchOverlay);
 			enableIOSAudio(this.touchOverlay, definition.audioId, function(){
 				self.removeComponent();
@@ -29,33 +30,25 @@ platformer.components['enable-ios-audio'] = (function(){
 			forceStop    = function () {
 			    audio.removeEventListener('play', forceStop, false);
 			    audio.pause();
-			    debug.innerHTML += 'f';
 			},
 			progress  = function () {
 			    audio.removeEventListener('canplaythrough', progress, false);
 			    if (callback) callback();
-			    debug.innerHTML += 'g';
 			};
 			
 			if(cjsAudio.playState === 'playSucceeded'){
 				cjsAudio.stop();
 			} else {
-				debug.innerHTML = 'a';
-
 				audio.addEventListener('play', forceStop, false);
 			    audio.addEventListener('canplaythrough', progress, false);
 
 			    try {
 					audio.play();
-					debug.innerHTML += 'b';
 			    } catch (e) {
 			    	callback = function () {
-			    		debug.innerHTML += 'd';
 			    		callback = false;
 			    		audio.play();
-			    		debug.innerHTML += 'e';
 			    	};
-			    	debug.innerHTML += 'c';
 			    }
 			}
 			element.removeEventListener('touchstart', click, false);

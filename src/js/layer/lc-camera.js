@@ -10,31 +10,35 @@ platformer.components['lc-camera'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['camera'];
-		this.addListeners(['resize', 'orientationchange', 'camera', 'load', 'world-loaded']);  
+		this.addListeners(['resize', 'orientationchange', 'camera', 'load', 'world-loaded', 'entity-added']);  
 		
 		//The dimensions of the camera in the window
-		this.windowViewportTop = this.owner.rootElement.innerTop;
-		this.windowViewportLeft = this.owner.rootElement.innerLeft;
-		this.windowViewportWidth = this.owner.rootElement.offsetWidth;
-		this.windowViewportHeight = this.owner.rootElement.offsetHeight;
+		this.window = {
+			viewportTop: this.owner.rootElement.innerTop,
+			viewportLeft: this.owner.rootElement.innerLeft,
+			viewportWidth: this.owner.rootElement.offsetWidth,
+			viewportHeight: this.owner.rootElement.offsetHeight
+		};
 		
 		//The dimensions of the camera in the game world
-		this.worldViewportWidth       = definition.width       || 0; 
-		this.worldViewportHeight      = definition.height      || 0;
-		this.worldViewportLeft        = definition.left        || 0;
-		this.worldViewportTop         = definition.top         || 0;
+		this.world = {
+			viewportWidth:       definition.width       || 0,
+			viewportHeight:      definition.height      || 0,
+			viewportLeft:        definition.left        || 0,
+			viewportTop:         definition.top         || 0
+		};
 
 		this.aspectRatio              = definition.aspectRatio || 0;
-		if(this.worldViewportWidth && this.worldViewportHeight){
-			this.aspectRatio = this.aspectRatio || (this.worldViewportHeight      / this.worldViewportWidth); 
+		if(this.world.viewportWidth && this.world.viewportHeight){
+			this.aspectRatio = this.aspectRatio || (this.world.viewportHeight      / this.world.viewportWidth); 
 		} else {
-			this.aspectRatio = this.aspectRatio || (this.windowViewportHeight / this.windowViewportWidth);
-			if (this.worldViewportWidth || this.worldViewportHeight){
-				this.worldViewportWidth       = this.worldViewportWidth       || (this.worldViewportHeight      / this.aspectRatio); 
-				this.worldViewportHeight      = this.worldViewportHeight      || (this.aspectRatio / this.worldViewportWidth); 
+			this.aspectRatio = this.aspectRatio || (this.window.viewportHeight / this.window.viewportWidth);
+			if (this.world.viewportWidth || this.world.viewportHeight){
+				this.world.viewportWidth       = this.world.viewportWidth       || (this.world.viewportHeight      / this.aspectRatio); 
+				this.world.viewportHeight      = this.world.viewportHeight      || (this.aspectRatio / this.world.viewportWidth); 
 			} else {
-				this.worldViewportWidth       = this.windowViewportWidth;
-				this.worldViewportHeight      = this.aspectRatio * this.worldViewportWidth;
+				this.world.viewportWidth       = this.window.viewportWidth;
+				this.world.viewportHeight      = this.aspectRatio * this.world.viewportWidth;
 			}
 		}
 		
@@ -56,8 +60,8 @@ platformer.components['lc-camera'] = (function(){
 		//--Bounding
 		this.bBBorderX = 0;
 		this.bBBorderY = 0;
-		this.bBInnerWidth = this.worldViewportWidth - (2 * this.bBBorderX);
-		this.bBInnerHeight = this.worldViewportHeight - (2 * this.bBBorderY);
+		this.bBInnerWidth = this.world.viewportWidth - (2 * this.bBBorderX);
+		this.bBInnerHeight = this.world.viewportHeight - (2 * this.bBBorderY);
 		
 		
 		this.direction = true;  
@@ -68,6 +72,19 @@ platformer.components['lc-camera'] = (function(){
 		
 	};
 
+	proto['entity-added'] = function(entity){
+		var messageIds = entity.getMessageIds(); 
+		
+		for (var x = 0; x < messageIds.length; x++)
+		{
+			if (messageIds[x] == 'camera-update')
+			{
+				this.entities.push(entity);
+				break;
+			}
+		}
+	};
+	
 	proto['world-loaded'] = function(values){
 		this.worldWidth   = this.owner.worldWidth  = values.width;
 		this.worldHeight  = this.owner.worldHeight = values.height;
@@ -87,13 +104,13 @@ platformer.components['lc-camera'] = (function(){
 			var speed = .3 * deltaT;
 			if (this.direction)
 			{
-				this.move(this.worldViewportLeft + speed, this.worldViewportTop);
-				if (this.worldWidth && (this.worldViewportLeft == this.worldWidth - this.worldViewportWidth)) {
+				this.move(this.world.viewportLeft + speed, this.world.viewportTop);
+				if (this.worldWidth && (this.world.viewportLeft == this.worldWidth - this.world.viewportWidth)) {
 					this.direction = !this.direction;
 				}
 			} else {
-				this.move(this.worldViewportLeft - speed, this.worldViewportTop);
-				if (this.worldWidth && (this.worldViewportLeft == 0)) {
+				this.move(this.world.viewportLeft - speed, this.world.viewportTop);
+				if (this.worldWidth && (this.world.viewportLeft == 0)) {
 					this.direction = !this.direction;
 				}
 			}
@@ -102,29 +119,39 @@ platformer.components['lc-camera'] = (function(){
 		default:
 			break;
 		}
-		this.owner.trigger('camera-update', {x: this.worldViewportLeft * this.windowPerWorldUnitWidth, y: this.worldViewportTop * this.windowPerWorldUnitHeight, scaleX: this.windowPerWorldUnitWidth, scaleY: this.windowPerWorldUnitHeight});
+		
+		this.owner.trigger('camera-update', {
+			x:      this.world.viewportLeft   * this.windowPerWorldUnitWidth,
+			y:      this.world.viewportTop    * this.windowPerWorldUnitHeight,
+			scaleX: this.windowPerWorldUnitWidth,
+			scaleY: this.windowPerWorldUnitHeight,
+		});
+		for (var x = 0; x < this.entities.length; x++)
+		{
+			this.entities[x].trigger('camera-update', this.world);
+		}
 	};
 	
 	proto['resize'] = proto['orientationchange'] = function ()
 	{
 		//The dimensions of the camera in the window
-		this.windowViewportTop = this.owner.rootElement.innerTop;
-		this.windowViewportLeft = this.owner.rootElement.innerLeft;
-		this.windowViewportWidth = this.owner.rootElement.offsetWidth;
-		this.windowViewportHeight = this.owner.rootElement.offsetHeight;
+		this.window.viewportTop = this.owner.rootElement.innerTop;
+		this.window.viewportLeft = this.owner.rootElement.innerLeft;
+		this.window.viewportWidth = this.owner.rootElement.offsetWidth;
+		this.window.viewportHeight = this.owner.rootElement.offsetHeight;
 
 		if(this.scaleWidth){
-			this.worldViewportWidth = this.windowViewportWidth / Math.ceil(this.windowViewportWidth / this.scaleWidth);
+			this.world.viewportWidth = this.window.viewportWidth / Math.ceil(this.window.viewportWidth / this.scaleWidth);
 		}
 		
 		if(!this.stretch || this.scaleWidth){
-			this.worldViewportHeight = this.windowViewportHeight * this.worldViewportWidth / this.windowViewportWidth;
+			this.world.viewportHeight = this.window.viewportHeight * this.world.viewportWidth / this.window.viewportWidth;
 		}
 		
-		this.worldPerWindowUnitWidth  = this.worldViewportWidth / this.windowViewportWidth;
-		this.worldPerWindowUnitHeight = this.worldViewportHeight / this.windowViewportHeight;
-		this.windowPerWorldUnitWidth  = this.windowViewportWidth / this.worldViewportWidth;
-		this.windowPerWorldUnitHeight = this.windowViewportHeight/ this.worldViewportHeight;
+		this.worldPerWindowUnitWidth  = this.world.viewportWidth / this.window.viewportWidth;
+		this.worldPerWindowUnitHeight = this.world.viewportHeight / this.window.viewportHeight;
+		this.windowPerWorldUnitWidth  = this.window.viewportWidth / this.world.viewportWidth;
+		this.windowPerWorldUnitHeight = this.window.viewportHeight/ this.world.viewportHeight;
 	};
 	
 	proto['follow'] = function (def)
@@ -160,42 +187,42 @@ platformer.components['lc-camera'] = (function(){
 	
 	proto.moveLeft = function (newLeft)
 	{
-		if (this.worldWidth < this.worldViewportWidth){
-			this.worldViewportLeft = (this.worldWidth - this.worldViewportWidth) / 2;
-		} else if (this.worldWidth && (newLeft + this.worldViewportWidth > this.worldWidth)) {
-			this.worldViewportLeft = this.worldWidth - this.worldViewportWidth;
+		if (this.worldWidth < this.world.viewportWidth){
+			this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
+		} else if (this.worldWidth && (newLeft + this.world.viewportWidth > this.worldWidth)) {
+			this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
 		} else if (this.worldWidth && (newLeft < 0)) {
-			this.worldViewportLeft = 0; 
+			this.world.viewportLeft = 0; 
 		} else {
-			this.worldViewportLeft = newLeft;
+			this.world.viewportLeft = newLeft;
 		}
 	};
 	
 	proto.moveTop = function (newTop)
 	{
-		if (this.worldHeight < this.worldViewportHeight){
-			this.worldViewportTop = (this.worldHeight - this.worldViewportHeight) / 2;
-		} else if (this.worldHeight && (newTop + this.worldViewportHeight > this.worldHeight)) {
-			this.worldViewportTop = this.worldHeight - this.worldViewportHeight;
+		if (this.worldHeight < this.world.viewportHeight){
+			this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
+		} else if (this.worldHeight && (newTop + this.world.viewportHeight > this.worldHeight)) {
+			this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
 		} else if (this.worldHeight && (newTop < 0)) {
-			this.worldViewportTop = 0; 
+			this.world.viewportTop = 0; 
 		} else {
-			this.worldViewportTop = newTop;
+			this.world.viewportTop = newTop;
 		}
 	};
 	
 	
 	proto.lockedFollow = function (entity)
 	{
-		this.move(entity.x - (this.worldViewportWidth / 2), entity.y - (this.worldViewportHeight / 2));
+		this.move(entity.x - (this.world.viewportWidth / 2), entity.y - (this.world.viewportHeight / 2));
 	};
 	
 	proto.setBoundingArea = function (top, left, width, height)
 	{
 		this.bBBorderY = (typeof top !== 'undefined') ? top : 500;
 		this.bBBorderX = (typeof left !== 'undefined') ? left : 500;
-		this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.worldViewportWidth - (2 * this.bBBorderX);
-		this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.worldViewportHeight - (2 * this.bBBorderY);
+		this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.world.viewportWidth - (2 * this.bBBorderX);
+		this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.world.viewportHeight - (2 * this.bBBorderY);
 	};
 	
 	proto.boundingFollow = function (entity)
@@ -203,17 +230,17 @@ platformer.components['lc-camera'] = (function(){
 		var newLeft = undefined;
 		var newTop = undefined;
 		
-		if (entity.x > this.worldViewportLeft + this.bBBorderX + this.bBInnerWidth) 
+		if (entity.x > this.world.viewportLeft + this.bBBorderX + this.bBInnerWidth) 
 		{
 			newLeft = entity.x -(this.bBBorderX + this.bBInnerWidth);
-		} else if (entity.x < this.worldViewportLeft + this.bBBorderX) {
+		} else if (entity.x < this.world.viewportLeft + this.bBBorderX) {
 			newLeft = entity.x - this.bBBorderX;
 		}
 		
-		if (entity.y > this.worldViewportTop + this.bBBorderY + this.bBInnerHeight) 
+		if (entity.y > this.world.viewportTop + this.bBBorderY + this.bBInnerHeight) 
 		{
 			newTop = entity.y - (this.bBBorderY + this.bBInnerHeight);
-		} else if (entity.y < this.worldViewportTop + this.bBBorderY) {
+		} else if (entity.y < this.world.viewportTop + this.bBBorderY) {
 			newTop = entity.y - this.bBBorderY;
 		}
 		
@@ -231,16 +258,16 @@ platformer.components['lc-camera'] = (function(){
 	proto.windowToWorld = function (sCoords)
 	{
 		var wCoords = [];
-		wCoords[0] = Math.round((sCoords[0] - this.windowViewportLeft) * this.worldPerWindowUnitWidth);
-		wCoords[1] = Math.round((sCoords[1] - this.windowViewportTop)  * this.worldPerWindowUnitHeight);
+		wCoords[0] = Math.round((sCoords[0] - this.window.viewportLeft) * this.worldPerWindowUnitWidth);
+		wCoords[1] = Math.round((sCoords[1] - this.window.viewportTop)  * this.worldPerWindowUnitHeight);
 		return wCoords; 
 	};
 	
 	proto.worldToWindow = function (wCoords)
 	{
 		var sCoords = [];
-		sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.windowViewportLeft);
-		sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.windowViewportTop);
+		sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.window.viewportLeft);
+		sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.window.viewportTop);
 		return sCoords;
 	};
 	

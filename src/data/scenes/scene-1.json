@@ -10,24 +10,53 @@
 				   "width": 3200//,
 				   //"scaleWidth":320 
 				},
-				{"type": "lc-render"},
+				{"type": "render-createjs"},
 				{"type": "layer-controller"},
 				{"type": "entity-container"},
-				{"type": "tiled-loader", "level": "level-1", "unitsPerPixel": 10}
+				{
+				    "type": "tiled-loader",
+				    "level": "level-1",
+				    "unitsPerPixel": 10,
+				    "images": ["sprites"], //optional: will use source images from Tiled JSON if not specified here.
+				    "imagesScale": 2       //size of image pixels in world coordinates
+				}
 			]
         },{
-            "id": "touch-interface",
+            "id": "multitouch-interface",
             "filter": {
-                "includes": ["touch"]
+                "includes": ["multitouch"]
             },
             "components": [
                 {
                     "type": "lc-camera",
-                    "width": 960
+                    "width": 2000
                 },
                 {"type": "lc-logic"},
-                {"type": "lc-render"},
+                {"type": "render-createjs"},
                 {"type": "entity-container", "entities": [
+                    {"type": "button-jump"},
+                    {"type": "button-left"},
+                    {"type": "button-right"},
+                    {"type": "button-mute"}
+                ]}
+            ]
+        },{
+            "id": "touch-interface",
+            "filter": {
+                "includes": ["touch"],
+                "excludes": ["multitouch"]
+            },
+            "components": [
+                {
+                    "type": "lc-camera",
+                    "width": 2000
+                },
+                {"type": "lc-logic"},
+                {"type": "render-createjs"},
+                {"type": "entity-container", "entities": [
+                    {"type": "button-jump-left"},
+                    {"type": "button-jump-right"},
+                    {"type": "button-jump", "properties": {"x": 310}},
                     {"type": "button-left"},
                     {"type": "button-right"},
                     {"type": "button-mute"}
@@ -41,19 +70,15 @@
             "components": [
                 {
                     "type": "lc-camera",
-                    "width": 1440
+                    "width": 4000
                 },
                 {"type": "lc-logic"},
-                {"type": "lc-render"},
+                {"type": "render-createjs"},
                 {"type": "entity-container", "entities": [
                     {"type": "button-mute"},
                     {"type": "button-play"}
                 ]}
             ]
-        },{
-            "id": "enable-ios-audio",
-            "filter": {"includes": ["iOS"]},
-            "components": [{"type": "enable-ios-audio", "audioId": "combined"}]
 		}
 	]
 }

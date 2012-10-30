@@ -9,7 +9,7 @@
 				},
 				{"type": "lc-logic"},
 				{"type": "lc-basic-collision"},
-				{"type": "lc-render"},
+				{"type": "render-createjs"},
 				{"type": "layer-controller"},
 				{"type": "entity-container"},
 				{"type": "tiled-loader", "level": "level-2", "unitsPerPixel": 10}
@@ -25,7 +25,7 @@
                     "width": 960
                 },
                 {"type": "lc-logic"},
-                {"type": "lc-render"},
+                {"type": "render-createjs"},
                 {"type": "entity-container", "entities": [
                     {"type": "button-left"},
                     {"type": "button-right"},
@@ -43,7 +43,7 @@
                     "width": 1440
                 },
                 {"type": "lc-logic"},
-                {"type": "lc-render"},
+                {"type": "render-createjs"},
                 {"type": "entity-container", "entities": [
                     {"type": "button-mute"}
                 ]}

@@ -7,6 +7,7 @@
 		{
 			"type": "entity-controller",
 			"controlMap":{
+			    "button-jump":      "key-jump",
 				"key:z": 			"key-jump",
                 "key:left-arrow":   "key-left",
                 "button-left":      "key-left",
@@ -31,20 +32,22 @@
 			"spriteSheet": {
 				"images": ["mookie-walk"],
 				"frames": {
-					"width":  26,
-					"height": 27,
-					"regY":   26,
-					"regX":   13
+					"width":  130,
+					"height": 135,
+					"regY":   130,
+					"regX":   65
 				},
 				"animations": {
-					"standing-left":  [2],
-					"standing-right":  [5],
-					"walking-left":  {frames:[3,0,1,2], 	frequency:4},
-					"walking-right":  {frames:[4,7,6,5], 	frequency:4},
-					"jumping-left":  [0],
-					"jumping-right":  [6]
+					"standing-right":[2],
+					"standing-left": [5],
+					"walking-right": {frames:[3,0,1,2], frequency:4},
+					"walking-left":  {frames:[4,7,6,5], frequency:4},
+					"jumping-right": [0],
+					"jumping-left":  [6]
 				}
-			}
+			},
+			"scaleX": 2,
+			"scaleY": 2
 		},{
 		    "type": "audio",
 		    "audioMap": {
@@ -62,8 +65,8 @@
 		"y": 10,
 		"width": 160,
 		"height": 240,
-		"state": "standing",
-		"heading": "south",
+		"state": "ground",
+		"heading": "right",
 		"camera": "bounding"
 	}
 }

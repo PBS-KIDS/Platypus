@@ -22,17 +22,19 @@
                 },
                 "animations": {
                     "released": 0,
-                    "pressed":  4
+                    "pressed":  6
                 }
             },
+            "scaleX": 2.9,
+            "scaleY": 2.9,
             "state": "released",
             "acceptInput": {"click": true, "touch": true}
 		}
 	],
 	"properties":{
-		"x": 51,
-		"y": 531,
-		"width": 138,
-		"height": 138
+		"x": 1180,
+		"y": 1090,
+		"width": 400,
+		"height": 400
 	}
 }

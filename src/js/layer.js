@@ -88,6 +88,14 @@ platformer.classes.layer = (function(){
 			}
 		}
 	};
+
+	proto.destroy = function(){
+		for (var x in this.components)
+		{
+			this.components[x].destroy();
+		}
+		this.components.length = 0;
+	};
 	
 	return layer;
 })();

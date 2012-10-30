@@ -1,17 +1,22 @@
 {
 	"layers":[
 		{
-			"id": "buttons",
+			"id": "menu",
 			"components": [
 				{"type": "lc-logic"},
-				{"type": "lc-render"},
+				{"type": "render-dom"},
 				{"type": "layer-controller"},
 				{"type": "entity-container",
 					"entities": [
-						{"type": "button"}
+                        {"type": "title-screen"},
+                        {"type": "button-play-game"}
 					]
 				}
 			]
+        },{
+            "id": "enable-ios-audio",
+            "filter": {"includes": ["iOS"]},
+            "components": [{"type": "enable-ios-audio", "audioId": "combined"}]
 		}
 	]
 }

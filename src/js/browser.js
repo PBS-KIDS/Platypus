@@ -19,6 +19,7 @@
 			iOS:       false, //determined below
 			mobile:    false, //determined below
 			desktop:   false, //determined below
+			multitouch:false, //determined below
 			
 			// audio support as determined below
 			ogg:         true,
@@ -36,6 +37,17 @@
 	supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
 	supports.mobile  = supports.iOS  || supports.android || supports.silk;
 	supports.desktop = !supports.mobile;
+	
+	//Determine multitouch:
+	if(supports.touch){
+		if (supports.android){
+			if(parseInt(uagent.slice(uagent.indexOf("android") + 8)) > 2){
+				supports.multitouch = true;
+			}
+		} else {
+			supports.multitouch = true;
+		}
+	}
 	
 	// Determine audio support
 	if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"'))){

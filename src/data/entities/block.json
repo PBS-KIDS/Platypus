@@ -5,32 +5,33 @@
 	"id": "block",
 	"components":[
 		{
+//            "type": "logic-gravity" //Once solid-vs-solid collision bug is fixed, add this component back. - DDD
+//        },{
 			"type": "collision-hero", 
 		 	"shape": {
 	 			"offset": [0,-120],
 	 			"type": "rectangle",
 	 		   	"points": [[-120,-120],[120,120]]
 	 		},
-			"collisionType": "solid"
+			"collisionType": "solid",
+			"collidesWith": ["solid"]
 		},{
-			"type": "render-animation", 
-		 	"spriteSheet": {
-				"images": ["tilemap"],
-				"frames": {
-					"width":  24,
-					"height": 24,
-                    "regX":   12,
-                    "regY":   24
-				  },
-				"animations": {
-					"tile": 9
-				  }
-			},
-			"state": "tile"
-		},{
-		    "type": "render-debug",
-            "regX": 120,
-            "regY": 240
+			"type": "render-image", 
+		 	"image": "sprites",
+			"source": {
+					"width":  120,
+					"height": 120,
+					"y": 720,
+					"x": 240   
+    		},
+            "regX":   60,
+            "regY":   120,
+            "scaleX": 2,
+            "scaleY": 2
+//		},{
+//		    "type": "render-debug",
+//            "regX": 120,
+//            "regY": 240
         }
 	],
 	"properties":{

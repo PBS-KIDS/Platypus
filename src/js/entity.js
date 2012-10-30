@@ -91,8 +91,9 @@ platformer.classes.entity = (function(){
 	proto.destroy = function(){
 		for (var x in this.components)
 		{
-			this.removeComponent(this.components[x]);
+			this.components[x].destroy();
 		}
+		this.components.length = 0;
 	};
 	
 	return entity;

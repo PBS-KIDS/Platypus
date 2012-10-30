@@ -18,9 +18,11 @@
                 },
                 "animations": {
                     "released": 3,
-                    "pressed":  7
+                    "pressed":  9
                 }
             },
+            "scaleX": 2.9,
+            "scaleY": 2.9,
             "state": "pressed",
             "acceptInput": {"click": true, "touch": true}
 		},{
@@ -33,9 +35,9 @@
         }
 	],
 	"properties":{
-		"x": 51,
-		"y": 51,
-		"width": 138,
-		"height": 138
+		"x": 10,
+		"y": 10,
+		"width": 400,
+		"height": 400
 	}
 }

@@ -58,7 +58,7 @@ platformer.components['collision-hero'] = (function(){
 		
 	};
 	
-	proto['layer:prep-collision'] = function(){
+	proto['layer:prep-collision'] = function(){ //TODO: Gravity-sensitive solids collision shapes break away from their owner due to this event not being fired - DDD
 		this.owner.shape.update(this.owner.x, this.owner.y);
 	};
 	

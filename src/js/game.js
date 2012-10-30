@@ -60,8 +60,45 @@ platformer.classes.game = (function(){
 		if(this.currentScene) this.currentScene.tick(deltaT);
 	};
 	
-	proto.loadScene = function(sceneName){ //TODO: add transitions here!
-		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneName], this.rootElement);
+	proto.loadScene = function(sceneId, transition){
+		var self = this;
+		this.inTransition = true;
+		this.leavingScene = this.currentScene;
+		switch(transition){
+		case 'fade-to-black':
+			var element = document.createElement('div');
+			this.rootElement.appendChild(element);
+			element.style.width = '100%';
+			element.style.height = '100%';
+			element.style.position = 'absolute';
+			element.style.zIndex = '12';
+			element.style.opacity = '0';
+			element.style.background = '#000';
+			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
+				self.loadNextScene(sceneId);
+			}).wait(500).to({opacity:0}, 500).call(function(t){
+				self.rootElement.removeChild(element);
+				element = undefined;
+				self.completeSceneTransition();
+			});
+			break;
+		case 'instant':
+		default:
+			this.loadNextScene(sceneId);
+			this.completeSceneTransition();
+		}
+	};
+	
+	proto.loadNextScene = function(sceneId){
+		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
+	};
+	
+	proto.completeSceneTransition = function(){
+		this.inTransition = false;
+		if(this.leavingScene){
+			this.leavingScene.destroy();
+			this.leavingScene = false;
+		}
 	};
 	
 	proto.addEventListener = function(element, event, callback){
