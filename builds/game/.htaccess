@@ -5,9 +5,6 @@ RewriteEngine on
 RewriteCond %{HTTP_USER_AGENT} "firefox|opera|chrome" [NC]
 RewriteRule ^cache\.manifest$ ogg.manifest [L]
 
-RewriteCond %{HTTP_USER_AGENT} "" [NC]
-RewriteRule ^cache\.manifest$ m4a.manifest [L]
-
 RewriteCond %{HTTP_USER_AGENT} "android|silk|ipod|ipad|iphone" [NC]
 RewriteRule ^cache\.manifest$ m4aCombined.manifest [L]
 

@@ -5,16 +5,21 @@
 	"id": "block",
 	"components":[
 		{
-//            "type": "logic-gravity" //Once solid-vs-solid collision bug is fixed, add this component back. - DDD
-//        },{
-			"type": "collision-hero", 
+            "type": "logic-gravity"
+        },{
+			"type": "collision-basic", 
 		 	"shape": {
 	 			"offset": [0,-120],
 	 			"type": "rectangle",
 	 		   	"points": [[-120,-120],[120,120]]
 	 		},
-			"collisionType": "solid",
-			"collidesWith": ["solid"]
+			"collisionType": "block",
+            "solidCollisions": {
+                "block": "",
+                "dirt": "",
+                "hero": "",
+                "tiles": ""
+            }
 		},{
 			"type": "render-image", 
 		 	"image": "sprites",

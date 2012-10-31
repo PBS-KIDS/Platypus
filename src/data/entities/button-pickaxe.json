@@ -1,0 +1,40 @@
+/*
+ * 
+ */
+{
+	"id": "button-pickaxe",
+	"components":[
+        {
+            "type": "logic-button"
+        },{
+            "type": "broadcast-events",
+		    "events":{
+                "mousedown": "button-pickaxe:down",
+                "mouseup":   "button-pickaxe:up"
+		    }
+		},
+		{"type": "render-animation",
+            "spriteSheet": {
+                "images": ["buttons"],
+                "frames": {
+                    "width":  138,
+                    "height": 138
+                },
+                "animations": {
+                    "released": 17,
+                    "pressed":  23
+                }
+            },
+            "scaleX": 2.9,
+            "scaleY": 2.9,
+            "state": "released",
+            "acceptInput": {"click": true, "touch": true}
+		}
+	],
+	"properties":{
+		"x": 420,
+		"y": 1090,
+		"width": 400,
+		"height": 400
+	}
+}

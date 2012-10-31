@@ -16,8 +16,27 @@ platformer.components['broadcast-events'] = (function(){
 				}
 			};
 		}
-	},
-	entityBroadcast = function(event){
+	};
+	
+	var parentBroadcast = function(event){
+		if(typeof event === 'string'){
+			return function(value){
+				if(this.owner.parent)
+				{
+					this.owner.parent.trigger(event, value);
+				}
+				
+			};
+		} else {
+			return function(value){
+				for (var e in event){
+					this.owner.parent.trigger(event[e], value);
+				}
+			};
+		}
+	};
+	
+	var entityBroadcast = function(event){
 		if(typeof event === 'string'){
 			return function(value){
 				this.owner.trigger(event, value);
@@ -29,8 +48,8 @@ platformer.components['broadcast-events'] = (function(){
 				}
 			};
 		}
-	},
-	component = function(owner, definition){
+	};
+	var component = function(owner, definition){
 		this.owner = owner;
 
 		// Messages that this component listens for and then broadcasts to all layers.
@@ -42,6 +61,13 @@ platformer.components['broadcast-events'] = (function(){
 			}
 		}
 		
+		if(definition.parentEvents){
+			for(var event in definition.parentEvents){
+				this[event] = parentBroadcast(definition.parentEvents[event]);
+				this.addListener(event);
+			}
+		}
+		
 		// Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
 		if(definition.renameEvents){
 			for(var event in definition.renameEvents){
@@ -49,8 +75,8 @@ platformer.components['broadcast-events'] = (function(){
 				this.addListener(event);
 			}
 		}
-	},
-	proto = component.prototype;
+	};
+	var proto = component.prototype;
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

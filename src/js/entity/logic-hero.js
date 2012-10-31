@@ -5,7 +5,7 @@ platformer.components['logic-hero'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down','key-jump']);
+		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down','key-jump','key-swing']);
 		
 		this.owner.state   = this.owner.state || 'ground';
 		this.owner.heading = this.owner.heading || 'right';
@@ -23,6 +23,8 @@ platformer.components['logic-hero'] = (function(){
 		this.maxVY = 3;
 		this.jumpV = 4;
 		this.aGravity = .01;
+		
+		this.hitGround = false;
 		
 		//Handle Tile Collisions
 		this.owner.resolveTileCollision = function(heading, collisionInfo){
@@ -91,6 +93,8 @@ platformer.components['logic-hero'] = (function(){
 			}
 		} 
 		*/
+
+		
 		if (this.jump && this.owner.state != 'air') {
 			this.vY = -this.jumpV;
 			this.owner.state = 'air';
@@ -108,32 +112,43 @@ platformer.components['logic-hero'] = (function(){
 			this.vY += this.aGravity * deltaT;
 		}
 		
+		if (!this.hitGround)
+		{
+			this.owner.state = 'air';
+		}
+		this.hitGround = false;
+		
 		this.owner.x += (this.vX * deltaT);
 		this.owner.y += (this.vY * deltaT);
 		
-		this.left = false;
-		this.right = false;
-		this.up = false;
-		this.down = false;
-		this.jump = false;
-		
-		
-		if (this.owner.state == 'ground')
-		{
-			if (this.vX == 0)
-			{
+		if(this.swing){
+			this.owner.trigger('logical-state', {state: 'swing' + '-' + this.owner.heading});
+			if(this.swingInstance){
+				this.owner.parent.addEntity(new platformer.classes.entity(platformer.settings.entities['pickaxe'], {
+					properties: {
+						x: this.owner.x + ((this.owner.heading === 'right')?1:-1) * 140,
+						y: this.owner.y
+					}
+				}));
+				this.owner.trigger('pickaxe');
+			}
+		} else if (this.owner.state == 'ground') {
+			if (this.vX == 0) {
 				this.owner.trigger('logical-state', {state: 'standing' + '-' + this.owner.heading});
 			} else {
 				this.owner.trigger('logical-state', {state: 'walking' + '-' + this.owner.heading});
 				this.owner.trigger('walking'); //This is for audio
 			}
-		} else if (this.owner.state == 'air')
-		{
+		} else if (this.owner.state == 'air') {
 			this.owner.trigger('logical-state', {state: 'jumping' + '-' + this.owner.heading});
-			
 		}
 		
-		
+		this.left  = false;
+		this.right = false;
+		this.up    = false;
+		this.down  = false;
+		this.jump  = false;
+		this.swingInstance = false;		
 		
 	};
 	
@@ -177,11 +192,26 @@ platformer.components['logic-hero'] = (function(){
 		}
 	};
 
+	proto['key-swing'] = function (state)
+	{
+		if(state.pressed)
+		{
+			if(!this.swing){
+				this.swing = true;
+				this.swingInstance = true;
+			}
+		} else {
+			this.swing = false;
+		}
+	};
+
 	proto.resolveTileCollision = function(heading, collisionInfo){
 		switch (heading)
 		{
 		case 'down':
 			this.owner.state = 'ground';
+			this.hitGround = true;
+			this.vY = 0; 
 			break;
 		case 'up':
 			this.vY = 0;
@@ -194,21 +224,19 @@ platformer.components['logic-hero'] = (function(){
 		switch (heading)
 		{
 		case 'down':
-			if (this.owner.state == 'ground')
-			{
-				this.vY = 0; 
-			} else if (this.owner.state == 'air') {
-				this.owner.state = 'ground';
-				this.vY = 0; 
-			}
+			this.owner.state = 'ground';
+			this.hitGround = true;
+			this.vY = 0; 
 			break;
-		}
+		} 
 		return true;
 	};
 	
 	proto.resolveSoftCollision = function(collisionInfo){
 		return false;
 	};
+	
+	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

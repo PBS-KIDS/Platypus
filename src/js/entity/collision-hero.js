@@ -29,25 +29,6 @@ platformer.components['collision-hero'] = (function(){
 			return self.routeSoftCollision(collisionInfo);
 		};
 		
-		
-		/*
-		this.owner.resolveTileCollisionX = function(dir, collisionInfo){
-			return self.resolveTileCollisionX(dir, collisionInfo);
-		};
-		this.owner.resolveTileCollisionY = function(dir, collisionInfo){
-			return self.resolveTileCollisionY(dir, collisionInfo);
-		};
-		this.owner.resolveSolidCollisionX = function(dir, collisionInfo){
-			return self.resolveSolidCollisionX(dir, collisionInfo);
-		};
-		this.owner.resolveSolidCollisionY = function(dir, collisionInfo){
-			return self.resolveSolidCollisionY(dir, collisionInfo);
-		};
-		this.owner.resolveSoftCollision = function(collisionInfo){
-			return self.resolveSoftCollision(collisionInfo);
-		};
-		*/
-		
 		this.owner.collisionType = definition.collisionType || 'solid';
 		this.owner.collidesWith = definition.collidesWith || [];
 	};
@@ -62,11 +43,18 @@ platformer.components['collision-hero'] = (function(){
 		this.owner.shape.update(this.owner.x, this.owner.y);
 	};
 	
+	
 	proto['layer:relocate'] = function(positionXY){
 		this.owner.x = positionXY[0] - this.owner.shape.getXOffset();
 		this.owner.y = positionXY[1] - this.owner.shape.getYOffset();
 		this.owner.shape.setXY(positionXY[0], positionXY[1]);
 	};
+	
+	/*
+	proto.relocateShape = function(positionXY){
+		this.owner.shape.setXY(positionXY[0], positionXY[1]);
+	};
+	*/
 	
 	proto.getAABB = function(){
 		return this.owner.shape.getAABB();
@@ -415,6 +403,15 @@ platformer.components['collision-hero'] = (function(){
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.owner.shape.destroy();
+		this.owner.shape = undefined;
+		this.owner.getAABB = undefined;
+		this.owner.routeTileCollision = undefined;
+		this.owner.routeSolidCollision = undefined;
+		this.owner.routeSoftCollision = undefined;
+		this.owner.collisionType = undefined;
+		this.owner.collidesWith = undefined;
+		
 		this.removeListeners(this.listeners);
 	};
 	

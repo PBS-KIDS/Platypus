@@ -2217,6 +2217,10 @@
              "2":
                 {
                  "entity":"dirt"
+                },
+             "9":
+                {
+                 "entity":"gem"
                 }
             },
          "tilewidth":24

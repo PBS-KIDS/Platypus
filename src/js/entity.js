@@ -78,6 +78,7 @@ platformer.classes.entity = (function(){
 				this.messages[messageId][i](value);
 			}
 		}
+		return i;
 	};
 	
 	proto.getMessageIds = function(){

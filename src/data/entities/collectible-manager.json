@@ -1,0 +1,27 @@
+/*
+ * 
+ */
+{
+	"id": "collectible-manager",
+	"components":[
+		{
+			"type": "logic-collectible-manager"
+		},{
+			"type": "render-collectible-manager",
+			"spriteSheet": {
+				"images": ["gem-bar"],
+				"frames": {
+					"width":  229,
+					"height": 139,
+					"regY":   0,
+					"regX":   229
+				},
+				"animations": {
+					"default":  [0]
+				}
+			}
+		}
+	],
+	"properties":{
+	}
+}

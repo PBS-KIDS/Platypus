@@ -12,13 +12,16 @@
 				},
 				{"type": "render-createjs"},
 				{"type": "layer-controller"},
-				{"type": "entity-container"},
+				{"type": "entity-container" 
+					/*, "entities": [{"type": "collectible-manager"}]*/
+				},
 				{
 				    "type": "tiled-loader",
 				    "level": "level-1",
 				    "unitsPerPixel": 10,
 				    "images": ["sprites"], //optional: will use source images from Tiled JSON if not specified here.
 				    "imagesScale": 2       //size of image pixels in world coordinates
+				    
 				}
 			]
         },{
@@ -35,9 +38,9 @@
                 {"type": "render-createjs"},
                 {"type": "entity-container", "entities": [
                     {"type": "button-jump"},
+                    {"type": "button-pickaxe"},
                     {"type": "button-left"},
-                    {"type": "button-right"},
-                    {"type": "button-mute"}
+                    {"type": "button-right"}
                 ]}
             ]
         },{
@@ -57,9 +60,9 @@
                     {"type": "button-jump-left"},
                     {"type": "button-jump-right"},
                     {"type": "button-jump", "properties": {"x": 310}},
+                    {"type": "button-pickaxe", "properties": {"x": 10, "y": 680}},
                     {"type": "button-left"},
-                    {"type": "button-right"},
-                    {"type": "button-mute"}
+                    {"type": "button-right"}
                 ]}
             ]
         },{

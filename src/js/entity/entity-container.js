@@ -13,7 +13,7 @@ platformer.components['entity-container'] = (function(){
 		
 		this.owner.entities     = self.entities;
 		this.owner.addEntity    = function(entity){return self.addEntity(entity);};
-		this.owner.removeEntity = function(){return self.removeEntity();};
+		this.owner.removeEntity = function(entity){return self.removeEntity(entity);};
 		
 		this.addListeners(['load', 'add-entity', 'remove-entity']);
 	};
@@ -34,15 +34,26 @@ platformer.components['entity-container'] = (function(){
 		}
 	};
 	
-	proto.addEntity = proto['add-entity'] = function (entity) {
+	proto.addEntity = proto['add-entity'] = function (entity) {   
+		for (var x = 0; x < this.entities.length; x++)
+		{
+			entity.trigger('peer-entity-added', this.entities[x]);
+		}
+		
+		for (var x = 0; x < this.entities.length; x++)
+		{
+			this.entities[x].trigger('peer-entity-added', entity);
+		}
 		this.entities.push(entity);
-		this.owner.trigger('entity-added', entity);
+		this.owner.trigger('child-entity-added', entity);
+		entity.parent = this.owner;
 		return entity;
 	};
 	
 	proto.removeEntity = proto['remove-entity'] = function (entity) {
 		for (var x = 0; x < this.entities.length; x++){
 		    if(this.entities[x] === entity){
+		    	entity.parent = undefined;
 		    	this.entities.splice(x, 1);
 		    	entity.destroy();
 			    return entity;

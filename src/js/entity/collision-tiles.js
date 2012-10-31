@@ -13,8 +13,6 @@ platformer.components['collision-tiles'] = (function(){
 		this.listeners = [];
 		this.addListeners(['layer:prep-collision']);
 		
-		this.owner.collisionType = definition.collisionType || 'solid';
-		this.owner.collidesWith = definition.collidesWith || [];
 		this.owner.getTiles = function(aabb){
 			return self.getTiles(aabb);
 		};

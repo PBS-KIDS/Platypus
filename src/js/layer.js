@@ -87,6 +87,7 @@ platformer.classes.layer = (function(){
 				this.messages[messageId][i](value);
 			}
 		}
+		return i;
 	};
 
 	proto.destroy = function(){

@@ -6,7 +6,7 @@ platformer.components['render-createjs'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		this.tickMessages = ['render'];
-		this.addListeners(['entity-added','render', 'camera-update']);
+		this.addListeners(['child-entity-added','render', 'camera-update']);
 		
 		this.canvas = this.owner.canvas = document.createElement('canvas');
 		this.owner.rootElement.appendChild(this.canvas);
@@ -18,7 +18,7 @@ platformer.components['render-createjs'] = (function(){
 	},
 	proto = component.prototype; 
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var self = this,
 		messageIds = entity.getMessageIds(); 
 		
@@ -38,9 +38,12 @@ platformer.components['render-createjs'] = (function(){
 	};
 	
 	proto['render'] = function(deltaT){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('layer:render', deltaT);
+			if(!this.entities[x].trigger('layer:render', deltaT))
+			{
+				this.entities.splice(x, 1);
+			}
 			
 		}
 		this.stage.update();

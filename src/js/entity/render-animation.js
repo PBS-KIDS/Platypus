@@ -1,4 +1,13 @@
 platformer.components['render-animation'] = (function(){
+	var changeState = function(state){
+		return function(value){
+			if (this.currentAnimation != state)
+			{
+				this.currentAnimation = state;
+				this.anim.gotoAndPlay(state);
+			}
+		};
+	};
 	var component = function(owner, definition){
 		var spriteSheet = {
 			images: definition.spriteSheet.images.slice(),
@@ -21,6 +30,14 @@ platformer.components['render-animation'] = (function(){
 		this.listeners = [];
 
 		this.addListeners(['layer:render-load', 'layer:render', 'logical-state']);
+
+		if(definition.animationMap){
+			for(var i in definition.animationMap){
+				this.addListener(i);
+				this[i] = changeState(definition.animationMap[i]);
+			}
+		}
+		
 		this.stage = undefined;
 		for (var x = 0; x < spriteSheet.images.length; x++)
 		{
@@ -122,6 +139,9 @@ platformer.components['render-animation'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.anim);
+		this.anim = undefined;
+		this.stage = undefined;
 		this.removeListeners(this.listeners);
 	};
 	

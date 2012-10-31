@@ -127,7 +127,7 @@ platformer.components['layer-controller'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['check-inputs'];
-		this.addListeners(['entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
+		this.addListeners(['child-entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
 	},
 	proto = component.prototype; 
 
@@ -146,13 +146,16 @@ platformer.components['layer-controller'] = (function(){
 	};
 	
 	proto['check-inputs'] = function(resp){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('controller:tick');
+			if(!this.entities[x].trigger('controller:tick'))	
+			{
+				this.entities.splice(x, 1);
+			}
 		}
 	};
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
 		for (var x = 0; x < messageIds.length; x++)

@@ -21,7 +21,7 @@ platformer.components['lc-template'] = (function(){
 		 TODO: Add message ids this component is listening for here
 		 	
 		 	e.g.
-		 	this.addListeners(['entity-added','render']);
+		 	this.addListeners(['child-entity-added','render']);
 		 *************************************************/
 		this.addListeners([/*MESSAGE IDS HERE!*/]);  
 		

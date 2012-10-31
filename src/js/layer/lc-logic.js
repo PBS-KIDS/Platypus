@@ -7,12 +7,12 @@ platformer.components['lc-logic'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['logic'];
-		this.addListeners(['entity-added', 'logic']);  
+		this.addListeners(['child-entity-added', 'logic']);  
 		
 	};
 	var proto = component.prototype; 
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var self = this,
 		messageIds = entity.getMessageIds(); 
 		
@@ -27,12 +27,14 @@ platformer.components['lc-logic'] = (function(){
 	};
 
 	proto['logic'] = function(deltaT){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('layer:logic', deltaT);
+			if(!this.entities[x].trigger('layer:logic', deltaT))
+			{
+				this.entities.splice(x, 1);
+			}
 		}
 	};
-	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

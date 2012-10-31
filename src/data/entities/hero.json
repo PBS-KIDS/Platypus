@@ -8,7 +8,9 @@
 			"type": "entity-controller",
 			"controlMap":{
 			    "button-jump":      "key-jump",
-				"key:z": 			"key-jump",
+                "key:z":            "key-jump",
+                "button-pickaxe":   "key-swing",
+                "key:x":            "key-swing",
                 "key:left-arrow":   "key-left",
                 "button-left":      "key-left",
 				"key:right-arrow": 	"key-right",
@@ -19,31 +21,37 @@
 		},{
 			"type": "logic-hero"
 		},{
-			"type": "collision-hero",
+			"type": "collision-basic",
 		 	"shape":{
 		 		"offset": [0,-120],
 		 		"type": "rectangle",
 		 		"points": [[-80,-120],[80, 120]]
 	 		},
 			"collisionType": "hero",
-			"collidesWith": ["solid"]
+			"solidCollisions": {
+			    "block": "",
+			    "dirt": "",
+                "tiles": ""
+			}
 		},{
 			"type": "render-animation",
 			"spriteSheet": {
-				"images": ["mookie-walk"],
+				"images": ["mookie"],
 				"frames": {
-					"width":  130,
-					"height": 135,
-					"regY":   130,
-					"regX":   65
+					"width":  240,
+					"height": 155,
+					"regY":   155,
+					"regX":   120
 				},
 				"animations": {
 					"standing-right":[2],
 					"standing-left": [5],
-					"walking-right": {frames:[3,0,1,2], frequency:4},
-					"walking-left":  {frames:[4,7,6,5], frequency:4},
+					"walking-right": {"frames": [3, 0, 1, 2], "frequency": 4},
+					"walking-left":  {"frames": [4, 7, 6, 5], "frequency": 4},
 					"jumping-right": [0],
-					"jumping-left":  [6]
+					"jumping-left":  [6],
+                    "swing-right":   {"frames": [ 8,  9, 10, 10, 2], "next": "standing-right", "frequency": 4},
+                    "swing-left":    {"frames": [14, 13, 12, 12, 5], "next": "standing-left",  "frequency": 4}
 				}
 			},
 			"scaleX": 2,
@@ -51,13 +59,14 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
+                "pickaxe": {"sound": "pickaxe-other", "interrupt": "none"},
 		        "walking": {"sound": "walk", "interrupt": "none"},
 		        "jumping": "jump"
 		    }
-		},{
-		    "type": "render-debug",
-		    "regY": 240,
-		    "regX": 130
+//		},{
+//		    "type": "render-debug",
+//		    "regY": 260,
+//		    "regX": 130
 		}
 	],
 	"properties":{

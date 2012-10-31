@@ -135,6 +135,11 @@ platformer.components['render-debug'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.shape);
+		this.stage.removeChild(this.txt);
+		this.shape = undefined;
+		this.txt = undefined;
+		this.stage = undefined;
 		this.removeListeners(this.listeners);
 	};
 	

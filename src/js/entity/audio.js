@@ -13,17 +13,14 @@ platformer.components['audio'] = (function(){
 		attributes = undefined;
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
+			attributes = {};
 		} else {
-			attributes = soundDefinition;
 			sound      = soundDefinition.sound;
+			attributes = soundDefinition;
 		}
 		if(platformer.settings.assets[sound].data){
-			if(!attributes){ // set up asset defaults
-				attributes = platformer.settings.assets[sound].data;
-			} else {         // if values are being passed in, let asset use defaults if not overridden by attributes.
-				for(var item in platformer.settings.assets[sound].data){
-					attributes[item] = attributes[item] || platformer.settings.assets[sound].data[item];
-				}
+			for(var item in platformer.settings.assets[sound].data){
+				attributes[item] = attributes[item] || platformer.settings.assets[sound].data[item];
 			}
 		}
 		if(platformer.settings.assets[sound].assetId){
@@ -76,21 +73,27 @@ platformer.components['audio'] = (function(){
 	var proto = component.prototype;
 	
 	proto['layer:render'] = function(deltaT){
-		var i     = 0,
-		audioClip = undefined;
-		newArray  = undefined;
-		if(this.timedAudioClips.length){
-			newArray = [];
-			for (i in this.timedAudioClips){
-				audioClip = this.timedAudioClips[i];
-				audioClip.progress += deltaT;
-				if(audioClip.progress >= audioClip.length){
-					audioClip.audio.stop();
-				} else {
-					newArray.push(audioClip);
+		if (this.destroyMe && this.timedAudioClips.length == 0)
+		{
+			this.timedAudioClips = undefined;
+			this.removeListeners(this.listeners);
+		} else {
+			var i     = 0,
+			audioClip = undefined;
+			newArray  = undefined;
+			if(this.timedAudioClips.length){
+				newArray = [];
+				for (i in this.timedAudioClips){
+					audioClip = this.timedAudioClips[i];
+					audioClip.progress += deltaT;
+					if(audioClip.progress >= audioClip.length){
+						audioClip.audio.stop();
+					} else {
+						newArray.push(audioClip);
+					}
 				}
+				this.timedAudioClips = newArray;
 			}
-			this.timedAudioClips = newArray;
 		}
 	};
 	
@@ -108,7 +111,8 @@ platformer.components['audio'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
-		this.removeListeners(this.listeners);
+		//Handling things in 'render'
+		this.destroyMe = true;
 	};
 	
 	/*********************************************************************************************************

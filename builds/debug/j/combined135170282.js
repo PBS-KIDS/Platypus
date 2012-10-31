@@ -5,7 +5,7 @@
   PBS.KIDS = this.PBS.KIDS || {};
   PBS.KIDS.platformer = platformer;
 
-platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4a":[],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4a":"a/powerup.m4a","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4a":"a/walk.m4a","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4a":"a/jump.m4a","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"mookie-walk":{"id":"mookie-walk","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/layer/enable-ios-audio.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"render-createjs":{"id":"render-createjs","src":"../src/js/layer/render-createjs.js"},"render-dom":{"id":"render-dom","src":"../src/js/layer/render-dom.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"audio":{"id":"audio","src":"../src/js/entity/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/entity/change-scene.js"},"dom-element":{"id":"dom-element","src":"../src/js/entity/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/entity/render-image.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/entity/logic-directional-movement.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/entity/logic-gravity.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"collision-hero":{"id":"collision-hero","src":"../src/js/entity/collision-hero.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-1","transition":"fade-to-black"}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right","key:up-arrow":"key-up","key:down-arrow":"key-down"}},{"type":"logic-hero"},{"type":"collision-hero","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","collidesWith":["solid"]},{"type":"render-animation","spriteSheet":{"images":["mookie-walk"],"frames":{"width":130,"height":135,"regY":130,"regX":65},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6]}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"walking":{"sound":"walk","interrupt":"none"},"jumping":"jump"}},{"type":"render-debug","regY":240,"regX":130}],"properties":{"x":10,"y":10,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"collision-hero","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"solid","collidesWith":["solid"]},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-hero","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"solid"},{"type":"render-animation","spriteSheet":{"images":["objects"],"frames":{"width":24,"height":24,"regX":12,"regY":24},"animations":{"tile":2}},"state":"tile"}],"properties":{"x":50,"y":50,"width":240,"height":240}},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu","components":[{"type":"lc-logic"},{"type":"render-dom"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-camera","width":3200},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},{"id":"multitouch-interface","filter":{"includes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-left"},{"type":"button-right"},{"type":"button-mute"}]}]},{"id":"touch-interface","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-left"},{"type":"button-right"},{"type":"button-mute"}]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":4000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"}]}]}],"id":"scene-1"},"scene-2":{"layers":[{"id":"action","components":[{"type":"lc-camera","width":3200},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-2","unitsPerPixel":10}]},{"id":"touch-interface","filter":{"includes":["touch"]},"components":[{"type":"lc-camera","width":960},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-left"},{"type":"button-right"},{"type":"button-mute"}]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":1440},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"}]}]}],"id":"scene-2"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"}}};
+platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/layer/enable-ios-audio.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"render-createjs":{"id":"render-createjs","src":"../src/js/layer/render-createjs.js"},"render-dom":{"id":"render-dom","src":"../src/js/layer/render-dom.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"audio":{"id":"audio","src":"../src/js/entity/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/entity/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/entity/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/entity/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/entity/render-image.js"},"render-collectible-manager":{"id":"render-collectible-manager","src":"../src/js/entity/render-collectible-manager.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/entity/logic-collectible-manager.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/entity/logic-directional-movement.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/entity/logic-gem.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/entity/logic-gravity.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/entity/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"width":400,"height":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":420,"y":1090,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-1","transition":"fade-to-black"}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right","key:up-arrow":"key-up","key:down-arrow":"key-down"}},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":""}},{"type":"render-animation","spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6],"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"pickaxe":{"sound":"pickaxe-other","interrupt":"none"},"walking":{"sound":"walk","interrupt":"none"},"jumping":"jump"}}],"properties":{"x":10,"y":10,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"","dirt":"","hero":"","tiles":""}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":300},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"layer:prep-collision","delay":50}]},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"render-collectible-manager","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}}}],"properties":{}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu","components":[{"type":"lc-logic"},{"type":"render-dom"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-camera","width":3200},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},{"id":"multitouch-interface","filter":{"includes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"}]}]},{"id":"touch-interface","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"}]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":4000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"}]}]}],"id":"scene-1"},"scene-2":{"layers":[{"id":"action","components":[{"type":"lc-camera","width":3200},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-2","unitsPerPixel":10}]},{"id":"touch-interface","filter":{"includes":["touch"]},"components":[{"type":"lc-camera","width":960},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-left"},{"type":"button-right"},{"type":"button-mute"}]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":1440},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"}]}]}],"id":"scene-2"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"}}};
 platformer.classes = {};
 
 /*--------------------------------------------------
@@ -213,6 +213,7 @@ platformer.classes.entity = (function(){
 				this.messages[messageId][i](value);
 			}
 		}
+		return i;
 	};
 	
 	proto.getMessageIds = function(){
@@ -326,6 +327,7 @@ platformer.classes.layer = (function(){
 				this.messages[messageId][i](value);
 			}
 		}
+		return i;
 	};
 
 	proto.destroy = function(){
@@ -418,10 +420,6 @@ platformer.classes.collisionShape = (function(){
 		{
 		case 'rectangle': //need TL and BR points
 		case 'circle': //need TL and BR points
-			//this.aABB.left = this.points[0][0];
-			//this.aABB.right = this.points[1][0];
-			//this.aABB.top = this.points[0][1];
-			//this.aABB.bottom = this.points[1][1];
 			width = this.points[1][0] - this.points[0][0];
 			height = this.points[1][1] - this.points[0][1];
 			break;
@@ -432,19 +430,11 @@ platformer.classes.collisionShape = (function(){
 				{
 					//TOP LEFT CORNER IS RIGHT
 					this.subType = 'tl';
-					//this.aABB.left = this.points[0][0];
-					//this.aABB.right = this.points[1][0];
-					//this.aABB.top = this.points[0][1];
-					//this.aABB.bottom = this.points[2][1];
 					width = this.points[1][0] - this.points[0][0];
 					height = this.points[2][1] - this.points[0][1];
 				} else {
 					//BOTTOM RIGHT CORNER IS RIGHT
 					this.subType = 'br';
-					//this.aABB.left = this.points[1][0];
-					//this.aABB.right = this.points[0][0];
-					//this.aABB.top = this.points[2][1];
-					//this.aABB.bottom = this.points[0][1];
 					width = this.points[0][0] - this.points[1][0];
 					height = this.points[0][1] - this.points[2][1];
 				}
@@ -454,19 +444,11 @@ platformer.classes.collisionShape = (function(){
 				{
 					//TOP RIGHT CORNER IS RIGHT
 					this.subType = 'tr';
-					//this.aABB.left = this.points[2][0];
-					//this.aABB.right = this.points[0][0];
-					//this.aABB.top = this.points[0][1];
-					//this.aABB.bottom = this.points[1][1];
 					width = this.points[0][0] - this.points[2][0];
 					height = this.points[1][1] - this.points[0][1];
 				} else {
 					//BOTTOM LEFT CORNER IS RIGHT
 					this.subType = 'bl';
-					//this.aABB.left = this.points[0][0];
-					//this.aABB.right = this.points[2][0];
-					//this.aABB.top = this.points[1][1];
-					//this.aABB.bottom = this.points[0][1];
 					width = this.points[2][0] - this.points[0][0];
 					height = this.points[0][1] - this.points[1][1];
 				}
@@ -474,40 +456,21 @@ platformer.classes.collisionShape = (function(){
 		}
 		
 		this.aABB = new platformer.classes.aABB(this.x, this.y, width, height);
-		
-		/*
-		this.aABB.width = this.aABB.right - this.aABB.left;
-		this.aABB.height = this.aABB.bottom - this.aABB.top;
-		this.aABB.halfWidth = this.aABB.width / 2;
-		this.aABB.halfHeight = this.aABB.height / 2;
-		this.aABBPos.left = this.aABB.left + this.x;
-		this.aABBPos.right = this.aABB.right + this.x;
-		this.aABBPos.top = this.aABB.top + this.y;
-		this.aABBPos.bottom = this.aABB.bottom + this.y;
-		*/
 	};
 	var proto = collisionShape.prototype;
 	
 	proto.update = function(x, y){
-		//alert('x: ' + x + ' y: ' + y);
-		
 		this.prevX = this.x;
 		this.prevY = this.y;
 		this.x = x + this.offset[0];
 		this.y = y + this.offset[1];
 		this.aABB.move(this.x, this.y);
-		/*
-		this.aABBPos.left = this.aABB.left + this.x;
-		this.aABBPos.right = this.aABB.right + this.x;
-		this.aABBPos.top = this.aABB.top + this.y;
-		this.aABBPos.bottom = this.aABB.bottom + this.y;
-		*/
-		//alert('this.x: ' + this.x + ' this.y: ' + this.y + ' this.prevX: ' + this.prevX + ' this.prevY: ' + this.prevY);
 	};
 	
 	proto.setXY = function (x, y) {
 		this.x = x;
 		this.y = y;
+		this.aABB.move(this.x, this.y);
 	};
 	
 	proto.getXY = function () {
@@ -544,6 +507,11 @@ platformer.classes.collisionShape = (function(){
 	
 	proto.getYOffset = function(){
 		return this.offset[1];
+	};
+	
+	proto.destroy = function(){
+		this.aABB = undefined;
+		this.points = undefined;
 	};
 	
 	return collisionShape;
@@ -795,7 +763,7 @@ platformer.components['layer-controller'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['check-inputs'];
-		this.addListeners(['entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
+		this.addListeners(['child-entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
 	},
 	proto = component.prototype; 
 
@@ -814,13 +782,16 @@ platformer.components['layer-controller'] = (function(){
 	};
 	
 	proto['check-inputs'] = function(resp){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('controller:tick');
+			if(!this.entities[x].trigger('controller:tick'))	
+			{
+				this.entities.splice(x, 1);
+			}
 		}
 	};
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
 		for (var x = 0; x < messageIds.length; x++)
@@ -1122,7 +1093,7 @@ platformer.components['render-createjs'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		this.tickMessages = ['render'];
-		this.addListeners(['entity-added','render', 'camera-update']);
+		this.addListeners(['child-entity-added','render', 'camera-update']);
 		
 		this.canvas = this.owner.canvas = document.createElement('canvas');
 		this.owner.rootElement.appendChild(this.canvas);
@@ -1134,7 +1105,7 @@ platformer.components['render-createjs'] = (function(){
 	},
 	proto = component.prototype; 
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var self = this,
 		messageIds = entity.getMessageIds(); 
 		
@@ -1154,9 +1125,12 @@ platformer.components['render-createjs'] = (function(){
 	};
 	
 	proto['render'] = function(deltaT){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('layer:render', deltaT);
+			if(!this.entities[x].trigger('layer:render', deltaT))
+			{
+				this.entities.splice(x, 1);
+			}
 			
 		}
 		this.stage.update();
@@ -1217,7 +1191,7 @@ platformer.components['render-dom'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		this.tickMessages = ['render'];
-		this.addListeners(['entity-added','render', 'camera-update']);
+		this.addListeners(['child-entity-added','render', 'camera-update']);
 		
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
@@ -1227,7 +1201,7 @@ platformer.components['render-dom'] = (function(){
 	},
 	proto = component.prototype; 
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var self = this,
 		messageIds = entity.getMessageIds(); 
 		
@@ -1245,9 +1219,12 @@ platformer.components['render-dom'] = (function(){
 	};
 	
 	proto['render'] = function(deltaT){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('layer:render', deltaT);
+			if(!this.entities[x].trigger('layer:render', deltaT))
+			{
+				this.entities.splice(x, 1);
+			}
 			
 		}
 	};
@@ -1304,12 +1281,12 @@ platformer.components['lc-logic'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['logic'];
-		this.addListeners(['entity-added', 'logic']);  
+		this.addListeners(['child-entity-added', 'logic']);  
 		
 	};
 	var proto = component.prototype; 
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var self = this,
 		messageIds = entity.getMessageIds(); 
 		
@@ -1324,12 +1301,14 @@ platformer.components['lc-logic'] = (function(){
 	};
 
 	proto['logic'] = function(deltaT){
-		for (var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('layer:logic', deltaT);
+			if(!this.entities[x].trigger('layer:logic', deltaT))
+			{
+				this.entities.splice(x, 1);
+			}
 		}
 	};
-	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
@@ -1380,7 +1359,7 @@ platformer.components['lc-camera'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['camera'];
-		this.addListeners(['resize', 'orientationchange', 'camera', 'load', 'world-loaded', 'entity-added']);  
+		this.addListeners(['resize', 'orientationchange', 'camera', 'load', 'world-loaded', 'child-entity-added']);  
 		
 		//The dimensions of the camera in the window
 		this.window = {
@@ -1442,7 +1421,7 @@ platformer.components['lc-camera'] = (function(){
 		
 	};
 
-	proto['entity-added'] = function(entity){
+	proto['child-entity-added'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
 		for (var x = 0; x < messageIds.length; x++)
@@ -1496,9 +1475,13 @@ platformer.components['lc-camera'] = (function(){
 			scaleX: this.windowPerWorldUnitWidth,
 			scaleY: this.windowPerWorldUnitHeight,
 		});
-		for (var x = 0; x < this.entities.length; x++)
+		
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('camera-update', this.world);
+			if(!this.entities[x].trigger('camera-update', this.world))
+			{
+				this.entities.splice(x, 1);
+			}
 		}
 	};
 	
@@ -1688,38 +1671,28 @@ platformer.components['lc-basic-collision'] = (function(){
 		this.listeners = [];
 		
 		this.tickMessages = ['collision'];
-		this.addListeners(['load','entity-added','collision']);  
+		this.addListeners(['load','child-entity-added','collision']);  
 		//this.toResolve = [];
 		
 		this.entities = [];
-		this.solidEntities = [];
+		this.entitiesByType = {};
 		this.terrain = undefined;
-		this.collisionMatrix = {};
 	};
 	var proto = component.prototype; 
 
-	proto['entity-added'] = function(entity){
-		var self = this;
+	proto['child-entity-added'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
-		if (entity.type == 'tile-layer')
-		{
+		if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
 			this.terrain = entity;
 		} else {
 			for (var x = 0; x < messageIds.length; x++){
-				if (messageIds[x] == 'layer:resolve-collision'){
-					if (entity.collisionType == 'solid')
-					{
-						this.solidEntities.push(entity);
-					} else {
-						this.entities.push(entity);
+				if (messageIds[x] == 'layer:prep-collision'){
+					if(!this.entitiesByType[entity.collisionType]){
+						this.entitiesByType[entity.collisionType] = [];
 					}
-					if(!this.collisionMatrix[entity.type]){
-						this.collisionMatrix[entity.type] = {};
-						for (var x = 0; x < entity.collidesWith.length; x++){
-							this.collisionMatrix[entity.type][entity.collidesWith[x]] = true;
-						}
-					}
+					this.entities.push(entity);
+					this.entitiesByType[entity.collisionType].push(entity);
 					break;
 				}
 			}
@@ -1731,23 +1704,29 @@ platformer.components['lc-basic-collision'] = (function(){
 	};
 	
 	proto['collision'] = function(deltaT){
-		var toResolve = [];
-		
 		this.prepareCollision();
+
+		this.checkSolidCollisions();
 		
-		//toResolve = this.checkSolidCollision();
-		//this.resolveSolidCollision(toResolve); 
-		this.checkStupidCollision();
-		
-		toResolve = this.checkCollision();
-		this.resolveCollision(toResolve);
+		this.checkSoftCollisions();
 	};
 	
 	proto.prepareCollision = function ()
 	{
-		for(var x = 0; x < this.entities.length; x++)
+		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			this.entities[x].trigger('layer:prep-collision');
+			if(!this.entities[x].trigger('layer:prep-collision'))
+			{
+				var entities = this.entitiesByType[this.entities[x].collisionType];
+				for (var y = entities.length - 1; y > -1; y--)
+				{
+					if(entities[y] === this.entities[x]){
+						entities.splice(y, 1);
+						break;
+					}
+				}
+				this.entities.splice(x, 1);
+			}
 		}
 	};
 	
@@ -1761,735 +1740,395 @@ platformer.components['lc-basic-collision'] = (function(){
 	 * TODO: This function currently FAILS to allow SOLID ENTITIES a chance TO RESOLVE the collision. WHAT WE GONNA DO!?!?
 	 * 
 	 ************************************************************************************************************************/
-	proto.checkStupidCollision = function ()
+	proto.checkSolidCollisions = function ()
 	{
-		for(var x = 0; x < this.entities.length; x++)
-		{
+		var x = 0,
+		y = 0,
+		z = 0,
+		initialX = 0,
+		initialY = 0;
+		for(x = 0; x < this.entities.length; x++){
 			var ent = this.entities[x];
-			if(this.collisionMatrix[ent.type]['solid'])
-			{
-				var currentAABB = ent.shape.getAABB();
-				var prevPos = ent.shape.getPrevLocation();
-				var previousAABB = (currentAABB.getCopy()).move(prevPos[0], prevPos[1]);
-				
-				var sweepTop = Math.min(currentAABB.top, previousAABB.top);
-				var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
-				var sweepHeight = sweepBottom - sweepTop;
-				var sweepLeft = Math.min(currentAABB.left, previousAABB.left);
-				var sweepRight = Math.max(currentAABB.right, previousAABB.right);
-				var sweepWidth = sweepRight - sweepLeft;
-				var sweepX = sweepLeft + (sweepWidth / 2);
-				var sweepY = sweepTop + (sweepHeight / 2); 
-				var sweepAABB = new platformer.classes.aABB(sweepX, sweepY, sweepWidth, sweepHeight);
-				var potentialsEntities = [];
-				
-				var potentialTiles = this.terrain.getTiles(sweepAABB);
-				
-				for (var y = 0; y < this.solidEntities.length; y++)
-				{
-					if(this.AABBCollision(sweepAABB, this.solidEntities[y].shape.getAABB()))
-					{
-						potentialsEntities.push(this.solidEntities[y]);
-					}
-				}
-				
-				var xDir = (ent.shape.getPrevX() < ent.shape.getX()) ? 1 : -1;
-				var xPos = ent.shape.getPrevX();
-				var xGoal = ent.shape.getX();
-				var yDir = (ent.shape.getPrevY() < ent.shape.getY()) ? 1 : -1;
-				var yPos = ent.shape.getPrevY();
-				var yGoal = ent.shape.getY();
-				
-				var finalY = undefined;
-				var finalX = undefined; 
-				
-				var collisionsX = [];
-				var collisionsY = [];
-				
-				var tileCollisionX = undefined;
-				var tileCollisionY = undefined;
-				
-				//////////////////////////////////////////////////////////////////////
-				//MOVE IN THE X DIRECTION
-				//////////////////////////////////////////////////////////////////////
-				while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
-				{
-					if (Math.abs(xGoal - xPos) <= 1)
-					{
-						xPos = xGoal;
-					} else {
-						xPos += xDir;
-					}
-					previousAABB.move(xPos, yPos);
+			if(ent.solidCollisions.length > 0){
+					/******/
 					
-					//CHECK AGAINST TILES
-					var tileAABB = undefined;
-					for (var t = 0; t < potentialTiles.length; t++)
+					var currentAABB = ent.shape.getAABB();
+					var prevPos = ent.shape.getPrevLocation();
+					var previousAABB = (currentAABB.getCopy()).move(prevPos[0], prevPos[1]);
+					
+					var sweepTop = Math.min(currentAABB.top, previousAABB.top);
+					var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
+					var sweepHeight = sweepBottom - sweepTop;
+					var sweepLeft = Math.min(currentAABB.left, previousAABB.left);
+					var sweepRight = Math.max(currentAABB.right, previousAABB.right);
+					var sweepWidth = sweepRight - sweepLeft;
+					var sweepX = sweepLeft + (sweepWidth / 2);
+					var sweepY = sweepTop + (sweepHeight / 2); 
+					var sweepAABB = new platformer.classes.aABB(sweepX, sweepY, sweepWidth, sweepHeight);
+					var potentialTiles = [];
+					var potentialsEntities = [];
+					var otherEntity = undefined;
+
+					for (y = 0; y < ent.solidCollisions.length; y++)
 					{
-						tileAABB = potentialTiles[t].shape.getAABB();
-						if(this.AABBCollision(previousAABB, tileAABB))
-						{
-							if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
-							{
-								var atX = undefined;
-								//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-								if (xDir > 0)
-								{
-									atX = tileAABB.left - previousAABB.halfWidth;
-								} else {
-									atX = tileAABB.right + previousAABB.halfWidth;
-								}
-								
-								if ( typeof tilecollisionX === 'undefined') {
-									tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
-								} else if (xDir > 0) {
-									if (atX < tileCollisionX.atX)
-									{
-										tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
-									}
-								} else {
-									if (atX > tileCollisionX.atX)
-									{
-										tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
-									}
+						if(this.entitiesByType[ent.solidCollisions[y]]){
+							for(z = 0; z < this.entitiesByType[ent.solidCollisions[y]].length; z++){
+								otherEntity = this.entitiesByType[ent.solidCollisions[y]][z];
+								if((otherEntity !== ent) && (this.AABBCollision(sweepAABB, otherEntity.shape.getAABB()))) {
+									potentialsEntities.push(this.entitiesByType[ent.solidCollisions[y]][z]);
 								}
 							}
+						} else if (ent.solidCollisions[y] === 'tiles'){
+							potentialTiles = this.terrain.getTiles(sweepAABB);
 						}
 					}
 					
-					//CHECK AGAINST SOLID ENTITIES
-					var entityAABB = undefined;
-					for (var u = 0; u < potentialsEntities.length; u++)
+					var xDir = (ent.shape.getPrevX() < ent.shape.getX()) ? 1 : -1;
+					var xPos = ent.shape.getPrevX();
+					var xGoal = ent.shape.getX();
+					var yDir = (ent.shape.getPrevY() < ent.shape.getY()) ? 1 : -1;
+					var yPos = ent.shape.getPrevY();
+					var yGoal = ent.shape.getY();
+
+					initialX = xPos;
+					initialY = yPos;
+					var finalY = undefined;
+					var finalX = undefined; 
+					
+					var collisionsX = [];
+					var collisionsY = [];
+					
+					var tileCollisionX = undefined;
+					var tileCollisionY = undefined;
+					
+					//////////////////////////////////////////////////////////////////////
+					//MOVE IN THE X DIRECTION
+					//////////////////////////////////////////////////////////////////////
+					while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
 					{
-						entityAABB = potentialsEntities[u].shape.getAABB();
-						if(this.AABBCollision(previousAABB, entityAABB))
+						if (Math.abs(xGoal - xPos) <= 1)
 						{
-							if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
-							{
-								var atX = undefined;
-								//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-								if (xDir > 0)
-								{
-									atX = entityAABB.left - previousAABB.halfWidth;
-									if (tileCollisionX && atX > tileCollisionX.atX)  
-									{
-										//If the tile is collided with before this, we can skip it.
-										continue;
-									}
-								} else {
-									atX = entityAABB.right + previousAABB.halfWidth;
-									if (tileCollisionX && atX < tileCollisionX.atX)  
-									{
-										//If the tile is collided with before this, we can skip it.
-										continue;
-									}
-								}
-								
-								if (collisionsX.length == 0) {
-									//finalX = atX;
-									collisionsX.push({atX: atX, entity: potentialsEntities[u]});
-								} else if (xDir > 0) {
-									var insertIndex = 0; 
-									for (var c = 0; c < collisionsX.length; c++)
-									{
-										if (atX < collisionsX[c].atX)
-										{
-											insertIndex = c;
-											break;
-										}
-									}
-									collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-								} else {
-									var insertIndex = 0; 
-									for (var c = 0; c < collisionsX.length; c++)
-									{
-										if (atX > collisionsX[c].atX)
-										{
-											insertIndex = c;
-											break;
-										}
-									}
-									collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-									
-								} 
-							}
+							xPos = xGoal;
+						} else {
+							xPos += xDir;
 						}
-							
-					}
-					
-					if (ent.routeSolidCollision)
-					{
-						var complete = false;
-						for(var q = 0; q < collisionsX.length; q++)
-						{
-							complete = ent.routeSolidCollision('x', xDir, collisionsX[q]);
-							if (complete)
-							{
-								finalX = collisionsX[q].atX;
-								break;
-							}
-						}	
-					}
-					
-					if (ent.routeTileCollision)
-					{
-						var complete = false;
-						if(typeof finalX === 'undefined' && tileCollisionX)
-						{
-							complete = ent.routeTileCollision('x', xDir, tileCollisionX);
-							if (complete)
-							{
-								finalX = tileCollisionX.atX;
-							}
-						}
-					}
-					
-					if(typeof finalX !== 'undefined')
-					{
-						break;
-					}
-					
-				}
-				
-				if(typeof finalX === 'undefined')
-				{
-					
-					finalX = xGoal;
-				}
-				
-				//////////////////////////////////////////////////////////////////////
-				//MOVE IN THE Y DIRECTION
-				//////////////////////////////////////////////////////////////////////
-				while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
-				{
-					if (Math.abs(yGoal - yPos) < 1)
-					{
-						yPos = yGoal;
-					} else {
-						yPos += yDir;
-					}
-					previousAABB.move(finalX, yPos);
-					
-					//CHECK AGAINST TILES
-					var tileAABB = undefined;
-					for (var t = 0; t < potentialTiles.length; t++)
-					{
-						tileAABB = potentialTiles[t].shape.getAABB();
-						if(this.AABBCollision(previousAABB, tileAABB))
-						{
-							if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
-							{
-								var atY = undefined;
-								//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-								if (yDir > 0)
-								{
-									atY = tileAABB.top - previousAABB.halfHeight; 
-								} else {
-									atY = tileAABB.bottom + previousAABB.halfHeight;
-								}
-								 
-								if ( typeof tilecollisionY === 'undefined') {
-									tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
-								} else if (yDir > 0) {
-									if (atY < collisionsY[0].atY)
-									{
-										tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
-									}
-								} else {
-									if (atY > tileCollisionY.atY)
-									{
-										tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
-									}
-								} 
-							}
-						}
-					}
-					
-					//CHECK AGAINST SOLID ENTITIES
-					var entityAABB = undefined;
-					for (var u = 0; u < potentialsEntities.length; u++)
-					{
-						entityAABB = potentialsEntities[u].shape.getAABB();
-						if(this.AABBCollision(previousAABB, entityAABB))
-						{
-							if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
-							{
-								var atY = undefined;
-								//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-								if (yDir > 0)
-								{
-									atY = entityAABB.top - previousAABB.halfHeight;
-									if (tileCollisionY && atY > tileCollisionY.atY)  
-									{
-										//If the tile is collided with before this, we can skip it.
-										continue;
-									}
-								} else {
-									atY = entityAABB.bottom + previousAABB.halfHeight;
-									if (tileCollisionY && atY < tileCollisionY.atY)  
-									{
-										//If the tile is collided with before this, we can skip it.
-										continue;
-									}
-								}
-																								
-								if (collisionsY.length == 0) {
-									//finalX = atX;
-									collisionsY.push({atY: atY, entity: potentialsEntities[u]});
-								} else if (yDir > 0) {
-									var insertIndex = 0; 
-									for (var c = 0; c < collisionsY.length; c++)
-									{
-										if (atY < collisionsY[c].atY)
-										{
-											insertIndex = c;
-											break;
-										}
-									}
-									collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-								} else {
-									var insertIndex = 0; 
-									for (var c = 0; c < collisionsY.length; c++)
-									{
-										if (atY > collisionsY[t].atY)
-										{
-											insertIndex = c;
-											break;
-										}
-									}
-									collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-								} 
-							}
-						}
-					}
-					
-					if (ent.routeSolidCollision)
-					{
-						var complete = false;
-						for(var q = 0; q < collisionsY.length; q++)
-						{
-							complete = ent.routeSolidCollision('y', yDir, collisionsY[q]);
-							if (complete)
-							{
-								finalY = collisionsY[q].atY;
-								break;
-							}
-						}
-					}
-					
-					if (ent.routeTileCollision)
-					{
-						var complete = false;
-						if(typeof finalY === 'undefined' && tileCollisionY)
-						{
-							complete = ent.routeTileCollision('y', yDir, tileCollisionY);
-							if (complete)
-							{
-								finalY = tileCollisionY.atY;
-							}
-						}
-					}
-					
-					
-					if(typeof finalY !== 'undefined')
-					{
-						break;
-					}
-				}
-				
-				
-				if(typeof finalY === 'undefined')
-				{
-					finalY = yGoal;
-				}
-				
-				ent.trigger('layer:relocate', [finalX, finalY]);
-			}
-		}
-	};
-	
-	/***********************************************************************************
-	 * BEHAVIOR:
-	 * This function tries to move the object to the new location. If it runs into 
-	 * solid collision it returns FALSE, otherwise true.
-	 ***********************************************************************************/
-	proto.moveSolidFree = function (ent, newX, newY)
-	{
-		
-		if(this.collisionMatrix[ent.type]['solid'])
-		{
-			var currentAABB = ent.shape.getAABB();
-			var prevPos = ent.shape.getPrevLocation();
-			var previousAABB = (currentAABB.getCopy()).move(prevPos[0], prevPos[1]);
-			
-			var sweepTop = Math.min(currentAABB.top, previousAABB.top);
-			var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
-			var sweepHeight = sweepBottom - sweepTop;
-			var sweepLeft = Math.min(currentAABB.left, previousAABB.left);
-			var sweepRight = Math.max(currentAABB.right, previousAABB.right);
-			var sweepWidth = sweepRight - sweepLeft;
-			var sweepX = sweepLeft + (sweepWidth / 2);
-			var sweepY = sweepTop + (sweepHeight / 2); 
-			var sweepAABB = new platformer.classes.aABB(sweepX, sweepY, sweepWidth, sweepHeight);
-			var potentialsEntities = [];
-			
-			var potentialTiles = this.terrain.getTiles(sweepAABB);
-			
-			for (var y = 0; y < this.solidEntities.length; y++)
-			{
-				if(this.AABBCollision(sweepAABB, this.solidEntities[y].shape.getAABB()))
-				{
-					potentialsEntities.push(this.solidEntities[y]);
-				}
-			}
-			
-			var xDir = (ent.shape.getPrevX() < ent.shape.getX()) ? 1 : -1;
-			var xPos = ent.shape.getPrevX();
-			var xGoal = ent.shape.getX();
-			var yDir = (ent.shape.getPrevY() < ent.shape.getY()) ? 1 : -1;
-			var yPos = ent.shape.getPrevY();
-			var yGoal = ent.shape.getY();
-			
-			
-			var collisionsX = [];
-			var collisionsY = [];
-			
-			
-			//////////////////////////////////////////////////////////////////////
-			//MOVE IN THE X DIRECTION
-			//////////////////////////////////////////////////////////////////////
-			while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
-			{
-				if (Math.abs(xGoal - xPos) <= 1)
-				{
-					xPos = xGoal;
-				} else {
-					xPos += xDir;
-				}
-				previousAABB.move(xPos, yPos);
-				
-				//CHECK AGAINST TILES
-				var tileAABB = undefined;
-				for (var t = 0; t < potentialTiles.length; t++)
-				{
-					tileAABB = potentialTiles[t].shape.getAABB();
-					if(this.AABBCollision(previousAABB, tileAABB))
-					{
-						if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
-						{
-							return false;
-						}
-					}
-				}
-				
-				//CHECK AGAINST SOLID ENTITIES
-				var entityAABB = undefined;
-				for (var u = 0; u < potentialsEntities.length; u++)
-				{
-					entityAABB = potentialsEntities[u].shape.getAABB();
-					if(this.AABBCollision(previousAABB, entityAABB))
-					{
-						if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
-						{
-							var atX = undefined;
-							//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-							if (xDir > 0)
-							{
-								atX = entityAABB.left - previousAABB.halfWidth;
-								if (tileCollisionX && atX > tileCollisionX.atX)  
-								{
-									//If the tile is collided with before this, we can skip it.
-									continue;
-								}
-							} else {
-								atX = entityAABB.right + previousAABB.halfWidth;
-								if (tileCollisionX && atX < tileCollisionX.atX)  
-								{
-									//If the tile is collided with before this, we can skip it.
-									continue;
-								}
-							}
-							
-							if (collisionsX.length == 0) {
-								//finalX = atX;
-								collisionsX.push({atX: atX, entity: potentialsEntities[u]});
-							} else if (xDir > 0) {
-								var insertIndex = 0; 
-								for (var c = 0; c < collisionsX.length; c++)
-								{
-									if (atX < collisionsX[c].atX)
-									{
-										insertIndex = c;
-										break;
-									}
-								}
-								collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-							} else {
-								var insertIndex = 0; 
-								for (var c = 0; c < collisionsX.length; c++)
-								{
-									if (atX > collisionsX[c].atX)
-									{
-										insertIndex = c;
-										break;
-									}
-								}
-								collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-								
-							} 
-						}
-					}
+						previousAABB.move(xPos, yPos);
 						
-				}
-				
-				if (ent.routeSolidCollision)
-				{
-					var complete = false;
-					for(var q = 0; q < collisionsX.length; q++)
-					{
-						complete = ent.routeSolidCollision('x', xDir, collisionsX[q]);
-						if (complete)
+						//CHECK AGAINST TILES
+						var tileAABB = undefined;
+						for (var t = 0; t < potentialTiles.length; t++)
 						{
-							finalX = collisionsX[q].atX;
-							break;
-						}
-					}	
-				}
-				
-				if (ent.routeTileCollision)
-				{
-					var complete = false;
-					if(typeof finalX === 'undefined' && tileCollisionX)
-					{
-						complete = ent.routeTileCollision('x', xDir, tileCollisionX);
-						if (complete)
-						{
-							finalX = tileCollisionX.atX;
-						}
-					}
-				}
-				
-				if(typeof finalX !== 'undefined')
-				{
-					break;
-				}
-				
-			}
-			
-			
-			
-			//////////////////////////////////////////////////////////////////////
-			//MOVE IN THE Y DIRECTION
-			//////////////////////////////////////////////////////////////////////
-			while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
-			{
-				if (Math.abs(yGoal - yPos) < 1)
-				{
-					yPos = yGoal;
-				} else {
-					yPos += yDir;
-				}
-				previousAABB.move(finalX, yPos);
-				
-				//CHECK AGAINST TILES
-				var tileAABB = undefined;
-				for (var t = 0; t < potentialTiles.length; t++)
-				{
-					tileAABB = potentialTiles[t].shape.getAABB();
-					if(this.AABBCollision(previousAABB, tileAABB))
-					{
-						if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
-						{
-							return false;
-						}
-					}
-				}
-				
-				//CHECK AGAINST SOLID ENTITIES
-				var entityAABB = undefined;
-				for (var u = 0; u < potentialsEntities.length; u++)
-				{
-					entityAABB = potentialsEntities[u].shape.getAABB();
-					if(this.AABBCollision(previousAABB, entityAABB))
-					{
-						if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
-						{
-							var atY = undefined;
-							//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-							if (yDir > 0)
+							tileAABB = potentialTiles[t].shape.getAABB();
+							if(this.AABBCollision(previousAABB, tileAABB))
 							{
-								atY = entityAABB.top - previousAABB.halfHeight;
-								if (tileCollisionY && atY > tileCollisionY.atY)  
+								if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
 								{
-									//If the tile is collided with before this, we can skip it.
-									continue;
-								}
-							} else {
-								atY = entityAABB.bottom + previousAABB.halfHeight;
-								if (tileCollisionY && atY < tileCollisionY.atY)  
-								{
-									//If the tile is collided with before this, we can skip it.
-									continue;
+									var atX = undefined;
+									//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
+									if (xDir > 0)
+									{
+										atX = tileAABB.left - previousAABB.halfWidth;
+									} else {
+										atX = tileAABB.right + previousAABB.halfWidth;
+									}
+									
+									if ( typeof tilecollisionX === 'undefined') {
+										tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+									} else if (xDir > 0) {
+										if (atX < tileCollisionX.atX)
+										{
+											tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+										}
+									} else {
+										if (atX > tileCollisionX.atX)
+										{
+											tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+										}
+									}
 								}
 							}
-																							
-							if (collisionsY.length == 0) {
-								//finalX = atX;
-								collisionsY.push({atY: atY, entity: potentialsEntities[u]});
-							} else if (yDir > 0) {
-								var insertIndex = 0; 
-								for (var c = 0; c < collisionsY.length; c++)
-								{
-									if (atY < collisionsY[c].atY)
-									{
-										insertIndex = c;
-										break;
-									}
-								}
-								collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-							} else {
-								var insertIndex = 0; 
-								for (var c = 0; c < collisionsY.length; c++)
-								{
-									if (atY > collisionsY[t].atY)
-									{
-										insertIndex = c;
-										break;
-									}
-								}
-								collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-							} 
 						}
-					}
-				}
-				
-				if (ent.routeSolidCollision)
-				{
-					var complete = false;
-					for(var q = 0; q < collisionsY.length; q++)
-					{
-						complete = ent.routeSolidCollision('y', yDir, collisionsY[q]);
-						if (complete)
+						
+						//CHECK AGAINST SOLID ENTITIES
+						var entityAABB = undefined;
+						for (var u = 0; u < potentialsEntities.length; u++)
 						{
-							finalY = collisionsY[q].atY;
+							entityAABB = potentialsEntities[u].shape.getAABB();
+							if(this.AABBCollision(previousAABB, entityAABB))
+							{
+								if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
+								{
+									var atX = undefined;
+									//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
+									if (xDir > 0)
+									{
+										atX = entityAABB.left - previousAABB.halfWidth;
+										if (tileCollisionX && atX > tileCollisionX.atX)  
+										{
+											//If the tile is collided with before this, we can skip it.
+											continue;
+										}
+									} else {
+										atX = entityAABB.right + previousAABB.halfWidth;
+										if (tileCollisionX && atX < tileCollisionX.atX)  
+										{
+											//If the tile is collided with before this, we can skip it.
+											continue;
+										}
+									}
+									
+									if (collisionsX.length == 0) {
+										//finalX = atX;
+										collisionsX.push({atX: atX, entity: potentialsEntities[u]});
+									} else if (xDir > 0) {
+										var insertIndex = 0; 
+										for (var c = 0; c < collisionsX.length; c++)
+										{
+											if (atX < collisionsX[c].atX)
+											{
+												insertIndex = c;
+												break;
+											}
+										}
+										collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+									} else {
+										var insertIndex = 0; 
+										for (var c = 0; c < collisionsX.length; c++)
+										{
+											if (atX > collisionsX[c].atX)
+											{
+												insertIndex = c;
+												break;
+											}
+										}
+										collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+										
+									} 
+								}
+							}
+								
+						}
+						
+						if (ent.routeSolidCollision)
+						{
+							var complete = false;
+							for(var q = 0; q < collisionsX.length; q++)
+							{
+								complete = ent.routeSolidCollision('x', xDir, collisionsX[q]);
+								if (complete)
+								{
+									if(((collisionsX[q].atX > initialX) && (xDir > 0)) || ((collisionsX[q].atX < initialX) && (xDir < 0))){
+										finalX = collisionsX[q].atX;
+									} else {
+										finalX = initialX;
+									}
+									break;
+								}
+							}	
+						}
+						
+						if (ent.routeTileCollision)
+						{
+							var complete = false;
+							if(typeof finalX === 'undefined' && tileCollisionX)
+							{
+								complete = ent.routeTileCollision('x', xDir, tileCollisionX);
+								if (complete)
+								{
+									finalX = tileCollisionX.atX;
+								}
+							}
+						}
+						
+						if(typeof finalX !== 'undefined')
+						{
 							break;
 						}
+						
 					}
-				}
-				
-				if (ent.routeTileCollision)
-				{
-					var complete = false;
-					if(typeof finalY === 'undefined' && tileCollisionY)
-					{
-						complete = ent.routeTileCollision('y', yDir, tileCollisionY);
-						if (complete)
-						{
-							finalY = tileCollisionY.atY;
-						}
-					}
-				}
-				
-				
-				if(typeof finalY !== 'undefined')
-				{
-					break;
-				}
-			}
-			
-			
-			if(typeof finalY === 'undefined')
-			{
-				finalY = yGoal;
-			}
-			
-			ent.trigger('layer:relocate', [finalX, finalY]);
-		}
-	};
-	
-	
-	
-	/*
-	proto.checkSolidCollision = function ()
-	{
-		var toResolve = [];
-		for(var x = 0; x < this.entities.length - 1; x++) //TODO: There may be an error in the for loops for this function.
-		{
-			var tileCollisions = [];
-			var otherCollisions = [];
-			if (this.collisionMatrix[this.entities[x].type]['solid'])
-			{
-				if (this.terrain)
-				{
-					tileCollisions = this.terrain.getTiles(this.entities[x].getAABB());
 					
-				}
-				
-				for (var y = x + 1; y < this.solidEntities.length; y++)
-				{
-					if(this.AABBCollision(this.entities[x].shape.getAABB(), this.entities[y].shape.getAABB()))
+					if(typeof finalX === 'undefined')
 					{
-						if (this.preciseCollision(this.entities[x].shape, this.solidEntities[y].shape))
-						{
-							//TODO: WHY IS THE MESSAGE CONSTRUCTED AS SUCH?
-							otherCollisions.push({
-												entity: this.solidEntities[y],
-												shape:  this.solidEntities[y].shape
-											});
-						}	
+						
+						finalX = xGoal;
 					}
-				}
-			}
-			
-			toResolve.push({
-				entity:  this.entities[x],
-				tileCollisions: tileCollisions,
-				otherCollisions: otherCollisions
-			});
-			
-		}
-		return toResolve;
-	};
-	*/
-	
-	proto.checkCollision = function ()
-	{
-		var toResolve = [];
-		for(var x = 0; x < this.entities.length - 1; x++)
-		{
-			for (var y = x + 1; y < this.entities.length; y++)
-			{
-				if (this.collisionMatrix[this.entities[x].type][this.entities[y].collisionType] || this.collisionMatrix[this.entities[y].type][this.entities[x].collisionType])
-				{
-					if(this.AABBCollision(this.entities[x].shape.getAABB(), this.entities[y].shape.getAABB()))
+					
+					//////////////////////////////////////////////////////////////////////
+					//MOVE IN THE Y DIRECTION
+					//////////////////////////////////////////////////////////////////////
+					while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
 					{
-						if (this.preciseCollision(this.entities[x].shape, this.entities[y].shape))
+						if (Math.abs(yGoal - yPos) < 1)
 						{
-							if (this.collisionMatrix[this.entities[x].type][this.entities[y].collisionType])
+							yPos = yGoal;
+						} else {
+							yPos += yDir;
+						}
+						previousAABB.move(finalX, yPos);
+						
+						//CHECK AGAINST TILES
+						var tileAABB = undefined;
+						for (var t = 0; t < potentialTiles.length; t++)
+						{
+							tileAABB = potentialTiles[t].shape.getAABB();
+							if(this.AABBCollision(previousAABB, tileAABB))
 							{
-								//TODO: WHY IS THE MESSAGE CONSTRUCTED AS SUCH?
-								
-								toResolve.push({
-									entity:  this.entities[x],
-									message:{
-										entity: this.entities[y],
-										type:   this.entities[y].collisionType,
-										shape:  this.entities[y].shape
+								if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
+								{
+									var atY = undefined;
+									//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
+									if (yDir > 0)
+									{
+										atY = tileAABB.top - previousAABB.halfHeight; 
+									} else {
+										atY = tileAABB.bottom + previousAABB.halfHeight;
 									}
-								});
+									 
+									if ( typeof tilecollisionY === 'undefined') {
+										tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+									} else if (yDir > 0) {
+										if (atY < collisionsY[0].atY)
+										{
+											tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+										}
+									} else {
+										if (atY > tileCollisionY.atY)
+										{
+											tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+										}
+									} 
+								}
 							}
-							
-							if (this.collisionMatrix[this.entities[y].type][this.entities[x].collisionType])
+						}
+						
+						//CHECK AGAINST SOLID ENTITIES
+						var entityAABB = undefined;
+						for (var u = 0; u < potentialsEntities.length; u++)
+						{
+							entityAABB = potentialsEntities[u].shape.getAABB();
+							if(this.AABBCollision(previousAABB, entityAABB))
 							{
-								//TODO: WHY IS THE MESSAGE CONSTRUCTED AS SUCH?
-								
-								toResolve.push({
-									entity:  this.entities[y],
-									message:{
-										entity: this.entities[x],
-										type:   this.entities[x].collisionType,
-										shape:  this.entities[x].shape
+								if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
+								{
+									var atY = undefined;
+									//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
+									if (yDir > 0)
+									{
+										atY = entityAABB.top - previousAABB.halfHeight;
+										if (tileCollisionY && atY > tileCollisionY.atY)  
+										{
+											//If the tile is collided with before this, we can skip it.
+											continue;
+										}
+									} else {
+										atY = entityAABB.bottom + previousAABB.halfHeight;
+										if (tileCollisionY && atY < tileCollisionY.atY)  
+										{
+											//If the tile is collided with before this, we can skip it.
+											continue;
+										}
 									}
+																									
+									if (collisionsY.length == 0) {
+										//finalX = atX;
+										collisionsY.push({atY: atY, entity: potentialsEntities[u]});
+									} else if (yDir > 0) {
+										var insertIndex = 0; 
+										for (var c = 0; c < collisionsY.length; c++)
+										{
+											if (atY < collisionsY[c].atY)
+											{
+												insertIndex = c;
+												break;
+											}
+										}
+										collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+									} else {
+										var insertIndex = 0; 
+										for (var c = 0; c < collisionsY.length; c++)
+										{
+											if (atY > collisionsY[t].atY)
+											{
+												insertIndex = c;
+												break;
+											}
+										}
+										collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+									} 
+								}
+							}
+						}
+						
+						if (ent.routeSolidCollision)
+						{
+							var complete = false;
+							for(var q = 0; q < collisionsY.length; q++)
+							{
+								complete = ent.routeSolidCollision('y', yDir, collisionsY[q]);
+								if (complete)
+								{
+									if(((collisionsY[q].atY > initialY) && (yDir > 0)) || ((collisionsY[q].atY < initialY) && (yDir < 0))){
+										finalY = collisionsY[q].atY;
+									} else {
+										finalY = initialY;
+									}
+									break;
+								}
+							}
+						}
+						
+						if (ent.routeTileCollision)
+						{
+							var complete = false;
+							if(typeof finalY === 'undefined' && tileCollisionY)
+							{
+								complete = ent.routeTileCollision('y', yDir, tileCollisionY);
+								if (complete)
+								{
+									finalY = tileCollisionY.atY;
+								}
+							}
+						}
+						
+						
+						if(typeof finalY !== 'undefined')
+						{
+							break;
+						}
+					}
+					
+					
+					if(typeof finalY === 'undefined')
+					{
+						finalY = yGoal;
+					}
+					
+					ent.trigger('layer:relocate', [finalX, finalY]);
+			}
+		}
+	};
+	
+	proto.checkSoftCollisions = function ()
+	{
+		var otherEntity = undefined,
+		ent = undefined,
+		x   = 0,
+		y   = 0,
+		z   = 0;
+		
+		for(x = 0; x < this.entities.length; x++){
+			ent = this.entities[x];
+			for (y = 0; y < ent.softCollisions.length; y++){
+				if(this.entitiesByType[ent.softCollisions[y]]){
+					for(z = 0; z < this.entitiesByType[ent.softCollisions[y]].length; z++){
+						otherEntity = this.entitiesByType[ent.softCollisions[y]][z];
+						if((otherEntity !== ent) && (this.AABBCollision(ent.shape.getAABB(), otherEntity.shape.getAABB()))) {
+							if (this.preciseCollision(ent.shape, otherEntity.shape))
+							{
+								ent.trigger('hit-by-' + otherEntity.collisionType, {
+									entity: otherEntity,
+									type:   otherEntity.collisionType,
+									shape:  otherEntity.shape
 								});
 							}
 						}
@@ -2497,7 +2136,6 @@ platformer.components['lc-basic-collision'] = (function(){
 				}
 			}
 		}
-		return toResolve;
 	};
 	
 	proto.AABBCollision = function (boxX, boxY)
@@ -2508,32 +2146,6 @@ platformer.components['lc-basic-collision'] = (function(){
 		if(boxX.top    >=  boxY.bottom) return false;
 		if(boxX.bottom <=  boxY.top)    return false;
 		return true;
-		
-		/*
-		var i   = 0;
-		var j   = 0;
-		var shapeA  = undefined;
-		var shapeB  = undefined;
-		var shapesA = entityA.getShapes?entityA.getShapes(entityB.getAABB()):[entityA.shape];
-		var shapesB = entityB.getShapes?entityB.getShapes(entityA.getAABB()):[entityB.shape];
-		
-		for (i = 0; i < shapesA.length; i++){
-			shapeA = shapesA[i].getAABB();
-			for (j = 0; j < shapesB.length; j++){
-				shapeB = shapesB[j].getAABB();
-				if(shapeA.left   >=  shapeB.right)  break;
-				if(shapeA.right  <=  shapeB.left)   break;
-				if(shapeA.top    >=  shapeB.bottom) break;
-				if(shapeA.bottom <=  shapeB.top)    break;
-				return {
-					shapeA: shapesA[i],
-					shapeB: shapesB[j]
-				};
-			}
-		}
-		
-		return false;
-		*/	
 	};
 	
 	proto.preciseCollision = function (shapeX, shapeY)
@@ -2541,22 +2153,13 @@ platformer.components['lc-basic-collision'] = (function(){
 		return true;
 	};
 	
-	proto.resolveCollision = function (toResolve)
-	{
-		for (var x = 0; x < toResolve.length; x++)
-		{
-			if (toResolve[x].routeSoftCollision)
-			{
-				toResolve[x].routeSoftCollision(toResolve[x].message);
-			}
-			//toResolve[x].entity.trigger('layer:resolve-collision', toResolve[x].message);
-		}
-	};
-	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
 		this.entities.length = 0;
+		for (var i in this.entitiesByType){
+			this.entitiesByType[i].length = 0;
+		}
 	};
 	
 	/*********************************************************************************************************
@@ -2606,17 +2209,14 @@ platformer.components['audio'] = (function(){
 		attributes = undefined;
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
+			attributes = {};
 		} else {
-			attributes = soundDefinition;
 			sound      = soundDefinition.sound;
+			attributes = soundDefinition;
 		}
 		if(platformer.settings.assets[sound].data){
-			if(!attributes){ // set up asset defaults
-				attributes = platformer.settings.assets[sound].data;
-			} else {         // if values are being passed in, let asset use defaults if not overridden by attributes.
-				for(var item in platformer.settings.assets[sound].data){
-					attributes[item] = attributes[item] || platformer.settings.assets[sound].data[item];
-				}
+			for(var item in platformer.settings.assets[sound].data){
+				attributes[item] = attributes[item] || platformer.settings.assets[sound].data[item];
 			}
 		}
 		if(platformer.settings.assets[sound].assetId){
@@ -2669,21 +2269,27 @@ platformer.components['audio'] = (function(){
 	var proto = component.prototype;
 	
 	proto['layer:render'] = function(deltaT){
-		var i     = 0,
-		audioClip = undefined;
-		newArray  = undefined;
-		if(this.timedAudioClips.length){
-			newArray = [];
-			for (i in this.timedAudioClips){
-				audioClip = this.timedAudioClips[i];
-				audioClip.progress += deltaT;
-				if(audioClip.progress >= audioClip.length){
-					audioClip.audio.stop();
-				} else {
-					newArray.push(audioClip);
+		if (this.destroyMe && this.timedAudioClips.length == 0)
+		{
+			this.timedAudioClips = undefined;
+			this.removeListeners(this.listeners);
+		} else {
+			var i     = 0,
+			audioClip = undefined;
+			newArray  = undefined;
+			if(this.timedAudioClips.length){
+				newArray = [];
+				for (i in this.timedAudioClips){
+					audioClip = this.timedAudioClips[i];
+					audioClip.progress += deltaT;
+					if(audioClip.progress >= audioClip.length){
+						audioClip.audio.stop();
+					} else {
+						newArray.push(audioClip);
+					}
 				}
+				this.timedAudioClips = newArray;
 			}
-			this.timedAudioClips = newArray;
 		}
 	};
 	
@@ -2701,7 +2307,8 @@ platformer.components['audio'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
-		this.removeListeners(this.listeners);
+		//Handling things in 'render'
+		this.destroyMe = true;
 	};
 	
 	/*********************************************************************************************************
@@ -2754,8 +2361,27 @@ platformer.components['broadcast-events'] = (function(){
 				}
 			};
 		}
-	},
-	entityBroadcast = function(event){
+	};
+	
+	var parentBroadcast = function(event){
+		if(typeof event === 'string'){
+			return function(value){
+				if(this.owner.parent)
+				{
+					this.owner.parent.trigger(event, value);
+				}
+				
+			};
+		} else {
+			return function(value){
+				for (var e in event){
+					this.owner.parent.trigger(event[e], value);
+				}
+			};
+		}
+	};
+	
+	var entityBroadcast = function(event){
 		if(typeof event === 'string'){
 			return function(value){
 				this.owner.trigger(event, value);
@@ -2767,8 +2393,8 @@ platformer.components['broadcast-events'] = (function(){
 				}
 			};
 		}
-	},
-	component = function(owner, definition){
+	};
+	var component = function(owner, definition){
 		this.owner = owner;
 
 		// Messages that this component listens for and then broadcasts to all layers.
@@ -2780,6 +2406,13 @@ platformer.components['broadcast-events'] = (function(){
 			}
 		}
 		
+		if(definition.parentEvents){
+			for(var event in definition.parentEvents){
+				this[event] = parentBroadcast(definition.parentEvents[event]);
+				this.addListener(event);
+			}
+		}
+		
 		// Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
 		if(definition.renameEvents){
 			for(var event in definition.renameEvents){
@@ -2787,8 +2420,8 @@ platformer.components['broadcast-events'] = (function(){
 				this.addListener(event);
 			}
 		}
-	},
-	proto = component.prototype;
+	};
+	var proto = component.prototype;
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
@@ -2847,6 +2480,71 @@ platformer.components['change-scene'] = (function(){
 		transition = resp.transition || this.transition;
 
 		platformer.game.loadScene(scene, transition);
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   destroy-me - ../src/js/entity/destroy-me.js
+ */
+platformer.components['destroy-me'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+		this.addListeners(['destroy-me']);
+		
+		if(definition.message){
+			this.addListener(definition.message);
+			this[definition.message] = this['destroy-me'];
+		}
+		
+		this.destroyed = false;
+		this.delay = definition.delay || 0;
+	};
+	var proto = component.prototype;
+	
+	proto['destroy-me'] = function(value){
+		var self = this;
+		if(!this.destroyed){
+			setTimeout(function(){
+				self.owner.parent.removeEntity(self.owner);
+			}, this.delay);
+		}
+		this.destroyed = true;
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -2987,7 +2685,7 @@ platformer.components['entity-container'] = (function(){
 		
 		this.owner.entities     = self.entities;
 		this.owner.addEntity    = function(entity){return self.addEntity(entity);};
-		this.owner.removeEntity = function(){return self.removeEntity();};
+		this.owner.removeEntity = function(entity){return self.removeEntity(entity);};
 		
 		this.addListeners(['load', 'add-entity', 'remove-entity']);
 	};
@@ -3008,15 +2706,26 @@ platformer.components['entity-container'] = (function(){
 		}
 	};
 	
-	proto.addEntity = proto['add-entity'] = function (entity) {
+	proto.addEntity = proto['add-entity'] = function (entity) {   
+		for (var x = 0; x < this.entities.length; x++)
+		{
+			entity.trigger('peer-entity-added', this.entities[x]);
+		}
+		
+		for (var x = 0; x < this.entities.length; x++)
+		{
+			this.entities[x].trigger('peer-entity-added', entity);
+		}
 		this.entities.push(entity);
-		this.owner.trigger('entity-added', entity);
+		this.owner.trigger('child-entity-added', entity);
+		entity.parent = this.owner;
 		return entity;
 	};
 	
 	proto.removeEntity = proto['remove-entity'] = function (entity) {
 		for (var x = 0; x < this.entities.length; x++){
 		    if(this.entities[x] === entity){
+		    	entity.parent = undefined;
 		    	this.entities.splice(x, 1);
 		    	entity.destroy();
 			    return entity;
@@ -3369,6 +3078,11 @@ platformer.components['render-debug'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.shape);
+		this.stage.removeChild(this.txt);
+		this.shape = undefined;
+		this.txt = undefined;
+		this.stage = undefined;
 		this.removeListeners(this.listeners);
 	};
 	
@@ -3513,6 +3227,15 @@ platformer.components['render-tiles'] = (function(){
  *   render-animation - ../src/js/entity/render-animation.js
  */
 platformer.components['render-animation'] = (function(){
+	var changeState = function(state){
+		return function(value){
+			if (this.currentAnimation != state)
+			{
+				this.currentAnimation = state;
+				this.anim.gotoAndPlay(state);
+			}
+		};
+	};
 	var component = function(owner, definition){
 		var spriteSheet = {
 			images: definition.spriteSheet.images.slice(),
@@ -3535,6 +3258,14 @@ platformer.components['render-animation'] = (function(){
 		this.listeners = [];
 
 		this.addListeners(['layer:render-load', 'layer:render', 'logical-state']);
+
+		if(definition.animationMap){
+			for(var i in definition.animationMap){
+				this.addListener(i);
+				this[i] = changeState(definition.animationMap[i]);
+			}
+		}
+		
 		this.stage = undefined;
 		for (var x = 0; x < spriteSheet.images.length; x++)
 		{
@@ -3636,6 +3367,9 @@ platformer.components['render-animation'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.anim);
+		this.anim = undefined;
+		this.stage = undefined;
 		this.removeListeners(this.listeners);
 	};
 	
@@ -3814,6 +3548,136 @@ platformer.components['render-image'] = (function(){
 
 
 /*--------------------------------------------------
+ *   render-collectible-manager - ../src/js/entity/render-collectible-manager.js
+ */
+platformer.components['render-collectible-manager'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['layer:render', 'layer:render-load', 'logic-gem-added', 'logic-gem-collected']);
+		
+		
+		this.displayGemCollected = 0;
+		this.actualGemCollected = 0;
+		this.countChanged = true;
+		this.gemCollectedText = undefined;
+		this.gemCountText = undefined;
+		
+		this.gemTotal = 0;
+		this.gemTotalText = undefined;
+		this.totalChanged = true;
+		
+		this.counterBG = undefined;
+		this.stage = undefined;
+		
+		var spriteSheetSpec = {
+				images: definition.spriteSheet.images.slice(),
+				frames: definition.spriteSheet.frames,
+				animations: definition.spriteSheet.animations
+			};
+		for (var x = 0; x < spriteSheetSpec.images.length; x++)
+		{
+			spriteSheetSpec.images[x] = platformer.assets[spriteSheetSpec.images[x]];
+		}
+		var spriteSheet = new createjs.SpriteSheet(spriteSheetSpec);
+		this.counterBG = new createjs.BitmapAnimation(spriteSheet);
+		this.currentAnimation = 'default';
+		this.counterBG.scaleX = this.owner.scaleX || 1;
+		this.counterBG.scaleY = this.owner.scaleY || 1;
+		if(this.currentAnimation){
+			this.counterBG.gotoAndPlay(this.currentAnimation);
+		}
+	};
+	var proto = component.prototype;
+	
+	proto['logic-gem-added'] = function(data){
+		this.gemTotal = data.total;
+		this.totalChanged = true;
+	};
+	
+	proto['logic-gem-collected'] = function(data){
+		this.actualGemCollected = data.count;
+		this.countChanged = true;
+	};
+	
+	proto['layer:render-load'] = function(resp){
+		this.stage = resp.stage;
+		
+		this.gemCountText = new createjs.Text('0');
+		this.gemCountText.x = 20;
+		this.gemCountText.y = 20;
+		this.gemCountText.textAlign = "center";
+		this.gemCountText.textBaseline = "middle";
+		
+		this.gemTotalText = new createjs.Text(this.gemTotal.toString);
+		this.gemTotalText.x = 30;
+		this.gemTotalText.y = 20;
+		this.gemTotalText.textAlign = "center";
+		this.gemTotalText.textBaseline = "middle";
+		
+		this.stage.addChild(this.counterBG);
+		this.stage.addChild(this.gemCountText);
+		this.stage.addChild(this.gemTotalText);
+	};
+	
+	proto['layer:render'] = function(resp){
+		if (this.countChanged)
+		{
+			//This is where we'd tween;
+			this.countChanged = false;
+			this.displayGemCollected = this.actualGemCollected;
+			this.gemCountText.text = this.displayGemCollected.toString();
+		}
+		
+		if (this.totalChanged)
+		{
+			this.totalChanged = false;
+			this.gemTotalText.text = this.gemTotal.toString();
+		}
+		
+		this.counterBG.x = 1000;
+		this.counterBG.y = 1000;
+		
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
  *   logic-button - ../src/js/entity/logic-button.js
  */
 platformer.components['logic-button'] = (function(){
@@ -3859,6 +3723,74 @@ platformer.components['logic-button'] = (function(){
 		this.owner.trigger('logical-state', this.message);
 	};
 
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   logic-collectible-manager - ../src/js/entity/logic-collectible-manager.js
+ */
+platformer.components['logic-collectible-manager'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['load', 'peer-entity-added', 'gem-collected']);
+		
+		this.gemsCollected;
+		this.gemTotal;
+	};
+	var proto = component.prototype;
+	
+	proto['load'] = function(resp){
+		
+	};
+	
+	proto['peer-entity-added'] = function(entity){
+		if(entity.type == 'gem')
+		{
+			this.gemTotal++;
+			//this.owner.trigger('logic-gem-added', {total: this.gemTotal});
+		}
+	};
+	
+	proto['gem-collected'] = function(resp){
+		this.gemsCollected++;
+		this.owner.trigger('logic-gem-collected', {count: this.gemsCollected});
+	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
@@ -4063,6 +3995,377 @@ platformer.components['logic-directional-movement'] = (function(){
 
 
 /*--------------------------------------------------
+ *   logic-hero - ../src/js/entity/logic-hero.js
+ */
+platformer.components['logic-hero'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		var self = this;
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down','key-jump','key-swing']);
+		
+		this.owner.state   = this.owner.state || 'ground';
+		this.owner.heading = this.owner.heading || 'right';
+		this.left = false;
+		this.right = false;
+		this.up = false;
+		this.down = false;
+		this.jump = false;
+		
+		this.vX = 0; 
+		this.vY = 0;
+		this.aX = .25;
+		this.fX = .4;
+		this.maxVX = 2;
+		this.maxVY = 3;
+		this.jumpV = 4;
+		this.aGravity = .01;
+		
+		this.hitGround = false;
+		
+		//Handle Tile Collisions
+		this.owner.resolveTileCollision = function(heading, collisionInfo){
+			return self.resolveTileCollision(heading, collisionInfo);
+		};
+		
+		//Handle Solid Collisions
+		this.owner.resolveSolidCollision = function(heading, collisionInfo){
+			return self.resolveSolidCollision(heading, collisionInfo);
+		};
+		
+		//Handle Soft Collisions
+		this.owner.resolveSoftCollision = function(collisionInfo){
+			return self.resolveSoftCollision(collisionInfo);
+		};
+	};
+	var proto = component.prototype;
+	
+	proto['layer:logic'] = function(deltaT){
+		//this.vX = 0;
+		//this.vY = 0;
+		
+		if(this.left) {
+			this.vX -= this.aX * deltaT;
+			if (this.vX < -this.maxVX)
+			{
+				this.vX = -this.maxVX;
+			}
+			this.owner.heading = 'left';
+		} else if (this.right) {
+			this.vX += this.aX * deltaT;
+			if (this.vX > this.maxVX)
+			{
+				this.vX = this.maxVX;
+			}
+			this.owner.heading = 'right';
+		} else {
+			if (this.vX > 0)
+			{
+				this.vX -= this.fX * deltaT;
+				if (this.vX < 0) {
+					this.vX = 0;
+				} 
+			} else if (this.vX < 0)
+			{
+				this.vX += this.fX * deltaT;
+				if (this.vX > 0) {
+					this.vX = 0;
+				} 
+			} 
+		}
+
+		/*
+		
+		if (this.up) {
+			this.vY -= this.aX * deltaT;
+			if (this.vY < -this.maxVX)
+			{
+				this.vY = -this.maxVX;
+			}
+		}  else if (this.down) {
+			this.vY += this.aX * deltaT;
+			if (this.vY > this.maxVX)
+			{
+				this.vY = this.maxVX;
+			}
+		} 
+		*/
+
+		
+		if (this.jump && this.owner.state != 'air') {
+			this.vY = -this.jumpV;
+			this.owner.state = 'air';
+			this.owner.trigger('jumping'); //This is for audio
+		}
+		
+		if (this.owner.state == 'air')
+		{
+			this.vY += this.aGravity * deltaT;
+			if (this.vY > this.maxVY)
+			{
+				this.vY = this.maxVY;
+			}
+		} else if (this.owner.state == 'ground'){
+			this.vY += this.aGravity * deltaT;
+		}
+		
+		if (!this.hitGround)
+		{
+			this.owner.state = 'air';
+		}
+		this.hitGround = false;
+		
+		this.owner.x += (this.vX * deltaT);
+		this.owner.y += (this.vY * deltaT);
+		
+		if(this.swing){
+			this.owner.trigger('logical-state', {state: 'swing' + '-' + this.owner.heading});
+			if(this.swingInstance){
+				this.owner.parent.addEntity(new platformer.classes.entity(platformer.settings.entities['pickaxe'], {
+					properties: {
+						x: this.owner.x + ((this.owner.heading === 'right')?1:-1) * 140,
+						y: this.owner.y
+					}
+				}));
+				this.owner.trigger('pickaxe');
+			}
+		} else if (this.owner.state == 'ground') {
+			if (this.vX == 0) {
+				this.owner.trigger('logical-state', {state: 'standing' + '-' + this.owner.heading});
+			} else {
+				this.owner.trigger('logical-state', {state: 'walking' + '-' + this.owner.heading});
+				this.owner.trigger('walking'); //This is for audio
+			}
+		} else if (this.owner.state == 'air') {
+			this.owner.trigger('logical-state', {state: 'jumping' + '-' + this.owner.heading});
+		}
+		
+		this.left  = false;
+		this.right = false;
+		this.up    = false;
+		this.down  = false;
+		this.jump  = false;
+		this.swingInstance = false;		
+		
+	};
+	
+	proto['key-left'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.left = true;
+		}
+	};
+	
+	proto['key-right'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.right = true;
+		}
+	};
+	
+	proto['key-up'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.up = true;
+		}
+	};
+	
+	proto['key-down'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.down = true;
+		}
+	};
+	
+	proto['key-jump'] = function (state)
+	{
+		if(state.pressed)
+		{
+			this.jump = true;
+		}
+	};
+
+	proto['key-swing'] = function (state)
+	{
+		if(state.pressed)
+		{
+			if(!this.swing){
+				this.swing = true;
+				this.swingInstance = true;
+			}
+		} else {
+			this.swing = false;
+		}
+	};
+
+	proto.resolveTileCollision = function(heading, collisionInfo){
+		switch (heading)
+		{
+		case 'down':
+			this.owner.state = 'ground';
+			this.hitGround = true;
+			this.vY = 0; 
+			break;
+		case 'up':
+			this.vY = 0;
+			break;
+		}
+		return true;
+	};
+	
+	proto.resolveSolidCollision = function(heading, collisionInfo){
+		switch (heading)
+		{
+		case 'down':
+			this.owner.state = 'ground';
+			this.hitGround = true;
+			this.vY = 0; 
+			break;
+		} 
+		return true;
+	};
+	
+	proto.resolveSoftCollision = function(collisionInfo){
+		return false;
+	};
+	
+	
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   logic-gem - ../src/js/entity/logic-gem.js
+ */
+platformer.components['logic-gem'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		var self = this;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['load', 'collect-gem', 'peer-entity-added']);
+		
+		//Handle Tile Collisions
+		this.owner.resolveTileCollision = function(heading, collisionInfo){
+			return self.resolveTileCollision(heading, collisionInfo);
+		};
+		
+		//Handle Solid Collisions
+		this.owner.resolveSolidCollision = function(heading, collisionInfo){
+			return self.resolveSolidCollision(heading, collisionInfo);
+		};
+		
+		this.manager = undefined;
+	};
+	var proto = component.prototype;
+	
+	
+	proto['load'] = function(resp){
+		this.owner.trigger('logical-state', {state: 'default'});
+	};
+	
+	proto['peer-entity-added'] = function(entity){
+		if(entity.type == 'collectible-manager')
+		{
+			this.manager = entity;
+		}
+	};
+	
+	proto.resolveTileCollision = function(heading, collisionInfo){
+		return false;
+	};
+	
+	proto.resolveSolidCollision = function(heading, collisionInfo){
+		return false;
+	};
+	
+	proto['collect-gem'] = function(collisionInfo){
+		if(this.manager)
+		{
+			this.manager.trigger('gem-collected');
+		}
+		this.owner.trigger('sound-collect-gem');
+		this.owner.parent.removeEntity(this.owner);
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.owner.resolveTileCollision = undefined;
+		this.owner.resolveSolidCollision = undefined;
+		this.owner.resolveSoftCollision = undefined;
+		this.manager = undefined;
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
  *   logic-gravity - ../src/js/entity/logic-gravity.js
  */
 platformer.components['logic-gravity'] = (function(){
@@ -4162,258 +4465,22 @@ platformer.components['logic-gravity'] = (function(){
 
 
 /*--------------------------------------------------
- *   logic-hero - ../src/js/entity/logic-hero.js
+ *   collision-basic - ../src/js/entity/collision-basic.js
  */
-platformer.components['logic-hero'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
-		var self = this;
-		// Messages that this component listens for
-		this.listeners = [];
-
-		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down','key-jump']);
-		
-		this.owner.state   = this.owner.state || 'ground';
-		this.owner.heading = this.owner.heading || 'right';
-		this.left = false;
-		this.right = false;
-		this.up = false;
-		this.down = false;
-		this.jump = false;
-		
-		this.vX = 0; 
-		this.vY = 0;
-		this.aX = .25;
-		this.fX = .4;
-		this.maxVX = 2;
-		this.maxVY = 3;
-		this.jumpV = 4;
-		this.aGravity = .01;
-		
-		//Handle Tile Collisions
-		this.owner.resolveTileCollision = function(heading, collisionInfo){
-			return self.resolveTileCollision(heading, collisionInfo);
-		};
-		
-		//Handle Solid Collisions
-		this.owner.resolveSolidCollision = function(heading, collisionInfo){
-			return self.resolveSolidCollision(heading, collisionInfo);
-		};
-		
-		//Handle Soft Collisions
-		this.owner.resolveSoftCollision = function(collisionInfo){
-			return self.resolveSoftCollision(collisionInfo);
-		};
-	};
-	var proto = component.prototype;
-	
-	proto['layer:logic'] = function(deltaT){
-		//this.vX = 0;
-		//this.vY = 0;
-		
-		if(this.left) {
-			this.vX -= this.aX * deltaT;
-			if (this.vX < -this.maxVX)
-			{
-				this.vX = -this.maxVX;
-			}
-			this.owner.heading = 'left';
-		} else if (this.right) {
-			this.vX += this.aX * deltaT;
-			if (this.vX > this.maxVX)
-			{
-				this.vX = this.maxVX;
-			}
-			this.owner.heading = 'right';
+platformer.components['collision-basic'] = (function(){
+	var entityBroadcast = function(event){
+		if(typeof event === 'string'){
+			return function(value){
+				this.owner.trigger(event, value);
+			};
 		} else {
-			if (this.vX > 0)
-			{
-				this.vX -= this.fX * deltaT;
-				if (this.vX < 0) {
-					this.vX = 0;
-				} 
-			} else if (this.vX < 0)
-			{
-				this.vX += this.fX * deltaT;
-				if (this.vX > 0) {
-					this.vX = 0;
-				} 
-			} 
-		}
-
-		/*
-		
-		if (this.up) {
-			this.vY -= this.aX * deltaT;
-			if (this.vY < -this.maxVX)
-			{
-				this.vY = -this.maxVX;
-			}
-		}  else if (this.down) {
-			this.vY += this.aX * deltaT;
-			if (this.vY > this.maxVX)
-			{
-				this.vY = this.maxVX;
-			}
-		} 
-		*/
-		if (this.jump && this.owner.state != 'air') {
-			this.vY = -this.jumpV;
-			this.owner.state = 'air';
-			this.owner.trigger('jumping'); //This is for audio
-		}
-		
-		if (this.owner.state == 'air')
-		{
-			this.vY += this.aGravity * deltaT;
-			if (this.vY > this.maxVY)
-			{
-				this.vY = this.maxVY;
-			}
-		} else if (this.owner.state == 'ground'){
-			this.vY += this.aGravity * deltaT;
-		}
-		
-		this.owner.x += (this.vX * deltaT);
-		this.owner.y += (this.vY * deltaT);
-		
-		this.left = false;
-		this.right = false;
-		this.up = false;
-		this.down = false;
-		this.jump = false;
-		
-		
-		if (this.owner.state == 'ground')
-		{
-			if (this.vX == 0)
-			{
-				this.owner.trigger('logical-state', {state: 'standing' + '-' + this.owner.heading});
-			} else {
-				this.owner.trigger('logical-state', {state: 'walking' + '-' + this.owner.heading});
-				this.owner.trigger('walking'); //This is for audio
-			}
-		} else if (this.owner.state == 'air')
-		{
-			this.owner.trigger('logical-state', {state: 'jumping' + '-' + this.owner.heading});
-			
-		}
-		
-		
-		
-	};
-	
-	proto['key-left'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.left = true;
+			return function(value){
+				for (var e in event){
+					this.owner.trigger(event[e], value);
+				}
+			};
 		}
 	};
-	
-	proto['key-right'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.right = true;
-		}
-	};
-	
-	proto['key-up'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.up = true;
-		}
-	};
-	
-	proto['key-down'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.down = true;
-		}
-	};
-	
-	proto['key-jump'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.jump = true;
-		}
-	};
-
-	proto.resolveTileCollision = function(heading, collisionInfo){
-		switch (heading)
-		{
-		case 'down':
-			this.owner.state = 'ground';
-			break;
-		case 'up':
-			this.vY = 0;
-			break;
-		}
-		return true;
-	};
-	
-	proto.resolveSolidCollision = function(heading, collisionInfo){
-		switch (heading)
-		{
-		case 'down':
-			if (this.owner.state == 'ground')
-			{
-				this.vY = 0; 
-			} else if (this.owner.state == 'air') {
-				this.owner.state = 'ground';
-				this.vY = 0; 
-			}
-			break;
-		}
-		return true;
-	};
-	
-	proto.resolveSoftCollision = function(collisionInfo){
-		return false;
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value){
-			self[messageId](value);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
-})();
-
-
-/*--------------------------------------------------
- *   collision-hero - ../src/js/entity/collision-hero.js
- */
-platformer.components['collision-hero'] = (function(){
 	var component = function(owner, definition){
 		var self = this;
 		this.owner = owner;
@@ -4432,6 +4499,29 @@ platformer.components['collision-hero'] = (function(){
 			return self.getAABB();
 		};
 		
+		this.owner.collisionType = definition.collisionType || 'none';
+		this.owner.solidCollisions = [];
+		if(definition.solidCollisions){
+			for(var i in definition.solidCollisions){
+				this.owner.solidCollisions.push(i);
+				if(definition.solidCollisions[i]){
+					this.addListener('hit-by-' + i);
+					this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i]);
+				}
+			}
+		}
+
+		this.owner.softCollisions = [];
+		if(definition.softCollisions){
+			for(var i in definition.softCollisions){
+				this.owner.softCollisions.push(i);
+				if(definition.softCollisions[i]){
+					this.addListener('hit-by-' + i);
+					this['hit-by-' + i] = entityBroadcast(definition.softCollisions[i]);
+				}
+			}
+		}
+		
 		this.owner.routeTileCollision = function(axis, dir, collisionInfo){
 			return self.routeTileCollision(axis, dir, collisionInfo);
 		};
@@ -4443,28 +4533,6 @@ platformer.components['collision-hero'] = (function(){
 		this.owner.routeSoftCollision = function(collisionInfo){
 			return self.routeSoftCollision(collisionInfo);
 		};
-		
-		
-		/*
-		this.owner.resolveTileCollisionX = function(dir, collisionInfo){
-			return self.resolveTileCollisionX(dir, collisionInfo);
-		};
-		this.owner.resolveTileCollisionY = function(dir, collisionInfo){
-			return self.resolveTileCollisionY(dir, collisionInfo);
-		};
-		this.owner.resolveSolidCollisionX = function(dir, collisionInfo){
-			return self.resolveSolidCollisionX(dir, collisionInfo);
-		};
-		this.owner.resolveSolidCollisionY = function(dir, collisionInfo){
-			return self.resolveSolidCollisionY(dir, collisionInfo);
-		};
-		this.owner.resolveSoftCollision = function(collisionInfo){
-			return self.resolveSoftCollision(collisionInfo);
-		};
-		*/
-		
-		this.owner.collisionType = definition.collisionType || 'solid';
-		this.owner.collidesWith = definition.collidesWith || [];
 	};
 	var proto = component.prototype;
 	
@@ -4477,6 +4545,7 @@ platformer.components['collision-hero'] = (function(){
 		this.owner.shape.update(this.owner.x, this.owner.y);
 	};
 	
+	
 	proto['layer:relocate'] = function(positionXY){
 		this.owner.x = positionXY[0] - this.owner.shape.getXOffset();
 		this.owner.y = positionXY[1] - this.owner.shape.getYOffset();
@@ -4487,8 +4556,7 @@ platformer.components['collision-hero'] = (function(){
 		return this.owner.shape.getAABB();
 	};
 	
-	proto.routeTileCollision = function(axis, dir, collisionInfo)
-	{
+	proto.routeTileCollision = function(axis, dir, collisionInfo){
 		if (this.owner.resolveTileCollision)
 		{
 			if (axis == 'x' && dir > 0)
@@ -4535,298 +4603,6 @@ platformer.components['collision-hero'] = (function(){
 			this.owner.resolveSoftCollision(collisionInfo);
 		}
 	};
-	
-	/*
-	proto.resolveTileCollisionX = function(dir, collisionInfo){
-		//TODO: Write this resolve function.
-		if (dir > 0 && this.owner.tileCollisionRight)
-		{
-			return this.owner.tileCollisionRight(collisionInfo);
-		} else if (dir > 0 && this.owner.tileCollisionLeft)
-		{
-			return this.owner.tileCollisionLeft(collisionInfo);
-		} else {
-			return collisionInfo.atX;
-		}		
-	};
-	
-	proto.resolveTileCollisionY  = function(dir, collisionInfo){
-		//TODO: Write this resolve function.
-		if (dir > 0 && this.owner.tileCollisionDown)
-		{
-			return this.owner.tileCollisionDown(collisionInfo);
-		} else if (dir > 0 && this.owner.tileCollisionUp)
-		{
-			return this.owner.tileCollisionUp(collisionInfo);
-		} else {
-			return collisionInfo.atY;
-		}
-	};
-	
-	proto.resolveSolidCollisionX = function(dir, collisionInfo){
-		//TODO: Write this resolve function.
-		if (dir > 0 && this.owner.solidCollisionRight)
-		{
-			return this.owner.solidCollisionRight(collisionInfo);
-		} else if (dir > 0 && this.owner.solidCollisionLeft)
-		{
-			return this.owner.solidCollisionLeft(collisionInfo);
-		} else {
-			return collisionInfo.atX;
-		}
-	};
-	
-	proto.resolveSolidCollisionY = function(dir, collisionInfo){
-		//TODO: Write this resolve function.
-		if (dir > 0 && this.owner.solidCollisionDown)
-		{
-			return this.owner.solidCollisionDown(collisionInfo);
-		} else if (dir > 0 && this.owner.solidCollisionUp)
-		{
-			return this.owner.solidCollisionUp(collisionInfo);
-		} else {
-			return collisionInfo.atY;
-		}
-	};
-	
-	proto.resolveSolidCollisionY = function(dir, collisionInfo){
-		//TODO: Write this resolve function.
-		if (dir > 0 && this.owner.solidCollisionDown)
-		{
-			return this.owner.solidCollisionDown(collisionInfo);
-		} else if (dir > 0 && this.owner.solidCollisionUp)
-		{
-			return this.owner.solidCollisionUp(collisionInfo);
-		} else {
-			return collisionInfo.atY;
-		}
-	};
-	*/
-	
-	/*
-	proto['layer:resolve-collision'] = function(other){
-		var x = this.owner.shape.x;
-		var y = this.owner.shape.y;
-		var pX = this.owner.shape.prevX;
-		var pY = this.owner.shape.prevY;
-		
-		var otherX = other.shape.x;
-		var otherY = other.shape.y;
-		
-		switch (other.type)
-		{
-	
-		}
-	};
-	*/
-	
-	/*
-	proto['layer:resolve-solid-collision'] = function(myShape, theirShape){
-		
-		
-		SOLID COLLISION ATTEMPT 2
-		var terrain = collisionInfo.terrain;
-		var tileCollisions = collisionInfo.tileCollisions;
-		var otherCollisions = collisionInfo.otherCollisions;
-		
-		var x = this.owner.shape.x;
-		var y = this.owner.shape.y;
-		var pX = this.owner.shape.prevX;
-		var pY = this.owner.shape.prevY;
-		
-		var deltaX = x - pX; 
-		var deltaY = y - pY;
-		var m = deltaY / deltaX; 
-		var b = y - x * m;
-		
-		var displaceX = undefined;
-		var displaceY = undefined;
-		
-		for (var c = 0; c < tileCollisions.length; c++)
-		{
-			var tile = tileCollisions[c];
-			var tileX = tile.shape.x;
-			var tileY = tile.shape.y;
-		
-			var targetX = undefined; 
-			var targetY = undefined; 
-			var yAtTargetX = undefined;
-			var xAtTargetY = undefined;
-			var thisAABB = this.owner.shape.aABB;
-			var tileAABB = tile.shape.aABB;
-			
-			var leftPlane = tileX - tileAABB.halfWidth - thisAABB.halfWidth;
-			var rightPlane = tileX + tileAABB.halfWidth + thisAABB.halfWidth;
-			var topPlane = tileY - tileAABB.halfHeight - thisAABB.halfHeight;
-			var bottomPlane = tileY + tileAABB.halfHeight + thisAABB.halfHeight;
-			
-			
-			
-			if (m !== Infinity && m !== -Infinity)
-			{
-				if (pX <= leftPlane)
-				{
-					targetX = leftPlane;
-				} else if (pX >= rightPlane) {
-					targetX = rightPlane;
-				}
-			}
-			
-			if (pY <= topPlane)
-			{
-				targetY = topPlane;
-			} else if (pY >= bottomPlane) {
-				targetY = bottomPlane;
-			}	
-			
-			
-			if (typeof targetX !== 'undefined')
-			{
-				yAtTargetX = m * targetX + b;
-			}
-			
-			if (typeof targetY !== 'undefined')
-			{
-				if (m === Infinity || m === -Infinity)
-				{
-					xAtTargetY = x;
-				} else {
-					xAtTargetY = (targetY - b) / m ;
-				}
-			}
-			
-			if (targetX && yAtTargetX >= topPlane && yAtTargetX <= bottomPlane)
-			{
-				
-				if (deltaX > 0)
-				{
-					if (!terrain.isTile(tile.gridX - 1, tile.gridY))
-					{
-						var displacement = targetX - x;
-						if (typeof displaceX === 'undefined' || displacement < displaceX)
-						{
-							displaceX = displacement;
-						}
-					}
-					
-				} else if (deltaX < 0) {
-					if (!terrain.isTile(tile.gridX + 1, tile.gridY))
-					{
-						var displacement = targetX - x;
-						if (typeof displaceX === 'undefined' || displacement > displaceX)
-						{
-							displaceX = displacement;
-						}
-					}
-				}
-			} else if (targetY && xAtTargetY >= leftPlane && xAtTargetY <= rightPlane){
-				if (deltaY > 0)
-				{
-					if (!terrain.isTile(tile.gridX, tile.gridY - 1))
-					{
-						var displacement = targetY - y;
-						if (typeof displaceY === 'undefined' || displacement < displaceY)
-						{
-							displaceY = displacement;
-						}
-					}
-					
-				} else if (deltaY < 0) {
-					if (!terrain.isTile(tile.gridX, tile.gridY + 1))
-					{
-						var displacement = targetY - y;
-						if (typeof displaceY === 'undefined' || displacement > displaceY)
-						{
-							displaceY = displacement;
-						}
-					}
-				}
-			}
-		}
-		
-		if (typeof displaceX !== 'undefined')
-		{
-			this.owner.x = x + displaceX - this.owner.shape.getXOffset();
-			this.owner.shape.x = x + displaceX;
-		}
-		if (typeof displaceY !== 'undefined')
-		{
-			this.owner.y = y + displaceY - this.owner.shape.getYOffset();
-			this.owner.shape.y = y + displaceY;	
-		}
-		
-		SOLID COLLISION ATTEMPT 1
-		case 'solid':
-			var deltaX = x - pX; 
-			var deltaY = y - pY;
-			var m = deltaY / deltaX; 
-			var b = y - x * m;
-			var targetX = undefined; 
-			var targetY = undefined; 
-			var yAtTargetX = undefined;
-			var xAtTargetY = undefined;
-			var thisAABB = this.owner.shape.aABB;
-			var otherAABB = other.shape.aABB;
-			
-			var leftPlane = otherX - otherAABB.halfWidth - thisAABB.halfWidth;
-			var rightPlane = otherX + otherAABB.halfWidth + thisAABB.halfWidth;
-			var topPlane = otherY - otherAABB.halfHeight - thisAABB.halfHeight;
-			var bottomPlane = otherY + otherAABB.halfHeight + thisAABB.halfHeight;
-			
-			if (m !== Infinity && m !== -Infinity)
-			{
-				if (pX <= leftPlane)
-				{
-					targetX = leftPlane;
-				} else if (pX >= rightPlane) {
-					targetX = rightPlane;
-				}
-			}
-			
-			if (pY <= topPlane)
-			{
-				targetY = topPlane;
-			} else if (pY >= bottomPlane) {
-				targetY = bottomPlane;
-			}	
-			
-			
-			if (typeof targetX !== 'undefined')
-			{
-				yAtTargetX = m * targetX + b;
-			}
-			
-			if (typeof targetY !== 'undefined')
-			{
-				if (m === Infinity || m === -Infinity)
-				{
-					xAtTargetY = x;
-				} else {
-					xAtTargetY = (targetY - b) / m ;
-				}
-			}
-			
-			if (targetX && yAtTargetX >= topPlane && yAtTargetX <= bottomPlane)
-			{
-				console.warn('Collide on Side');
-				this.owner.x = targetX - this.owner.shape.getXOffset();
-				this.owner.shape.x = targetX;
-				this.owner.y = yAtTargetX - this.owner.shape.getYOffset();
-				this.owner.shape.y = yAtTargetX;
-			} else if (targetY && xAtTargetY >= leftPlane && xAtTargetY <= rightPlane){
-				console.warn('Collide on Top/Bottom');
-				this.owner.x = xAtTargetY - this.owner.shape.getXOffset();
-				this.owner.shape.x = xAtTargetY;
-				this.owner.y = targetY - this.owner.shape.getYOffset();
-				this.owner.shape.y = targetY;
-			} else {
-				console.warn('Hero is inside the block.');
-			}
-			
-			break;
-		
-	};
-	*/
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
@@ -4880,8 +4656,6 @@ platformer.components['collision-tiles'] = (function(){
 		this.listeners = [];
 		this.addListeners(['layer:prep-collision']);
 		
-		this.owner.collisionType = definition.collisionType || 'solid';
-		this.owner.collidesWith = definition.collidesWith || [];
 		this.owner.getTiles = function(aabb){
 			return self.getTiles(aabb);
 		};

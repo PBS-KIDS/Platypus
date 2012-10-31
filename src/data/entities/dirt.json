@@ -5,28 +5,44 @@
 	"id": "dirt",
 	"components":[
 		{
-			"type": "collision-hero", 
+			"type": "collision-basic", 
 		 	"shape": {
 	 			"offset": [0,-120],
 	 			"type": "rectangle",
 	 		   	"points": [[-120,-120],[120,120]]
 	 		},
-			"collisionType": "solid"
-		},{
-			"type": "render-animation", 
+			"collisionType": "dirt",
+			"softCollisions": {
+			    "pickaxe": "destroy-me"
+			}
+        },{
+            "type": "destroy-me", "delay": 300
+        },{
+            "type": "audio",
+            "audioMap": {
+                "destroy-me": {"sound": "pickaxe-crush", "interrupt": "none"}
+            }
+        },{
+            "type": "render-animation",
+            "animationMap":{
+                "destroy-me": "explosion"
+            }, 
 		 	"spriteSheet": {
-				"images": ["objects"],
+				"images": ["dirt"],
 				"frames": {
-					"width":  24,
-					"height": 24,
-                    "regX":   12,
-                    "regY":   24
+					"width":  240,
+					"height": 240,
+                    "regX":   120,
+                    "regY":   180
 				  },
 				"animations": {
-					"tile": 2
+					"stationary": 0,
+					"explosion": {"frames": [1, 2, 3, 4, 5], "frequency": 4}
 				  }
 			},
-			"state": "tile"
+			"state": "stationary",
+            "scaleX": 2,
+            "scaleY": 2
 		}
 	],
 	"properties":{

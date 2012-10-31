@@ -1,0 +1,49 @@
+/*
+ * 
+ */
+{
+	"id": "gem",
+	"components":[
+		{
+			"type": "logic-gem"
+		},{
+			"type": "collision-basic",
+		 	"shape":{
+		 		"offset": [0,-110],
+		 		"type": "rectangle",
+		 		"points": [[-70,-110],[70, 110]]
+	 		},
+			"collisionType": "gem",
+			"softCollisions": {
+			    "hero": "collect-gem"
+			}
+		},{
+			"type": "render-animation",
+			"spriteSheet": {
+				"images": ["gem"],
+				"frames": {
+					"width":  14,
+					"height": 22,
+					"regY":   22,
+					"regX":   7
+				},
+				"animations": {
+					"default":  {frames:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2], 	frequency:4}
+				}
+			}
+		},{
+		    "type": "audio",
+		    "audioMap": {
+		        "sound-collect-gem": {sound:"collect-gem", interrupt:"early"}
+		    }
+		},{
+		    "type": "render-debug",
+		    "regY": 220,
+		    "regX": 110
+		}
+	],
+	"properties":{
+		"x": 10,
+		"y": 10
+	}
+}

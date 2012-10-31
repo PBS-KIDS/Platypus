@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# Version 135155877
+# Version 135170282
 
 CACHE:
 
@@ -8,16 +8,22 @@ CACHE:
 a/powerup.ogg
 a/walk.ogg
 a/jump.ogg
-j/compressed135155877.js
-s/compressed135155877.css
+a/collect-gem.ogg
+a/pickaxe-crush.ogg
+a/pickaxe-other.ogg
+j/compressed135170282.js
+s/compressed135170282.css
 
 i/buttons.png
+i/dirt.png
 i/mookie.png
 i/tile-map.png
 i/game-sprites.png
 i/test.png
 i/test-animation.png
 i/tiles.png
+i/gem.png
+i/gem-bar.png
 i/title-screen.png
 i/objects.png
 http://code.createjs.com/easeljs-0.5.0.min.js
