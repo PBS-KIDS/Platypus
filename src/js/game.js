@@ -60,7 +60,7 @@ platformer.classes.game = (function(){
 		if(this.currentScene) this.currentScene.tick(deltaT);
 	};
 	
-	proto.loadScene = function(sceneId, transition){
+	proto.loadScene = function(sceneId, transition, overrides){
 		var self = this;
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
@@ -75,7 +75,7 @@ platformer.classes.game = (function(){
 			element.style.opacity = '0';
 			element.style.background = '#000';
 			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				self.loadNextScene(sceneId);
+				self.loadNextScene(sceneId, overrides);
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
 				element = undefined;
@@ -84,13 +84,23 @@ platformer.classes.game = (function(){
 			break;
 		case 'instant':
 		default:
-			this.loadNextScene(sceneId);
+			this.loadNextScene(sceneId, overrides);
 			this.completeSceneTransition();
 		}
 	};
 	
-	proto.loadNextScene = function(sceneId){
-		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
+	proto.loadNextScene = function(sceneId, overrides){
+		if(overrides){
+			var scene = JSON.stringify(this.settings.scenes[sceneId]);
+			for (var i in overrides){
+				while(scene.indexOf(i) > -1){
+					scene = scene.replace(i, overrides[i]);
+				}
+			}
+			this.currentScene = new platformer.classes.scene(JSON.parse(scene), this.rootElement);
+		} else {
+			this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
+		}
 	};
 	
 	proto.completeSceneTransition = function(){

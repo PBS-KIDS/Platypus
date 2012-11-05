@@ -77,24 +77,6 @@ platformer.components['logic-hero'] = (function(){
 			} 
 		}
 
-		/*
-		
-		if (this.up) {
-			this.vY -= this.aX * deltaT;
-			if (this.vY < -this.maxVX)
-			{
-				this.vY = -this.maxVX;
-			}
-		}  else if (this.down) {
-			this.vY += this.aX * deltaT;
-			if (this.vY > this.maxVX)
-			{
-				this.vY = this.maxVX;
-			}
-		} 
-		*/
-
-		
 		if (this.jump && this.owner.state != 'air') {
 			this.vY = -this.jumpV;
 			this.owner.state = 'air';

@@ -2150,6 +2150,32 @@
                  "y":96
                 }, 
                 {
+                 "gid":48,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "width":0,
+                 "x":72,
+                 "y":72
+                }, 
+                {
+                 "gid":48,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "width":0,
+                 "x":72,
+                 "y":96
+                }, 
+                {
                  "gid":56,
                  "height":0,
                  "name":"",
@@ -2159,8 +2185,8 @@
                     },
                  "type":"",
                  "width":0,
-                 "x":-120,
-                 "y":456
+                 "x":24,
+                 "y":48
                 }],
          "opacity":1,
          "type":"objectgroup",

@@ -49,6 +49,7 @@ platformer.components['broadcast-events'] = (function(){
 			};
 		}
 	};
+	
 	var component = function(owner, definition){
 		this.owner = owner;
 

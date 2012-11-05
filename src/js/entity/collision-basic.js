@@ -29,6 +29,9 @@ platformer.components['collision-basic'] = (function(){
 		this.owner.getAABB = function(){
 			return self.getAABB();
 		};
+		this.owner.getPreviousAABB = function(){
+			return self.getPreviousAABB();
+		};
 		
 		this.owner.collisionType = definition.collisionType || 'none';
 		this.owner.solidCollisions = [];
@@ -69,7 +72,6 @@ platformer.components['collision-basic'] = (function(){
 	
 	
 	proto['load'] = function(resp){
-		
 	};
 	
 	proto['layer:prep-collision'] = function(){ //TODO: Gravity-sensitive solids collision shapes break away from their owner due to this event not being fired - DDD
@@ -80,11 +82,15 @@ platformer.components['collision-basic'] = (function(){
 	proto['layer:relocate'] = function(positionXY){
 		this.owner.x = positionXY[0] - this.owner.shape.getXOffset();
 		this.owner.y = positionXY[1] - this.owner.shape.getYOffset();
-		this.owner.shape.setXY(positionXY[0], positionXY[1]);
+		this.owner.shape.reset(this.owner.x, this.owner.y);
 	};
 	
 	proto.getAABB = function(){
 		return this.owner.shape.getAABB();
+	};
+	
+	proto.getPreviousAABB = function(){
+		return this.owner.shape.getPreviousAABB();
 	};
 	
 	proto.routeTileCollision = function(axis, dir, collisionInfo){
@@ -104,7 +110,7 @@ platformer.components['collision-basic'] = (function(){
 				return this.owner.resolveTileCollision('up', collisionInfo);
 			}
 		}
-		return false;
+		return true;
 	};
 	
 	proto.routeSolidCollision = function(axis, dir, collisionInfo)
@@ -125,7 +131,7 @@ platformer.components['collision-basic'] = (function(){
 				return this.owner.resolveSolidCollision('up', collisionInfo);
 			}
 		}
-		return false;
+		return true;
 	};
 	
 	proto.routeSoftCollision = function(collisionInfo){

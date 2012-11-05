@@ -4,7 +4,7 @@
 			"id": "action",
 			"components": [
 				{"type": "lc-logic"},
-				{"type": "lc-basic-collision"},
+				{"type": "collision-group"},
 				{
 				   "type": "lc-camera",
 				   "width": 3200//,
@@ -12,12 +12,12 @@
 				},
 				{"type": "render-createjs"},
 				{"type": "layer-controller"},
-				{"type": "entity-container" 
-					/*, "entities": [{"type": "collectible-manager"}]*/
+				{"type": "entity-container", 
+				 	"entities": [{"type": "collectible-manager"}]
 				},
 				{
 				    "type": "tiled-loader",
-				    "level": "level-1",
+				    "level": "#levelName#",
 				    "unitsPerPixel": 10,
 				    "images": ["sprites"], //optional: will use source images from Tiled JSON if not specified here.
 				    "imagesScale": 2       //size of image pixels in world coordinates
@@ -36,12 +36,16 @@
                 },
                 {"type": "lc-logic"},
                 {"type": "render-createjs"},
-                {"type": "entity-container", "entities": [
+                {"type": "entity-container", 
+                	"entities": [
                     {"type": "button-jump"},
                     {"type": "button-pickaxe"},
                     {"type": "button-left"},
-                    {"type": "button-right"}
-                ]}
+                    {"type": "button-right"},
+                    {"type": "gui", "properties": {"y": 2000}}
+                    ],
+                	"childEvents": ['gui-gem-collected']
+                }
             ]
         },{
             "id": "touch-interface",
@@ -56,14 +60,18 @@
                 },
                 {"type": "lc-logic"},
                 {"type": "render-createjs"},
-                {"type": "entity-container", "entities": [
-                    {"type": "button-jump-left"},
-                    {"type": "button-jump-right"},
-                    {"type": "button-jump", "properties": {"x": 310}},
-                    {"type": "button-pickaxe", "properties": {"x": 10, "y": 680}},
-                    {"type": "button-left"},
-                    {"type": "button-right"}
-                ]}
+                {"type": "entity-container", 
+                 	"entities": [
+	                    {"type": "button-jump-left"},
+	                    {"type": "button-jump-right"},
+	                    {"type": "button-jump", "properties": {"x": 310}},
+	                    {"type": "button-pickaxe", "properties": {"x": 10, "y": 680}},
+	                    {"type": "button-left"},
+	                    {"type": "button-right"},
+	                    {"type": "gui", "properties": {"y": 2000}}
+	                ],
+                	"childEvents": ['gui-gem-collected']
+	             }
             ]
         },{
             "id": "desktop-interface",
@@ -77,10 +85,14 @@
                 },
                 {"type": "lc-logic"},
                 {"type": "render-createjs"},
-                {"type": "entity-container", "entities": [
-                    {"type": "button-mute"},
-                    {"type": "button-play"}
-                ]}
+                {"type": "entity-container", 
+                	"entities": [
+	                    {"type": "button-mute"},
+	                    {"type": "button-play"},
+	                    {"type": "gui"}
+                	],
+                	"childEvents": ['gui-gem-collected']
+                }
             ]
 		}
 	]

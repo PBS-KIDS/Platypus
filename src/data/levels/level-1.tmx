@@ -203,6 +203,8 @@
   <object gid="63" x="696" y="168"/>
   <object gid="55" x="336" y="264"/>
   <object type="hero" gid="46" x="24" y="96"/>
-  <object gid="56" x="-120" y="456"/>
+  <object gid="48" x="72" y="72"/>
+  <object gid="48" x="72" y="96"/>
+  <object gid="56" x="24" y="48"/>
  </objectgroup>
 </map>

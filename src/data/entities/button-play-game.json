@@ -13,8 +13,11 @@
 		    "ontouchend": "new-scene"
 		},{
 		    "type": "change-scene",
-		    "scene": "scene-1",
-		    "transition": "fade-to-black"
+		    "scene": "scene-level",
+		    "transition": "fade-to-black",
+		    "overrides": {
+		        "#levelName#": "level-1"
+		    }
         }
 	]
 }

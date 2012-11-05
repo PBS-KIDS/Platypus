@@ -5,7 +5,7 @@
   PBS.KIDS = this.PBS.KIDS || {};
   PBS.KIDS.platformer = platformer;
 
-platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/layer/enable-ios-audio.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"render-createjs":{"id":"render-createjs","src":"../src/js/layer/render-createjs.js"},"render-dom":{"id":"render-dom","src":"../src/js/layer/render-dom.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"lc-basic-collision":{"id":"lc-basic-collision","src":"../src/js/layer/lc-basic-collision.js"},"audio":{"id":"audio","src":"../src/js/entity/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/entity/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/entity/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/entity/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/entity/render-image.js"},"render-collectible-manager":{"id":"render-collectible-manager","src":"../src/js/entity/render-collectible-manager.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/entity/logic-collectible-manager.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/entity/logic-directional-movement.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/entity/logic-gem.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/entity/logic-gravity.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/entity/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"width":400,"height":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":420,"y":1090,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-1","transition":"fade-to-black"}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right","key:up-arrow":"key-up","key:down-arrow":"key-down"}},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":""}},{"type":"render-animation","spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6],"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"pickaxe":{"sound":"pickaxe-other","interrupt":"none"},"walking":{"sound":"walk","interrupt":"none"},"jumping":"jump"}}],"properties":{"x":10,"y":10,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"","dirt":"","hero":"","tiles":""}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":300},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"layer:prep-collision","delay":50}]},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"render-collectible-manager","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}}}],"properties":{}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu","components":[{"type":"lc-logic"},{"type":"render-dom"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-1":{"layers":[{"id":"action","components":[{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"lc-camera","width":3200},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-1","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},{"id":"multitouch-interface","filter":{"includes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"}]}]},{"id":"touch-interface","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"}]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":4000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"}]}]}],"id":"scene-1"},"scene-2":{"layers":[{"id":"action","components":[{"type":"lc-camera","width":3200},{"type":"lc-logic"},{"type":"lc-basic-collision"},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container"},{"type":"tiled-loader","level":"level-2","unitsPerPixel":10}]},{"id":"touch-interface","filter":{"includes":["touch"]},"components":[{"type":"lc-camera","width":960},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-left"},{"type":"button-right"},{"type":"button-mute"}]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":1440},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"}]}]}],"id":"scene-2"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"}}};
+platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Layer":{"id":"Layer","src":"../src/js/layer.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/layer/enable-ios-audio.js"},"layer-controller":{"id":"layer-controller","src":"../src/js/layer/layer-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/layer/tiled-loader.js"},"render-createjs":{"id":"render-createjs","src":"../src/js/layer/render-createjs.js"},"render-dom":{"id":"render-dom","src":"../src/js/layer/render-dom.js"},"lc-logic":{"id":"lc-logic","src":"../src/js/layer/lc-logic.js"},"lc-camera":{"id":"lc-camera","src":"../src/js/layer/lc-camera.js"},"collision-group":{"id":"collision-group","src":"../src/js/layer/collision-group.js"},"audio":{"id":"audio","src":"../src/js/entity/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/entity/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/entity/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/entity/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/entity/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/entity/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/entity/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/entity/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/entity/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/entity/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/entity/render-image.js"},"render-gui":{"id":"render-gui","src":"../src/js/entity/render-gui.js"},"render-counter":{"id":"render-counter","src":"../src/js/entity/render-counter.js"},"logic-button":{"id":"logic-button","src":"../src/js/entity/logic-button.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/entity/logic-collectible-manager.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/entity/logic-directional-movement.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/entity/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/entity/logic-gem.js"},"logic-gui":{"id":"logic-gui","src":"../src/js/entity/logic-gui.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/entity/logic-gravity.js"},"logic-portable":{"id":"logic-portable","src":"../src/js/entity/logic-portable.js"},"logic-pushable":{"id":"logic-pushable","src":"../src/js/entity/logic-pushable.js"},"logic-counter":{"id":"logic-counter","src":"../src/js/entity/logic-counter.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/entity/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/entity/collision-tiles.js"}},"entities":{"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"width":400,"height":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":420,"y":1090,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-level","transition":"fade-to-black","overrides":{"#levelName#":"level-1"}}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right","key:up-arrow":"key-up","key:down-arrow":"key-down"}},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":""}},{"type":"render-animation","spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6],"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"pickaxe":{"sound":"pickaxe-other","interrupt":"none"},"walking":{"sound":"walk","interrupt":"none"},"jumping":"jump"}},{"type":"render-debug","regY":260,"regX":130}],"properties":{"x":10,"y":10,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"logic-pushable"},{"type":"logic-portable"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"hit-solid","dirt":"hit-solid","hero":["push-entity","hit-solid"],"tiles":"hit-solid"}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2},{"type":"render-debug","regX":120,"regY":240}],"properties":{"x":50,"y":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":250},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"layer:prep-collision","delay":50}]},"gem-counter":{"id":"gem-counter","components":[{"type":"logic-counter","message":"count-gems"},{"type":"render-counter","scaleX":20,"scaleY":20,"color":"#FFF"}],"properties":{"x":3800,"y":175}},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"broadcast-events","events":{"broadcast-gem-collected":"gui-gem-collected"}}],"properties":{"x":10,"y":10}},"gui":{"id":"gui","components":[{"type":"logic-gui"},{"type":"render-animation","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}},"scaleX":2.9,"scaleY":2.9},{"type":"entity-container","entities":[{"type":"gem-counter"}],"childEvents":["count-gems","layer:render","layer:render-load"]}],"properties":{"x":4000,"y":0}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu","components":[{"type":"lc-logic"},{"type":"render-dom"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-level":{"layers":[{"id":"action","components":[{"type":"lc-logic"},{"type":"collision-group"},{"type":"lc-camera","width":3200},{"type":"render-createjs"},{"type":"layer-controller"},{"type":"entity-container","entities":[{"type":"collectible-manager"}]},{"type":"tiled-loader","level":"#levelName#","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},{"id":"multitouch-interface","filter":{"includes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},{"id":"touch-interface","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"lc-camera","width":2000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},{"id":"desktop-interface","filter":{"excludes":["touch"]},"components":[{"type":"lc-camera","width":4000},{"type":"lc-logic"},{"type":"render-createjs"},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"},{"type":"gui"}],"childEvents":["gui-gem-collected"]}]}],"id":"scene-level"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":48}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":888,"y":168},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":288},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":65,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":-120,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"}}};
 platformer.classes = {};
 
 /*--------------------------------------------------
@@ -73,7 +73,7 @@ platformer.classes.game = (function(){
 		if(this.currentScene) this.currentScene.tick(deltaT);
 	};
 	
-	proto.loadScene = function(sceneId, transition){
+	proto.loadScene = function(sceneId, transition, overrides){
 		var self = this;
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
@@ -88,7 +88,7 @@ platformer.classes.game = (function(){
 			element.style.opacity = '0';
 			element.style.background = '#000';
 			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				self.loadNextScene(sceneId);
+				self.loadNextScene(sceneId, overrides);
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
 				element = undefined;
@@ -97,13 +97,23 @@ platformer.classes.game = (function(){
 			break;
 		case 'instant':
 		default:
-			this.loadNextScene(sceneId);
+			this.loadNextScene(sceneId, overrides);
 			this.completeSceneTransition();
 		}
 	};
 	
-	proto.loadNextScene = function(sceneId){
-		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
+	proto.loadNextScene = function(sceneId, overrides){
+		if(overrides){
+			var scene = JSON.stringify(this.settings.scenes[sceneId]);
+			for (var i in overrides){
+				while(scene.indexOf(i) > -1){
+					scene = scene.replace(i, overrides[i]);
+				}
+			}
+			this.currentScene = new platformer.classes.scene(JSON.parse(scene), this.rootElement);
+		} else {
+			this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
+		}
 	};
 	
 	proto.completeSceneTransition = function(){
@@ -413,6 +423,7 @@ platformer.classes.collisionShape = (function(){
 		this.subType = '';
 		this.points = points; //Points should distributed as if the 0,0 is the focal point of the object.
 		this.aABB = undefined;
+		this.prevAABB = undefined;
 		
 		var width = 0;
 		var height = 0; 
@@ -455,11 +466,15 @@ platformer.classes.collisionShape = (function(){
 			} 
 		}
 		
-		this.aABB = new platformer.classes.aABB(this.x, this.y, width, height);
+		this.aABB     = new platformer.classes.aABB(this.x, this.y, width, height);
+		this.prevAABB = new platformer.classes.aABB(this.x, this.y, width, height);
 	};
 	var proto = collisionShape.prototype;
 	
 	proto.update = function(x, y){
+		var swap = this.prevAABB; 
+		this.prevAABB = this.aABB;
+		this.aABB     = swap;
 		this.prevX = this.x;
 		this.prevY = this.y;
 		this.x = x + this.offset[0];
@@ -467,9 +482,12 @@ platformer.classes.collisionShape = (function(){
 		this.aABB.move(this.x, this.y);
 	};
 	
-	proto.setXY = function (x, y) {
-		this.x = x;
-		this.y = y;
+	proto.reset = function (x, y) {
+		this.prevX = x + this.offset[0];
+		this.prevY = y + this.offset[1];
+		this.x = x + this.offset[0];
+		this.y = y + this.offset[1];
+		this.prevAABB.move(this.x, this.y);
 		this.aABB.move(this.x, this.y);
 	};
 	
@@ -499,6 +517,10 @@ platformer.classes.collisionShape = (function(){
 	
 	proto.getAABB = function(){
 		return this.aABB;
+	};
+	
+	proto.getPreviousAABB = function(){
+		return this.prevAABB;
 	};
 	
 	proto.getXOffset = function(){
@@ -1660,12 +1682,14 @@ platformer.components['lc-camera'] = (function(){
 
 
 /*--------------------------------------------------
- *   lc-basic-collision - ../src/js/layer/lc-basic-collision.js
+ *   collision-group - ../src/js/layer/collision-group.js
  */
-platformer.components['lc-basic-collision'] = (function(){
+/**
+ * Requires Owner entity to have 'entity-container' component 
+ */
+platformer.components['collision-group'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
-		
 		
 		// Messages that this component listens for
 		this.listeners = [];
@@ -1704,11 +1728,11 @@ platformer.components['lc-basic-collision'] = (function(){
 	};
 	
 	proto['collision'] = function(deltaT){
-		this.prepareCollision();
+		this.prepareCollision(deltaT);
 
-		this.checkSolidCollisions();
+		this.checkSolidCollisions(deltaT);
 		
-		this.checkSoftCollisions();
+		this.checkSoftCollisions(deltaT);
 	};
 	
 	proto.prepareCollision = function ()
@@ -1730,381 +1754,415 @@ platformer.components['lc-basic-collision'] = (function(){
 		}
 	};
 	
-	/*
-	 * Collision Matrix is set up so that [x,y] is a check to see if X cares about Y
-	 */
-	
-	
-	
-	/*************************************************************************************************************************
-	 * TODO: This function currently FAILS to allow SOLID ENTITIES a chance TO RESOLVE the collision. WHAT WE GONNA DO!?!?
-	 * 
-	 ************************************************************************************************************************/
-	proto.checkSolidCollisions = function ()
+	proto.checkSolidCollisions = function (deltaT)
 	{
 		var x = 0,
-		y = 0,
+		entities = [];
+		
+		for(x = 0; x < this.entities.length; x++){
+			if(this.entities[x].solidCollisions.length > 0){
+				this.entities[x].collisionUnresolved = true;
+				entities.push(this.entities[x]);
+			}
+		}
+		
+		this.resolveCollisionList(entities);
+	};
+	
+	proto.resolveCollisionList = function(entities){
+		for (var x = entities.length - 1; x > -1; x--){
+			if(entities[x].collisionUnresolved){
+				if(entities[x].postponeCollisionCheck && (entities[x].postponeCollisionCheck.length > 0)){
+					this.resolveCollisionList(entities[x].postponeCollisionCheck);
+					entities[x].postponeCollisionCheck.length = 0;
+					entities[x].trigger('collision-postponement-resolved');
+				}
+				this.checkSolidEntityCollision(entities[x]);
+				entities[x].collisionUnresolved = false;
+			}
+		}
+	};
+	
+	proto.checkSolidEntityCollision = function(ent){
+		var y = 0,
 		z = 0,
 		initialX = 0,
-		initialY = 0;
-		for(x = 0; x < this.entities.length; x++){
-			var ent = this.entities[x];
-			if(ent.solidCollisions.length > 0){
-					/******/
-					
-					var currentAABB = ent.shape.getAABB();
-					var prevPos = ent.shape.getPrevLocation();
-					var previousAABB = (currentAABB.getCopy()).move(prevPos[0], prevPos[1]);
-					
-					var sweepTop = Math.min(currentAABB.top, previousAABB.top);
-					var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
-					var sweepHeight = sweepBottom - sweepTop;
-					var sweepLeft = Math.min(currentAABB.left, previousAABB.left);
-					var sweepRight = Math.max(currentAABB.right, previousAABB.right);
-					var sweepWidth = sweepRight - sweepLeft;
-					var sweepX = sweepLeft + (sweepWidth / 2);
-					var sweepY = sweepTop + (sweepHeight / 2); 
-					var sweepAABB = new platformer.classes.aABB(sweepX, sweepY, sweepWidth, sweepHeight);
-					var potentialTiles = [];
-					var potentialsEntities = [];
-					var otherEntity = undefined;
+		initialY = 0,
+		triggerMessages = [];
 
-					for (y = 0; y < ent.solidCollisions.length; y++)
-					{
-						if(this.entitiesByType[ent.solidCollisions[y]]){
-							for(z = 0; z < this.entitiesByType[ent.solidCollisions[y]].length; z++){
-								otherEntity = this.entitiesByType[ent.solidCollisions[y]][z];
-								if((otherEntity !== ent) && (this.AABBCollision(sweepAABB, otherEntity.shape.getAABB()))) {
-									potentialsEntities.push(this.entitiesByType[ent.solidCollisions[y]][z]);
-								}
-							}
-						} else if (ent.solidCollisions[y] === 'tiles'){
-							potentialTiles = this.terrain.getTiles(sweepAABB);
-						}
-					}
-					
-					var xDir = (ent.shape.getPrevX() < ent.shape.getX()) ? 1 : -1;
-					var xPos = ent.shape.getPrevX();
-					var xGoal = ent.shape.getX();
-					var yDir = (ent.shape.getPrevY() < ent.shape.getY()) ? 1 : -1;
-					var yPos = ent.shape.getPrevY();
-					var yGoal = ent.shape.getY();
+		/******/
+		
+		var currentAABB = ent.shape.getAABB();
+		var prevPos = ent.shape.getPrevLocation();
+		var previousAABB = (currentAABB.getCopy()).move(prevPos[0], prevPos[1]);
+		
+		var sweepTop = Math.min(currentAABB.top, previousAABB.top);
+		var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
+		var sweepHeight = sweepBottom - sweepTop;
+		var sweepLeft = Math.min(currentAABB.left, previousAABB.left);
+		var sweepRight = Math.max(currentAABB.right, previousAABB.right);
+		var sweepWidth = sweepRight - sweepLeft;
+		var sweepX = sweepLeft + (sweepWidth / 2);
+		var sweepY = sweepTop + (sweepHeight / 2); 
+		var sweepAABB = new platformer.classes.aABB(sweepX, sweepY, sweepWidth, sweepHeight);
+		var potentialTiles = [];
+		var potentialsEntities = [];
+		var otherEntity = undefined;
 
-					initialX = xPos;
-					initialY = yPos;
-					var finalY = undefined;
-					var finalX = undefined; 
-					
-					var collisionsX = [];
-					var collisionsY = [];
-					
-					var tileCollisionX = undefined;
-					var tileCollisionY = undefined;
-					
-					//////////////////////////////////////////////////////////////////////
-					//MOVE IN THE X DIRECTION
-					//////////////////////////////////////////////////////////////////////
-					while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
-					{
-						if (Math.abs(xGoal - xPos) <= 1)
-						{
-							xPos = xGoal;
-						} else {
-							xPos += xDir;
-						}
-						previousAABB.move(xPos, yPos);
-						
-						//CHECK AGAINST TILES
-						var tileAABB = undefined;
-						for (var t = 0; t < potentialTiles.length; t++)
-						{
-							tileAABB = potentialTiles[t].shape.getAABB();
-							if(this.AABBCollision(previousAABB, tileAABB))
-							{
-								if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
-								{
-									var atX = undefined;
-									//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-									if (xDir > 0)
-									{
-										atX = tileAABB.left - previousAABB.halfWidth;
-									} else {
-										atX = tileAABB.right + previousAABB.halfWidth;
-									}
-									
-									if ( typeof tilecollisionX === 'undefined') {
-										tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
-									} else if (xDir > 0) {
-										if (atX < tileCollisionX.atX)
-										{
-											tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
-										}
-									} else {
-										if (atX > tileCollisionX.atX)
-										{
-											tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
-										}
-									}
-								}
-							}
-						}
-						
-						//CHECK AGAINST SOLID ENTITIES
-						var entityAABB = undefined;
-						for (var u = 0; u < potentialsEntities.length; u++)
-						{
-							entityAABB = potentialsEntities[u].shape.getAABB();
-							if(this.AABBCollision(previousAABB, entityAABB))
-							{
-								if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
-								{
-									var atX = undefined;
-									//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-									if (xDir > 0)
-									{
-										atX = entityAABB.left - previousAABB.halfWidth;
-										if (tileCollisionX && atX > tileCollisionX.atX)  
-										{
-											//If the tile is collided with before this, we can skip it.
-											continue;
-										}
-									} else {
-										atX = entityAABB.right + previousAABB.halfWidth;
-										if (tileCollisionX && atX < tileCollisionX.atX)  
-										{
-											//If the tile is collided with before this, we can skip it.
-											continue;
-										}
-									}
-									
-									if (collisionsX.length == 0) {
-										//finalX = atX;
-										collisionsX.push({atX: atX, entity: potentialsEntities[u]});
-									} else if (xDir > 0) {
-										var insertIndex = 0; 
-										for (var c = 0; c < collisionsX.length; c++)
-										{
-											if (atX < collisionsX[c].atX)
-											{
-												insertIndex = c;
-												break;
-											}
-										}
-										collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-									} else {
-										var insertIndex = 0; 
-										for (var c = 0; c < collisionsX.length; c++)
-										{
-											if (atX > collisionsX[c].atX)
-											{
-												insertIndex = c;
-												break;
-											}
-										}
-										collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-										
-									} 
-								}
-							}
-								
-						}
-						
-						if (ent.routeSolidCollision)
-						{
-							var complete = false;
-							for(var q = 0; q < collisionsX.length; q++)
-							{
-								complete = ent.routeSolidCollision('x', xDir, collisionsX[q]);
-								if (complete)
-								{
-									if(((collisionsX[q].atX > initialX) && (xDir > 0)) || ((collisionsX[q].atX < initialX) && (xDir < 0))){
-										finalX = collisionsX[q].atX;
-									} else {
-										finalX = initialX;
-									}
-									break;
-								}
-							}	
-						}
-						
-						if (ent.routeTileCollision)
-						{
-							var complete = false;
-							if(typeof finalX === 'undefined' && tileCollisionX)
-							{
-								complete = ent.routeTileCollision('x', xDir, tileCollisionX);
-								if (complete)
-								{
-									finalX = tileCollisionX.atX;
-								}
-							}
-						}
-						
-						if(typeof finalX !== 'undefined')
-						{
-							break;
-						}
-						
+		for (y = 0; y < ent.solidCollisions.length; y++)
+		{
+			if(this.entitiesByType[ent.solidCollisions[y]]){
+				for(z = 0; z < this.entitiesByType[ent.solidCollisions[y]].length; z++){
+					otherEntity = this.entitiesByType[ent.solidCollisions[y]][z];
+					if((!otherEntity.postponeCollisionCheck || (otherEntity.postponeCollisionCheck.length === 0)) && (otherEntity !== ent) && (this.AABBCollision(sweepAABB, otherEntity.shape.getPreviousAABB()))) {
+						potentialsEntities.push(this.entitiesByType[ent.solidCollisions[y]][z]);
 					}
-					
-					if(typeof finalX === 'undefined')
-					{
-						
-						finalX = xGoal;
-					}
-					
-					//////////////////////////////////////////////////////////////////////
-					//MOVE IN THE Y DIRECTION
-					//////////////////////////////////////////////////////////////////////
-					while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
-					{
-						if (Math.abs(yGoal - yPos) < 1)
-						{
-							yPos = yGoal;
-						} else {
-							yPos += yDir;
-						}
-						previousAABB.move(finalX, yPos);
-						
-						//CHECK AGAINST TILES
-						var tileAABB = undefined;
-						for (var t = 0; t < potentialTiles.length; t++)
-						{
-							tileAABB = potentialTiles[t].shape.getAABB();
-							if(this.AABBCollision(previousAABB, tileAABB))
-							{
-								if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
-								{
-									var atY = undefined;
-									//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-									if (yDir > 0)
-									{
-										atY = tileAABB.top - previousAABB.halfHeight; 
-									} else {
-										atY = tileAABB.bottom + previousAABB.halfHeight;
-									}
-									 
-									if ( typeof tilecollisionY === 'undefined') {
-										tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
-									} else if (yDir > 0) {
-										if (atY < collisionsY[0].atY)
-										{
-											tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
-										}
-									} else {
-										if (atY > tileCollisionY.atY)
-										{
-											tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
-										}
-									} 
-								}
-							}
-						}
-						
-						//CHECK AGAINST SOLID ENTITIES
-						var entityAABB = undefined;
-						for (var u = 0; u < potentialsEntities.length; u++)
-						{
-							entityAABB = potentialsEntities[u].shape.getAABB();
-							if(this.AABBCollision(previousAABB, entityAABB))
-							{
-								if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
-								{
-									var atY = undefined;
-									//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-									if (yDir > 0)
-									{
-										atY = entityAABB.top - previousAABB.halfHeight;
-										if (tileCollisionY && atY > tileCollisionY.atY)  
-										{
-											//If the tile is collided with before this, we can skip it.
-											continue;
-										}
-									} else {
-										atY = entityAABB.bottom + previousAABB.halfHeight;
-										if (tileCollisionY && atY < tileCollisionY.atY)  
-										{
-											//If the tile is collided with before this, we can skip it.
-											continue;
-										}
-									}
-																									
-									if (collisionsY.length == 0) {
-										//finalX = atX;
-										collisionsY.push({atY: atY, entity: potentialsEntities[u]});
-									} else if (yDir > 0) {
-										var insertIndex = 0; 
-										for (var c = 0; c < collisionsY.length; c++)
-										{
-											if (atY < collisionsY[c].atY)
-											{
-												insertIndex = c;
-												break;
-											}
-										}
-										collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-									} else {
-										var insertIndex = 0; 
-										for (var c = 0; c < collisionsY.length; c++)
-										{
-											if (atY > collisionsY[t].atY)
-											{
-												insertIndex = c;
-												break;
-											}
-										}
-										collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
-									} 
-								}
-							}
-						}
-						
-						if (ent.routeSolidCollision)
-						{
-							var complete = false;
-							for(var q = 0; q < collisionsY.length; q++)
-							{
-								complete = ent.routeSolidCollision('y', yDir, collisionsY[q]);
-								if (complete)
-								{
-									if(((collisionsY[q].atY > initialY) && (yDir > 0)) || ((collisionsY[q].atY < initialY) && (yDir < 0))){
-										finalY = collisionsY[q].atY;
-									} else {
-										finalY = initialY;
-									}
-									break;
-								}
-							}
-						}
-						
-						if (ent.routeTileCollision)
-						{
-							var complete = false;
-							if(typeof finalY === 'undefined' && tileCollisionY)
-							{
-								complete = ent.routeTileCollision('y', yDir, tileCollisionY);
-								if (complete)
-								{
-									finalY = tileCollisionY.atY;
-								}
-							}
-						}
-						
-						
-						if(typeof finalY !== 'undefined')
-						{
-							break;
-						}
-					}
-					
-					
-					if(typeof finalY === 'undefined')
-					{
-						finalY = yGoal;
-					}
-					
-					ent.trigger('layer:relocate', [finalX, finalY]);
+				}
+			} else if (ent.solidCollisions[y] === 'tiles'){
+				potentialTiles = this.terrain.getTiles(sweepAABB);
 			}
+		}
+		
+		var xDir = (ent.shape.getPrevX() < ent.shape.getX()) ? 1 : -1;
+		var xPos = ent.shape.getPrevX();
+		var xGoal = ent.shape.getX();
+		var yDir = (ent.shape.getPrevY() < ent.shape.getY()) ? 1 : -1;
+		var yPos = ent.shape.getPrevY();
+		var yGoal = ent.shape.getY();
+
+		initialX = xPos;
+		initialY = yPos;
+		var finalY = undefined;
+		var finalX = undefined; 
+		
+		var collisionsX = [];
+		var collisionsY = [];
+		
+		var tileCollisionX = undefined;
+		var tileCollisionY = undefined;
+		triggerMessages.length = 0;
+		
+		//////////////////////////////////////////////////////////////////////
+		//MOVE IN THE X DIRECTION
+		//////////////////////////////////////////////////////////////////////
+		while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
+		{
+			if (Math.abs(xGoal - xPos) <= 1)
+			{
+				xPos = xGoal;
+			} else {
+				xPos += xDir;
+			}
+			previousAABB.move(xPos, yPos);
+			
+			//CHECK AGAINST TILES
+			var tileAABB = undefined;
+			for (var t = 0; t < potentialTiles.length; t++)
+			{
+				tileAABB = potentialTiles[t].shape.getAABB();
+				if(this.AABBCollision(previousAABB, tileAABB))
+				{
+					if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
+					{
+						var atX = undefined;
+						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
+						if (xDir > 0)
+						{
+							atX = tileAABB.left - previousAABB.halfWidth;
+						} else {
+							atX = tileAABB.right + previousAABB.halfWidth;
+						}
+						
+						if ( typeof tilecollisionX === 'undefined') {
+							tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+						} else if (xDir > 0) {
+							if (atX < tileCollisionX.atX)
+							{
+								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+							}
+						} else {
+							if (atX > tileCollisionX.atX)
+							{
+								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+							}
+						}
+					}
+				}
+			}
+			
+			//CHECK AGAINST SOLID ENTITIES
+			var entityAABB = undefined;
+			for (var u = 0; u < potentialsEntities.length; u++)
+			{
+				entityAABB = potentialsEntities[u].shape.getPreviousAABB();
+				if(this.AABBCollision(previousAABB, entityAABB))
+				{
+					if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
+					{
+						var atX = undefined;
+						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
+						if (xDir > 0)
+						{
+							atX = entityAABB.left - previousAABB.halfWidth;
+							if (tileCollisionX && atX > tileCollisionX.atX)  
+							{
+								//If the tile is collided with before this, we can skip it.
+								continue;
+							}
+						} else {
+							atX = entityAABB.right + previousAABB.halfWidth;
+							if (tileCollisionX && atX < tileCollisionX.atX)  
+							{
+								//If the tile is collided with before this, we can skip it.
+								continue;
+							}
+						}
+						
+						if (collisionsX.length == 0) {
+							//finalX = atX;
+							collisionsX.push({atX: atX, entity: potentialsEntities[u]});
+						} else if (xDir > 0) {
+							var insertIndex = 0; 
+							for (var c = 0; c < collisionsX.length; c++)
+							{
+								if (atX < collisionsX[c].atX)
+								{
+									insertIndex = c;
+									break;
+								}
+							}
+							collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+						} else {
+							var insertIndex = 0; 
+							for (var c = 0; c < collisionsX.length; c++)
+							{
+								if (atX > collisionsX[c].atX)
+								{
+									insertIndex = c;
+									break;
+								}
+							}
+							collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+							
+						} 
+					}
+				}
+					
+			}
+			
+			var complete = false;
+			for(var q = 0; q < collisionsX.length; q++)
+			{
+				complete = ent.routeSolidCollision?ent.routeSolidCollision('x', xDir, collisionsX[q]):true;
+				if (complete)
+				{
+					triggerMessages.push({
+						entity: collisionsX[q].entity,
+						type:   collisionsX[q].entity.collisionType,
+						shape:  collisionsX[q].entity.shape,
+						x: xDir,
+						y: 0
+					});
+					if(((collisionsX[q].atX > initialX) && (xDir > 0)) || ((collisionsX[q].atX < initialX) && (xDir < 0))){
+						finalX = collisionsX[q].atX;
+					} else {
+						finalX = initialX;
+					}
+					break;
+				}
+			}	
+			
+			if (ent.routeTileCollision)
+			{
+				var complete = false;
+				if(typeof finalX === 'undefined' && tileCollisionX)
+				{
+					complete = ent.routeTileCollision('x', xDir, tileCollisionX);
+					if (complete)
+					{
+						finalX = tileCollisionX.atX;
+					}
+				}
+			}
+			
+			if(typeof finalX !== 'undefined')
+			{
+				break;
+			}
+			
+		}
+		
+		if(typeof finalX === 'undefined')
+		{
+			
+			finalX = xGoal;
+		}
+		
+		//////////////////////////////////////////////////////////////////////
+		//MOVE IN THE Y DIRECTION
+		//////////////////////////////////////////////////////////////////////
+		while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
+		{
+			if (Math.abs(yGoal - yPos) < 1)
+			{
+				yPos = yGoal;
+			} else {
+				yPos += yDir;
+			}
+			previousAABB.move(finalX, yPos);
+			
+			//CHECK AGAINST TILES
+			var tileAABB = undefined;
+			for (var t = 0; t < potentialTiles.length; t++)
+			{
+				tileAABB = potentialTiles[t].shape.getAABB();
+				if(this.AABBCollision(previousAABB, tileAABB))
+				{
+					if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
+					{
+						var atY = undefined;
+						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
+						if (yDir > 0)
+						{
+							atY = tileAABB.top - previousAABB.halfHeight; 
+						} else {
+							atY = tileAABB.bottom + previousAABB.halfHeight;
+						}
+						 
+						if ( typeof tilecollisionY === 'undefined') {
+							tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+						} else if (yDir > 0) {
+							if (atY < collisionsY[0].atY)
+							{
+								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+							}
+						} else {
+							if (atY > tileCollisionY.atY)
+							{
+								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+							}
+						} 
+					}
+				}
+			}
+			
+			//CHECK AGAINST SOLID ENTITIES
+			var entityAABB = undefined;
+			for (var u = 0; u < potentialsEntities.length; u++)
+			{
+				entityAABB = potentialsEntities[u].shape.getPreviousAABB();
+				if(this.AABBCollision(previousAABB, entityAABB))
+				{
+					if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
+					{
+						var atY = undefined;
+						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
+						if (yDir > 0)
+						{
+							atY = entityAABB.top - previousAABB.halfHeight;
+							if (tileCollisionY && atY > tileCollisionY.atY)  
+							{
+								//If the tile is collided with before this, we can skip it.
+								continue;
+							}
+						} else {
+							atY = entityAABB.bottom + previousAABB.halfHeight;
+							if (tileCollisionY && atY < tileCollisionY.atY)  
+							{
+								//If the tile is collided with before this, we can skip it.
+								continue;
+							}
+						}
+																						
+						if (collisionsY.length == 0) {
+							//finalX = atX;
+							collisionsY.push({atY: atY, entity: potentialsEntities[u]});
+						} else if (yDir > 0) {
+							var insertIndex = 0; 
+							for (var c = 0; c < collisionsY.length; c++)
+							{
+								if (atY < collisionsY[c].atY)
+								{
+									insertIndex = c;
+									break;
+								}
+							}
+							collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+						} else {
+							var insertIndex = 0; 
+							for (var c = 0; c < collisionsY.length; c++)
+							{
+								if (atY > collisionsY[c].atY)
+								{
+									insertIndex = c;
+									break;
+								}
+							}
+							collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
+						} 
+					}
+				}
+			}
+			
+			var complete = false;
+			for(var q = 0; q < collisionsY.length; q++)
+			{
+				complete = ent.routeSolidCollision?ent.routeSolidCollision('y', yDir, collisionsY[q]):true;
+				if (complete)
+				{
+					triggerMessages.push({
+						entity: collisionsY[q].entity,
+						type:   collisionsY[q].entity.collisionType,
+						shape:  collisionsY[q].entity.shape,
+						x: 0,
+						y: yDir
+					});
+					if(((collisionsY[q].atY > initialY) && (yDir > 0)) || ((collisionsY[q].atY < initialY) && (yDir < 0))){
+						finalY = collisionsY[q].atY;
+					} else {
+						finalY = initialY;
+					}
+					break;
+				}
+			}
+			
+			if (ent.routeTileCollision)
+			{
+				var complete = false;
+				if(typeof finalY === 'undefined' && tileCollisionY)
+				{
+					complete = ent.routeTileCollision('y', yDir, tileCollisionY);
+					if (complete)
+					{
+						finalY = tileCollisionY.atY;
+					}
+				}
+			}
+			
+			
+			if(typeof finalY !== 'undefined')
+			{
+				break;
+			}
+		}
+		
+		
+		if(typeof finalY === 'undefined')
+		{
+			finalY = yGoal;
+		}
+
+		ent.trigger('layer:relocate', [finalX, finalY]);
+
+		for (var i in triggerMessages){
+			ent.trigger('hit-by-' + triggerMessages[i].type, triggerMessages[i]);
+			triggerMessages[i].entity.trigger('hit-by-' + ent.collisionType, { //have to go both ways because the alternate direction may not be checked if the alternate entity is not moving toward this entity
+				entity: ent,
+				type:   ent.collisionType,
+				shape:  ent.shape,
+				x: -triggerMessages[i].x,
+				y: -triggerMessages[i].y
+			});
 		}
 	};
 	
@@ -2394,6 +2452,7 @@ platformer.components['broadcast-events'] = (function(){
 			};
 		}
 	};
+	
 	var component = function(owner, definition){
 		this.owner = owner;
 
@@ -2469,17 +2528,19 @@ platformer.components['change-scene'] = (function(){
 
 		this.scene = definition.scene;
 		this.transition = definition.transition || 'instant';
+		this.overrides = definition.overrides || false;
 		
 		this.addListeners(['new-scene']);
 	};
 	var proto = component.prototype;
 	
-	proto['new-scene'] = function(resp){
-		var resp   = resp || this,
+	proto['new-scene'] = function(response){
+		var resp   = response || this,
 		scene      = resp.scene || this.scene,
 		transition = resp.transition || this.transition;
+		overrides  = resp.overrides  || this.overrides;
 
-		platformer.game.loadScene(scene, transition);
+		platformer.game.loadScene(scene, transition, overrides);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -2687,6 +2748,13 @@ platformer.components['entity-container'] = (function(){
 		this.owner.addEntity    = function(entity){return self.addEntity(entity);};
 		this.owner.removeEntity = function(entity){return self.removeEntity(entity);};
 		
+		if(definition.childEvents){
+			for(var event in definition.childEvents){
+				this[definition.childEvents[event]] = childBroadcast(definition.childEvents[event]);
+				this.addListener(definition.childEvents[event]);
+			}
+		}
+		
 		this.addListeners(['load', 'add-entity', 'remove-entity']);
 	};
 	var proto = component.prototype;
@@ -2732,6 +2800,26 @@ platformer.components['entity-container'] = (function(){
 		    }
 	    }
 	    return false;
+	};
+	
+	var childBroadcast = function(event){
+		if(typeof event === 'string'){
+			return function(value){
+				for (var x = 0; x < this.entities.length; x++)
+				{
+					this.entities[x].trigger(event, value);
+				}
+			};
+		} else {
+			return function(value){
+				for (var e in event){
+					for (var x = 0; x < this.entities.length; x++)
+					{
+						this.entities[x].trigger(event[e], value);
+					}
+				}
+			};
+		}
 	};
 	
 	
@@ -3548,9 +3636,9 @@ platformer.components['render-image'] = (function(){
 
 
 /*--------------------------------------------------
- *   render-collectible-manager - ../src/js/entity/render-collectible-manager.js
+ *   render-gui - ../src/js/entity/render-gui.js
  */
-platformer.components['render-collectible-manager'] = (function(){
+platformer.components['render-gui'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
@@ -3559,88 +3647,121 @@ platformer.components['render-collectible-manager'] = (function(){
 
 		this.addListeners(['layer:render', 'layer:render-load', 'logic-gem-added', 'logic-gem-collected']);
 		
-		
-		this.displayGemCollected = 0;
-		this.actualGemCollected = 0;
-		this.countChanged = true;
-		this.gemCollectedText = undefined;
-		this.gemCountText = undefined;
-		
-		this.gemTotal = 0;
-		this.gemTotalText = undefined;
-		this.totalChanged = true;
-		
-		this.counterBG = undefined;
+		this.background = undefined;
 		this.stage = undefined;
 		
 		var spriteSheetSpec = {
-				images: definition.spriteSheet.images.slice(),
-				frames: definition.spriteSheet.frames,
-				animations: definition.spriteSheet.animations
-			};
+			images: definition.spriteSheet.images.slice(),
+			frames: definition.spriteSheet.frames,
+			animations: definition.spriteSheet.animations
+		};
 		for (var x = 0; x < spriteSheetSpec.images.length; x++)
 		{
 			spriteSheetSpec.images[x] = platformer.assets[spriteSheetSpec.images[x]];
 		}
 		var spriteSheet = new createjs.SpriteSheet(spriteSheetSpec);
-		this.counterBG = new createjs.BitmapAnimation(spriteSheet);
+		this.background = new createjs.BitmapAnimation(spriteSheet);
 		this.currentAnimation = 'default';
-		this.counterBG.scaleX = this.owner.scaleX || 1;
-		this.counterBG.scaleY = this.owner.scaleY || 1;
+		this.background.scaleX = this.owner.scaleX || 1;
+		this.background.scaleY = this.owner.scaleY || 1;
 		if(this.currentAnimation){
-			this.counterBG.gotoAndPlay(this.currentAnimation);
+			this.background.gotoAndPlay(this.currentAnimation);
 		}
 	};
 	var proto = component.prototype;
 	
-	proto['logic-gem-added'] = function(data){
-		this.gemTotal = data.total;
-		this.totalChanged = true;
-	};
-	
-	proto['logic-gem-collected'] = function(data){
-		this.actualGemCollected = data.count;
-		this.countChanged = true;
-	};
-	
 	proto['layer:render-load'] = function(resp){
 		this.stage = resp.stage;
-		
-		this.gemCountText = new createjs.Text('0');
-		this.gemCountText.x = 20;
-		this.gemCountText.y = 20;
-		this.gemCountText.textAlign = "center";
-		this.gemCountText.textBaseline = "middle";
-		
-		this.gemTotalText = new createjs.Text(this.gemTotal.toString);
-		this.gemTotalText.x = 30;
-		this.gemTotalText.y = 20;
-		this.gemTotalText.textAlign = "center";
-		this.gemTotalText.textBaseline = "middle";
-		
-		this.stage.addChild(this.counterBG);
-		this.stage.addChild(this.gemCountText);
-		this.stage.addChild(this.gemTotalText);
+		this.stage.addChild(this.background);
+		this.background.x = 200;
+		this.background.y = 200;
 	};
 	
 	proto['layer:render'] = function(resp){
-		if (this.countChanged)
+		
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   render-counter - ../src/js/entity/render-counter.js
+ */
+platformer.components['render-counter'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['layer:render', 'layer:render-load', 'refresh-count']);
+		this.currentValue = 0;
+		this.targetValue = 0;
+		this.txt = new createjs.Text(this.currentValue.toString());
+		this.txt.scaleX = definition.scaleX || this.owner.scaleX || 1;
+		this.txt.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.txt.color = definition.color || '#000';
+	};
+	var proto = component.prototype;
+	
+	proto['layer:render-load'] = function(resp){
+		//this.stage = resp.stage;
+		this.txt.x = this.owner.x;
+		this.txt.y = this.owner.y;
+		this.txt.textAlign = "center";
+		this.txt.textBaseline = "middle";
+		resp.stage.addChild(this.txt);
+	};
+	
+	proto['layer:render'] = function(){
+		// Run loading code here
+		if (this.currentValue != this.targetValue)
 		{
-			//This is where we'd tween;
-			this.countChanged = false;
-			this.displayGemCollected = this.actualGemCollected;
-			this.gemCountText.text = this.displayGemCollected.toString();
+			if (this.currentValue < this.targetValue)
+			{
+				this.currentValue++;
+			}
+			if (this.currentValue > this.targetValue)
+			{
+				this.currentValue--;
+			}
+			this.txt.text = this.currentValue;
 		}
-		
-		if (this.totalChanged)
-		{
-			this.totalChanged = false;
-			this.gemTotalText.text = this.gemTotal.toString();
-		}
-		
-		this.counterBG.x = 1000;
-		this.counterBG.y = 1000;
-		
+	};
+	
+	proto['refresh-count'] = function(data){
+		this.targetValue = data;
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -3770,8 +3891,8 @@ platformer.components['logic-collectible-manager'] = (function(){
 
 		this.addListeners(['load', 'peer-entity-added', 'gem-collected']);
 		
-		this.gemsCollected;
-		this.gemTotal;
+		this.gemsCollected = 0;
+		this.gemTotal = 0;
 	};
 	var proto = component.prototype;
 	
@@ -3789,7 +3910,7 @@ platformer.components['logic-collectible-manager'] = (function(){
 	
 	proto['gem-collected'] = function(resp){
 		this.gemsCollected++;
-		this.owner.trigger('logic-gem-collected', {count: this.gemsCollected});
+		this.owner.trigger("broadcast-gem-collected", {count:this.gemsCollected, debug:true});
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -4076,24 +4197,6 @@ platformer.components['logic-hero'] = (function(){
 			} 
 		}
 
-		/*
-		
-		if (this.up) {
-			this.vY -= this.aX * deltaT;
-			if (this.vY < -this.maxVX)
-			{
-				this.vY = -this.maxVX;
-			}
-		}  else if (this.down) {
-			this.vY += this.aX * deltaT;
-			if (this.vY > this.maxVX)
-			{
-				this.vY = this.maxVX;
-			}
-		} 
-		*/
-
-		
 		if (this.jump && this.owner.state != 'air') {
 			this.vY = -this.jumpV;
 			this.owner.state = 'air';
@@ -4366,6 +4469,62 @@ platformer.components['logic-gem'] = (function(){
 
 
 /*--------------------------------------------------
+ *   logic-gui - ../src/js/entity/logic-gui.js
+ */
+platformer.components['logic-gui'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['load', 'gui-gem-collected']);
+	};
+	var proto = component.prototype;
+	
+	proto['load'] = function(resp){
+		this.owner.trigger('logical-state', {state: 'default'});
+	};
+	
+	proto['gui-gem-collected'] = function(data){
+		this.owner.trigger('count-gems', {count: data.count, debug: true});
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
  *   logic-gravity - ../src/js/entity/logic-gravity.js
  */
 platformer.components['logic-gravity'] = (function(){
@@ -4375,7 +4534,7 @@ platformer.components['logic-gravity'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic']);
+		this.addListeners(['layer:logic', 'hit-solid']);
 		
 		this.vX = definition.velocityX || 0; 
 		this.vY = definition.velocityY || 0;
@@ -4383,21 +4542,6 @@ platformer.components['logic-gravity'] = (function(){
 		this.maxVY = definition.maxVelocityY || definition.maxVelocity || 3;
 		this.yGravity = definition.gravity || definition.yGravity || .01;
 		this.xGravity = definition.xGravity || 0;
-		
-		//Handle Tile Collisions
-		this.owner.resolveTileCollision = function(heading, collisionInfo){
-			return self.resolveTileCollision(heading, collisionInfo);
-		};
-		
-		//Handle Solid Collisions
-		this.owner.resolveSolidCollision = function(heading, collisionInfo){
-			return self.resolveSolidCollision(heading, collisionInfo);
-		};
-		
-		//Handle Soft Collisions
-		this.owner.resolveSoftCollision = function(collisionInfo){
-			return self.resolveSoftCollision(collisionInfo);
-		};
 	};
 	var proto = component.prototype;
 	
@@ -4417,17 +4561,334 @@ platformer.components['logic-gravity'] = (function(){
 		this.owner.y += (this.vY * deltaT);
 	};
 	
-	proto.resolveSolidCollision = proto.resolveTileCollision = function(heading, collisionInfo){
-		if(((heading == 'down') && (this.vY > 0)) || ((heading == 'up') && (this.vY < 0))){
+	proto['hit-solid'] = function(collisionInfo){
+		if(((collisionInfo.y > 0) && (this.vY > 0)) || ((collisionInfo.y < 0) && (this.vY < 0))){
 			this.vY = 0;
-		} else if(((heading == 'left') && (this.vX < 0)) || ((heading == 'right') && (this.vX > 0))){
+		} else if(((collisionInfo.y < 0) && (this.vX < 0)) || ((collisionInfo.x > 0) && (this.vX > 0))){
 			this.vX = 0;
 		}
 		return true;
 	};
 	
-	proto.resolveSoftCollision = function(collisionInfo){
-		return false;
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   logic-portable - ../src/js/entity/logic-portable.js
+ */
+platformer.components['logic-portable'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		var self = this;
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['layer:logic', 'collision-postponement-resolved', 'hit-solid']);
+		
+		this.portableDirections = definition.portableDirections || {
+			down: true //default is false, 'true' means as soon as carrier is connected downward
+		};
+
+		this.clampTop = null;
+		this.clampBottom = null;
+		this.clampLeft = null;
+		this.clampRight = null;
+		this.lastCarrierX = 0;
+        this.lastCarrierY = 0;
+        this.carrier      = undefined;
+	};
+	var proto = component.prototype;
+	
+	proto['layer:logic'] = function(deltaT){
+		if(this.trackMe){
+			this.trackMe++;
+			console.log('LogicA (' + this.tracking + ': ' + this.trackMe + '): ' + (this.carrier?'{ox:' + this.owner.x + ', oy:' + this.owner.y + ', cx:' + this.carrier.x + ', cy:' + this.carrier.y + ', lastX:' + this.lastCarrierX + ', lastY:' + this.lastCarrierY + ', down:' + this.clampBottom + '}':'No Carrier!'));
+		}
+		if(this.carrierConnected){
+			if(this.carrier.collisionType == 'hero'){
+				this.trackMe = 100;
+				this.tracking = 'block';
+			}
+			if(this.owner.collisionType == 'hero'){
+				this.trackMe = 200;
+				this.tracking = 'hero';
+			}
+			if(!this.owner.postponeCollisionCheck){
+				this.owner.postponeCollisionCheck = [];
+			}
+			this.owner.postponeCollisionCheck.push(this.carrier);
+			this.carrierConnected = false;
+		} else {
+			if(this.carrier){
+				this.carrier = undefined;
+			}
+		}
+		if(this.trackMe){
+			this.trackMe++;
+			console.log('LogicB (' + this.tracking + ': ' + this.trackMe + '): ' + (this.carrier?'{ox:' + this.owner.x + ', oy:' + this.owner.y + ', cx:' + this.carrier.x + ', cy:' + this.carrier.y + ', lastX:' + this.lastCarrierX + ', lastY:' + this.lastCarrierY + ', down:' + this.clampBottom + '}':'No Carrier!'));
+		}
+	};
+	
+	proto['collision-postponement-resolved'] = function(){
+		if(this.trackMe){
+			this.trackMe++;
+			console.log('ResolA (' + this.tracking + ': ' + this.trackMe + '): ' + (this.carrier?'{ox:' + this.owner.x + ', oy:' + this.owner.y + ', cx:' + this.carrier.x + ', cy:' + this.carrier.y + ', lastX:' + this.lastCarrierX + ', lastY:' + this.lastCarrierY + ', down:' + this.clampBottom + '}':'No Carrier!'));
+		}
+		this.owner.x += this.carrier.x - this.lastCarrierX;
+		this.owner.y += this.carrier.y - this.lastCarrierY;
+		this.lastCarrierX = this.carrier.x;
+		this.lastCarrierY = this.carrier.y;
+		
+		if((this.clampBottom != null) && (this.owner.y > (this.carrier.y - this.clampBottom))){
+			this.owner.y = (this.carrier.y - this.clampBottom);
+		}
+		if((this.clampTop != null) && (this.owner.y < (this.carrier.y + this.clampTop))){
+			this.owner.y = (this.carrier.y + this.clampTop);
+		}
+		if((this.clampLeft != null) && (this.owner.x < (this.carrier.x + this.clampLeft))){
+			this.owner.x = (this.carrier.x + this.clampLeft);
+		}
+		if((this.clampRight != null) && (this.owner.x > (this.carrier.x - this.clampRight))){
+			this.owner.x = (this.carrier.x - this.clampRight);
+		}
+		this.clampTop = null;
+		this.clampBottom = null;
+		this.clampLeft = null;
+		this.clampRight = null;
+		
+		this.owner.shape.update(this.owner.x, this.owner.y);
+		
+		if(this.trackMe){
+			this.trackMe++;
+			console.log('ResolB (' + this.tracking + ': ' + this.trackMe + '): ' + (this.carrier?'{ox:' + this.owner.x + ', oy:' + this.owner.y + ', cx:' + this.carrier.x + ', cy:' + this.carrier.y + ', lastX:' + this.lastCarrierX + ', lastY:' + this.lastCarrierY + ', down:' + this.clampBottom + '}':'No Carrier!'));
+		}
+	};
+	
+	proto['hit-solid'] = function(collisionInfo){
+		if(this.trackMe){
+			this.trackMe++;
+			console.log('ColDeA (' + this.tracking + ': ' + this.trackMe + '): ' + (this.carrier?'{ox:' + this.owner.x + ', oy:' + this.owner.y + ', cx:' + this.carrier.x + ', cy:' + this.carrier.y + ', lastX:' + this.lastCarrierX + ', lastY:' + this.lastCarrierY + ', down:' + this.clampBottom + '}':'No Carrier!'));
+		}
+		if(collisionInfo.y > 0){
+			this.updateCarrier(collisionInfo.entity, 'down',  collisionInfo.shape);
+		} else if(collisionInfo.y < 0){
+			this.updateCarrier(collisionInfo.entity, 'up',    collisionInfo.shape);
+		} else if(collisionInfo.x < 0){
+			this.updateCarrier(collisionInfo.entity, 'left',  collisionInfo.shape);
+		} else if(collisionInfo.x > 0){
+			this.updateCarrier(collisionInfo.entity, 'right', collisionInfo.shape);
+		}
+		if(this.trackMe){
+			this.trackMe++;
+			console.log('ColDeB (' + this.tracking + ': ' + this.trackMe + '): ' + (this.carrier?'{ox:' + this.owner.x + ', oy:' + this.owner.y + ', cx:' + this.carrier.x + ', cy:' + this.carrier.y + ', lastX:' + this.lastCarrierX + ', lastY:' + this.lastCarrierY + ', down:' + this.clampBottom + '}':'No Carrier!'));
+		}
+	};
+	
+	proto.updateCarrier = function(entity, direction, shape){
+		if(this.portableDirections[direction]){
+			if(entity !== this.carrier){
+				this.carrier = entity;
+				this.lastCarrierX = this.carrier.x;
+				this.lastCarrierY = this.carrier.y;
+			}
+			this.carrierConnected = true;
+			switch(direction){
+			case 'down':
+				this.clampBottom = this.owner.shape.getAABB().halfHeight + shape.getAABB().halfHeight; break;
+			case 'up':
+				this.clampTop    = this.owner.shape.getAABB().halfHeight + shape.getAABB().halfHeight; break;
+			case 'left':
+				this.clampLeft   = this.owner.shape.getAABB().halfWidth  + shape.getAABB().halfWidth;  break;
+			case 'right':
+				this.clampRight  = this.owner.shape.getAABB().halfWidth  + shape.getAABB().halfWidth;  break;
+			}
+		}
+	};	
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   logic-pushable - ../src/js/entity/logic-pushable.js
+ */
+platformer.components['logic-pushable'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		var self = this;
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['layer:logic', 'push-entity', 'hit-solid']);
+		
+		this.vX = definition.velocityX || 0; 
+		this.vY = definition.velocityY || 0;
+		this.maxVX = definition.maxVelocityX || definition.maxVelocity || 3;
+		this.maxVY = definition.maxVelocityY || definition.maxVelocity || 3;
+		this.yPush = definition.push || definition.yPush || .01;
+		this.xPush = definition.push || definition.xPush || .01;
+		this.currentPushX = 0;
+		this.currentPushY = 0;
+	};
+	var proto = component.prototype;
+	
+	proto['layer:logic'] = function(deltaT){
+		if(this.currentPushY){
+			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * deltaT;
+			if (this.vY > this.maxVY)
+			{
+				this.vY = this.maxVY;
+			}
+		}
+		if(this.currentPushX){
+			this.vX += (this.currentPushX / Math.abs(this.currentPushX)) * this.xPush * deltaT;
+			if (this.vX > this.maxVX)
+			{
+				this.vX = this.maxVX;
+			}
+		}
+		
+		this.owner.x += (this.vX * deltaT);
+		this.owner.y += (this.vY * deltaT);
+		
+		this.currentPushX = 0;
+		this.currentPushY = 0;
+		this.vX = 0;
+		this.vY = 0;
+	};
+	
+	proto['push-entity'] = function(collisionInfo){
+		this.currentPushX -= (collisionInfo.x || 0);
+		this.currentPushY -= (collisionInfo.y || 0);
+	};
+	
+	proto['hit-solid'] = function(collisionInfo){
+		if(((collisionInfo.y > 0) && (this.vY > 0)) || ((collisionInfo.y < 0) && (this.vY < 0))){
+			this.vY = 0;
+		} else if(((collisionInfo.y < 0) && (this.vX < 0)) || ((collisionInfo.x > 0) && (this.vX > 0))){
+			this.vX = 0;
+		}
+		return true;
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value){
+			self[messageId](value);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   logic-counter - ../src/js/entity/logic-counter.js
+ */
+platformer.components['logic-counter'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.count = 0;
+		if(definition.message)
+		{
+			this.addListener(definition.message);
+			this[definition.message] = this['change-count'];
+		}
+		this.addListeners(['change-count']);
+	};
+	var proto = component.prototype;
+	
+	proto['change-count'] = function(data){
+		this.count = data.count;
+		this.owner.trigger('refresh-count', this.count);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -4498,6 +4959,9 @@ platformer.components['collision-basic'] = (function(){
 		this.owner.getAABB = function(){
 			return self.getAABB();
 		};
+		this.owner.getPreviousAABB = function(){
+			return self.getPreviousAABB();
+		};
 		
 		this.owner.collisionType = definition.collisionType || 'none';
 		this.owner.solidCollisions = [];
@@ -4538,7 +5002,6 @@ platformer.components['collision-basic'] = (function(){
 	
 	
 	proto['load'] = function(resp){
-		
 	};
 	
 	proto['layer:prep-collision'] = function(){ //TODO: Gravity-sensitive solids collision shapes break away from their owner due to this event not being fired - DDD
@@ -4549,11 +5012,15 @@ platformer.components['collision-basic'] = (function(){
 	proto['layer:relocate'] = function(positionXY){
 		this.owner.x = positionXY[0] - this.owner.shape.getXOffset();
 		this.owner.y = positionXY[1] - this.owner.shape.getYOffset();
-		this.owner.shape.setXY(positionXY[0], positionXY[1]);
+		this.owner.shape.reset(this.owner.x, this.owner.y);
 	};
 	
 	proto.getAABB = function(){
 		return this.owner.shape.getAABB();
+	};
+	
+	proto.getPreviousAABB = function(){
+		return this.owner.shape.getPreviousAABB();
 	};
 	
 	proto.routeTileCollision = function(axis, dir, collisionInfo){
@@ -4573,7 +5040,7 @@ platformer.components['collision-basic'] = (function(){
 				return this.owner.resolveTileCollision('up', collisionInfo);
 			}
 		}
-		return false;
+		return true;
 	};
 	
 	proto.routeSolidCollision = function(axis, dir, collisionInfo)
@@ -4594,7 +5061,7 @@ platformer.components['collision-basic'] = (function(){
 				return this.owner.resolveSolidCollision('up', collisionInfo);
 			}
 		}
-		return false;
+		return true;
 	};
 	
 	proto.routeSoftCollision = function(collisionInfo){

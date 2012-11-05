@@ -15,6 +15,13 @@ platformer.components['entity-container'] = (function(){
 		this.owner.addEntity    = function(entity){return self.addEntity(entity);};
 		this.owner.removeEntity = function(entity){return self.removeEntity(entity);};
 		
+		if(definition.childEvents){
+			for(var event in definition.childEvents){
+				this[definition.childEvents[event]] = childBroadcast(definition.childEvents[event]);
+				this.addListener(definition.childEvents[event]);
+			}
+		}
+		
 		this.addListeners(['load', 'add-entity', 'remove-entity']);
 	};
 	var proto = component.prototype;
@@ -60,6 +67,26 @@ platformer.components['entity-container'] = (function(){
 		    }
 	    }
 	    return false;
+	};
+	
+	var childBroadcast = function(event){
+		if(typeof event === 'string'){
+			return function(value){
+				for (var x = 0; x < this.entities.length; x++)
+				{
+					this.entities[x].trigger(event, value);
+				}
+			};
+		} else {
+			return function(value){
+				for (var e in event){
+					for (var x = 0; x < this.entities.length; x++)
+					{
+						this.entities[x].trigger(event[e], value);
+					}
+				}
+			};
+		}
 	};
 	
 	

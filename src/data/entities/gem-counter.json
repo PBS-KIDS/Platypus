@@ -1,0 +1,21 @@
+/*
+ * 
+ */
+{
+	"id": "gem-counter",
+	"components":[
+		{
+			"type": "logic-counter",
+			"message": "count-gems"
+		},{
+			"type": "render-counter",
+			"scaleX": 20,
+            "scaleY": 20,
+            "color": "#FFF"
+		}
+	],
+	"properties":{
+		"x": 3800,
+		"y": 175
+	}
+}

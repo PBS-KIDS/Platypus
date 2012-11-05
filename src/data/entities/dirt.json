@@ -16,7 +16,7 @@
 			    "pickaxe": "destroy-me"
 			}
         },{
-            "type": "destroy-me", "delay": 300
+            "type": "destroy-me", "delay": 250
         },{
             "type": "audio",
             "audioMap": {

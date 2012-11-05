@@ -9,6 +9,7 @@ platformer.classes.collisionShape = (function(){
 		this.subType = '';
 		this.points = points; //Points should distributed as if the 0,0 is the focal point of the object.
 		this.aABB = undefined;
+		this.prevAABB = undefined;
 		
 		var width = 0;
 		var height = 0; 
@@ -51,11 +52,15 @@ platformer.classes.collisionShape = (function(){
 			} 
 		}
 		
-		this.aABB = new platformer.classes.aABB(this.x, this.y, width, height);
+		this.aABB     = new platformer.classes.aABB(this.x, this.y, width, height);
+		this.prevAABB = new platformer.classes.aABB(this.x, this.y, width, height);
 	};
 	var proto = collisionShape.prototype;
 	
 	proto.update = function(x, y){
+		var swap = this.prevAABB; 
+		this.prevAABB = this.aABB;
+		this.aABB     = swap;
 		this.prevX = this.x;
 		this.prevY = this.y;
 		this.x = x + this.offset[0];
@@ -63,9 +68,12 @@ platformer.classes.collisionShape = (function(){
 		this.aABB.move(this.x, this.y);
 	};
 	
-	proto.setXY = function (x, y) {
-		this.x = x;
-		this.y = y;
+	proto.reset = function (x, y) {
+		this.prevX = x + this.offset[0];
+		this.prevY = y + this.offset[1];
+		this.x = x + this.offset[0];
+		this.y = y + this.offset[1];
+		this.prevAABB.move(this.x, this.y);
 		this.aABB.move(this.x, this.y);
 	};
 	
@@ -95,6 +103,10 @@ platformer.classes.collisionShape = (function(){
 	
 	proto.getAABB = function(){
 		return this.aABB;
+	};
+	
+	proto.getPreviousAABB = function(){
+		return this.prevAABB;
 	};
 	
 	proto.getXOffset = function(){

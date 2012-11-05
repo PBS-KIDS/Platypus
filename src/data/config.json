@@ -78,7 +78,7 @@
             {"id": "render-dom",         "src": "../js/layer/render-dom.js"},
 			{"id": "lc-logic",           "src": "../js/layer/lc-logic.js"},
 			{"id": "lc-camera",          "src": "../js/layer/lc-camera.js"},
-			{"id": "lc-basic-collision", "src": "../js/layer/lc-basic-collision.js"},
+			{"id": "collision-group",    "src": "../js/layer/collision-group.js"},
             {"id": "audio",              "src": "../js/entity/audio.js"},
             {"id": "broadcast-events",   "src": "../js/entity/broadcast-events.js"},
             {"id": "change-scene",       "src": "../js/entity/change-scene.js"},
@@ -90,13 +90,18 @@
 			{"id": "render-tiles",       "src": "../js/entity/render-tiles.js"},
             {"id": "render-animation",   "src": "../js/entity/render-animation.js"},
             {"id": "render-image",       "src": "../js/entity/render-image.js"},
-            {"id": "render-collectible-manager",       "src": "../js/entity/render-collectible-manager.js"},
+            {"id": "render-gui",       	 "src": "../js/entity/render-gui.js"},
+            {"id": "render-counter",       	 "src": "../js/entity/render-counter.js"},
             {"id": "logic-button",       "src": "../js/entity/logic-button.js"},
             {"id": "logic-collectible-manager",       "src": "../js/entity/logic-collectible-manager.js"},
             {"id": "logic-directional-movement", "src": "../js/entity/logic-directional-movement.js"},
             {"id": "logic-hero", 		 "src": "../js/entity/logic-hero.js"},
             {"id": "logic-gem", 		 "src": "../js/entity/logic-gem.js"},
+            {"id": "logic-gui", 		 "src": "../js/entity/logic-gui.js"},
             {"id": "logic-gravity",      "src": "../js/entity/logic-gravity.js"},
+            {"id": "logic-portable",     "src": "../js/entity/logic-portable.js"},
+            {"id": "logic-pushable",     "src": "../js/entity/logic-pushable.js"},
+            {"id": "logic-counter",     "src": "../js/entity/logic-counter.js"},
 			{"id": "collision-basic",    "src": "../js/entity/collision-basic.js"},
 			{"id": "collision-tiles",    "src": "../js/entity/collision-tiles.js"}
 		],
@@ -117,8 +122,10 @@
             {"id": "dirt",            "src": "entities/dirt.json"},
             {"id": "gem",             "src": "entities/gem.json"},
             {"id": "pickaxe",         "src": "entities/pickaxe.json"},
+            {"id": "gem-counter",     "src": "entities/gem-counter.json"},
             {"id": "title-screen",    "src": "entities/title-screen.json"},
-            {"id": "collectible-manager",    "src": "entities/collectible-manager.json"}
+            {"id": "collectible-manager",    "src": "entities/collectible-manager.json"},
+            {"id": "gui",    		  "src": "entities/gui.json"}
 		],
 		"includes": [
 			{"id": "EaselJS",   "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
@@ -134,9 +141,8 @@
             {"id": "GameCSS",   "src": "../css/game.css"}
 		],
 		"scenes": [ // JSON files describing scenes
-			{"id": "menu",    "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "scene-1", "src": "scenes/scene-1.json"},
-            {"id": "scene-2", "src": "scenes/scene-2.json"}
+			{"id": "menu",        "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+            {"id": "scene-level", "src": "scenes/scene-level.json"}
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

@@ -7,17 +7,19 @@ platformer.components['change-scene'] = (function(){
 
 		this.scene = definition.scene;
 		this.transition = definition.transition || 'instant';
+		this.overrides = definition.overrides || false;
 		
 		this.addListeners(['new-scene']);
 	};
 	var proto = component.prototype;
 	
-	proto['new-scene'] = function(resp){
-		var resp   = resp || this,
+	proto['new-scene'] = function(response){
+		var resp   = response || this,
 		scene      = resp.scene || this.scene,
 		transition = resp.transition || this.transition;
+		overrides  = resp.overrides  || this.overrides;
 
-		platformer.game.loadScene(scene, transition);
+		platformer.game.loadScene(scene, transition, overrides);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

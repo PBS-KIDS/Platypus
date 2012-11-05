@@ -1,32 +1,20 @@
-platformer.components['logic-collectible-manager'] = (function(){
+platformer.components['logic-gui'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['load', 'peer-entity-added', 'gem-collected']);
-		
-		this.gemsCollected = 0;
-		this.gemTotal = 0;
+		this.addListeners(['load', 'gui-gem-collected']);
 	};
 	var proto = component.prototype;
 	
 	proto['load'] = function(resp){
-		
+		this.owner.trigger('logical-state', {state: 'default'});
 	};
 	
-	proto['peer-entity-added'] = function(entity){
-		if(entity.type == 'gem')
-		{
-			this.gemTotal++;
-			//this.owner.trigger('logic-gem-added', {total: this.gemTotal});
-		}
-	};
-	
-	proto['gem-collected'] = function(resp){
-		this.gemsCollected++;
-		this.owner.trigger("broadcast-gem-collected", {count:this.gemsCollected, debug:true});
+	proto['gui-gem-collected'] = function(data){
+		this.owner.trigger('count-gems', {count: data.count, debug: true});
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

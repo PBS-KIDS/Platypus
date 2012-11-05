@@ -1,32 +1,44 @@
-platformer.components['logic-collectible-manager'] = (function(){
+platformer.components['render-gui'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['load', 'peer-entity-added', 'gem-collected']);
+		this.addListeners(['layer:render', 'layer:render-load', 'logic-gem-added', 'logic-gem-collected']);
 		
-		this.gemsCollected = 0;
-		this.gemTotal = 0;
+		this.background = undefined;
+		this.stage = undefined;
+		
+		var spriteSheetSpec = {
+			images: definition.spriteSheet.images.slice(),
+			frames: definition.spriteSheet.frames,
+			animations: definition.spriteSheet.animations
+		};
+		for (var x = 0; x < spriteSheetSpec.images.length; x++)
+		{
+			spriteSheetSpec.images[x] = platformer.assets[spriteSheetSpec.images[x]];
+		}
+		var spriteSheet = new createjs.SpriteSheet(spriteSheetSpec);
+		this.background = new createjs.BitmapAnimation(spriteSheet);
+		this.currentAnimation = 'default';
+		this.background.scaleX = this.owner.scaleX || 1;
+		this.background.scaleY = this.owner.scaleY || 1;
+		if(this.currentAnimation){
+			this.background.gotoAndPlay(this.currentAnimation);
+		}
 	};
 	var proto = component.prototype;
 	
-	proto['load'] = function(resp){
+	proto['layer:render-load'] = function(resp){
+		this.stage = resp.stage;
+		this.stage.addChild(this.background);
+		this.background.x = 200;
+		this.background.y = 200;
+	};
+	
+	proto['layer:render'] = function(resp){
 		
-	};
-	
-	proto['peer-entity-added'] = function(entity){
-		if(entity.type == 'gem')
-		{
-			this.gemTotal++;
-			//this.owner.trigger('logic-gem-added', {total: this.gemTotal});
-		}
-	};
-	
-	proto['gem-collected'] = function(resp){
-		this.gemsCollected++;
-		this.owner.trigger("broadcast-gem-collected", {count:this.gemsCollected, debug:true});
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

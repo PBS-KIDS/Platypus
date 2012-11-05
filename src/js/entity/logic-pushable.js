@@ -1,35 +1,51 @@
-platformer.components['logic-gravity'] = (function(){
+platformer.components['logic-pushable'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		var self = this;
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'hit-solid']);
+		this.addListeners(['layer:logic', 'push-entity', 'hit-solid']);
 		
 		this.vX = definition.velocityX || 0; 
 		this.vY = definition.velocityY || 0;
 		this.maxVX = definition.maxVelocityX || definition.maxVelocity || 3;
 		this.maxVY = definition.maxVelocityY || definition.maxVelocity || 3;
-		this.yGravity = definition.gravity || definition.yGravity || .01;
-		this.xGravity = definition.xGravity || 0;
+		this.yPush = definition.push || definition.yPush || .01;
+		this.xPush = definition.push || definition.xPush || .01;
+		this.currentPushX = 0;
+		this.currentPushY = 0;
 	};
 	var proto = component.prototype;
 	
 	proto['layer:logic'] = function(deltaT){
-		this.vY += this.yGravity * deltaT;
-		if (this.vY > this.maxVY)
-		{
-			this.vY = this.maxVY;
+		if(this.currentPushY){
+			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * deltaT;
+			if (this.vY > this.maxVY)
+			{
+				this.vY = this.maxVY;
+			}
 		}
-		this.vX += this.xGravity * deltaT;
-		if (this.vX > this.maxVX)
-		{
-			this.vX = this.maxVX;
+		if(this.currentPushX){
+			this.vX += (this.currentPushX / Math.abs(this.currentPushX)) * this.xPush * deltaT;
+			if (this.vX > this.maxVX)
+			{
+				this.vX = this.maxVX;
+			}
 		}
 		
 		this.owner.x += (this.vX * deltaT);
 		this.owner.y += (this.vY * deltaT);
+		
+		this.currentPushX = 0;
+		this.currentPushY = 0;
+		this.vX = 0;
+		this.vY = 0;
+	};
+	
+	proto['push-entity'] = function(collisionInfo){
+		this.currentPushX -= (collisionInfo.x || 0);
+		this.currentPushY -= (collisionInfo.y || 0);
 	};
 	
 	proto['hit-solid'] = function(collisionInfo){

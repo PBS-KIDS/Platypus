@@ -7,6 +7,10 @@
 		{
             "type": "logic-gravity"
         },{
+            "type": "logic-pushable"
+        },{
+            "type": "logic-portable"
+        },{
 			"type": "collision-basic", 
 		 	"shape": {
 	 			"offset": [0,-120],
@@ -15,10 +19,10 @@
 	 		},
 			"collisionType": "block",
             "solidCollisions": {
-                "block": "",
-                "dirt": "",
-                "hero": "",
-                "tiles": ""
+                "block": "hit-solid",
+                "dirt": "hit-solid",
+                "hero": ["push-entity", "hit-solid"],
+                "tiles": "hit-solid"
             }
 		},{
 			"type": "render-image", 
@@ -33,10 +37,10 @@
             "regY":   120,
             "scaleX": 2,
             "scaleY": 2
-//		},{
-//		    "type": "render-debug",
-//            "regX": 120,
-//            "regY": 240
+		},{
+		    "type": "render-debug",
+            "regX": 120,
+            "regY": 240
         }
 	],
 	"properties":{
