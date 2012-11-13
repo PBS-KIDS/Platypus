@@ -1,8 +1,9 @@
 {
 	"layers":[
 		{
-			"id": "action",
+			"id": "action-layer",
 			"components": [
+				{"type": "lc-ai"},
 				{"type": "lc-logic"},
 				{"type": "collision-group"},
 				{
@@ -14,8 +15,7 @@
 				{"type": "layer-controller"},
 				{"type": "entity-container", 
 				 	"entities": [{"type": "collectible-manager"}]
-				},
-				{
+				},{
 				    "type": "tiled-loader",
 				    "level": "#levelName#",
 				    "unitsPerPixel": 10,
@@ -25,7 +25,7 @@
 				}
 			]
         },{
-            "id": "multitouch-interface",
+            "id": "multitouch-interface-layer",
             "filter": {
                 "includes": ["multitouch"]
             },
@@ -48,7 +48,7 @@
                 }
             ]
         },{
-            "id": "touch-interface",
+            "id": "touch-interface-layer",
             "filter": {
                 "includes": ["touch"],
                 "excludes": ["multitouch"]
@@ -74,7 +74,7 @@
 	             }
             ]
         },{
-            "id": "desktop-interface",
+            "id": "desktop-interface-layer",
             "filter": {
                 "excludes": ["touch"]
             },

@@ -162,7 +162,18 @@ platformer.components['tiled-loader'] = (function(){
 					//Copy properties from Tiled
 					properties = {};
 					for (x in entity.properties){
-						properties[x] = entity.properties[x];
+						//This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
+						var numberProperty = parseFloat(entity.properties[x]);
+						if (numberProperty == 0 || (!numberProperty) == false)
+						{
+							properties[x] = numberProperty;
+						} else if(entity.properties[x] == 'true') {
+							properties[x] = true;
+						} else if(entity.properties[x] == 'false') {
+							properties[x] = false;
+						}else {
+							properties[x] = entity.properties[x];
+						}
 					}
 					properties.width  = (entity.width  || tileWidth)  * this.unitsPerPixel;
 					properties.height = (entity.height || tileHeight) * this.unitsPerPixel;

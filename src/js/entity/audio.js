@@ -72,7 +72,7 @@ platformer.components['audio'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render'] = function(deltaT){
+	proto['layer:render'] = function(resp){
 		if (this.destroyMe && this.timedAudioClips.length == 0)
 		{
 			this.timedAudioClips = undefined;
@@ -85,7 +85,7 @@ platformer.components['audio'] = (function(){
 				newArray = [];
 				for (i in this.timedAudioClips){
 					audioClip = this.timedAudioClips[i];
-					audioClip.progress += deltaT;
+					audioClip.progress += resp.deltaT;
 					if(audioClip.progress >= audioClip.length){
 						audioClip.audio.stop();
 					} else {

@@ -4,6 +4,10 @@ platformer.classes.scene = (function(){
 		supportedLayer = true;
 		this.rootElement = rootElement;
 		this.layers = [];
+		this.tickContent = {
+			deltaT: 0//,
+			//debug: true
+		};
 		for(var layer in layers){
 			supportedLayer = true;
 			if(layers[layer].filter){
@@ -24,19 +28,25 @@ platformer.classes.scene = (function(){
 				}
 			}
 			if (supportedLayer){
-				this.layers.push(new platformer.classes.layer(layers[layer], this.rootElement));
+				this.layers.push(new platformer.classes.entity(layers[layer], {
+					properties:{
+						rootElement: this.rootElement
+					}
+				}));
 			}
 		}
 	};
 	var proto = scene.prototype;
 	
 	proto.tick = function(deltaT){
+		this.tickContent.deltaT = deltaT;
+		
 		for(var layer in this.layers){
-			this.layers[layer].tick(deltaT);
+			this.layers[layer].trigger('tick', this.tickContent);
 		}
 	};
 
-	proto.destroy = function(deltaT){
+	proto.destroy = function(){
 		for(var layer in this.layers){
 			this.layers[layer].destroy();
 		}

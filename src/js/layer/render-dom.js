@@ -5,8 +5,7 @@ platformer.components['render-dom'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.tickMessages = ['render'];
-		this.addListeners(['child-entity-added','render', 'camera-update']);
+		this.addListeners(['tick', 'child-entity-added','render', 'camera-update']);
 		
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
@@ -33,10 +32,10 @@ platformer.components['render-dom'] = (function(){
 		}
 	};
 	
-	proto['render'] = function(deltaT){
+	proto['tick'] = proto['render'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:render', deltaT))
+			if(!this.entities[x].trigger('layer:render', resp))
 			{
 				this.entities.splice(x, 1);
 			}

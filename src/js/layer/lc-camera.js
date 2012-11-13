@@ -9,8 +9,7 @@ platformer.components['lc-camera'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.tickMessages = ['camera'];
-		this.addListeners(['resize', 'orientationchange', 'camera', 'load', 'world-loaded', 'child-entity-added']);  
+		this.addListeners(['tick', 'resize', 'orientationchange', 'camera', 'load', 'world-loaded', 'child-entity-added']);  
 		
 		//The dimensions of the camera in the window
 		this.window = {
@@ -93,7 +92,8 @@ platformer.components['lc-camera'] = (function(){
 		}
 	};
 	
-	proto['camera'] = function(deltaT){
+	proto['tick'] = proto['camera'] = function(resp){
+		var deltaT = resp.deltaT;
 		
 		switch (this.state)
 		{

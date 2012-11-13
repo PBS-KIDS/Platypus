@@ -1,0 +1,51 @@
+/*
+ * 
+ */
+{
+	"id": "briar",
+	"components":[
+		{
+			"type": "logic-briar"
+		},
+		{
+			"type": "collision-basic", 
+		 	"shape": {
+	 			"offset": [0,-120],
+	 			"type": "rectangle",
+	 		   	"points": [[-120,-120],[120, 120]]
+	 		},
+			"collisionType": "briar",
+            "solidCollisions": {
+            	"hero": "caught-hero"
+           	}
+		},{
+			"type": "render-animation",
+            "spriteSheet": {
+				"images": ["briar"],
+				"frames": {
+					"width":  120,
+					"height": 120,
+					"regY":   120,
+					"regX":   60
+				},
+				"animations": {
+					"bottom": [0],
+					"top": [3],
+					"left": [1],
+					"right":  [2]
+				}
+			},
+			"scaleX": 2,
+			"scaleY": 2
+//		},{
+//		    "type": "render-debug",
+//            "regX": 60,
+//            "regY": 120
+        }
+	],
+	"properties":{
+		"x": 10,
+		"y": 10,
+		"linkId": ''
+	}
+}

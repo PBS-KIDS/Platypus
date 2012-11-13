@@ -57,7 +57,9 @@ platformer.classes.game = (function(){
 	proto = game.prototype;
 	
 	proto.tick = function(deltaT){
-		if(this.currentScene) this.currentScene.tick(deltaT);
+		if(this.currentScene){
+			this.currentScene.tick(deltaT);
+		}
 	};
 	
 	proto.loadScene = function(sceneId, transition, overrides){

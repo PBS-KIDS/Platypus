@@ -6,8 +6,7 @@ platformer.components['lc-logic'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.tickMessages = ['logic'];
-		this.addListeners(['child-entity-added', 'logic']);  
+		this.addListeners(['tick', 'child-entity-added', 'logic']);  
 		
 	};
 	var proto = component.prototype; 
@@ -26,10 +25,10 @@ platformer.components['lc-logic'] = (function(){
 		}
 	};
 
-	proto['logic'] = function(deltaT){
+	proto['tick'] = proto['logic'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:logic', deltaT))
+			if(!this.entities[x].trigger('layer:logic', resp))
 			{
 				this.entities.splice(x, 1);
 			}

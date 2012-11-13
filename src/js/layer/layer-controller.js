@@ -126,8 +126,7 @@ platformer.components['layer-controller'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.tickMessages = ['check-inputs'];
-		this.addListeners(['child-entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
+		this.addListeners(['tick', 'child-entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
 	},
 	proto = component.prototype; 
 
@@ -145,7 +144,7 @@ platformer.components['layer-controller'] = (function(){
 		}
 	};
 	
-	proto['check-inputs'] = function(resp){
+	proto['tick'] = proto['check-inputs'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
 			if(!this.entities[x].trigger('controller:tick'))	

@@ -13,27 +13,54 @@ platformer.components['collision-basic'] = (function(){
 		}
 	};
 	var component = function(owner, definition){
-		var self = this;
-		this.owner = owner;
-		
+		var x  = 0, 
+		self   = this,
+		shapes = definition.shapes || (definition.shape?[definition.shape]:[]);
+
+		this.owner    = owner;
+		this.lastX    = this.owner.x;
+		this.lastY    = this.owner.y;
+		this.aabb     = new platformer.classes.aABB();
+		this.prevAABB = new platformer.classes.aABB();
+		this.canCollide = true;
+
 		// Messages that this component listens for
 		this.listeners = [];
 
 		this.addListeners(['load',
-		                   'layer:prep-collision', 
+		                   'collide-on',
+		                   'collide-off',
+		                   'prepare-for-collision', 
 		                   'layer:resolve-collision', 
 		                   'layer:resolve-solid-collision', 
-		                   'layer:relocate']);
-		
-		this.owner.shape = new platformer.classes.collisionShape([this.owner.x, this.owner.y],definition.shape.type, definition.shape.points, definition.shape.offset, definition.shape.radius); 
+		                   'relocate-entity']);
+		this.shapes = [];
+		this.entities = undefined;
+		for (x in shapes){
+			this.shapes.push(new platformer.classes.collisionShape([this.owner.x, this.owner.y], shapes[x].type, shapes[x].points, shapes[x].offset, shapes[x].radius));
+			this.prevAABB.include(this.shapes[x].getAABB());
+			this.aabb.include(this.shapes[x].getAABB());
+		}
+
 		this.owner.getAABB = function(){
 			return self.getAABB();
 		};
 		this.owner.getPreviousAABB = function(){
 			return self.getPreviousAABB();
 		};
+		this.owner.getShapes = function(){
+			return self.getShapes();
+		};
+		this.owner.getPreviousX = function(){
+			return self.lastX;
+		};
+		this.owner.getPreviousY = function(){
+			return self.lastY;
+		};
 		
 		this.owner.collisionType = definition.collisionType || 'none';
+		//this.prevCollisionType = 'none';
+
 		this.owner.solidCollisions = [];
 		if(definition.solidCollisions){
 			for(var i in definition.solidCollisions){
@@ -74,23 +101,106 @@ platformer.components['collision-basic'] = (function(){
 	proto['load'] = function(resp){
 	};
 	
-	proto['layer:prep-collision'] = function(){ //TODO: Gravity-sensitive solids collision shapes break away from their owner due to this event not being fired - DDD
-		this.owner.shape.update(this.owner.x, this.owner.y);
+	proto['collide-on'] = function(resp){
+		//this.owner.collisionType = this.prevCollisionType;
+		this.owner.parent.trigger('add-collision-entity', this.owner);
+	};
+	
+	proto['collide-off'] = function(resp){
+		this.owner.parent.trigger('remove-collision-entity', this.owner);
+		//this.prevCollisionType = this.owner.collisionType;
+		//this.owner.collisionType = 'none';
+	};
+	
+	proto['prepare-for-collision'] = function(resp){
+		var swap = this.prevAABB; 
+		this.prevAABB = this.aabb;
+		this.aabb     = swap;
+
+/*		if(!this.entities){
+			if(this.owner.getCollisionGroup){
+				this.entities = this.owner.getCollisionGroup();
+			}
+		}
+				
+		if(this.entities && (this.entities.length > 1)){
+			var goalX    = this.owner.x - this.lastX,
+			goalY        = this.owner.y - this.lastY;
+
+			this.aabb.reset();
+			for (var x = 0; x < this.shapes.length; x++){
+				this.aabb.include(this.shapes[x].getAABB());
+			}
+
+			this.owner.x = this.lastX;
+			this.owner.y = this.lastY;
+			this.owner.collisionUnresolved = false;
+			this.owner.trigger('check-collision-group', resp);
+//			for (var x = 0; x < this.entities.length; x++){
+//				this.entities[x].x += goalX;
+//				this.entities[x].y += goalY;
+//				entities[x].collisionUnresolved = true; // to ensure they are again tested against parent collisions
+//			}
+			this.owner.collisionUnresolved = true;
+			
+			this.aabb.reset();
+			for (var x = 0; x < this.shapes.length; x++){
+				this.shapes[x].update(this.owner.x, this.owner.y);
+				this.aabb.include(this.shapes[x].getAABB());
+			}
+			for (var x = 0; x < this.entities.length; x++){
+				this.aabb.include(this.entities[x].getAABB());
+			}
+
+			this.owner.x += goalX;
+			this.owner.y += goalY;
+			this.aabb.move(this.aabb.x + goalX, this.aabb.y + goalY);
+		} else {*/
+		
+		this.aabb.reset();
+		for (var x = 0; x < this.shapes.length; x++){
+			this.shapes[x].update(this.owner.x, this.owner.y);
+			this.aabb.include(this.shapes[x].getAABB());
+		}
+		//}
 	};
 	
 	
-	proto['layer:relocate'] = function(positionXY){
-		this.owner.x = positionXY[0] - this.owner.shape.getXOffset();
-		this.owner.y = positionXY[1] - this.owner.shape.getYOffset();
-		this.owner.shape.reset(this.owner.x, this.owner.y);
+	proto['relocate-entity'] = function(resp){
+		this.owner.x = resp.x;// - this.shapes[0].getXOffset();
+		this.owner.y = resp.y;// - this.shapes[0].getYOffset();
+
+		this.aabb.reset();
+		for (var x in this.shapes){
+			this.shapes[x].reset(this.owner.x, this.owner.y);
+			this.aabb.include(this.shapes[x].getAABB());
+		}
+
+		this.lastX = this.owner.x;
+		this.lastY = this.owner.y;
+//		this.aabb.move(positionXY[0], positionXY[1]);
+//		this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
 	};
 	
 	proto.getAABB = function(){
-		return this.owner.shape.getAABB();
+		return this.aabb;
 	};
 	
 	proto.getPreviousAABB = function(){
-		return this.owner.shape.getPreviousAABB();
+		return this.prevAABB;
+	};
+	
+	proto.getShapes = function(){
+		var shapes = this.shapes.slice();
+		
+/*		if(this.entities && (this.entities.length > 1)){
+			for (var x = 0; x < this.entities.length; x++){
+				if(this.entities[x] !== this.owner){
+					shapes = shapes.concat(this.entities[x].shapes || this.entities[x].getShapes());
+				}
+			}
+		}*/
+		return shapes;
 	};
 	
 	proto.routeTileCollision = function(axis, dir, collisionInfo){

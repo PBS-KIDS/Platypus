@@ -18,7 +18,8 @@ platformer.components['logic-pushable'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(deltaT){
+	proto['layer:logic'] = function(resp){
+		var deltaT = resp.deltaT;
 		if(this.currentPushY){
 			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * deltaT;
 			if (this.vY > this.maxVY)

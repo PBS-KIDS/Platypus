@@ -45,7 +45,7 @@ platformer.components['logic-directional-movement'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(deltaT){
+	proto['layer:logic'] = function(resp){
 		var vX    = 0,
 		vY        = 0,
 		upLeft    = this.upLeft    || (this.up   && this.left),
@@ -97,13 +97,11 @@ platformer.components['logic-directional-movement'] = (function(){
 			this.owner.state = 'standing';
 		}
 		
-		this.owner.x += (vX * deltaT);
-		this.owner.y += (vY * deltaT);
+		this.owner.x += (vX * resp.deltaT);
+		this.owner.y += (vY * resp.deltaT);
 		
 		this.owner.trigger('logical-state', {state: this.owner.state + '-' + this.owner.heading});
 		this.owner.trigger(this.owner.state);
-		
-		if(!deltaT) console.warn('WHAT!?!');
 	};
 	
 	proto['go-down']       = proto['go-south']     = processDirection('down');

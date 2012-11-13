@@ -1,0 +1,31 @@
+/*
+ * 
+ */
+{
+	"id": "clock",
+	"components":[
+		{
+			"type": "logic-timer"
+		},{
+			"type": "render-clock",
+			"scaleX": 20,
+            "scaleY": 20,
+            "color": "#FFF"
+		},{
+		    "type": "audio",
+		    "audioMap": {
+		        "half-minute-timer": {sound:"collect-gem", interrupt:"early"}
+		    }
+		}
+	],
+	"properties":{
+		"x": 2000,
+		"y": 175,
+		"alarmMessage": "half-minute-timer",
+		"updateMessage": "refresh-clock",
+	    "alarmTime": 30000,
+	    "isIncrementing": true,
+	    "isInterval": true,
+	    "time": 1000
+	}
+}

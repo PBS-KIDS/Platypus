@@ -62,6 +62,7 @@ platformer.components['entity-container'] = (function(){
 		    if(this.entities[x] === entity){
 		    	entity.parent = undefined;
 		    	this.entities.splice(x, 1);
+				this.owner.trigger('child-entity-removed', entity);
 		    	entity.destroy();
 			    return entity;
 		    }

@@ -16,7 +16,9 @@ platformer.components['logic-gravity'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(deltaT){
+	proto['layer:logic'] = function(resp){
+		var deltaT = resp.deltaT;
+		
 		this.vY += this.yGravity * deltaT;
 		if (this.vY > this.maxVY)
 		{

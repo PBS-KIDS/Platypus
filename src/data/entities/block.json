@@ -8,8 +8,8 @@
             "type": "logic-gravity"
         },{
             "type": "logic-pushable"
-        },{
-            "type": "logic-portable"
+//        },{
+//            "type": "logic-portable"
         },{
 			"type": "collision-basic", 
 		 	"shape": {
@@ -22,7 +22,9 @@
                 "block": "hit-solid",
                 "dirt": "hit-solid",
                 "hero": ["push-entity", "hit-solid"],
-                "tiles": "hit-solid"
+                "tiles": "hit-solid",
+                "beetle": "hit-solid",
+                "briar": "hit-solid"
             }
 		},{
 			"type": "render-image", 

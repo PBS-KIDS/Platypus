@@ -26,7 +26,7 @@ platformer.components['logic-collectible-manager'] = (function(){
 	
 	proto['gem-collected'] = function(resp){
 		this.gemsCollected++;
-		this.owner.trigger("broadcast-gem-collected", {count:this.gemsCollected, debug:true});
+		this.owner.trigger("broadcast-gem-collected", {count:this.gemsCollected});
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

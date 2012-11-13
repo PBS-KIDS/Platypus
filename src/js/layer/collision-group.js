@@ -1,5 +1,6 @@
 /**
- * Requires Owner entity to have 'entity-container' component 
+ * Uses 'entity-container' component messages if triggered to add to its collision list;
+ * also listens for explicit add/remove messages (useful in the absence of 'entity-container'). - DDD
  */
 platformer.components['collision-group'] = (function(){
 	var component = function(owner, definition){
@@ -8,24 +9,40 @@ platformer.components['collision-group'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.tickMessages = ['collision'];
-		this.addListeners(['load','child-entity-added','collision']);  
+		this.addListeners([
+		    'tick',
+		    'load',
+		    'child-entity-added',   'add-collision-entity',
+		    'child-entity-removed', 'remove-collision-entity',
+		    'check-collision-group'
+		]);  
 		//this.toResolve = [];
 		
+		var self = this;
+		this.owner.getCollisionGroup = function(){
+			return self.entities;
+		};
+		this.owner.getCollisionGroupAABB = function(){
+			return self.getAABB();
+		};
+		
 		this.entities = [];
+		this.collisionGroups = []; //defined here so we aren't continually recreating new arrays
 		this.entitiesByType = {};
 		this.terrain = undefined;
+		this.aabb     = new platformer.classes.aABB();
+		this.prevAABB = new platformer.classes.aABB();
 	};
 	var proto = component.prototype; 
 
-	proto['child-entity-added'] = function(entity){
+	proto['child-entity-added'] = proto['add-collision-entity'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
 		if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
 			this.terrain = entity;
 		} else {
 			for (var x = 0; x < messageIds.length; x++){
-				if (messageIds[x] == 'layer:prep-collision'){
+				if (messageIds[x] == 'prepare-for-collision'){
 					if(!this.entitiesByType[entity.collisionType]){
 						this.entitiesByType[entity.collisionType] = [];
 					}
@@ -37,53 +54,104 @@ platformer.components['collision-group'] = (function(){
 		}
 	};
 	
+	proto['child-entity-removed'] = proto['remove-collision-entity'] = function(entity){
+		var x = 0;
+
+		for (x in this.entitiesByType[entity.collisionType]) {
+			if(this.entitiesByType[entity.collisionType][x] === entity){
+				this.entitiesByType[entity.collisionType].splice(x, 1);
+				break;
+			}
+		}
+		for (x in this.entities) {
+			if(this.entities[x] === entity){
+				this.entities.splice(x, 1);
+				break;
+			}
+		}
+	};
+	
 	proto['load'] = function(){
 		
 	};
 	
-	proto['collision'] = function(deltaT){
-		this.prepareCollision(deltaT);
+	proto['tick'] = proto['check-collision-group'] = function(resp){
 
-		this.checkSolidCollisions(deltaT);
+		var swap = this.prevAABB,
+		goalX    = this.owner.x - this.lastX,
+		goalY    = this.owner.y - this.lastY;
+
+		this.prevAABB = this.aabb;
+		this.aabb     = swap;
 		
-		this.checkSoftCollisions(deltaT);
+		this.owner.x = this.lastX;
+		this.owner.y = this.lastY;
+		
+		this.checkGroupCollisions(resp);
+		this.checkSolidCollisions(resp);
+
+		this.aabb.reset();
+		for (var x = 0; x < this.entities.length; x++){
+			this.aabb.include(this.entities[x].getCollisionGroupAABB?this.entities[x].getCollisionGroupAABB():this.entities[x].getAABB());
+		}
+
+		this.owner.x += goalX;
+		this.owner.y += goalY;
+		this.aabb.move(this.aabb.x + goalX, this.aabb.y + goalY);
+
+		this.checkSoftCollisions(resp);
 	};
 	
-	proto.prepareCollision = function ()
-	{
-		for (var x = this.entities.length - 1; x > -1; x--)
-		{
-			if(!this.entities[x].trigger('layer:prep-collision'))
-			{
-				var entities = this.entitiesByType[this.entities[x].collisionType];
-				for (var y = entities.length - 1; y > -1; y--)
-				{
-					if(entities[y] === this.entities[x]){
-						entities.splice(y, 1);
-						break;
-					}
-				}
-				this.entities.splice(x, 1);
+	proto.getAABB = function(){
+		return this.aabb;
+	};
+
+	proto.checkGroupCollisions = function (resp){
+		var groups = this.collisionGroups;
+		
+		groups.length = 0;
+		for (var x = 0; x < this.entities.length; x++){
+			if(this.entities[x] !== this.owner){
+				if(this.entities[x].trigger('check-collision-group', resp)){
+					groups.push(this.entities[x]);
+				};
 			}
 		}
+
+		this.resolveCollisionList(groups, true);
 	};
-	
-	proto.checkSolidCollisions = function (deltaT)
-	{
-		var x = 0,
+
+	proto.checkSolidCollisions = function (resp){
+		var x    = 0,
+		y        = 0,
 		entities = [];
 		
-		for(x = 0; x < this.entities.length; x++){
-			if(this.entities[x].solidCollisions.length > 0){
-				this.entities[x].collisionUnresolved = true;
-				entities.push(this.entities[x]);
+		for (x = this.entities.length - 1; x > -1; x--)
+		{
+			if(this.owner !== this.entities[x]){
+				if(this.entities[x].trigger('prepare-for-collision', resp)){
+					if(this.entities[x].solidCollisions.length > 0){
+						this.entities[x].collisionUnresolved = true;
+						entities.push(this.entities[x]);
+					}
+				} else { // remove the entity because it no longer has a collision handler
+					var typeEntities = this.entitiesByType[this.entities[x].collisionType];
+					for (y = typeEntities.length - 1; y > -1; y--)
+					{
+						if(typeEntities[y] === this.entities[x]){
+							typeEntities.splice(y, 1);
+							break;
+						}
+					}
+					this.entities.splice(x, 1);
+				}
 			}
 		}
 		
-		this.resolveCollisionList(entities);
+		this.resolveCollisionList(entities, false);
 	};
 	
-	proto.resolveCollisionList = function(entities){
+	proto.resolveCollisionList = function(entities, group){
 		for (var x = entities.length - 1; x > -1; x--){
 			if(entities[x].collisionUnresolved){
 				if(entities[x].postponeCollisionCheck && (entities[x].postponeCollisionCheck.length > 0)){
@@ -91,13 +159,13 @@ platformer.components['collision-group'] = (function(){
 					entities[x].postponeCollisionCheck.length = 0;
 					entities[x].trigger('collision-postponement-resolved');
 				}
-				this.checkSolidEntityCollision(entities[x]);
+				this.checkSolidEntityCollision(entities[x], group);
 				entities[x].collisionUnresolved = false;
 			}
 		}
 	};
 	
-	proto.checkSolidEntityCollision = function(ent){
+	proto.checkSolidEntityCollision = function(ent, groupCheck){
 		var y = 0,
 		z = 0,
 		initialX = 0,
@@ -106,9 +174,8 @@ platformer.components['collision-group'] = (function(){
 
 		/******/
 		
-		var currentAABB = ent.shape.getAABB();
-		var prevPos = ent.shape.getPrevLocation();
-		var previousAABB = (currentAABB.getCopy()).move(prevPos[0], prevPos[1]);
+		var currentAABB = groupCheck?ent.getCollisionGroupAABB():ent.getAABB();
+		var previousAABB = groupCheck?ent.getPreviousCollisionGroupAABB():ent.getPreviousAABB();//ent.getAABB().getCopy().move(ent.getPreviousX() + ent.getShapes()[0].getXOffset(), ent.getPreviousY() + ent.getShapes()[0].getYOffset());
 		
 		var sweepTop = Math.min(currentAABB.top, previousAABB.top);
 		var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
@@ -128,55 +195,57 @@ platformer.components['collision-group'] = (function(){
 			if(this.entitiesByType[ent.solidCollisions[y]]){
 				for(z = 0; z < this.entitiesByType[ent.solidCollisions[y]].length; z++){
 					otherEntity = this.entitiesByType[ent.solidCollisions[y]][z];
-					if((!otherEntity.postponeCollisionCheck || (otherEntity.postponeCollisionCheck.length === 0)) && (otherEntity !== ent) && (this.AABBCollision(sweepAABB, otherEntity.shape.getPreviousAABB()))) {
+					if((!otherEntity.postponeCollisionCheck || (otherEntity.postponeCollisionCheck.length === 0)) && (otherEntity !== ent) && (this.AABBCollision(sweepAABB, otherEntity.getPreviousAABB()))) {
 						potentialsEntities.push(this.entitiesByType[ent.solidCollisions[y]][z]);
 					}
 				}
-			} else if (ent.solidCollisions[y] === 'tiles'){
+			} else if (this.terrain && (ent.solidCollisions[y] === 'tiles')){
 				potentialTiles = this.terrain.getTiles(sweepAABB);
 			}
 		}
 		
-		var xDir = (ent.shape.getPrevX() < ent.shape.getX()) ? 1 : -1;
-		var xPos = ent.shape.getPrevX();
-		var xGoal = ent.shape.getX();
-		var yDir = (ent.shape.getPrevY() < ent.shape.getY()) ? 1 : -1;
-		var yPos = ent.shape.getPrevY();
-		var yGoal = ent.shape.getY();
-
-		initialX = xPos;
-		initialY = yPos;
-		var finalY = undefined;
-		var finalX = undefined; 
-		
-		var collisionsX = [];
-		var collisionsY = [];
-		
-		var tileCollisionX = undefined;
-		var tileCollisionY = undefined;
 		triggerMessages.length = 0;
+		
+		initialX  = previousAABB.x;//ent.getPreviousX();
+		var xPos  = initialX;
+		var xGoal = currentAABB.x;//ent.x;
+		var xDir  = (xPos < xGoal) ? 1 : -1;
+		var finalX = undefined; 
+		var collisionsX = [];
+		var tileCollisionX = undefined;
+		var aabbOffsetX = previousAABB.x - ent.getPreviousX();//previousAABB.x - initialX;
+		
+		initialY  = previousAABB.y;//ent.getPreviousY();
+		var yPos  = initialY;
+		var yGoal = currentAABB.y;//ent.y;
+		var yDir  = (yPos < yGoal) ? 1 : -1;
+		var finalY = undefined;
+		var collisionsY = [];
+		var tileCollisionY = undefined;
+		var aabbOffsetY = previousAABB.y - ent.getPreviousY();//previousAABB.y - initialY;
 		
 		//////////////////////////////////////////////////////////////////////
 		//MOVE IN THE X DIRECTION
 		//////////////////////////////////////////////////////////////////////
 		while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
 		{
-			if (Math.abs(xGoal - xPos) <= 1)
+			if (Math.abs(xGoal - xPos) < 1)
 			{
 				xPos = xGoal;
 			} else {
 				xPos += xDir;
 			}
+//			previousAABB.move(xPos + aabbOffsetX, yPos + aabbOffsetY);
 			previousAABB.move(xPos, yPos);
 			
 			//CHECK AGAINST TILES
 			var tileAABB = undefined;
 			for (var t = 0; t < potentialTiles.length; t++)
 			{
-				tileAABB = potentialTiles[t].shape.getAABB();
+				tileAABB = potentialTiles[t].shapes[0].getAABB();
 				if(this.AABBCollision(previousAABB, tileAABB))
 				{
-					if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
+					if(this.preciseCollision(ent, potentialTiles[t]))
 					{
 						var atX = undefined;
 						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
@@ -188,16 +257,16 @@ platformer.components['collision-group'] = (function(){
 						}
 						
 						if ( typeof tilecollisionX === 'undefined') {
-							tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+							tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shapes[0]};
 						} else if (xDir > 0) {
 							if (atX < tileCollisionX.atX)
 							{
-								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shapes[0]};
 							}
 						} else {
 							if (atX > tileCollisionX.atX)
 							{
-								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shape};
+								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shapes[0]};
 							}
 						}
 					}
@@ -208,10 +277,10 @@ platformer.components['collision-group'] = (function(){
 			var entityAABB = undefined;
 			for (var u = 0; u < potentialsEntities.length; u++)
 			{
-				entityAABB = potentialsEntities[u].shape.getPreviousAABB();
+				entityAABB = potentialsEntities[u].collisionUnresolved?potentialsEntities[u].getPreviousAABB():potentialsEntities[u].getAABB();
 				if(this.AABBCollision(previousAABB, entityAABB))
 				{
-					if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
+					if(this.preciseCollision(ent, potentialsEntities[u]))
 					{
 						var atX = undefined;
 						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
@@ -294,6 +363,12 @@ platformer.components['collision-group'] = (function(){
 					complete = ent.routeTileCollision('x', xDir, tileCollisionX);
 					if (complete)
 					{
+						triggerMessages.push({
+							type:   'tiles',
+							shape:  tileCollisionX.shape,
+							x: xDir,
+							y: 0
+						});
 						finalX = tileCollisionX.atX;
 					}
 				}
@@ -315,6 +390,7 @@ platformer.components['collision-group'] = (function(){
 		//////////////////////////////////////////////////////////////////////
 		//MOVE IN THE Y DIRECTION
 		//////////////////////////////////////////////////////////////////////
+
 		while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
 		{
 			if (Math.abs(yGoal - yPos) < 1)
@@ -323,16 +399,17 @@ platformer.components['collision-group'] = (function(){
 			} else {
 				yPos += yDir;
 			}
+//			previousAABB.move(finalX + aabbOffsetX, yPos + aabbOffsetY);
 			previousAABB.move(finalX, yPos);
 			
 			//CHECK AGAINST TILES
 			var tileAABB = undefined;
 			for (var t = 0; t < potentialTiles.length; t++)
 			{
-				tileAABB = potentialTiles[t].shape.getAABB();
+				tileAABB = potentialTiles[t].shapes[0].getAABB();
 				if(this.AABBCollision(previousAABB, tileAABB))
 				{
-					if(this.preciseCollision(ent.shape, potentialTiles[t].shape))
+					if(this.preciseCollision(ent, potentialTiles[t]))
 					{
 						var atY = undefined;
 						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
@@ -344,16 +421,16 @@ platformer.components['collision-group'] = (function(){
 						}
 						 
 						if ( typeof tilecollisionY === 'undefined') {
-							tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+							tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shapes[0]};
 						} else if (yDir > 0) {
-							if (atY < collisionsY[0].atY)
+							if (atY < tileCollisionY.atY)
 							{
-								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shapes[0]};
 							}
 						} else {
 							if (atY > tileCollisionY.atY)
 							{
-								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shape};
+								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shapes[0]};
 							}
 						} 
 					}
@@ -364,10 +441,10 @@ platformer.components['collision-group'] = (function(){
 			var entityAABB = undefined;
 			for (var u = 0; u < potentialsEntities.length; u++)
 			{
-				entityAABB = potentialsEntities[u].shape.getPreviousAABB();
+				entityAABB = potentialsEntities[u].collisionUnresolved?potentialsEntities[u].getPreviousAABB():potentialsEntities[u].getAABB();
 				if(this.AABBCollision(previousAABB, entityAABB))
 				{
-					if(this.preciseCollision(ent.shape, potentialsEntities[u].shape))
+					if(this.preciseCollision(ent, potentialsEntities[u]))
 					{
 						var atY = undefined;
 						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
@@ -448,6 +525,12 @@ platformer.components['collision-group'] = (function(){
 					complete = ent.routeTileCollision('y', yDir, tileCollisionY);
 					if (complete)
 					{
+						triggerMessages.push({
+							type:   'tiles',
+							shape:  tileCollisionY.shape,
+							x: 0,
+							y: yDir
+						});
 						finalY = tileCollisionY.atY;
 					}
 				}
@@ -466,21 +549,27 @@ platformer.components['collision-group'] = (function(){
 			finalY = yGoal;
 		}
 
-		ent.trigger('layer:relocate', [finalX, finalY]);
+		if(groupCheck){
+			this.relocateGroup(finalX - aabbOffsetX - initialX, finalY - aabbOffsetY - initialY);
+		} else {
+			ent.trigger('relocate-entity', {x: finalX - aabbOffsetX, y: finalY - aabbOffsetY});
+		}
 
 		for (var i in triggerMessages){
 			ent.trigger('hit-by-' + triggerMessages[i].type, triggerMessages[i]);
-			triggerMessages[i].entity.trigger('hit-by-' + ent.collisionType, { //have to go both ways because the alternate direction may not be checked if the alternate entity is not moving toward this entity
-				entity: ent,
-				type:   ent.collisionType,
-				shape:  ent.shape,
-				x: -triggerMessages[i].x,
-				y: -triggerMessages[i].y
-			});
+			if(triggerMessages[i].entity){ //have to go both ways because the alternate direction may not be checked if the alternate entity is not moving toward this entity
+				triggerMessages[i].entity.trigger('hit-by-' + ent.collisionType, {
+					entity: ent,
+					type:   ent.collisionType,
+					shape:  ent.shape,
+					x: -triggerMessages[i].x,
+					y: -triggerMessages[i].y
+				});
+			}
 		}
 	};
 	
-	proto.checkSoftCollisions = function ()
+	proto.checkSoftCollisions = function (resp)
 	{
 		var otherEntity = undefined,
 		ent = undefined,
@@ -494,8 +583,8 @@ platformer.components['collision-group'] = (function(){
 				if(this.entitiesByType[ent.softCollisions[y]]){
 					for(z = 0; z < this.entitiesByType[ent.softCollisions[y]].length; z++){
 						otherEntity = this.entitiesByType[ent.softCollisions[y]][z];
-						if((otherEntity !== ent) && (this.AABBCollision(ent.shape.getAABB(), otherEntity.shape.getAABB()))) {
-							if (this.preciseCollision(ent.shape, otherEntity.shape))
+						if((otherEntity !== ent) && (this.AABBCollision(ent.getAABB(), otherEntity.getAABB()))) {
+							if (this.preciseCollision(ent, otherEntity))
 							{
 								ent.trigger('hit-by-' + otherEntity.collisionType, {
 									entity: otherEntity,
@@ -512,7 +601,6 @@ platformer.components['collision-group'] = (function(){
 	
 	proto.AABBCollision = function (boxX, boxY)
 	{
-		
 		if(boxX.left   >=  boxY.right)  return false;
 		if(boxX.right  <=  boxY.left)   return false;
 		if(boxX.top    >=  boxY.bottom) return false;
@@ -520,9 +608,38 @@ platformer.components['collision-group'] = (function(){
 		return true;
 	};
 	
-	proto.preciseCollision = function (shapeX, shapeY)
-	{
+	proto.preciseCollision = function (entityA, entityB){
+		var i = 0,
+		j     = 0,
+		aabb  = undefined,
+		shapesA = entityA.shapes || entityA.getShapes(),
+		shapesB = entityB.shapes || entityB.getShapes();
+		
+		if((shapesA.length > 1) || (shapesB.length > 1)){
+			for (i = 0; i < shapesA.length; i++){
+				aabb = shapesA[i].getAABB();
+				for (j = 0; j < shapesB.length; j++){
+					if((this.AABBCollision(aabb, shapesB[j].getAABB())) && (this.shapeCollision(shapesA[i], shapesB[j]))){
+						return true; //TODO: return all true instances instead of just the first one in case they need to be resolved in unique ways - DDD
+					}
+				}
+			}
+			return false;
+		} else {
+			return this.shapeCollision(shapesA[0], shapesB[0]);
+		}
+	};
+	
+	proto.shapeCollision = function(shapeA, shapeB){
 		return true;
+	};
+	
+	proto.relocateGroup = function(dx, dy){
+		for (var x = 0; x < this.entities.length; x++){
+//			if(this.entities[x] !== this.owner){
+				this.entities[x].trigger('relocate-entity', {x:this.entities[x].x + dx, y:this.entities[x].y + dy});
+//			}
+		}
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

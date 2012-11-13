@@ -1,0 +1,55 @@
+/*
+ * 
+ */
+{
+	"id": "beetle",
+	"components":[
+		{	
+			"type": "ai-pacer"
+		},{	
+			"type": "logic-directional-movement"
+		},{	
+			"type": "logic-gravity"
+		},{
+			"type": "collision-basic",
+		 	"shape":{
+		 		"offset": [0,-120],
+		 		"type": "rectangle",
+		 		"points": [[-90,-120],[90, 120]]
+	 		},
+			"collisionType": "beetle",
+			"solidCollisions": {
+				"beetle": "turn-around",
+				"hero": "turn-around",
+			    "block": "turn-around",
+			    "dirt": "turn-around",
+                "tiles": "turn-around",
+                "briar": "turn-around"
+			}
+		},{
+			"type": "render-animation",
+			"spriteSheet": {
+				"images": ["beetle"],
+				"frames": {
+					"width":  24,
+					"height": 24,
+					"regY":   24,
+					"regX":   12
+				},
+				"animations": {
+					"standing":[0],
+					"walking-right": {"frames": [2, 3, 1], "frequency": 4},
+					"walking-left":  {"frames": [3, 2, 1], "frequency": 4}
+				}
+			}
+//		},{
+//		    "type": "render-debug",
+//		    "regY": 240,
+//		    "regX": 120
+		}
+	],
+	"properties":{
+		"x": 10,
+		"y": 10
+	}
+}

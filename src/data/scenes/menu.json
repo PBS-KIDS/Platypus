@@ -1,7 +1,7 @@
 {
 	"layers":[
 		{
-			"id": "menu",
+			"id": "menu-layer",
 			"components": [
 				{"type": "lc-logic"},
 				{"type": "render-dom"},
@@ -14,7 +14,7 @@
 				}
 			]
         },{
-            "id": "enable-ios-audio",
+            "id": "enable-ios-audio-layer",
             "filter": {"includes": ["iOS"]},
             "components": [{"type": "enable-ios-audio", "audioId": "combined"}]
 		}

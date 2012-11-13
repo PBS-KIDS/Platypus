@@ -18,8 +18,10 @@
 				"key:up-arrow":   	"key-up",
 				"key:down-arrow":   "key-down"
 			}
-		},{
-			"type": "logic-hero"
+        },{
+            "type": "logic-carrier"
+        },{
+            "type": "logic-hero"
 		},{
 			"type": "collision-basic",
 		 	"shape":{
@@ -31,7 +33,9 @@
 			"solidCollisions": {
 			    "block": "",
 			    "dirt": "",
-                "tiles": ""
+                "tiles": "",
+                "beetle": "",
+                "briar": ""
 			}
 		},{
 			"type": "render-animation",

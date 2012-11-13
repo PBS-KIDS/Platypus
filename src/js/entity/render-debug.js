@@ -24,10 +24,20 @@ platformer.components['render-debug'] = (function(){
 	var proto = component.prototype;
 
 	proto['layer:render'] = function(stage){
-		this.shape.x = this.owner.x	- this.regX;
-		this.shape.y = this.owner.y	- this.regY;
-		this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
-		this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
+		if(this.owner.getAABB){
+			var aabb   = this.owner.getAABB();
+			this.shape.scaleX = aabb.width / this.initialWidth;
+			this.shape.scaleY = aabb.height / this.initialHeight;
+			this.shape.x = aabb.x - aabb.halfWidth;
+			this.shape.y = aabb.y - aabb.halfHeight;
+			this.txt.x = aabb.x;
+			this.txt.y = aabb.y;
+		} else {
+			this.shape.x = this.owner.x	- this.regX;
+			this.shape.y = this.owner.y	- this.regY;
+			this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
+			this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
+		}
 	};
 
 	proto['layer:render-load'] = function(resp){
@@ -54,12 +64,13 @@ platformer.components['render-debug'] = (function(){
 		this.mookieImg.x = this.owner.x;
 		this.mookieImg.y = this.owner.y;*/
 		
-		if(this.owner.shape && this.owner.shape.type == 'rectangle'){
-			width  = this.owner.shape.points[1][0] - this.owner.shape.points[0][0];
-			height = this.owner.shape.points[1][1] - this.owner.shape.points[0][1];
+		if(this.owner.getAABB){
+			var aabb   = this.owner.getAABB();
+			width      = this.initialWidth  = aabb.width;
+			height     = this.initialHeight = aabb.height;
 			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,0,255,0.1)").setStrokeStyle(3).beginStroke("#f0f").rect(0, 0, width, height));
-			this.regX  = width / 2 - this.owner.shape.offset[0];
-			this.regY  = height / 2 - this.owner.shape.offset[1];
+			this.regX  = width  / 2;
+			this.regY  = height / 2;
 		} else {
 			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
 		}

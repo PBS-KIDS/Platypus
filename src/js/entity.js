@@ -11,6 +11,7 @@ platformer.classes.entity = (function(){
 		
 		self.components = [];
 		self.messages   = [];
+		self.loopCheck  = [];
 		self.type = def.id;
 
 		for (index in defaultProperties){ // This takes the list of properties in the JSON definition and appends them directly to the object.
@@ -73,11 +74,18 @@ platformer.classes.entity = (function(){
 				console.warn('Entity "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
 			}
 		}
+		for (i = 0; i < this.loopCheck.length; i++){
+			if(this.loopCheck[i] === messageId){
+				throw "Endless loop detected for '" + messageId + "'.";
+			}
+		}
+		this.loopCheck.push(messageId);
 		if(this.messages[messageId]){
 			for (i = 0; i < this.messages[messageId].length; i++){
 				this.messages[messageId][i](value);
 			}
 		}
+		this.loopCheck.length = this.loopCheck.length - 1; 
 		return i;
 	};
 	

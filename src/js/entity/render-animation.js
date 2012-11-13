@@ -45,7 +45,7 @@ platformer.components['render-animation'] = (function(){
 		}
 		spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
-		this.currentAnimation = definition.state || this.owner.state || '';
+		this.currentAnimation = definition.state || this.owner.state || 'default';
 		this.anim.scaleX = definition.scaleX || this.owner.scaleX || 1;
 		this.anim.scaleY = definition.scaleY || this.owner.scaleY || 1;
 		if(this.currentAnimation){

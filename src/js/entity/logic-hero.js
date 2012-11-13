@@ -5,7 +5,7 @@ platformer.components['logic-hero'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic','key-left','key-right','key-up','key-down','key-jump','key-swing']);
+		this.addListeners(['layer:logic', 'set-velocity', 'teleport','key-left','key-right','key-up','key-down','key-jump','key-swing']);
 		
 		this.owner.state   = this.owner.state || 'ground';
 		this.owner.heading = this.owner.heading || 'right';
@@ -21,8 +21,11 @@ platformer.components['logic-hero'] = (function(){
 		this.fX = .4;
 		this.maxVX = 2;
 		this.maxVY = 3;
-		this.jumpV = 4;
+		this.aJump = 4;
 		this.aGravity = .01;
+		
+		this.teleportDestination = undefined;
+		this.justTeleported = false;
 		
 		this.hitGround = false;
 		
@@ -43,55 +46,68 @@ platformer.components['logic-hero'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(deltaT){
-		//this.vX = 0;
-		//this.vY = 0;
+	proto['layer:logic'] = function(resp){
+		var deltaT = resp.deltaT;
 		
-		if(this.left) {
-			this.vX -= this.aX * deltaT;
-			if (this.vX < -this.maxVX)
-			{
-				this.vX = -this.maxVX;
-			}
-			this.owner.heading = 'left';
-		} else if (this.right) {
-			this.vX += this.aX * deltaT;
-			if (this.vX > this.maxVX)
-			{
-				this.vX = this.maxVX;
-			}
-			this.owner.heading = 'right';
-		} else {
-			if (this.vX > 0)
-			{
-				this.vX -= this.fX * deltaT;
-				if (this.vX < 0) {
-					this.vX = 0;
-				} 
-			} else if (this.vX < 0)
-			{
-				this.vX += this.fX * deltaT;
-				if (this.vX > 0) {
-					this.vX = 0;
-				} 
-			} 
-		}
-
-		if (this.jump && this.owner.state != 'air') {
-			this.vY = -this.jumpV;
-			this.owner.state = 'air';
-			this.owner.trigger('jumping'); //This is for audio
-		}
-		
-		if (this.owner.state == 'air')
+		if (this.teleportDestination)
 		{
-			this.vY += this.aGravity * deltaT;
-			if (this.vY > this.maxVY)
+			this.owner.x = this.teleportDestination.x;
+			this.owner.y = this.teleportDestination.y;
+			this.teleportDestination = undefined;
+			this.justTeleported = true;
+		} else {
+			if (this.justTeleported)
 			{
-				this.vY = this.maxVY;
+				this.justTeleported = false;
+				this.owner.trigger('collide-on');
 			}
-		} else if (this.owner.state == 'ground'){
+			
+			if(this.left) {
+				this.vX -= this.aX * deltaT;
+				if (this.vX < -this.maxVX)
+				{
+					this.vX = -this.maxVX;
+				}
+				this.owner.heading = 'left';
+			} else if (this.right) {
+				this.vX += this.aX * deltaT;
+				if (this.vX > this.maxVX)
+				{
+					this.vX = this.maxVX;
+				}
+				this.owner.heading = 'right';
+			} else {
+				if (this.vX > 0)
+				{
+					this.vX -= this.fX * deltaT;
+					if (this.vX < 0) {
+						this.vX = 0;
+					} 
+				} else if (this.vX < 0)
+				{
+					this.vX += this.fX * deltaT;
+					if (this.vX > 0) {
+						this.vX = 0;
+					} 
+				} 
+			}
+
+			if (this.jump && this.owner.state != 'air') {
+				this.vY = -this.aJump;
+				this.owner.state = 'air';
+				this.owner.trigger('jumping'); //This is for audio
+			}
+			
 			this.vY += this.aGravity * deltaT;
+
+			if (this.vY > this.maxVY) {
+				this.vY = this.maxVY;
+			//	} else if (this.vY < - this.maxVY) {
+			//		this.vY = -this.maxVY;
+			}
+			
+			this.owner.x += (this.vX * deltaT);
+			this.owner.y += (this.vY * deltaT);
 		}
 		
 		if (!this.hitGround)
@@ -99,9 +115,6 @@ platformer.components['logic-hero'] = (function(){
 			this.owner.state = 'air';
 		}
 		this.hitGround = false;
-		
-		this.owner.x += (this.vX * deltaT);
-		this.owner.y += (this.vY * deltaT);
 		
 		if(this.swing){
 			this.owner.trigger('logical-state', {state: 'swing' + '-' + this.owner.heading});
@@ -132,6 +145,24 @@ platformer.components['logic-hero'] = (function(){
 		this.jump  = false;
 		this.swingInstance = false;		
 		
+	};
+	
+	proto['teleport'] = function (posObj)
+	{
+		this.owner.trigger('collide-off');
+		this.teleportDestination = {x: posObj.x, y: posObj.y};
+	};
+	
+	proto['set-velocity'] = function (velocityObj)
+	{
+		if (typeof velocityObj.vX !== "undefined")
+		{
+			this.vX = velocityObj.vX;
+		}
+		if (typeof velocityObj.vY !== "undefined")
+		{
+			this.vY = velocityObj.vY;
+		}
 	};
 	
 	proto['key-left'] = function (state)

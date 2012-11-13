@@ -24,8 +24,8 @@
             "scaleY": 2.9
 		},{
 			"type": "entity-container", 
-				"entities": [{"type": "gem-counter"}],
-				"childEvents": ['count-gems', 'layer:render', 'layer:render-load']
+				"entities": [{"type": "gem-counter"},{"type": "clock"}],
+				"childEvents": ['count-gems', 'set-time', 'start-timer', 'stop-timer', 'layer:logic', 'layer:render', 'layer:render-load', 'audio-mute-toggle', 'audio-mute', 'audio-unmute']
 		}
 	],
 	"properties":{

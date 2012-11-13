@@ -11,7 +11,7 @@ platformer.components['collision-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:prep-collision']);
+		this.addListeners(['prepare-for-collision']);
 		
 		this.owner.getTiles = function(aabb){
 			return self.getTiles(aabb);
@@ -25,7 +25,7 @@ platformer.components['collision-tiles'] = (function(){
 	};
 	var proto = component.prototype;
 
-	proto['layer:prep-collision'] = function(){
+	proto['prepare-for-collision'] = function(){
 		
 	};
 	
@@ -64,7 +64,7 @@ platformer.components['collision-tiles'] = (function(){
 								gridX: x,
 								gridY: y,
 								//type: this.collisionMap[x][y],
-								shape: new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]])	
+								shapes: [new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]])]
 								});
 					
 					//shapes.push(new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]]));

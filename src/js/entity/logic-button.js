@@ -37,7 +37,7 @@ platformer.components['logic-button'] = (function(){
 		this.message.state = 'released';
 	};
 	
-	proto['layer:logic'] = function(deltaT){
+	proto['layer:logic'] = function(resp){
 		this.owner.trigger('logical-state', this.message);
 	};
 

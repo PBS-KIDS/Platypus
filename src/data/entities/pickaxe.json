@@ -13,7 +13,7 @@
 	 		},
 			"collisionType": "pickaxe"
         },{
-            "type": "destroy-me", "message": "layer:prep-collision", "delay": 50
+            "type": "destroy-me", "message": "prepare-for-collision", "delay": 50
         }
 	]
 }
