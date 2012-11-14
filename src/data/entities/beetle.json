@@ -5,7 +5,8 @@
 	"id": "beetle",
 	"components":[
 		{	
-			"type": "ai-pacer"
+			"type": "ai-pacer",
+			"movement": "horizontal"
 		},{	
 			"type": "logic-directional-movement"
 		},{	
@@ -50,6 +51,7 @@
 	],
 	"properties":{
 		"x": 10,
-		"y": 10
+		"y": 10,
+		"z": 150
 	}
 }

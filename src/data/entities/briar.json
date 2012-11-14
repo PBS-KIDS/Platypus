@@ -5,9 +5,9 @@
 	"id": "briar",
 	"components":[
 		{
-			"type": "logic-briar"
-		},
-		{
+			"type": "logic-teleporter",
+			"facing": "up"
+		},{
 			"type": "collision-basic", 
 		 	"shape": {
 	 			"offset": [0,-120],
@@ -16,7 +16,7 @@
 	 		},
 			"collisionType": "briar",
             "solidCollisions": {
-            	"hero": "caught-hero"
+            	"hero": "teleport-entity"
            	}
 		},{
 			"type": "render-animation",
@@ -29,23 +29,25 @@
 					"regX":   60
 				},
 				"animations": {
-					"bottom": [0],
-					"top": [3],
-					"left": [1],
-					"right":  [2]
+					"up":    [0],
+					"down":  [3],
+					"right": [1],
+					"left":  [2]
 				}
 			},
+			"state": "up",
 			"scaleX": 2,
 			"scaleY": 2
-//		},{
-//		    "type": "render-debug",
-//            "regX": 60,
-//            "regY": 120
+		},{
+		    "type": "render-debug",
+            "regX": 60,
+            "regY": 120
         }
 	],
 	"properties":{
 		"x": 10,
 		"y": 10,
+		"z": 250,
 		"linkId": ''
 	}
 }

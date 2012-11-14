@@ -36,6 +36,18 @@
    <property name="entity" value="briar"/>
   </properties>
  </tile>
+ <tile id="18">
+  <properties>
+   <property name="entity" value="briar"/>
+   <property name="facing" value="right"/>
+  </properties>
+ </tile>
+ <tile id="19">
+  <properties>
+   <property name="entity" value="briar"/>
+   <property name="facing" value="left"/>
+  </properties>
+ </tile>
  <tile id="24">
   <properties>
    <property name="entity" value="timer"/>

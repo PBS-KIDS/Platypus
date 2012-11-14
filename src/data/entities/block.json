@@ -8,9 +8,9 @@
             "type": "logic-gravity"
         },{
             "type": "logic-pushable"
-//        },{
-//            "type": "logic-portable"
         },{
+//            "type": "logic-portable"
+//        },{
 			"type": "collision-basic", 
 		 	"shape": {
 	 			"offset": [0,-120],
@@ -48,6 +48,7 @@
 	"properties":{
 		"x": 50,
 		"y": 50,
+		"z": 50,
 		"width": 240,
 		"height": 240
 	}

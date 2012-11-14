@@ -76,6 +76,7 @@
 	"properties":{
 		"x": 10,
 		"y": 10,
+		"z": 200,
 		"width": 160,
 		"height": 240,
 		"state": "ground",

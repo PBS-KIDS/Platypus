@@ -29,7 +29,6 @@ platformer.classes.entity = (function(){
 				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
 			}
 		}
-		
 		self.trigger('load');
 	};
 	var proto = entity.prototype;
@@ -38,7 +37,7 @@ platformer.classes.entity = (function(){
 	    this.components.push(component);
 	    return component;
 	};
-
+	
 	proto.removeComponent = function(component){
 	    for (var index in this.components){
 		    if(this.components[index] === component){
@@ -65,9 +64,9 @@ platformer.classes.entity = (function(){
 		}
 	};
 	
-	proto.trigger = function(messageId, value){
+	proto.trigger = function(messageId, value, debug){
 		var i = 0;
-		if(this.debug || (value && value.debug)){
+		if(this.debug || debug || (value && value.debug)){
 			if(this.messages[messageId] && this.messages[messageId].length){
 				console.log('Entity "' + this.type + '": Event "' + messageId + '" has ' + this.messages[messageId].length + ' subscriber' + ((this.messages[messageId].length>1)?'s':'') + '.', value);
 			} else {
@@ -79,10 +78,11 @@ platformer.classes.entity = (function(){
 				throw "Endless loop detected for '" + messageId + "'.";
 			}
 		}
+		i = 0;
 		this.loopCheck.push(messageId);
 		if(this.messages[messageId]){
 			for (i = 0; i < this.messages[messageId].length; i++){
-				this.messages[messageId][i](value);
+				this.messages[messageId][i](value, debug);
 			}
 		}
 		this.loopCheck.length = this.loopCheck.length - 1; 

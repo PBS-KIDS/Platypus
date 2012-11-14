@@ -14,13 +14,14 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
-		        "half-minute-timer": {sound:"collect-gem", interrupt:"early"}
+//		        "half-minute-timer": {sound:"collect-gem", interrupt:"early"}
 		    }
 		}
 	],
 	"properties":{
 		"x": 2000,
 		"y": 175,
+		"z": 400,
 		"alarmMessage": "half-minute-timer",
 		"updateMessage": "refresh-clock",
 	    "alarmTime": 30000,

@@ -54,6 +54,10 @@ platformer.classes.aABB = (function(){
 	};
 	
 	proto.move = function(x, y){
+		if(!x){
+			var s = 56;
+		}
+		
 		this.x = x;
 		this.y = y;
 		this.left   = -this.halfWidth + this.x;

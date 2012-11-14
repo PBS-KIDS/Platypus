@@ -34,6 +34,7 @@
 	"properties":{
 		"x": 10,
 		"y": 1090,
+		"z": 400,
 		"width": 400,
 		"height": 400
 	}

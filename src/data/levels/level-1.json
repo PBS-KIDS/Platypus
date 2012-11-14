@@ -244,7 +244,7 @@
                  "name":"",
                  "properties":
                     {
-
+                     "linkId":"flower6"
                     },
                  "type":"",
                  "width":0,
@@ -881,7 +881,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower2"
+                     "teleportId":"flower2"
                     },
                  "type":"",
                  "width":0,
@@ -894,7 +894,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower3"
+                     "teleportId":"flower3"
                     },
                  "type":"",
                  "width":0,
@@ -907,7 +907,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower0"
+                     "teleportId":"flower0"
                     },
                  "type":"",
                  "width":0,
@@ -920,7 +920,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower1"
+                     "teleportId":"flower1"
                     },
                  "type":"",
                  "width":0,
@@ -933,7 +933,8 @@
                  "name":"",
                  "properties":
                     {
-
+                     "":"",
+                     "teleportId":"flower6"
                     },
                  "type":"",
                  "width":0,
@@ -946,7 +947,8 @@
                  "name":"",
                  "properties":
                     {
-
+                     "facing":"right",
+                     "teleportId":"flower6"
                     },
                  "type":"",
                  "width":0,
@@ -959,7 +961,8 @@
                  "name":"",
                  "properties":
                     {
-
+                     "facing":"left",
+                     "teleportId":"flower6"
                     },
                  "type":"",
                  "width":0,
@@ -1895,7 +1898,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower5"
+                     "teleportId":"flower5"
                     },
                  "type":"",
                  "width":0,
@@ -1986,7 +1989,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower0"
+                     "teleportId":"flower0"
                     },
                  "type":"",
                  "width":0,
@@ -1999,7 +2002,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower0"
+                     "teleportId":"flower0"
                     },
                  "type":"",
                  "width":0,
@@ -2012,7 +2015,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower2"
+                     "teleportId":"flower2"
                     },
                  "type":"",
                  "width":0,
@@ -2025,7 +2028,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower2"
+                     "teleportId":"flower2"
                     },
                  "type":"",
                  "width":0,
@@ -2038,7 +2041,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower2"
+                     "teleportId":"flower2"
                     },
                  "type":"",
                  "width":0,
@@ -2051,7 +2054,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower1"
+                     "teleportId":"flower1"
                     },
                  "type":"",
                  "width":0,
@@ -2064,7 +2067,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower3"
+                     "teleportId":"flower3"
                     },
                  "type":"",
                  "width":0,
@@ -2077,7 +2080,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower3"
+                     "teleportId":"flower3"
                     },
                  "type":"",
                  "width":0,
@@ -2090,7 +2093,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower3"
+                     "teleportId":"flower3"
                     },
                  "type":"",
                  "width":0,
@@ -2103,7 +2106,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower4"
+                     "teleportId":"flower4"
                     },
                  "type":"",
                  "width":0,
@@ -2116,7 +2119,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower5"
+                     "teleportId":"flower5"
                     },
                  "type":"",
                  "width":0,
@@ -2129,7 +2132,7 @@
                  "name":"",
                  "properties":
                     {
-                     "linkId":"flower5"
+                     "teleportId":"flower5"
                     },
                  "type":"",
                  "width":0,
@@ -2195,6 +2198,16 @@
              "17":
                 {
                  "entity":"briar"
+                },
+             "18":
+                {
+                 "entity":"briar",
+                 "facing":"right"
+                },
+             "19":
+                {
+                 "entity":"briar",
+                 "facing":"left"
                 },
              "2":
                 {
