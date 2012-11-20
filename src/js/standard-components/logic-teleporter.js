@@ -1,12 +1,10 @@
 /**
 # COMPONENT **logic-teleporter**
-
-## Description:
 This component listens for redirected collision messages and fires a message on the colliding entity to specify where the colliding entity should relocate itself.
 
 ## Dependencies:
-- **collision-basic** (on entity) - This component listens for collision messages on the entity.
-- **entity-container** (on entity's parent) - This component listens for new peer entities being added on its parent to find its teleport destination.
+- [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.
+- [[Entity-Container]] (on entity's parent) - This component listens for new peer entities being added on its parent to find its teleport destination.
 
 ## Messages
 

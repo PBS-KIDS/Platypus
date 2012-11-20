@@ -5,14 +5,20 @@ platformer.components['logic-hero'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'set-velocity', 'teleport','key-left','key-right','key-up','key-down','key-jump','key-swing']);
+		this.addListeners(['handle-logic', 'set-velocity', 'teleport', 'portal-waiting', 'key-left','key-right','key-up','key-down','key-jump','key-swing']);
 		
-		this.owner.state   = this.owner.state || 'ground';
-		this.owner.heading = this.owner.heading || 'right';
+		this.state = {
+			air: false,
+			ground: true,
+			left: false,
+			moving: false,
+			right: true,
+			swing: false,
+			swingHit: false
+		};
+		
 		this.left = false;
 		this.right = false;
-		this.up = false;
-		this.down = false;
 		this.jump = false;
 		
 		this.vX = 0; 
@@ -46,7 +52,7 @@ platformer.components['logic-hero'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var deltaT = resp.deltaT;
 		
 		if (this.teleportDestination)
@@ -56,18 +62,19 @@ platformer.components['logic-hero'] = (function(){
 		} else {
 			if(this.left) {
 				this.vX -= this.aX * deltaT;
-				if (this.vX < -this.maxVX)
-				{
+				if (this.vX < -this.maxVX) {
 					this.vX = -this.maxVX;
 				}
-				this.owner.heading = 'left';
+				this.state.left  = true;
+				this.state.right = false;
 			} else if (this.right) {
 				this.vX += this.aX * deltaT;
 				if (this.vX > this.maxVX)
 				{
 					this.vX = this.maxVX;
 				}
-				this.owner.heading = 'right';
+				this.state.left  = false;
+				this.state.right = true;
 			} else {
 				if (this.vX > 0)
 				{
@@ -84,9 +91,10 @@ platformer.components['logic-hero'] = (function(){
 				} 
 			}
 
-			if (this.jump && this.owner.state != 'air') {
+			if (this.jump && this.state.ground) {
 				this.vY = -this.aJump;
-				this.owner.state = 'air';
+				this.state.air = true;
+				this.state.ground = false;
 				this.owner.trigger('jumping'); //This is for audio
 			}
 			
@@ -104,36 +112,41 @@ platformer.components['logic-hero'] = (function(){
 		
 		if (!this.hitGround)
 		{
-			this.owner.state = 'air';
+			this.state.air = true;
+			this.state.ground = false;
 		}
 		this.hitGround = false;
 		
+		this.state.swingHit = false;
 		if(this.swing){
-			this.owner.trigger('logical-state', {state: 'swing' + '-' + this.owner.heading});
+			this.state.swing = true;
+//			this.state.debug = true;
 			if(this.swingInstance){
+				this.state.swingHit = true;
 				this.owner.parent.addEntity(new platformer.classes.entity(platformer.settings.entities['pickaxe'], {
 					properties: {
-						x: this.owner.x + ((this.owner.heading === 'right')?1:-1) * 140,
+						x: this.owner.x + (this.state.right?1:-1) * 140,
 						y: this.owner.y
 					}
 				}));
-				this.owner.trigger('pickaxe');
 			}
-		} else if (this.owner.state == 'ground') {
-			if (this.vX == 0) {
-				this.owner.trigger('logical-state', {state: 'standing' + '-' + this.owner.heading});
-			} else {
-				this.owner.trigger('logical-state', {state: 'walking' + '-' + this.owner.heading});
-				this.owner.trigger('walking'); //This is for audio
+		} else {
+			this.state.swing = false;
+//			this.state.debug = false;
+			if (this.state.ground) {
+				if (this.vX == 0) {
+					this.state.moving = false;
+				} else {
+					this.state.moving = true;
+//					this.owner.trigger('walking'); //This is for audio
+				}
 			}
-		} else if (this.owner.state == 'air') {
-			this.owner.trigger('logical-state', {state: 'jumping' + '-' + this.owner.heading});
 		}
+
+		this.owner.trigger('logical-state', this.state);
 		
 		this.left  = false;
 		this.right = false;
-		this.up    = false;
-		this.down  = false;
 		this.jump  = false;
 		this.swingInstance = false;		
 		
@@ -143,6 +156,11 @@ platformer.components['logic-hero'] = (function(){
 	{
 //		this.owner.trigger('collide-off');
 		this.teleportDestination = {x: posObj.x, y: posObj.y};
+	};
+	
+	proto['portal-waiting'] = function (portal)
+	{
+		portal.trigger('activate');
 	};
 	
 	proto['set-velocity'] = function (velocityObj)
@@ -173,22 +191,6 @@ platformer.components['logic-hero'] = (function(){
 		}
 	};
 	
-	proto['key-up'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.up = true;
-		}
-	};
-	
-	proto['key-down'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.down = true;
-		}
-	};
-	
 	proto['key-jump'] = function (state)
 	{
 		if(state.pressed)
@@ -214,7 +216,8 @@ platformer.components['logic-hero'] = (function(){
 		switch (heading)
 		{
 		case 'down':
-			this.owner.state = 'ground';
+			this.state.ground = true;
+			this.state.air = false;
 			this.hitGround = true;
 			this.vY = 0; 
 			break;
@@ -229,7 +232,8 @@ platformer.components['logic-hero'] = (function(){
 		switch (heading)
 		{
 		case 'down':
-			this.owner.state = 'ground';
+			this.state.ground = true;
+			this.state.air = false;
 			this.hitGround = true;
 			this.vY = 0; 
 			break;
@@ -240,8 +244,6 @@ platformer.components['logic-hero'] = (function(){
 	proto.resolveSoftCollision = function(collisionInfo){
 		return false;
 	};
-	
-	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

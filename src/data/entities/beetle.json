@@ -29,7 +29,12 @@
 			}
 		},{
 			"type": "render-animation",
-			"spriteSheet": {
+			"animationMap":{
+                "moving,left":  "walking-left",
+                "moving,right": "walking-right",
+                "default":      "standing"
+            }, 
+            "spriteSheet": {
 				"images": ["beetle"],
 				"frames": {
 					"width":  24,

@@ -4,7 +4,7 @@ platformer.components['logic-timer'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:logic']);
+		this.addListeners(['handle-logic']);
 		this.owner.time = this.owner.time || definition.time ||  0;
 		this.prevTime = this.owner.time;
 		this.owner.alarmTime = this.owner.alarmTime || definition.alarmTime || false;
@@ -18,7 +18,7 @@ platformer.components['logic-timer'] = (function(){
 	var proto = component.prototype;
 	
 	
-	proto['layer:logic'] = function(data){
+	proto['handle-logic'] = function(data){
 		if (this.owner.isOn)
 		{
 			this.prevTime = this.owner.time;

@@ -13,10 +13,9 @@ platformer.components['collision-basic'] = (function(){
 		}
 	};
 	var component = function(owner, definition){
-		var x  = 0, 
-		self   = this,
-		shapes = definition.shapes || (definition.shape?[definition.shape]:[]);
-
+		var x  = 0; 
+		var self   = this;
+		
 		this.owner    = owner;
 		this.lastX    = this.owner.x;
 		this.lastY    = this.owner.y;
@@ -24,6 +23,20 @@ platformer.components['collision-basic'] = (function(){
 		this.prevAABB = new platformer.classes.aABB();
 		this.canCollide = true;
 
+		var shapes = [];
+		if(definition.shapes)
+		{
+			shapes = definition.shapes;
+		} else if (definition.shape) {
+			shapes = [definition.shape];
+		} else {
+			var halfWidth = this.owner.width/2;
+			var halfHeight = this.owner.height/2;
+			var points = [[-halfWidth, -halfHeight],[halfWidth, halfHeight]];
+			var offset = [0, halfHeight];
+			shapes = [{offset: offset, points: points, shape: 'rectangle'}];
+		}
+		
 		// Messages that this component listens for
 		this.listeners = [];
 

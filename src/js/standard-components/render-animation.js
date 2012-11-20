@@ -1,12 +1,32 @@
+/*
+- **logical-state** - This component also listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
+ */
 platformer.components['render-animation'] = (function(){
 	var changeState = function(state){
 		return function(value){
-			if (this.currentAnimation != state)
-			{
+			if (this.currentAnimation !== state){
 				this.currentAnimation = state;
 				this.anim.gotoAndPlay(state);
 			}
 		};
+	},
+	createTest = function(testStates, animation){
+		var states = testStates.replace(/ /g, '').split(',');
+		if(testStates === 'default'){
+			return function(state){
+				return animation;
+			};
+		} else {
+			return function(state){
+				for(var i = 0; i < states.length; i++){
+					if(!state[states[i]]){
+						return false;
+					}
+				}
+				return animation;
+			};
+		}
 	};
 	var component = function(owner, definition){
 		var spriteSheet = {
@@ -29,18 +49,19 @@ platformer.components['render-animation'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render-load', 'layer:render', 'logical-state']);
+		this.addListeners(['handle-render-load', 'handle-render', 'logical-state']);
 
 		if(definition.animationMap){
+			this.checkStates = [];
 			for(var i in definition.animationMap){
 				this.addListener(i);
 				this[i] = changeState(definition.animationMap[i]);
+				this.checkStates.push(createTest(i, definition.animationMap[i]));
 			}
 		}
 		
 		this.stage = undefined;
-		for (var x = 0; x < spriteSheet.images.length; x++)
-		{
+		for (var x = 0; x < spriteSheet.images.length; x++){
 			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
 		spriteSheet = new createjs.SpriteSheet(spriteSheet);
@@ -48,13 +69,15 @@ platformer.components['render-animation'] = (function(){
 		this.currentAnimation = definition.state || this.owner.state || 'default';
 		this.anim.scaleX = definition.scaleX || this.owner.scaleX || 1;
 		this.anim.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.state = {};
+		this.stateChange = false;
 		if(this.currentAnimation){
 			this.anim.gotoAndPlay(this.currentAnimation);
 		}
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(obj){
+	proto['handle-render-load'] = function(obj){
 		var self = this,
 		over     = false;
 		
@@ -124,17 +147,35 @@ platformer.components['render-animation'] = (function(){
 		}
 	};
 	
-	proto['layer:render'] = function(obj){
+	proto['handle-render'] = function(obj){
+		var testCase = false, i = 0;
 		this.anim.x = this.owner.x;
 		this.anim.y = this.owner.y;
 		this.anim.z = this.owner.z;
+		
+		if(this.stateChange){
+			if(this.checkStates){
+				for(; i < this.checkStates.length; i++){
+					testCase = this.checkStates[i](this.state);
+					if(testCase){
+						if(this.currentAnimation !== testCase){
+							this.currentAnimation = testCase;
+							this.anim.gotoAndPlay(testCase);
+						}
+						break;
+					}
+				}
+			}
+			this.stateChange = false;
+		}
 	};
 	
-	proto['logical-state'] = function(obj){
-		if (this.currentAnimation != obj.state)
-		{
-			this.currentAnimation = obj.state;
-			this.anim.gotoAndPlay(obj.state);
+	proto['logical-state'] = function(state){
+		for(var i in state){
+			if(this.state[i] !== state[i]){
+				this.stateChange = true;
+				this.state[i] = state[i];
+			}
 		}
 	};
 	

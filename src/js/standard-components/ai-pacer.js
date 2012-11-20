@@ -1,13 +1,11 @@
 /**
 # COMPONENT **ai-pacer**
-
-## Description:
 This component listens for collision messages and fires a message on itself to change its movement direction.
 
 ## Dependencies:
-- **collision-basic** (on entity) - This component listens for collision messages on the entity.
-- **logic-directional-movement** (on entity) - This component receives triggered messages from this component and moves the entity accordingly.
-- **handler-ai** (on entity's parent) - This component listens for an ai "tick" message to orderly perform its control logic.
+- [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.
+- [[Logic-Directional-Movement]] (on entity) - This component receives triggered messages from this component and moves the entity accordingly.
+- [[Handler-Ai]] (on entity's parent) - This component listens for an ai "tick" message to orderly perform its control logic.
 
 ## Messages
 

@@ -1,7 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="44" height="18" tilewidth="24" tileheight="24">
  <tileset firstgid="1" source="tiles.tsx"/>
- <tileset firstgid="46" source="objects.tsx"/>
+ <tileset firstgid="46" name="objects" tilewidth="24" tileheight="24">
+  <image source="../../images/objects.png" width="192" height="96"/>
+  <tile id="0">
+   <properties>
+    <property name="entity" value="hero"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="entity" value="flower"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="entity" value="dirt"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="entity" value="beetle"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="entity" value="gem"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="entity" value="block"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="entity" value="briar"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="entity" value="briar"/>
+    <property name="facing" value="right"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="entity" value="briar"/>
+    <property name="facing" value="left"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="entity" value="timer"/>
+   </properties>
+  </tile>
+ </tileset>
  <layer name="background" width="44" height="18">
   <data encoding="base64" compression="zlib">
    eJztzrsSwBAQheHVatOKLvH+b4hO4XKCGZuZU3wNa/1GRIwSD+B0I3vZy1727mjNbEdtb++uNTt6g7Zm10C5t3Veg+yb6XWblP+jc19bT/hbL9GMO/EKOlBvEhR0rIrs1UEj
@@ -287,6 +341,11 @@
   <object gid="63" x="696" y="168">
    <properties>
     <property name="teleportId" value="flower5"/>
+   </properties>
+  </object>
+  <object type="level-portal" x="912" y="360" width="48" height="48">
+   <properties>
+    <property name="destination" value="scene-level-3"/>
    </properties>
   </object>
  </objectgroup>

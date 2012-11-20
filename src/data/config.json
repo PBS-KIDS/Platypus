@@ -73,28 +73,28 @@
 			{"id": "AABB", 			  "src": "../js/aabb.js"}
 		],
 		"components": [ // JavaScript files defining component modules
-            {"id": "enable-ios-audio",        "src": "../js/standard-components/enable-ios-audio.js"},
-			{"id": "handler-controller",      "src": "../js/standard-components/handler-controller.js"},
-			{"id": "tiled-loader",            "src": "../js/standard-components/tiled-loader.js"},
-            {"id": "handler-render-createjs", "src": "../js/standard-components/handler-render-createjs.js"},
-            {"id": "handler-render-dom",      "src": "../js/standard-components/handler-render-dom.js"},
-            {"id": "handler-ai",              "src": "../js/standard-components/handler-ai.js"},
-			{"id": "handler-logic",           "src": "../js/standard-components/handler-logic.js"},
-			{"id": "camera",                  "src": "../js/standard-components/camera.js"},
-			{"id": "collision-group",         "src": "../js/standard-components/collision-group.js"},
-            {"id": "audio",                   "src": "../js/standard-components/audio.js"},
-            {"id": "broadcast-events",        "src": "../js/standard-components/broadcast-events.js"},
-            {"id": "change-scene",            "src": "../js/standard-components/change-scene.js"},
-            {"id": "destroy-me",              "src": "../js/standard-components/destroy-me.js"},
-            {"id": "dom-element",             "src": "../js/standard-components/dom-element.js"},
-            {"id": "entity-container",        "src": "../js/standard-components/entity-container.js"},
-            {"id": "entity-controller",       "src": "../js/standard-components/entity-controller.js"},
-			{"id": "render-debug",            "src": "../js/standard-components/render-debug.js"},
-			{"id": "render-tiles",            "src": "../js/standard-components/render-tiles.js"},
-            {"id": "render-animation",        "src": "../js/standard-components/render-animation.js"},
-            {"id": "render-image",            "src": "../js/standard-components/render-image.js"},
-            {"id": "logic-button",            "src": "../js/standard-components/logic-button.js"},
-            {"id": "logic-carrier",           "src": "../js/standard-components/logic-carrier.js"},
+            {"id": "enable-ios-audio",           "src": "../js/standard-components/enable-ios-audio.js"},
+			{"id": "handler-controller",         "src": "../js/standard-components/handler-controller.js"},
+			{"id": "tiled-loader",               "src": "../js/standard-components/tiled-loader.js"},
+            {"id": "handler-render-createjs",    "src": "../js/standard-components/handler-render-createjs.js"},
+            {"id": "handler-render-dom",         "src": "../js/standard-components/handler-render-dom.js"},
+            {"id": "handler-ai",                 "src": "../js/standard-components/handler-ai.js"},
+			{"id": "handler-logic",              "src": "../js/standard-components/handler-logic.js"},
+			{"id": "camera",                     "src": "../js/standard-components/camera.js"},
+			{"id": "collision-group",            "src": "../js/standard-components/collision-group.js"},
+            {"id": "audio",                      "src": "../js/standard-components/audio.js"},
+            {"id": "broadcast-events",           "src": "../js/standard-components/broadcast-events.js"},
+            {"id": "change-scene",               "src": "../js/standard-components/change-scene.js"},
+            {"id": "destroy-me",                 "src": "../js/standard-components/destroy-me.js"},
+            {"id": "dom-element",                "src": "../js/standard-components/dom-element.js"},
+            {"id": "entity-container",           "src": "../js/standard-components/entity-container.js"},
+            {"id": "entity-controller",          "src": "../js/standard-components/entity-controller.js"},
+			{"id": "render-debug",               "src": "../js/standard-components/render-debug.js"},
+			{"id": "render-tiles",               "src": "../js/standard-components/render-tiles.js"},
+            {"id": "render-animation",           "src": "../js/standard-components/render-animation.js"},
+            {"id": "render-image",               "src": "../js/standard-components/render-image.js"},
+            {"id": "logic-button",               "src": "../js/standard-components/logic-button.js"},
+            {"id": "logic-carrier",              "src": "../js/standard-components/logic-carrier.js"},
             {"id": "logic-directional-movement", "src": "../js/standard-components/logic-directional-movement.js"},
             {"id": "logic-gravity",           "src": "../js/standard-components/logic-gravity.js"},
             {"id": "logic-portable",          "src": "../js/standard-components/logic-portable.js"},
@@ -102,6 +102,7 @@
             {"id": "logic-counter",           "src": "../js/standard-components/logic-counter.js"},
             {"id": "logic-timer",             "src": "../js/standard-components/logic-timer.js"},
             {"id": "logic-teleporter",        "src": "../js/standard-components/logic-teleporter.js"},
+            {"id": "logic-portal",	          "src": "../js/standard-components/logic-portal.js"},
 			{"id": "collision-basic",         "src": "../js/standard-components/collision-basic.js"},
 			{"id": "collision-tiles",         "src": "../js/standard-components/collision-tiles.js"},
 			{"id": "ai-pacer",     	 	      "src": "../js/standard-components/ai-pacer.js"},
@@ -114,7 +115,11 @@
             {"id": "logic-gui",               "src": "../js/example-components/logic-gui.js"}
 		],
 		"entities": [ // JSON files describing entities
-			{"id": "tile-layer",      "src": "entities/tile-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+            {"id": "desktop-interface-layer",    "src": "entities/desktop-interface-layer.json"},
+            {"id": "multitouch-interface-layer", "src": "entities/multitouch-interface-layer.json"},
+            {"id": "touch-interface-layer",      "src": "entities/touch-interface-layer.json"},
+            {"id": "tile-layer",      "src": "entities/tile-layer.json"},
 			{"id": "render-layer",    "src": "entities/render-layer.json"},
 			{"id": "collision-layer", "src": "entities/collision-layer.json"},
             {"id": "button-jump",     "src": "entities/button-jump.json"},
@@ -130,6 +135,7 @@
             {"id": "dirt",            "src": "entities/dirt.json"},
             {"id": "gem",             "src": "entities/gem.json"},
             {"id": "pickaxe",         "src": "entities/pickaxe.json"},
+            {"id": "level-portal",	  "src": "entities/level-portal.json"},
             {"id": "gem-counter",     "src": "entities/gem-counter.json"},
             {"id": "title-screen",    "src": "entities/title-screen.json"},
             {"id": "collectible-manager",    "src": "entities/collectible-manager.json"},
@@ -154,11 +160,14 @@
 		],
 		"scenes": [ // JSON files describing scenes
 			{"id": "menu",        "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "scene-level", "src": "scenes/scene-level.json"}
+            {"id": "scene-level-1", "src": "scenes/scene-level-1.json"},
+            {"id": "scene-level-2", "src": "scenes/scene-level-2.json"},
+            {"id": "scene-level-3", "src": "scenes/scene-level-3.json"}
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "level-2", "src": "levels/level-2.json"}
+            {"id": "level-2", "src": "levels/level-2.json"},
+            {"id": "level-3", "src": "levels/level-3.json"}
 		]
 	},
 	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.

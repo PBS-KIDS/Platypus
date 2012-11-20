@@ -5,7 +5,7 @@ platformer.components['render-counter'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render', 'layer:render-load', 'refresh-count']);
+		this.addListeners(['handle-render', 'handle-render-load', 'refresh-count']);
 		this.currentValue = 0;
 		this.targetValue = 0;
 		this.txt = new createjs.Text(this.currentValue.toString());
@@ -15,7 +15,7 @@ platformer.components['render-counter'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		//this.stage = resp.stage;
 		this.txt.x = this.owner.x;
 		this.txt.y = this.owner.y;
@@ -25,7 +25,7 @@ platformer.components['render-counter'] = (function(){
 		resp.stage.addChild(this.txt);
 	};
 	
-	proto['layer:render'] = function(){
+	proto['handle-render'] = function(){
 		// Run loading code here
 		if (this.currentValue != this.targetValue)
 		{

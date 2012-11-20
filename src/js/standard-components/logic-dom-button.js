@@ -5,7 +5,7 @@ platformer.components['logic-dom-button'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'hide', 'show', 'hide-layer', 'show-layer', 'change-text']);
+		this.addListeners(['handle-logic', 'hide', 'show', 'hide-layer', 'show-layer', 'change-text']);
 		
 		this.prevState = '';
 		this.state = 'visible'; //visible, invisible
@@ -21,7 +21,7 @@ platformer.components['logic-dom-button'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(val)
+	proto['handle-logic'] = function(val)
 	{
 		var deltaT = val.deltaT;
 		

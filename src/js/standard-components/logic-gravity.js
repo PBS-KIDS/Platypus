@@ -5,7 +5,7 @@ platformer.components['logic-gravity'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'hit-solid']);
+		this.addListeners(['handle-logic', 'hit-solid']);
 		
 		this.vX = definition.velocityX || 0; 
 		this.vY = definition.velocityY || 0;
@@ -16,7 +16,7 @@ platformer.components['logic-gravity'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var deltaT = resp.deltaT;
 		
 		this.vY += this.yGravity * deltaT;

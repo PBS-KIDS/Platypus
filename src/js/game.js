@@ -2,6 +2,7 @@ platformer.classes.game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};},
 	game          = function (definition){
 		this.currentScene = undefined;
+		this.tickContent = {deltaT: 0};
 		this.settings = definition;
 		this.rootElement = document.createElement('div');
 		this.rootElement.id = definition.global.rootElement;
@@ -57,8 +58,10 @@ platformer.classes.game = (function(){
 	proto = game.prototype;
 	
 	proto.tick = function(deltaT){
+		this.tickContent.deltaT = deltaT;
+		
 		if(this.currentScene){
-			this.currentScene.tick(deltaT);
+			this.currentScene.trigger('tick', this.tickContent);
 		}
 	};
 	

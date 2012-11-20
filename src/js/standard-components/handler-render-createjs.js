@@ -33,10 +33,10 @@ platformer.components['handler-render-createjs'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'layer:render')
+			if (messageIds[x] == 'handle-render')
 			{
 				this.entities.push(entity);
-				entity.trigger('layer:render-load', {
+				entity.trigger('handle-render-load', {
 					stage: self.stage,
 					parentElement: self.owner.rootElement
 					//TODO: send along scaling functions to convert world coordinates to window coordinates // somehow get these from camera?
@@ -49,7 +49,7 @@ platformer.components['handler-render-createjs'] = (function(){
 	proto['tick'] = proto['render'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:render', resp))
+			if(!this.entities[x].trigger('handle-render', resp))
 			{
 				this.entities.splice(x, 1);
 			}
@@ -71,7 +71,7 @@ platformer.components['handler-render-createjs'] = (function(){
 	proto['camera-update'] = function(cameraInfo){
 		this.canvas.width  = this.canvas.offsetWidth;
 		this.canvas.height = this.canvas.offsetHeight;
-		this.stage.setTransform(-cameraInfo.x, -cameraInfo.y, cameraInfo.scaleX, cameraInfo.scaleY);
+		this.stage.setTransform(-cameraInfo.x * cameraInfo.scaleX, -cameraInfo.y * cameraInfo.scaleY, cameraInfo.scaleX, cameraInfo.scaleY);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

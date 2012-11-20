@@ -1,3 +1,25 @@
+/**
+# COMPONENT **change-scene**
+This component allows the entity to initiate a change from the current scene to another scene.
+
+## Messages
+
+### Listens for:
+- **new-scene** - On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
+  > @param message.scene (string) - This is a label corresponding with a predefined scene.
+  > @param message.transition (string) - This can be "instant" or "fade-to-black". Defaults to an instant transition.
+
+## JSON Definition:
+    {
+      "type": "change-scene",
+      
+      "scene": "scene-menu",
+      // Optional (but must be provided by a "change-scene" parameter if not defined here). This causes the "new-scene" trigger to load this scene.
+      
+      "transition": "fade-to-black",
+      // Optional. This can be "instant" or "fade-to-black". Defaults to an "instant" transition.
+    }
+*/
 platformer.components['change-scene'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -7,7 +29,6 @@ platformer.components['change-scene'] = (function(){
 
 		this.scene = definition.scene;
 		this.transition = definition.transition || 'instant';
-		this.overrides = definition.overrides || false;
 		
 		this.addListeners(['new-scene']);
 	};
@@ -17,9 +38,8 @@ platformer.components['change-scene'] = (function(){
 		var resp   = response || this,
 		scene      = resp.scene || this.scene,
 		transition = resp.transition || this.transition;
-		overrides  = resp.overrides  || this.overrides;
 
-		platformer.game.loadScene(scene, transition, overrides);
+		platformer.game.loadScene(scene, transition);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

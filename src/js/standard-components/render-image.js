@@ -18,7 +18,7 @@ platformer.components['render-image'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render-load', 'layer:render']);
+		this.addListeners(['handle-render-load', 'handle-render']);
 		this.stage = undefined;
 		this.image = new createjs.Bitmap(platformer.assets[image]);
 		if(source){
@@ -31,7 +31,7 @@ platformer.components['render-image'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(obj){
+	proto['handle-render-load'] = function(obj){
 		var self = this,
 		over     = false;
 		
@@ -101,7 +101,7 @@ platformer.components['render-image'] = (function(){
 		}
 	};
 	
-	proto['layer:render'] = function(obj){
+	proto['handle-render'] = function(obj){
 		this.image.x = this.owner.x;
 		this.image.y = this.owner.y;
 		this.image.z = this.owner.z;

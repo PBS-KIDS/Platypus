@@ -25,32 +25,40 @@ Summarize the purpose of this component here.
       // List all additional parameters and their possible values here.
     }
 */
-platformer.components['name-of-component'] = (function(){ //TODO: Change the name of the component!
+platformer.components['logic-portal'] = (function(){ //TODO: Change the name of the component!
 	var component = function(owner, definition){
 		this.owner = owner;
 		
 		// Messages that this component listens for
 		this.listeners = [];
 
-		/**************************************************
-		 TODO: Add message ids that this component is listening for here.
-		 	
-		 	e.g.
-		 	this.addListeners(['load']);
-		 *************************************************/
-		this.addListeners([/*MESSAGE IDS HERE!*/]);
+		this.addListeners(['layer:logic', 'occupied', 'activate']);
+		this.destination = this.owner.destination || definition.destination;
+		this.activateOn = definition.activateOn || 'collide';
+		this.override = definition.override;
+		this.activated = false;
+		this.used = false; 
 	};
 	var proto = component.prototype;
 	
-	/*********************************************************************
-	 TODO: Add functions that handle the various messages. There should be a corresponding function for each 
-	       listener added above. 
-		
-		e.g.
-		proto['load'] = function(resp){
-			// Run loading code here
-		};
-	**********************************************************************/
+	
+	proto['layer:logic'] = function(resp){
+		if (!this.used && this.activated)
+		{
+			this.owner.trigger("new-scene", {scene: this.destination});
+			this.used = true;
+		}
+	};
+	
+	proto['occupied'] = function(collisionInfo){
+		var entity = collisionInfo.entity; 
+		entity.trigger('portal-waiting', this.owner);
+	};
+	
+	proto['activate'] = function()
+	{
+		this.activated = true;
+	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

@@ -19,11 +19,11 @@ platformer.components['render-debug'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load']);
+		this.addListeners(['handle-render', 'handle-render-load']);
 	};
 	var proto = component.prototype;
 
-	proto['layer:render'] = function(stage){
+	proto['handle-render'] = function(stage){
 		if(this.owner.getAABB){
 			var aabb   = this.owner.getAABB();
 			this.shape.scaleX = aabb.width / this.initialWidth;
@@ -57,7 +57,7 @@ platformer.components['render-debug'] = (function(){
 		}
 	};
 
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		var self = this,
 		x        = this.owner.x      = this.owner.x || 0,
 		y        = this.owner.y      = this.owner.y || 0,

@@ -5,7 +5,7 @@
   PBS.KIDS = this.PBS.KIDS || {};
   PBS.KIDS.platformer = platformer;
 
-platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"},"beetle":{"id":"beetle","src":"i/beetle.png"},"flower":{"id":"flower","src":"i/flower.png"},"briar":{"id":"briar","src":"i/briar.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/standard-components/enable-ios-audio.js"},"handler-controller":{"id":"handler-controller","src":"../src/js/standard-components/handler-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/standard-components/tiled-loader.js"},"handler-render-createjs":{"id":"handler-render-createjs","src":"../src/js/standard-components/handler-render-createjs.js"},"handler-render-dom":{"id":"handler-render-dom","src":"../src/js/standard-components/handler-render-dom.js"},"handler-ai":{"id":"handler-ai","src":"../src/js/standard-components/handler-ai.js"},"handler-logic":{"id":"handler-logic","src":"../src/js/standard-components/handler-logic.js"},"camera":{"id":"camera","src":"../src/js/standard-components/camera.js"},"collision-group":{"id":"collision-group","src":"../src/js/standard-components/collision-group.js"},"audio":{"id":"audio","src":"../src/js/standard-components/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/standard-components/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/standard-components/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/standard-components/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/standard-components/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/standard-components/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/standard-components/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/standard-components/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/standard-components/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/standard-components/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/standard-components/render-image.js"},"logic-button":{"id":"logic-button","src":"../src/js/standard-components/logic-button.js"},"logic-carrier":{"id":"logic-carrier","src":"../src/js/standard-components/logic-carrier.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/standard-components/logic-directional-movement.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/standard-components/logic-gravity.js"},"logic-portable":{"id":"logic-portable","src":"../src/js/standard-components/logic-portable.js"},"logic-pushable":{"id":"logic-pushable","src":"../src/js/standard-components/logic-pushable.js"},"logic-counter":{"id":"logic-counter","src":"../src/js/standard-components/logic-counter.js"},"logic-timer":{"id":"logic-timer","src":"../src/js/standard-components/logic-timer.js"},"logic-teleporter":{"id":"logic-teleporter","src":"../src/js/standard-components/logic-teleporter.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/standard-components/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/standard-components/collision-tiles.js"},"ai-pacer":{"id":"ai-pacer","src":"../src/js/standard-components/ai-pacer.js"},"render-gui":{"id":"render-gui","src":"../src/js/example-components/render-gui.js"},"render-counter":{"id":"render-counter","src":"../src/js/example-components/render-counter.js"},"render-clock":{"id":"render-clock","src":"../src/js/example-components/render-clock.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/example-components/logic-collectible-manager.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/example-components/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/example-components/logic-gem.js"},"logic-gui":{"id":"logic-gui","src":"../src/js/example-components/logic-gui.js"}},"entities":{"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"z":400,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"z":400,"width":400,"height":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":420,"y":1090,"z":400,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-level","transition":"fade-to-black","overrides":{"#levelName#":"level-1"}}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"z":400,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"z":400,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right","key:up-arrow":"key-up","key:down-arrow":"key-down"}},{"type":"logic-carrier"},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":"","beetle":"","briar":""}},{"type":"render-animation","spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6],"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"pickaxe":{"sound":"pickaxe-other","interrupt":"none"},"walking":{"sound":"walk","interrupt":"none"},"jumping":"jump"}},{"type":"render-debug","regY":260,"regX":130}],"properties":{"x":10,"y":10,"z":200,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"logic-pushable"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"hit-solid","dirt":"hit-solid","hero":["push-entity","hit-solid"],"tiles":"hit-solid","beetle":"hit-solid","briar":"hit-solid"}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2},{"type":"render-debug","regX":120,"regY":240}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":250},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10,"z":100}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"prepare-for-collision","delay":50}]},"gem-counter":{"id":"gem-counter","components":[{"type":"logic-counter","message":"count-gems"},{"type":"render-counter","scaleX":20,"scaleY":20,"color":"#FFF"}],"properties":{"x":3800,"y":175,"z":400}},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"broadcast-events","events":{"broadcast-gem-collected":"gui-gem-collected"}}],"properties":{"x":10,"y":10}},"gui":{"id":"gui","components":[{"type":"logic-gui"},{"type":"render-animation","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}},"scaleX":2.9,"scaleY":2.9},{"type":"entity-container","entities":[{"type":"gem-counter"},{"type":"clock"}],"childEvents":["count-gems","set-time","start-timer","stop-timer","layer:logic","layer:render","layer:render-load","audio-mute-toggle","audio-mute","audio-unmute"]}],"properties":{"x":4000,"y":0,"z":350}},"beetle":{"id":"beetle","components":[{"type":"ai-pacer","movement":"horizontal"},{"type":"logic-directional-movement"},{"type":"logic-gravity"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-90,-120],[90,120]]},"collisionType":"beetle","solidCollisions":{"beetle":"turn-around","hero":"turn-around","block":"turn-around","dirt":"turn-around","tiles":"turn-around","briar":"turn-around"}},{"type":"render-animation","spriteSheet":{"images":["beetle"],"frames":{"width":24,"height":24,"regY":24,"regX":12},"animations":{"standing":[0],"walking-right":{"frames":[2,3,1],"frequency":4},"walking-left":{"frames":[3,2,1],"frequency":4}}}}],"properties":{"x":10,"y":10,"z":150}},"clock":{"id":"clock","components":[{"type":"logic-timer"},{"type":"render-clock","scaleX":20,"scaleY":20,"color":"#FFF"},{"type":"audio","audioMap":{}}],"properties":{"x":2000,"y":175,"z":400,"alarmMessage":"half-minute-timer","updateMessage":"refresh-clock","alarmTime":30000,"isIncrementing":true,"isInterval":true,"time":1000}},"flower":{"id":"flower","components":[{"type":"render-animation","spriteSheet":{"images":["flower"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"default":[0]}},"scaleX":2,"scaleY":2}],"properties":{"x":10,"y":10,"z":50}},"briar":{"id":"briar","components":[{"type":"logic-teleporter","facing":"up"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"briar","solidCollisions":{"hero":"teleport-entity"}},{"type":"render-animation","spriteSheet":{"images":["briar"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"up":[0],"down":[3],"right":[1],"left":[2]}},"state":"up","scaleX":2,"scaleY":2},{"type":"render-debug","regX":60,"regY":120}],"properties":{"x":10,"y":10,"z":250,"linkId":""}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu-layer","components":[{"type":"handler-logic"},{"type":"handler-render-dom"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio-layer","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-level":{"layers":[{"id":"action-layer","components":[{"type":"handler-ai"},{"type":"handler-logic"},{"type":"collision-group"},{"type":"camera","width":3200},{"type":"handler-render-createjs"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"collectible-manager"}]},{"type":"tiled-loader","level":"#levelName#","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},{"id":"multitouch-interface-layer","filter":{"includes":["multitouch"]},"components":[{"type":"camera","width":2000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},{"id":"touch-interface-layer","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"camera","width":2000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},{"id":"desktop-interface-layer","filter":{"excludes":["touch"]},"components":[{"type":"camera","width":4000},{"type":"handler-logic"},{"type":"handler-render-createjs","showFPS":true},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"},{"type":"gui"}],"childEvents":["gui-gem-collected"]}]}],"id":"scene-level"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower0"},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower1"},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower2"},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower3"},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower4"},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower5"},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower6"},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{"":"","teleportId":"flower6"},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{"facing":"right","teleportId":"flower6"},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{"facing":"left","teleportId":"flower6"},"type":"","width":0,"x":888,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":648,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":48},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":0,"y":24},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower4"},"type":"","width":0,"x":528,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":696,"y":168}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49,35,35,35,35,35,35,35,35,35,35,35,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"height":18,"name":"tile-layer","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":1,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":48},{"gid":11,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":0}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24},{"firstgid":33,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"}}};
+platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"},"beetle":{"id":"beetle","src":"i/beetle.png"},"flower":{"id":"flower","src":"i/flower.png"},"briar":{"id":"briar","src":"i/briar.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/standard-components/enable-ios-audio.js"},"handler-controller":{"id":"handler-controller","src":"../src/js/standard-components/handler-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/standard-components/tiled-loader.js"},"handler-render-createjs":{"id":"handler-render-createjs","src":"../src/js/standard-components/handler-render-createjs.js"},"handler-render-dom":{"id":"handler-render-dom","src":"../src/js/standard-components/handler-render-dom.js"},"handler-ai":{"id":"handler-ai","src":"../src/js/standard-components/handler-ai.js"},"handler-logic":{"id":"handler-logic","src":"../src/js/standard-components/handler-logic.js"},"camera":{"id":"camera","src":"../src/js/standard-components/camera.js"},"collision-group":{"id":"collision-group","src":"../src/js/standard-components/collision-group.js"},"audio":{"id":"audio","src":"../src/js/standard-components/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/standard-components/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/standard-components/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/standard-components/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/standard-components/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/standard-components/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/standard-components/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/standard-components/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/standard-components/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/standard-components/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/standard-components/render-image.js"},"logic-button":{"id":"logic-button","src":"../src/js/standard-components/logic-button.js"},"logic-carrier":{"id":"logic-carrier","src":"../src/js/standard-components/logic-carrier.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/standard-components/logic-directional-movement.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/standard-components/logic-gravity.js"},"logic-portable":{"id":"logic-portable","src":"../src/js/standard-components/logic-portable.js"},"logic-pushable":{"id":"logic-pushable","src":"../src/js/standard-components/logic-pushable.js"},"logic-counter":{"id":"logic-counter","src":"../src/js/standard-components/logic-counter.js"},"logic-timer":{"id":"logic-timer","src":"../src/js/standard-components/logic-timer.js"},"logic-teleporter":{"id":"logic-teleporter","src":"../src/js/standard-components/logic-teleporter.js"},"logic-portal":{"id":"logic-portal","src":"../src/js/standard-components/logic-portal.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/standard-components/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/standard-components/collision-tiles.js"},"ai-pacer":{"id":"ai-pacer","src":"../src/js/standard-components/ai-pacer.js"},"render-gui":{"id":"render-gui","src":"../src/js/example-components/render-gui.js"},"render-counter":{"id":"render-counter","src":"../src/js/example-components/render-counter.js"},"render-clock":{"id":"render-clock","src":"../src/js/example-components/render-clock.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/example-components/logic-collectible-manager.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/example-components/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/example-components/logic-gem.js"},"logic-gui":{"id":"logic-gui","src":"../src/js/example-components/logic-gui.js"}},"entities":{"action-layer":{"id":"action-layer","components":[{"type":"handler-ai"},{"type":"handler-logic"},{"type":"collision-group"},{"type":"camera","width":3200},{"type":"handler-render-createjs"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"collectible-manager"}]},{"type":"tiled-loader","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},"desktop-interface-layer":{"id":"desktop-interface-layer","filter":{"excludes":["touch"]},"components":[{"type":"camera","width":4000},{"type":"handler-logic"},{"type":"handler-render-createjs","showFPS":true},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"},{"type":"gui"}],"childEvents":["gui-gem-collected"]}]},"multitouch-interface-layer":{"id":"multitouch-interface-layer","filter":{"includes":["multitouch"]},"components":[{"type":"camera","width":2000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},"touch-interface-layer":{"id":"touch-interface-layer","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"camera","width":2000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"z":400,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"z":400,"width":400,"height":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":420,"y":1090,"z":400,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-level-1","transition":"fade-to-black"}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"z":400,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"z":400,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right"}},{"type":"logic-carrier"},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":"","beetle":"","briar":""}},{"type":"render-animation","animationMap":{"swing,left":"swing-left","swing,right":"swing-right","air,left":"jumping-left","air,right":"jumping-right","moving,left":"walking-left","moving,right":"walking-right","left":"standing-left","right":"standing-right","default":"standing-right"},"spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6],"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"swingHit":{"sound":"pickaxe-other","interrupt":"none"},"ground, moving":{"sound":"walk","interrupt":"none"},"jumping":"jump"}},{"type":"render-debug","regY":260,"regX":130}],"properties":{"x":10,"y":10,"z":200,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"logic-pushable"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"hit-solid","dirt":"hit-solid","hero":["push-entity","hit-solid"],"tiles":"hit-solid","beetle":"hit-solid","briar":"hit-solid"}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2},{"type":"render-debug","regX":120,"regY":240}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":250},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10,"z":100}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"prepare-for-collision","delay":50}]},"level-portal":{"id":"level-portal","components":[{"type":"logic-portal"},{"type":"collision-basic","collisionType":"portal","softCollisions":{"hero":"occupied"}},{"type":"render-debug","regX":120,"regY":240},{"type":"change-scene","transition":"fade-to-black"}],"properties":{"x":50,"y":50,"z":0}},"gem-counter":{"id":"gem-counter","components":[{"type":"logic-counter","message":"count-gems"},{"type":"render-counter","scaleX":20,"scaleY":20,"color":"#FFF"}],"properties":{"x":3800,"y":175,"z":400}},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"broadcast-events","events":{"broadcast-gem-collected":"gui-gem-collected"}}],"properties":{"x":10,"y":10}},"gui":{"id":"gui","components":[{"type":"logic-gui"},{"type":"render-animation","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}},"scaleX":2.9,"scaleY":2.9},{"type":"entity-container","entities":[{"type":"gem-counter"},{"type":"clock"}],"childEvents":["count-gems","set-time","start-timer","stop-timer","handle-logic","handle-render","handle-render-load","audio-mute-toggle","audio-mute","audio-unmute"]}],"properties":{"x":4000,"y":0,"z":350}},"beetle":{"id":"beetle","components":[{"type":"ai-pacer","movement":"horizontal"},{"type":"logic-directional-movement"},{"type":"logic-gravity"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-90,-120],[90,120]]},"collisionType":"beetle","solidCollisions":{"beetle":"turn-around","hero":"turn-around","block":"turn-around","dirt":"turn-around","tiles":"turn-around","briar":"turn-around"}},{"type":"render-animation","animationMap":{"moving,left":"walking-left","moving,right":"walking-right","default":"standing"},"spriteSheet":{"images":["beetle"],"frames":{"width":24,"height":24,"regY":24,"regX":12},"animations":{"standing":[0],"walking-right":{"frames":[2,3,1],"frequency":4},"walking-left":{"frames":[3,2,1],"frequency":4}}}}],"properties":{"x":10,"y":10,"z":150}},"clock":{"id":"clock","components":[{"type":"logic-timer"},{"type":"render-clock","scaleX":20,"scaleY":20,"color":"#FFF"},{"type":"audio","audioMap":{}}],"properties":{"x":2000,"y":175,"z":400,"alarmMessage":"half-minute-timer","updateMessage":"refresh-clock","alarmTime":30000,"isIncrementing":true,"isInterval":true,"time":1000}},"flower":{"id":"flower","components":[{"type":"render-animation","spriteSheet":{"images":["flower"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"default":[0]}},"scaleX":2,"scaleY":2}],"properties":{"x":10,"y":10,"z":50}},"briar":{"id":"briar","components":[{"type":"logic-teleporter","facing":"up"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"briar","solidCollisions":{"hero":"teleport-entity"}},{"type":"render-animation","spriteSheet":{"images":["briar"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"up":[0],"down":[3],"right":[1],"left":[2]}},"state":"up","scaleX":2,"scaleY":2},{"type":"render-debug","regX":60,"regY":120}],"properties":{"x":10,"y":10,"z":250,"linkId":""}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu-layer","components":[{"type":"handler-logic"},{"type":"handler-render-dom"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio-layer","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-level-1":{"layers":[{"type":"action-layer","properties":{"level":"level-1"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-1"},"scene-level-2":{"layers":[{"type":"action-layer","properties":{"level":"level-2"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-2"},"scene-level-3":{"layers":[{"type":"action-layer","properties":{"level":"level-3"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-3"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower0"},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower1"},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower2"},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower3"},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower4"},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower5"},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower6"},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{"":"","teleportId":"flower6"},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{"facing":"right","teleportId":"flower6"},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{"facing":"left","teleportId":"flower6"},"type":"","width":0,"x":888,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":648,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":48},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":0,"y":24},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower4"},"type":"","width":0,"x":528,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":696,"y":168},{"height":48,"name":"","properties":{"destination":"scene-level-3"},"type":"level-portal","width":48,"x":912,"y":360}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49,35,35,35,35,35,35,35,35,35,35,35,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"height":18,"name":"tile-layer","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":1,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":48},{"gid":11,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":0}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24},{"firstgid":33,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"},"level-3":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":20,"name":"Back","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[6,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,7,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,15,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,16],"height":20,"name":"Front","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"Objects","objects":[{"gid":46,"height":0,"name":"","properties":{},"type":"","width":0,"x":48,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-3"}}};
 platformer.classes = {};
 
 /*--------------------------------------------------
@@ -15,6 +15,7 @@ platformer.classes.game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};},
 	game          = function (definition){
 		this.currentScene = undefined;
+		this.tickContent = {deltaT: 0};
 		this.settings = definition;
 		this.rootElement = document.createElement('div');
 		this.rootElement.id = definition.global.rootElement;
@@ -70,8 +71,10 @@ platformer.classes.game = (function(){
 	proto = game.prototype;
 	
 	proto.tick = function(deltaT){
+		this.tickContent.deltaT = deltaT;
+		
 		if(this.currentScene){
-			this.currentScene.tick(deltaT);
+			this.currentScene.trigger('tick', this.tickContent);
 		}
 	};
 	
@@ -145,6 +148,71 @@ platformer.classes.game = (function(){
 /*--------------------------------------------------
  *   Entity - ../src/js/entity.js
  */
+/**
+# CLASS entity
+This class comprises the core structure of every object in the [[Game]]. Starting with an entity, various components are added to it to build a specific object. As such, there is very little functionality in the entity itself apart from functions and pieces allowing for addition and removal of components and communication between components.
+
+## Messages
+
+### Local Broadcasts:
+- **load** - The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
+
+## Methods
+- **[constructor]** - Creates an object from the entity class and attaches both properties and components as provided by the parameters.
+  > @param definition (object) - Base definition for the entity, including both properties and components as shown below under "JSON definition".
+  > @param instanceDefinition (object) - Specific instance definition including properties that override the base definition properties.
+  > @return entity - returns the new entity made up of the provided components. 
+- **addComponent** - Attaches the provided component to the entity.
+  > @param component (object) - Must be an object that functions as a [[Component]].
+- > @return component - Returns the same object that was submitted.
+- **removeComponent** - Removes the mentioned component from the entity.
+  > @param component (object) - Must be a [[Component]] attached to the entity.
+- > @return component|false - Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
+- **bind** - Used by components' to bind handler functions to triggered events on the entity. 
+  > @param messageId (string) - This is the message for which the component is listening.
+  > @param func (function) - This is the function that will be run when the message is triggered.
+- **unbind** - Used by components' to unbind handler functions on the entity, typically called when a component is removed from the entity.
+  > @param messageId (string) - This is the message the component is currently listening to.
+  > @param func (function) - This is the function that was attached to the message.
+- **trigger** - This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run component functions as appropriate.
+  > @param messageId (string) - This is the message to process.
+  > @param value (variant) - This is a message object or other value to pass along to component functions.
+  > @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+  > @return integer - The number of handlers for the triggered message: this is useful for determining whether the entity cares about a given message.
+- **getMessageIds** - This method returns all the messages that this entity is concerned about.
+  > @return Array - An array of strings listing all the messages for which this entity has handlers.
+- **destroy** - This method removes all components from the entity.
+
+## JSON Definition:
+    {
+      "id": "entity-id",
+      // "entity-id" becomes `entity.type` once the entity is created.
+      
+      "components": [
+      // This array lists one or more component definition objects
+      
+        {"type": "example-component"}
+        // The component objects must include a "type" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
+      ],
+      
+      "properties": [
+      // This array lists properties that will be attached directly to this entity.
+      
+        "x": 240
+        // For example, `x` becomes `entity.x` on the new entity.
+      ],
+      
+      "filters": {
+      // Filters are only used by top level entities loaded by the scene and are not used by the entity directly. They determine whether an entity should be loaded on a particular browser according to browser settings.
+      
+        "includes": ["touch"],
+        // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.
+
+        "excludes": ["multitouch"]
+        // Optional. This filter specifies that this entity should not be loaded on browsers/devices that do not support a multitouch interface. More than one setting can be added to the array.
+      }
+    }
+*/
 platformer.classes.entity = (function(){
 	var entity = function(definition, instanceDefinition){
 		var self             = this,
@@ -258,65 +326,100 @@ platformer.classes.entity = (function(){
 /*--------------------------------------------------
  *   Scene - ../src/js/scene.js
  */
+/**
+# CLASS scene
+This class is instantiated by [[Game]] and contains one or more entities as layers. Each layer [[Entity]] handles a unique aspect of the scene. For example, one layer might contain the game world, while another layer contains the game interface. Generally there is only a single scene loaded at any given moment.
+
+## Messages
+
+### Child Broadcasts:
+- **[Messages specified in definition]** - Listens for messages and on receiving them, re-triggers them on each entity layer.
+  > @param message (object) - sends the message object received by the original message.
+
+## Methods
+- **[constructor]** - Creates an object from the scene class and passes in a scene definition containing a list of layers to load and a DOM element where the scene will take place.
+  > @param definition (object) - Base definition for the scene, including one or more layers with both properties, filters, and components as shown below under "JSON definition".
+  > @param rootElement (DOM element) - DOM element where scene displays layers.
+  > @return scene - returns the new scene composed of the provided layers.
+- **trigger** - This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
+  > @param messageId (string) - This is the message to process.
+  > @param value (variant) - This is a message object or other value to pass along to component functions.
+- **destroy** - This method destroys all the layers in the scene.
+
+## JSON Definition:
+    {
+      "layers":[
+      // Required array listing the entities that should be loaded as scene layers. These can be actual entity JSON definitions as shown in [[Entity]] or references to entities by using the following specification.
+
+        {
+          "type": "entity-id",
+          // This value maps to an entity definition with a matching "id" value as shown in [[Entity]] and will load that definition.
+          
+          "properties":{"x": 400}
+          // Optional. If properties are passed in this reference, they override the entity definition's properties of the same name.
+        }
+      ]
+    }
+*/
 platformer.classes.scene = (function(){
 	var scene = function(definition, rootElement){
 		var layers = definition.layers,
-		supportedLayer = true;
+		supportedLayer = true,
+		layerDefinition = false,
+		properties = false;
 		this.rootElement = rootElement;
 		this.layers = [];
-		this.tickContent = {
-			deltaT: 0//,
-			//debug: true
-		};
 		for(var layer in layers){
+			layerDefinition = layers[layer];
+			properties = {rootElement: this.rootElement};
+			if (layerDefinition.properties){
+				for(i in layerDefinition.properties){
+					properties[i] = layerDefinition.properties[i];
+				}
+			}
+
+			if(layerDefinition.type){ // this layer should be loaded from an entity definition rather than this instance
+				layerDefinition = platformer.settings.entities[layerDefinition.type];
+			}
+			
 			supportedLayer = true;
-			if(layers[layer].filter){
-				if(layers[layer].filter.includes){
+			if(layerDefinition.filter){
+				if(layerDefinition.filter.includes){
 					supportedLayer = false;
-					for(var filter in layers[layer].filter.includes){
-						if(platformer.settings.supports[layers[layer].filter.includes[filter]]){
+					for(var filter in layerDefinition.filter.includes){
+						if(platformer.settings.supports[layerDefinition.filter.includes[filter]]){
 							supportedLayer = true;
 						}
 					}
 				}
-				if(layers[layer].filter.excludes){
-					for(var filter in layers[layer].filter.excludes){
-						if(platformer.settings.supports[layers[layer].filter.excludes[filter]]){
+				if(layerDefinition.filter.excludes){
+					for(var filter in layerDefinition.filter.excludes){
+						if(platformer.settings.supports[layerDefinition.filter.excludes[filter]]){
 							supportedLayer = false;
 						}
 					}
 				}
 			}
 			if (supportedLayer){
-				this.layers.push(new platformer.classes.entity(layers[layer], {
-					properties:{
-						rootElement: this.rootElement
-					}
+				this.layers.push(new platformer.classes.entity(layerDefinition, {
+					properties: properties
 				}));
 			}
 		}
 	};
 	var proto = scene.prototype;
 	
-	proto.tick = function(deltaT){
-		this.tickContent.deltaT = deltaT;
-		
+	proto.trigger = function(eventId, event){
 		for(var layer in this.layers){
-			this.layers[layer].trigger('tick', this.tickContent);
+			this.layers[layer].trigger(eventId, event);
 		}
 	};
-
+	
 	proto.destroy = function(){
 		for(var layer in this.layers){
 			this.layers[layer].destroy();
 		}
 		this.layers.length = 0;
-	};
-	
-	proto.trigger = function(eventId, event){
-		for(var layer in this.layers){
-			this.layers[layer].trigger(eventId, event);
-		}
 	};
 	
 	return scene;
@@ -836,22 +939,66 @@ platformer.components['handler-controller'] = (function(){
 /*--------------------------------------------------
  *   tiled-loader - ../src/js/standard-components/tiled-loader.js
  */
+/**
+# COMPONENT **tiled-loader**
+This component is attached to a top-level entity (loaded by the [[Scene]]) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor] [link1] and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
+
+## Dependencies:
+- Component [[Entity-Container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
+- Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
+- Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
+- Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
+
+## Messages
+
+### Listens for:
+- **load** - On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
+
+### Local Broadcasts:
+- **world-loaded** - Once finished loading the map, this message is triggered on the entity to notify other components of completion.
+  > @param message.width (number) - The width of the world in world units.
+  > @param message.height (number) - The height of the world in world units.
+  > @param message.camera ([[Entity]]) - If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+
+## JSON Definition:
+    {
+      "type": "tiled-loader",
+      
+      "level": "level-4",
+      // Required. Specifies the JSON level to load.
+      
+      "unitsPerPixel": 10,
+      // Optional. Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit.
+      
+      "images": ["spritesheet-1", "spritesheet-2"],
+      // Optional. If specified, the referenced images are used as the game spritesheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.
+      
+      "imagesScale": 5,
+      // Optional. If images are set above, this property sets the scale of the art relative to world coordinates. Defaults to the value set in "unitsPerPixel".
+      
+      "zStep": 500
+      // Optional. Adds step number to each additional Tiled layer to maintain z-order. Defaults to 1000.
+    }
+
+[link1]: http://www.mapeditor.org/
+*/
 platformer.components['tiled-loader'] = (function(){
 	var component = function(owner, definition){
-		this.owner = owner;
-		this.entities = [];
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['load']);
+		this.owner        = owner;
+		this.entities     = [];
+		this.layerZ       = 0;
+		this.followEntity = false;
+		this.listeners    = [];
 
-		this.level = platformer.settings.levels[definition.level];
-		this.tileEntityId = definition.tileEntityId || 'tile';
-		this.unitsPerPixel = definition.unitsPerPixel || 1;
-		this.images = definition.images || false;
-		this.imagesScale = definition.imagesScale || this.unitsPerPixel;
-		this.layerZ = 0;
-		this.layerZStep = 1000;
+		this.level = platformer.settings.levels[this.owner.level || definition.level];
+
+		this.unitsPerPixel = this.owner.unitsPerPixel || definition.unitsPerPixel || 1;
+		this.images        = this.owner.images        || definition.images        || false;
+		this.imagesScale   = this.owner.imagesScale   || definition.imagesScale   || this.unitsPerPixel;
+		this.layerZStep    = this.owner.zStep         || definition.zStep         || 1000;
+
+		// Messages that this component listens for
+		this.addListeners(['load']);
 	},
 	proto = component.prototype; 
 
@@ -861,6 +1008,11 @@ platformer.components['tiled-loader'] = (function(){
 		for(; actionLayer < this.level.layers.length; actionLayer++){
 			this.setupLayer(this.level.layers[actionLayer], this.level);
 		}
+		this.owner.trigger('world-loaded', {
+			width:  this.level.width  * this.level.tilewidth  * this.unitsPerPixel,
+			height: this.level.height * this.level.tileheight * this.unitsPerPixel,
+			camera: this.followEntity
+		});
 		this.owner.removeComponent(this);
 	};
 	
@@ -882,7 +1034,6 @@ platformer.components['tiled-loader'] = (function(){
 		importAnimation= undefined,
 		importCollision= undefined,
 		importRender   = undefined,
-		followEntity   = undefined,
 		layerCollides  = true,
 		numberProperty = false;
 
@@ -1059,18 +1210,12 @@ platformer.components['tiled-loader'] = (function(){
 					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
 					if(entity){
 						if(entity.camera){
-							followEntity = {entity: entity, mode: entity.camera}; //used by camera
+							this.followEntity = {entity: entity, mode: entity.camera}; //used by camera
 						}
 					}
 				}
 			}
 		}
-		this.owner.trigger('world-loaded', {
-			width:  width  * tileWidth  * this.unitsPerPixel,
-			height: height * tileHeight * this.unitsPerPixel,
-			unitsPerPixel: this.unitsPerPixel,
-			camera: followEntity
-		});
 		this.layerZ += this.layerZStep;
 	};
 
@@ -1147,10 +1292,10 @@ platformer.components['handler-render-createjs'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'layer:render')
+			if (messageIds[x] == 'handle-render')
 			{
 				this.entities.push(entity);
-				entity.trigger('layer:render-load', {
+				entity.trigger('handle-render-load', {
 					stage: self.stage,
 					parentElement: self.owner.rootElement
 					//TODO: send along scaling functions to convert world coordinates to window coordinates // somehow get these from camera?
@@ -1163,7 +1308,7 @@ platformer.components['handler-render-createjs'] = (function(){
 	proto['tick'] = proto['render'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:render', resp))
+			if(!this.entities[x].trigger('handle-render', resp))
 			{
 				this.entities.splice(x, 1);
 			}
@@ -1185,7 +1330,7 @@ platformer.components['handler-render-createjs'] = (function(){
 	proto['camera-update'] = function(cameraInfo){
 		this.canvas.width  = this.canvas.offsetWidth;
 		this.canvas.height = this.canvas.offsetHeight;
-		this.stage.setTransform(-cameraInfo.x, -cameraInfo.y, cameraInfo.scaleX, cameraInfo.scaleY);
+		this.stage.setTransform(-cameraInfo.x * cameraInfo.scaleX, -cameraInfo.y * cameraInfo.scaleY, cameraInfo.scaleX, cameraInfo.scaleY);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -1236,7 +1381,7 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['tick', 'child-entity-added','render', 'camera-update']);
+		this.addListeners(['tick', 'child-entity-added', 'render']);
 		
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
@@ -1252,10 +1397,10 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'layer:render')
+			if (messageIds[x] == 'handle-render')
 			{
 				this.entities.push(entity);
-				entity.trigger('layer:render-load', {
+				entity.trigger('handle-render-load', {
 					element: self.element
 				});
 				break;
@@ -1266,15 +1411,12 @@ platformer.components['handler-render-dom'] = (function(){
 	proto['tick'] = proto['render'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:render', resp))
+			if(!this.entities[x].trigger('handle-render', resp))
 			{
 				this.entities.splice(x, 1);
 			}
 			
 		}
-	};
-	
-	proto['camera-update'] = function(cameraInfo){
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -1409,7 +1551,7 @@ platformer.components['handler-logic'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'layer:logic')
+			if (messageIds[x] == 'handle-logic')
 			{
 				this.entities.push(entity);
 				break;
@@ -1420,7 +1562,7 @@ platformer.components['handler-logic'] = (function(){
 	proto['tick'] = proto['logic'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:logic', resp))
+			if(!this.entities[x].trigger('handle-logic', resp))
 			{
 				this.entities.splice(x, 1);
 			}
@@ -1464,6 +1606,72 @@ platformer.components['handler-logic'] = (function(){
 /*--------------------------------------------------
  *   camera - ../src/js/standard-components/camera.js
  */
+/**
+# COMPONENT **camera**
+This component maintains the current viewport location and size with regards to both the game world coordinates and the screen coordinates.
+
+## Dependencies:
+- **rootElement** property (on entity) - This component requires a DOM element which it uses as the "window" determining the camera's aspect ratio and size.
+
+## Messages
+
+### Listens for:
+- **tick, camera** - On a `tick` or `camera` step message, the camera updates its location according to its current state.
+  > @param message.deltaT - If necessary, the current camera update function may require the length of the tick to adjust movement rate.
+- **follow** - On receiving this message, the camera begins following the requested object.
+  > @param message.mode (string) - Required. Can be "locked", "bounding", or "static". "static" suspends following, but the other two settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method.
+  > @param message.entity ([[Entity]]) - The entity that the camera should commence following.
+  > @param message.top (number) - The top of a bounding box following an entity.
+  > @param message.left (number) - The left of a bounding box following an entity.
+  > @param message.width (number) - The width of a bounding box following an entity.
+  > @param message.height (number) - The height of a bounding box following an entity.
+- **resize, orientationchange** - The camera listens for these events passed along from [[Game]] (who receives them from `window`). It adjusts the camera viewport according to the new size and position of the window.
+- **world-loaded** - On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
+  > @param message.width (number) - Optional. The width of the loaded world.
+  > @param message.height (number) - Optional. The height of the loaded world.
+  > @param message.camera ([[Entity]]) - Optional. An entity that the camera should follow in the loaded world.
+- **child-entity-added** - If children entities are listening for a `camera-update` message, they are added to an internal list.
+  > @param message ([[Entity]]} - Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+- **child-entity-removed** - If children are removed from the entity, they are also removed from this component.
+  > @param message ([[Entity]]} - Expects an entity as the message object to determine the entity to remove from its list.
+
+### Child Broadcasts:
+- **camera-update** - This component fires this message when the position of the camera in the world has changed.
+  > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
+  > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
+  > @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
+  > @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
+
+### Local Broadcasts:
+- **camera-update** - This component fires this message when the position of the camera in the world has changed or if the window has been resized.
+  > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
+  > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
+  > @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
+  > @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
+
+## JSON Definition:
+    {
+      "type": "camera",
+      
+      "top": 100,
+      // Optional number specifying top of viewport in world coordinates
+      
+      "left": 100,
+      // Optional number specifying left of viewport in world coordinates
+      
+      "width": 100,
+      // Optional number specifying width of viewport in world coordinates
+      
+      "height": 100,
+      // Optional number specifying height of viewport in world coordinates
+      
+      "stretch": true,
+      // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
+      
+      "scaleWidth": 480
+      // Optional. Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
+    }
+*/
 platformer.components['camera'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -1475,7 +1683,7 @@ platformer.components['camera'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.addListeners(['tick', 'resize', 'orientationchange', 'camera', 'load', 'world-loaded', 'child-entity-added']);  
+		this.addListeners(['tick', 'camera', 'follow', 'resize', 'orientationchange', 'world-loaded', 'child-entity-added', 'child-entity-removed']);
 		
 		//The dimensions of the camera in the window
 		this.window = {
@@ -1493,20 +1701,6 @@ platformer.components['camera'] = (function(){
 			viewportTop:         definition.top         || 0
 		};
 
-		this.aspectRatio              = definition.aspectRatio || 0;
-		if(this.world.viewportWidth && this.world.viewportHeight){
-			this.aspectRatio = this.aspectRatio || (this.world.viewportHeight      / this.world.viewportWidth); 
-		} else {
-			this.aspectRatio = this.aspectRatio || (this.window.viewportHeight / this.window.viewportWidth);
-			if (this.world.viewportWidth || this.world.viewportHeight){
-				this.world.viewportWidth       = this.world.viewportWidth       || (this.world.viewportHeight      / this.aspectRatio); 
-				this.world.viewportHeight      = this.world.viewportHeight      || (this.aspectRatio / this.world.viewportWidth); 
-			} else {
-				this.world.viewportWidth       = this.window.viewportWidth;
-				this.world.viewportHeight      = this.aspectRatio * this.world.viewportWidth;
-			}
-		}
-		
 		// on resize should the game snap to certain sizes or should it be fluid?
 		// 0 == fluid scaling
 		// set the windowWidth multiple that triggers zooming in
@@ -1533,10 +1727,6 @@ platformer.components['camera'] = (function(){
 	};
 	var proto = component.prototype; 
 
-	proto['load'] = function(){
-		
-	};
-
 	proto['child-entity-added'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
@@ -1545,6 +1735,17 @@ platformer.components['camera'] = (function(){
 			if (messageIds[x] == 'camera-update')
 			{
 				this.entities.push(entity);
+				break;
+			}
+		}
+	};
+	
+	proto['child-entity-removed'] = function(entity){
+		var x = 0;
+
+		for (x in this.entities) {
+			if(this.entities[x] === entity){
+				this.entities.splice(x, 1);
 				break;
 			}
 		}
@@ -1559,14 +1760,15 @@ platformer.components['camera'] = (function(){
 	};
 	
 	proto['tick'] = proto['camera'] = function(resp){
-		var deltaT = resp.deltaT;
+		var deltaT = resp.deltaT,
+		broadcastUpdate = false;
 		
 		switch (this.state)
 		{
 		case 'following':
-			this.followingFunction(this.following);
+			broadcastUpdate = this.followingFunction(this.following);
 			break;
-		case 'roaming':
+		case 'roaming': //TODO: remove or change this test code, since it currently just goes left to right - DDD
 			var speed = .3 * deltaT;
 			if (this.direction)
 			{
@@ -1580,24 +1782,30 @@ platformer.components['camera'] = (function(){
 					this.direction = !this.direction;
 				}
 			}
+			broadcastUpdate = true;
 			break;
 		case 'static':
 		default:
 			break;
 		}
 		
-		this.owner.trigger('camera-update', {
-			x:      this.world.viewportLeft   * this.windowPerWorldUnitWidth,
-			y:      this.world.viewportTop    * this.windowPerWorldUnitHeight,
-			scaleX: this.windowPerWorldUnitWidth,
-			scaleY: this.windowPerWorldUnitHeight,
-		});
-		
-		for (var x = this.entities.length - 1; x > -1; x--)
-		{
-			if(!this.entities[x].trigger('camera-update', this.world))
+		if(broadcastUpdate || this.windowResized){
+			this.windowResized = false;
+			this.owner.trigger('camera-update', {
+				x:      this.world.viewportLeft,
+				y:      this.world.viewportTop,
+				scaleX: this.windowPerWorldUnitWidth,
+				scaleY: this.windowPerWorldUnitHeight
+			});
+		}
+			
+		if(broadcastUpdate){
+			for (var x = this.entities.length - 1; x > -1; x--)
 			{
-				this.entities.splice(x, 1);
+				if(!this.entities[x].trigger('camera-update', this.world))
+				{
+					this.entities.splice(x, 1);
+				}
 			}
 		}
 	};
@@ -1622,6 +1830,8 @@ platformer.components['camera'] = (function(){
 		this.worldPerWindowUnitHeight = this.world.viewportHeight / this.window.viewportHeight;
 		this.windowPerWorldUnitWidth  = this.window.viewportWidth / this.world.viewportWidth;
 		this.windowPerWorldUnitHeight = this.window.viewportHeight/ this.world.viewportHeight;
+		
+		this.windowResized = true;
 	};
 	
 	proto['follow'] = function (def)
@@ -1649,42 +1859,48 @@ platformer.components['camera'] = (function(){
 		
 	};
 	
-	proto.move = function (newLeft, newTop)
-	{
-		this.moveLeft(newLeft);
-		this.moveTop(newTop);
+	proto.move = function (newLeft, newTop){
+		var moved = this.moveLeft(newLeft);
+		moved = this.moveTop(newTop) || moved;
+		return moved;
 	};
 	
-	proto.moveLeft = function (newLeft)
-	{
-		if (this.worldWidth < this.world.viewportWidth){
-			this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
-		} else if (this.worldWidth && (newLeft + this.world.viewportWidth > this.worldWidth)) {
-			this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
-		} else if (this.worldWidth && (newLeft < 0)) {
-			this.world.viewportLeft = 0; 
-		} else {
-			this.world.viewportLeft = newLeft;
+	proto.moveLeft = function (newLeft)	{
+		if(this.world.viewportLeft !== newLeft){
+			if (this.worldWidth < this.world.viewportWidth){
+				this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
+			} else if (this.worldWidth && (newLeft + this.world.viewportWidth > this.worldWidth)) {
+				this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
+			} else if (this.worldWidth && (newLeft < 0)) {
+				this.world.viewportLeft = 0; 
+			} else {
+				this.world.viewportLeft = newLeft;
+			}
+			return true;
 		}
+		return false;
 	};
 	
-	proto.moveTop = function (newTop)
-	{
-		if (this.worldHeight < this.world.viewportHeight){
-			this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
-		} else if (this.worldHeight && (newTop + this.world.viewportHeight > this.worldHeight)) {
-			this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
-		} else if (this.worldHeight && (newTop < 0)) {
-			this.world.viewportTop = 0; 
-		} else {
-			this.world.viewportTop = newTop;
+	proto.moveTop = function (newTop) {
+		if(this.world.viewportTop !== newTop){
+			if (this.worldHeight < this.world.viewportHeight){
+				this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
+			} else if (this.worldHeight && (newTop + this.world.viewportHeight > this.worldHeight)) {
+				this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
+			} else if (this.worldHeight && (newTop < 0)) {
+				this.world.viewportTop = 0; 
+			} else {
+				this.world.viewportTop = newTop;
+			}
+			return true;
 		}
+		return false;
 	};
 	
 	
 	proto.lockedFollow = function (entity)
 	{
-		this.move(entity.x - (this.world.viewportWidth / 2), entity.y - (this.world.viewportHeight / 2));
+		return this.move(entity.x - (this.world.viewportWidth / 2), entity.y - (this.world.viewportHeight / 2));
 	};
 	
 	proto.setBoundingArea = function (top, left, width, height)
@@ -1716,13 +1932,15 @@ platformer.components['camera'] = (function(){
 		
 		if (typeof newLeft !== 'undefined')
 		{
-			this.moveLeft(newLeft);
+			newLeft = this.moveLeft(newLeft);
 		}
 		
 		if (typeof newTop !== 'undefined')
 		{
-			this.moveTop(newTop);
+			newTop = this.moveTop(newTop);
 		}
+		
+		return newLeft || newTop;
 	};
 	
 	proto.windowToWorld = function (sCoords)
@@ -2501,6 +2719,79 @@ platformer.components['collision-group'] = (function(){
 /*--------------------------------------------------
  *   audio - ../src/js/standard-components/audio.js
  */
+/**
+# COMPONENT **audio**
+This component maps messages triggered on the entity with an audio clip to play when the given message is triggered.
+
+## Dependencies:
+- [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
+- [[Handler-Render]] (on entity's parent) - This component listens for a render "tick" message in order to stop audio clips that have a play length set.
+
+## Messages
+
+### Listens for:
+- **handle-render** - On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
+  > @param message.deltaT (number) - uses the value of deltaT (time since last `handle-render`) to track progess of the audio clip and stop clip if play length has been reached.
+- **audio-mute-toggle** - On receiving this message, the audio will mute if unmuted, and unmute if muted.
+  > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
+- **audio-mute** - On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.
+  > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is muted.
+- **audio-unmute** - On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
+  > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is unmuted.
+- **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with [SoundJS play parameters] [link2].
+  > @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
+  > @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
+  > @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+  > @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
+  > @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
+  > @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+  > @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+- **logical-state** - This component also listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
+
+## JSON Definition:
+    {
+      "type": "audio",
+      
+      "audioMap":{
+      // Required. Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play.
+      
+        "message-triggered": "audio-id",
+        // This simple form is useful to listen for "message-triggered" and play "audio-id" using default audio properties.
+        
+        "another-message": {
+        // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to [SoundJS play parameters] (http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play).
+        
+          "sound": "another-audio-id",
+          // Required. This is the audio clip to play when "another-message" is triggered.
+          
+          "interrupt": "none",
+          // Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
+          
+          "delay": 500,
+          // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
+          
+          "offset": 1500,
+          // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+          
+          "length": 2500,
+          // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
+
+          "loop": 4,
+          // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
+          
+          "volume": 0.75,
+          // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+          
+          "pan": -0.25
+          // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+        }
+      }
+    }
+
+[link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
+[link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
+*/
 platformer.components['audio'] = (function(){
 	var defaultSettings = {
 		interrupt: createjs.SoundJS.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
@@ -2558,24 +2849,47 @@ platformer.components['audio'] = (function(){
 			}
 		};
 	},
+	createTest = function(testStates, audio){
+		var states = testStates.replace(/ /g, '').split(',');
+		if(testStates === 'default'){
+			return function(state){
+				return testStates;
+			};
+		} else {
+			return function(state){
+				for(var i = 0; i < states.length; i++){
+					if(!state[states[i]]){
+						return false;
+					}
+				}
+				return testStates;
+			};
+		}
+	},
 	component = function(owner, definition){
 		this.owner = owner;
 		this.timedAudioClips = [],
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'audio-mute-toggle', 'audio-mute', 'audio-unmute']);
+		this.addListeners(['handle-render', 'audio-mute-toggle', 'audio-mute', 'audio-unmute', 'logical-state']);
+
+		this.state = {};
+		this.stateChange = false;
+		this.currentState = false;
 
 		if(definition.audioMap){
+			this.checkStates = [];
 			for (var key in definition.audioMap){
 				this.addListener(key);
 				this[key] = playSound(definition.audioMap[key]);
+				this.checkStates.push(createTest(key, definition.audioMap[key]));
 			}
 		}
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render'] = function(resp){
+	proto['handle-render'] = function(resp){
 		if (this.destroyMe && this.timedAudioClips.length == 0)
 		{
 			this.timedAudioClips = undefined;
@@ -2597,11 +2911,45 @@ platformer.components['audio'] = (function(){
 				}
 				this.timedAudioClips = newArray;
 			}
+
+			i = 0;
+			if(this.stateChange){
+				if(this.checkStates){
+					this.currentState = false;
+					for(; i < this.checkStates.length; i++){
+						audioClip = this.checkStates[i](this.state);
+						if(audioClip){
+							this.currentState = audioClip;
+							break;
+						}
+					}
+				}
+				this.stateChange = false;
+			}
+			
+			if(this.currentState){
+				this[this.currentState]();
+			}
+		}
+	};
+
+	proto['logical-state'] = function(state){
+		for(var i in state){
+			if(this.state[i] !== state[i]){
+				this.stateChange = true;
+				this.state[i] = state[i];
+			}
 		}
 	};
 	
 	proto['audio-mute-toggle'] = function(sound){
-		createjs.SoundJS.setMute(!createjs.SoundJS.muted, sound);
+		if(sound){
+			if(createjs.SoundJS.getInstanceById(sound)){
+				createjs.SoundJS.setMute(!createjs.SoundJS.getInstanceById(sound).muted, sound);
+			}
+		} else {
+			createjs.SoundJS.setMute(!createjs.SoundJS.muted, sound);
+		}
 	};
 	
 	proto['audio-mute'] = function(sound){
@@ -2650,11 +2998,69 @@ platformer.components['audio'] = (function(){
 /*--------------------------------------------------
  *   broadcast-events - ../src/js/standard-components/broadcast-events.js
  */
-/*
- * Component "broadcast-events"
- * 
- * Notes: Make sure that this component is never set up to receive and broadcast matching messages or an infinite loop will result.
- */
+/**
+# COMPONENT **broadcast-events**
+This component listens for local entity messages and re-broadcasts as alternate messages on itself, its parent entity, or at the game level.
+> **Note:** Make sure that this component is never set up to receive and broadcast identical messages or an infinite loop will result, since it will receive the same message it sent.
+
+## Dependencies:
+- [[Entity-Container]] (on entity's parent) - This component can broadcast messages to its parent; `this.parent` is commonly specified by being a member of an entity container.
+
+## Messages
+
+### Listens for:
+- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages.
+  > @param message (object) - accepts a message object that it will include in the new message to be triggered.
+
+### Local Broadcasts:
+- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages on the entity.
+  > @param message (object) - sends the message object received by the original message.
+
+### Parent Broadcasts:
+- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages on the entity's parent if one exists.
+  > @param message (object) - sends the message object received by the original message.
+
+### Game Broadcasts:
+- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages at the top game level.
+  > @param message (object) - sends the message object received by the original message.
+
+## JSON Definition:
+    {
+      "type": "broadcast-events",
+      
+      // One of the following event mappings must be specified: "events", "parentEvents", or "renameEvents".
+      
+      "events": {
+      // Optional: Maps local messages to trigger global game messages. At least one of the following mappings should be included.
+        
+        "local-message-1": "global-game-message",
+        // On receiving "local-message-1", triggers "global-game-message" at the game level.
+        
+        "local-message-2": ["multiple", "messages", "to-trigger"]
+        // On receiving "local-message-2", triggers each message in the array in sequence at the game level.
+      }
+      
+      "parentEvents": {
+      // Optional: Maps local messages to trigger messages on the entity's parent. At least one of the following mappings should be included.
+        
+        "local-message-3": "parent-message",
+        // On receiving "local-message-3", triggers "parent-message" on the entity's parent.
+        
+        "local-message-4": ["multiple", "messages", "to-trigger"]
+        // On receiving "local-message-4", triggers each message in the array in sequence on the entity's parent.
+      }
+      
+      "renameEvents": {
+      // Optional: Maps local messages to trigger alternative messages on the entity itself. This can be useful as a basic fill-in for a logic component to translate an outgoing message from one component into an incoming message for another. At least one of the following mappings should be included.
+        
+        "local-message-5": "another-local-message",
+        // On receiving "local-message-5", triggers "another-local-message" on the entity itself.
+        
+        "local-message-6": ["multiple", "messages", "to-trigger"]
+        // On receiving "local-message-6", triggers each message in the array in sequence on the entity itself.
+      }
+    }
+*/
 platformer.components['broadcast-events'] = (function(){
 	var gameBroadcast = function(event){
 		if(typeof event === 'string'){
@@ -2768,6 +3174,28 @@ platformer.components['broadcast-events'] = (function(){
 /*--------------------------------------------------
  *   change-scene - ../src/js/standard-components/change-scene.js
  */
+/**
+# COMPONENT **change-scene**
+This component allows the entity to initiate a change from the current scene to another scene.
+
+## Messages
+
+### Listens for:
+- **new-scene** - On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
+  > @param message.scene (string) - This is a label corresponding with a predefined scene.
+  > @param message.transition (string) - This can be "instant" or "fade-to-black". Defaults to an instant transition.
+
+## JSON Definition:
+    {
+      "type": "change-scene",
+      
+      "scene": "scene-menu",
+      // Optional (but must be provided by a "change-scene" parameter if not defined here). This causes the "new-scene" trigger to load this scene.
+      
+      "transition": "fade-to-black",
+      // Optional. This can be "instant" or "fade-to-black". Defaults to an "instant" transition.
+    }
+*/
 platformer.components['change-scene'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -2777,7 +3205,6 @@ platformer.components['change-scene'] = (function(){
 
 		this.scene = definition.scene;
 		this.transition = definition.transition || 'instant';
-		this.overrides = definition.overrides || false;
 		
 		this.addListeners(['new-scene']);
 	};
@@ -2787,9 +3214,8 @@ platformer.components['change-scene'] = (function(){
 		var resp   = response || this,
 		scene      = resp.scene || this.scene,
 		transition = resp.transition || this.transition;
-		overrides  = resp.overrides  || this.overrides;
 
-		platformer.game.loadScene(scene, transition, overrides);
+		platformer.game.loadScene(scene, transition);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -2904,7 +3330,7 @@ platformer.components['dom-element'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load']);
+		this.addListeners(['handle-render', 'handle-render-load']);
 		
 		this.element = this.owner.element = document.createElement(elementType);
 		for(i in definition){
@@ -2925,14 +3351,14 @@ platformer.components['dom-element'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		if(resp.element){
 			this.parentElement = resp.element;
 			this.parentElement.appendChild(this.element);
 		}
 	};
 	
-	proto['layer:render'] = function(resp){
+	proto['handle-render'] = function(resp){
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
@@ -3300,11 +3726,11 @@ platformer.components['render-debug'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load']);
+		this.addListeners(['handle-render', 'handle-render-load']);
 	};
 	var proto = component.prototype;
 
-	proto['layer:render'] = function(stage){
+	proto['handle-render'] = function(stage){
 		if(this.owner.getAABB){
 			var aabb   = this.owner.getAABB();
 			this.shape.scaleX = aabb.width / this.initialWidth;
@@ -3338,7 +3764,7 @@ platformer.components['render-debug'] = (function(){
 		}
 	};
 
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		var self = this,
 		x        = this.owner.x      = this.owner.x || 0,
 		y        = this.owner.y      = this.owner.y || 0,
@@ -3509,14 +3935,14 @@ platformer.components['render-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load', 'camera-update']);
+		this.addListeners(['handle-render', 'handle-render-load', 'camera-update']);
 	};
 	var proto = component.prototype;
 
-	proto['layer:render'] = function(stage){
+	proto['handle-render'] = function(stage){
 	};
 
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		var x = 0,
 		y     = 0,
 		stage = this.stage = resp.stage;
@@ -3595,15 +4021,35 @@ platformer.components['render-tiles'] = (function(){
 /*--------------------------------------------------
  *   render-animation - ../src/js/standard-components/render-animation.js
  */
+/*
+- **logical-state** - This component also listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
+ */
 platformer.components['render-animation'] = (function(){
 	var changeState = function(state){
 		return function(value){
-			if (this.currentAnimation != state)
-			{
+			if (this.currentAnimation !== state){
 				this.currentAnimation = state;
 				this.anim.gotoAndPlay(state);
 			}
 		};
+	},
+	createTest = function(testStates, animation){
+		var states = testStates.replace(/ /g, '').split(',');
+		if(testStates === 'default'){
+			return function(state){
+				return animation;
+			};
+		} else {
+			return function(state){
+				for(var i = 0; i < states.length; i++){
+					if(!state[states[i]]){
+						return false;
+					}
+				}
+				return animation;
+			};
+		}
 	};
 	var component = function(owner, definition){
 		var spriteSheet = {
@@ -3626,18 +4072,19 @@ platformer.components['render-animation'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render-load', 'layer:render', 'logical-state']);
+		this.addListeners(['handle-render-load', 'handle-render', 'logical-state']);
 
 		if(definition.animationMap){
+			this.checkStates = [];
 			for(var i in definition.animationMap){
 				this.addListener(i);
 				this[i] = changeState(definition.animationMap[i]);
+				this.checkStates.push(createTest(i, definition.animationMap[i]));
 			}
 		}
 		
 		this.stage = undefined;
-		for (var x = 0; x < spriteSheet.images.length; x++)
-		{
+		for (var x = 0; x < spriteSheet.images.length; x++){
 			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
 		spriteSheet = new createjs.SpriteSheet(spriteSheet);
@@ -3645,13 +4092,15 @@ platformer.components['render-animation'] = (function(){
 		this.currentAnimation = definition.state || this.owner.state || 'default';
 		this.anim.scaleX = definition.scaleX || this.owner.scaleX || 1;
 		this.anim.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.state = {};
+		this.stateChange = false;
 		if(this.currentAnimation){
 			this.anim.gotoAndPlay(this.currentAnimation);
 		}
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(obj){
+	proto['handle-render-load'] = function(obj){
 		var self = this,
 		over     = false;
 		
@@ -3721,17 +4170,35 @@ platformer.components['render-animation'] = (function(){
 		}
 	};
 	
-	proto['layer:render'] = function(obj){
+	proto['handle-render'] = function(obj){
+		var testCase = false, i = 0;
 		this.anim.x = this.owner.x;
 		this.anim.y = this.owner.y;
 		this.anim.z = this.owner.z;
+		
+		if(this.stateChange){
+			if(this.checkStates){
+				for(; i < this.checkStates.length; i++){
+					testCase = this.checkStates[i](this.state);
+					if(testCase){
+						if(this.currentAnimation !== testCase){
+							this.currentAnimation = testCase;
+							this.anim.gotoAndPlay(testCase);
+						}
+						break;
+					}
+				}
+			}
+			this.stateChange = false;
+		}
 	};
 	
-	proto['logical-state'] = function(obj){
-		if (this.currentAnimation != obj.state)
-		{
-			this.currentAnimation = obj.state;
-			this.anim.gotoAndPlay(obj.state);
+	proto['logical-state'] = function(state){
+		for(var i in state){
+			if(this.state[i] !== state[i]){
+				this.stateChange = true;
+				this.state[i] = state[i];
+			}
 		}
 	};
 	
@@ -3795,7 +4262,7 @@ platformer.components['render-image'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render-load', 'layer:render']);
+		this.addListeners(['handle-render-load', 'handle-render']);
 		this.stage = undefined;
 		this.image = new createjs.Bitmap(platformer.assets[image]);
 		if(source){
@@ -3808,7 +4275,7 @@ platformer.components['render-image'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(obj){
+	proto['handle-render-load'] = function(obj){
 		var self = this,
 		over     = false;
 		
@@ -3878,7 +4345,7 @@ platformer.components['render-image'] = (function(){
 		}
 	};
 	
-	proto['layer:render'] = function(obj){
+	proto['handle-render'] = function(obj){
 		this.image.x = this.owner.x;
 		this.image.y = this.owner.y;
 		this.image.z = this.owner.z;
@@ -3940,7 +4407,7 @@ platformer.components['logic-button'] = (function(){
 			this.addListeners(['mousedown','mouseup']);
 		}
 		
-		this.addListeners(['layer:logic', 'pressed', 'released']);
+		this.addListeners(['handle-logic', 'pressed', 'released']);
 	};
 	var proto = component.prototype;
 	
@@ -3960,7 +4427,7 @@ platformer.components['logic-button'] = (function(){
 		this.message.state = 'released';
 	};
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		this.owner.trigger('logical-state', this.message);
 	};
 
@@ -4065,6 +4532,52 @@ platformer.components['logic-carrier'] = (function(){
 /*--------------------------------------------------
  *   logic-directional-movement - ../src/js/standard-components/logic-directional-movement.js
  */
+/**
+# COMPONENT **logic-directional-movement**
+This component Changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with push and gravity components. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
+
+## Dependencies:
+- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+
+## Messages
+
+### Listens for:
+- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
+  > @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
+- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these message, the entity adjusts its movement orientation.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+- **stop** - Stops motion in all directions until movement messages are again received.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+
+### Local Broadcasts: //TODO: v-- fix this documentation after fixing logic state messages - DDD
+- **logical-state** - This component fires this message each tick to describe its current state.
+  > @param message.state (string) - This string takes the form of "state-heading" where state is either "stopped" or "moving" and heading is "up", "up-right", "right", "down-right", "down", "down-left", "left", or "up-left".
+- **stopped** - This message is triggered on the entity when the entity enters a "stopped" state after having been moving.
+- **moving** - This message is triggered on the entity when the entity enters a "moving" state after having been stopped.
+
+## JSON Definition:
+    {
+      "type": "logic-directional-movement",
+      
+      "top": 100,
+      // Optional number specifying top of viewport in world coordinates
+      
+      "left": 100,
+      // Optional number specifying left of viewport in world coordinates
+      
+      "width": 100,
+      // Optional number specifying width of viewport in world coordinates
+      
+      "height": 100,
+      // Optional number specifying height of viewport in world coordinates
+      
+      "stretch": true,
+      // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
+      
+      "scaleWidth": 480
+      // Optional. Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
+    }
+*/
 platformer.components['logic-directional-movement'] = (function(){
 	var processDirection = function(direction){
 		return function (state){
@@ -4086,7 +4599,7 @@ platformer.components['logic-directional-movement'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic',
+		this.addListeners(['handle-logic',
    		    'go-down',       'go-south',
    		    'go-down-left',  'go-southwest',
 		    'go-left',       'go-west',
@@ -4098,9 +4611,17 @@ platformer.components['logic-directional-movement'] = (function(){
 		    'stop'
 		]);
 		
-		this.owner.state = 'standing';
-		this.owner.heading = 'right';
 		this.speed = definition.speed || .3;
+
+		this.state = {
+			moving: false,
+			left: false,
+			right: false,
+			up: false,
+			down: false
+		};
+		
+		this.moving = false;
 		this.left = false;
 		this.right = false;
 		this.up = false;
@@ -4112,63 +4633,82 @@ platformer.components['logic-directional-movement'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var vX    = 0,
 		vY        = 0,
+		up        = this.up        || this.upLeft || this.downLeft,
 		upLeft    = this.upLeft    || (this.up   && this.left),
+		left      = this.left      || this.upLeft || this.downLeft,
 		downLeft  = this.downLeft  || (this.down && this.left),
+		down      = this.down      || this.downLeft || this.downRight,
 		downRight = this.downRight || (this.down && this.right),
-		upRight   = this.upRight   || (this.up   && this.right);
+		right     = this.right     || this.upRight || this.downRight,
+		upRight   = this.upRight   || (this.up   && this.right),
+		stateChanged = false;
 		
 		if (this.up && this.down){
-			this.owner.state = 'standing';
+			this.moving = false;
 		} else if (this.left && this.right) {
-			this.owner.state = 'standing';
+			this.moving = false;
 		} else if (upLeft) {
 			vX = -this.speed / 1.414;
 			vY = -this.speed / 1.414;
-			this.owner.heading = 'up-left';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if (upRight) {
 			vY = -this.speed / 1.414;
 			vX =  this.speed / 1.414;
-			this.owner.heading = 'up-right';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if (downLeft) {
 			vY =  this.speed / 1.414;
 			vX = -this.speed / 1.414;
-			this.owner.heading = 'down-left';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if (downRight) {
 			vY =  this.speed / 1.414;
 			vX =  this.speed / 1.414;
-			this.owner.heading = 'down-right';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if(this.left)	{
 			vX = -this.speed;
-			this.owner.heading = 'left';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if (this.right) {
 			vX =  this.speed;
-			this.owner.heading = 'right';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if (this.up) {
 			vY = -this.speed;
-			this.owner.heading = 'up';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else if (this.down) {
 			vY =  this.speed;
-			this.owner.heading = 'down';
-			this.owner.state = 'walking';
+			this.moving = true;
 		} else {
-			this.owner.state = 'standing';
+			this.moving = false;
 		}
-		
+
 		this.owner.x += (vX * resp.deltaT);
 		this.owner.y += (vY * resp.deltaT);
 		
-		this.owner.trigger('logical-state', {state: this.owner.state + '-' + this.owner.heading});
-		this.owner.trigger(this.owner.state);
+		if(this.state.moving !== this.moving){
+			this.state.moving = this.moving;
+			stateChanged = true;
+		}
+		if(this.state.up !== up){
+			this.state.up = up;
+			stateChanged = true;
+		}
+		if(this.state.right !== right){
+			this.state.right = right;
+			stateChanged = true;
+		}
+		if(this.state.down !== down){
+			this.state.down = down;
+			stateChanged = true;
+		}
+		if(this.state.left !== left){
+			this.state.left = left;
+			stateChanged = true;
+		}
+		
+		if(stateChanged){
+			this.owner.trigger('logical-state', this.state);
+		}
 	};
 	
 	proto['go-down']       = proto['go-south']     = processDirection('down');
@@ -4238,7 +4778,7 @@ platformer.components['logic-gravity'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'hit-solid']);
+		this.addListeners(['handle-logic', 'hit-solid']);
 		
 		this.vX = definition.velocityX || 0; 
 		this.vY = definition.velocityY || 0;
@@ -4249,7 +4789,7 @@ platformer.components['logic-gravity'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var deltaT = resp.deltaT;
 		
 		this.vY += this.yGravity * deltaT;
@@ -4320,7 +4860,7 @@ platformer.components['logic-portable'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'collision-postponement-resolved', 'hit-solid']);
+		this.addListeners(['handle-logic', 'collision-postponement-resolved', 'hit-solid']);
 		
 		this.portableDirections = definition.portableDirections || {
 			down: true //default is false, 'true' means as soon as carrier is connected downward
@@ -4334,7 +4874,7 @@ platformer.components['logic-portable'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		if(this.carrierConnected){
 			if(this.carrier != this.lastCarrier){
 				if(this.lastCarrier){
@@ -4420,7 +4960,7 @@ platformer.components['logic-pushable'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'push-entity', 'hit-solid']);
+		this.addListeners(['handle-logic', 'push-entity', 'hit-solid']);
 		
 		this.vX = definition.velocityX || 0; 
 		this.vY = definition.velocityY || 0;
@@ -4433,7 +4973,7 @@ platformer.components['logic-pushable'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var deltaT = resp.deltaT;
 		if(this.currentPushY){
 			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * deltaT;
@@ -4575,7 +5115,7 @@ platformer.components['logic-timer'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:logic']);
+		this.addListeners(['handle-logic']);
 		this.owner.time = this.owner.time || definition.time ||  0;
 		this.prevTime = this.owner.time;
 		this.owner.alarmTime = this.owner.alarmTime || definition.alarmTime || false;
@@ -4589,7 +5129,7 @@ platformer.components['logic-timer'] = (function(){
 	var proto = component.prototype;
 	
 	
-	proto['layer:logic'] = function(data){
+	proto['handle-logic'] = function(data){
 		if (this.owner.isOn)
 		{
 			this.prevTime = this.owner.time;
@@ -4681,13 +5221,11 @@ platformer.components['logic-timer'] = (function(){
  */
 /**
 # COMPONENT **logic-teleporter**
-
-## Description:
 This component listens for redirected collision messages and fires a message on the colliding entity to specify where the colliding entity should relocate itself.
 
 ## Dependencies:
-- **collision-basic** (on entity) - This component listens for collision messages on the entity.
-- **entity-container** (on entity's parent) - This component listens for new peer entities being added on its parent to find its teleport destination.
+- [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.
+- [[Entity-Container]] (on entity's parent) - This component listens for new peer entities being added on its parent to find its teleport destination.
 
 ## Messages
 
@@ -4812,6 +5350,105 @@ platformer.components['logic-teleporter'] = (function(){
 
 
 /*--------------------------------------------------
+ *   logic-portal - ../src/js/standard-components/logic-portal.js
+ */
+/**
+# COMPONENT **name-of-component**
+Summarize the purpose of this component here.
+
+## Dependencies
+- [[Required-Component]] - List other components that this component requires to function properly on an entity.
+
+## Messages
+
+### Listens for:
+- **received-message-label** - List all messages that this component responds to here.
+  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+
+### Local Broadcasts:
+- **local-message-label** - List all messages that are triggered by this component on this entity here.
+  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+
+### Peer Broadcasts:
+- **peer-message-label** - List all messages that are triggered by this component on other entities here.
+  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+
+## JSON Definition
+    {
+      "type": "name-of-component"
+      // List all additional parameters and their possible values here.
+    }
+*/
+platformer.components['logic-portal'] = (function(){ //TODO: Change the name of the component!
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['layer:logic', 'occupied', 'activate']);
+		this.destination = this.owner.destination || definition.destination;
+		this.activateOn = definition.activateOn || 'collide';
+		this.override = definition.override;
+		this.activated = false;
+		this.used = false; 
+	};
+	var proto = component.prototype;
+	
+	
+	proto['layer:logic'] = function(resp){
+		if (!this.used && this.activated)
+		{
+			this.owner.trigger("new-scene", {scene: this.destination});
+			this.used = true;
+		}
+	};
+	
+	proto['occupied'] = function(collisionInfo){
+		var entity = collisionInfo.entity; 
+		entity.trigger('portal-waiting', this.owner);
+	};
+	
+	proto['activate'] = function()
+	{
+		this.activated = true;
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value, debug){
+			self[messageId](value, debug);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
  *   collision-basic - ../src/js/standard-components/collision-basic.js
  */
 platformer.components['collision-basic'] = (function(){
@@ -4829,10 +5466,9 @@ platformer.components['collision-basic'] = (function(){
 		}
 	};
 	var component = function(owner, definition){
-		var x  = 0, 
-		self   = this,
-		shapes = definition.shapes || (definition.shape?[definition.shape]:[]);
-
+		var x  = 0; 
+		var self   = this;
+		
 		this.owner    = owner;
 		this.lastX    = this.owner.x;
 		this.lastY    = this.owner.y;
@@ -4840,6 +5476,20 @@ platformer.components['collision-basic'] = (function(){
 		this.prevAABB = new platformer.classes.aABB();
 		this.canCollide = true;
 
+		var shapes = [];
+		if(definition.shapes)
+		{
+			shapes = definition.shapes;
+		} else if (definition.shape) {
+			shapes = [definition.shape];
+		} else {
+			var halfWidth = this.owner.width/2;
+			var halfHeight = this.owner.height/2;
+			var points = [[-halfWidth, -halfHeight],[halfWidth, halfHeight]];
+			var offset = [0, halfHeight];
+			shapes = [{offset: offset, points: points, shape: 'rectangle'}];
+		}
+		
 		// Messages that this component listens for
 		this.listeners = [];
 
@@ -5181,14 +5831,12 @@ platformer.components['collision-tiles'] = (function(){
  */
 /**
 # COMPONENT **ai-pacer**
-
-## Description:
 This component listens for collision messages and fires a message on itself to change its movement direction.
 
 ## Dependencies:
-- **collision-basic** (on entity) - This component listens for collision messages on the entity.
-- **logic-directional-movement** (on entity) - This component receives triggered messages from this component and moves the entity accordingly.
-- **handler-ai** (on entity's parent) - This component listens for an ai "tick" message to orderly perform its control logic.
+- [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.
+- [[Logic-Directional-Movement]] (on entity) - This component receives triggered messages from this component and moves the entity accordingly.
+- [[Handler-Ai]] (on entity's parent) - This component listens for an ai "tick" message to orderly perform its control logic.
 
 ## Messages
 
@@ -5297,7 +5945,7 @@ platformer.components['render-gui'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render', 'layer:render-load', 'logic-gem-added', 'logic-gem-collected']);
+		this.addListeners(['handle-render', 'handle-render-load', 'logic-gem-added', 'logic-gem-collected']);
 		
 		this.background = undefined;
 		this.stage = undefined;
@@ -5322,7 +5970,7 @@ platformer.components['render-gui'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		this.stage = resp.stage;
 		this.stage.addChild(this.background);
 		this.background.x = 200;
@@ -5330,7 +5978,7 @@ platformer.components['render-gui'] = (function(){
 		this.background.z = this.owner.z;
 	};
 	
-	proto['layer:render'] = function(resp){
+	proto['handle-render'] = function(resp){
 		
 	};
 	
@@ -5378,7 +6026,7 @@ platformer.components['render-counter'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render', 'layer:render-load', 'refresh-count']);
+		this.addListeners(['handle-render', 'handle-render-load', 'refresh-count']);
 		this.currentValue = 0;
 		this.targetValue = 0;
 		this.txt = new createjs.Text(this.currentValue.toString());
@@ -5388,7 +6036,7 @@ platformer.components['render-counter'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		//this.stage = resp.stage;
 		this.txt.x = this.owner.x;
 		this.txt.y = this.owner.y;
@@ -5398,7 +6046,7 @@ platformer.components['render-counter'] = (function(){
 		resp.stage.addChild(this.txt);
 	};
 	
-	proto['layer:render'] = function(){
+	proto['handle-render'] = function(){
 		// Run loading code here
 		if (this.currentValue != this.targetValue)
 		{
@@ -5462,7 +6110,7 @@ platformer.components['render-clock'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render', 'layer:render-load', 'refresh-clock']);
+		this.addListeners(['handle-render', 'handle-render-load', 'refresh-clock']);
 		this.currentValue = 0;
 		this.targetValue = 0;
 		this.txt = new createjs.Text(this.currentValue.toString());
@@ -5472,7 +6120,7 @@ platformer.components['render-clock'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		this.txt.x = this.owner.x;
 		this.txt.y = this.owner.y;
 		this.txt.z = this.owner.z;
@@ -5481,7 +6129,7 @@ platformer.components['render-clock'] = (function(){
 		resp.stage.addChild(this.txt);
 	};
 	
-	proto['layer:render'] = function(){
+	proto['handle-render'] = function(){
 		this.txt.text = Math.floor(this.time / 1000).toString() + 'sec.';
 	};
 	
@@ -5601,14 +6249,20 @@ platformer.components['logic-hero'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'set-velocity', 'teleport','key-left','key-right','key-up','key-down','key-jump','key-swing']);
+		this.addListeners(['handle-logic', 'set-velocity', 'teleport', 'portal-waiting', 'key-left','key-right','key-up','key-down','key-jump','key-swing']);
 		
-		this.owner.state   = this.owner.state || 'ground';
-		this.owner.heading = this.owner.heading || 'right';
+		this.state = {
+			air: false,
+			ground: true,
+			left: false,
+			moving: false,
+			right: true,
+			swing: false,
+			swingHit: false
+		};
+		
 		this.left = false;
 		this.right = false;
-		this.up = false;
-		this.down = false;
 		this.jump = false;
 		
 		this.vX = 0; 
@@ -5642,7 +6296,7 @@ platformer.components['logic-hero'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var deltaT = resp.deltaT;
 		
 		if (this.teleportDestination)
@@ -5652,18 +6306,19 @@ platformer.components['logic-hero'] = (function(){
 		} else {
 			if(this.left) {
 				this.vX -= this.aX * deltaT;
-				if (this.vX < -this.maxVX)
-				{
+				if (this.vX < -this.maxVX) {
 					this.vX = -this.maxVX;
 				}
-				this.owner.heading = 'left';
+				this.state.left  = true;
+				this.state.right = false;
 			} else if (this.right) {
 				this.vX += this.aX * deltaT;
 				if (this.vX > this.maxVX)
 				{
 					this.vX = this.maxVX;
 				}
-				this.owner.heading = 'right';
+				this.state.left  = false;
+				this.state.right = true;
 			} else {
 				if (this.vX > 0)
 				{
@@ -5680,9 +6335,10 @@ platformer.components['logic-hero'] = (function(){
 				} 
 			}
 
-			if (this.jump && this.owner.state != 'air') {
+			if (this.jump && this.state.ground) {
 				this.vY = -this.aJump;
-				this.owner.state = 'air';
+				this.state.air = true;
+				this.state.ground = false;
 				this.owner.trigger('jumping'); //This is for audio
 			}
 			
@@ -5700,36 +6356,41 @@ platformer.components['logic-hero'] = (function(){
 		
 		if (!this.hitGround)
 		{
-			this.owner.state = 'air';
+			this.state.air = true;
+			this.state.ground = false;
 		}
 		this.hitGround = false;
 		
+		this.state.swingHit = false;
 		if(this.swing){
-			this.owner.trigger('logical-state', {state: 'swing' + '-' + this.owner.heading});
+			this.state.swing = true;
+//			this.state.debug = true;
 			if(this.swingInstance){
+				this.state.swingHit = true;
 				this.owner.parent.addEntity(new platformer.classes.entity(platformer.settings.entities['pickaxe'], {
 					properties: {
-						x: this.owner.x + ((this.owner.heading === 'right')?1:-1) * 140,
+						x: this.owner.x + (this.state.right?1:-1) * 140,
 						y: this.owner.y
 					}
 				}));
-				this.owner.trigger('pickaxe');
 			}
-		} else if (this.owner.state == 'ground') {
-			if (this.vX == 0) {
-				this.owner.trigger('logical-state', {state: 'standing' + '-' + this.owner.heading});
-			} else {
-				this.owner.trigger('logical-state', {state: 'walking' + '-' + this.owner.heading});
-				this.owner.trigger('walking'); //This is for audio
+		} else {
+			this.state.swing = false;
+//			this.state.debug = false;
+			if (this.state.ground) {
+				if (this.vX == 0) {
+					this.state.moving = false;
+				} else {
+					this.state.moving = true;
+//					this.owner.trigger('walking'); //This is for audio
+				}
 			}
-		} else if (this.owner.state == 'air') {
-			this.owner.trigger('logical-state', {state: 'jumping' + '-' + this.owner.heading});
 		}
+
+		this.owner.trigger('logical-state', this.state);
 		
 		this.left  = false;
 		this.right = false;
-		this.up    = false;
-		this.down  = false;
 		this.jump  = false;
 		this.swingInstance = false;		
 		
@@ -5739,6 +6400,11 @@ platformer.components['logic-hero'] = (function(){
 	{
 //		this.owner.trigger('collide-off');
 		this.teleportDestination = {x: posObj.x, y: posObj.y};
+	};
+	
+	proto['portal-waiting'] = function (portal)
+	{
+		portal.trigger('activate');
 	};
 	
 	proto['set-velocity'] = function (velocityObj)
@@ -5769,22 +6435,6 @@ platformer.components['logic-hero'] = (function(){
 		}
 	};
 	
-	proto['key-up'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.up = true;
-		}
-	};
-	
-	proto['key-down'] = function (state)
-	{
-		if(state.pressed)
-		{
-			this.down = true;
-		}
-	};
-	
 	proto['key-jump'] = function (state)
 	{
 		if(state.pressed)
@@ -5810,7 +6460,8 @@ platformer.components['logic-hero'] = (function(){
 		switch (heading)
 		{
 		case 'down':
-			this.owner.state = 'ground';
+			this.state.ground = true;
+			this.state.air = false;
 			this.hitGround = true;
 			this.vY = 0; 
 			break;
@@ -5825,7 +6476,8 @@ platformer.components['logic-hero'] = (function(){
 		switch (heading)
 		{
 		case 'down':
-			this.owner.state = 'ground';
+			this.state.ground = true;
+			this.state.air = false;
 			this.hitGround = true;
 			this.vY = 0; 
 			break;
@@ -5836,8 +6488,6 @@ platformer.components['logic-hero'] = (function(){
 	proto.resolveSoftCollision = function(collisionInfo){
 		return false;
 	};
-	
-	
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

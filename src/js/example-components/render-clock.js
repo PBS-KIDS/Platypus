@@ -5,7 +5,7 @@ platformer.components['render-clock'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render', 'layer:render-load', 'refresh-clock']);
+		this.addListeners(['handle-render', 'handle-render-load', 'refresh-clock']);
 		this.currentValue = 0;
 		this.targetValue = 0;
 		this.txt = new createjs.Text(this.currentValue.toString());
@@ -15,7 +15,7 @@ platformer.components['render-clock'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		this.txt.x = this.owner.x;
 		this.txt.y = this.owner.y;
 		this.txt.z = this.owner.z;
@@ -24,7 +24,7 @@ platformer.components['render-clock'] = (function(){
 		resp.stage.addChild(this.txt);
 	};
 	
-	proto['layer:render'] = function(){
+	proto['handle-render'] = function(){
 		this.txt.text = Math.floor(this.time / 1000).toString() + 'sec.';
 	};
 	

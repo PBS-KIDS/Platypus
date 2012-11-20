@@ -2138,6 +2138,18 @@
                  "width":0,
                  "x":696,
                  "y":168
+                }, 
+                {
+                 "height":48,
+                 "name":"",
+                 "properties":
+                    {
+                     "destination":"scene-level-3"
+                    },
+                 "type":"level-portal",
+                 "width":48,
+                 "x":912,
+                 "y":360
                 }],
          "opacity":1,
          "type":"objectgroup",

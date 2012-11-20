@@ -5,7 +5,7 @@ platformer.components['logic-pushable'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'push-entity', 'hit-solid']);
+		this.addListeners(['handle-logic', 'push-entity', 'hit-solid']);
 		
 		this.vX = definition.velocityX || 0; 
 		this.vY = definition.velocityY || 0;
@@ -18,7 +18,7 @@ platformer.components['logic-pushable'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		var deltaT = resp.deltaT;
 		if(this.currentPushY){
 			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * deltaT;

@@ -17,7 +17,7 @@ platformer.components['handler-logic'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'layer:logic')
+			if (messageIds[x] == 'handle-logic')
 			{
 				this.entities.push(entity);
 				break;
@@ -28,7 +28,7 @@ platformer.components['handler-logic'] = (function(){
 	proto['tick'] = proto['logic'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:logic', resp))
+			if(!this.entities[x].trigger('handle-logic', resp))
 			{
 				this.entities.splice(x, 1);
 			}

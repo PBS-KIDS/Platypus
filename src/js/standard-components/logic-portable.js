@@ -5,7 +5,7 @@ platformer.components['logic-portable'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'collision-postponement-resolved', 'hit-solid']);
+		this.addListeners(['handle-logic', 'collision-postponement-resolved', 'hit-solid']);
 		
 		this.portableDirections = definition.portableDirections || {
 			down: true //default is false, 'true' means as soon as carrier is connected downward
@@ -19,7 +19,7 @@ platformer.components['logic-portable'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		if(this.carrierConnected){
 			if(this.carrier != this.lastCarrier){
 				if(this.lastCarrier){

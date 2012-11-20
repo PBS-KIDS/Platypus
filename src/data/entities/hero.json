@@ -14,9 +14,9 @@
                 "key:left-arrow":   "key-left",
                 "button-left":      "key-left",
 				"key:right-arrow": 	"key-right",
-				"button-right":     "key-right",
-				"key:up-arrow":   	"key-up",
-				"key:down-arrow":   "key-down"
+				"button-right":     "key-right"//,
+//				"key:up-arrow":   	"key-up",
+//				"key:down-arrow":   "key-down"
 			}
         },{
             "type": "logic-carrier"
@@ -39,6 +39,17 @@
 			}
 		},{
 			"type": "render-animation",
+            "animationMap":{
+                "swing,left":   "swing-left",
+                "swing,right":  "swing-right",
+                "air,left":     "jumping-left",
+                "air,right":    "jumping-right",
+                "moving,left":  "walking-left",
+                "moving,right": "walking-right",
+                "left":         "standing-left",
+                "right":        "standing-right",
+                "default":      "standing-right"
+            }, 
 			"spriteSheet": {
 				"images": ["mookie"],
 				"frames": {
@@ -63,8 +74,8 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
-                "pickaxe": {"sound": "pickaxe-other", "interrupt": "none"},
-		        "walking": {"sound": "walk", "interrupt": "none"},
+                "swingHit": {"sound": "pickaxe-other", "interrupt": "none"},
+		        "ground, moving": {"sound": "walk", "interrupt": "none"},
 		        "jumping": "jump"
 		    }
 		},{

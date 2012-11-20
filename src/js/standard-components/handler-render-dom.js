@@ -5,7 +5,7 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['tick', 'child-entity-added','render', 'camera-update']);
+		this.addListeners(['tick', 'child-entity-added', 'render']);
 		
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
@@ -21,10 +21,10 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'layer:render')
+			if (messageIds[x] == 'handle-render')
 			{
 				this.entities.push(entity);
-				entity.trigger('layer:render-load', {
+				entity.trigger('handle-render-load', {
 					element: self.element
 				});
 				break;
@@ -35,15 +35,12 @@ platformer.components['handler-render-dom'] = (function(){
 	proto['tick'] = proto['render'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('layer:render', resp))
+			if(!this.entities[x].trigger('handle-render', resp))
 			{
 				this.entities.splice(x, 1);
 			}
 			
 		}
-	};
-	
-	proto['camera-update'] = function(cameraInfo){
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

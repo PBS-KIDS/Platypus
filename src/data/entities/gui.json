@@ -25,7 +25,7 @@
 		},{
 			"type": "entity-container", 
 				"entities": [{"type": "gem-counter"},{"type": "clock"}],
-				"childEvents": ['count-gems', 'set-time', 'start-timer', 'stop-timer', 'layer:logic', 'layer:render', 'layer:render-load', 'audio-mute-toggle', 'audio-mute', 'audio-unmute']
+				"childEvents": ['count-gems', 'set-time', 'start-timer', 'stop-timer', 'handle-logic', 'handle-render', 'handle-render-load', 'audio-mute-toggle', 'audio-mute', 'audio-unmute']
 		}
 	],
 	"properties":{

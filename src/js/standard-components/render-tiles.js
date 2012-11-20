@@ -21,14 +21,14 @@ platformer.components['render-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load', 'camera-update']);
+		this.addListeners(['handle-render', 'handle-render-load', 'camera-update']);
 	};
 	var proto = component.prototype;
 
-	proto['layer:render'] = function(stage){
+	proto['handle-render'] = function(stage){
 	};
 
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		var x = 0,
 		y     = 0,
 		stage = this.stage = resp.stage;

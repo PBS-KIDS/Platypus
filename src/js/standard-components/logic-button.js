@@ -17,7 +17,7 @@ platformer.components['logic-button'] = (function(){
 			this.addListeners(['mousedown','mouseup']);
 		}
 		
-		this.addListeners(['layer:logic', 'pressed', 'released']);
+		this.addListeners(['handle-logic', 'pressed', 'released']);
 	};
 	var proto = component.prototype;
 	
@@ -37,7 +37,7 @@ platformer.components['logic-button'] = (function(){
 		this.message.state = 'released';
 	};
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		this.owner.trigger('logical-state', this.message);
 	};
 

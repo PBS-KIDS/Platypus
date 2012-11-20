@@ -8,7 +8,7 @@ platformer.components['dom-element'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['layer:render', 'layer:render-load']);
+		this.addListeners(['handle-render', 'handle-render-load']);
 		
 		this.element = this.owner.element = document.createElement(elementType);
 		for(i in definition){
@@ -29,14 +29,14 @@ platformer.components['dom-element'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		if(resp.element){
 			this.parentElement = resp.element;
 			this.parentElement.appendChild(this.element);
 		}
 	};
 	
-	proto['layer:render'] = function(resp){
+	proto['handle-render'] = function(resp){
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

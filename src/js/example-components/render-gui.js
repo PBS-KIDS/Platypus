@@ -5,7 +5,7 @@ platformer.components['render-gui'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:render', 'layer:render-load', 'logic-gem-added', 'logic-gem-collected']);
+		this.addListeners(['handle-render', 'handle-render-load', 'logic-gem-added', 'logic-gem-collected']);
 		
 		this.background = undefined;
 		this.stage = undefined;
@@ -30,7 +30,7 @@ platformer.components['render-gui'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto['layer:render-load'] = function(resp){
+	proto['handle-render-load'] = function(resp){
 		this.stage = resp.stage;
 		this.stage.addChild(this.background);
 		this.background.x = 200;
@@ -38,7 +38,7 @@ platformer.components['render-gui'] = (function(){
 		this.background.z = this.owner.z;
 	};
 	
-	proto['layer:render'] = function(resp){
+	proto['handle-render'] = function(resp){
 		
 	};
 	

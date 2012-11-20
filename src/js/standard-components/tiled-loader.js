@@ -1,19 +1,63 @@
+/**
+# COMPONENT **tiled-loader**
+This component is attached to a top-level entity (loaded by the [[Scene]]) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor] [link1] and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
+
+## Dependencies:
+- Component [[Entity-Container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
+- Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
+- Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
+- Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
+
+## Messages
+
+### Listens for:
+- **load** - On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
+
+### Local Broadcasts:
+- **world-loaded** - Once finished loading the map, this message is triggered on the entity to notify other components of completion.
+  > @param message.width (number) - The width of the world in world units.
+  > @param message.height (number) - The height of the world in world units.
+  > @param message.camera ([[Entity]]) - If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+
+## JSON Definition:
+    {
+      "type": "tiled-loader",
+      
+      "level": "level-4",
+      // Required. Specifies the JSON level to load.
+      
+      "unitsPerPixel": 10,
+      // Optional. Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit.
+      
+      "images": ["spritesheet-1", "spritesheet-2"],
+      // Optional. If specified, the referenced images are used as the game spritesheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.
+      
+      "imagesScale": 5,
+      // Optional. If images are set above, this property sets the scale of the art relative to world coordinates. Defaults to the value set in "unitsPerPixel".
+      
+      "zStep": 500
+      // Optional. Adds step number to each additional Tiled layer to maintain z-order. Defaults to 1000.
+    }
+
+[link1]: http://www.mapeditor.org/
+*/
 platformer.components['tiled-loader'] = (function(){
 	var component = function(owner, definition){
-		this.owner = owner;
-		this.entities = [];
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['load']);
+		this.owner        = owner;
+		this.entities     = [];
+		this.layerZ       = 0;
+		this.followEntity = false;
+		this.listeners    = [];
 
-		this.level = platformer.settings.levels[definition.level];
-		this.tileEntityId = definition.tileEntityId || 'tile';
-		this.unitsPerPixel = definition.unitsPerPixel || 1;
-		this.images = definition.images || false;
-		this.imagesScale = definition.imagesScale || this.unitsPerPixel;
-		this.layerZ = 0;
-		this.layerZStep = 1000;
+		this.level = platformer.settings.levels[this.owner.level || definition.level];
+
+		this.unitsPerPixel = this.owner.unitsPerPixel || definition.unitsPerPixel || 1;
+		this.images        = this.owner.images        || definition.images        || false;
+		this.imagesScale   = this.owner.imagesScale   || definition.imagesScale   || this.unitsPerPixel;
+		this.layerZStep    = this.owner.zStep         || definition.zStep         || 1000;
+
+		// Messages that this component listens for
+		this.addListeners(['load']);
 	},
 	proto = component.prototype; 
 
@@ -23,6 +67,11 @@ platformer.components['tiled-loader'] = (function(){
 		for(; actionLayer < this.level.layers.length; actionLayer++){
 			this.setupLayer(this.level.layers[actionLayer], this.level);
 		}
+		this.owner.trigger('world-loaded', {
+			width:  this.level.width  * this.level.tilewidth  * this.unitsPerPixel,
+			height: this.level.height * this.level.tileheight * this.unitsPerPixel,
+			camera: this.followEntity
+		});
 		this.owner.removeComponent(this);
 	};
 	
@@ -44,7 +93,6 @@ platformer.components['tiled-loader'] = (function(){
 		importAnimation= undefined,
 		importCollision= undefined,
 		importRender   = undefined,
-		followEntity   = undefined,
 		layerCollides  = true,
 		numberProperty = false;
 
@@ -221,18 +269,12 @@ platformer.components['tiled-loader'] = (function(){
 					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
 					if(entity){
 						if(entity.camera){
-							followEntity = {entity: entity, mode: entity.camera}; //used by camera
+							this.followEntity = {entity: entity, mode: entity.camera}; //used by camera
 						}
 					}
 				}
 			}
 		}
-		this.owner.trigger('world-loaded', {
-			width:  width  * tileWidth  * this.unitsPerPixel,
-			height: height * tileHeight * this.unitsPerPixel,
-			unitsPerPixel: this.unitsPerPixel,
-			camera: followEntity
-		});
 		this.layerZ += this.layerZStep;
 	};
 
