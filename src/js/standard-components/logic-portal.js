@@ -32,7 +32,7 @@ platformer.components['logic-portal'] = (function(){ //TODO: Change the name of 
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['layer:logic', 'occupied', 'activate']);
+		this.addListeners(['handle-logic', 'occupied', 'activate']);
 		this.destination = this.owner.destination || definition.destination;
 		this.activateOn = definition.activateOn || 'collide';
 		this.override = definition.override;
@@ -42,7 +42,7 @@ platformer.components['logic-portal'] = (function(){ //TODO: Change the name of 
 	var proto = component.prototype;
 	
 	
-	proto['layer:logic'] = function(resp){
+	proto['handle-logic'] = function(resp){
 		if (!this.used && this.activated)
 		{
 			this.owner.trigger("new-scene", {scene: this.destination});
