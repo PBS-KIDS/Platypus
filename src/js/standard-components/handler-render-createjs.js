@@ -15,15 +15,6 @@ platformer.components['handler-render-createjs'] = (function(){
 		this.canvas.height = 240;
 		this.stage = new createjs.Stage(this.canvas);
 		this.firstChild = undefined;
-		this.showFPS = definition.showFPS || false;
-		if (this.showFPS)
-		{
-			this.fpsCounter = new createjs.Text('SOON TO BE FPS', "bold 50px Arial","#FFF");
-			this.stage.addChild(this.fpsCounter);
-			this.fpsCounter.x = 20;
-			this.fpsCounter.y = 20;
-			this.fpsCounter.z = 1000;
-		}
 	},
 	proto = component.prototype; 
 
@@ -60,10 +51,6 @@ platformer.components['handler-render-createjs'] = (function(){
 				return a.z - b.z;
 			});
 			this.firstChild = this.stage.getChildAt(0);
-		}
-		if(this.fpsCounter)
-		{
-			this.fpsCounter.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS";
 		}
 		this.stage.update();
 	};

@@ -10,6 +10,10 @@
             "state":  "pressed"
         },{
 		    "type": "render-animation",
+		    "animationMap":{
+                "pressed": "pressed",
+                "released": "released"
+		    },
             "spriteSheet": {
                 "images": ["buttons"],
                 "frames": {

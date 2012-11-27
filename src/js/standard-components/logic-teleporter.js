@@ -19,7 +19,7 @@ This component listens for redirected collision messages and fires a message on 
 
 ### Local Broadcasts:
 - **logical-state** - On load, this component will send the state as the this.facing value if it exists.
-  > @param message.state (string) - the current `this.facing` value: "up", "down", "left", or "right"
+  > @param message (object) - the current `this.facing` value is passed as a property of the message object: "facing-up", "facing-down", "facing-left", or "facing-right" set to `true`.
 
 ### Peer Broadcasts:
 - **teleport** - On receiving a `teleport-entity` message, if the colliding entity is colliding on the teleporter's facing side, this message is triggered on the colliding entity.
@@ -40,7 +40,6 @@ platformer.components['logic-teleporter'] = (function(){
 
 	var component = function(owner, definition){
 		this.owner = owner;
-		var self = this;
 		
 		// Messages that this component listens for
 		this.listeners = [];
@@ -54,8 +53,10 @@ platformer.components['logic-teleporter'] = (function(){
 	var proto = component.prototype;
 	
 	proto['load'] = function(resp){
+		var state = {};
 		if(this.facing){
-			this.owner.trigger('logical-state', {state: this.facing});
+			state['facing-' + this.facing] = true;
+			this.owner.trigger('logical-state', state);
 		}
 	};
 	

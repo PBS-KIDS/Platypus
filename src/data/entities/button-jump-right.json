@@ -14,6 +14,10 @@
 		    }
 		},
 		{"type": "render-animation",
+            "animationMap":{
+                "pressed": "pressed",
+                "released": "released"
+            },
             "spriteSheet": {
                 "images": ["buttons"],
                 "frames": {
@@ -25,8 +29,8 @@
                     "pressed":  11
                 }
             },
-            "scaleX": 2.9,
-            "scaleY": 2.9,
+            "scaleX": 5,
+            "scaleY": 5,
             "state": "released",
             "acceptInput": {"click": true, "touch": true}
 		}
@@ -34,8 +38,6 @@
 	"properties":{
 		"x": 610,
 		"y": 1090,
-		"z": 400,
-		"width": 400,
-		"height": 400
+		"z": 400
 	}
 }

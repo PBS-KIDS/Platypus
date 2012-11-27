@@ -1,3 +1,55 @@
+/**
+# COMPONENT **render-debug**
+This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in green), if the object has a collision component it will display the AABB of the collision shape (in pink). The render-debug component also allows the user to click on an object and it will print the object in the debug console. 
+
+## Dependencies
+- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+
+## Messages
+
+### Listens for:
+- **handle-render** - Repositions the pieces of the component in preparation for rendering
+- **handle-render-load** - The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too. 
+  > @param resp.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
+
+### Local Broadcasts:
+- **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+
+## JSON Definition
+    {
+      "type": "render-debug",
+      "acceptInput": {
+      	//Optional - What types of input the object should take.
+      	"hover": false;
+      	"click": false; 
+      }, 
+      "regX": 0,
+      //Optional - The X offset from X position for the displayed shape. If you're using the AABB this is set automatically.
+      "regY": 0
+      //Optional - The Y offset from Y position for the displayed shape. If you're using the AABB this is set automatically.
+    }
+    
+[link1]: http://createjs.com/Docs/EaselJS/Stage.html
+*/
+
+
 platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -7,11 +59,9 @@ platformer.components['render-debug'] = (function(){
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
 			this.click = definition.acceptInput.click || false;
-			this.touch = definition.acceptInput.touch || false;
 		} else {
 			this.hover = false;
 			this.click = false;
-			this.touch = false;
 		}
 		
 		this.regX = definition.regX || 0;
@@ -23,7 +73,7 @@ platformer.components['render-debug'] = (function(){
 	};
 	var proto = component.prototype;
 
-	proto['handle-render'] = function(stage){
+	proto['handle-render'] = function(){
 		if(this.owner.getAABB){
 			var aabb   = this.owner.getAABB();
 			this.shape.scaleX = aabb.width / this.initialWidth;
@@ -98,12 +148,12 @@ platformer.components['render-debug'] = (function(){
 		this.stage.addChild(this.txt);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.touch && createjs.Touch.isSupported()){
+		if(this.click && createjs.Touch.isSupported()){
 			createjs.Touch.enable(this.stage);
 		}
 
 		this.shape.onPress     = function(event) {
-			if(this.click || this.touch){
+			if(this.click){
 				self.owner.trigger('mousedown', {
 					event: event.nativeEvent,
 					over: over,
@@ -134,7 +184,7 @@ platformer.components['render-debug'] = (function(){
 				console.log('This Entity:', self.owner);
 			}
 		};
-		if(this.click || this.touch){
+		if(this.click){
 			this.shape.onMouseOut  = function(){over = false;};
 			this.shape.onMouseOver = function(){over = true;};
 		}

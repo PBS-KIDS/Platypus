@@ -112,7 +112,8 @@
             {"id": "logic-collectible-manager", "src": "../js/example-components/logic-collectible-manager.js"},
             {"id": "logic-hero",              "src": "../js/example-components/logic-hero.js"},
             {"id": "logic-gem",               "src": "../js/example-components/logic-gem.js"},
-            {"id": "logic-gui",               "src": "../js/example-components/logic-gui.js"}
+            {"id": "logic-gui",               "src": "../js/example-components/logic-gui.js"},
+            {"id": "render-fps-counter",      "src": "../js/example-components/render-fps-counter.js"}
 		],
 		"entities": [ // JSON files describing entities
 		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
@@ -143,7 +144,8 @@
             {"id": "beetle",    	  "src": "entities/beetle.json"},
             {"id": "clock",	    	  "src": "entities/clock.json"},
             {"id": "flower",	      "src": "entities/flower.json"},
-            {"id": "briar",	    	  "src": "entities/briar.json"}
+            {"id": "briar",	    	  "src": "entities/briar.json"},
+            {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
 		],
 		"includes": [
 			{"id": "EaselJS",   "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},

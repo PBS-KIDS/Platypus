@@ -6,6 +6,7 @@ platformer.components['render-clock'] = (function(){
 		this.listeners = [];
 
 		this.addListeners(['handle-render', 'handle-render-load', 'refresh-clock']);
+		this.stage = undefined;
 		this.currentValue = 0;
 		this.targetValue = 0;
 		this.txt = new createjs.Text(this.currentValue.toString());
@@ -16,12 +17,13 @@ platformer.components['render-clock'] = (function(){
 	var proto = component.prototype;
 	
 	proto['handle-render-load'] = function(resp){
+		this.stage = resp.stage;
 		this.txt.x = this.owner.x;
 		this.txt.y = this.owner.y;
 		this.txt.z = this.owner.z;
 		this.txt.textAlign = "center";
 		this.txt.textBaseline = "middle";
-		resp.stage.addChild(this.txt);
+		this.stage.addChild(this.txt);
 	};
 	
 	proto['handle-render'] = function(){
@@ -34,6 +36,9 @@ platformer.components['render-clock'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.txt);
+		this.stage = undefined;
+		this.txt = undefined;
 		this.removeListeners(this.listeners);
 	};
 	

@@ -63,8 +63,8 @@
 					"standing-left": [5],
 					"walking-right": {"frames": [3, 0, 1, 2], "frequency": 4},
 					"walking-left":  {"frames": [4, 7, 6, 5], "frequency": 4},
-					"jumping-right": [0],
-					"jumping-left":  [6],
+					"jumping-right": {"frames": [0]},
+					"jumping-left":  {"frames": [6]},
                     "swing-right":   {"frames": [ 8,  9, 10, 10, 2], "next": "standing-right", "frequency": 4},
                     "swing-left":    {"frames": [14, 13, 12, 12, 5], "next": "standing-left",  "frequency": 4}
 				}

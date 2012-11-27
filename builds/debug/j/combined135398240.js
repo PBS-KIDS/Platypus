@@ -5,7 +5,7 @@
   PBS.KIDS = this.PBS.KIDS || {};
   PBS.KIDS.platformer = platformer;
 
-platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"},"beetle":{"id":"beetle","src":"i/beetle.png"},"flower":{"id":"flower","src":"i/flower.png"},"briar":{"id":"briar","src":"i/briar.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/standard-components/enable-ios-audio.js"},"handler-controller":{"id":"handler-controller","src":"../src/js/standard-components/handler-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/standard-components/tiled-loader.js"},"handler-render-createjs":{"id":"handler-render-createjs","src":"../src/js/standard-components/handler-render-createjs.js"},"handler-render-dom":{"id":"handler-render-dom","src":"../src/js/standard-components/handler-render-dom.js"},"handler-ai":{"id":"handler-ai","src":"../src/js/standard-components/handler-ai.js"},"handler-logic":{"id":"handler-logic","src":"../src/js/standard-components/handler-logic.js"},"camera":{"id":"camera","src":"../src/js/standard-components/camera.js"},"collision-group":{"id":"collision-group","src":"../src/js/standard-components/collision-group.js"},"audio":{"id":"audio","src":"../src/js/standard-components/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/standard-components/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/standard-components/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/standard-components/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/standard-components/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/standard-components/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/standard-components/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/standard-components/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/standard-components/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/standard-components/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/standard-components/render-image.js"},"logic-button":{"id":"logic-button","src":"../src/js/standard-components/logic-button.js"},"logic-carrier":{"id":"logic-carrier","src":"../src/js/standard-components/logic-carrier.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/standard-components/logic-directional-movement.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/standard-components/logic-gravity.js"},"logic-portable":{"id":"logic-portable","src":"../src/js/standard-components/logic-portable.js"},"logic-pushable":{"id":"logic-pushable","src":"../src/js/standard-components/logic-pushable.js"},"logic-counter":{"id":"logic-counter","src":"../src/js/standard-components/logic-counter.js"},"logic-timer":{"id":"logic-timer","src":"../src/js/standard-components/logic-timer.js"},"logic-teleporter":{"id":"logic-teleporter","src":"../src/js/standard-components/logic-teleporter.js"},"logic-portal":{"id":"logic-portal","src":"../src/js/standard-components/logic-portal.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/standard-components/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/standard-components/collision-tiles.js"},"ai-pacer":{"id":"ai-pacer","src":"../src/js/standard-components/ai-pacer.js"},"render-gui":{"id":"render-gui","src":"../src/js/example-components/render-gui.js"},"render-counter":{"id":"render-counter","src":"../src/js/example-components/render-counter.js"},"render-clock":{"id":"render-clock","src":"../src/js/example-components/render-clock.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/example-components/logic-collectible-manager.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/example-components/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/example-components/logic-gem.js"},"logic-gui":{"id":"logic-gui","src":"../src/js/example-components/logic-gui.js"}},"entities":{"action-layer":{"id":"action-layer","components":[{"type":"handler-ai"},{"type":"handler-logic"},{"type":"collision-group"},{"type":"camera","width":3200},{"type":"handler-render-createjs"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"collectible-manager"}]},{"type":"tiled-loader","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},"desktop-interface-layer":{"id":"desktop-interface-layer","filter":{"excludes":["touch"]},"components":[{"type":"camera","width":4000},{"type":"handler-logic"},{"type":"handler-render-createjs","showFPS":true},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"},{"type":"gui"}],"childEvents":["gui-gem-collected"]}]},"multitouch-interface-layer":{"id":"multitouch-interface-layer","filter":{"includes":["multitouch"]},"components":[{"type":"camera","width":2000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},"touch-interface-layer":{"id":"touch-interface-layer","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"camera","width":2000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"},{"type":"gui","properties":{"y":2000}}],"childEvents":["gui-gem-collected"]}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400,"width":400,"height":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400,"width":400,"height":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"z":400,"width":400,"height":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1180,"y":1090,"z":400,"width":400,"height":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":420,"y":1090,"z":400,"width":400,"height":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-level-1","transition":"fade-to-black"}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":2.9,"scaleY":2.9,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":1590,"y":1090,"z":400,"width":400,"height":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"z":400,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right"}},{"type":"logic-carrier"},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":"","beetle":"","briar":""}},{"type":"render-animation","animationMap":{"swing,left":"swing-left","swing,right":"swing-right","air,left":"jumping-left","air,right":"jumping-right","moving,left":"walking-left","moving,right":"walking-right","left":"standing-left","right":"standing-right","default":"standing-right"},"spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":[0],"jumping-left":[6],"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"swingHit":{"sound":"pickaxe-other","interrupt":"none"},"ground, moving":{"sound":"walk","interrupt":"none"},"jumping":"jump"}},{"type":"render-debug","regY":260,"regX":130}],"properties":{"x":10,"y":10,"z":200,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"logic-pushable"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"hit-solid","dirt":"hit-solid","hero":["push-entity","hit-solid"],"tiles":"hit-solid","beetle":"hit-solid","briar":"hit-solid"}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2},{"type":"render-debug","regX":120,"regY":240}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":250},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10,"z":100}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"prepare-for-collision","delay":50}]},"level-portal":{"id":"level-portal","components":[{"type":"logic-portal"},{"type":"collision-basic","collisionType":"portal","softCollisions":{"hero":"occupied"}},{"type":"render-debug","regX":120,"regY":240},{"type":"change-scene","transition":"fade-to-black"}],"properties":{"x":50,"y":50,"z":0}},"gem-counter":{"id":"gem-counter","components":[{"type":"logic-counter","message":"count-gems"},{"type":"render-counter","scaleX":20,"scaleY":20,"color":"#FFF"}],"properties":{"x":3800,"y":175,"z":400}},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"broadcast-events","events":{"broadcast-gem-collected":"gui-gem-collected"}}],"properties":{"x":10,"y":10}},"gui":{"id":"gui","components":[{"type":"logic-gui"},{"type":"render-animation","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}},"scaleX":2.9,"scaleY":2.9},{"type":"entity-container","entities":[{"type":"gem-counter"},{"type":"clock"}],"childEvents":["count-gems","set-time","start-timer","stop-timer","handle-logic","handle-render","handle-render-load","audio-mute-toggle","audio-mute","audio-unmute"]}],"properties":{"x":4000,"y":0,"z":350}},"beetle":{"id":"beetle","components":[{"type":"ai-pacer","movement":"horizontal"},{"type":"logic-directional-movement"},{"type":"logic-gravity"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-90,-120],[90,120]]},"collisionType":"beetle","solidCollisions":{"beetle":"turn-around","hero":"turn-around","block":"turn-around","dirt":"turn-around","tiles":"turn-around","briar":"turn-around"}},{"type":"render-animation","animationMap":{"moving,left":"walking-left","moving,right":"walking-right","default":"standing"},"spriteSheet":{"images":["beetle"],"frames":{"width":24,"height":24,"regY":24,"regX":12},"animations":{"standing":[0],"walking-right":{"frames":[2,3,1],"frequency":4},"walking-left":{"frames":[3,2,1],"frequency":4}}}}],"properties":{"x":10,"y":10,"z":150}},"clock":{"id":"clock","components":[{"type":"logic-timer"},{"type":"render-clock","scaleX":20,"scaleY":20,"color":"#FFF"},{"type":"audio","audioMap":{}}],"properties":{"x":2000,"y":175,"z":400,"alarmMessage":"half-minute-timer","updateMessage":"refresh-clock","alarmTime":30000,"isIncrementing":true,"isInterval":true,"time":1000}},"flower":{"id":"flower","components":[{"type":"render-animation","spriteSheet":{"images":["flower"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"default":[0]}},"scaleX":2,"scaleY":2}],"properties":{"x":10,"y":10,"z":50}},"briar":{"id":"briar","components":[{"type":"logic-teleporter","facing":"up"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"briar","solidCollisions":{"hero":"teleport-entity"}},{"type":"render-animation","spriteSheet":{"images":["briar"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"up":[0],"down":[3],"right":[1],"left":[2]}},"state":"up","scaleX":2,"scaleY":2},{"type":"render-debug","regX":60,"regY":120}],"properties":{"x":10,"y":10,"z":250,"linkId":""}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu-layer","components":[{"type":"handler-logic"},{"type":"handler-render-dom"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio-layer","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-level-1":{"layers":[{"type":"action-layer","properties":{"level":"level-1"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-1"},"scene-level-2":{"layers":[{"type":"action-layer","properties":{"level":"level-2"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-2"},"scene-level-3":{"layers":[{"type":"action-layer","properties":{"level":"level-3"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-3"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower0"},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower1"},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower2"},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower3"},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower4"},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower5"},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower6"},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{"":"","teleportId":"flower6"},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{"facing":"right","teleportId":"flower6"},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{"facing":"left","teleportId":"flower6"},"type":"","width":0,"x":888,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":648,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":48},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":0,"y":24},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower4"},"type":"","width":0,"x":528,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":696,"y":168},{"height":48,"name":"","properties":{"destination":"scene-level-3"},"type":"level-portal","width":48,"x":912,"y":360}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49,35,35,35,35,35,35,35,35,35,35,35,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"height":18,"name":"tile-layer","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":1,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":48},{"gid":11,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":0}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24},{"firstgid":33,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"},"level-3":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":20,"name":"Back","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[6,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,7,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,15,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,16],"height":20,"name":"Front","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"Objects","objects":[{"gid":46,"height":0,"name":"","properties":{},"type":"","width":0,"x":48,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-3"}}};
+platformer.settings = {"global":{"initialScene":"menu","fps":60,"rootElement":"root","aspectRatio":1.333,"resizeFont":true},"aspects":[{"ogg":["firefox","opera","chrome"],"m4aCombined":["android","silk","ipod","ipad","iphone"],"mp3":["msie","safari"]}],"assets":{"powerup":{"id":"powerup","src":{"ogg":"a/powerup.ogg","mp3":"a/powerup.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":5000,"length":370}}}},"walk":{"id":"walk","src":{"ogg":"a/walk.ogg","mp3":"a/walk.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":3200,"length":330}}}},"jump":{"id":"jump","src":{"ogg":"a/jump.ogg","mp3":"a/jump.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":1500,"length":250}}}},"collect-gem":{"id":"collect-gem","src":{"ogg":"a/collect-gem.ogg","mp3":"a/collect-gem.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":7000,"length":610}}}},"pickaxe-crush":{"id":"pickaxe-crush","src":{"ogg":"a/pickaxe-crush.ogg","mp3":"a/pickaxe-crush.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":9150,"length":500}}}},"pickaxe-other":{"id":"pickaxe-other","src":{"ogg":"a/pickaxe-other.ogg","mp3":"a/pickaxe-other.mp3","m4aCombined":{"assetId":"combined","src":"a/combined.m4a","data":{"offset":11150,"length":300}}}},"buttons":{"id":"buttons","src":"i/buttons.png"},"dirt":{"id":"dirt","src":"i/dirt.png"},"mookie":{"id":"mookie","src":"i/mookie.png"},"tilemap":{"id":"tilemap","src":"i/tile-map.png"},"sprites":{"id":"sprites","src":"i/game-sprites.png"},"test":{"id":"test","src":"i/test.png"},"test-animation":{"id":"test-animation","src":"i/test-animation.png"},"tiles":{"id":"tiles","src":"i/tiles.png"},"gem":{"id":"gem","src":"i/gem.png"},"gem-bar":{"id":"gem-bar","src":"i/gem-bar.png"},"title-screen":{"id":"title-screen","src":"i/title-screen.png"},"objects":{"id":"objects","src":"i/objects.png"},"beetle":{"id":"beetle","src":"i/beetle.png"},"flower":{"id":"flower","src":"i/flower.png"},"briar":{"id":"briar","src":"i/briar.png"}},"classes":{"Game":{"id":"Game","src":"../src/js/game.js"},"Entity":{"id":"Entity","src":"../src/js/entity.js"},"Scene":{"id":"Scene","src":"../src/js/scene.js"},"Collision-Shape":{"id":"Collision-Shape","src":"../src/js/collision-shape.js"},"AABB":{"id":"AABB","src":"../src/js/aabb.js"}},"components":{"enable-ios-audio":{"id":"enable-ios-audio","src":"../src/js/standard-components/enable-ios-audio.js"},"handler-controller":{"id":"handler-controller","src":"../src/js/standard-components/handler-controller.js"},"tiled-loader":{"id":"tiled-loader","src":"../src/js/standard-components/tiled-loader.js"},"handler-render-createjs":{"id":"handler-render-createjs","src":"../src/js/standard-components/handler-render-createjs.js"},"handler-render-dom":{"id":"handler-render-dom","src":"../src/js/standard-components/handler-render-dom.js"},"handler-ai":{"id":"handler-ai","src":"../src/js/standard-components/handler-ai.js"},"handler-logic":{"id":"handler-logic","src":"../src/js/standard-components/handler-logic.js"},"camera":{"id":"camera","src":"../src/js/standard-components/camera.js"},"collision-group":{"id":"collision-group","src":"../src/js/standard-components/collision-group.js"},"audio":{"id":"audio","src":"../src/js/standard-components/audio.js"},"broadcast-events":{"id":"broadcast-events","src":"../src/js/standard-components/broadcast-events.js"},"change-scene":{"id":"change-scene","src":"../src/js/standard-components/change-scene.js"},"destroy-me":{"id":"destroy-me","src":"../src/js/standard-components/destroy-me.js"},"dom-element":{"id":"dom-element","src":"../src/js/standard-components/dom-element.js"},"entity-container":{"id":"entity-container","src":"../src/js/standard-components/entity-container.js"},"entity-controller":{"id":"entity-controller","src":"../src/js/standard-components/entity-controller.js"},"render-debug":{"id":"render-debug","src":"../src/js/standard-components/render-debug.js"},"render-tiles":{"id":"render-tiles","src":"../src/js/standard-components/render-tiles.js"},"render-animation":{"id":"render-animation","src":"../src/js/standard-components/render-animation.js"},"render-image":{"id":"render-image","src":"../src/js/standard-components/render-image.js"},"logic-button":{"id":"logic-button","src":"../src/js/standard-components/logic-button.js"},"logic-carrier":{"id":"logic-carrier","src":"../src/js/standard-components/logic-carrier.js"},"logic-directional-movement":{"id":"logic-directional-movement","src":"../src/js/standard-components/logic-directional-movement.js"},"logic-gravity":{"id":"logic-gravity","src":"../src/js/standard-components/logic-gravity.js"},"logic-portable":{"id":"logic-portable","src":"../src/js/standard-components/logic-portable.js"},"logic-pushable":{"id":"logic-pushable","src":"../src/js/standard-components/logic-pushable.js"},"logic-counter":{"id":"logic-counter","src":"../src/js/standard-components/logic-counter.js"},"logic-timer":{"id":"logic-timer","src":"../src/js/standard-components/logic-timer.js"},"logic-teleporter":{"id":"logic-teleporter","src":"../src/js/standard-components/logic-teleporter.js"},"logic-portal":{"id":"logic-portal","src":"../src/js/standard-components/logic-portal.js"},"collision-basic":{"id":"collision-basic","src":"../src/js/standard-components/collision-basic.js"},"collision-tiles":{"id":"collision-tiles","src":"../src/js/standard-components/collision-tiles.js"},"ai-pacer":{"id":"ai-pacer","src":"../src/js/standard-components/ai-pacer.js"},"render-gui":{"id":"render-gui","src":"../src/js/example-components/render-gui.js"},"render-counter":{"id":"render-counter","src":"../src/js/example-components/render-counter.js"},"render-clock":{"id":"render-clock","src":"../src/js/example-components/render-clock.js"},"logic-collectible-manager":{"id":"logic-collectible-manager","src":"../src/js/example-components/logic-collectible-manager.js"},"logic-hero":{"id":"logic-hero","src":"../src/js/example-components/logic-hero.js"},"logic-gem":{"id":"logic-gem","src":"../src/js/example-components/logic-gem.js"},"logic-gui":{"id":"logic-gui","src":"../src/js/example-components/logic-gui.js"},"render-fps-counter":{"id":"render-fps-counter","src":"../src/js/example-components/render-fps-counter.js"}},"entities":{"action-layer":{"id":"action-layer","components":[{"type":"handler-ai"},{"type":"handler-logic"},{"type":"collision-group"},{"type":"camera","width":3200},{"type":"handler-render-createjs"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"collectible-manager"}]},{"type":"tiled-loader","unitsPerPixel":10,"images":["sprites"],"imagesScale":2}]},"desktop-interface-layer":{"id":"desktop-interface-layer","filter":{"excludes":["touch"]},"components":[{"type":"camera","width":4000},{"type":"handler-logic"},{"type":"handler-render-createjs","showFPS":true},{"type":"entity-container","entities":[{"type":"button-mute"},{"type":"button-play"},{"type":"gui"},{"type":"fps-counter"}],"childEvents":["gui-gem-collected"]}]},"multitouch-interface-layer":{"id":"multitouch-interface-layer","filter":{"includes":["multitouch"]},"components":[{"type":"camera","width":4000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump"},{"type":"button-pickaxe"},{"type":"button-left"},{"type":"button-right"},{"type":"gui"},{"type":"fps-counter"}],"childEvents":["gui-gem-collected"]}]},"touch-interface-layer":{"id":"touch-interface-layer","filter":{"includes":["touch"],"excludes":["multitouch"]},"components":[{"type":"camera","width":4000},{"type":"handler-logic"},{"type":"handler-render-createjs"},{"type":"entity-container","entities":[{"type":"button-jump-left"},{"type":"button-jump-right"},{"type":"button-jump","properties":{"x":310}},{"type":"button-pickaxe","properties":{"x":10,"y":680}},{"type":"button-left"},{"type":"button-right"},{"type":"gui"},{"type":"fps-counter"}],"childEvents":["gui-gem-collected"]}]},"tile-layer":{"id":"tile-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"},{"type":"collision-tiles","collisionMap":"import"}]},"render-layer":{"id":"render-layer","components":[{"type":"render-tiles","spritesheet":"import","imageMap":"import"}]},"collision-layer":{"id":"collision-layer","components":[{"type":"collision-tiles","collisionMap":"import"}]},"button-jump":{"id":"button-jump","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-jump:down","mouseup":"button-jump:up"}},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":1,"pressed":7}},"scaleX":5,"scaleY":5,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":20,"y":2300,"z":400}},"button-jump-left":{"id":"button-jump-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-left:down"],"mouseup":["button-jump:up","button-left:up"]}},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":4,"pressed":10}},"scaleX":5,"scaleY":5,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":10,"y":1090,"z":400}},"button-jump-right":{"id":"button-jump-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":["button-jump:down","button-right:down"],"mouseup":["button-jump:up","button-right:up"]}},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":5,"pressed":11}},"scaleX":5,"scaleY":5,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":610,"y":1090,"z":400}},"button-left":{"id":"button-left","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-left:down","mouseup":"button-left:up"}},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":0,"pressed":6}},"scaleX":5,"scaleY":5,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":2460,"y":2300,"z":400}},"button-pickaxe":{"id":"button-pickaxe","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-pickaxe:down","mouseup":"button-pickaxe:up"}},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":17,"pressed":23}},"scaleX":5,"scaleY":5,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":840,"y":2300,"z":400}},"button-play-game":{"id":"button-play-game","components":[{"type":"dom-element","element":"div","innerHTML":"Play Game","className":"menu-button","onmouseup":"new-scene","ontouchend":"new-scene"},{"type":"change-scene","scene":"scene-level-1","transition":"fade-to-black"}]},"button-right":{"id":"button-right","components":[{"type":"logic-button"},{"type":"broadcast-events","events":{"mousedown":"button-right:down","mouseup":"button-right:up"}},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":2,"pressed":8}},"scaleX":5,"scaleY":5,"state":"released","acceptInput":{"click":true,"touch":true}}],"properties":{"x":3280,"y":2300,"z":400}},"button-mute":{"id":"button-mute","components":[{"type":"logic-button","toggle":true,"state":"pressed"},{"type":"render-animation","animationMap":{"pressed":"pressed","released":"released"},"spriteSheet":{"images":["buttons"],"frames":{"width":138,"height":138},"animations":{"released":3,"pressed":9}},"scaleX":2.9,"scaleY":2.9,"state":"pressed","acceptInput":{"click":true,"touch":true}},{"type":"broadcast-events","renameEvents":{"mouseup":"audio-mute-toggle"}},{"type":"audio"}],"properties":{"x":10,"y":10,"z":400,"width":400,"height":400}},"hero":{"id":"hero","components":[{"type":"entity-controller","controlMap":{"button-jump":"key-jump","key:z":"key-jump","button-pickaxe":"key-swing","key:x":"key-swing","key:left-arrow":"key-left","button-left":"key-left","key:right-arrow":"key-right","button-right":"key-right"}},{"type":"logic-carrier"},{"type":"logic-hero"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-80,-120],[80,120]]},"collisionType":"hero","solidCollisions":{"block":"","dirt":"","tiles":"","beetle":"","briar":""}},{"type":"render-animation","animationMap":{"swing,left":"swing-left","swing,right":"swing-right","air,left":"jumping-left","air,right":"jumping-right","moving,left":"walking-left","moving,right":"walking-right","left":"standing-left","right":"standing-right","default":"standing-right"},"spriteSheet":{"images":["mookie"],"frames":{"width":240,"height":155,"regY":155,"regX":120},"animations":{"standing-right":[2],"standing-left":[5],"walking-right":{"frames":[3,0,1,2],"frequency":4},"walking-left":{"frames":[4,7,6,5],"frequency":4},"jumping-right":{"frames":[0]},"jumping-left":{"frames":[6]},"swing-right":{"frames":[8,9,10,10,2],"next":"standing-right","frequency":4},"swing-left":{"frames":[14,13,12,12,5],"next":"standing-left","frequency":4}}},"scaleX":2,"scaleY":2},{"type":"audio","audioMap":{"swingHit":{"sound":"pickaxe-other","interrupt":"none"},"ground, moving":{"sound":"walk","interrupt":"none"},"jumping":"jump"}},{"type":"render-debug","regY":260,"regX":130}],"properties":{"x":10,"y":10,"z":200,"width":160,"height":240,"state":"ground","heading":"right","camera":"bounding"}},"block":{"id":"block","components":[{"type":"logic-gravity"},{"type":"logic-pushable"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"block","solidCollisions":{"block":"hit-solid","dirt":"hit-solid","hero":["push-entity","hit-solid"],"tiles":"hit-solid","beetle":"hit-solid","briar":"hit-solid"}},{"type":"render-image","image":"sprites","source":{"width":120,"height":120,"y":720,"x":240},"regX":60,"regY":120,"scaleX":2,"scaleY":2},{"type":"render-debug","regX":120,"regY":240}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"dirt":{"id":"dirt","components":[{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"dirt","softCollisions":{"pickaxe":"destroy-me"}},{"type":"destroy-me","delay":250},{"type":"audio","audioMap":{"destroy-me":{"sound":"pickaxe-crush","interrupt":"none"}}},{"type":"render-animation","animationMap":{"destroy-me":"explosion"},"spriteSheet":{"images":["dirt"],"frames":{"width":240,"height":240,"regX":120,"regY":180},"animations":{"stationary":0,"explosion":{"frames":[1,2,3,4,5],"frequency":4}}},"state":"stationary","scaleX":2,"scaleY":2}],"properties":{"x":50,"y":50,"z":50,"width":240,"height":240}},"gem":{"id":"gem","components":[{"type":"logic-gem"},{"type":"collision-basic","shape":{"offset":[0,-110],"type":"rectangle","points":[[-70,-110],[70,110]]},"collisionType":"gem","softCollisions":{"hero":"collect-gem"}},{"type":"render-animation","spriteSheet":{"images":["gem"],"frames":{"width":14,"height":22,"regY":22,"regX":7},"animations":{"default":{"frames":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],"frequency":4}}}},{"type":"audio","audioMap":{"sound-collect-gem":{"sound":"collect-gem","interrupt":"early"}}},{"type":"render-debug","regY":220,"regX":110}],"properties":{"x":10,"y":10,"z":100}},"pickaxe":{"id":"pickaxe","components":[{"type":"collision-basic","shape":{"offset":[0,-140],"type":"rectangle","points":[[-100,-140],[100,140]]},"collisionType":"pickaxe"},{"type":"destroy-me","message":"prepare-for-collision","delay":50}]},"level-portal":{"id":"level-portal","components":[{"type":"logic-portal"},{"type":"collision-basic","collisionType":"portal","softCollisions":{"hero":"occupied"}},{"type":"render-debug","regX":120,"regY":240},{"type":"change-scene","transition":"fade-to-black"}],"properties":{"x":50,"y":50,"z":0}},"gem-counter":{"id":"gem-counter","components":[{"type":"logic-counter","message":"count-gems"},{"type":"render-counter","scaleX":20,"scaleY":20,"color":"#FFF"}],"properties":{"x":3800,"y":175,"z":400}},"title-screen":{"id":"title-screen","components":[{"type":"dom-element","element":"img","className":"title-screen","src":"i/title-screen.png"}]},"collectible-manager":{"id":"collectible-manager","components":[{"type":"logic-collectible-manager"},{"type":"broadcast-events","events":{"broadcast-gem-collected":"gui-gem-collected"}}],"properties":{"x":10,"y":10}},"gui":{"id":"gui","components":[{"type":"logic-gui"},{"type":"render-animation","spriteSheet":{"images":["gem-bar"],"frames":{"width":229,"height":139,"regY":0,"regX":229},"animations":{"default":[0]}},"scaleX":2.9,"scaleY":2.9},{"type":"entity-container","entities":[{"type":"gem-counter"},{"type":"clock"}],"childEvents":["count-gems","set-time","start-timer","stop-timer","handle-logic","handle-render","handle-render-load","audio-mute-toggle","audio-mute","audio-unmute"]}],"properties":{"x":4000,"y":0,"z":350}},"beetle":{"id":"beetle","components":[{"type":"ai-pacer","movement":"horizontal"},{"type":"logic-directional-movement"},{"type":"logic-gravity"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-90,-120],[90,120]]},"collisionType":"beetle","solidCollisions":{"beetle":"turn-around","hero":"turn-around","block":"turn-around","dirt":"turn-around","tiles":"turn-around","briar":"turn-around"}},{"type":"render-animation","animationMap":{"moving,left":"walking-left","moving,right":"walking-right","default":"standing"},"spriteSheet":{"images":["beetle"],"frames":{"width":24,"height":24,"regY":24,"regX":12},"animations":{"standing":[0],"walking-right":{"frames":[2,3,1],"frequency":4},"walking-left":{"frames":[3,2,1],"frequency":4}}}}],"properties":{"x":10,"y":10,"z":150}},"clock":{"id":"clock","components":[{"type":"logic-timer"},{"type":"render-clock","scaleX":20,"scaleY":20,"color":"#FFF"},{"type":"audio","audioMap":{}}],"properties":{"x":2000,"y":175,"z":400,"alarmMessage":"half-minute-timer","updateMessage":"refresh-clock","alarmTime":30000,"isIncrementing":true,"isInterval":true,"time":1000}},"flower":{"id":"flower","components":[{"type":"render-animation","spriteSheet":{"images":["flower"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"default":[0]}},"scaleX":2,"scaleY":2}],"properties":{"x":10,"y":10,"z":50}},"briar":{"id":"briar","components":[{"type":"logic-teleporter","facing":"up"},{"type":"collision-basic","shape":{"offset":[0,-120],"type":"rectangle","points":[[-120,-120],[120,120]]},"collisionType":"briar","solidCollisions":{"hero":"teleport-entity"}},{"type":"render-animation","animationMap":{"facing-up":"up","facing-down":"down","facing-left":"left","facing-right":"right"},"spriteSheet":{"images":["briar"],"frames":{"width":120,"height":120,"regY":120,"regX":60},"animations":{"up":[0],"down":[3],"right":[1],"left":[2]}},"state":"up","scaleX":2,"scaleY":2},{"type":"render-debug","regX":60,"regY":120}],"properties":{"x":10,"y":10,"z":250,"linkId":""}},"fps-counter":{"id":"fps-counter","components":[{"type":"render-fps-counter","scaleX":1,"scaleY":1,"x":200,"y":60,"z":1000,"color":"#FFF","font":"bold 80px Arial"}],"properties":{}}},"includes":{"EaselJS":{"id":"EaselJS","src":"http://code.createjs.com/easeljs-0.5.0.min.js"},"TweenJS":{"id":"TweenJS","src":"http://code.createjs.com/tweenjs-0.3.0.min.js"},"SoundJS":{"id":"SoundJS","src":"http://code.createjs.com/soundjs-0.3.0.min.js"},"PreloadJS":{"id":"PreloadJS","src":"http://code.createjs.com/preloadjs-0.2.0.min.js"},"Browser":{"id":"Browser","src":"../src/js/browser.js"},"iOSAudio":{"id":"iOSAudio","src":"../src/js/HTMLiOSAudioPlugin.js"},"SoundJSm4a":{"id":"SoundJSm4a","src":"../src/js/SoundJSm4aOverride.js"},"Main":{"id":"Main","src":"../src/js/main.js"},"ButtonCSS":{"id":"ButtonCSS","src":"../src/css/button.css"},"MainCSS":{"id":"MainCSS","src":"../src/css/main.css"},"GameCSS":{"id":"GameCSS","src":"../src/css/game.css"}},"scenes":{"menu":{"layers":[{"id":"menu-layer","components":[{"type":"handler-logic"},{"type":"handler-render-dom"},{"type":"handler-controller"},{"type":"entity-container","entities":[{"type":"title-screen"},{"type":"button-play-game"}]}]},{"id":"enable-ios-audio-layer","filter":{"includes":["iOS"]},"components":[{"type":"enable-ios-audio","audioId":"combined"}]}],"id":"menu"},"scene-level-1":{"layers":[{"type":"action-layer","properties":{"level":"level-1"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-1"},"scene-level-2":{"layers":[{"type":"action-layer","properties":{"level":"level-2"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-2"},"scene-level-3":{"layers":[{"type":"action-layer","properties":{"level":"level-3"}},{"type":"multitouch-interface-layer"},{"type":"touch-interface-layer"},{"type":"desktop-interface-layer"}],"id":"scene-level-3"}},"levels":{"level-1":{"height":18,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,10,10,10,10,10,10,10,1,1,1,1,1,10,10,1,1,1,1,1,1,1,1,1,10,10,10,10,1,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,19,19,19,19,19,19,19,19,1,1,1,19,19,19,1,1,1,1,1,1,1,1,19,19,19,19,19,19,1,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,1,1,1,28,28,28,28,28,28,28,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,1,1,1,1,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":18,"name":"background","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"data":[6,21,21,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,11,13,0,0,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,3,0,0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,5,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,12,0,0,12,3,3,0,0,0,0,0,0,13,0,3,0,0,0,0,0,11,15,3,3,3,0,3,3,18,0,0,0,0,0,0,3,0,0,0,0,0,12,0,0,12,0,0,12,12,12,3,0,0,0,0,0,12,0,12,3,3,0,3,3,3,13,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,12,0,3,0,0,0,12,0,0,0,0,0,3,3,0,0,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,11,0,3,3,3,0,3,3,0,0,0,3,0,0,12,0,0,0,12,0,0,0,3,3,0,0,0,11,0,0,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,3,0,0,0,3,12,0,0,0,0,0,0,0,12,0,3,3,0,0,0,0,0,0,0,0,3,16,0,12,0,0,0,0,0,12,13,0,0,32,3,32,3,32,0,0,0,12,0,12,12,0,0,0,0,0,0,0,11,0,12,0,0,5,0,0,0,0,0,3,0,12,0,12,0,0,0,0,0,12,12,0,0,33,35,36,35,34,3,3,3,12,0,12,12,0,0,0,0,0,0,3,16,0,12,0,0,12,0,0,0,0,0,12,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,20,12,12,12,12,0,0,0,3,3,3,0,0,0,0,12,0,12,0,0,12,0,0,0,0,3,0,0,12,0,12,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,3,12,0,0,12,0,12,0,0,12,0,0,0,0,12,0,0,12,0,11,0,0,0,0,0,12,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,12,0,0,12,0,0,3,0,0,12,24,26,25,0,0,0,0,0,12,0,0,0,0,0,12,12,0,0,2,3,3,0,3,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,23,21,23,0,0,0,0,0,12,0,0,0,0,0,12,12,0,5,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,3,0,0,0,0,0,0,0,0,0,12,3,3,3,4,0,2,12,0,11,0,0,0,0,0,0,0,13,0,0,0,0,3,0,3,3,0,3,3,3,0,0,3,0,12,32,3,32,3,32,4,0,2,3,18,0,0,0,0,0,0,12,0,0,0,0,0,0,0,0,0,13,0,0,0,0,12,0,0,0,0,0,0,0,3,0,0,0,12,33,35,36,35,34,13,0,11,12,13,0,0,0,0,0,0,3,3,3,3,3,0,0,0,0,3,3,0,0,0,0,3,3,3,3,3,3,3,0,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"height":18,"name":"action","opacity":1,"properties":{"entity":"tile-layer"},"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":72},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":864,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":936,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":912,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":216},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":264},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":144},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":312},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower0"},"type":"","width":0,"x":288,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower1"},"type":"","width":0,"x":264,"y":192},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower2"},"type":"","width":0,"x":24,"y":408},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower3"},"type":"","width":0,"x":240,"y":336},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower4"},"type":"","width":0,"x":408,"y":360},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower5"},"type":"","width":0,"x":672,"y":72},{"gid":47,"height":0,"name":"","properties":{"linkId":"flower6"},"type":"","width":0,"x":864,"y":360},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":288},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":408},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":384},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":96},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":72},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":144,"y":48},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":144},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":120},{"gid":54,"height":0,"name":"","properties":{},"type":"","width":0,"x":264,"y":96},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":120,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":168,"y":192},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":360},{"gid":62,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":288},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":192},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":192,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":240,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":216},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":288,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":216,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":312,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":120},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":240},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":264},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":816,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":1008,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":744,"y":72},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":96},{"gid":56,"height":72,"name":"","properties":{},"type":"","width":24,"x":816,"y":336},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":48,"x":984,"y":96},{"gid":56,"height":48,"name":"","properties":{},"type":"","width":24,"x":456,"y":360},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":96,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":120,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":264,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":432,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":456,"y":264},{"gid":64,"height":0,"name":"","properties":{"":"","teleportId":"flower6"},"type":"","width":0,"x":840,"y":48},{"gid":64,"height":0,"name":"","properties":{"facing":"right","teleportId":"flower6"},"type":"","width":0,"x":840,"y":144},{"gid":65,"height":0,"name":"","properties":{"facing":"left","teleportId":"flower6"},"type":"","width":0,"x":888,"y":168},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":192},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":216},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":96},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":120},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":312},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":336},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":360},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":24},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":48},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":72},{"gid":71,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":96},{"gid":75,"height":0,"name":"","properties":{},"type":"","width":0,"x":768,"y":120},{"gid":66,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":120},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":744,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":720,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":144},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":360,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":696,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":672,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":528,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":480,"y":408},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":432,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":384,"y":408},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":504,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":456,"y":408},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":408,"y":240},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":72,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":288},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":264},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":240},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":216},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":192},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":144},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":168},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":168},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":408},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":384},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":624,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":360},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":600,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":336},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":576,"y":312},{"gid":73,"height":0,"name":"","properties":{},"type":"","width":0,"x":648,"y":144},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":648,"y":168},{"gid":55,"height":0,"name":"","properties":{},"type":"","width":0,"x":336,"y":264},{"gid":46,"height":0,"name":"","properties":{},"type":"hero","width":0,"x":24,"y":96},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":72},{"gid":48,"height":0,"name":"","properties":{},"type":"","width":0,"x":72,"y":96},{"gid":56,"height":0,"name":"","properties":{},"type":"","width":0,"x":24,"y":48},{"gid":70,"height":0,"name":"","properties":{},"type":"","width":0,"x":0,"y":24},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":408,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower0"},"type":"","width":0,"x":384,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":144,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":168,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower2"},"type":"","width":0,"x":192,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower1"},"type":"","width":0,"x":480,"y":264},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":288,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":312,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower3"},"type":"","width":0,"x":336,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower4"},"type":"","width":0,"x":528,"y":432},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":672,"y":168},{"gid":63,"height":0,"name":"","properties":{"teleportId":"flower5"},"type":"","width":0,"x":696,"y":168},{"height":48,"name":"","properties":{"destination":"scene-level-3"},"type":"level-portal","width":48,"x":912,"y":360}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-1"},"level-2":{"height":18,"layers":[{"data":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,49,35,35,35,35,35,35,35,35,35,35,35,50,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"height":18,"name":"tile-layer","opacity":1,"type":"tilelayer","visible":true,"width":44,"x":0,"y":0},{"height":18,"name":"entities","objects":[{"gid":1,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":48},{"gid":11,"height":0,"name":"","properties":{},"type":"","width":0,"x":552,"y":0}],"opacity":1,"type":"objectgroup","visible":true,"width":44,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"10":{"entity":"block"},"2":{"entity":"dirt"},"9":{"entity":"gem"}},"tilewidth":24},{"firstgid":33,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24}],"tilewidth":24,"version":1,"width":44,"id":"level-2"},"level-3":{"height":20,"layers":[{"data":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,19,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,29,30,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,38,39,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37,37],"height":20,"name":"Back","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"data":[6,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,21,7,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,15,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,16],"height":20,"name":"Front","opacity":1,"type":"tilelayer","visible":true,"width":20,"x":0,"y":0},{"height":20,"name":"Objects","objects":[{"gid":46,"height":0,"name":"","properties":{},"type":"","width":0,"x":48,"y":456}],"opacity":1,"type":"objectgroup","visible":true,"width":20,"x":0,"y":0}],"orientation":"orthogonal","properties":{},"tileheight":24,"tilesets":[{"firstgid":1,"image":"../src/images/tiles.png","imageheight":120,"imagewidth":216,"margin":0,"name":"tiles","properties":{},"spacing":0,"tileheight":24,"tilewidth":24},{"firstgid":46,"image":"../src/images/objects.png","imageheight":96,"imagewidth":192,"margin":0,"name":"objects","properties":{},"spacing":0,"tileheight":24,"tileproperties":{"0":{"entity":"hero"},"1":{"entity":"flower"},"10":{"entity":"block"},"17":{"entity":"briar"},"18":{"entity":"briar","facing":"right"},"19":{"entity":"briar","facing":"left"},"2":{"entity":"dirt"},"24":{"entity":"timer"},"8":{"entity":"beetle"},"9":{"entity":"gem"}},"tilewidth":24}],"tilewidth":24,"version":1,"width":20,"id":"level-3"}}};
 platformer.classes = {};
 
 /*--------------------------------------------------
@@ -1274,15 +1274,6 @@ platformer.components['handler-render-createjs'] = (function(){
 		this.canvas.height = 240;
 		this.stage = new createjs.Stage(this.canvas);
 		this.firstChild = undefined;
-		this.showFPS = definition.showFPS || false;
-		if (this.showFPS)
-		{
-			this.fpsCounter = new createjs.Text('SOON TO BE FPS', "bold 50px Arial","#FFF");
-			this.stage.addChild(this.fpsCounter);
-			this.fpsCounter.x = 20;
-			this.fpsCounter.y = 20;
-			this.fpsCounter.z = 1000;
-		}
 	},
 	proto = component.prototype; 
 
@@ -1319,10 +1310,6 @@ platformer.components['handler-render-createjs'] = (function(){
 				return a.z - b.z;
 			});
 			this.firstChild = this.stage.getChildAt(0);
-		}
-		if(this.fpsCounter)
-		{
-			this.fpsCounter.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS";
 		}
 		this.stage.update();
 	};
@@ -2721,7 +2708,7 @@ platformer.components['collision-group'] = (function(){
  */
 /**
 # COMPONENT **audio**
-This component maps messages triggered on the entity with an audio clip to play when the given message is triggered.
+This component listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding audio clip.
 
 ## Dependencies:
 - [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
@@ -2738,6 +2725,8 @@ This component maps messages triggered on the entity with an audio clip to play 
   > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is muted.
 - **audio-unmute** - On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
   > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is unmuted.
+- **logical-state** - This component listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with [SoundJS play parameters] [link2].
   > @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
   > @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
@@ -2746,8 +2735,6 @@ This component maps messages triggered on the entity with an audio clip to play 
   > @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
   > @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
   > @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-- **logical-state** - This component also listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
-  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
 
 ## JSON Definition:
     {
@@ -2943,12 +2930,12 @@ platformer.components['audio'] = (function(){
 	};
 	
 	proto['audio-mute-toggle'] = function(sound){
-		if(sound){
+		if(sound && (typeof sound === 'string')){
 			if(createjs.SoundJS.getInstanceById(sound)){
 				createjs.SoundJS.setMute(!createjs.SoundJS.getInstanceById(sound).muted, sound);
 			}
 		} else {
-			createjs.SoundJS.setMute(!createjs.SoundJS.muted, sound);
+			createjs.SoundJS.setMute(!createjs.SoundJS.muted);
 		}
 	};
 	
@@ -3705,6 +3692,58 @@ platformer.components['entity-controller'] = (function(){
 /*--------------------------------------------------
  *   render-debug - ../src/js/standard-components/render-debug.js
  */
+/**
+# COMPONENT **render-debug**
+This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in green), if the object has a collision component it will display the AABB of the collision shape (in pink). The render-debug component also allows the user to click on an object and it will print the object in the debug console. 
+
+## Dependencies
+- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+
+## Messages
+
+### Listens for:
+- **handle-render** - Repositions the pieces of the component in preparation for rendering
+- **handle-render-load** - The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too. 
+  > @param resp.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
+
+### Local Broadcasts:
+- **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+
+## JSON Definition
+    {
+      "type": "render-debug",
+      "acceptInput": {
+      	//Optional - What types of input the object should take.
+      	"hover": false;
+      	"click": false; 
+      }, 
+      "regX": 0,
+      //Optional - The X offset from X position for the displayed shape. If you're using the AABB this is set automatically.
+      "regY": 0
+      //Optional - The Y offset from Y position for the displayed shape. If you're using the AABB this is set automatically.
+    }
+    
+[link1]: http://createjs.com/Docs/EaselJS/Stage.html
+*/
+
+
 platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -3714,11 +3753,9 @@ platformer.components['render-debug'] = (function(){
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
 			this.click = definition.acceptInput.click || false;
-			this.touch = definition.acceptInput.touch || false;
 		} else {
 			this.hover = false;
 			this.click = false;
-			this.touch = false;
 		}
 		
 		this.regX = definition.regX || 0;
@@ -3730,7 +3767,7 @@ platformer.components['render-debug'] = (function(){
 	};
 	var proto = component.prototype;
 
-	proto['handle-render'] = function(stage){
+	proto['handle-render'] = function(){
 		if(this.owner.getAABB){
 			var aabb   = this.owner.getAABB();
 			this.shape.scaleX = aabb.width / this.initialWidth;
@@ -3805,12 +3842,12 @@ platformer.components['render-debug'] = (function(){
 		this.stage.addChild(this.txt);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.touch && createjs.Touch.isSupported()){
+		if(this.click && createjs.Touch.isSupported()){
 			createjs.Touch.enable(this.stage);
 		}
 
 		this.shape.onPress     = function(event) {
-			if(this.click || this.touch){
+			if(this.click){
 				self.owner.trigger('mousedown', {
 					event: event.nativeEvent,
 					over: over,
@@ -3841,7 +3878,7 @@ platformer.components['render-debug'] = (function(){
 				console.log('This Entity:', self.owner);
 			}
 		};
-		if(this.click || this.touch){
+		if(this.click){
 			this.shape.onMouseOut  = function(){over = false;};
 			this.shape.onMouseOver = function(){over = true;};
 		}
@@ -4021,16 +4058,114 @@ platformer.components['render-tiles'] = (function(){
 /*--------------------------------------------------
  *   render-animation - ../src/js/standard-components/render-animation.js
  */
-/*
-- **logical-state** - This component also listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+/**
+# COMPONENT **render-animation**
+This component is attached to entities that will appear in the game world. It renders an animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
+
+## Dependencies:
+- [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas animation functionality.
+- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+
+## Messages
+
+### Listens for:
+- **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require for displaying animations.
+  > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
+- **handle-render** - On each `handle-render` message, this component checks to see if there has been a change in the state of the entity. If so, it updates its animation play-back accordingly.
+- **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played.
   > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
- */
+- **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing the corresponding animations.
+
+### Local Broadcasts:
+- **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+
+## JSON Definition
+    {
+      "type": "render-animation",
+
+      "animationMap":{
+      //Optional. If the animation sequence will change, this is required. This defines a mapping from either triggered messages or one or more states for which to choose a new animation to play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation).
+      
+          "standing": "default-animation"
+          // On receiving a "standing" message, or a "logical-state" where message.standing == true, the "default" animation will begin playing.
+          
+          "ground,moving": "walking",
+          // comma separated values have a special meaning when evaluating "logical-state" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+          
+          "default": "default-animation",
+          // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+      }  
+
+      "spriteSheet": {
+      //Required. Defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
+
+	      "images": ["example0", "example1"],
+	      //Required: An array of ids of the images from the asset list in config.js.
+	      
+	      "frames": {
+	      //Required: The dimensions of the frames on the image and how to offset them around the entity position. The image is automatically cut up into pieces based on the dimensions. 
+	      	"width":  100,
+			"height": 100,
+			"regY":   100,
+			"regX":   50
+	      },
+	      
+	      "animations":{
+	      //Required: The list of animation ids and the frames that make up that animation. The frequency determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
+			"default-animation":[2],
+			"walking": {"frames": [0, 1, 2], "frequency": 4}
+		  }
+      }
+      
+      "state": "default",
+      //Optional: The starting animation. This defaults to "default".
+      
+      "acceptInput": {
+      	//Optional - What types of input the object should take.
+      	"hover": false;
+      	"click": false; 
+      }, 
+      
+      "scaleX": 1,
+      //Optional - The X scaling factor for the image. Will default to 1.
+      
+      "scaleY": 1
+      //Optional - The Y scaling factor for the image. Will default to 1.
+    }
+    
+[link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
+[link2]: http://createjs.com/Docs/EaselJS/Stage.html
+*/
 platformer.components['render-animation'] = (function(){
 	var changeState = function(state){
 		return function(value){
-			if (this.currentAnimation !== state){
-				this.currentAnimation = state;
-				this.anim.gotoAndPlay(state);
+			if(this.currentAnimation !== state){
+				if(this.animationFinished || (this.lastState >= -1)){
+					this.currentAnimation = state;
+					this.lastState = -1;
+					this.animationFinished = false;
+					this.anim.gotoAndPlay(state);
+				} else {
+					this.waitingAnimation = state;
+					this.waitingState = -1;
+				}
 			}
 		};
 	},
@@ -4050,13 +4185,15 @@ platformer.components['render-animation'] = (function(){
 				return animation;
 			};
 		}
-	};
-	var component = function(owner, definition){
+	},
+	component = function(owner, definition){
 		var spriteSheet = {
 			images: definition.spriteSheet.images.slice(),
 			frames: definition.spriteSheet.frames,
 			animations: definition.spriteSheet.animations
-		};
+		},
+		self = this,
+		x = 0;
 		this.owner = owner;
 		
 		if(definition.acceptInput){
@@ -4084,16 +4221,32 @@ platformer.components['render-animation'] = (function(){
 		}
 		
 		this.stage = undefined;
-		for (var x = 0; x < spriteSheet.images.length; x++){
+		for (x = 0; x < spriteSheet.images.length; x++){
 			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
 		spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
+		this.anim.onAnimationEnd = function(animationInstance, lastAnimation){
+			if(self.waitingAnimation){
+				self.currentAnimation = self.waitingAnimation;
+				self.waitingAnimation = false;
+				self.lastState = self.waitingState;
+				
+				self.animationFinished = false;
+				self.anim.gotoAndPlay(self.currentAnimation);
+			} else {
+				self.animationFinished = true;
+			}
+		};
 		this.currentAnimation = definition.state || this.owner.state || 'default';
 		this.anim.scaleX = definition.scaleX || this.owner.scaleX || 1;
 		this.anim.scaleY = definition.scaleY || this.owner.scaleY || 1;
 		this.state = {};
 		this.stateChange = false;
+		this.waitingAnimation = false;
+		this.waitingState = 0;
+		this.playWaiting = false;
+		this.animationFinished = false;
 		if(this.currentAnimation){
 			this.anim.gotoAndPlay(this.currentAnimation);
 		}
@@ -4170,7 +4323,7 @@ platformer.components['render-animation'] = (function(){
 		}
 	};
 	
-	proto['handle-render'] = function(obj){
+	proto['handle-render'] = function(){
 		var testCase = false, i = 0;
 		this.anim.x = this.owner.x;
 		this.anim.y = this.owner.y;
@@ -4182,8 +4335,15 @@ platformer.components['render-animation'] = (function(){
 					testCase = this.checkStates[i](this.state);
 					if(testCase){
 						if(this.currentAnimation !== testCase){
-							this.currentAnimation = testCase;
-							this.anim.gotoAndPlay(testCase);
+							if(this.animationFinished || (this.lastState >= +i)){
+								this.currentAnimation = testCase;
+								this.lastState = +i;
+								this.animationFinished = false;
+								this.anim.gotoAndPlay(testCase);
+							} else {
+								this.waitingAnimation = testCase;
+								this.waitingState = +i;
+							}
 						}
 						break;
 					}
@@ -4242,6 +4402,70 @@ platformer.components['render-animation'] = (function(){
 /*--------------------------------------------------
  *   render-image - ../src/js/standard-components/render-image.js
  */
+/**
+# COMPONENT **render-image**
+This component is attached to entities that will appear in the game world. It renders a static image. It can render a whole image or a portion of a larger images depending on the definition.
+
+## Dependencies
+- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+
+## Messages
+
+### Listens for:
+- **handle-render** - Repositions the image in preparation for rendering
+- **handle-render-load** - The image added to the stage. Setting up the mouse input stuff.
+  > @param obj.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
+
+### Local Broadcasts:
+- **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+
+## JSON Definition
+    {
+      "type": "render-image",
+      "image": "example",
+      //Required: The id of the image from the asset list in config.js.
+      "source": {
+      //Optional - The portion of the image you are going to use.
+		"width":  100,
+		"height": 100,
+		"y": 100,
+		"x": 100   
+      },
+      "acceptInput": {
+      	//Optional - What types of input the object should take.
+      	"hover": false;
+      	"click": false; 
+      }, 
+      "regX": 0,
+      //Optional - The X offset from X position for the image.
+      "regY": 0,
+      //Optional - The Y offset from Y position for the image.
+      "scaleX": 1,
+      //Optional - The X scaling factor for the image.  Will default to 1.
+      "scaleY": 1
+      //Optional - The Y scaling factor for the image.  Will default to 1.
+    }
+    
+[link1]: http://createjs.com/Docs/EaselJS/Stage.html
+*/
+
 platformer.components['render-image'] = (function(){
 	var component = function(owner, definition){
 		var image = definition.image,
@@ -4252,11 +4476,9 @@ platformer.components['render-image'] = (function(){
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
 			this.click = definition.acceptInput.click || false;
-			this.touch = definition.acceptInput.touch || false;
 		} else {
 			this.hover = false;
 			this.click = false;
-			this.touch = false;
 		}
 		
 		// Messages that this component listens for
@@ -4283,12 +4505,12 @@ platformer.components['render-image'] = (function(){
 		this.stage.addChild(this.image);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.click || this.touch){
-			if(this.touch && createjs.Touch.isSupported()){
+		if(this.click){
+			if(createjs.Touch.isSupported()){
 				createjs.Touch.enable(this.stage);
 			}
 
-			this.anim.onPress     = function(event) {
+			this.image.onPress     = function(event) {
 				self.owner.trigger('mousedown', {
 					//debug: true,
 					event: event.nativeEvent,
@@ -4317,12 +4539,12 @@ platformer.components['render-image'] = (function(){
 					});
 				};
 			};
-			this.anim.onMouseOut  = function(){over = false;};
-			this.anim.onMouseOver = function(){over = true;};
+			this.image.onMouseOut  = function(){over = false;};
+			this.image.onMouseOver = function(){over = true;};
 		}
 		if(this.hover){
 			this.stage.enableMouseOver();
-			this.anim.onMouseOut  = function(event){
+			this.image.onMouseOut  = function(event){
 				over = false;
 				self.owner.trigger('mouseout', {
 					event: event.nativeEvent,
@@ -4332,7 +4554,7 @@ platformer.components['render-image'] = (function(){
 					entity: self.owner
 				});
 			};
-			this.anim.onMouseOver = function(event){
+			this.image.onMouseOver = function(event){
 				over = true;
 				self.owner.trigger('mouseover', {
 					event: event.nativeEvent,
@@ -4353,6 +4575,9 @@ platformer.components['render-image'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.image);
+		this.stage = undefined;
+		this.image = undefined;
 		this.removeListeners(this.listeners);
 	};
 	
@@ -4396,9 +4621,14 @@ platformer.components['logic-button'] = (function(){
 		this.listeners = [];
 		
 		// Create object to send with messages here so it's not recreated each time.
-		this.message = {
-			state: definition.state || 'released'
+		this.state = {
+			released: true,
+			pressed: false
 		};
+
+		if(definition.state === 'pressed'){
+			this.pressed();
+		}
 
 		if(definition.toggle){
 			this.toggle = true;
@@ -4412,23 +4642,29 @@ platformer.components['logic-button'] = (function(){
 	var proto = component.prototype;
 	
 	proto['mousedown'] = proto['pressed'] = function(){
-		this.message.state = 'pressed';
+		this.state.pressed = true;
+		this.state.released = false;
 	};
 	
 	proto['mouseup'] = function(){
 		if(this.toggle){
-			this.message.state = (this.message.state === 'released')?'pressed':'released';
+			if(this.state.pressed){
+				this.released();
+			} else {
+				this.pressed();
+			}
 		} else {
-			this.message.state = 'released';
+			this.released();
 		}
 	};
 	
 	proto['released'] = function(){
-		this.message.state = 'released';
+		this.state.pressed = false;
+		this.state.released = true;
 	};
 	
 	proto['handle-logic'] = function(resp){
-		this.owner.trigger('logical-state', this.message);
+		this.owner.trigger('logical-state', this.state);
 	};
 
 	
@@ -5240,7 +5476,7 @@ This component listens for redirected collision messages and fires a message on 
 
 ### Local Broadcasts:
 - **logical-state** - On load, this component will send the state as the this.facing value if it exists.
-  > @param message.state (string) - the current `this.facing` value: "up", "down", "left", or "right"
+  > @param message (object) - the current `this.facing` value is passed as a property of the message object: "facing-up", "facing-down", "facing-left", or "facing-right" set to `true`.
 
 ### Peer Broadcasts:
 - **teleport** - On receiving a `teleport-entity` message, if the colliding entity is colliding on the teleporter's facing side, this message is triggered on the colliding entity.
@@ -5261,7 +5497,6 @@ platformer.components['logic-teleporter'] = (function(){
 
 	var component = function(owner, definition){
 		this.owner = owner;
-		var self = this;
 		
 		// Messages that this component listens for
 		this.listeners = [];
@@ -5275,8 +5510,10 @@ platformer.components['logic-teleporter'] = (function(){
 	var proto = component.prototype;
 	
 	proto['load'] = function(resp){
+		var state = {};
 		if(this.facing){
-			this.owner.trigger('logical-state', {state: this.facing});
+			state['facing-' + this.facing] = true;
+			this.owner.trigger('logical-state', state);
 		}
 	};
 	
@@ -6111,6 +6348,7 @@ platformer.components['render-clock'] = (function(){
 		this.listeners = [];
 
 		this.addListeners(['handle-render', 'handle-render-load', 'refresh-clock']);
+		this.stage = undefined;
 		this.currentValue = 0;
 		this.targetValue = 0;
 		this.txt = new createjs.Text(this.currentValue.toString());
@@ -6121,12 +6359,13 @@ platformer.components['render-clock'] = (function(){
 	var proto = component.prototype;
 	
 	proto['handle-render-load'] = function(resp){
+		this.stage = resp.stage;
 		this.txt.x = this.owner.x;
 		this.txt.y = this.owner.y;
 		this.txt.z = this.owner.z;
 		this.txt.textAlign = "center";
 		this.txt.textBaseline = "middle";
-		resp.stage.addChild(this.txt);
+		this.stage.addChild(this.txt);
 	};
 	
 	proto['handle-render'] = function(){
@@ -6139,6 +6378,9 @@ platformer.components['render-clock'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.txt);
+		this.stage = undefined;
+		this.txt = undefined;
 		this.removeListeners(this.listeners);
 	};
 	
@@ -6641,6 +6883,82 @@ platformer.components['logic-gui'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.removeListeners(this.listeners);
+	};
+	
+	/*********************************************************************************************************
+	 * The stuff below here will stay the same for all components. It's BORING!
+	 *********************************************************************************************************/
+
+	proto.addListeners = function(messageIds){
+		for(var message in messageIds) this.addListener(messageIds[message]);
+	};
+
+	proto.removeListeners = function(listeners){
+		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
+	};
+	
+	proto.addListener = function(messageId, callback){
+		var self = this,
+		func = callback || function(value, debug){
+			self[messageId](value, debug);
+		};
+		this.owner.bind(messageId, func);
+		this.listeners[messageId] = func;
+	};
+
+	proto.removeListener = function(boundMessageId, callback){
+		this.owner.unbind(boundMessageId, callback);
+	};
+	
+	return component;
+})();
+
+
+/*--------------------------------------------------
+ *   render-fps-counter - ../src/js/example-components/render-fps-counter.js
+ */
+platformer.components['render-fps-counter'] = (function(){
+	var component = function(owner, definition){
+		this.owner = owner;
+		
+		// Messages that this component listens for
+		this.listeners = [];
+
+		this.addListeners(['handle-render', 'handle-render-load', 'toggle-visible']);
+		this.stage = undefined;
+		
+		var font = definition.font || "12px Arial";
+		this.counter = new createjs.Text('SOON TO BE FPS', font);
+		this.counter.x = definition.x || this.owner.x || 20;
+		this.counter.y = definition.y || this.owner.y || 20;
+		this.counter.z = definition.z || this.owner.z || 1000;
+		this.counter.scaleX = definition.scaleX || this.owner.scaleX || 1;
+		this.counter.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.counter.color = definition.color || '#000';
+		this.counter.textAlign = "center";
+		this.counter.textBaseline = "middle";
+	};
+	var proto = component.prototype;
+	
+	proto['handle-render-load'] = function(resp){
+		this.stage = resp.stage;
+		this.stage.addChild(this.counter);
+	};
+	
+	proto['handle-render'] = function(){
+		this.counter.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS";
+	};
+	
+	proto['toggle-visible'] = function(){
+		this.counter.visible = !this.counter.visible;  
+	};
+	
+	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+	proto.destroy = function(){
+		this.stage.removeChild(this.counter);
+		this.stage = undefined;
+		this.counter = undefined;
 		this.removeListeners(this.listeners);
 	};
 	

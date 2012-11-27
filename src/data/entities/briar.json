@@ -20,6 +20,12 @@
            	}
 		},{
 			"type": "render-animation",
+			"animationMap":{
+                "facing-up":    "up",
+                "facing-down":  "down",
+                "facing-left":  "left",
+                "facing-right": "right"
+			},
             "spriteSheet": {
 				"images": ["briar"],
 				"frames": {

@@ -6,7 +6,7 @@
     "components": [
         {
             "type": "camera",
-            "width": 2000
+            "width": 4000
         },
         {"type": "handler-logic"},
         {"type": "handler-render-createjs"},
@@ -16,7 +16,8 @@
             {"type": "button-pickaxe"},
             {"type": "button-left"},
             {"type": "button-right"},
-            {"type": "gui", "properties": {"y": 2000}}
+            {"type": "gui"},
+            {"type": "fps-counter"}
             ],
             "childEvents": ['gui-gem-collected']
         }

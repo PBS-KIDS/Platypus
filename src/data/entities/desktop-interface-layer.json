@@ -15,7 +15,8 @@
             "entities": [
                 {"type": "button-mute"},
                 {"type": "button-play"},
-                {"type": "gui"}
+                {"type": "gui"},
+            	{"type": "fps-counter"}
             ],
             "childEvents": ['gui-gem-collected']
         }

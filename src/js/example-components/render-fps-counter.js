@@ -1,60 +1,44 @@
-platformer.components['logic-button'] = (function(){
+platformer.components['render-fps-counter'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		
-		// Create object to send with messages here so it's not recreated each time.
-		this.state = {
-			released: true,
-			pressed: false
-		};
 
-		if(definition.state === 'pressed'){
-			this.pressed();
-		}
-
-		if(definition.toggle){
-			this.toggle = true;
-			this.addListener('mouseup');
-		} else {
-			this.addListeners(['mousedown','mouseup']);
-		}
+		this.addListeners(['handle-render', 'handle-render-load', 'toggle-visible']);
+		this.stage = undefined;
 		
-		this.addListeners(['handle-logic', 'pressed', 'released']);
+		var font = definition.font || "12px Arial";
+		this.counter = new createjs.Text('SOON TO BE FPS', font);
+		this.counter.x = definition.x || this.owner.x || 20;
+		this.counter.y = definition.y || this.owner.y || 20;
+		this.counter.z = definition.z || this.owner.z || 1000;
+		this.counter.scaleX = definition.scaleX || this.owner.scaleX || 1;
+		this.counter.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.counter.color = definition.color || '#000';
+		this.counter.textAlign = "center";
+		this.counter.textBaseline = "middle";
 	};
 	var proto = component.prototype;
 	
-	proto['mousedown'] = proto['pressed'] = function(){
-		this.state.pressed = true;
-		this.state.released = false;
+	proto['handle-render-load'] = function(resp){
+		this.stage = resp.stage;
+		this.stage.addChild(this.counter);
 	};
 	
-	proto['mouseup'] = function(){
-		if(this.toggle){
-			if(this.state.pressed){
-				this.released();
-			} else {
-				this.pressed();
-			}
-		} else {
-			this.released();
-		}
+	proto['handle-render'] = function(){
+		this.counter.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS";
 	};
 	
-	proto['released'] = function(){
-		this.state.pressed = false;
-		this.state.released = true;
+	proto['toggle-visible'] = function(){
+		this.counter.visible = !this.counter.visible;  
 	};
-	
-	proto['handle-logic'] = function(resp){
-		this.owner.trigger('logical-state', this.state);
-	};
-
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
+		this.stage.removeChild(this.counter);
+		this.stage = undefined;
+		this.counter = undefined;
 		this.removeListeners(this.listeners);
 	};
 	
