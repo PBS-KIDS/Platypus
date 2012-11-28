@@ -147,7 +147,7 @@ platformer.components['handler-controller'] = (function(){
 	proto['tick'] = proto['check-inputs'] = function(resp){
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('controller:tick'))	
+			if(!this.entities[x].trigger('handle-controller'))	
 			{
 				this.entities.splice(x, 1);
 			}
@@ -159,7 +159,7 @@ platformer.components['handler-controller'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'controller')
+			if (messageIds[x] == 'handle-controller')
 			{
 				// Check for custom input messages that should be relayed from scene.
 				if(entity.controlMap){
@@ -176,7 +176,7 @@ platformer.components['handler-controller'] = (function(){
 				}
 				
 				this.entities.push(entity);
-				entity.trigger('controller:load');
+				entity.trigger('controller-load');
 				break;
 			}
 		}

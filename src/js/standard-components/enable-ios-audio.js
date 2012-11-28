@@ -1,3 +1,21 @@
+/**
+# COMPONENT **enable-ios-audio**
+This component enables JavaScript-triggered audio play-back on iOS devices by overlaying an invisible `div` across the game area that, when touched, causes the audio track to play, giving it necessary permissions for further programmatic play-back. Once touched, it removes itself as a component from the entity as well as removes the layer `div` DOM element.
+
+## Dependencies:
+- [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
+- **rootElement** property (on entity) - This component requires a DOM element which it uses to overlay the touchable audio-instantiation layer `div`.
+
+## JSON Definition:
+    {
+      "type": "enable-ios-audio",
+      
+      "audioId": "combined"
+      // Required. The SoundJS audio id for the audio clip to be enabled for future play-back.
+    }
+
+[link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
+*/
 platformer.components['enable-ios-audio'] = (function(){
 	var iOSAudioEnabled = false,
 	component = function(owner, definition){

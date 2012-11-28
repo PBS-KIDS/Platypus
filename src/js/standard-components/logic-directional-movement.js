@@ -1,6 +1,6 @@
 /**
 # COMPONENT **logic-directional-movement**
-This component Changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with push and gravity components. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
+This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]] and [[Logic-Gravity]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
 
 ## Dependencies:
 - [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
@@ -10,50 +10,32 @@ This component Changes the (x, y) position of an object according to its current
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
   > @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
-- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these message, the entity adjusts its movement orientation.
+- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement orientation.
   > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
 - **stop** - Stops motion in all directions until movement messages are again received.
   > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
 
-### Local Broadcasts: //TODO: v-- fix this documentation after fixing logic state messages - DDD
-- **logical-state** - This component fires this message each tick to describe its current state.
-  > @param message.state (string) - This string takes the form of "state-heading" where state is either "stopped" or "moving" and heading is "up", "up-right", "right", "down-right", "down", "down-left", "left", or "up-left".
-- **stopped** - This message is triggered on the entity when the entity enters a "stopped" state after having been moving.
-- **moving** - This message is triggered on the entity when the entity enters a "moving" state after having been stopped.
+### Local Broadcasts:
+- **logical-state** - this component will trigger this message when its movement or direction changes. Note that directions are not mutually exclusive: adjacent directions can both be true, establishing that the entity is facing a diagonal direction.
+  > @param message.moving (boolean) - whether the entity is in motion.
+  > @param message.left (boolean)   - whether the entity is facing left.
+  > @param message.right (boolean)  - whether the entity is facing right.
+  > @param message.up (boolean)     - whether the entity is facing up.
+  > @param message.down (boolean)   - whether the entity is facing down.
 
 ## JSON Definition:
     {
       "type": "logic-directional-movement",
       
-      "top": 100,
-      // Optional number specifying top of viewport in world coordinates
-      
-      "left": 100,
-      // Optional number specifying left of viewport in world coordinates
-      
-      "width": 100,
-      // Optional number specifying width of viewport in world coordinates
-      
-      "height": 100,
-      // Optional number specifying height of viewport in world coordinates
-      
-      "stretch": true,
-      // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
-      
-      "scaleWidth": 480
-      // Optional. Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
+      "speed": 4.5
+      // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
     }
 */
 platformer.components['logic-directional-movement'] = (function(){
 	var processDirection = function(direction){
 		return function (state){
 			if(state){
-				if(state.pressed)
-				{
-					this[direction] = true;
-				} else {
-					this[direction] = false;
-				}
+				this[direction] = state.pressed;
 			} else {
 				this[direction] = true;
 			}

@@ -1,8 +1,80 @@
+/**
+# COMPONENT **entity-controller**
+This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
+
+## Dependencies:
+- [[Handler-Controller]] (on entity's parent) - This component listens for a controller "tick" message in order to trigger messages regarding the state of its inputs.
+
+## Messages
+
+### Listens for:
+- **handle-controller** - On each `handle-controller` message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.
+- **mousedown** - This message is re-triggered on the entity as a new message including the button that was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
+  > @param message.event (DOM Event object) - This event object is passed along with the new message.
+- **mouseup** - This message is re-triggered on the entity as a new message including the button that was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
+  > @param message.event (DOM Event object) - This event object is passed along with the new message.
+- **mousemove** - This message is re-triggered on the entity as a new message "mouse:move".
+  > @param message (object) - This message object is passed along with the new message.
+- **[Messages specified in definition]** - Listens for additional messages and on receiving them, sets the appropriate state and broadcasts the associated message on the next `handle-controller` message.
+  > @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
+  > @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
+  > @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+  > @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
+  > @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
+  > @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+  > @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+
+## JSON Definition:
+    {
+      "type": "audio",
+      
+      "audioMap":{
+      // Required. Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play.
+      
+        "message-triggered": "audio-id",
+        // This simple form is useful to listen for "message-triggered" and play "audio-id" using default audio properties.
+        
+        "another-message": {
+        // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to [SoundJS play parameters] (http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play).
+        
+          "sound": "another-audio-id",
+          // Required. This is the audio clip to play when "another-message" is triggered.
+          
+          "interrupt": "none",
+          // Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
+          
+          "delay": 500,
+          // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
+          
+          "offset": 1500,
+          // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+          
+          "length": 2500,
+          // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
+
+          "loop": 4,
+          // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
+          
+          "volume": 0.75,
+          // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+          
+          "pan": -0.25
+          // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+        }
+      }
+    }
+*/
 platformer.components['entity-controller'] = (function(){
 	var state = function(){
 		this.current = false;
 		this.last    = false;
 		this.state   = false;
+		this.stateSummary = {
+			pressed:   false,
+			released:  false,
+			triggered: false,
+			over:      false
+		};
 	},
 	mouseMap = ['left-button', 'middle-button', 'right-button'],
 	createUpHandler = function(state){
@@ -24,7 +96,7 @@ platformer.components['entity-controller'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['load', 'controller', 'controller:load', 'controller:tick', 'mousedown', 'mouseup', 'mousemove']);
+		this.addListeners(['handle-controller', 'mousedown', 'mouseup', 'mousemove', 'mouse:move']);
 		
 		if(definition && definition.controlMap){
 			this.owner.controlMap = definition.controlMap;
@@ -61,7 +133,12 @@ platformer.components['entity-controller'] = (function(){
 		return !this.current && this.last;
 	};
 	
-	proto['load'] = function(){
+	stateProto.getState = function(){
+		this.stateSummary.pressed   = this.current;
+		this.stateSummary.released  = !this.current && this.last;
+		this.stateSummary.triggered = this.current && !this.last;
+		this.stateSummary.over      = this.over;
+		return this.stateSummary;
 	};
 	
 	proto['mouse:move'] = function(value){
@@ -70,19 +147,7 @@ platformer.components['entity-controller'] = (function(){
 		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
 	};
 	
-//	proto['touch:move'] = function(value){
-//		if(this.actions['touch'] && (this.actions['touch'].over !== value.over))  this.actions['touch'].over = value.over;
-//	};
-
-	proto['controller'] = function(){
-		
-	};
-
-	proto['controller:load'] = function(){
-
-	};
-
-	proto['controller:tick'] = function(resp){
+	proto['handle-controller'] = function(){
 		var state = undefined,
 		action    = '';
 		
@@ -90,12 +155,7 @@ platformer.components['entity-controller'] = (function(){
 			for (action in this.actions){
 				state = this.actions[action];
 				if(state.current || state.last){
-					this.owner.trigger(action, {
-						pressed:   state.current,
-						released: !state.current && state.last,
-						triggered: state.current && !state.last,
-						over:      state.over
-					});
+					this.owner.trigger(action, state.getState());
 				}
 				state.update();
 			}

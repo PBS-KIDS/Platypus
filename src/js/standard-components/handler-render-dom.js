@@ -21,8 +21,7 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'handle-render')
-			{
+			if ((messageIds[x] == 'handle-render') || (messageIds[x] == 'handle-render-load')){
 				this.entities.push(entity);
 				entity.trigger('handle-render-load', {
 					element: self.element

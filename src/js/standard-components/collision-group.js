@@ -10,7 +10,6 @@ platformer.components['collision-group'] = (function(){
 		this.listeners = [];
 		
 		this.addListeners([
-		    'tick',
 		    'load',
 		    'child-entity-added',   'add-collision-entity',
 		    'child-entity-removed', 'remove-collision-entity',
@@ -80,7 +79,7 @@ platformer.components['collision-group'] = (function(){
 		
 	};
 	
-	proto['tick'] = proto['check-collision-group'] = function(resp){
+	proto['check-collision-group'] = function(resp){
 
 		if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
 			var goalX = this.owner.x - this.lastX,

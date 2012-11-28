@@ -145,9 +145,6 @@ platformer.components['logic-hero'] = (function(){
 
 		this.owner.trigger('logical-state', this.state);
 		
-		this.left  = false;
-		this.right = false;
-		this.jump  = false;
 		this.swingInstance = false;		
 		
 	};
@@ -177,26 +174,17 @@ platformer.components['logic-hero'] = (function(){
 	
 	proto['key-left'] = function (state)
 	{
-		if(state.pressed)
-		{
-			this.left = true;
-		}
+		this.left = state.pressed;
 	};
 	
 	proto['key-right'] = function (state)
 	{
-		if(state.pressed)
-		{
-			this.right = true;
-		}
+		this.right = state.pressed;
 	};
 	
 	proto['key-jump'] = function (state)
 	{
-		if(state.pressed)
-		{
-			this.jump = true;
-		}
+		this.jump = state.pressed;
 	};
 
 	proto['key-swing'] = function (state)

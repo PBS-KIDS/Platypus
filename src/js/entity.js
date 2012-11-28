@@ -14,10 +14,10 @@ This class comprises the core structure of every object in the [[Game]]. Startin
   > @return entity - returns the new entity made up of the provided components. 
 - **addComponent** - Attaches the provided component to the entity.
   > @param component (object) - Must be an object that functions as a [[Component]].
-- > @return component - Returns the same object that was submitted.
+  > @return component - Returns the same object that was submitted.
 - **removeComponent** - Removes the mentioned component from the entity.
   > @param component (object) - Must be a [[Component]] attached to the entity.
-- > @return component|false - Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
+  > @return component|false - Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
 - **bind** - Used by components' to bind handler functions to triggered events on the entity. 
   > @param messageId (string) - This is the message for which the component is listening.
   > @param func (function) - This is the function that will be run when the message is triggered.

@@ -1,3 +1,35 @@
+/**
+# COMPONENT **logic-button**
+This component handles the pressed/released state of a button according to input. It can be set as a toggle button or a simple press-and-release button.
+
+## Dependencies:
+- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
+
+## Messages
+
+### Listens for:
+- **handle-logic** - On a `tick` logic message, the component updates its current state and broadcasts its logical state to the entity.
+- **pressed** - on receiving this message, the state of the button is set to "pressed".
+- **released** - on receiving this message, the state of the button is set to "released".
+- **mousedown** - on receiving this message, the state of the button is set to "pressed". Note that this component will not listen for "mousedown" if the component is in toggle mode.
+- **mouseup** - on receiving this message, the state of the button is set to "released" unless in toggle mode, in which case it toggles between "pressed" and "released".
+
+### Local Broadcasts:
+- **logical-state** - this component will trigger this message with both "pressed" and "released" properties denoting its state. Both of these work in tandem and never equal each other.
+  > @param message.pressed (boolean) - whether the button is in a pressed state.
+  > @param message.released (boolean) - whether the button is in a released state.
+
+## JSON Definition:
+    {
+      "type": "logic-button",
+      
+      "toggle": true,
+      // Optional. Determines whether this button should behave as a toggle. Defaults to "false".
+      
+      "state": "pressed",
+      // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
+    }
+*/
 platformer.components['logic-button'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -5,11 +37,12 @@ platformer.components['logic-button'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		// Create object to send with messages here so it's not recreated each time.
+		// Create state object to send with messages here so it's not recreated each time.
 		this.state = {
 			released: true,
 			pressed: false
 		};
+		this.stateChange = true;
 
 		if(definition.state === 'pressed'){
 			this.pressed();
@@ -27,8 +60,11 @@ platformer.components['logic-button'] = (function(){
 	var proto = component.prototype;
 	
 	proto['mousedown'] = proto['pressed'] = function(){
-		this.state.pressed = true;
-		this.state.released = false;
+		if(this.state.released){
+			this.stateChange = true;
+			this.state.pressed = true;
+			this.state.released = false;
+		}
 	};
 	
 	proto['mouseup'] = function(){
@@ -44,12 +80,18 @@ platformer.components['logic-button'] = (function(){
 	};
 	
 	proto['released'] = function(){
-		this.state.pressed = false;
-		this.state.released = true;
+		if(this.state.pressed){
+			this.stateChange = true;
+			this.state.pressed = false;
+			this.state.released = true;
+		}
 	};
 	
-	proto['handle-logic'] = function(resp){
-		this.owner.trigger('logical-state', this.state);
+	proto['handle-logic'] = function(){
+		if(this.stateChange){
+			this.stateChange = false;
+			this.owner.trigger('logical-state', this.state);
+		}
 	};
 
 	
