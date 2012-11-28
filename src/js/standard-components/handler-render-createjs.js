@@ -11,9 +11,18 @@ platformer.components['handler-render-createjs'] = (function(){
 		this.owner.rootElement.appendChild(this.canvas);
 		this.canvas.style.width = '100%';
 		this.canvas.style.height = '100%';
-		this.canvas.width  = 320; //TODO: figure out where to specify this
+		this.canvas.width  = 320;
 		this.canvas.height = 240;
+		
 		this.stage = new createjs.Stage(this.canvas);
+		
+		this.camera = {
+			left: 0,
+			top: 0,
+			width: 0,
+			height: 0,
+			buffer: definition.buffer || 0
+		};
 		this.firstChild = undefined;
 	},
 	proto = component.prototype; 
@@ -24,13 +33,11 @@ platformer.components['handler-render-createjs'] = (function(){
 		
 		for (var x = 0; x < messageIds.length; x++)
 		{
-			if (messageIds[x] == 'handle-render')
-			{
+			if ((messageIds[x] == 'handle-render') || (messageIds[x] == 'handle-render-load')){
 				this.entities.push(entity);
 				entity.trigger('handle-render-load', {
 					stage: self.stage,
 					parentElement: self.owner.rootElement
-					//TODO: send along scaling functions to convert world coordinates to window coordinates // somehow get these from camera?
 				});
 				break;
 			}
@@ -38,13 +45,25 @@ platformer.components['handler-render-createjs'] = (function(){
 	};
 	
 	proto['tick'] = proto['render'] = function(resp){
-		for (var x = this.entities.length - 1; x > -1; x--)
-		{
+		var child = undefined;
+		
+		for (var x = this.entities.length - 1; x > -1; x--){
 			if(!this.entities[x].trigger('handle-render', resp))
 			{
 				this.entities.splice(x, 1);
 			}
 		}
+		for (var x = this.stage.children.length - 1; x > -1; x--){
+			child = this.stage.children[x];
+			if(child.name !== 'entity-managed'){
+				if((child.x >= this.camera.x - this.camera.buffer) && (child.x <= this.camera.x + this.camera.width + this.camera.buffer) && (child.y >= this.camera.y - this.camera.buffer) && (child.y <= this.camera.y + this.camera.height + this.camera.buffer)){
+					if(!child.visible) child.visible = true;
+				} else {
+					if(child.visible) child.visible = false;
+				}
+			}
+		}
+		
 		if (this.stage.getChildAt(0) !== this.firstChild)
 		{
 			this.stage.sortChildren(function(a, b) {
@@ -56,9 +75,17 @@ platformer.components['handler-render-createjs'] = (function(){
 	};
 	
 	proto['camera-update'] = function(cameraInfo){
+		this.camera.x = cameraInfo.viewportLeft;
+		this.camera.y = cameraInfo.viewportTop;
+		this.camera.width = cameraInfo.viewportWidth;
+		this.camera.height = cameraInfo.viewportHeight;
+		if(!this.camera.buffer){
+			this.camera.buffer = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+		}
+		
 		this.canvas.width  = this.canvas.offsetWidth;
 		this.canvas.height = this.canvas.offsetHeight;
-		this.stage.setTransform(-cameraInfo.x * cameraInfo.scaleX, -cameraInfo.y * cameraInfo.scaleY, cameraInfo.scaleX, cameraInfo.scaleY);
+		this.stage.setTransform(-cameraInfo.viewportLeft * cameraInfo.scaleX, -cameraInfo.viewportTop * cameraInfo.scaleY, cameraInfo.scaleX, cameraInfo.scaleY);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

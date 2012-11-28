@@ -3,7 +3,7 @@
 This component handles the pressed/released state of a button according to input. It can be set as a toggle button or a simple press-and-release button.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
+- [[Handler-Logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
 
 ## Messages
 

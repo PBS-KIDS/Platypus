@@ -14,9 +14,7 @@
                 "key:left-arrow":   "key-left",
                 "button-left":      "key-left",
 				"key:right-arrow": 	"key-right",
-				"button-right":     "key-right"//,
-//				"key:up-arrow":   	"key-up",
-//				"key:down-arrow":   "key-down"
+				"button-right":     "key-right"
 			}
         },{
             "type": "logic-carrier"

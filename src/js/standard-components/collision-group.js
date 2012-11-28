@@ -10,7 +10,6 @@ platformer.components['collision-group'] = (function(){
 		this.listeners = [];
 		
 		this.addListeners([
-		    'load',
 		    'child-entity-added',   'add-collision-entity',
 		    'child-entity-removed', 'remove-collision-entity',
 		    'check-collision-group','relocate-group'
@@ -29,13 +28,18 @@ platformer.components['collision-group'] = (function(){
 		};
 		
 		this.entities = [];
-		this.collisionGroups = []; //defined here so we aren't continually recreating new arrays
 		this.entitiesByType = {};
+		this.entitiesLive = [];
+		this.entitiesByTypeLive = {};
+		this.collisionGroups = []; //defined here so we aren't continually recreating new arrays
 		this.terrain = undefined;
 		this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
 		this.prevAABB = new platformer.classes.aABB(this.owner.x, this.owner.y);
 		this.lastX = this.owner.x;
 		this.lastY = this.owner.y;
+		
+		this.cameraLogicAABB = new platformer.classes.aABB(0, 0);
+		this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
 	};
 	var proto = component.prototype; 
 
@@ -49,6 +53,7 @@ platformer.components['collision-group'] = (function(){
 				if (messageIds[x] == 'prepare-for-collision'){
 					if(!this.entitiesByType[entity.collisionType]){
 						this.entitiesByType[entity.collisionType] = [];
+						this.entitiesByTypeLive[entity.collisionType] = [];
 					}
 					this.entities.push(entity);
 					this.entitiesByType[entity.collisionType].push(entity);
@@ -75,12 +80,28 @@ platformer.components['collision-group'] = (function(){
 		}
 	};
 	
-	proto['load'] = function(){
-		
-	};
-	
 	proto['check-collision-group'] = function(resp){
 
+		if(resp.camera){
+			this.cameraLogicAABB.setAll(resp.camera.left + resp.camera.width / 2, resp.camera.top + resp.camera.height / 2, resp.camera.width + resp.camera.buffer * 2, resp.camera.height + resp.camera.buffer * 2);
+			this.entitiesLive.length = 0;
+			for (var i in this.entities){
+				if(this.AABBCollision(this.entities[i].getAABB(), this.cameraLogicAABB)){
+					this.entitiesLive.push(this.entities[i]);
+				}
+			}
+			
+			this.cameraCollisionAABB.setAll(resp.camera.left + resp.camera.width / 2, resp.camera.top + resp.camera.height / 2, resp.camera.width + resp.camera.buffer * 4, resp.camera.height + resp.camera.buffer * 4);
+			for (var i in this.entitiesByType){
+				this.entitiesByTypeLive[i].length = 0;
+				for (var j in this.entitiesByType[i]){
+					if(this.AABBCollision(this.entitiesByType[i][j].getAABB(), this.cameraCollisionAABB)){
+						this.entitiesByTypeLive[i].push(this.entitiesByType[i][j]);
+					}
+				}
+			}
+		}
+		
 		if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
 			var goalX = this.owner.x - this.lastX,
 			goalY     = this.owner.y - this.lastY;
@@ -129,11 +150,11 @@ platformer.components['collision-group'] = (function(){
 		var groups = this.collisionGroups;
 		
 		groups.length = 0;
-		for (var x = 0; x < this.entities.length; x++){
-			if(this.entities[x] !== this.owner){
-				if(this.entities[x].trigger('check-collision-group', resp)){
-					this.entities[x].collisionUnresolved = true;
-					groups.push(this.entities[x]);
+		for (var x = 0; x < this.entitiesLive.length; x++){
+			if(this.entitiesLive[x] !== this.owner){
+				if(this.entitiesLive[x].trigger('check-collision-group', resp)){
+					this.entitiesLive[x].collisionUnresolved = true;
+					groups.push(this.entitiesLive[x]);
 				};
 			}
 		}
@@ -149,15 +170,15 @@ platformer.components['collision-group'] = (function(){
 		entities = this.collisionGroups;
 		entities.length = 0;
 		
-		for (x = this.entities.length - 1; x > -1; x--)
+		for (x = this.entitiesLive.length - 1; x > -1; x--)
 		{
-			if(this.owner !== this.entities[x]){
-				if(this.entities[x].trigger('prepare-for-collision', resp)){
-					if(this.entities[x].solidCollisions.length > 0){
-						this.entities[x].collisionUnresolved = true;
-						entities.push(this.entities[x]);
+			if(this.owner !== this.entitiesLive[x]){
+				if(this.entitiesLive[x].trigger('prepare-for-collision', resp)){
+					if(this.entitiesLive[x].solidCollisions.length > 0){
+						this.entitiesLive[x].collisionUnresolved = true;
+						entities.push(this.entitiesLive[x]);
 					}
-				} else { // remove the entity because it no longer has a collision handler
+/*				} else { // remove the entity because it no longer has a collision handler
 					var typeEntities = this.entitiesByType[this.entities[x].collisionType];
 					for (y = typeEntities.length - 1; y > -1; y--)
 					{
@@ -166,7 +187,7 @@ platformer.components['collision-group'] = (function(){
 							break;
 						}
 					}
-					this.entities.splice(x, 1);
+					this.entities.splice(x, 1);*/ //temp removed since this line must now find the actual listed entity, not the live entity index
 				}
 			}
 		}
@@ -212,10 +233,10 @@ platformer.components['collision-group'] = (function(){
 
 		for (y = 0; y < ent.solidCollisions.length; y++)
 		{
-			if(this.entitiesByType[ent.solidCollisions[y]]){
-				for(z = 0; z < this.entitiesByType[ent.solidCollisions[y]].length; z++){
+			if(this.entitiesByTypeLive[ent.solidCollisions[y]]){
+				for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[y]].length; z++){
 					include = true;
-					otherEntity = this.entitiesByType[ent.solidCollisions[y]][z];
+					otherEntity = this.entitiesByTypeLive[ent.solidCollisions[y]][z];
 					if(entityCollisionGroup){
 						for(var i in entityCollisionGroup){
 							if(otherEntity === entityCollisionGroup[i]){
@@ -226,7 +247,7 @@ platformer.components['collision-group'] = (function(){
 						include = false;
 					}
 					if(include && (this.AABBCollision(sweepAABB, otherEntity.getPreviousAABB()))) {
-						potentialsEntities.push(this.entitiesByType[ent.solidCollisions[y]][z]);
+						potentialsEntities.push(this.entitiesByTypeLive[ent.solidCollisions[y]][z]);
 					}
 				}
 			} else if (this.terrain && (ent.solidCollisions[y] === 'tiles')){
@@ -611,12 +632,12 @@ platformer.components['collision-group'] = (function(){
 		y   = 0,
 		z   = 0;
 		
-		for(x = 0; x < this.entities.length; x++){
-			ent = this.entities[x];
+		for(x = 0; x < this.entitiesLive.length; x++){
+			ent = this.entitiesLive[x];
 			for (y = 0; y < ent.softCollisions.length; y++){
-				if(this.entitiesByType[ent.softCollisions[y]]){
-					for(z = 0; z < this.entitiesByType[ent.softCollisions[y]].length; z++){
-						otherEntity = this.entitiesByType[ent.softCollisions[y]][z];
+				if(this.entitiesByTypeLive[ent.softCollisions[y]]){
+					for(z = 0; z < this.entitiesByTypeLive[ent.softCollisions[y]].length; z++){
+						otherEntity = this.entitiesByTypeLive[ent.softCollisions[y]][z];
 						if((otherEntity !== ent) && (this.AABBCollision(ent.getAABB(), otherEntity.getAABB()))) {
 							if (this.preciseCollision(ent, otherEntity))
 							{

@@ -13,54 +13,34 @@ This component listens for input messages triggered on the entity and updates th
   > @param message.event (DOM Event object) - This event object is passed along with the new message.
 - **mouseup** - This message is re-triggered on the entity as a new message including the button that was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
   > @param message.event (DOM Event object) - This event object is passed along with the new message.
-- **mousemove** - This message is re-triggered on the entity as a new message "mouse:move".
-  > @param message (object) - This message object is passed along with the new message.
-- **[Messages specified in definition]** - Listens for additional messages and on receiving them, sets the appropriate state and broadcasts the associated message on the next `handle-controller` message.
-  > @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
-  > @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
-  > @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
-  > @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
-  > @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
-  > @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
-  > @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+- **mousemove** - Updates mouse action states with whether the mouse is currently over the entity.
+  > @param message.over (boolean) - Whether the mouse is over the input entity.
+- **[Messages specified in definition]** - Listens for additional messages and on receiving them, sets the appropriate state and broadcasts the associated message on the next `handle-controller` message. These messages come in pairs and typically have the form of "keyname:up" and "keyname:down" specifying the current state of the input.
+  
+### Local Broadcasts:
+- **mouse:mouse-left:down, mouse:mouse-left:up, mouse:mouse-middle:down, mouse:mouse-middle:up, mouse:mouse-right:down, mouse:mouse-right:up** - This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
+  > @param message (DOM Event object) - The original mouse event object is passed along with the control message.
+- **[Messages specified in definition]** - Broadcasts active states using the JSON-defined message on each `handle-controller` message. Active states include `pressed` being true or `released` being true. If both of these states are false, the message is not broadcasted.
+  > @param message.pressed (boolean) - Whether the current input is active.
+  > @param message.released (boolean) - Whether the current input was active last tick but is no longer active.
+  > @param message.triggered (boolean) - Whether the current input is active but was not active last tick.
+  > @param message.over (boolean) - Whether the mouse was over the entity when pressed, released, or triggered. This value is always false for non-mouse input messages.
 
 ## JSON Definition:
     {
-      "type": "audio",
+      "type": "entity-controller",
       
-      "audioMap":{
-      // Required. Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play.
+      "controlMap":{
+      // Required. Use the controlMap property object to map inputs to messages that should be triggered. At least one control mapping should be included. The following are a few examples:
       
-        "message-triggered": "audio-id",
-        // This simple form is useful to listen for "message-triggered" and play "audio-id" using default audio properties.
+        "key:x": "run-left",
+        // This causes an "x" keypress to fire "run-left" on the entity. For a full listing of key names, check out the `handler-controller` component.
         
-        "another-message": {
-        // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to [SoundJS play parameters] (http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play).
+        "button-pressed": "throw-block",
+        // custom input messages can be fired on this entity from other entities, allowing for on-screen input buttons to run through the same controller channel as other inputs.
         
-          "sound": "another-audio-id",
-          // Required. This is the audio clip to play when "another-message" is triggered.
-          
-          "interrupt": "none",
-          // Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
-          
-          "delay": 500,
-          // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
-          
-          "offset": 1500,
-          // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
-          
-          "length": 2500,
-          // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
-
-          "loop": 4,
-          // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
-          
-          "volume": 0.75,
-          // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
-          
-          "pan": -0.25
-          // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-        }
+        "mouse:left-button"
+        // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `render-animation` component).
       }
     }
 */
@@ -96,10 +76,10 @@ platformer.components['entity-controller'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['handle-controller', 'mousedown', 'mouseup', 'mousemove', 'mouse:move']);
+		this.addListeners(['handle-controller', 'mousedown', 'mouseup', 'mousemove']);
 		
 		if(definition && definition.controlMap){
-			this.owner.controlMap = definition.controlMap;
+//			this.owner.controlMap = definition.controlMap;
 			this.actions  = {};
 			for(key in definition.controlMap){
 				actionState = this.actions[definition.controlMap[key]]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
@@ -141,12 +121,6 @@ platformer.components['entity-controller'] = (function(){
 		return this.stateSummary;
 	};
 	
-	proto['mouse:move'] = function(value){
-		if(this.actions['mouse:left-button'] && (this.actions['mouse:left-button'].over !== value.over))     this.actions['mouse:left-button'].over = value.over;
-		if(this.actions['mouse:middle-button'] && (this.actions['mouse:middle-button'].over !== value.over)) this.actions['mouse:middle-button'].over = value.over;
-		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
-	};
-	
 	proto['handle-controller'] = function(){
 		var state = undefined,
 		action    = '';
@@ -173,7 +147,9 @@ platformer.components['entity-controller'] = (function(){
 	};
 	
 	proto['mousemove'] = function(value){
-		this.owner.trigger('mouse:move', value);
+		if(this.actions['mouse:left-button'] && (this.actions['mouse:left-button'].over !== value.over))     this.actions['mouse:left-button'].over = value.over;
+		if(this.actions['mouse:middle-button'] && (this.actions['mouse:middle-button'].over !== value.over)) this.actions['mouse:middle-button'].over = value.over;
+		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
 	};
 /*
 	proto['mouseover'] = function(value){

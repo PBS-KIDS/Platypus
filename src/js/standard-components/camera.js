@@ -33,11 +33,15 @@ This component maintains the current viewport location and size with regards to 
   > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
   > @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
   > @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
+  > @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
+  > @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
 
 ### Local Broadcasts:
 - **camera-update** - This component fires this message when the position of the camera in the world has changed or if the window has been resized.
   > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
   > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
+  > @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
+  > @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
   > @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
   > @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
 
@@ -91,6 +95,15 @@ platformer.components['camera'] = (function(){
 			viewportHeight:      definition.height      || 0,
 			viewportLeft:        definition.left        || 0,
 			viewportTop:         definition.top         || 0
+		};
+		
+		this.message = { //defined here so it can be reused
+			viewportWidth:  0,
+			viewportHeight: 0,
+			viewportLeft:   0,
+			viewportTop:    0,
+			scaleX: 0,
+			scaleY: 0
 		};
 
 		// on resize should the game snap to certain sizes or should it be fluid?
@@ -182,21 +195,22 @@ platformer.components['camera'] = (function(){
 		}
 		
 		if(broadcastUpdate || this.windowResized){
+			this.message.viewportLeft   = this.world.viewportLeft;
+			this.message.viewportTop    = this.world.viewportTop;
+			this.message.viewportWidth  = this.world.viewportWidth;
+			this.message.viewportHeight = this.world.viewportHeight;
+			this.message.scaleX         = this.windowPerWorldUnitWidth;
+			this.message.scaleY         = this.windowPerWorldUnitHeight;
+
 			this.windowResized = false;
-			this.owner.trigger('camera-update', {
-				x:      this.world.viewportLeft,
-				y:      this.world.viewportTop,
-				scaleX: this.windowPerWorldUnitWidth,
-				scaleY: this.windowPerWorldUnitHeight
-			});
-		}
-			
-		if(broadcastUpdate){
-			for (var x = this.entities.length - 1; x > -1; x--)
-			{
-				if(!this.entities[x].trigger('camera-update', this.world))
+			this.owner.trigger('camera-update', this.message);
+
+			if(broadcastUpdate){
+				for (var x = this.entities.length - 1; x > -1; x--)
 				{
-					this.entities.splice(x, 1);
+					if(!this.entities[x].trigger('camera-update', this.message)){
+						this.entities.splice(x, 1);
+					}
 				}
 			}
 		}

@@ -126,7 +126,7 @@ platformer.components['handler-controller'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.addListeners(['tick', 'child-entity-added', 'check-inputs', 'keydown', 'keyup', 'mousedown', 'mousemove', 'mouseup', 'touchstart', 'touchmove', 'touchend', 'touchcancel']);
+		this.addListeners(['tick', 'child-entity-added', 'check-inputs', 'keydown', 'keyup']);
 	},
 	proto = component.prototype; 
 

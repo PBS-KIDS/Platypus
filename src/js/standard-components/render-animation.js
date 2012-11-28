@@ -133,7 +133,8 @@ platformer.components['render-animation'] = (function(){
 			animations: definition.spriteSheet.animations
 		},
 		self = this,
-		x = 0;
+		x = 0,
+		lastAnimation = '';
 		this.owner = owner;
 		
 		if(definition.acceptInput){
@@ -157,6 +158,7 @@ platformer.components['render-animation'] = (function(){
 				this.addListener(i);
 				this[i] = changeState(definition.animationMap[i]);
 				this.checkStates.push(createTest(i, definition.animationMap[i]));
+				lastAnimation = definition.animationMap[i];
 			}
 		}
 		
@@ -178,7 +180,7 @@ platformer.components['render-animation'] = (function(){
 				self.animationFinished = true;
 			}
 		};
-		this.currentAnimation = definition.state || this.owner.state || 'default';
+		this.currentAnimation = this.owner.state || definition.state || lastAnimation || 'default';
 		this.anim.scaleX = definition.scaleX || this.owner.scaleX || 1;
 		this.anim.scaleY = definition.scaleY || this.owner.scaleY || 1;
 		this.state = {};

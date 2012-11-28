@@ -23,12 +23,9 @@ platformer.components['render-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['handle-render', 'handle-render-load', 'camera-update']);
+		this.addListeners(['handle-render-load', 'camera-update']);
 	};
 	var proto = component.prototype;
-
-	proto['handle-render'] = function(stage){
-	};
 
 	proto['handle-render-load'] = function(resp){
 		var x = 0,
@@ -37,6 +34,7 @@ platformer.components['render-tiles'] = (function(){
 		tile  = undefined;
 		
 		this.tilesToRender = new createjs.Container();
+		this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
 		
 		for(x = 0; x < this.imageMap.length; x++){
 			this.tiles[x] = [];
@@ -53,7 +51,6 @@ platformer.components['render-tiles'] = (function(){
 		this.tilesToRender.scaleX = this.scaleX;
 		this.tilesToRender.scaleY = this.scaleY;
 		this.tilesToRender.z = this.owner.z;
-//		tileList.cache(0, 0, x * this.tileWidth, y * this.tileWidth);
 		stage.addChild(this.tilesToRender);
 	};
 	
@@ -66,7 +63,7 @@ platformer.components['render-tiles'] = (function(){
 		minX   = 0,
 		minY   = 0;
 				
-		if ((Math.abs(this.camera.x - camera.viewportLeft) > this.camera.buffer) || (Math.abs(this.camera.y - camera.viewportTop) > this.camera.buffer)){
+		if (((Math.abs(this.camera.x - camera.viewportLeft) > this.camera.buffer) || (Math.abs(this.camera.y - camera.viewportTop) > this.camera.buffer)) && (this.tiles.length > 0)){
 			this.camera.x = camera.viewportLeft;
 			this.camera.y = camera.viewportTop;
 			
@@ -75,15 +72,10 @@ platformer.components['render-tiles'] = (function(){
 			minX = Math.max(Math.floor((camera.viewportLeft - this.camera.buffer) / (this.tileWidth * this.scaleX)), 0),
 			maxY = Math.min(Math.ceil((camera.viewportTop + camera.viewportHeight + this.camera.buffer) / (this.tileHeight * this.scaleY)), this.tiles[0].length - 1),
 			minY = Math.max(Math.floor((camera.viewportTop - this.camera.buffer) / (this.tileHeight * this.scaleY)), 0);
-//			maxX = Math.min(Math.ceil((camera.viewportLeft + camera.viewportWidth) / (this.tileWidth * this.scaleX) + buffer), this.tiles.length - 1),
-//			minX = Math.max(Math.floor(camera.viewportLeft / (this.tileWidth * this.scaleX) - buffer), 0),
-//			maxY = Math.min(Math.ceil((camera.viewportTop + camera.viewportHeight) / (this.tileHeight * this.scaleY) + buffer), this.tiles[0].length - 1),
-//			minY = Math.max(Math.floor(camera.viewportTop / (this.tileHeight * this.scaleY) - buffer), 0);
 			this.tilesToRender.removeAllChildren();
 			for(x = minX; x <= maxX; x++){
 				for (y = minY; y <= maxY; y++){
 					this.tilesToRender.addChild(this.tiles[x][y]);
-//					tile.gotoAndPlay(this.imageMap[x][y]);
 				}
 			}
 
