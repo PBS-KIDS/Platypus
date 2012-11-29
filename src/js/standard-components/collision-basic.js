@@ -21,7 +21,6 @@ platformer.components['collision-basic'] = (function(){
 		this.lastY    = this.owner.y;
 		this.aabb     = new platformer.classes.aABB();
 		this.prevAABB = new platformer.classes.aABB();
-		this.canCollide = true;
 
 		var shapes = [];
 		if(definition.shapes)

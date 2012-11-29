@@ -21,11 +21,11 @@
 			"collisionType": "beetle",
 			"solidCollisions": {
 				"beetle": "turn-around",
-				"hero": "turn-around",
-			    "block": "turn-around",
-			    "dirt": "turn-around",
-                "tiles": "turn-around",
-                "briar": "turn-around"
+				"hero":   "turn-around",
+			    "block":  "turn-around",
+			    "dirt":   "turn-around",
+                "tiles":  "turn-around",
+                "briar":  "turn-around"
 			}
 		},{
 			"type": "render-animation",

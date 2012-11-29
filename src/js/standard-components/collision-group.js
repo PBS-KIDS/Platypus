@@ -31,7 +31,6 @@ platformer.components['collision-group'] = (function(){
 		this.entitiesByType = {};
 		this.entitiesLive = [];
 		this.entitiesByTypeLive = {};
-		this.collisionGroups = []; //defined here so we aren't continually recreating new arrays
 		this.terrain = undefined;
 		this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
 		this.prevAABB = new platformer.classes.aABB(this.owner.x, this.owner.y);
@@ -40,6 +39,12 @@ platformer.components['collision-group'] = (function(){
 		
 		this.cameraLogicAABB = new platformer.classes.aABB(0, 0);
 		this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
+		
+		this.unitStepSize = 1;
+
+		//defined here so we aren't continually recreating new arrays
+		this.collisionGroups = [];
+		this.triggerMessages = [];
 	};
 	var proto = component.prototype; 
 
@@ -209,8 +214,10 @@ platformer.components['collision-group'] = (function(){
 		z = 0,
 		initialX = 0,
 		initialY = 0,
-		triggerMessages = [];
+		triggerMessages = this.triggerMessages,
+		unitStepSize = this.unitStepSize;
 
+		
 		/******/
 		
 		var currentAABB = groupCheck?ent.getCollisionGroupAABB():ent.getAABB();
@@ -246,7 +253,7 @@ platformer.components['collision-group'] = (function(){
 					} else if (otherEntity === ent){
 						include = false;
 					}
-					if(include && (this.AABBCollision(sweepAABB, otherEntity.getPreviousAABB()))) {
+					if(include && (this.AABBCollision(sweepAABB, otherEntity.collisionUnresolved?otherEntity.getPreviousAABB():otherEntity.getAABB()))) {
 						potentialsEntities.push(this.entitiesByTypeLive[ent.solidCollisions[y]][z]);
 					}
 				}
@@ -260,7 +267,7 @@ platformer.components['collision-group'] = (function(){
 		initialX  = previousAABB.x;//ent.getPreviousX();
 		var xPos  = initialX;
 		var xGoal = currentAABB.x;//ent.x;
-		var xDir  = (xPos < xGoal) ? 1 : -1;
+		var xStep  = (xPos < xGoal) ? unitStepSize : -unitStepSize;
 		var finalX = undefined; 
 		var collisionsX = [];
 		var tileCollisionX = undefined;
@@ -269,7 +276,7 @@ platformer.components['collision-group'] = (function(){
 		initialY  = previousAABB.y;//ent.getPreviousY();
 		var yPos  = initialY;
 		var yGoal = currentAABB.y;//ent.y;
-		var yDir  = (yPos < yGoal) ? 1 : -1;
+		var yStep  = (yPos < yGoal) ? unitStepSize : -unitStepSize;
 		var finalY = undefined;
 		var collisionsY = [];
 		var tileCollisionY = undefined;
@@ -278,13 +285,12 @@ platformer.components['collision-group'] = (function(){
 		//////////////////////////////////////////////////////////////////////
 		//MOVE IN THE X DIRECTION
 		//////////////////////////////////////////////////////////////////////
-		while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length))
-		{
-			if (Math.abs(xGoal - xPos) < 1)
+		while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length)){
+			if (Math.abs(xGoal - xPos) < unitStepSize)
 			{
 				xPos = xGoal;
 			} else {
-				xPos += xDir;
+				xPos += xStep;
 			}
 //			previousAABB.move(xPos + aabbOffsetX, yPos + aabbOffsetY);
 			previousAABB.move(xPos, yPos);
@@ -300,7 +306,7 @@ platformer.components['collision-group'] = (function(){
 					{
 						var atX = undefined;
 						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-						if (xDir > 0)
+						if (xStep > 0)
 						{
 							atX = tileAABB.left - previousAABB.halfWidth;
 						} else {
@@ -309,7 +315,7 @@ platformer.components['collision-group'] = (function(){
 						
 						if ( typeof tilecollisionX === 'undefined') {
 							tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shapes[0]};
-						} else if (xDir > 0) {
+						} else if (xStep > 0) {
 							if (atX < tileCollisionX.atX)
 							{
 								tileCollisionX = {atX: atX, aABB: tileAABB, shape: potentialTiles[t].shapes[0]};
@@ -335,7 +341,7 @@ platformer.components['collision-group'] = (function(){
 					{
 						var atX = undefined;
 						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
-						if (xDir > 0)
+						if (xStep > 0)
 						{
 							atX = entityAABB.left - previousAABB.halfWidth;
 							if (tileCollisionX && atX > tileCollisionX.atX)  
@@ -355,7 +361,7 @@ platformer.components['collision-group'] = (function(){
 						if (collisionsX.length == 0) {
 							//finalX = atX;
 							collisionsX.push({atX: atX, entity: potentialsEntities[u]});
-						} else if (xDir > 0) {
+						} else if (xStep > 0) {
 							var insertIndex = 0; 
 							for (var c = 0; c < collisionsX.length; c++)
 							{
@@ -387,17 +393,17 @@ platformer.components['collision-group'] = (function(){
 			var complete = false;
 			for(var q = 0; q < collisionsX.length; q++)
 			{
-				complete = ent.routeSolidCollision?ent.routeSolidCollision('x', xDir, collisionsX[q]):true;
+				complete = ent.routeSolidCollision?ent.routeSolidCollision('x', xStep, collisionsX[q]):true;
 				if (complete)
 				{
 					triggerMessages.push({
 						entity: collisionsX[q].entity,
 						type:   collisionsX[q].entity.collisionType,
 						shape:  collisionsX[q].entity.shape,
-						x: xDir,
+						x: xStep / Math.abs(xStep),
 						y: 0
 					});
-					if(((collisionsX[q].atX > initialX) && (xDir > 0)) || ((collisionsX[q].atX < initialX) && (xDir < 0))){
+					if(((collisionsX[q].atX > initialX) && (xStep > 0)) || ((collisionsX[q].atX < initialX) && (xStep < 0))){
 						finalX = collisionsX[q].atX;
 					} else {
 						finalX = initialX;
@@ -411,13 +417,13 @@ platformer.components['collision-group'] = (function(){
 				var complete = false;
 				if(typeof finalX === 'undefined' && tileCollisionX)
 				{
-					complete = ent.routeTileCollision('x', xDir, tileCollisionX);
+					complete = ent.routeTileCollision('x', xStep, tileCollisionX);
 					if (complete)
 					{
 						triggerMessages.push({
 							type:   'tiles',
 							shape:  tileCollisionX.shape,
-							x: xDir,
+							x: xStep / Math.abs(xStep),
 							y: 0
 						});
 						finalX = tileCollisionX.atX;
@@ -444,11 +450,11 @@ platformer.components['collision-group'] = (function(){
 
 		while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
 		{
-			if (Math.abs(yGoal - yPos) < 1)
+			if (Math.abs(yGoal - yPos) < unitStepSize)
 			{
 				yPos = yGoal;
 			} else {
-				yPos += yDir;
+				yPos += yStep;
 			}
 //			previousAABB.move(finalX + aabbOffsetX, yPos + aabbOffsetY);
 			previousAABB.move(finalX, yPos);
@@ -464,7 +470,7 @@ platformer.components['collision-group'] = (function(){
 					{
 						var atY = undefined;
 						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-						if (yDir > 0)
+						if (yStep > 0)
 						{
 							atY = tileAABB.top - previousAABB.halfHeight; 
 						} else {
@@ -473,7 +479,7 @@ platformer.components['collision-group'] = (function(){
 						 
 						if ( typeof tilecollisionY === 'undefined') {
 							tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shapes[0]};
-						} else if (yDir > 0) {
+						} else if (yStep > 0) {
 							if (atY < tileCollisionY.atY)
 							{
 								tileCollisionY = {atY: atY, aABB: tileAABB,  shape: potentialTiles[t].shapes[0]};
@@ -499,7 +505,7 @@ platformer.components['collision-group'] = (function(){
 					{
 						var atY = undefined;
 						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
-						if (yDir > 0)
+						if (yStep > 0)
 						{
 							atY = entityAABB.top - previousAABB.halfHeight;
 							if (tileCollisionY && atY > tileCollisionY.atY)  
@@ -519,7 +525,7 @@ platformer.components['collision-group'] = (function(){
 						if (collisionsY.length == 0) {
 							//finalX = atX;
 							collisionsY.push({atY: atY, entity: potentialsEntities[u]});
-						} else if (yDir > 0) {
+						} else if (yStep > 0) {
 							var insertIndex = 0; 
 							for (var c = 0; c < collisionsY.length; c++)
 							{
@@ -549,7 +555,7 @@ platformer.components['collision-group'] = (function(){
 			var complete = false;
 			for(var q = 0; q < collisionsY.length; q++)
 			{
-				complete = ent.routeSolidCollision?ent.routeSolidCollision('y', yDir, collisionsY[q]):true;
+				complete = ent.routeSolidCollision?ent.routeSolidCollision('y', yStep, collisionsY[q]):true;
 				if (complete)
 				{
 					triggerMessages.push({
@@ -557,9 +563,9 @@ platformer.components['collision-group'] = (function(){
 						type:   collisionsY[q].entity.collisionType,
 						shape:  collisionsY[q].entity.shape,
 						x: 0,
-						y: yDir
+						y: yStep / Math.abs(yStep)
 					});
-					if(((collisionsY[q].atY > initialY) && (yDir > 0)) || ((collisionsY[q].atY < initialY) && (yDir < 0))){
+					if(((collisionsY[q].atY > initialY) && (yStep > 0)) || ((collisionsY[q].atY < initialY) && (yStep < 0))){
 						finalY = collisionsY[q].atY;
 					} else {
 						finalY = initialY;
@@ -573,14 +579,14 @@ platformer.components['collision-group'] = (function(){
 				var complete = false;
 				if(typeof finalY === 'undefined' && tileCollisionY)
 				{
-					complete = ent.routeTileCollision('y', yDir, tileCollisionY);
+					complete = ent.routeTileCollision('y', yStep, tileCollisionY);
 					if (complete)
 					{
 						triggerMessages.push({
 							type:   'tiles',
 							shape:  tileCollisionY.shape,
 							x: 0,
-							y: yDir
+							y: yStep / Math.abs(yStep)
 						});
 						finalY = tileCollisionY.atY;
 					}

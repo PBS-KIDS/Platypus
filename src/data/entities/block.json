@@ -15,7 +15,7 @@
 		 	"shape": {
 	 			"offset": [0,-120],
 	 			"type": "rectangle",
-	 		   	"points": [[-120,-120],[120,120]]
+	 		   	"points": [[-110,-120],[110,120]]
 	 		},
 			"collisionType": "block",
             "solidCollisions": {

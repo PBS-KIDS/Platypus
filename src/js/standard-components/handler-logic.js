@@ -10,7 +10,7 @@ platformer.components['handler-logic'] = (function(){
 		
 		this.stepLength    = definition.stepLength || 15;
 		this.leftoverTime = 0;
-		this.maximumStepsPerTick = Math.ceil(500 / this.stepLength);
+		this.maximumStepsPerTick = 10; //Math.ceil(500 / this.stepLength);
 		this.camera = {
 			left: 0,
 			top: 0,
@@ -21,6 +21,10 @@ platformer.components['handler-logic'] = (function(){
 		this.message = {
 			deltaT: this.stepLength,
 			camera: this.camera
+		};
+		this.timeElapsed = {
+			name: 'Logic',
+			time: 0
 		};
 	};
 	var proto = component.prototype; 
@@ -50,7 +54,8 @@ platformer.components['handler-logic'] = (function(){
 
 	proto['tick'] = proto['logic'] = function(resp){
 		var cycles = 0,
-		child = undefined;
+		child   = undefined,
+		time    = new Date().getTime();
 		this.leftoverTime += resp.deltaT;
 		cycles = Math.floor(this.leftoverTime / this.stepLength);
 
@@ -72,8 +77,20 @@ platformer.components['handler-logic'] = (function(){
 					}
 				}
 			}
+			this.timeElapsed.name = 'Logic';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
+			
 			this.owner.trigger('check-collision-group', this.message); // If a collision group is attached, make sure collision is processed on each logic tick.
+			this.timeElapsed.name = 'Collision';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
 		}
+
+		this.timeElapsed.time = new Date().getTime() - time;
+		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

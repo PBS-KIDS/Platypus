@@ -79,7 +79,7 @@ platformer.components['entity-controller'] = (function(){
 		this.addListeners(['handle-controller', 'mousedown', 'mouseup', 'mousemove']);
 		
 		if(definition && definition.controlMap){
-//			this.owner.controlMap = definition.controlMap;
+			this.owner.controlMap = definition.controlMap; // this is used and expected by the handler-controller to handle messages not covered by key and mouse inputs.
 			this.actions  = {};
 			for(key in definition.controlMap){
 				actionState = this.actions[definition.controlMap[key]]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.

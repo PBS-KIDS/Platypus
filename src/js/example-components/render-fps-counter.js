@@ -5,7 +5,7 @@ platformer.components['render-fps-counter'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['handle-render', 'handle-render-load', 'toggle-visible']);
+		this.addListeners(['handle-render', 'handle-render-load', 'toggle-visible', 'time-elapsed']);
 		this.stage = undefined;
 		
 		var font = definition.font || "12px Arial";
@@ -16,8 +16,10 @@ platformer.components['render-fps-counter'] = (function(){
 		this.counter.scaleX = definition.scaleX || this.owner.scaleX || 1;
 		this.counter.scaleY = definition.scaleY || this.owner.scaleY || 1;
 		this.counter.color = definition.color || '#000';
-		this.counter.textAlign = "center";
+		this.counter.textAlign = "left";
 		this.counter.textBaseline = "middle";
+		
+		this.times = {};
 	};
 	var proto = component.prototype;
 	
@@ -27,11 +29,24 @@ platformer.components['render-fps-counter'] = (function(){
 	};
 	
 	proto['handle-render'] = function(){
-		this.counter.text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS";
+		var text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS\n";
+		for(var name in this.times){
+			text += '\n' + name + ': ' + this.times[name] + 'ms';
+			this.times[name] = 0;
+		}
+		this.counter.text = text;
 	};
 	
 	proto['toggle-visible'] = function(){
 		this.counter.visible = !this.counter.visible;  
+	};
+	
+	proto['time-elapsed'] = function(value){
+		if(value){
+			if(value.name){
+				this.times[value.name] += value.time;
+			}
+		}
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

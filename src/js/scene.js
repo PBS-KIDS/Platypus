@@ -78,12 +78,33 @@ platformer.classes.scene = (function(){
 				}));
 			}
 		}
+		
+		this.time = new Date().getTime();
+		this.timeElapsed = {
+			name: '',
+			time: 0
+		};
 	};
 	var proto = scene.prototype;
 	
 	proto.trigger = function(eventId, event){
+		var time = 0;
+		if(eventId === 'tick'){
+			time = new Date().getTime();
+			this.timeElapsed.name = 'Non-Engine';
+			this.timeElapsed.time = time - this.time;
+			this.trigger('time-elapsed', this.timeElapsed);
+			this.time = time;
+		}
 		for(var layer in this.layers){
 			this.layers[layer].trigger(eventId, event);
+		}
+		if(eventId === 'tick'){
+			time = new Date().getTime();
+			this.timeElapsed.name = 'Engine Total';
+			this.timeElapsed.time = time - this.time;
+			this.trigger('time-elapsed', this.timeElapsed);
+			this.time = time;
 		}
 	};
 	
