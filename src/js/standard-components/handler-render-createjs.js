@@ -24,6 +24,10 @@ platformer.components['handler-render-createjs'] = (function(){
 			buffer: definition.buffer || 0
 		};
 		this.firstChild = undefined;
+		this.timeElapsed = {
+			name: 'Render',
+			time: 0
+		};
 	},
 	proto = component.prototype; 
 
@@ -45,7 +49,8 @@ platformer.components['handler-render-createjs'] = (function(){
 	};
 	
 	proto['tick'] = proto['render'] = function(resp){
-		var child = undefined;
+		var child = undefined,
+		time    = new Date().getTime();
 		
 		for (var x = this.entities.length - 1; x > -1; x--){
 			if(!this.entities[x].trigger('handle-render', resp))
@@ -71,7 +76,16 @@ platformer.components['handler-render-createjs'] = (function(){
 			});
 			this.firstChild = this.stage.getChildAt(0);
 		}
+
+		this.timeElapsed.name = 'Render-Prep';
+		this.timeElapsed.time = new Date().getTime() - time;
+		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+		time += this.timeElapsed.time;
+
 		this.stage.update();
+		this.timeElapsed.name = 'Render';
+		this.timeElapsed.time = new Date().getTime() - time;
+		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 	};
 	
 	proto['camera-update'] = function(cameraInfo){

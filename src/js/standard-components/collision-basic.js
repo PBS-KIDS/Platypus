@@ -17,6 +17,7 @@ platformer.components['collision-basic'] = (function(){
 		var self   = this;
 		
 		this.owner    = owner;
+		this.immobile = this.owner.immobile = this.owner.immobile || definition.immobile || false;
 		this.lastX    = this.owner.x;
 		this.lastY    = this.owner.y;
 		this.aabb     = new platformer.classes.aABB();

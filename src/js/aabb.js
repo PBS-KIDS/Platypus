@@ -25,10 +25,11 @@ platformer.classes.aABB = (function(){
 			this.top = -this.halfHeight + this.y;
 			this.bottom = this.halfHeight + this.y;
 		}
+		return this;
 	};
 	
 	proto.reset = function(){
-		this.setAll(undefined, undefined, 0, 0);
+		return this.setAll(undefined, undefined, 0, 0);
 	};
 	
 	proto.include = function(aabb){
@@ -54,10 +55,6 @@ platformer.classes.aABB = (function(){
 	};
 	
 	proto.move = function(x, y){
-		if(!x){
-			var s = 56;
-		}
-		
 		this.x = x;
 		this.y = y;
 		this.left   = -this.halfWidth + this.x;
@@ -68,7 +65,7 @@ platformer.classes.aABB = (function(){
 	};
 
 	proto.getCopy = function(){
-		return new platformer.classes.aABB(this.x, this.y, this.width, this.height);
+		return new aABB(this.x, this.y, this.width, this.height);
 	};
 	
 	return aABB;

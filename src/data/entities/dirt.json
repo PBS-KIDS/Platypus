@@ -12,6 +12,7 @@
 	 		   	"points": [[-120,-120],[120,120]]
 	 		},
 			"collisionType": "dirt",
+            "immobile": true,
 			"softCollisions": {
 			    "pickaxe": "destroy-me"
 			}

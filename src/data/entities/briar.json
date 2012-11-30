@@ -15,6 +15,7 @@
 	 		   	"points": [[-120,-120],[120, 120]]
 	 		},
 			"collisionType": "briar",
+            "immobile": true,
             "solidCollisions": {
             	"hero": "teleport-entity"
            	}

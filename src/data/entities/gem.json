@@ -14,6 +14,7 @@
 		 		"points": [[-70,-110],[70, 110]]
 	 		},
 			"collisionType": "gem",
+			"immobile": true,
 			"softCollisions": {
 			    "hero": "collect-gem"
 			}

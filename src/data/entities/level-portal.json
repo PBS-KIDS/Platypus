@@ -9,6 +9,7 @@
 		},{
 			"type": "collision-basic",
 			"collisionType": "portal",
+            "immobile": true,
 			"softCollisions": {
 			    "hero": "occupied"
 			}
