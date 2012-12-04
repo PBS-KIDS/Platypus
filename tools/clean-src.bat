@@ -1,1 +1,0 @@
-del ..\src\images\compressed\*.*

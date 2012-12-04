@@ -72,7 +72,7 @@ platformer.components['collision-group'] = (function(){
 		this.cameraLogicAABB = new platformer.classes.aABB(0, 0);
 		this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
 		
-		this.unitStepSize = 1;
+		this.unitStepSize = 1000;
 
 		//defined here so we aren't continually recreating new arrays
 		this.collisionGroups = [];

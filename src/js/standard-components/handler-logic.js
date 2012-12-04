@@ -57,7 +57,7 @@ platformer.components['handler-logic'] = (function(){
 		child   = undefined,
 		time    = new Date().getTime();
 		this.leftoverTime += resp.deltaT;
-		cycles = Math.floor(this.leftoverTime / this.stepLength);
+		cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
 
 		// This makes the frames smoother, but adds variance into the calculations
 		this.message.deltaT = this.leftoverTime / cycles;

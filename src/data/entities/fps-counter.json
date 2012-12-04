@@ -1,6 +1,3 @@
-/*
- * 
- */
 {
 	"id": "fps-counter",
 	"components":[
@@ -20,8 +17,5 @@
                 "zIndex": 11
             }
         }
-	],
-	"properties":{
-		
-	}
+	]
 }
