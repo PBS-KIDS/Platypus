@@ -1,43 +1,20 @@
-/*
- * 
- */
 {
 	"id": "button-jump-left",
 	"components":[
         {
-            "type": "logic-button"
+            "type": "dom-element",
+            "element": "div",
+            "className": "game-button jump-left-button",
+            "onmousedown": "start-jump",
+            "ontouchstart": "start-jump",
+            "onmouseup": "stop-jump",
+            "ontouchend": "stop-jump"
         },{
             "type": "broadcast-events",
-		    "events":{
-                "mousedown": ["button-jump:down", "button-left:down"],
-                "mouseup":   ["button-jump:up",   "button-left:up"]
-		    }
-		},
-		{"type": "render-animation",
-            "animationMap":{
-                "pressed": "pressed",
-                "released": "released"
-            },
-            "spriteSheet": {
-                "images": ["buttons"],
-                "frames": {
-                    "width":  138,
-                    "height": 138
-                },
-                "animations": {
-                    "released": 4,
-                    "pressed":  10
-                }
-            },
-            "scaleX": 5,
-            "scaleY": 5,
-            "state": "released",
-            "acceptInput": {"click": true, "touch": true}
-		}
-	],
-	"properties":{
-		"x": 10,
-		"y": 1090,
-		"z": 400
-	}
+            "events":{
+                "start-jump": ["button-jump:down", "button-left:down"],
+                "stop-jump":  ["button-jump:up",   "button-left:up"]
+            }
+        }
+	]
 }

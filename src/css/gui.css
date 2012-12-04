@@ -1,0 +1,23 @@
+.gem-bar {
+position: absolute;
+right: 0;
+top: 0;
+width: 16em;
+height: 10em;
+background: url('../i/gem-bar.png') no-repeat;
+background-size: 100%;
+}
+
+.gem-counter {
+position: absolute;
+right: 0;
+top: 0;
+width: 2em;
+text-align: center;
+font-size: 5em;
+color: white;
+font-family: arial;
+font-weight: bold;
+line-height: 1.6em;
+height: 1.6em;
+}

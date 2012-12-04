@@ -1,43 +1,20 @@
-/*
- * 
- */
 {
 	"id": "button-pickaxe",
 	"components":[
         {
-            "type": "logic-button"
+            "type": "dom-element",
+            "element": "div",
+            "className": "game-button pickaxe-button",
+            "onmousedown": "start-axe",
+            "ontouchstart": "start-axe",
+            "onmouseup": "stop-axe",
+            "ontouchend": "stop-axe"
         },{
             "type": "broadcast-events",
-		    "events":{
-                "mousedown": "button-pickaxe:down",
-                "mouseup":   "button-pickaxe:up"
-		    }
-		},
-		{"type": "render-animation",
-            "animationMap":{
-                "pressed": "pressed",
-                "released": "released"
-            },
-            "spriteSheet": {
-                "images": ["buttons"],
-                "frames": {
-                    "width":  138,
-                    "height": 138
-                },
-                "animations": {
-                    "released": 17,
-                    "pressed":  23
-                }
-            },
-            "scaleX": 5,
-            "scaleY": 5,
-            "state": "released",
-            "acceptInput": {"click": true, "touch": true}
-		}
-	],
-	"properties":{
-		"x": 840,
-		"y": 2300,
-		"z": 400
-	}
+            "events":{
+                "start-axe": "button-pickaxe:down",
+                "stop-axe":  "button-pickaxe:up"
+            }
+        }
+	]
 }

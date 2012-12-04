@@ -8,15 +8,9 @@
 			"type": "logic-counter",
 			"message": "count-gems"
 		},{
-			"type": "render-counter",
-			"scaleX": 20,
-            "scaleY": 20,
-            "color": "#FFF"
-		}
-	],
-	"properties":{
-		"x": 3800,
-		"y": 175,
-		"z": 400
-	}
+            "type": "dom-element",
+            "className": "gem-counter",
+            "innerHTML": "0"
+        }
+	]
 }

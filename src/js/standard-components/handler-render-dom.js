@@ -9,9 +9,9 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
-		this.element.style.position = 'absolute';
-		this.element.style.width = '100%';
-		this.element.style.height = '100%';
+//		this.element.style.position = 'absolute';
+//		this.element.style.width = '100%';
+//		this.element.style.height = '100%';
 	},
 	proto = component.prototype; 
 

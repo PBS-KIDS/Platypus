@@ -12,12 +12,17 @@ platformer.components['logic-counter'] = (function(){
 			this[definition.message] = this['change-count'];
 		}
 		this.addListeners(['change-count']);
+		
+		this.message = {
+		    text: ''
+		};
 	};
 	var proto = component.prototype;
 	
 	proto['change-count'] = function(data){
 		this.count = data.count;
-		this.owner.trigger('refresh-count', this.count);
+		this.message.text = '' + this.count;
+		this.owner.trigger('update-content', this.message);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

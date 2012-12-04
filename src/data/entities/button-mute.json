@@ -1,6 +1,3 @@
-/*
- * 
- */
 {
 	"id": "button-mute",
 	"components":[
@@ -9,31 +6,12 @@
             "toggle": true,
             "state":  "pressed"
         },{
-		    "type": "render-animation",
-		    "animationMap":{
-                "pressed": "pressed",
-                "released": "released"
-		    },
-            "spriteSheet": {
-                "images": ["buttons"],
-                "frames": {
-                    "width":  138,
-                    "height": 138
-                },
-                "animations": {
-                    "released": 3,
-                    "pressed":  9
-                }
-            },
-            "scaleX": 2.9,
-            "scaleY": 2.9,
-            "state": "pressed",
-            "acceptInput": {"click": true, "touch": true}
-		},{
-		    "type": "broadcast-events",
-            "renameEvents":{
-                "mouseup": "audio-mute-toggle"
-            }
+            "type": "dom-element",
+            "element": "div",
+            "className": "game-button mute-button",
+            "updateClassName": true,
+            "onmouseup": ["audio-mute-toggle", "mouseup"],
+            "ontouchend": ["audio-mute-toggle", "mouseup"]
         },{
             "type": "audio"
         }

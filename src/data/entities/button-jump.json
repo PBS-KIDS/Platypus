@@ -5,34 +5,19 @@
 	"id": "button-jump",
 	"components":[
         {
-            "type": "logic-button"
+            "type": "dom-element",
+            "element": "div",
+            "className": "game-button jump-button",
+            "onmousedown": "start-jump",
+            "ontouchstart": "start-jump",
+            "onmouseup": "stop-jump",
+            "ontouchend": "stop-jump"
         },{
             "type": "broadcast-events",
 		    "events":{
-                "mousedown": "button-jump:down",
-                "mouseup":   "button-jump:up"
+                "start-jump": "button-jump:down",
+                "stop-jump":  "button-jump:up"
 		    }
-		},
-		{"type": "render-animation",
-            "animationMap":{
-                "pressed": "pressed",
-                "released": "released"
-            },
-            "spriteSheet": {
-                "images": ["buttons"],
-                "frames": {
-                    "width":  138,
-                    "height": 138
-                },
-                "animations": {
-                    "released": 1,
-                    "pressed":  7
-                }
-            },
-            "scaleX": 5,
-            "scaleY": 5,
-            "state": "released",
-            "acceptInput": {"click": true, "touch": true}
 		}
 	],
 	"properties":{

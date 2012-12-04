@@ -1,3 +1,7 @@
+
+/*--------------------------------------------------
+ *   ButtonCSS - ../src/css/button.css
+ */
 .menu-button {
 position: absolute;
 bottom: 3.3em;
@@ -138,4 +142,77 @@ height: 7em;
 z-index: 10;
 position: absolute;
 cursor: pointer;
+}
+
+
+/*--------------------------------------------------
+ *   MainCSS - ../src/css/main.css
+ */
+body {
+	background: #9E8A74;
+	padding: 0;
+	margin: 0;
+}
+
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -moz-tap-highlight-color:    rgba(0, 0, 0, 0);
+    -ms-tap-highlight-color:     rgba(0, 0, 0, 0);
+    -o-tap-highlight-color:      rgba(0, 0, 0, 0);
+    tap-highlight-color:         rgba(0, 0, 0, 0);
+}
+
+/*--------------------------------------------------
+ *   GameCSS - ../src/css/game.css
+ */
+#root
+{
+	width:       100%;
+	height:      100%;
+	left:        50%;
+	top:         50%;
+	margin-left: -50%;
+	margin-top:  -50%;	
+	position:    absolute;
+}
+
+#root canvas {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+.title-screen {
+	position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/*--------------------------------------------------
+ *   GUI CSS - ../src/css/gui.css
+ */
+.gem-bar {
+position: absolute;
+right: 0;
+top: 0;
+width: 16em;
+height: 10em;
+background: url('../i/gem-bar.png') no-repeat;
+background-size: 100%;
+}
+
+.gem-counter {
+position: absolute;
+right: 0;
+top: 0;
+width: 2em;
+text-align: center;
+font-size: 5em;
+color: white;
+font-family: arial;
+font-weight: bold;
+line-height: 1.6em;
+height: 1.6em;
 }

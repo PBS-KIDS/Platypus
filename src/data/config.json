@@ -113,7 +113,7 @@
             {"id": "logic-hero",              "src": "../js/example-components/logic-hero.js"},
             {"id": "logic-gem",               "src": "../js/example-components/logic-gem.js"},
             {"id": "logic-gui",               "src": "../js/example-components/logic-gui.js"},
-            {"id": "render-fps-counter",      "src": "../js/example-components/render-fps-counter.js"}
+            {"id": "logic-fps-counter",      "src": "../js/standard-components/logic-fps-counter.js"}
 		],
 		"entities": [ // JSON files describing entities
 		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
@@ -142,7 +142,6 @@
             {"id": "collectible-manager",    "src": "entities/collectible-manager.json"},
             {"id": "gui",    		  "src": "entities/gui.json"},
             {"id": "beetle",    	  "src": "entities/beetle.json"},
-            {"id": "clock",	    	  "src": "entities/clock.json"},
             {"id": "flower",	      "src": "entities/flower.json"},
             {"id": "briar",	    	  "src": "entities/briar.json"},
             {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
@@ -158,7 +157,8 @@
             {"id": "Main",      "src": "../js/main.js"},
             {"id": "ButtonCSS", "src": "../css/button.css"},
             {"id": "MainCSS",   "src": "../css/main.css"},
-            {"id": "GameCSS",   "src": "../css/game.css"}
+            {"id": "GameCSS",   "src": "../css/game.css"},
+            {"id": "GUI CSS",   "src": "../css/gui.css"}
 		],
 		"scenes": [ // JSON files describing scenes
 			{"id": "menu",        "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

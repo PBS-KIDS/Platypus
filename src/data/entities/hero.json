@@ -76,10 +76,10 @@
 		        "ground, moving": {"sound": "walk", "interrupt": "none"},
 		        "jumping": "jump"
 		    }
-		},{
-		    "type": "render-debug",
-		    "regY": 260,
-		    "regX": 130
+//		},{
+//		    "type": "render-debug",
+//		    "regY": 260,
+//		    "regX": 130
 		}
 	],
 	"properties":{

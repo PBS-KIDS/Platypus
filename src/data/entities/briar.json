@@ -45,10 +45,10 @@
 			"state": "up",
 			"scaleX": 2,
 			"scaleY": 2
-		},{
-		    "type": "render-debug",
-            "regX": 60,
-            "regY": 120
+//		},{
+//		    "type": "render-debug",
+//            "regX": 60,
+//            "regY": 120
         }
 	],
 	"properties":{

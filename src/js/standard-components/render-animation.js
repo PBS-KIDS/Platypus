@@ -200,6 +200,11 @@ platformer.components['render-animation'] = (function(){
 		over     = false;
 		
 		this.stage = obj.stage;
+		if(!this.stage){
+			console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
+			this.owner.removeComponent(this);
+			return;
+		}
 		this.stage.addChild(this.anim);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
@@ -306,9 +311,11 @@ platformer.components['render-animation'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
-		this.stage.removeChild(this.anim);
+		if (this.stage){
+			this.stage.removeChild(this.anim);
+			this.stage = undefined;
+		}
 		this.anim = undefined;
-		this.stage = undefined;
 		this.removeListeners(this.listeners);
 	};
 	

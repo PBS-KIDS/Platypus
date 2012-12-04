@@ -1,43 +1,20 @@
-/*
- * 
- */
 {
 	"id": "button-right",
 	"components":[
         {
-		    "type": "logic-button"
-		},{
-		    "type": "broadcast-events",
-            "events": {
-                "mousedown": "button-right:down",
-                "mouseup":   "button-right:up"
+            "type": "dom-element",
+            "element": "div",
+            "className": "game-button go-right-button",
+            "onmousedown": "start-move",
+            "ontouchstart": "start-move",
+            "onmouseup": "stop-move",
+            "ontouchend": "stop-move"
+        },{
+            "type": "broadcast-events",
+            "events":{
+                "start-move": "button-right:down",
+                "stop-move":  "button-right:up"
             }
-        },
-        {"type": "render-animation",
-            "animationMap":{
-                "pressed": "pressed",
-                "released": "released"
-            },
-            "spriteSheet": {
-                "images": ["buttons"],
-                "frames": {
-                    "width":  138,
-                    "height": 138
-                },
-                "animations": {
-                    "released": 2,
-                    "pressed":  8
-                }
-            },
-            "scaleX": 5,
-            "scaleY": 5,
-            "state": "released",
-            "acceptInput": {"click": true, "touch": true}
-		}
-	],
-	"properties":{
-		"x": 3280,
-		"y": 2300,
-		"z": 400
-	}
+        }
+	]
 }

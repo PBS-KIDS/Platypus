@@ -5,15 +5,21 @@
 	"id": "fps-counter",
 	"components":[
 		{
-			"type": "render-fps-counter",
-			"scaleX": 1,
-            "scaleY": 1,
-            "x": 200,
-			"y": 60,
-			"z": 1000,
-            "color": "#FFF",
-            "font": "bold 80px Arial"
-		}
+			"type": "logic-fps-counter"
+		},{
+            "type": "dom-element",
+            "className": "fps-counter",
+            "style": {
+                "position": "absolute",
+                "left": "0.5em",
+                "top": "0.5em",
+                "color": "white",
+                "fontSize": "2em",
+                "fontWeight": "bold",
+                "fontFamily": "Arial",
+                "zIndex": 11
+            }
+        }
 	],
 	"properties":{
 		

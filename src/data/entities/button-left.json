@@ -1,43 +1,20 @@
-/*
- * 
- */
 {
 	"id": "button-left",
 	"components":[
         {
-            "type": "logic-button"
+            "type": "dom-element",
+            "element": "div",
+            "className": "game-button go-left-button",
+            "onmousedown": "start-move",
+            "ontouchstart": "start-move",
+            "onmouseup": "stop-move",
+            "ontouchend": "stop-move"
         },{
             "type": "broadcast-events",
-		    "events":{
-                "mousedown": "button-left:down",
-                "mouseup":   "button-left:up"
-		    }
-		},
-		{"type": "render-animation",
-            "animationMap":{
-                "pressed": "pressed",
-                "released": "released"
-            },
-            "spriteSheet": {
-                "images": ["buttons"],
-                "frames": {
-                    "width":  138,
-                    "height": 138
-                },
-                "animations": {
-                    "released": 0,
-                    "pressed":  6
-                }
-            },
-            "scaleX": 5,
-            "scaleY": 5,
-            "state": "released",
-            "acceptInput": {"click": true, "touch": true}
-		}
-	],
-	"properties":{
-		"x": 2460,
-		"y": 2300,
-		"z": 400
-	}
+            "events":{
+                "start-move": "button-left:down",
+                "stop-move":  "button-left:up"
+            }
+        }
+	]
 }

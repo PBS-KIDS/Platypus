@@ -10,6 +10,11 @@ This component creates a DOM element associated with the entity. In addition to 
 ### Listens for:
 - **handle-render-load** - This event provides the parent DOM element that this component will require for displaying its DOM element.
   > @param message.element (DOM element) - Required. Provides the render component with the necessary DOM element parent.
+- **handle-render** - On each `handle-render` message, this component checks to see if there has been a change in the state of the entity. If so (and updateClassName is set to true in the JSON definition) it updates its className accordingly.
+- **logical-state** - This component listens for logical state changes and updates its local record of states.
+  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
+- **update-content** - This message updates the innerHTML of the DOM element.
+  > @param message.text (string) - Required. The text that should replace the DOM element's innerHTML.
 
 ### Local Broadcasts:
 - **[Messages specified in definition]** - Element event handlers will trigger messages as defined in the JSON definition.
@@ -28,38 +33,59 @@ This component creates a DOM element associated with the entity. In addition to 
       "className": "top-band",
       //Optional. Any standard properties of the element can be set by listing property names and their values. "className" is one example, but other element properties can be specified in the same way.
       
-      "onmousedown": "turn-green"
+      "updateClassName": true,
+      //Optional. Specifies whether the className of the DOM element should be updated to reflect the entity's logical state. This setting will cause the className to equal its setting above followed by a space-delimited list of its `true` valued state names.
+      
+      "onmousedown": "turn-green",
       //Optional. If specified properties begin with "on", it is assumed that the property is an event handler and the listed value is broadcast as a message on the entity where the message object is the event handler's event object.
+
+      "onmouseup": ["turn-red", "shout"]
+      //Optional. In addition to the event syntax above, an Array of strings may be provided, causing multiple messages to be triggered in the order listed.
     }
 */
 platformer.components['dom-element'] = (function(){
 	var createFunction = function(message, entity){
-		return function(e){
-			entity.trigger(message, e);
-		};
+		if(typeof message === 'string'){
+			return function(e){
+				entity.trigger(message, e);
+			};
+		} else {
+			return function(e){
+				for (var i = 0; i < message.length; i++){
+					entity.trigger(message[i], e);
+				}
+			};
+		}
 	},
 	component = function(owner, definition){
-		var elementType = definition.element   || 'div',
-		innerHTML       = definition.innerHTML || false;
+		var elementType = definition.element   || 'div';
 		
 		this.owner = owner;
+		this.updateClassName = definition.updateClassName || false;
+		this.className = '';
+		this.states = {};
+		this.stateChange = false;
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListener('handle-render-load');
+		this.addListeners(['handle-render-load', 'handle-render', 'update-content', 'logical-state']);
 		
 		this.element = this.owner.element = document.createElement(elementType);
 		for(var i in definition){
-			if((i !== 'innerHTML') && (i !== 'type') && (i !== 'element')){
+			if(i === 'style'){
+				for(var j in definition[i]){
+					this.element.style[j] = definition[i][j]; 
+				}
+			} else if((i !== 'type') && (i !== 'element') && (i !== 'updateClassName')){
 				if(i.indexOf('on') === 0){
 					this.element[i] = createFunction(definition[i], this.owner);
 				} else {
 					this.element[i] = definition[i];
+					if(i == 'className'){
+						this.className = definition[i];
+					}
 				}
 			}
-		}
-		if(innerHTML){
-			this.element.innerHTML = innerHTML;
 		}
 	};
 	var proto = component.prototype;
@@ -68,6 +94,36 @@ platformer.components['dom-element'] = (function(){
 		if(resp.element){
 			this.parentElement = resp.element;
 			this.parentElement.appendChild(this.element);
+		}
+	};
+	
+	proto['handle-render'] = function(resp){
+		var i     = 0,
+		className = this.className;
+		
+		if(this.stateChange && this.updateClassName){
+			for(i in this.states){
+				if(this.states[i]){
+					className += ' ' + i;
+				}
+			}
+			this.element.className = className;
+			this.stateChange = false;
+		}
+	};
+	
+	proto['update-content'] = function(resp){
+		if(resp && resp.text && (resp.text !== this.element.innerHTML)){
+			this.element.innerHTML = resp.text;
+		}
+	};
+	
+	proto['logical-state'] = function(state){
+		for(var i in state){
+			if(this.states[i] !== state[i]){
+				this.stateChange = true;
+				this.states[i] = state[i];
+			}
 		}
 	};
 	

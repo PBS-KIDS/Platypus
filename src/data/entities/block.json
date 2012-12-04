@@ -39,10 +39,10 @@
             "regY":   120,
             "scaleX": 2,
             "scaleY": 2
-		},{
-		    "type": "render-debug",
-            "regX": 120,
-            "regY": 240
+//		},{
+//		    "type": "render-debug",
+//            "regX": 120,
+//            "regY": 240
         }
 	],
 	"properties":{
