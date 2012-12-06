@@ -51,7 +51,7 @@ background-size: 600%;
 background: url('../i/buttons.png') 20% 0 no-repeat;
 background-size: 600%;
 bottom: 1em;
-right: 11em;
+right: 17em;
 z-index: 11;
 }
 .jump-center-button:active {
@@ -59,23 +59,23 @@ background: url('../i/buttons.png') 20% 33.333% no-repeat;
 background-size: 600%;
 }
 .jump-left-button {
-background: url('../i/buttons.png') 100% 0 no-repeat;
+background: url('../i/buttons.png') 80% 0 no-repeat;
 background-size: 600%;
 bottom: 1em;
-right: 21em;
+right: 33em;
 }
 .jump-left-button:active {
-background: url('../i/buttons.png') 100% 33.333% no-repeat;
+background: url('../i/buttons.png') 80% 33.333% no-repeat;
 background-size: 600%;
 }
 .jump-right-button {
-background: url('../i/buttons.png') 80% 0 no-repeat;
+background: url('../i/buttons.png') 100% 0 no-repeat;
 background-size: 600%;
 bottom: 1em;
 right: 1em;
 }
 .jump-right-button:active {
-background: url('../i/buttons.png') 80% 33.333% no-repeat;
+background: url('../i/buttons.png') 100% 33.333% no-repeat;
 background-size: 600%;
 }
 
@@ -152,6 +152,11 @@ body {
 	background: #9E8A74;
 	padding: 0;
 	margin: 0;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none;
 }
 
 * {

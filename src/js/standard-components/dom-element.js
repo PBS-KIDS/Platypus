@@ -87,6 +87,10 @@ platformer.components['dom-element'] = (function(){
 				}
 			}
 		}
+		
+		if(this.owner.className){
+			this.className = this.element.className = this.owner.className;
+		}
 	};
 	var proto = component.prototype;
 	

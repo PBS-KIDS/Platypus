@@ -56,14 +56,10 @@ platformer.components['render-tiles'] = (function(){
 		for(x = 0; x < this.imageMap.length; x++){
 			this.tiles[x] = [];
 			for (y = 0; y < this.imageMap[x].length; y++){
-				//TODO: Test speed of this - would non-animations perform better?
 				tile = new createjs.BitmapAnimation(this.spriteSheet);
 				tile.x = x * this.tileWidth;
 				tile.y = y * this.tileHeight;
-				//this.tilesToRender.addChild(tile);
 				this.tiles[x][y] = tile;
-//				tile.scaleX = 1.05;
-//				tile.scaleY = 1.05;
 				tile.gotoAndPlay(this.imageMap[x][y]);
 				this.tiles[x][y].cache(0,0,this.tileWidth,this.tileHeight);
 			}

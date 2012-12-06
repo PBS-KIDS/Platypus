@@ -68,7 +68,7 @@ platformer.components['broadcast-events'] = (function(){
 				platformer.game.currentScene.trigger(event, value, debug);
 			};
 		} else {
-			return function(value){
+			return function(value, debug){
 				for (var e in event){
 					platformer.game.currentScene.trigger(event[e], value, debug);
 				}

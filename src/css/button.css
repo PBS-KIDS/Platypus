@@ -47,7 +47,7 @@ background-size: 600%;
 background: url('../i/buttons.png') 20% 0 no-repeat;
 background-size: 600%;
 bottom: 1em;
-right: 11em;
+right: 17em;
 z-index: 11;
 }
 .jump-center-button:active {
@@ -55,23 +55,23 @@ background: url('../i/buttons.png') 20% 33.333% no-repeat;
 background-size: 600%;
 }
 .jump-left-button {
-background: url('../i/buttons.png') 100% 0 no-repeat;
+background: url('../i/buttons.png') 80% 0 no-repeat;
 background-size: 600%;
 bottom: 1em;
-right: 21em;
+right: 33em;
 }
 .jump-left-button:active {
-background: url('../i/buttons.png') 100% 33.333% no-repeat;
+background: url('../i/buttons.png') 80% 33.333% no-repeat;
 background-size: 600%;
 }
 .jump-right-button {
-background: url('../i/buttons.png') 80% 0 no-repeat;
+background: url('../i/buttons.png') 100% 0 no-repeat;
 background-size: 600%;
 bottom: 1em;
 right: 1em;
 }
 .jump-right-button:active {
-background: url('../i/buttons.png') 80% 33.333% no-repeat;
+background: url('../i/buttons.png') 100% 33.333% no-repeat;
 background-size: 600%;
 }
 
