@@ -330,7 +330,10 @@ platformer.components['collision-group'] = (function(){
 		initialY = 0,
 		message  = triggerMessage,
 		xy       = xyPair,
-		unitStepSize = this.unitStepSize;
+		unitStepSize = this.unitStepSize,
+		atX      = 0,
+		atY      = 0,
+		insertIndex = 0;
 		
 		var currentAABB = groupCheck?ent.getCollisionGroupAABB():ent.getAABB();
 		var previousAABB = groupCheck?ent.getPreviousCollisionGroupAABB():ent.getPreviousAABB();//ent.getAABB().getCopy().move(ent.getPreviousX() + ent.getShapes()[0].getXOffset(), ent.getPreviousY() + ent.getShapes()[0].getYOffset());
@@ -421,7 +424,7 @@ platformer.components['collision-group'] = (function(){
 				{
 					if(groupCheck || this.preciseCollision(ent, potentialTiles[t]))
 					{
-						var atX = undefined;
+						atX = undefined;
 						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
 						if (xStep > 0)
 						{
@@ -461,7 +464,7 @@ platformer.components['collision-group'] = (function(){
 				if(this.AABBCollision(previousAABB, entityAABB)) {
 					if(groupCheck || this.preciseCollision(ent, potentialsEntities[u]))
 					{
-						var atX = undefined;
+						atX = undefined;
 						//TODO: How we solve for atX is going to need to change when we're dealing with non-rectangular objects.
 						if (xStep > 0)
 						{
@@ -484,7 +487,7 @@ platformer.components['collision-group'] = (function(){
 							//finalX = atX;
 							collisionsX[collisionsX.length] = {atX: atX, entity: potentialsEntities[u]};
 						} else if (xStep > 0) {
-							var insertIndex = 0; 
+							insertIndex = collisionsX.length; 
 							for (var c = 0; c < collisionsX.length; c++)
 							{
 								if (atX < collisionsX[c].atX)
@@ -495,7 +498,7 @@ platformer.components['collision-group'] = (function(){
 							}
 							collisionsX.splice(insertIndex, 0, {atX: atX, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
 						} else {
-							var insertIndex = 0; 
+							insertIndex = collisionsX.length; 
 							for (var c = 0; c < collisionsX.length; c++)
 							{
 								if (atX > collisionsX[c].atX)
@@ -596,7 +599,7 @@ platformer.components['collision-group'] = (function(){
 				{
 					if(groupCheck || this.preciseCollision(ent, potentialTiles[t]))
 					{
-						var atY = undefined;
+						atY = undefined;
 						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
 						if (yStep > 0)
 						{
@@ -637,7 +640,7 @@ platformer.components['collision-group'] = (function(){
 				{
 					if(groupCheck || this.preciseCollision(ent, potentialsEntities[u]))
 					{
-						var atY = undefined;
+						atY = undefined;
 						//TODO: How we solve for atY is going to need to change when we're dealing with non-rectangular objects.
 						if (yStep > 0)
 						{
@@ -660,7 +663,7 @@ platformer.components['collision-group'] = (function(){
 							//finalX = atX;
 							collisionsY[collisionsY.length] = {atY: atY, entity: potentialsEntities[u]};
 						} else if (yStep > 0) {
-							var insertIndex = 0; 
+							insertIndex = collisionsY.length; 
 							for (var c = 0; c < collisionsY.length; c++)
 							{
 								if (atY < collisionsY[c].atY)
@@ -671,7 +674,7 @@ platformer.components['collision-group'] = (function(){
 							}
 							collisionsY.splice(insertIndex, 0, {atY: atY, type: potentialsEntities[u].collisionType, aABB: entityAABB,  entity: potentialsEntities[u]});
 						} else {
-							var insertIndex = 0; 
+							insertIndex = collisionsY.length;
 							for (var c = 0; c < collisionsY.length; c++)
 							{
 								if (atY > collisionsY[c].atY)
