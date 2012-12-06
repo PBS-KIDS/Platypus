@@ -3,7 +3,7 @@
 	"components":[
 		{
 			"type": "render-tiles",
-			"spritesheet": "import",
+			"spriteSheet": "import",
 			"imageMap":    "import"
 		},{
 			"type": "collision-tiles",

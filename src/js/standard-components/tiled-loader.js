@@ -55,6 +55,7 @@ platformer.components['tiled-loader'] = (function(){
 		this.images        = this.owner.images        || definition.images        || false;
 		this.imagesScale   = this.owner.imagesScale   || definition.imagesScale   || this.unitsPerPixel;
 		this.layerZStep    = this.owner.zStep         || definition.zStep         || 1000;
+		this.separateTiles = this.owner.separateTiles || definition.separateTiles || false;
 
 		// Messages that this component listens for
 		this.addListeners(['load']);
@@ -62,10 +63,14 @@ platformer.components['tiled-loader'] = (function(){
 	proto = component.prototype; 
 
 	proto['load'] = function(){
-		var actionLayer = 0;
+		var actionLayer = 0,
+		layer = false;
 		
 		for(; actionLayer < this.level.layers.length; actionLayer++){
-			this.setupLayer(this.level.layers[actionLayer], this.level);
+			layer = this.setupLayer(this.level.layers[actionLayer], this.level, layer);
+			if (this.separateTiles){
+				layer = false;
+			}
 		}
 		this.owner.trigger('world-loaded', {
 			width:  this.level.width  * this.level.tilewidth  * this.unitsPerPixel,
@@ -75,13 +80,13 @@ platformer.components['tiled-loader'] = (function(){
 		this.owner.removeComponent(this);
 	};
 	
-	proto.setupLayer = function(layer, level){
-		var width      = layer.width,
-		height         = layer.height,
-		images         = this.images || [],
+	proto.setupLayer = function(layer, level, combineRenderLayer){
+		var self       = this,
+		images         = self.images || [],
 		tilesets       = level.tilesets,
 		tileWidth      = level.tilewidth,
 		tileHeight     = level.tileheight,
+		tileTypes      = (tilesets[tilesets.length - 1].imagewidth / tileWidth) * (tilesets[tilesets.length - 1].imageheight / tileHeight) + tilesets[tilesets.length - 1].firstgid,
 		x              = 0,
 		y              = 0,
 		obj            = 0,
@@ -89,12 +94,78 @@ platformer.components['tiled-loader'] = (function(){
 		entityType     = '',
 		tileset        = undefined,
 		properties     = undefined,
-		tileDefinition = undefined,
-		importAnimation= undefined,
-		importCollision= undefined,
-		importRender   = undefined,
 		layerCollides  = true,
-		numberProperty = false;
+		numberProperty = false,
+		createLayer = function(entityKind){
+			var width      = layer.width,
+			height         = layer.height,
+			tileDefinition = undefined,
+			importAnimation= undefined,
+			importCollision= undefined,
+			importRender   = undefined,
+			renderTiles    = false;
+			
+			//TODO: a bit of a hack to copy an object instead of overwrite values
+			tileDefinition  = JSON.parse(JSON.stringify(platformer.settings.entities[entityKind]));
+
+			importAnimation = {};
+			importCollision = [];
+			importRender    = [];
+
+			tileDefinition.properties            = tileDefinition.properties || {};
+			tileDefinition.properties.width      = tileWidth  * width  * self.unitsPerPixel;
+			tileDefinition.properties.height     = tileHeight * height * self.unitsPerPixel;
+			tileDefinition.properties.columns    = width;
+			tileDefinition.properties.rows       = height;
+			tileDefinition.properties.tileWidth  = tileWidth  * self.unitsPerPixel;
+			tileDefinition.properties.tileHeight = tileHeight * self.unitsPerPixel;
+			tileDefinition.properties.scaleX     = self.imagesScale;
+			tileDefinition.properties.scaleY     = self.imagesScale;
+			tileDefinition.properties.layerZ     = self.layerZ;
+			tileDefinition.properties.z    		 = self.layerZ;
+			
+			
+			for (x = 0; x < tileTypes; x++){
+				importAnimation['tile' + x] = x;
+			}
+			for (x = 0; x < width; x++){
+				importCollision[x] = [];
+				importRender[x]    = [];
+				for (y = 0; y < height; y++){
+					importCollision[x][y] = +layer.data[x + y * width] - 1;
+					importRender[x][y] = 'tile' + (+layer.data[x + y * width] - 1);
+				}
+			}
+			for (x = 0; x < tileDefinition.components.length; x++){
+				if(tileDefinition.components[x].type === 'render-tiles'){
+					renderTiles = tileDefinition.components[x]; 
+				}
+				if(tileDefinition.components[x].spriteSheet == 'import'){
+					tileDefinition.components[x].spriteSheet = {
+						images: images,
+						frames: {
+							width:  tileWidth * self.unitsPerPixel / self.imagesScale,
+							height: tileHeight * self.unitsPerPixel / self.imagesScale
+						},
+						animations: importAnimation
+					};
+				}
+				if(tileDefinition.components[x].collisionMap == 'import'){
+					tileDefinition.components[x].collisionMap = importCollision;
+				}
+				if(tileDefinition.components[x].imageMap == 'import'){
+					tileDefinition.components[x].imageMap = importRender;
+				}
+			}
+			self.layerZ += self.layerZStep;
+			
+			if((entityKind === 'render-layer') && combineRenderLayer){
+				combineRenderLayer.trigger('add-tiles', renderTiles);
+				return combineRenderLayer; 
+			} else {
+				return self.owner.addEntity(new platformer.classes.entity(tileDefinition, {properties:{}})); 
+			}
+		};
 
 		if(images.length == 0){
 			for (x = 0; x < tilesets.length; x++){
@@ -112,7 +183,7 @@ platformer.components['tiled-loader'] = (function(){
 				}
 			}
 		}
-
+		
 		if(layer.type == 'tilelayer'){
 			// First determine which type of entity this layer should behave as:
 			entity = 'tile-layer'; // default
@@ -142,56 +213,12 @@ platformer.components['tiled-loader'] = (function(){
 				}
 			}
 			
-			//TODO: a bit of a hack to copy an object instead of overwrite values
-			tileDefinition  = JSON.parse(JSON.stringify(platformer.settings.entities[entity]));
-
-			importAnimation = {};
-			importCollision = [];
-			importRender    = [];
-
-			tileDefinition.properties            = tileDefinition.properties || {};
-			tileDefinition.properties.width      = tileWidth  * width  * this.unitsPerPixel;
-			tileDefinition.properties.height     = tileHeight * height * this.unitsPerPixel;
-			tileDefinition.properties.columns    = width;
-			tileDefinition.properties.rows       = height;
-			tileDefinition.properties.tileWidth  = tileWidth  * this.unitsPerPixel;
-			tileDefinition.properties.tileHeight = tileHeight * this.unitsPerPixel;
-			tileDefinition.properties.scaleX     = this.imagesScale;
-			tileDefinition.properties.scaleY     = this.imagesScale;
-			tileDefinition.properties.layerZ     = this.layerZ;
-			tileDefinition.properties.z    		 = this.layerZ;
-			
-			
-			for (x = 0; x < width; x++){
-				importCollision[x] = [];
-				importRender[x]    = [];
-				for (y = 0; y < height; y++){
-					if(typeof importAnimation['tile' + (+layer.data[x + y * width] - 1)] == 'undefined'){
-						importAnimation['tile' + (+layer.data[x + y * width] - 1)] = +layer.data[x + y * width] - 1;
-					};
-					importCollision[x][y] = +layer.data[x + y * width] - 1;
-					importRender[x][y] = 'tile' + (+layer.data[x + y * width] - 1);
-				}
+			if(entity === 'tile-layer'){
+				createLayer('collision-layer');
+				return createLayer('render-layer', combineRenderLayer);
+			} else {
+				return createLayer(entity, combineRenderLayer);
 			}
-			for (x = 0; x < tileDefinition.components.length; x++){
-				if(tileDefinition.components[x].spritesheet == 'import'){
-					tileDefinition.components[x].spritesheet = {
-						images: images,
-						frames: {
-							width:  tileWidth * this.unitsPerPixel / this.imagesScale,
-							height: tileHeight * this.unitsPerPixel / this.imagesScale
-						},
-						animations: importAnimation
-					};
-				}
-				if(tileDefinition.components[x].collisionMap == 'import'){
-					tileDefinition.components[x].collisionMap = importCollision;
-				}
-				if(tileDefinition.components[x].imageMap == 'import'){
-					tileDefinition.components[x].imageMap = importRender;
-				}
-			}
-			this.owner.addEntity(new platformer.classes.entity(tileDefinition, {properties:{}})); 
 		} else if(layer.type == 'objectgroup'){
 			for (obj = 0; obj < layer.objects.length; obj++){
 				entity = layer.objects[obj];
@@ -254,13 +281,13 @@ platformer.components['tiled-loader'] = (function(){
 					properties.height = (entity.height || tileHeight) * this.unitsPerPixel;
 					properties.x = entity.x * this.unitsPerPixel + (properties.width / 2);
 					properties.y = entity.y * this.unitsPerPixel;
-					properties.scaleX = this.unitsPerPixel;
-					properties.scaleY = this.unitsPerPixel;
+					properties.scaleX = this.imagesScale;//this.unitsPerPixel;
+					properties.scaleY = this.imagesScale;//this.unitsPerPixel;
 					properties.layerZ = this.layerZ;
 					//Setting the z value. All values are getting added to the layerZ value.
 					if (properties.z) {
 						properties.z += this.layerZ;
-					} else if (entityType && platformer.settings.entities[entityType] && platformer.settings.entities[entityType].properties.z) {
+					} else if (entityType && platformer.settings.entities[entityType] && platformer.settings.entities[entityType].properties && platformer.settings.entities[entityType].properties.z) {
 						properties.z = this.layerZ + platformer.settings.entities[entityType].properties.z;
 					} else {
 						properties.z = this.layerZ;
@@ -274,8 +301,9 @@ platformer.components['tiled-loader'] = (function(){
 					}
 				}
 			}
+			this.layerZ += this.layerZStep;
+			return false;
 		}
-		this.layerZ += this.layerZStep;
 	};
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

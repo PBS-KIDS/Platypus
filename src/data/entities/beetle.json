@@ -37,10 +37,10 @@
             "spriteSheet": {
 				"images": ["beetle"],
 				"frames": {
-					"width":  24,
-					"height": 24,
-					"regY":   24,
-					"regX":   12
+					"width":  72,
+					"height": 72,
+					"regY":   72,
+					"regX":   36
 				},
 				"animations": {
 					"standing":[0],

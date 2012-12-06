@@ -23,10 +23,10 @@
 			"spriteSheet": {
 				"images": ["gem"],
 				"frames": {
-					"width":  14,
-					"height": 22,
-					"regY":   22,
-					"regX":   7
+					"width":  42,
+					"height": 66,
+					"regY":   66,
+					"regX":   21
 				},
 				"animations": {
 					"default":  {frames:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2], 	frequency:4}

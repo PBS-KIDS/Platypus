@@ -1,28 +1,24 @@
 CACHE MANIFEST
-# Version 135463732
+# Version 135480826
 
 CACHE:
 
 # m4aCombined:
 
 a/combined.m4a
-j/compressed135463732.js
-s/compressed135463732.css
+j/compressed135480826.js
+s/compressed135480826.css
 
 i/buttons.png
 i/dirt.png
 i/mookie.png
-i/tile-map.png
 i/game-sprites.png
-i/test.png
-i/test-animation.png
 i/tiles.png
 i/gem.png
 i/gem-bar.png
 i/title-screen.png
 i/objects.png
 i/beetle.png
-i/flower.png
 i/briar.png
 http://code.createjs.com/easeljs-0.5.0.min.js
 http://code.createjs.com/tweenjs-0.3.0.min.js

@@ -5,21 +5,16 @@
 	"id": "flower",
 	"components":[
 		{
-			"type": "render-animation",
-            "spriteSheet": {
-				"images": ["flower"],
-				"frames": {
-					"width":  120,
-					"height": 120,
-					"regY":   120,
-					"regX":   60
-				},
-				"animations": {
-					"default":[0]
-				}
-			},
-			"scaleX": 2,
-			"scaleY": 2
+			"type": "render-image",
+            "image": "sprites",
+            "source": {
+                    "width":  72,
+                    "height": 72,
+                    "y": 360,
+                    "x": 72   
+            },
+            "regY":   72,
+            "regX":   36
 //		},{
 //		    "type": "render-debug",
 //            "regX": 60,

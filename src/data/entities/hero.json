@@ -38,8 +38,8 @@
 		},{
 			"type": "render-animation",
             "animationMap":{
-                "swing,left":   "swing-left",
-                "swing,right":  "swing-right",
+                "swingHit,left":   "swing-left",
+                "swingHit,right":  "swing-right",
                 "air,left":     "jumping-left",
                 "air,right":    "jumping-right",
                 "moving,left":  "walking-left",
@@ -51,10 +51,10 @@
 			"spriteSheet": {
 				"images": ["mookie"],
 				"frames": {
-					"width":  240,
-					"height": 155,
-					"regY":   155,
-					"regX":   120
+					"width":  144,
+					"height": 93,
+					"regY":   93,
+					"regX":   72
 				},
 				"animations": {
 					"standing-right":[2],
@@ -63,12 +63,10 @@
 					"walking-left":  {"frames": [4, 7, 6, 5], "frequency": 4},
 					"jumping-right": {"frames": [0]},
 					"jumping-left":  {"frames": [6]},
-                    "swing-right":   {"frames": [ 8,  9, 10, 10, 2], "next": "standing-right", "frequency": 4},
-                    "swing-left":    {"frames": [14, 13, 12, 12, 5], "next": "standing-left",  "frequency": 4}
+                    "swing-right":   {"frames": [ 8,  9, 10, 10, 2], "frequency": 4},
+                    "swing-left":    {"frames": [14, 13, 12, 12, 5], "frequency": 4}
 				}
-			},
-			"scaleX": 2,
-			"scaleY": 2
+			}
 		},{
 		    "type": "audio",
 		    "audioMap": {
@@ -83,12 +81,12 @@
 		}
 	],
 	"properties":{
+	    "alwaysOn": true,
 		"x": 10,
 		"y": 10,
 		"z": 200,
 		"width": 160,
 		"height": 240,
-		"state": "ground",
 		"heading": "right",
 		"camera": "bounding"
 	}

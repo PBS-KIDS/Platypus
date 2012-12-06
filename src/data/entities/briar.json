@@ -30,10 +30,10 @@
             "spriteSheet": {
 				"images": ["briar"],
 				"frames": {
-					"width":  120,
-					"height": 120,
-					"regY":   120,
-					"regX":   60
+					"width":  72,
+					"height": 72,
+					"regY":   72,
+					"regX":   36
 				},
 				"animations": {
 					"up":    [0],
@@ -42,9 +42,7 @@
 					"left":  [2]
 				}
 			},
-			"state": "up",
-			"scaleX": 2,
-			"scaleY": 2
+			"state": "up"
 //		},{
 //		    "type": "render-debug",
 //            "regX": 60,

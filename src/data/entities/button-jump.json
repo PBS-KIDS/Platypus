@@ -19,10 +19,5 @@
                 "stop-jump":  "button-jump:up"
 		    }
 		}
-	],
-	"properties":{
-		"x": 20,
-		"y": 2300,
-		"z": 400
-	}
+	]
 }

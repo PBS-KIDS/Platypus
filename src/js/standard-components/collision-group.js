@@ -237,7 +237,7 @@ platformer.components['collision-group'] = (function(){
 		length = this.solidEntities.length;
 		for (; i < length; i++){
 			entity = this.solidEntities[i];
-			if(check(entity.getAABB(), this.cameraLogicAABB)){
+			if(entity.alwaysOn || check(entity.getAABB(), this.cameraLogicAABB)){
 				list[list.length] = entity;
 			}
 		}
@@ -246,7 +246,7 @@ platformer.components['collision-group'] = (function(){
 		length = this.softEntities.length;
 		for (i = 0; i < length; i++){
 			entity = this.softEntities[i];
-			if(check(entity.getAABB(), this.cameraLogicAABB)){
+			if(entity.alwaysOn || check(entity.getAABB(), this.cameraLogicAABB)){
 				list[list.length] = entity;
 			}
 		}
@@ -260,7 +260,7 @@ platformer.components['collision-group'] = (function(){
 			length = entities.length;
 			for (j = 0; j < length; j++){
 				entity = entities[j];
-				if(check(entity.getAABB(), this.cameraCollisionAABB)){
+				if(entity.alwaysOn || check(entity.getAABB(), this.cameraCollisionAABB)){
 					list[list.length] = entity;
 				}
 			}

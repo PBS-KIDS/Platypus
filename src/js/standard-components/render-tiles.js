@@ -1,18 +1,34 @@
 platformer.components['render-tiles'] = (function(){
 	var component = function(owner, definition){
+		var spriteSheet = {
+			images: definition.spriteSheet.images.slice(),
+			frames: definition.spriteSheet.frames,
+			animations: definition.spriteSheet.animations
+		},
+		scaleX = spriteSheet.images[0].scaleX || 1,
+		scaleY = spriteSheet.images[0].scaleY || 1;
+		if((scaleX !== 1) || (scaleY !== 1)){
+			spriteSheet.frames = {
+				width: spriteSheet.frames.width * scaleX,	
+				height: spriteSheet.frames.height * scaleY,	
+				regX: spriteSheet.frames.regX * scaleX,	
+				regY: spriteSheet.frames.regY * scaleY
+			};
+		}
+
 		this.owner = owner;
 		
 		this.controllerEvents = undefined;
-		this.spriteSheet = new createjs.SpriteSheet(definition.spritesheet);
+		this.spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.imageMap    = definition.imageMap   || [];
 		this.tiles       = [];
 		this.tilesToRender = undefined;
-		this.scaleX      = definition.scaleX || this.owner.scaleX || 1;
-		this.scaleY      = definition.scaleY || this.owner.scaleY || 1;
+		this.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
+		this.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
 		this.tileWidth   = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
 		this.tileHeight  = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
 		
-		var buffer = (definition.buffer || this.tileWidth) * this.scaleX;
+		var buffer = (definition.buffer || (this.tileWidth / 2)) * this.scaleX;
 		this.camera = {
 			x: -buffer - 1, //to force camera update
 			y: -buffer - 1,
@@ -23,7 +39,7 @@ platformer.components['render-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['handle-render-load', 'camera-update']);
+		this.addListeners(['handle-render-load', 'camera-update', 'add-tiles']);
 	};
 	var proto = component.prototype;
 
@@ -34,6 +50,7 @@ platformer.components['render-tiles'] = (function(){
 		tile  = undefined;
 		
 		this.tilesToRender = new createjs.Container();
+		this.tilesToRender.snapToPixel = true;
 		this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
 		
 		for(x = 0; x < this.imageMap.length; x++){
@@ -45,7 +62,10 @@ platformer.components['render-tiles'] = (function(){
 				tile.y = y * this.tileHeight;
 				//this.tilesToRender.addChild(tile);
 				this.tiles[x][y] = tile;
+//				tile.scaleX = 1.05;
+//				tile.scaleY = 1.05;
 				tile.gotoAndPlay(this.imageMap[x][y]);
+				this.tiles[x][y].cache(0,0,this.tileWidth,this.tileHeight);
 			}
 		}
 		this.tilesToRender.scaleX = this.scaleX;
@@ -54,24 +74,41 @@ platformer.components['render-tiles'] = (function(){
 		stage.addChild(this.tilesToRender);
 	};
 	
+	proto['add-tiles'] = function(definition){
+		var x = 0,
+		y     = 0,
+		map   = definition.imageMap;
+		
+		if(map){
+			for(x = 0; x < this.imageMap.length; x++){
+				for (y = 0; y < this.imageMap[x].length; y++){
+					this.tiles[x][y].gotoAndPlay(map[x][y]);
+					this.tiles[x][y].updateCache('source-over');
+				}
+			}
+		}
+	};
+
 	proto['camera-update'] = function(camera){
 		var x  = 0,
 		y      = 0,
-		buffer = this.camera.buffer / this.scaleX,
+		buffer = this.camera.buffer,
 		maxX   = 0,
 		maxY   = 0,
 		minX   = 0,
-		minY   = 0;
+		minY   = 0,
+		vpL    = Math.floor(camera.viewportLeft / this.tileWidth)  * this.tileWidth,
+		vpT    = Math.floor(camera.viewportTop  / this.tileHeight) * this.tileHeight;
 				
-		if (((Math.abs(this.camera.x - camera.viewportLeft) > this.camera.buffer) || (Math.abs(this.camera.y - camera.viewportTop) > this.camera.buffer)) && (this.tiles.length > 0)){
-			this.camera.x = camera.viewportLeft;
-			this.camera.y = camera.viewportTop;
+		if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.tiles.length > 0)){
+			this.camera.x = vpL;
+			this.camera.y = vpT;
 			
 			//only attempt to draw children that are relevant
-			maxX = Math.min(Math.ceil((camera.viewportLeft + camera.viewportWidth + this.camera.buffer) / (this.tileWidth * this.scaleX)), this.tiles.length - 1),
-			minX = Math.max(Math.floor((camera.viewportLeft - this.camera.buffer) / (this.tileWidth * this.scaleX)), 0),
-			maxY = Math.min(Math.ceil((camera.viewportTop + camera.viewportHeight + this.camera.buffer) / (this.tileHeight * this.scaleY)), this.tiles[0].length - 1),
-			minY = Math.max(Math.floor((camera.viewportTop - this.camera.buffer) / (this.tileHeight * this.scaleY)), 0);
+			maxX = Math.min(Math.ceil((vpL + camera.viewportWidth + buffer) / (this.tileWidth * this.scaleX)), this.tiles.length) - 1;
+			minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
+			maxY = Math.min(Math.ceil((vpT + camera.viewportHeight + buffer) / (this.tileHeight * this.scaleY)), this.tiles[0].length) - 1;
+			minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
 			this.tilesToRender.removeAllChildren();
 			for(x = minX; x <= maxX; x++){
 				for (y = minY; y <= maxY; y++){
@@ -79,7 +116,7 @@ platformer.components['render-tiles'] = (function(){
 				}
 			}
 
-			this.tilesToRender.cache(camera.viewportLeft / this.scaleX - buffer, camera.viewportTop / this.scaleY - buffer, camera.viewportWidth / this.scaleX + buffer * 2, camera.viewportHeight / this.scaleY + buffer * 2);
+			this.tilesToRender.cache(minX * this.tileWidth, minY * this.tileHeight, (maxX - minX + 1) * this.tileWidth, (maxY - minY + 1) * this.tileHeight);
 		}
 	};
 	

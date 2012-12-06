@@ -311,8 +311,8 @@ platformer.components['camera'] = (function(){
 	
 	proto.setBoundingArea = function (top, left, width, height)
 	{
-		this.bBBorderY = (typeof top !== 'undefined') ? top : 500;
-		this.bBBorderX = (typeof left !== 'undefined') ? left : 500;
+		this.bBBorderY = (typeof top !== 'undefined') ? top : this.world.viewportHeight  * 0.25;
+		this.bBBorderX = (typeof left !== 'undefined') ? left : this.world.viewportWidth * 0.4;
 		this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.world.viewportWidth - (2 * this.bBBorderX);
 		this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.world.viewportHeight - (2 * this.bBBorderY);
 	};

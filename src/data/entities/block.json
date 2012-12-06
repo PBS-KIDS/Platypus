@@ -30,15 +30,13 @@
 			"type": "render-image", 
 		 	"image": "sprites",
 			"source": {
-					"width":  120,
-					"height": 120,
-					"y": 720,
-					"x": 240   
+					"width":  72,
+					"height": 72,
+					"y": 432,
+					"x": 144   
     		},
-            "regX":   60,
-            "regY":   120,
-            "scaleX": 2,
-            "scaleY": 2
+            "regX":   36,
+            "regY":   72
 //		},{
 //		    "type": "render-debug",
 //            "regX": 120,

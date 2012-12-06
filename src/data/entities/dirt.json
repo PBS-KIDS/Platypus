@@ -31,19 +31,17 @@
 		 	"spriteSheet": {
 				"images": ["dirt"],
 				"frames": {
-					"width":  240,
-					"height": 240,
-                    "regX":   120,
-                    "regY":   180
+					"width":  144,
+					"height": 144,
+                    "regX":   72,
+                    "regY":   108
 				  },
 				"animations": {
 					"stationary": 0,
 					"explosion": {"frames": [1, 2, 3, 4, 5], "frequency": 4}
 				  }
 			},
-			"state": "stationary",
-            "scaleX": 2,
-            "scaleY": 2
+			"state": "stationary"
 		}
 	],
 	"properties":{

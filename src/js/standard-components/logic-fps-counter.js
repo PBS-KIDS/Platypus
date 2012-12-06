@@ -43,6 +43,9 @@ platformer.components['logic-fps-counter'] = (function(){
 				if((value.name === 'Engine Total') && !this.timeElapsed){
 					this.timeElapsed = true;
 				}
+				if (!this.times[value.name]){
+					this.times[value.name] = 0;
+				}
 				this.times[value.name] += value.time;
 			}
 		}

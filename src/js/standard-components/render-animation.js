@@ -166,6 +166,16 @@ platformer.components['render-animation'] = (function(){
 		for (x = 0; x < spriteSheet.images.length; x++){
 			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
 		}
+		var scaleX = spriteSheet.images[0].scaleX || 1,
+		scaleY     = spriteSheet.images[0].scaleY || 1;
+		if((scaleX !== 1) || (scaleY !== 1)){
+			spriteSheet.frames = {
+				width: spriteSheet.frames.width * scaleX,	
+				height: spriteSheet.frames.height * scaleY,	
+				regX: spriteSheet.frames.regX * scaleX,	
+				regY: spriteSheet.frames.regY * scaleY
+			};
+		}
 		spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
 		this.anim.onAnimationEnd = function(animationInstance, lastAnimation){
@@ -181,8 +191,8 @@ platformer.components['render-animation'] = (function(){
 			}
 		};
 		this.currentAnimation = this.owner.state || definition.state || lastAnimation || 'default';
-		this.anim.scaleX = definition.scaleX || this.owner.scaleX || 1;
-		this.anim.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
+		this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
 		this.state = {};
 		this.stateChange = false;
 		this.waitingAnimation = false;

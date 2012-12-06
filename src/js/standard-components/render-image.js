@@ -83,13 +83,15 @@ platformer.components['render-image'] = (function(){
 		this.addListeners(['handle-render-load', 'handle-render']);
 		this.stage = undefined;
 		this.image = new createjs.Bitmap(platformer.assets[image]);
+		var scaleX = platformer.assets[image].scaleX || 1,
+		scaleY     = platformer.assets[image].scaleY || 1;
 		if(source){
-			this.image.sourceRect = new createjs.Rectangle(source.x, source.y, source.width, source.height);
+			this.image.sourceRect = new createjs.Rectangle(source.x * scaleX, source.y * scaleY, source.width * scaleX, source.height * scaleY);
 		}
-		this.image.regX   = definition.regX || 0;
-		this.image.regY   = definition.regY || 0;
-		this.image.scaleX = definition.scaleX || this.owner.scaleX || 1;
-		this.image.scaleY = definition.scaleY || this.owner.scaleY || 1;
+		this.image.regX   = (definition.regX || 0) * scaleX;
+		this.image.regY   = (definition.regY || 0) * scaleY;
+		this.image.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
+		this.image.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
 	};
 	var proto = component.prototype;
 	

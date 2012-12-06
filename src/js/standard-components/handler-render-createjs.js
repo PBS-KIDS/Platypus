@@ -13,10 +13,11 @@ platformer.components['handler-render-createjs'] = (function(){
 		this.canvas.style.height = '100%';
 		this.canvas.width  = 320;
 		this.canvas.height = 240;
-		this.canvas.style.webkitTransform = 'translate3d(0,0,0)';
-		this.canvas.style.transform = 'translate3d(0,0,0)';
+//		this.canvas.style.webkitTransform = 'translate3d(0,0,0)';
+//		this.canvas.style.transform = 'translate3d(0,0,0)';
 		
 		this.stage = new createjs.Stage(this.canvas);
+		this.stage.snapToPixelEnabled = true;
 		
 		this.camera = {
 			left: 0,

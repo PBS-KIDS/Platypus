@@ -8,7 +8,7 @@ platformer.components['handler-logic'] = (function(){
 		
 		this.addListeners(['tick', 'camera-update', 'child-entity-added', 'logic']);  
 		
-		this.stepLength    = definition.stepLength || 15;
+		this.stepLength    = definition.stepLength || 30;//15;
 		this.leftoverTime = 0;
 		this.maximumStepsPerTick = 10; //Math.ceil(500 / this.stepLength);
 		this.camera = {
@@ -48,7 +48,7 @@ platformer.components['handler-logic'] = (function(){
 		this.camera.width = camera.viewportWidth;
 		this.camera.height = camera.viewportHeight;
 		if(!this.camera.buffer){
-			this.camera.buffer = this.camera.width / 4; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+			this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
 		}
 	};
 
@@ -71,7 +71,7 @@ platformer.components['handler-logic'] = (function(){
 			for (var x = this.entities.length - 1; x > -1; x--)
 			{
 				child = this.entities[x];
-				if((typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))){
+				if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))){
 					if(!child.trigger('handle-logic', this.message)){
 						this.entities.splice(x, 1);
 					}

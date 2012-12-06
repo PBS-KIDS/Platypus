@@ -13,36 +13,41 @@ window.addEventListener('load', function(){
 		}
 	},
 	loader     = new createjs.PreloadJS(),
-	loadAssets = [];
+	loadAssets = [],
+	optimizeImages = 960, //assets designed for this resolution
+	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) / optimizeImages):1,
+	scaleImage = function(img, columns, rows){
+		var r          = rows    || 1,
+		c              = columns || 1,
+		imgWidth       = Math.ceil((img.width  / c) * scale) * c,
+		imgHeight      = Math.ceil((img.height / r) * scale) * r,
+		element        = document.createElement('canvas'),
+		ctx            = element.getContext('2d');
+		element.width  = imgWidth;
+		element.height = imgHeight;
+		element.scaleX = imgWidth  / img.width;
+		element.scaleY = imgHeight / img.height;
+		ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, imgWidth, imgHeight);
+		return element;
+	};
 	
 	loader.onProgress = function (event) {
 		console.log('Progress:', event);	
 	};
 	
 	loader.onFileLoad = function (event) {
-		var i  = 0,
-		j      = 0,
-		data   = event.data,
-		result = event.result,
-		ss     = undefined;
+		var data = event.data,
+		result   = event.result;
 		
 		console.log('Load:', event);
 		
-		if((event.type == "image") && data){
-			//split up image if it's a sprite sheet
-			if(data.rows && data.columns){
-				ss = new createjs.SpriteSheet({
-					images: [result],
-					frames: {width: result.width / data.columns, height: result.height / data.rows}
-				});
-				for (j = 0; j < data.rows; j++) for (i = 0; i < data.columns; i++){
-					if(data.ids && data.ids[i] && data.ids[i][j]){
-						platformer.assets[data.ids[i][j]] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
-					} else {
-						platformer.assets[event.id + '-' + i + '_' + j] = createjs.SpriteSheetUtils.extractFrame(ss, +j + (i * data.rows));
-					}
+		if(event.type == "image"){
+			if(optimizeImages && (scale !== 1) && (event.type == "image")){
+				if(data){
+					result = scaleImage(result, data.columns, data.rows);
+				} else {
+					result = scaleImage(result);
 				}
-				return ;
 			}
 		}
 		
