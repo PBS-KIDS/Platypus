@@ -1,3 +1,4 @@
+/* This is the primary game-play region of the page */
 #root
 {
 	width:       100%;
@@ -9,6 +10,7 @@
 	position:    absolute;
 }
 
+/* This is the canvas used by the handler-render-createjs component */
 #root canvas {
 	position: absolute;
 	width: 100%;
@@ -17,6 +19,7 @@
 	left: 0;
 }
 
+/* This is the opening screen div used by the handler-render-dom component */
 .title-screen {
 	position: absolute;
     width: 100%;

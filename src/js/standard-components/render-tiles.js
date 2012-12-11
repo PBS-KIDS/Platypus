@@ -68,6 +68,7 @@ platformer.components['render-tiles'] = (function(){
 		this.tilesToRender.scaleY = this.scaleY;
 		this.tilesToRender.z = this.owner.z;
 		stage.addChild(this.tilesToRender);
+		stage.autoClear = false; //since tile map is re-painted every time, the canvas does not require clearing.
 	};
 	
 	proto['add-tiles'] = function(definition){

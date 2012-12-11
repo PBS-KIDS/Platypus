@@ -1,3 +1,7 @@
+/*
+ * The following set styles for the the game's wrapper page.
+ */
+ 
 body {
 	background: #9E8A74;
 	padding: 0;
@@ -15,4 +19,10 @@ body {
     -ms-tap-highlight-color:     rgba(0, 0, 0, 0);
     -o-tap-highlight-color:      rgba(0, 0, 0, 0);
     tap-highlight-color:         rgba(0, 0, 0, 0);
+    
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }

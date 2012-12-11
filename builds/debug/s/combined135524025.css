@@ -1,3 +1,7 @@
+
+/*--------------------------------------------------
+ *   ButtonCSS - ../src/css/button.css
+ */
 /*
  * This CSS file defines button styles for the initial play button and the in-game control buttons.
  *
@@ -147,4 +151,101 @@
 	z-index: 10;
 	position: absolute;
 	cursor: pointer;
+}
+
+
+/*--------------------------------------------------
+ *   MainCSS - ../src/css/main.css
+ */
+/*
+ * The following set styles for the the game's wrapper page.
+ */
+ 
+body {
+	background: #9E8A74;
+	padding: 0;
+	margin: 0;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -moz-tap-highlight-color:    rgba(0, 0, 0, 0);
+    -ms-tap-highlight-color:     rgba(0, 0, 0, 0);
+    -o-tap-highlight-color:      rgba(0, 0, 0, 0);
+    tap-highlight-color:         rgba(0, 0, 0, 0);
+    
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+/*--------------------------------------------------
+ *   GameCSS - ../src/css/game.css
+ */
+/* This is the primary game-play region of the page */
+#root
+{
+	width:       100%;
+	height:      100%;
+	left:        50%;
+	top:         50%;
+	margin-left: -50%;
+	margin-top:  -50%;	
+	position:    absolute;
+}
+
+/* This is the canvas used by the handler-render-createjs component */
+#root canvas {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+}
+
+/* This is the opening screen div used by the handler-render-dom component */
+.title-screen {
+	position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+/*--------------------------------------------------
+ *   GUI CSS - ../src/css/gui.css
+ */
+/*
+ *  The in-game GUI (apart from buttons, defined in button.css)
+ */
+
+/* The top-right notification area during game-play */
+.gem-bar {
+position: absolute;
+right: 0;
+top: 0;
+width: 16em;
+height: 10em;
+background: url('../i/gem-bar.png') no-repeat;
+background-size: 100%;
+}
+
+/* The active counter in the notification area above */
+.gem-counter {
+position: absolute;
+right: 0;
+top: 0;
+width: 2em;
+text-align: center;
+font-size: 5em;
+color: white;
+font-family: arial;
+font-weight: bold;
+line-height: 1.6em;
+height: 1.6em;
 }

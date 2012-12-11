@@ -13,10 +13,10 @@
 			"softCollisions": {
 			    "hero": "occupied"
 			}
-		},{
-		    "type": "render-debug",
-            "regX": 120,
-            "regY": 240
+//		},{
+//		    "type": "render-debug",
+//            "regX": 120,
+//            "regY": 240
         },{
         	"type": "change-scene",
         		"transition": "fade-to-black"

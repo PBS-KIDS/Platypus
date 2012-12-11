@@ -60,6 +60,7 @@ window.addEventListener('load', function(){
 	
 	loader.onComplete = function (event) {
 		platformer.game = new platformer.classes.game(platformer.settings);
+		createjs.Ticker.useRAF = true;
 		createjs.Ticker.setFPS(platformer.settings.global.fps);
 		createjs.Ticker.addListener(platformer.game);
 	};
