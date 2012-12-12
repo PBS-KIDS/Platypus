@@ -31,9 +31,13 @@ platformer.classes.game = (function(){
 		this.currentScene = undefined;
 		this.tickContent = {deltaT: 0};
 		this.settings = definition;
-		this.rootElement = document.createElement('div');
-		this.rootElement.id = definition.global.rootElement;
-		document.getElementsByTagName('body')[0].appendChild(this.rootElement);
+		if(document.getElementById(definition.global.rootElement || "root")){
+			this.rootElement = document.getElementById(definition.global.rootElement || "root");
+		} else {
+			this.rootElement = document.createElement('div');
+			this.rootElement.id = definition.global.rootElement || "root";
+			document.getElementsByTagName('body')[0].appendChild(this.rootElement);
+		}
 		
 		this.loadScene(definition.global.initialScene);
 		

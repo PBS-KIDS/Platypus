@@ -74,10 +74,10 @@ platformer.components['render-tiles'] = (function(){
 			buffer: buffer
 		};
 		this.cache = {
-			minX: 0,
-			minY: 0,
-			maxX: 0,
-			maxY: 0
+			minX: -1,
+			minY: -1,
+			maxX: -1,
+			maxY: -1
 		};
 		
 		//this.state = definition.state || 'tile';
@@ -211,9 +211,8 @@ platformer.components['render-tiles'] = (function(){
 		imageArray = imageName.split(' ');
 		tile  = new createjs.BitmapAnimation(this.spriteSheet);
 		
-		tile.x = 0;//x * this.tileWidth;
-		tile.y = 0;//y * this.tileHeight;
-		//tile.alpha = 0.5;
+		tile.x = 0;
+		tile.y = 0;
 		tile.gotoAndPlay(imageArray[0]);
 		tile.cache(0,0,this.tileWidth,this.tileHeight);
 		
@@ -221,7 +220,6 @@ platformer.components['render-tiles'] = (function(){
 			tile.gotoAndPlay(imageArray[i]);
 			tile.updateCache('source-over');
 		}
-//		document.body.appendChild(tile.cacheCanvas);
 
 		return tile;
 	};

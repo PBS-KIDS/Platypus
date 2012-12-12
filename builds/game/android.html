@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>Android Small Size Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  </head>
+  <body style='-webkit-text-size-adjust: none;    -moz-text-size-adjust: none;    -ms-text-size-adjust: none;    -o-text-size-adjust: none;    text-size-adjust: none;'>
+    <iframe id='game' width='320' height='240'></iframe>
+    <script>
+      document.getElementById('game').src = 'index.html?cachebreaker=' + new Date().getTime();
+    </script>
+  </body>
+</html>

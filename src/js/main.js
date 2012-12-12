@@ -20,8 +20,9 @@ window.addEventListener('load', function(){
 	},
 	loader     = new createjs.PreloadJS(),
 	loadAssets = [],
-	optimizeImages = 960, //assets designed for this resolution
-	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) / optimizeImages):1,
+	optimizeImages = platformer.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
+//	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) / optimizeImages):1,
+	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) / optimizeImages):1,
 	scaleImage = function(img, columns, rows){
 		var r          = rows    || 1,
 		c              = columns || 1,
