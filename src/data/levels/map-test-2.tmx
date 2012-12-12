@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="10" tilewidth="24" tileheight="24">
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <tileset firstgid="46" name="objects" tilewidth="24" tileheight="24">
+  <image source="../../images/objects.png" width="192" height="96"/>
+  <tile id="0">
+   <properties>
+    <property name="entity" value="hero"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="entity" value="flower"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="entity" value="dirt"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="entity" value="beetle"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="entity" value="gem"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="entity" value="block"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="entity" value="briar"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="entity" value="briar"/>
+    <property name="facing" value="right"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="entity" value="briar"/>
+    <property name="facing" value="left"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="entity" value="timer"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="background" width="100" height="10">
+  <data encoding="base64" compression="zlib">
+   eJzt1bEKwCAMhOG4urpaN+37v2EVOuh2ClUo//BtN4SEI87MHAD8RO6cngXjXU7PAPqxkxdkMYc1V5XeewRB3w8ljzmluk3vUMQWK/8D32m7fgDSrSYb
+  </data>
+ </layer>
+ <layer name="action" width="100" height="10">
+  <properties>
+   <property name="entity" value="tile-layer"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt0TEKACEUA9HAghYq2nj/q/q3FbHbJcU8GHKAJEmTLMpR01naFt8r4g8ntz/wP/7wwh9e+MMLf3h5/+jRQxaNqJJVC9abDs0=
+  </data>
+ </layer>
+ <objectgroup name="entities" width="100" height="10">
+  <object type="hero" gid="46" x="24" y="96"/>
+  <object gid="70" x="0" y="24"/>
+  <object type="level-portal" x="2328" y="144" width="48" height="48">
+   <properties>
+    <property name="destination" value="scene-map-test-3"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

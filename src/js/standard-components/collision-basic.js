@@ -1,3 +1,79 @@
+/**
+# COMPONENT **collision-basic**
+This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
+
+## Dependencies:
+- [[Collision-Group]] (on entity's parent) - This component listens for 'prepare-for-collision', 'relocate-entity', and 'hit-by' messages, commonly triggered by [[Collision-Group]] on the parent entity.
+
+## Messages
+
+### Listens for:
+- **collide-on** - On receiving this message, the component triggers `add-collision-entity` on the parent.
+- **collide-off** - On receiving this message, the component triggers `remove-collision-entity` on the parent.
+- **prepare-for-collision** - Updates the axis-aligned bounding box for this entity in preparation for collision checks.
+- **relocate-entity** - This message causes the entity's x,y coordinates to update.
+  > @param message.x (number) - Required. The new x coordinate.
+  > @param message.y (number) - Required. The new y coordinate.
+  > @param message.relative (boolean) - Optional. Determines whether the provided x,y coordinates are relative to the entity's current position. Defaults to `false`.
+- **hit-by-[collision-types specified in definition]** - When the entity collides with a listed collision-type, this message is received and re-triggered as a new message according to the component definition.
+
+### Local Broadcasts
+- **[Message specified in definition]** - On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component definition.
+
+### Parent Broadcasts
+- **add-collision-entity** - On receiving 'collide-on', this message is triggered on the parent.
+- **remove-collision-entity** - On receiving 'collide-off', this message is triggered on the parent.
+
+## JSON Definition:
+    {
+      "type": "collision-basic",
+      
+      "collisionType": "boulder",
+      // Optional. Defines how this entity should be recognized by other colliding entities. Defaults to `none`.
+      
+      "immobile": true,
+      // Optional. Defaults to `false`, but should be set to true if entity doesn't move for better optimization.
+      
+      "shape": {
+      //Optional. Defines the shape of the collision area. Defaults to the width, height, regX, and regY properties of the entity.
+      
+        "type": "rectangle",
+        // Optional. Defaults to "rectangle". Rectangles are currently the only supported shape.
+        
+        "offset": [0,-120]
+        // Optional. Specifies the collision shape's position relative to the entity's x,y coordinates. Defaults to [0, 0].
+        
+        "points": [[-80,-120],[80, 120]]
+        // Required. Specifies the top-left and bottom-right corners of the rectangle, with the center at [0,0].
+      }
+      
+      "solidCollisions":{
+      // Optional. Determines which collision types this entity should consider solid, meaning this entity should not pass through them.
+
+        "boulder": "",
+        // This specifies that this entity should not pass through other "boulder" collision-type entities.
+        
+        "diamond": "crack-up",
+        // This specifies that this entity should not pass through "diamond" collision-type entities, but if it touches one, it triggers a "crack-up" message on the entity.
+
+        "marble": ["flip", "dance", "crawl"]
+        // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
+      }
+      
+      "softCollisions":{
+      // Optional. Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so.
+
+        "water": "soaked",
+        // This triggers a "soaked" message on the entity when it passes over a "water" collision-type entity.
+
+        "lava": ["burn", "ouch"]
+        // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
+      }
+      
+      "delay": 250
+      // Optional: Time in milliseconds before entity should be destroyed. If not defined, it is instantaneous.
+    }
+*/
 platformer.components['collision-basic'] = (function(){
 	var entityBroadcast = function(event){
 		if(typeof event === 'string'){
@@ -33,19 +109,16 @@ platformer.components['collision-basic'] = (function(){
 			var halfWidth = this.owner.width/2;
 			var halfHeight = this.owner.height/2;
 			var points = [[-halfWidth, -halfHeight],[halfWidth, halfHeight]];
-			var offset = [0, halfHeight];
+			var offset = [(this.owner.regX?halfWidth-this.owner.regX:0), (this.owner.regY?halfHeight-this.owner.regY:0)];
 			shapes = [{offset: offset, points: points, shape: 'rectangle'}];
 		}
 		
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['load',
-		                   'collide-on',
+		this.addListeners(['collide-on',
 		                   'collide-off',
 		                   'prepare-for-collision', 
-		                   'layer:resolve-collision', 
-		                   'layer:resolve-solid-collision', 
 		                   'relocate-entity']);
 		this.shapes = [];
 		this.entities = undefined;
@@ -110,22 +183,15 @@ platformer.components['collision-basic'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	
-	proto['load'] = function(resp){
-	};
-	
-	proto['collide-on'] = function(resp){
-		//this.owner.collisionType = this.prevCollisionType;
+	proto['collide-on'] = function(){
 		this.owner.parent.trigger('add-collision-entity', this.owner);
 	};
 	
-	proto['collide-off'] = function(resp){
+	proto['collide-off'] = function(){
 		this.owner.parent.trigger('remove-collision-entity', this.owner);
-		//this.prevCollisionType = this.owner.collisionType;
-		//this.owner.collisionType = 'none';
 	};
 	
-	proto['prepare-for-collision'] = function(resp){
+	proto['prepare-for-collision'] = function(){
 		this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
 		this.aabb.reset();
 		for (var x = 0; x < this.shapes.length; x++){
@@ -137,11 +203,11 @@ platformer.components['collision-basic'] = (function(){
 	
 	proto['relocate-entity'] = function(resp){
 		if(resp.relative){
-			this.owner.x = this.lastX + resp.x;// - this.shapes[0].getXOffset();
-			this.owner.y = this.lastY + resp.y;// - this.shapes[0].getYOffset();
+			this.owner.x = this.lastX + resp.x;
+			this.owner.y = this.lastY + resp.y;
 		} else {
-			this.owner.x = resp.x;// - this.shapes[0].getXOffset();
-			this.owner.y = resp.y;// - this.shapes[0].getYOffset();
+			this.owner.x = resp.x;
+			this.owner.y = resp.y;
 		}
 
 		this.aabb.reset();
@@ -152,8 +218,6 @@ platformer.components['collision-basic'] = (function(){
 
 		this.lastX = this.owner.x;
 		this.lastY = this.owner.y;
-//		this.aabb.move(positionXY[0], positionXY[1]);
-//		this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
 	};
 	
 	proto.getAABB = function(){

@@ -48,12 +48,14 @@ platformer.components['dom-element'] = (function(){
 		if(typeof message === 'string'){
 			return function(e){
 				entity.trigger(message, e);
+				e.preventDefault();
 			};
 		} else {
 			return function(e){
 				for (var i = 0; i < message.length; i++){
 					entity.trigger(message[i], e);
 				}
+				e.preventDefault();
 			};
 		}
 	},
@@ -71,6 +73,8 @@ platformer.components['dom-element'] = (function(){
 		this.addListeners(['handle-render-load', 'handle-render', 'update-content', 'logical-state']);
 		
 		this.element = this.owner.element = document.createElement(elementType);
+		this.element.ondragstart = function() {return false;}; //prevent element dragging by default
+
 		for(var i in definition){
 			if(i === 'style'){
 				for(var j in definition[i]){
@@ -90,6 +94,9 @@ platformer.components['dom-element'] = (function(){
 		
 		if(this.owner.className){
 			this.className = this.element.className = this.owner.className;
+		}
+		if(this.owner.innerHTML){
+			this.element.innerHTML = this.owner.innerHTML;
 		}
 	};
 	var proto = component.prototype;

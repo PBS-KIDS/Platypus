@@ -35,8 +35,17 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
       "imagesScale": 5,
       // Optional. If images are set above, this property sets the scale of the art relative to world coordinates. Defaults to the value set in "unitsPerPixel".
       
-      "zStep": 500
+      "zStep": 500,
       // Optional. Adds step number to each additional Tiled layer to maintain z-order. Defaults to 1000.
+      
+      "separateTiles": true,
+      // Optional. Keeps the tile maps in separate render layers. Default is 'false' to for better optimization.
+      
+      "entityPositionX": "center",
+      // Optional. Can be "left", "right", or "center". Defines where entities registered X position should be when spawned. Default is "center".
+
+      "entityPositionY": "center"
+      // Optional. Can be "top", "bottom", or "center". Defines where entities registered Y position should be when spawned. Default is "bottom".
     }
 
 [link1]: http://www.mapeditor.org/
@@ -56,6 +65,8 @@ platformer.components['tiled-loader'] = (function(){
 		this.imagesScale   = this.owner.imagesScale   || definition.imagesScale   || this.unitsPerPixel;
 		this.layerZStep    = this.owner.zStep         || definition.zStep         || 1000;
 		this.separateTiles = this.owner.separateTiles || definition.separateTiles || false;
+		this.entityPositionX = this.owner.entityPositionX || definition.entityPositionX || 'center';
+		this.entityPositionY = this.owner.entityPositionY || definition.entityPositionY || 'bottom';
 
 		// Messages that this component listens for
 		this.addListeners(['load']);
@@ -86,6 +97,8 @@ platformer.components['tiled-loader'] = (function(){
 		tilesets       = level.tilesets,
 		tileWidth      = level.tilewidth,
 		tileHeight     = level.tileheight,
+		widthOffset    = 0,
+		heightOffset   = 0,
 		tileTypes      = (tilesets[tilesets.length - 1].imagewidth / tileWidth) * (tilesets[tilesets.length - 1].imageheight / tileHeight) + tilesets[tilesets.length - 1].firstgid,
 		x              = 0,
 		y              = 0,
@@ -186,21 +199,16 @@ platformer.components['tiled-loader'] = (function(){
 		
 		if(layer.type == 'tilelayer'){
 			// First determine which type of entity this layer should behave as:
-			entity = 'tile-layer'; // default
+			entity = 'render-layer'; // default
 			if(layer.properties && layer.properties.entity){
 				entity = layer.properties.entity;
 			} else { // If not explicitly defined, try using the name of the layer
 				switch(layer.name){
-				case "background":
-					entity = 'render-layer';
-					break;
-				case "foreground":
-					entity = 'render-layer';
-					break;
 				case "collision":
 					entity = 'collision-layer';
 					break;
 				case "action":
+					entity = 'tile-layer';
 					for (x = 0; x < level.layers.length; x++){
 						if(level.layers[x].name === 'collision'){
 							layerCollides = false;
@@ -277,13 +285,42 @@ platformer.components['tiled-loader'] = (function(){
 							properties[x] = entity.properties[x];
 						}
 					}
-					properties.width  = (entity.width  || tileWidth)  * this.unitsPerPixel;
-					properties.height = (entity.height || tileHeight) * this.unitsPerPixel;
-					properties.x = entity.x * this.unitsPerPixel + (properties.width / 2);
+					widthOffset  = properties.width  = (entity.width  || tileWidth)  * this.unitsPerPixel;
+					heightOffset = properties.height = (entity.height || tileHeight) * this.unitsPerPixel;
+					if (entityType && platformer.settings.entities[entityType] && platformer.settings.entities[entityType].properties) {
+						properties.width  = platformer.settings.entities[entityType].properties.width  || properties.width;
+						properties.height = platformer.settings.entities[entityType].properties.height || properties.height;
+					}
+
+					properties.x = entity.x * this.unitsPerPixel;
+					if(this.entityPositionX === 'left'){
+						properties.regX = 0;
+					} else if(this.entityPositionX === 'center'){
+						properties.regX = properties.width / 2;
+						properties.x += widthOffset / 2;
+					} else if(this.entityPositionX === 'right'){
+						properties.regX = properties.width;
+						properties.x += widthOffset;
+					}
+
 					properties.y = entity.y * this.unitsPerPixel;
+					if(typeof entity.gid === 'undefined'){
+						properties.y += properties.height;
+					}
+					if(this.entityPositionY === 'bottom'){
+						properties.regY = properties.height;
+					} else if(this.entityPositionY === 'center'){
+						properties.regY = properties.height / 2;
+						properties.y -= heightOffset / 2;
+					} else if(this.entityPositionY === 'top'){
+						properties.regY = 0;
+						properties.y -= heightOffset;
+					}
+
 					properties.scaleX = this.imagesScale;//this.unitsPerPixel;
 					properties.scaleY = this.imagesScale;//this.unitsPerPixel;
 					properties.layerZ = this.layerZ;
+					
 					//Setting the z value. All values are getting added to the layerZ value.
 					if (properties.z) {
 						properties.z += this.layerZ;

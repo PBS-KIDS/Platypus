@@ -7,7 +7,7 @@
 /* This is the main menu play button */
 .menu-button {
 	position: absolute;
-	bottom: 3.3em;
+	bottom: 6.8em;
 	left: 7.5em;
 	margin-left: -5em;
 	width: 10em;
@@ -31,6 +31,12 @@
 .menu-button:active {
     background: url('../i/buttons.png') 0 100% no-repeat;
     background-size: 150% 400%;
+}
+.map-test {
+    bottom: 3.8em;
+}
+.entity-test {
+    bottom: 0.8em;
 }
 
 /* The following styles determine in-game buttons, all of which use game-button as their base style */

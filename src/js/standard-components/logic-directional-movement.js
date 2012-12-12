@@ -185,6 +185,7 @@ platformer.components['logic-directional-movement'] = (function(){
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

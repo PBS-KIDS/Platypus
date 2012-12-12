@@ -5,7 +5,7 @@
 	"id": "gem-counter",
 	"components":[
 		{
-			"type": "logic-counter",
+			"type": "counter",
 			"message": "count-gems"
 		},{
             "type": "dom-element",

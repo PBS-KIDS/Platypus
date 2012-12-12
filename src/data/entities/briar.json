@@ -9,11 +9,6 @@
 			"facing": "up"
 		},{
 			"type": "collision-basic", 
-		 	"shape": {
-	 			"offset": [0,-120],
-	 			"type": "rectangle",
-	 		   	"points": [[-120,-120],[120, 120]]
-	 		},
 			"collisionType": "briar",
             "immobile": true,
             "solidCollisions": {
@@ -50,8 +45,8 @@
         }
 	],
 	"properties":{
-		"x": 10,
-		"y": 10,
+	    "width": 240,
+	    "height": 240,
 		"z": 250,
 		"linkId": ''
 	}

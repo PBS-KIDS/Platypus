@@ -1,13 +1,64 @@
+/**
+# CLASS collision-shape
+This class defines a collision shape, which is used during the collision process. Collisions shapes define the shape of the entity according to the collision system. Currently entities can be rectangles, right-triangles, and circles. Collision shapes contain an AABB that tightly wraps the shape and is used for initial collision check. **WARNING** Currently there is no precise collision check of shape vs. shape, the imprecise AABB vs. AABB is the only one performed.
+
+## Fields
+- **offset** (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
+- **x** (number) - The x position of the shape. The x is always located in the center of the object.
+- **y** (number) - The y position of the shape. The y is always located in the center of the object.
+- **prevX** (number) - The previous x position of the shape.
+- **prevY** (number) - The previous y position of the shape.
+- **type** (string) - The type of shape this is. Can be: rectangle, circle or triangle
+- **subType** (string) - Only used for triangles, specifies which corner the right angle is in. Can be: tl, tr, bl, br.
+- **points** (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
+- **aABB** (object) - The AABB for this shape.
+- **prevAABB** (object) - The previous location of the AABB for this shape.
+
+## Methods
+- **constructor** - Creates an object from the collisionShape class.
+  > @param ownerLocation (number []) - An array [x,y] of the position.
+  > @param type (string) - The type of shape this is. Can be: rectangle, circle or triangle.
+  > @param points (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
+  > @param offset (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
+- **update** - Updates the location of the shape. Takes in values as if from the owner. The AABBs are also updated.
+  > @param ownerX (number) - The x position of the owner.
+  > @param ownerY (number) - The y position of the owner.
+- **reset** - Resets the location of the shape so that the current and previous position are the same. Takes in values as if from the owner. The AABBs are also reset.
+  > @param ownerX (number) - The x position of the owner.
+  > @param ownerY (number) - The y position of the owner.
+- **getXY** - Returns an array containing the position of the shape.
+  > @return number [] - An array [x,y] of the position.
+- **getX** - Returns the x position of the shape.
+  > @return number - The x position.
+- **getY** - Return the y position of the shape.
+  > @return number - The y position.
+- **getPrevXY** - Returns the previous position of the shape.
+  > @return number [] - An array [x,y] of the previous position.
+- **getPrevX** - Returns the previous x position of the shape.
+  > @return number - The previous x position.
+- **getPrevY** - Returns the previous y position of the shape.
+  > @return number - The previous x position.
+- **getAABB** - Returns the AABB of the shape.
+  > @return AABB object - The AABB of the shape.
+- **getPreviousAABB** - Returns the previous AABB of the shape.
+  > @return AABB object - The previous AABB of the shape.
+- **getXOffset** - Returns the x offset of the shape.
+  > @return number - The x offset.
+- **getYOffset** - Returns the y offset of the shape.
+  > @return number - The y offset.
+- **destroy** - Destroys the shape so that it can be memory collected safely.
+*/
+
 platformer.classes.collisionShape = (function(){
-	var collisionShape = function(location, type, points, offset){
+	var collisionShape = function(ownerLocation, type, points, offset){
 		this.offset = offset || [0,0];
-		this.x = location[0] + this.offset[0];
-		this.y = location[1] + this.offset[1];
+		this.x = ownerLocation[0] + this.offset[0];
+		this.y = ownerLocation[1] + this.offset[1];
 		this.prevX = this.x;
 		this.prevY = this.y;
 		this.type = type || 'rectangle';
 		this.subType = '';
-		this.points = points; //Points should distributed as if the 0,0 is the focal point of the object.
+		this.points = points; //Points should distributed so that the center of the AABB is at (0,0).
 		this.aABB = undefined;
 		this.prevAABB = undefined;
 		
@@ -57,22 +108,22 @@ platformer.classes.collisionShape = (function(){
 	};
 	var proto = collisionShape.prototype;
 	
-	proto.update = function(x, y){
+	proto.update = function(ownerX, ownerY){
 		var swap = this.prevAABB; 
 		this.prevAABB = this.aABB;
 		this.aABB     = swap;
 		this.prevX = this.x;
 		this.prevY = this.y;
-		this.x = x + this.offset[0];
-		this.y = y + this.offset[1];
+		this.x = ownerX + this.offset[0];
+		this.y = ownerY + this.offset[1];
 		this.aABB.move(this.x, this.y);
 	};
 	
-	proto.reset = function (x, y) {
-		this.prevX = x + this.offset[0];
-		this.prevY = y + this.offset[1];
-		this.x = x + this.offset[0];
-		this.y = y + this.offset[1];
+	proto.reset = function (ownerX, ownerY) {
+		this.prevX = ownerX + this.offset[0];
+		this.prevY = ownerY + this.offset[1];
+		this.x = ownerX + this.offset[0];
+		this.y = ownerY + this.offset[1];
 		this.prevAABB.move(this.x, this.y);
 		this.aABB.move(this.x, this.y);
 	};
@@ -89,6 +140,10 @@ platformer.classes.collisionShape = (function(){
 		return this.y;
 	};
 	
+	proto.getPrevXY = function () {
+		return [this.prevX, this.prevY];
+	};
+	
 	proto.getPrevX = function () {
 		return this.prevX;
 	};
@@ -96,11 +151,7 @@ platformer.classes.collisionShape = (function(){
 	proto.getPrevY = function () {
 		return this.prevY;
 	};
-	
-	proto.getPrevLocation = function () {
-		return [this.prevX, this.prevY];
-	};
-	
+
 	proto.getAABB = function(){
 		return this.aABB;
 	};

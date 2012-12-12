@@ -1,6 +1,33 @@
+/**
+# CLASS game
+This is the game.
+
+## Methods
+- **constructor** - Creates an object from the game class.
+  > @param definition (object) - Collection of settings from config.json.
+- **tick** - Called by the CreateJS ticker. This calls tick on the scene.
+  > @param deltaT (number) - The time passed since the last tick.
+- **loadScene** - Loads a scene. If there's a transition, performs the transition.
+  > @param sceneId (string) - The scene to load.
+  > @param transition (string) - What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
+- **loadNextScene** - Sets the currentScene to the specified scene. Called by loadScene, shouldn't be called on its own.
+  > @param sceneId (string) - The scene to load.
+- **completeSceneTransition** - Ends the transition and destroys the old scene. Called when the scene effect is finished.
+- **addEventListener** - Adding event listeners to the specified element and assigning callback functions.
+  > @param element (DOM element) - The element to add the eventListener to.
+  > @param event (DOM events) - The event to listen for.
+  > @param callback (function) - The function to call when the event occurs.
+- **destroy** - Destroys the object so that it's ready to garbage collect.
+
+## Helper Function
+- **bindEvent** - Returns a function which takes in an event and calls the callback function passing it the eventId and the event.
+  > @param eventId (string) - The id of the event we're binding to.
+  > @param callback (function) - The function to call.
+*/
+
 platformer.classes.game = (function(){
-	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};},
-	game          = function (definition){
+	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
+	var game      = function (definition){
 		this.currentScene = undefined;
 		this.tickContent = {deltaT: 0};
 		this.settings = definition;
@@ -54,8 +81,8 @@ platformer.classes.game = (function(){
 		}
 		this.addEventListener(window, 'orientationchange', callback);
 		this.addEventListener(window, 'resize',            callback);
-	},
-	proto = game.prototype;
+	};
+	var proto = game.prototype;
 	
 	proto.tick = function(deltaT){
 		this.tickContent.deltaT = deltaT;
@@ -65,7 +92,7 @@ platformer.classes.game = (function(){
 		}
 	};
 	
-	proto.loadScene = function(sceneId, transition, overrides){
+	proto.loadScene = function(sceneId, transition){
 		var self = this;
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
@@ -80,7 +107,7 @@ platformer.classes.game = (function(){
 			element.style.opacity = '0';
 			element.style.background = '#000';
 			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				self.loadNextScene(sceneId, overrides);
+				self.loadNextScene(sceneId);
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
 				element = undefined;
@@ -89,23 +116,13 @@ platformer.classes.game = (function(){
 			break;
 		case 'instant':
 		default:
-			this.loadNextScene(sceneId, overrides);
+			this.loadNextScene(sceneId);
 			this.completeSceneTransition();
 		}
 	};
 	
-	proto.loadNextScene = function(sceneId, overrides){
-		if(overrides){
-			var scene = JSON.stringify(this.settings.scenes[sceneId]);
-			for (var i in overrides){
-				while(scene.indexOf(i) > -1){
-					scene = scene.replace(i, overrides[i]);
-				}
-			}
-			this.currentScene = new platformer.classes.scene(JSON.parse(scene), this.rootElement);
-		} else {
-			this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
-		}
+	proto.loadNextScene = function(sceneId){
+		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
 	};
 	
 	proto.completeSceneTransition = function(){

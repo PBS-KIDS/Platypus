@@ -157,7 +157,7 @@ platformer.components['logic-hero'] = (function(){
 	
 	proto['portal-waiting'] = function (portal)
 	{
-		portal.trigger('activate');
+		portal.trigger('activate-portal');
 	};
 	
 	proto['set-velocity'] = function (velocityObj)

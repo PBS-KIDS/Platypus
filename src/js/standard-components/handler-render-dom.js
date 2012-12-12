@@ -1,3 +1,30 @@
+/**
+# COMPONENT **handler-render-dom**
+A component that handles the rendering of DOM elements. It creates a div element that it then shares with entities to add themselves too. It then alerts these entities when they should load and update their rendering.
+
+## Dependencies
+- **Needs a 'tick' or 'render' call** - This component doesn't need a specific component, but it does require a 'tick' or 'render' call to function. It's usually used as a component of an action-layer.
+
+## Messages
+
+### Listens for:
+- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-render' or 'handle-render-load' message id it's added to the list of entities. Also the 'handle-render-load' message is called immediately.
+  > @param entity (Object) - The entity that is being considered for addition to the handler.
+- **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+  > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+
+### Peer Broadcasts:
+- **handle-render-load** - Sent to an entity that has finished loading to prepare itself before the first render cycle. Passes the entity a div element that it can add itself to.
+  > @param obj.element (Object) - An object containing a DOM element that the entity should add child elements to.
+- **handle-render** - Sent to entities to have them prepare to be rendered.
+  > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
+
+## JSON Definition
+    {
+      "type": "handler-render-dom",
+    }
+*/
+
 platformer.components['handler-render-dom'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -48,6 +75,7 @@ platformer.components['handler-render-dom'] = (function(){
 		this.owner.rootElement.removeChild(this.element);
 		this.element = undefined;
 		this.entities.length = 0;
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

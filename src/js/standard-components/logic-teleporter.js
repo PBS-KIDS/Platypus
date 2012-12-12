@@ -98,6 +98,7 @@ platformer.components['logic-teleporter'] = (function(){
 	proto.destroy = function(){
 		this.destination = undefined;
 		this.removeListeners(this.listeners);
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

@@ -22,11 +22,6 @@
             "type": "logic-hero"
 		},{
 			"type": "collision-basic",
-		 	"shape":{
-		 		"offset": [0,-120],
-		 		"type": "rectangle",
-		 		"points": [[-80,-120],[80, 120]]
-	 		},
 			"collisionType": "hero",
 			"solidCollisions": {
 			    "block": "",
@@ -75,19 +70,14 @@
 		        "jumping": "jump"
 		    }
 //		},{
-//		    "type": "render-debug",
-//		    "regY": 260,
-//		    "regX": 130
+//		    "type": "render-debug"
 		}
 	],
 	"properties":{
 	    "alwaysOn": true,
-		"x": 10,
-		"y": 10,
 		"z": 200,
 		"width": 160,
 		"height": 240,
-		"heading": "right",
 		"camera": "bounding"
 	}
 }

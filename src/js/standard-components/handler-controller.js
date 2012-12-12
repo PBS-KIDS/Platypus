@@ -1,3 +1,39 @@
+/**
+# COMPONENT **handler-controller**
+This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'handler-controller' message is sent to demarcate ticks.
+
+## Dependencies
+- **Needs a 'tick' or 'check-inputs' call** - This component doesn't need a specific component, but it does require a 'tick' or 'check-inputs' call to function. It's usually used as a component of an action-layer.
+
+## Messages
+
+### Listens for:
+- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-controller' message id it's added to the list of entities. Once an entity is added to the handler-controller 'controller-load' is called on the entity. If an entity has a control map that includes non-keyboard inputs, we add listeners for those and update functions to alert the entity when they happen. 
+  > @param entity (Object) - The entity that is being considered for addition to the handler.
+- **tick, check-inputs** - Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+  > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+- **keydown** - Sends a message to the handled entities 'key:' + the key id + ":down". 
+  > @param event (DOM event) - The DOM event that triggered the keydown event. 
+ - **keyup** - Sends a message to the handled entities 'key:' + the key id + ":up".
+  > @param event (DOM event) - The DOM event that triggered the keyup event. 
+
+### Peer Broadcasts:
+- **handle-controller** - Sent to entities on each tick to handle whatever they need to regarding controls..
+  > @param resp (object) - An object containing a deltaT variable that is the time that's passed since the last tick.
+- **controller-load** - Sent to entities when they are added to the handler-controller.
+- **key:keyid:up** - Message sent to an entity when a key goes from down to up.
+  > @param event (DOM event) - The DOM event that triggered the keyup event. 
+- **key:keyid:down** - Message sent to an entity when a key goes from up to down.
+  > @param event (DOM event) - The DOM event that triggered the keydown event. 
+- **custom:up and custom:down messages** - Messages created when an entity has a control map with non-keyboard input. The handler creates these message when it adds the entity and then fires them on the entity when the input is received.
+  > @param value (object) - A message object sent by the custom message.
+
+## JSON Definition
+    {
+      "type": "handler-controller",
+    }
+*/
+
 platformer.components['handler-controller'] = (function(){
 	var relayUpDown = function(event, self){
 		return function(value){
@@ -10,16 +46,16 @@ platformer.components['handler-controller'] = (function(){
 				self.entities[x].trigger(event, value);
 			}
 		}; 
-	},
-	relay = function(event, self){
+	};
+	var relay = function(event, self){
 		return function(value){
 			for (var x = 0; x < self.entities.length; x++) {
 				self.entities[x].trigger(event, value);
 			}
 		}; 
-	},
+	};
 	
-	keyMap = {
+	var keyMap = {
 		kc0:   'unknown',         
 		kc8:   'backspace',
 		kc9:   'tab',
@@ -118,8 +154,8 @@ platformer.components['handler-controller'] = (function(){
 		kc220: 'back-slash',
 		kc221: 'close-bracket',
 		kc222: 'quote'
-	},
-	component = function(owner, definition){
+	};
+	var component = function(owner, definition){
 		this.owner = owner;
 		this.entities = [];
 		
@@ -127,31 +163,41 @@ platformer.components['handler-controller'] = (function(){
 		this.listeners = [];
 		
 		this.addListeners(['tick', 'child-entity-added', 'check-inputs', 'keydown', 'keyup']);
-	},
-	proto = component.prototype; 
+		
+		this.timeElapsed = {
+				name: 'Controller',
+				time: 0
+			};
+	};
+	var proto = component.prototype; 
 
-	proto['keydown'] = function(value){
+	proto['keydown'] = function(event){
 		for (var x = 0; x < this.entities.length; x++)
 		{
-			this.entities[x].trigger('key:' + (keyMap['kc' + value.keyCode] || ('key-code-' + value.keyCode)) + ':down', value);
+			this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
 		}
 	}; 
-		
-	proto['keyup'] = function(value){
+	
+	proto['keyup'] = function(event){
 		for (var x = 0; x < this.entities.length; x++)
 		{
-			this.entities[x].trigger('key:' + (keyMap['kc' + value.keyCode] || ('key-code-' + value.keyCode)) + ':up', value);
+			this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
 		}
 	};
 	
 	proto['tick'] = proto['check-inputs'] = function(resp){
+		var time    = new Date().getTime();
+
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('handle-controller'))	
+			if(!this.entities[x].trigger('handle-controller', resp))	
 			{
 				this.entities.splice(x, 1);
 			}
 		}
+		
+		this.timeElapsed.time = new Date().getTime() - time;
+		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 	};
 
 	proto['child-entity-added'] = function(entity){
@@ -164,7 +210,7 @@ platformer.components['handler-controller'] = (function(){
 				// Check for custom input messages that should be relayed from scene.
 				if(entity.controlMap){
 					for(var y in entity.controlMap){
-						if((y.indexOf('key:') < 0) || (y.indexOf('mouse:') < 0)){
+						if((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)){
 							if(!this[y]){
 								this.addListeners([y, y + ':up', y + ':down']);
 								this[y]           = relayUpDown(y,     this);
@@ -186,6 +232,7 @@ platformer.components['handler-controller'] = (function(){
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
 		this.entities.length = 0;
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

@@ -177,6 +177,7 @@ platformer.components['render-image'] = (function(){
 		this.stage = undefined;
 		this.image = undefined;
 		this.removeListeners(this.listeners);
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

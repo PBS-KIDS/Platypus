@@ -13,7 +13,7 @@
 	"builds": [                                  // Builds and their respective settings
 		{
 			"id": "game",                        // This is the id of the build and is matched to a folder name in the "builds/" folder.
-		    "namespace": "PBS.KIDS.platformer",  // Optional namespace for the platformer - defaults to "PBS.KIDS.platformer"
+			"namespace": "PBS.KIDS.platformer",  // Optional namespace for the platformer - defaults to "PBS.KIDS.platformer"
 			"cssCompression": true,
 			"jsCompression": true,
 			"manifest": true,                    // Determines whether this build uses Application Cache.
@@ -32,24 +32,24 @@
 	],
 	"source": { 
 		"assets": [ // Assets such as images and audio
-            {
-                "id": "powerup",
-                "src": {
-                    "ogg": "../audio/powerup.ogg",
-                    "mp3": "../audio/powerup.mp3",
-                    "m4aCombined": {
-                        "assetId": "combined", 
-                        "src": "../audio/combined.m4a",
-                        "data": {"offset": 5000, "length": 370}
-                    }
-                }
-            },
+		    {
+		        "id": "powerup",
+		        "src": {
+		            "ogg": "../audio/powerup.ogg",
+		            "mp3": "../audio/powerup.mp3",
+		            "m4aCombined": {
+		                "assetId": "combined", 
+		                "src": "../audio/combined.m4a",
+		                "data": {"offset": 5000, "length": 370}
+		            }
+		        }
+		    },
             {"id": "walk",           "src": {"ogg": "../audio/walk.ogg",     	  "mp3": "../audio/walk.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "../audio/combined.m4a", "data": {"offset": 3200,  "length": 330}}}},
             {"id": "jump",           "src": {"ogg": "../audio/jump.ogg",     	  "mp3": "../audio/jump.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "../audio/combined.m4a", "data": {"offset": 1500,  "length": 250}}}},
             {"id": "collect-gem",    "src": {"ogg": "../audio/collect-gem.ogg",   "mp3": "../audio/collect-gem.mp3",   "m4aCombined": {"assetId": "combined", "src": "../audio/combined.m4a", "data": {"offset": 7000,  "length": 610}}}},
             {"id": "pickaxe-crush",  "src": {"ogg": "../audio/pickaxe-crush.ogg", "mp3": "../audio/pickaxe-crush.mp3", "m4aCombined": {"assetId": "combined", "src": "../audio/combined.m4a", "data": {"offset": 9150,  "length": 500}}}},
             {"id": "pickaxe-other",  "src": {"ogg": "../audio/pickaxe-other.ogg", "mp3": "../audio/pickaxe-other.mp3", "m4aCombined": {"assetId": "combined", "src": "../audio/combined.m4a", "data": {"offset": 11150, "length": 300}}}},
-            {"id": "buttons",        "src": "../images/buttons.png"},
+		    {"id": "buttons",    	 "src": "../images/buttons.png"},
             {"id": "dirt",           "src": "../images/dirt.png",         "data": {"rows": 2, "columns": 3}},
 			{"id": "mookie",         "src": "../images/mookie.png",       "data": {"rows": 4, "columns": 4}},
 //            {"id": "tilemap",        "src": "../images/tile-map.png"},
@@ -66,14 +66,14 @@
             {"id": "briar",        	 "src": "../images/briar.png",        "data": {"rows": 1, "columns": 4}}
 		],
 		"classes": [
-			{"id": "Game",            "src": "../js/game.js"},
+			{"id": "Game",			  "src": "../js/game.js"},
 			{"id": "Entity",          "src": "../js/entity.js"},
 			{"id": "Scene",           "src": "../js/scene.js"},
 			{"id": "Collision-Shape", "src": "../js/collision-shape.js"},
 			{"id": "AABB", 			  "src": "../js/aabb.js"}
 		],
 		"components": [ // JavaScript files defining component modules
-            {"id": "enable-ios-audio",           "src": "../js/standard-components/enable-ios-audio.js"},
+		    {"id": "enable-ios-audio",           "src": "../js/standard-components/enable-ios-audio.js"},
 			{"id": "handler-controller",         "src": "../js/standard-components/handler-controller.js"},
 			{"id": "tiled-loader",               "src": "../js/standard-components/tiled-loader.js"},
             {"id": "handler-render-createjs",    "src": "../js/standard-components/handler-render-createjs.js"},
@@ -99,7 +99,7 @@
             {"id": "logic-gravity",           "src": "../js/standard-components/logic-gravity.js"},
             {"id": "logic-portable",          "src": "../js/standard-components/logic-portable.js"},
             {"id": "logic-pushable",          "src": "../js/standard-components/logic-pushable.js"},
-            {"id": "logic-counter",           "src": "../js/standard-components/logic-counter.js"},
+            {"id": "counter",           	  "src": "../js/standard-components/counter.js"},
             {"id": "logic-timer",             "src": "../js/standard-components/logic-timer.js"},
             {"id": "logic-teleporter",        "src": "../js/standard-components/logic-teleporter.js"},
             {"id": "logic-portal",	          "src": "../js/standard-components/logic-portal.js"},
@@ -117,7 +117,7 @@
 		],
 		"entities": [ // JSON files describing entities
 		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "desktop-interface-layer",    "src": "entities/desktop-interface-layer.json"},
+			{"id": "desktop-interface-layer",    "src": "entities/desktop-interface-layer.json"},
             {"id": "multitouch-interface-layer", "src": "entities/multitouch-interface-layer.json"},
             {"id": "touch-interface-layer",      "src": "entities/touch-interface-layer.json"},
             {"id": "tile-layer",      "src": "entities/tile-layer.json"},
@@ -147,7 +147,7 @@
             {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
 		],
 		"includes": [
-			{"id": "EaselJS",   "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
+			{"id": "EaselJS",	"src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
 			{"id": "TweenJS",   "src": "http://code.createjs.com/tweenjs-0.3.0.min.js"},
 			{"id": "SoundJS",   "src": "http://code.createjs.com/soundjs-0.3.0.min.js"},
 			{"id": "PreloadJS", "src": "http://code.createjs.com/preloadjs-0.2.0.min.js"},
@@ -162,21 +162,47 @@
 		],
 		"scenes": [ // JSON files describing scenes
 			{"id": "menu",        "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "scene-level-1", "src": "scenes/scene-level-1.json"},
+			{"id": "scene-level-1", "src": "scenes/scene-level-1.json"},
             {"id": "scene-level-2", "src": "scenes/scene-level-2.json"},
-            {"id": "scene-level-3", "src": "scenes/scene-level-3.json"}
+            {"id": "scene-entity-test-1", "src": "scenes/scene-entity-test-1.json"},
+            {"id": "scene-entity-test-2", "src": "scenes/scene-entity-test-2.json"},
+            {"id": "scene-entity-test-3", "src": "scenes/scene-entity-test-3.json"},
+            {"id": "scene-entity-test-4", "src": "scenes/scene-entity-test-4.json"},
+            {"id": "scene-entity-test-5", "src": "scenes/scene-entity-test-5.json"},
+            {"id": "scene-entity-test-6", "src": "scenes/scene-entity-test-6.json"},
+            {"id": "scene-entity-test-7", "src": "scenes/scene-entity-test-7.json"},
+            {"id": "scene-map-test-1", "src": "scenes/scene-map-test-1.json"},
+            {"id": "scene-map-test-2", "src": "scenes/scene-map-test-2.json"},
+            {"id": "scene-map-test-3", "src": "scenes/scene-map-test-3.json"},
+            {"id": "scene-map-test-4", "src": "scenes/scene-map-test-4.json"},
+            {"id": "scene-map-test-5", "src": "scenes/scene-map-test-5.json"},
+            {"id": "scene-map-test-6", "src": "scenes/scene-map-test-6.json"}//,
+            //{"id": "scene-map-test-7", "src": "scenes/scene-map-test-7.json"}
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
             {"id": "level-2", "src": "levels/level-2.json"},
-            {"id": "level-3", "src": "levels/level-3.json"}
+            {"id": "entity-test-1", "src": "levels/entity-test-1.json"},
+            {"id": "entity-test-2", "src": "levels/entity-test-2.json"},
+            {"id": "entity-test-3", "src": "levels/entity-test-3.json"},
+            {"id": "entity-test-4", "src": "levels/entity-test-4.json"},
+            {"id": "entity-test-5", "src": "levels/entity-test-5.json"},
+            {"id": "entity-test-6", "src": "levels/entity-test-6.json"},
+            {"id": "entity-test-7", "src": "levels/entity-test-7.json"},
+            {"id": "map-test-1", "src": "levels/map-test-1.json"},
+            {"id": "map-test-2", "src": "levels/map-test-2.json"},
+            {"id": "map-test-3", "src": "levels/map-test-3.json"},
+            {"id": "map-test-4", "src": "levels/map-test-4.json"},
+            {"id": "map-test-5", "src": "levels/map-test-5.json"},
+            {"id": "map-test-6", "src": "levels/map-test-6.json"}//,
+            //{"id": "map-test-7", "src": "levels/map-test-7.json"}
 		]
 	},
 	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.
-        {                //    Each contained object lists mutually exclusive properties, so that a single aspect is comprised of an item from each object list. This example includes a single object in the list, but additional objects can be appended for different aspects
-            "ogg": ["firefox", "opera", "chrome"],         // Array lists user agent checks that should load this resource type
-            "m4aCombined": ["android", "silk", "ipod", "ipad", "iphone"],  // Order determines first valid version, so Safari on iPad will use "m4aCombined" rather than "mp3" below
-            "mp3": ["msie", "safari"]
-        }
+		{                //    Each contained object lists mutually exclusive properties, so that a single aspect is comprised of an item from each object list. This example includes a single object in the list, but additional objects can be appended for different aspects
+		    "ogg": ["firefox", "opera", "chrome"],         // Array lists user agent checks that should load this resource type
+		    "m4aCombined": ["android", "silk", "ipod", "ipad", "iphone"],  // Order determines first valid version, so Safari on iPad will use "m4aCombined" rather than "mp3" below
+		    "mp3": ["msie", "safari"]
+		}
 	]
 }

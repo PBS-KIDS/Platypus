@@ -1,28 +1,33 @@
 /**
-# COMPONENT **name-of-component**
-Summarize the purpose of this component here.
+# COMPONENT **logic-portal**
+A component which changes the scene when activated. When the portal receives an occupied message it sends the entity in that message notifying it. This message is meant to give the entity a chance to activate the portal in the manner it wants. The portal can also be activated by simply telling it to activate.
 
 ## Dependencies
-- [[Required-Component]] - List other components that this component requires to function properly on an entity.
+- [[Handler-Logic]] (on entity's parent) - This component listens for a "handle-logic" message it then checks to see if it should change the scene if the portal is activated.
+- [[Change-Scene]] (on entity) - This component listens for the "new-scene" message that the logic-portal sends and actually handles the scene changing.
+- [[Collision-Basic]] (on entity) - Not required, but if we want the 'occupied-portal' call to fire on collision you'll need to have a collision-basic component on the portal.
 
 ## Messages
 
 ### Listens for:
-- **received-message-label** - List all messages that this component responds to here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **handle-logic** - Checks to see if we should change scene if the portal is activated.
+- **occupied-portal** - This message takes an entity and then sends the entity a 'portal-waiting' message. The idea behind this was that you could use it with collision. When an entity gets in front of the portal the collision sends this message, we then tell the entity that collided to do whatever it needs and then it calls back to activate the portal.
+  > @param message.entity (entity Object) - The entity that will receive the 'portal-waiting' message.
+- **activate-portal** - This message turns the portal on. The next 'handle-logic' call will cause a change of scene.
 
 ### Local Broadcasts:
-- **local-message-label** - List all messages that are triggered by this component on this entity here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **new-scene** - Calls the 'change-scene' component to tell it to change scenes.
+  > @param object.destination (string) - The id of the scene that we want to go to.
 
 ### Peer Broadcasts:
-- **peer-message-label** - List all messages that are triggered by this component on other entities here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **portal-waiting** - Informs another object that the portal is waiting on it to send the activate message.
+  > @param entity - This is the portal entity. To be used so that the object can communicate with it directly.
 
 ## JSON Definition
     {
-      "type": "name-of-component"
-      // List all additional parameters and their possible values here.
+      "type": "name-of-component",
+      "destination" : "level-2"
+      //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.
     }
 */
 platformer.components['logic-portal'] = (function(){ //TODO: Change the name of the component!
@@ -32,17 +37,15 @@ platformer.components['logic-portal'] = (function(){ //TODO: Change the name of 
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['handle-logic', 'occupied', 'activate']);
+		this.addListeners(['handle-logic', 'occupied-portal', 'activate-portal']);
 		this.destination = this.owner.destination || definition.destination;
-		this.activateOn = definition.activateOn || 'collide';
-		this.override = definition.override;
 		this.activated = false;
 		this.used = false; 
 	};
 	var proto = component.prototype;
 	
 	
-	proto['handle-logic'] = function(resp){
+	proto['handle-logic'] = function(){
 		if (!this.used && this.activated)
 		{
 			this.owner.trigger("new-scene", {scene: this.destination});
@@ -50,12 +53,12 @@ platformer.components['logic-portal'] = (function(){ //TODO: Change the name of 
 		}
 	};
 	
-	proto['occupied'] = function(collisionInfo){
-		var entity = collisionInfo.entity; 
+	proto['occupied-portal'] = function(message){
+		var entity = message.entity; 
 		entity.trigger('portal-waiting', this.owner);
 	};
 	
-	proto['activate'] = function()
+	proto['activate-portal'] = function()
 	{
 		this.activated = true;
 	};
@@ -63,6 +66,7 @@ platformer.components['logic-portal'] = (function(){ //TODO: Change the name of 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

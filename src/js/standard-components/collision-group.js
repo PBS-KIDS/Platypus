@@ -1,7 +1,34 @@
 /**
- * Uses 'entity-container' component messages if triggered to add to its collision list;
- * also listens for explicit add/remove messages (useful in the absence of 'entity-container'). - DDD
- */
+# COMPONENT **collision-group**
+This component checks for collisions between entities in its group which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
+
+## Dependencies:
+- [[Handler-Logic]] (on entity) - At the top-most layer, the logic handler triggers `check-collision-group` causing this component to test collisions on all children entities.
+
+## Messages
+
+### Listens for:
+- **child-entity-added, add-collision-entity** - On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
+  > @param message ([[Entity]] object) - The entity to be added.
+- **child-entity-removed, remove-collision-entity** - On receiving this message, the component looks for the entity in its collision group and removes it.
+  > @param message ([[Entity]] object) - The entity to be removed.
+- **check-collision-group** - This message causes the component to go through the entities and check for collisions.
+  > @param message.camera (object) - Optional. Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
+- **relocate-group** - This message causes the collision group to trigger `relocate-entity` on entities in the collision group.
+  > @param message.x (number) - Required. The new x coordinate.
+  > @param message.y (number) - Required. The new y coordinate.
+
+### Child Broadcasts
+- **prepare-for-collision** - This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
+- **relocate-entity** - This message is triggered on an entity that has been repositioned due to a solid collision.
+- **hit-by-[collision-types specified in collision entities' definitions]** - When an entity collides with an entity of a listed collision-type, this message is triggered on the entity.
+
+## JSON Definition:
+    {
+      "type": "collision-group"
+      // This component has no customizable properties.
+    }
+*/
 platformer.components['collision-group'] = (function(){
 	//set here to make them reusable objects
 	var tempAABB = new platformer.classes.aABB(),
@@ -76,18 +103,6 @@ platformer.components['collision-group'] = (function(){
 
 		//defined here so we aren't continually recreating new arrays
 		this.collisionGroups = [];
-		//this.triggerMessages = [];
-		
-		this.debugCameraChecking = 0;
-		this.debugSolidCollision = 0;
-		this.debugSoftCollision  = 0;
-		this.debugGroupCollision = 0;
-		this.debugPercents = {
-			camera: 0,
-			solid: 0,
-			soft: 0,
-			group: 0
-		};
 	};
 	var proto = component.prototype; 
 
@@ -146,12 +161,9 @@ platformer.components['collision-group'] = (function(){
 	};
 	
 	proto['check-collision-group'] = function(resp){
-		var time = new Date().getTime();
-		
 		if(resp.camera){
 			this.checkCamera(resp.camera);
 		}
-		this.debugCameraChecking += new Date().getTime() - time;
 		
 		if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
 			var goalX = this.owner.x - this.lastX,
@@ -183,30 +195,9 @@ platformer.components['collision-group'] = (function(){
 	
 			this.checkSoftCollisions(resp);
 		} else {
-			time = new Date().getTime();
 			this.checkGroupCollisions(resp);
-			this.debugGroupCollision += new Date().getTime() - time;
-			
-			time = new Date().getTime();
 			this.checkSolidCollisions(resp);
-			this.debugSolidCollision += new Date().getTime() - time;
-			
-			time = new Date().getTime();
 			this.checkSoftCollisions(resp);
-			this.debugSoftCollision += new Date().getTime() - time;
-			
-			var total = this.debugCameraChecking + this.debugSolidCollision + this.debugSoftCollision + this.debugGroupCollision;
-			if(total > 10000){
-				this.debugCameraChecking *= 10000 / total;
-				this.debugSolidCollision *= 10000 / total;
-				this.debugSoftCollision  *= 10000 / total;
-				this.debugGroupCollision *= 10000 / total;
-				total = 10000;
-			}
-			this.debugPercents.camera = this.debugCameraChecking / total;
-			this.debugPercents.solid  = this.debugSolidCollision / total;
-			this.debugPercents.soft   = this.debugSoftCollision  / total;
-			this.debugPercents.group  = this.debugGroupCollision / total;
 		}
 	};
 	

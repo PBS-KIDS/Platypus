@@ -1,3 +1,28 @@
+/**
+# COMPONENT **handler-logic**
+A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages.
+
+## Dependencies
+- **Needs a 'tick' or 'logic' call** - This component doesn't need a specific component, but it does require a 'tick' or 'logic' call to function. It's usually used as a component of an action-layer.
+
+## Messages
+
+### Listens for:
+- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities. 
+  > @param entity (Object) - The entity that is being considered for addition to the handler.
+- **tick, logic** - Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+  > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+
+### Peer Broadcasts:
+- **handle-logic** - Sent to entities to run their logic.
+  > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
+
+## JSON Definition
+    {
+      "type": "handler-logic",
+    }
+*/
+
 platformer.components['handler-logic'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
@@ -96,6 +121,7 @@ platformer.components['handler-logic'] = (function(){
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

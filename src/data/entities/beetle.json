@@ -13,11 +13,6 @@
 			"type": "logic-gravity"
 		},{
 			"type": "collision-basic",
-		 	"shape":{
-		 		"offset": [0,-120],
-		 		"type": "rectangle",
-		 		"points": [[-90,-120],[90, 120]]
-	 		},
 			"collisionType": "beetle",
 			"solidCollisions": {
 				"beetle": "turn-around",
@@ -55,8 +50,8 @@
 		}
 	],
 	"properties":{
-		"x": 10,
-		"y": 10,
+	    "width": 180,
+	    "height": 240,
 		"z": 150
 	}
 }

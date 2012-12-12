@@ -27,8 +27,8 @@ platformer.components['change-scene'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.scene = definition.scene;
-		this.transition = definition.transition || 'instant';
+		this.scene = this.owner.scene || definition.scene;
+		this.transition = this.owner.transition || definition.transition || 'instant';
 		
 		this.addListeners(['new-scene']);
 	};
@@ -45,6 +45,7 @@ platformer.components['change-scene'] = (function(){
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
+		this.owner = undefined;
 	};
 	
 	/*********************************************************************************************************

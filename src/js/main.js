@@ -1,3 +1,9 @@
+/**
+# Main.js
+Main.js handles loading the game assets and creates the game object. Main.js is called on the window 'load' event. Main takes advantage of [PreloadJS][link1] to handle the loading process.
+[link1]: http://createjs.com/Docs/PreloadJS/PreloadJS.html
+*/
+
 window.addEventListener('load', function(){
 	var checkPush = function(asset, list){
 		var i = 0,

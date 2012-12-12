@@ -8,11 +8,6 @@
 			"type": "logic-gem"
 		},{
 			"type": "collision-basic",
-		 	"shape":{
-		 		"offset": [0,-110],
-		 		"type": "rectangle",
-		 		"points": [[-70,-110],[70, 110]]
-	 		},
 			"collisionType": "gem",
 			"immobile": true,
 			"softCollisions": {
@@ -44,8 +39,8 @@
 		}
 	],
 	"properties":{
-		"x": 10,
-		"y": 10,
-		"z": 100
+		"z": 100,
+		"width": 140,
+		"height": 220
 	}
 }
