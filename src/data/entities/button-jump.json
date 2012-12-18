@@ -11,7 +11,8 @@
             "onmousedown": "start-jump",
             "ontouchstart": "start-jump",
             "onmouseup": "stop-jump",
-            "ontouchend": "stop-jump"
+            "ontouchend": "stop-jump",
+            "ontouchcancel": "stop-jump"
         },{
             "type": "broadcast-events",
 		    "events":{

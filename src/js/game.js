@@ -1,6 +1,6 @@
 /**
 # CLASS game
-This is the game.
+This class is used to create the `platformer.game` object. The `game` object handles loading [[Scene]]s and transitions between scenes. It also accepts external events and passes them on to the current scene.
 
 ## Methods
 - **constructor** - Creates an object from the game class.
@@ -57,6 +57,9 @@ platformer.classes.game = (function(){
 				var ratio   = definition.global.aspectRatio;
 				var newW = window.innerWidth;
 				var newH = window.innerHeight;
+				if(definition.global.maxWidth && (definition.global.maxWidth < newW)){
+					newW = definition.global.maxWidth;
+				}
 				var bodyRatio = newW / newH;
 				if (bodyRatio > ratio)
 				{  //Width is too wide

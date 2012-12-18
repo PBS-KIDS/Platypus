@@ -4,6 +4,14 @@ Main.js handles loading the game assets and creates the game object. Main.js is 
 [link1]: http://createjs.com/Docs/PreloadJS/PreloadJS.html
 */
 
+// Clean up console logging for MSIE
+(function(window){
+	if(window && !window.console){
+		var console = window.console = {};
+		console.log = console.warn = console.error = function(){};
+	}
+})(window);
+
 window.addEventListener('load', function(){
 	var checkPush = function(asset, list){
 		var i = 0,
@@ -21,8 +29,8 @@ window.addEventListener('load', function(){
 	loader     = new createjs.PreloadJS(),
 	loadAssets = [],
 	optimizeImages = platformer.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
-//	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) / optimizeImages):1,
-	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) / optimizeImages):1,
+//	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * window.devicePixelRatio / optimizeImages):1,
+	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
 	scaleImage = function(img, columns, rows){
 		var r          = rows    || 1,
 		c              = columns || 1,

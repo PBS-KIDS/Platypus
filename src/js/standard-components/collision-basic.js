@@ -285,7 +285,7 @@ platformer.components['collision-basic'] = (function(){
 	proto.routeSoftCollision = function(collisionInfo){
 		if (this.owner.resolveSoftCollision)
 		{
-			this.owner.resolveSoftCollision(collisionInfo);
+			return this.owner.resolveSoftCollision(collisionInfo);
 		}
 	};
 

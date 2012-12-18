@@ -9,8 +9,6 @@
         },{
             "type": "logic-pushable"
         },{
-//            "type": "logic-portable"
-//        },{
 			"type": "collision-basic", 
 			"collisionType": "block",
             "solidCollisions": {
@@ -33,9 +31,7 @@
             "regX":   36,
             "regY":   72
 //		},{
-//		    "type": "render-debug",
-//            "regX": 120,
-//            "regY": 240
+//		    "type": "render-debug"
         }
 	],
 	"properties":{

@@ -169,7 +169,7 @@ platformer.components['collision-group'] = (function(){
 			var goalX = this.owner.x - this.lastX,
 			goalY     = this.owner.y - this.lastY;
 			
-			console.log('goalY = ' + goalY + ' = ' + this.owner.y + ' - ' + this.lastY + ' = this.owner.y - this.lastY:');
+//			console.log('goalY = ' + goalY + ' = ' + this.owner.y + ' - ' + this.lastY + ' = this.owner.y - this.lastY:');
 
 			this.owner.x = this.lastX;
 			this.owner.y = this.lastY;
@@ -180,9 +180,10 @@ platformer.components['collision-group'] = (function(){
 			this.checkSolidCollisions(resp);
 	
 //			this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);;
+
 			this.aabb.reset();
-			for (var x = 0; x < this.entities.length; x++){
-				this.aabb.include(((this.entities[x] !== this.owner) && this.entities[x].getCollisionGroupAABB)?this.entities[x].getCollisionGroupAABB():this.entities[x].getAABB());
+			for (var x = 0; x < this.solidEntitiesLive.length; x++){
+				this.aabb.include(((this.solidEntitiesLive[x] !== this.owner) && this.solidEntitiesLive[x].getCollisionGroupAABB)?this.solidEntitiesLive[x].getCollisionGroupAABB():this.solidEntitiesLive[x].getAABB());
 //				this.entities[x].x += goalX;
 //				this.entities[x].y += goalY;
 			}
@@ -512,6 +513,9 @@ platformer.components['collision-group'] = (function(){
 				complete = ent.routeSolidCollision?ent.routeSolidCollision('x', xStep, collisionsX[q]):true;
 				if (complete) {
 					message.entity = otherEntity = collisionsX[q].entity;
+//					if(otherEntity.collisionType === 'hero') console.log('X Collision on Hero by ' + ent.collisionType);
+//					if(ent.collisionType === 'hero') console.log('X Collision by Hero on ' + otherEntity.collisionType);
+
 					message.type   = otherEntity.collisionType;
 					message.shape  = otherEntity.shape;
 					message.x      = xStep / Math.abs(xStep);
@@ -686,6 +690,9 @@ platformer.components['collision-group'] = (function(){
 				complete = ent.routeSolidCollision?ent.routeSolidCollision('y', yStep, collisionsY[q]):true;
 				if (complete) {
 					message.entity = otherEntity = collisionsY[q].entity;
+//					if(otherEntity.collisionType === 'hero') console.log('Y Collision on Hero by ' + ent.collisionType);
+//					if(ent.collisionType === 'hero') console.log('Y Collision by Hero on ' + otherEntity.collisionType);
+					
 					message.type   = otherEntity.collisionType;
 					message.shape  = otherEntity.shape;
 					message.x      = 0;
@@ -746,6 +753,9 @@ platformer.components['collision-group'] = (function(){
 			xy.x = finalX - initialX;
 			xy.y = finalY - initialY;
 			ent.trigger('relocate-group', xy);
+//			if(xy.x+xy.y){
+//				console.log('X: ' + xy.x + ', Y: ' + xy.y)
+//			}
 		} else {
 			xy.x = finalX - aabbOffsetX;
 			xy.y = finalY - aabbOffsetY;
@@ -834,22 +844,18 @@ platformer.components['collision-group'] = (function(){
 	};
 	
 	proto['relocate-group'] = function(resp){
-		var xy = xyPair,
-		x = resp.x,
-		y = resp.y;
-		
+		var xy = xyPair;
+		xy.x = resp.x;
+		xy.y = resp.y;
+		xy.relative = true;
 		for (var i = 0; i < this.solidEntities.length; i++){
-			if(this.solidEntities[i] !== this.owner){
-				xy.x = this.solidEntities[i].x + x;
-				xy.y = this.solidEntities[i].y + y;
-				xy.relative = false;
-				this.solidEntities[i].trigger('relocate-entity', xy);
-			} else {
-				xy.x = x;
-				xy.y = y;
-				xy.relative = true;
-				this.solidEntities[i].trigger('relocate-entity', xy);
-			}
+			this.solidEntities[i].trigger('relocate-entity', xy);
+		}
+		this.lastX = this.owner.x;
+		this.lastY = this.owner.y;
+		this.aabb.reset();
+		for (var x = 0; x < this.solidEntitiesLive.length; x++){
+			this.aabb.include(((this.solidEntitiesLive[x] !== this.owner) && this.solidEntitiesLive[x].getCollisionGroupAABB)?this.solidEntitiesLive[x].getCollisionGroupAABB():this.solidEntitiesLive[x].getAABB());
 		}
 	};
 	

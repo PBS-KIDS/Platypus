@@ -8,7 +8,8 @@
             "onmousedown": "start-move",
             "ontouchstart": "start-move",
             "onmouseup": "stop-move",
-            "ontouchend": "stop-move"
+            "ontouchend": "stop-move",
+            "ontouchcancel": "stop-move"
         },{
             "type": "broadcast-events",
             "events":{

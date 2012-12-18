@@ -11,7 +11,11 @@
 			"type": "logic-directional-movement"
 		},{	
 			"type": "logic-gravity"
-		},{
+//		},{
+//            "type": "logic-portable"
+        },{
+            "type": "logic-carrier"
+        },{
 			"type": "collision-basic",
 			"collisionType": "beetle",
 			"solidCollisions": {
@@ -44,9 +48,7 @@
 				}
 			}
 //		},{
-//		    "type": "render-debug",
-//		    "regY": 240,
-//		    "regX": 120
+//		    "type": "render-debug"
 		}
 	],
 	"properties":{

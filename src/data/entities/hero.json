@@ -17,18 +17,18 @@
 				"button-right":     "key-right"
 			}
         },{
-            "type": "logic-carrier"
-        },{
             "type": "logic-hero"
 		},{
+            "type": "logic-portable"
+        },{
 			"type": "collision-basic",
 			"collisionType": "hero",
 			"solidCollisions": {
-			    "block": "",
-			    "dirt": "",
-                "tiles": "",
-                "beetle": "",
-                "briar": ""
+			    "block": "hit-solid",
+			    "dirt": "hit-solid",
+                "tiles": "hit-solid",
+                "beetle": "hit-solid",
+                "briar": "hit-solid"
 			}
 		},{
 			"type": "render-animation",

@@ -28,7 +28,7 @@ platformer.components['logic-portable'] = (function(){
 				this.carrier.trigger('carry-me', this.message);
 			}
 			
-//			this.carrierConnected = false;
+			this.carrierConnected = false;
 		} else {
 			if(this.carrier){
 				this.carrier.trigger('release-me', this.message);
@@ -57,6 +57,7 @@ platformer.components['logic-portable'] = (function(){
 					this.carrier = entity;
 				}
 				this.carrierConnected = true;
+				console.log('Hit ' + entity.type + ' on ' + direction);
 			}
 		}
 	};	
