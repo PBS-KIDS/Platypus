@@ -11,16 +11,16 @@ A component that handles updating rendering for components that are rendering vi
 ### Listens for:
 - **child-entity-added** - Called when a new entity has been added to the parent and should be considered for addition to the handler. If the entity has a 'handle-render' or 'handle-render-load' message id it's added to the list of entities. Entities are sent a reference to the stage that we're rendering to, so they can add their display objects to it. 
   > @param entity (Object) - The entity that is being considered for addition to the handler.
-- **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list. This function also sorts the display objects in the stage according to their z value. We detect when new objects are added by keeping track of the front element. If it changes the list gets resorted. Finally the whole stage is updated by CreateJS.
+- **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list. This function also sorts the display objects in the stage according to their z value. We detect when new objects are added by keeping track of the first element. If it changes the list gets resorted. Finally the whole stage is updated by CreateJS.
   > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
 - **camera-update** - Called when the camera moves in the world, or if the window is resized. This function sets the canvas size and the stage transform.
   > @param cameraInfo (object) - An object containing the camera information. 
 
 
-### Peer Broadcasts:
+### Child Broadcasts:
 - **handle-render** - Sent to entities to run their render for the tick.
   > @param object (object) - An object containing a deltaT variable that is the time that's passed since the last tick.
-- **handle-render-load** - Sent to entities to prepare for rendering. Sends along the stage object so the entity can add its display objects. It also sends the parent DOM element of the canvas.
+- **handle-render-load** - Sent to entities when they are added to the handler. Sends along the stage object so the entity can add its display objects. It also sends the parent DOM element of the canvas.
   > @param object.stage ([createjs.Stage][link2]) - The createjs stage object.
   > @param object.parentElement (object) - The DOM parent element of the canvas. 
 

@@ -17,8 +17,8 @@ This component handles capturing and relaying input information to the entities 
  - **keyup** - Sends a message to the handled entities 'key:' + the key id + ":up".
   > @param event (DOM event) - The DOM event that triggered the keyup event. 
 
-### Peer Broadcasts:
-- **handle-controller** - Sent to entities on each tick to handle whatever they need to regarding controls..
+### Child Broadcasts:
+- **handle-controller** - Sent to entities on each tick to handle whatever they need to regarding controls.
   > @param resp (object) - An object containing a deltaT variable that is the time that's passed since the last tick.
 - **controller-load** - Sent to entities when they are added to the handler-controller.
 - **key:keyid:up** - Message sent to an entity when a key goes from down to up.

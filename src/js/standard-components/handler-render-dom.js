@@ -13,8 +13,8 @@ A component that handles the rendering of DOM elements. It creates a div element
 - **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
   > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
 
-### Peer Broadcasts:
-- **handle-render-load** - Sent to an entity that has finished loading to prepare itself before the first render cycle. Passes the entity a div element that it can add itself to.
+### Child Broadcasts:
+- **handle-render-load** - Sent to an entity that has been added to the handler. Passes the entity a div element that it can add itself to.
   > @param obj.element (Object) - An object containing a DOM element that the entity should add child elements to.
 - **handle-render** - Sent to entities to have them prepare to be rendered.
   > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.

@@ -1,6 +1,6 @@
 /**
 # COMPONENT **render-tiles**
-This component handles rendering tile map backgrounds. To do so, it first compiles a giant 2D array of all the tiles in the map in the tiles array. Then when it comes time to render it figures out which tiles from the tiles array are actually within the range it needs to draw and puts them in the tilesToRender array. This it caches in case the camera doesn't move and there's no need to change the image next frame.
+This component handles rendering tile map backgrounds. When rendering the background, this component figures out what tiles are being displayed as caches them so they are rendered as one image rather than individually. As the camera moves, the cache is updated by blitting the relevant part of the old cached image into the new cached image and then rendering the tiles that have shifted into the camera's view into the cache.
 
 ## Dependencies:
 - [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas functionality.
@@ -9,7 +9,7 @@ This component handles rendering tile map backgrounds. To do so, it first compil
 ## Messages
 
 ### Listens for:
-- **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require for displaying animations. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
+- **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
   > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
 - **camera-update** - Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.
   > @param camera (object) - Required. Provides information about the camera.

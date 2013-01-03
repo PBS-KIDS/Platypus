@@ -1,6 +1,6 @@
 /**
 # CLASS entity
-This class comprises the core structure of every object in the [[Game]]. Starting with an entity, various components are added to it to build a specific object. As such, there is very little functionality in the entity itself apart from functions and pieces allowing for addition and removal of components and communication between components.
+The Entity object acts as a container for components, facilitating communication between them and other game objects. The entity object serves as the foundation for most of the objects in the Platformer engine.
 
 ## Messages
 
@@ -8,8 +8,8 @@ This class comprises the core structure of every object in the [[Game]]. Startin
 - **load** - The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
 
 ## Methods
-- **[constructor]** - Creates an object from the entity class and attaches both properties and components as provided by the parameters.
-  > @param definition (object) - Base definition for the entity, including both properties and components as shown below under "JSON definition".
+- **[constructor]** - Returns a new Entity object based on the definitions provided.
+  > @param definition (object) - Base definition for the entity, includes properties and components as shown below under "JSON definition".
   > @param instanceDefinition (object) - Specific instance definition including properties that override the base definition properties.
   > @return entity - returns the new entity made up of the provided components. 
 - **addComponent** - Attaches the provided component to the entity.

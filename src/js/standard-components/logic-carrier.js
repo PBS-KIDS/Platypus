@@ -17,12 +17,10 @@ platformer.components['logic-carrier'] = (function(){
 			this.owner.trigger('add-collision-entity', this.owner);
 			this.owner.trigger('add-collision-entity', resp.entity);
 		}
-//		this.owner.parent.trigger('remove-collision-entity', resp.entity);
 	};
 	
 	proto['release-me'] = function(resp){
 		this.owner.trigger('remove-collision-entity', resp.entity);
-//		this.owner.parent.trigger('add-collision-entity', resp.entity);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

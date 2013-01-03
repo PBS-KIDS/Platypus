@@ -1,6 +1,6 @@
 /**
 # COMPONENT **ai-pacer**
-This component listens for collision messages and fires a message on itself to change its movement direction.
+This component acts as a simple AI that will reverse the movement direction of an object when it collides with something.
 
 ## Dependencies:
 - [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.

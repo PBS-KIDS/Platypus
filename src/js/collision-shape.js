@@ -1,15 +1,15 @@
 /**
 # CLASS collision-shape
-This class defines a collision shape, which is used during the collision process. Collisions shapes define the shape of the entity according to the collision system. Currently entities can be rectangles, right-triangles, and circles. Collision shapes contain an AABB that tightly wraps the shape and is used for initial collision check. **WARNING** Currently there is no precise collision check of shape vs. shape, the imprecise AABB vs. AABB is the only one performed.
+This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle shapes can be created (some code exists for right-triangles and circles, but the precise collision checking needed for these is not in place). Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
 
 ## Fields
-- **offset** (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
+- **offset** (number []) - An array of length 2 that holds the x and y offset of the collision shape from the owner entity's location.
 - **x** (number) - The x position of the shape. The x is always located in the center of the object.
 - **y** (number) - The y position of the shape. The y is always located in the center of the object.
 - **prevX** (number) - The previous x position of the shape.
 - **prevY** (number) - The previous y position of the shape.
-- **type** (string) - The type of shape this is. Can be: rectangle, circle or triangle
-- **subType** (string) - Only used for triangles, specifies which corner the right angle is in. Can be: tl, tr, bl, br.
+- **type** (string) - The type of shape this is. Currently 'rectangle' is the default and only valid type.
+- **subType** (string) - **Not Used** Only used for triangles, specifies which corner the right angle is in. Can be: tl, tr, bl, br.
 - **points** (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
 - **aABB** (object) - The AABB for this shape.
 - **prevAABB** (object) - The previous location of the AABB for this shape.
@@ -17,13 +17,13 @@ This class defines a collision shape, which is used during the collision process
 ## Methods
 - **constructor** - Creates an object from the collisionShape class.
   > @param ownerLocation (number []) - An array [x,y] of the position.
-  > @param type (string) - The type of shape this is. Can be: rectangle, circle or triangle.
+  > @param type (string) - The type of shape this is. Currently 'rectangle' is the default and only valid type.
   > @param points (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
   > @param offset (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
-- **update** - Updates the location of the shape. Takes in values as if from the owner. The AABBs are also updated.
+- **update** - Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
   > @param ownerX (number) - The x position of the owner.
   > @param ownerY (number) - The y position of the owner.
-- **reset** - Resets the location of the shape so that the current and previous position are the same. Takes in values as if from the owner. The AABBs are also reset.
+- **reset** - Resets the location of the shape and AABBs so that the current and previous position are the same. The position you send should be that of the owner, the offset of the shape is added inside the function.
   > @param ownerX (number) - The x position of the owner.
   > @param ownerY (number) - The y position of the owner.
 - **getXY** - Returns an array containing the position of the shape.

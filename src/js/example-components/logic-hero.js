@@ -5,7 +5,7 @@ platformer.components['logic-hero'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['handle-logic', 'set-velocity', 'teleport', 'portal-waiting', 'key-left','key-right','key-up','key-down','key-jump','key-swing']);
+		this.addListeners(['handle-logic', 'set-velocity', 'teleport', 'portal-waiting', 'key-left', 'key-right', 'key-up', 'key-down', 'key-jump', 'key-swing', 'hit-solid']);
 		
 		this.state = {
 			air: false,
@@ -34,21 +34,6 @@ platformer.components['logic-hero'] = (function(){
 		this.justTeleported = false;
 		
 		this.hitGround = false;
-		
-		//Handle Tile Collisions
-		this.owner.resolveTileCollision = function(heading, collisionInfo){
-			return self.resolveTileCollision(heading, collisionInfo);
-		};
-		
-		//Handle Solid Collisions
-		this.owner.resolveSolidCollision = function(heading, collisionInfo){
-			return self.resolveSolidCollision(heading, collisionInfo);
-		};
-		
-		//Handle Soft Collisions
-		this.owner.resolveSoftCollision = function(collisionInfo){
-			return self.resolveSoftCollision(collisionInfo);
-		};
 	};
 	var proto = component.prototype;
 	
@@ -200,37 +185,15 @@ platformer.components['logic-hero'] = (function(){
 		}
 	};
 
-	proto.resolveTileCollision = function(heading, collisionInfo){
-		switch (heading)
-		{
-		case 'down':
-			this.state.ground = true;
-			this.state.air = false;
-			this.hitGround = true;
-			this.vY = 0; 
-			break;
-		case 'up':
+	proto['hit-solid'] = function(value){
+		if(value.y < 0){
 			this.vY = 0;
-			break;
-		}
-		return true;
-	};
-	
-	proto.resolveSolidCollision = function(heading, collisionInfo){
-		switch (heading)
-		{
-		case 'down':
+		} else if(value.y > 0) {
 			this.state.ground = true;
 			this.state.air = false;
 			this.hitGround = true;
 			this.vY = 0; 
-			break;
-		} 
-		return true;
-	};
-	
-	proto.resolveSoftCollision = function(collisionInfo){
-		return false;
+		}
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

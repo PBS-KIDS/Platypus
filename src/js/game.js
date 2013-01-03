@@ -29,7 +29,10 @@ platformer.classes.game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
 	var game      = function (definition){
 		this.currentScene = undefined;
-		this.tickContent = {deltaT: 0};
+		this.tickContent = {
+			deltaT: 0,
+			count: 0
+		};
 		this.settings = definition;
 		if(document.getElementById(definition.global.rootElement || "root")){
 			this.rootElement = document.getElementById(definition.global.rootElement || "root");
@@ -93,6 +96,7 @@ platformer.classes.game = (function(){
 	
 	proto.tick = function(deltaT){
 		this.tickContent.deltaT = deltaT;
+		this.tickContent.count += 1;
 		
 		if(this.currentScene){
 			this.currentScene.trigger('tick', this.tickContent);

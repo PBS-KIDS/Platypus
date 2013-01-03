@@ -45,7 +45,7 @@ This component causes this entity to collide with other entities. It must be par
         
         "points": [[-80,-120],[80, 120]]
         // Required. Specifies the top-left and bottom-right corners of the rectangle, with the center at [0,0].
-      }
+      },
       
       "solidCollisions":{
       // Optional. Determines which collision types this entity should consider solid, meaning this entity should not pass through them.
@@ -58,7 +58,7 @@ This component causes this entity to collide with other entities. It must be par
 
         "marble": ["flip", "dance", "crawl"]
         // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
-      }
+      },
       
       "softCollisions":{
       // Optional. Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so.
@@ -69,9 +69,6 @@ This component causes this entity to collide with other entities. It must be par
         "lava": ["burn", "ouch"]
         // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
       }
-      
-      "delay": 250
-      // Optional: Time in milliseconds before entity should be destroyed. If not defined, it is instantaneous.
     }
 */
 platformer.components['collision-basic'] = (function(){
@@ -96,6 +93,8 @@ platformer.components['collision-basic'] = (function(){
 		this.immobile = this.owner.immobile = this.owner.immobile || definition.immobile || false;
 		this.lastX    = this.owner.x;
 		this.lastY    = this.owner.y;
+		this.xMomentum= 0;
+		this.yMomentum= 0;
 		this.aabb     = new platformer.classes.aABB();
 		this.prevAABB = new platformer.classes.aABB();
 
@@ -119,7 +118,8 @@ platformer.components['collision-basic'] = (function(){
 		this.addListeners(['collide-on',
 		                   'collide-off',
 		                   'prepare-for-collision', 
-		                   'relocate-entity']);
+		                   'relocate-entity',
+		                   'resolve-momentum']);
 		this.shapes = [];
 		this.entities = undefined;
 		for (x in shapes){
@@ -168,18 +168,6 @@ platformer.components['collision-basic'] = (function(){
 				}
 			}
 		}
-		
-		this.owner.routeTileCollision = function(axis, dir, collisionInfo){
-			return self.routeTileCollision(axis, dir, collisionInfo);
-		};
-		
-		this.owner.routeSolidCollision = function(axis, dir, collisionInfo){
-			return self.routeSolidCollision(axis, dir, collisionInfo);
-		};
-		
-		this.owner.routeSoftCollision = function(collisionInfo){
-			return self.routeSoftCollision(collisionInfo);
-		};
 	};
 	var proto = component.prototype;
 	
@@ -218,6 +206,16 @@ platformer.components['collision-basic'] = (function(){
 
 		this.lastX = this.owner.x;
 		this.lastY = this.owner.y;
+		
+		this.xMomentum = resp.xMomentum || 0;
+		this.yMomentum = resp.yMomentum || 0;
+	};
+	
+	proto['resolve-momentum'] = function(){
+		this.owner.x += this.xMomentum;
+		this.owner.y += this.yMomentum;
+		this.xMomentum = 0;
+		this.yMomentum = 0;
 	};
 	
 	proto.getAABB = function(){
@@ -239,54 +237,6 @@ platformer.components['collision-basic'] = (function(){
 			}
 		}*/
 		return shapes;
-	};
-	
-	proto.routeTileCollision = function(axis, dir, collisionInfo){
-		if (this.owner.resolveTileCollision)
-		{
-			if (axis == 'x' && dir > 0)
-			{
-				return this.owner.resolveTileCollision('right', collisionInfo);
-			} else if (axis == 'x' && dir < 0)
-			{
-				return this.owner.resolveTileCollision('left', collisionInfo);
-			} else if (axis == 'y' && dir > 0)
-			{
-				return this.owner.resolveTileCollision('down', collisionInfo);
-			} else if (axis == 'y' && dir < 0)
-			{
-				return this.owner.resolveTileCollision('up', collisionInfo);
-			}
-		}
-		return true;
-	};
-	
-	proto.routeSolidCollision = function(axis, dir, collisionInfo)
-	{
-		if (this.owner.resolveSolidCollision)
-		{
-			if (axis == 'x' && dir > 0)
-			{
-				return this.owner.resolveSolidCollision('right', collisionInfo);
-			} else if (axis == 'x' && dir < 0)
-			{
-				return this.owner.resolveSolidCollision('left', collisionInfo);
-			} else if (axis == 'y' && dir > 0)
-			{
-				return this.owner.resolveSolidCollision('down', collisionInfo);
-			} else if (axis == 'y' && dir < 0)
-			{
-				return this.owner.resolveSolidCollision('up', collisionInfo);
-			}
-		}
-		return true;
-	};
-	
-	proto.routeSoftCollision = function(collisionInfo){
-		if (this.owner.resolveSoftCollision)
-		{
-			return this.owner.resolveSoftCollision(collisionInfo);
-		}
 	};
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

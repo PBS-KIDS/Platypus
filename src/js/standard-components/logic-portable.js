@@ -57,7 +57,6 @@ platformer.components['logic-portable'] = (function(){
 					this.carrier = entity;
 				}
 				this.carrierConnected = true;
-				console.log('Hit ' + entity.type + ' on ' + direction);
 			}
 		}
 	};	

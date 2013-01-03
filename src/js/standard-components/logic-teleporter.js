@@ -35,6 +35,7 @@ This component listens for redirected collision messages and fires a message on 
       "teleportId": "Destination entity's linkId property"
       // Required: String that matches the "linkId" property of the destination entity. This destination entity is passed on a "teleport" message so teleporting entity knows where to relocate.
     }
+
 */
 platformer.components['logic-teleporter'] = (function(){
 

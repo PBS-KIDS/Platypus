@@ -1,6 +1,6 @@
 {
 	"layers":[
-		{
+        {
 			"type": "action-layer",
 			"properties": {
 			    "level": "level-1"

@@ -13,7 +13,7 @@ A component that handles updating logic components. Each tick it calls all the e
 - **tick, logic** - Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
   > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
 
-### Peer Broadcasts:
+### Child Broadcasts:
 - **handle-logic** - Sent to entities to run their logic.
   > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
 
@@ -45,6 +45,7 @@ platformer.components['handler-logic'] = (function(){
 		};
 		this.message = {
 			deltaT: this.stepLength,
+			tick: null,
 			camera: this.camera
 		};
 		this.timeElapsed = {
@@ -89,6 +90,10 @@ platformer.components['handler-logic'] = (function(){
 		this.leftoverTime = 0;
 //		this.leftoverTime -= (cycles * this.stepLength);
 
+		if(!this.message.tick){
+			this.message.tick = resp;
+		}
+		
 		//Prevents game lockdown when processing takes longer than time alotted.
 		cycles = Math.min(cycles, this.maximumStepsPerTick);
 		

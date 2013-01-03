@@ -21,6 +21,7 @@ This component will cause the entity to remove itself from its parent upon recei
       "delay": 250
       // Optional: Time in milliseconds before entity should be destroyed. If not defined, it is instantaneous.
     }
+
 */
 platformer.components['destroy-me'] = (function(){
 	var component = function(owner, definition){

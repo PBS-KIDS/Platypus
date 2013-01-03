@@ -8,16 +8,6 @@ platformer.components['logic-gem'] = (function(){
 
 		this.addListeners(['load', 'collect-gem', 'peer-entity-added']);
 		
-		//Handle Tile Collisions
-		this.owner.resolveTileCollision = function(heading, collisionInfo){
-			return self.resolveTileCollision(heading, collisionInfo);
-		};
-		
-		//Handle Solid Collisions
-		this.owner.resolveSolidCollision = function(heading, collisionInfo){
-			return self.resolveSolidCollision(heading, collisionInfo);
-		};
-		
 		this.manager = undefined;
 	};
 	var proto = component.prototype;
@@ -34,14 +24,6 @@ platformer.components['logic-gem'] = (function(){
 		}
 	};
 	
-	proto.resolveTileCollision = function(heading, collisionInfo){
-		return false;
-	};
-	
-	proto.resolveSolidCollision = function(heading, collisionInfo){
-		return false;
-	};
-	
 	proto['collect-gem'] = function(collisionInfo){
 		if(this.manager)
 		{
@@ -53,9 +35,6 @@ platformer.components['logic-gem'] = (function(){
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
-		this.owner.resolveTileCollision = undefined;
-		this.owner.resolveSolidCollision = undefined;
-		this.owner.resolveSoftCollision = undefined;
 		this.manager = undefined;
 		this.removeListeners(this.listeners);
 	};

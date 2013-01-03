@@ -1,6 +1,6 @@
 /**
 # COMPONENT **render-debug**
-This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in green), if the object has a collision component it will display the AABB of the collision shape (in pink). The render-debug component also allows the user to click on an object and it will print the object in the debug console. 
+This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in grey), if the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a [[Logic-Carrier]] component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The render-debug component also allows the user to click on an object and it will print the object in the debug console. 
 
 ## Dependencies
 - [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
@@ -66,46 +66,15 @@ platformer.components['render-debug'] = (function(){
 		
 		this.regX = definition.regX || 0;
 		this.regY = definition.regY || 0;
+		this.stage = undefined;
+		//this.txt = undefined;
+		this.shape = undefined;
 		
 		// Messages that this component listens for
 		this.listeners = [];
 		this.addListeners(['handle-render', 'handle-render-load']);
 	};
 	var proto = component.prototype;
-
-	proto['handle-render'] = function(){
-		if(this.owner.getAABB){
-			var aabb   = this.owner.getAABB();
-			this.shape.scaleX = aabb.width / this.initialWidth;
-			this.shape.scaleY = aabb.height / this.initialHeight;
-			this.shape.x = aabb.x - aabb.halfWidth;
-			this.shape.y = aabb.y - aabb.halfHeight;
-			this.shape.z = this.owner.z;
-			this.txt.x = aabb.x;
-			this.txt.y = aabb.y;
-			this.txt.z = this.owner.z;
-		} else {
-			this.shape.x = this.owner.x	- this.regX;
-			this.shape.y = this.owner.y	- this.regY;
-			this.shape.z = this.owner.z;
-			this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
-			this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
-			this.txt.z = this.owner.z;
-		}
-		if(this.owner.getCollisionGroupAABB){
-			var aabb = this.owner.getCollisionGroupAABB();
-			if(!this.groupShape){
-				this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,255,0,0.1)").setStrokeStyle(3).beginStroke("#0f0").rect(0, 0, aabb.width, aabb.height));
-				this.groupShapeInitialWidth  = aabb.width;
-				this.groupShapeInitialHeight = aabb.height;
-				this.stage.addChild(this.groupShape);
-			}
-			this.groupShape.scaleX = aabb.width  / this.groupShapeInitialWidth;
-			this.groupShape.scaleY = aabb.height / this.groupShapeInitialHeight;
-			this.groupShape.x      = aabb.x      - aabb.halfWidth;
-			this.groupShape.y      = aabb.y      - aabb.halfHeight;
-		}
-	};
 
 	proto['handle-render-load'] = function(resp){
 		var self = this,
@@ -122,16 +91,14 @@ platformer.components['render-debug'] = (function(){
 		
 		this.stage = resp.stage;
 		
+		/*
 		this.txt   = new createjs.Text(this.owner.type + '\n(' + components.join(', ') + ')');
 		this.txt.x = x + width / 2;
 		this.txt.y = y + height / 2;
 		this.txt.z = z;
 		this.txt.textAlign = "center";
 		this.txt.textBaseline = "middle";
-		
-/*		this.mookieImg   = new createjs.Bitmap('i/mookie.png');
-		this.mookieImg.x = this.owner.x;
-		this.mookieImg.y = this.owner.y;*/
+		*/
 		
 		if(this.owner.getAABB){
 			var aabb   = this.owner.getAABB();
@@ -143,9 +110,9 @@ platformer.components['render-debug'] = (function(){
 		} else {
 			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
 		}
-		this.shape.z = z;
+		this.shape.z = z + 10000;
 		this.stage.addChild(this.shape);
-		this.stage.addChild(this.txt);
+		//this.stage.addChild(this.txt);
 		
 		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
 		if(this.click && createjs.Touch.isSupported()){
@@ -213,12 +180,52 @@ platformer.components['render-debug'] = (function(){
 		}
 	};
 	
+	proto['handle-render'] = function(){
+		if(this.owner.getAABB){
+			var aabb   = this.owner.getAABB();
+			this.shape.scaleX = aabb.width / this.initialWidth;
+			this.shape.scaleY = aabb.height / this.initialHeight;
+			this.shape.x = aabb.x - aabb.halfWidth;
+			this.shape.y = aabb.y - aabb.halfHeight;
+			this.shape.z = this.owner.z;
+			this.shape.z += 10000;
+			/*
+			this.txt.x = aabb.x;
+			this.txt.y = aabb.y;
+			this.txt.z = this.owner.z;
+			*/
+		} else {
+			this.shape.x = this.owner.x	- this.regX;
+			this.shape.y = this.owner.y	- this.regY;
+			this.shape.z = this.owner.z;
+			this.shape.z += 10000;
+			/*
+			this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
+			this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
+			this.txt.z = this.owner.z;
+			*/
+		}
+		if(this.owner.getCollisionGroupAABB){
+			var aabb = this.owner.getCollisionGroupAABB();
+			if(!this.groupShape){
+				this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,255,0,0.1)").setStrokeStyle(3).beginStroke("#0f0").rect(0, 0, aabb.width, aabb.height));
+				this.groupShapeInitialWidth  = aabb.width;
+				this.groupShapeInitialHeight = aabb.height;
+				this.stage.addChild(this.groupShape);
+			}
+			this.groupShape.scaleX = aabb.width  / this.groupShapeInitialWidth;
+			this.groupShape.scaleY = aabb.height / this.groupShapeInitialHeight;
+			this.groupShape.x      = aabb.x      - aabb.halfWidth;
+			this.groupShape.y      = aabb.y      - aabb.halfHeight;
+		}
+	};
+	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){
 		this.stage.removeChild(this.shape);
-		this.stage.removeChild(this.txt);
+		//this.stage.removeChild(this.txt);
 		this.shape = undefined;
-		this.txt = undefined;
+		//this.txt = undefined;
 		this.stage = undefined;
 		this.removeListeners(this.listeners);
 	};

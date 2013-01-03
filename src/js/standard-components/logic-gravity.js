@@ -9,9 +9,9 @@ A component that causes the object to move according to a specified gravity.
 ## Messages
 
 ### Listens for:
-- **handle-logic** - Accelerates and moves the objects according to the gravity set. Objects will not move faster than the max velocity set. Though this only velocity attributable to gravity.
+- **handle-logic** - Accelerates and moves the objects according to the set gravity. Objects will not move faster than the max velocity set. Though max velocity only limits the portion of the velocity maintained by the gravity component.
   > @param resp.deltaT (number) - The time since the last tick.
-- **hit-solid** - Received when we collide with an object is solid to the entity. We stop the movement in the direction of that object.
+- **hit-solid** - Received when we collide with an object that is solid to the entity. We stop the movement in the direction of that object.
   > @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
   > @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all. 
 

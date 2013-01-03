@@ -1,6 +1,6 @@
 /**
 # COMPONENT **camera**
-This component maintains the current viewport location and size with regards to both the game world coordinates and the screen coordinates.
+This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
 
 ## Dependencies:
 - **rootElement** property (on entity) - This component requires a DOM element which it uses as the "window" determining the camera's aspect ratio and size.

@@ -210,7 +210,7 @@ platformer.components['tiled-loader'] = (function(){
 				case "action":
 					entity = 'tile-layer';
 					for (x = 0; x < level.layers.length; x++){
-						if(level.layers[x].name === 'collision'){
+						if(level.layers[x].name === 'collision' || (level.layers[x].properties && level.layers[x].properties.entity === 'collision-layer')){
 							layerCollides = false;
 						}
 					}

@@ -57,22 +57,22 @@
   </tile>
  </tileset>
  <layer name="background" width="147" height="28">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3XsQrCMBRG4XR1dVW36vu/oV0tQkMQz3/TU/iWQErg3CFZWmuLJEmSJEmSJEmSPlw60GdUDdcO3/b1zODM6G6J1sF9PTM4M7pbonXQ7eTobolGZ+ns6G6J6CZV0d0S0U1S0V0qopulot+J6e6bx26NbpaKfieme25euzW6WSr6nVgR3Yxy9NHn07z+fW/99X+9e+eg30gV0I0qoBtVQXdKR/ephG6Vju5TCd3KGZnHG2rraDNQQAAA
+  <data encoding="base64" compression="zlib">
+   eJzt2LEOgkAQRdGltbVVO/X//1AoKFRgCRHuzHpJTgMFk30bZpaulNJJkiRJkiRJP3RaQNemPM4VdH3K4VJB16fYhr517d169xl0jcph6FuP3rNM76O5vrY0U/0DOreItn53anNV6+jcIprrazW12ap1dG4Rbd1L/47O7Uhrez2dSVZ0vkda2+vpTKKi84tmTa+nM4uKPidGNa7P+B9p6pne0efEyIb1Gf8jfd7XN/qcmBGdGaV20fWpXXvPtnu976j6nb3j7KUW0BllQGeUBZ1TdHQ+mdBZRUfnkwmdlXukHS+/TMOA
   </data>
  </layer>
  <layer name="action" width="147" height="28">
   <properties>
    <property name="entity" value="tile-layer"/>
   </properties>
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+2Z2W4DIQxF0TTNS7o9tP3/T82MWhQLmcVgMBnuka4UzcLinAwJcQ6Aem573v4DQAtwCWgBl4AWM7m07bkEx14jryXXHO2+BAn7AXydJHWzdon6873nNzh/I69jY6TH35nzdI7XPT9MPysT+4xKsXAp5w+Fjq8kKZeumb5WgvrzodTmKJck/lC0XIJHf3iHtPyhtLhE/fBr7SVyXuJPbHwtLnHHV6HHM4ij1qXDky/3eI8OV8LvIbX+UHy7peH60xjHM9LzGcRR45L3KPYcALaMdsgjdYl6pOEStw8A5Ixax1JIXAo9anVpE/QN0lj5Q6Eu5fapQo+wxtkx4/Nc+jspzKcr2xNN7alKalLbzha5v3bMI/bPZ/QlRatLWilFuh9A58ndn7un5LP0TO93T2ZxSSMWLsGnB3BJpzahT3R9LD0e8zE8N+vaB5fktQE8q7uUciN3bey7+ehnhtb//K2cySX6m5Lbz3CN7VMk1/YmNe+R4faMWpPC0rWW/meZw2pJYT2u1vlY13a1WNa9J9Z1XTFWte+JdU1XzlmwriNyHp+sa4ggq+cOFfdmiFBAAAA=
+  <data encoding="base64" compression="zlib">
+   eJztmYtuwyAMRdHWVZrabp207v8/dUEbmuXZBhOCSfCRrlQlNQ9zA4TcguPUc1l0/dXNuC3OvnEvOa1wLzmtGMlLT4tO6NoL81vzn1juMxKux6HzpMmbtZegfz4XfaH7F/D7ypQBr1N9gH08L3oQ9cwM94xqsfBSzj8Q2L4SSV46Z+qaCeift0Zl9vKSxj+QVl5yH/2QPNTKPxA4Vu9Bt6eA/khr7Ym5r/EP1741XrLeC1qyxRxEwY1V7jmOPrmHvzGKXsH7kFr/QFK5paLqa9GOPbLlHERB7UujXoWY5KMR3v2c//T2UILbL1HtSOvYnYmpgToHcPT0WsckNHtvaj1c4yW8Tjr1WPkHIu29seB8NMr55qyMOJ9r35OwoP+kvklnqpqc1JaT1gAcX9vmHufnI/pFYq2XsK84qDmtJE5TjjRHfjDxUkxJbmLb9zTeNcBnqvQbyt6V80WoiCl9ho7sJ7wP4vrqXpJjSuvGOeaeZek6N0b4Xs+1D57/5PzkXpJjqHpmgssB5acjeSm3XwsVMZKPuL157/Wu1Xd+DDUnSX46kpdyCg3iQ0E5mneJFuTOcmol+QhK+//anGP26qVR+jCbJKzbtbY/1rmdTZZ53xLrvM4oq9xviXVOZ9ZRsM6j6zh+ss6hyzW7vgFJ/klf
   </data>
  </layer>
  <objectgroup name="entities" width="147" height="28">
-  <object gid="54" x="144" y="96"/>
+  <object gid="54" x="168" y="312"/>
   <object gid="55" x="336" y="264"/>
-  <object type="hero" gid="46" x="24" y="96"/>
+  <object type="hero" gid="46" x="48" y="312"/>
   <object gid="70" x="0" y="24"/>
   <object type="level-portal" x="3408" y="432" width="48" height="48">
    <properties>

@@ -76,7 +76,7 @@
 	"properties":{
 	    "alwaysOn": true,
 		"z": 200,
-		"width": 160,
+		"width": 80,
 		"height": 240,
 		"camera": "bounding"
 	}

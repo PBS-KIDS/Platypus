@@ -13,13 +13,13 @@ A component that handles updating ai components. Each tick it calls all the enti
 - **tick** - Sends a 'handle-ai' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
   > @param obj (object) - An object containing deltaT which is the time passed since the last tick. 
 
-### Peer Broadcasts:
+### Child Broadcasts:
 - **handle-ai** - Sent to entities to run their ai for the tick.
   > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
 
 ## JSON Definition
     {
-      "type": "handler-ai"
+      "type": "handler-ai",
     }
 */
 

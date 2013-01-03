@@ -9,9 +9,9 @@ This component listens for input messages triggered on the entity and updates th
 
 ### Listens for:
 - **handle-controller** - On each `handle-controller` message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.
-- **mousedown** - This message is re-triggered on the entity as a new message including the button that was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
+- **mousedown** - This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
   > @param message.event (DOM Event object) - This event object is passed along with the new message.
-- **mouseup** - This message is re-triggered on the entity as a new message including the button that was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
+- **mouseup** - This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
   > @param message.event (DOM Event object) - This event object is passed along with the new message.
 - **mousemove** - Updates mouse action states with whether the mouse is currently over the entity.
   > @param message.over (boolean) - Whether the mouse is over the input entity.

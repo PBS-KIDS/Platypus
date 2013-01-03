@@ -1,3 +1,37 @@
+/**
+# COMPONENT **collision-tiles**
+This component causes the tile-map to collide with other entities. It must be part of a collision group and will cause "hit-by-tile" messages to fire on colliding entities.
+
+## Dependencies:
+- [[Collision-Group]] (on entity's parent) - This component handles the collision state of the map for the [[Collision-Group]] component on the parent entity.
+- [[CollisionShape]] object - This component uses collisionShape objects to expose individual tiles to the collision group.
+
+## Methods
+
+- **getTiles** - Returns all the collision tiles within the provided axis-aligned bounding box.
+  > @param aabb ([[Aabb]]) - The axis-aligned bounding box for which tiles should be returned.
+  > @return tiles (Array of objects) - Each returned object provides the shape [[collisionShape]] of the tile and the grid coordinates of the returned tile.
+- **getAABB** - Returns the axis-aligned bounding box of the entire map.
+  > @return aabb (object) - The returned object provides the top, left, width, and height of the collision map.
+- **isTile** - Confirms whether a particular map grid coordinate contains a tile.
+  > @param x (number) - Integer specifying the row of tiles in the collision map to check.
+  > @param y (number) - Integer specifying the column of tiles in the collision map to check.
+  > @return isTile (boolean) - Returns `true` if the coordinate contains a collision tile, `false` if it does not.
+
+## JSON Definition:
+    {
+      "type": "collision-tiles",
+      
+      "collisionMap": [[-1,-1,-1], [1,-1,-1], [1,1,1]],
+      // Required. A 2D array describing the tile-map with off (-1) and on (!-1) states.
+      
+      "tileWidth": 240,
+      // Optional. The width of tiles in world coordinates. Defaults to 10.
+      
+      "tileHeight": 240,
+      // Optional. The height of tiles in world coordinates. Defaults to 10.
+    }
+*/
 platformer.components['collision-tiles'] = (function(){
 	var component = function(owner, definition){
 		var self = this;
@@ -11,7 +45,6 @@ platformer.components['collision-tiles'] = (function(){
 		
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['prepare-for-collision']);
 		
 		this.owner.getTiles = function(aabb){
 			return self.getTiles(aabb);
@@ -25,10 +58,6 @@ platformer.components['collision-tiles'] = (function(){
 	};
 	var proto = component.prototype;
 
-	proto['prepare-for-collision'] = function(){
-		
-	};
-	
 	proto.getAABB = function(){
 		return {
 			left: 0,
@@ -60,7 +89,7 @@ platformer.components['collision-tiles'] = (function(){
 		for (x = left; x < right; x++){
 			for (y = top; y < bottom; y++){
 				if (this.collisionMap[x][y] != -1) {
-					tiles.push({
+					tiles.push({ //TODO: Make some optimizations here. Remove creation of objects if possible. - DDD
 								gridX: x,
 								gridY: y,
 								//type: this.collisionMap[x][y],

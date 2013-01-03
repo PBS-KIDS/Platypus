@@ -11,13 +11,12 @@ A simple component that keeps count of something and sends messages each time th
   > @param data.count (number) - The new count value.
 
 ### Local Broadcasts:
-- **update-content** - A call used to notify other components that the count has changed.
-  > @param message.text (string) - The count.
+- **refresh-count** - A call used to notify other components that the count has changed.
+  > @param number - The count.
   
 ## JSON Definition
     {
       "type": "counter",
-      
       "message" : "coin-change-count"
       //Optional - An alternate message to change-count. Used in the case that you have two counters on the same entity and want to talk to a specific one.
     }

@@ -1,6 +1,6 @@
 /**
 # COMPONENT **broadcast-events**
-This component listens for local entity messages and re-broadcasts as alternate messages on itself, its parent entity, or at the game level.
+This component listens for specified local entity messages and re-broadcasts them on itself, its parent entity, or at the game level.
 > **Note:** Make sure that this component is never set up to receive and broadcast identical messages or an infinite loop will result, since it will receive the same message it sent.
 
 ## Dependencies:
