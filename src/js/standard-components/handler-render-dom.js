@@ -36,9 +36,7 @@ platformer.components['handler-render-dom'] = (function(){
 		
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
-//		this.element.style.position = 'absolute';
-//		this.element.style.width = '100%';
-//		this.element.style.height = '100%';
+		this.owner.element = this.element;
 	},
 	proto = component.prototype; 
 
@@ -73,6 +71,7 @@ platformer.components['handler-render-dom'] = (function(){
 	proto.destroy = function(){
 		this.removeListeners(this.listeners);
 		this.owner.rootElement.removeChild(this.element);
+		this.owner.element = null;
 		this.element = undefined;
 		this.entities.length = 0;
 		this.owner = undefined;

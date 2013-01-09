@@ -44,12 +44,7 @@ platformer.components['handler-render-createjs'] = (function(){
 		
 		this.canvas = this.owner.canvas = document.createElement('canvas');
 		this.owner.rootElement.appendChild(this.canvas);
-		this.canvas.style.width = '100%';
-		this.canvas.style.height = '100%';
-		this.canvas.width  = 320;
-		this.canvas.height = 240;
-//		this.canvas.style.webkitTransform = 'translate3d(0,0,0)';
-//		this.canvas.style.transform = 'translate3d(0,0,0)';
+		this.owner.element = this.canvas; 
 		
 		this.stage = new createjs.Stage(this.canvas);
 		this.stage.snapToPixelEnabled = true;
@@ -145,6 +140,7 @@ platformer.components['handler-render-createjs'] = (function(){
 		this.removeListeners(this.listeners);
 		this.stage = undefined;
 		this.owner.rootElement.removeChild(this.canvas);
+		this.owner.element = null;
 		this.canvas = undefined;
 		this.entities.length = 0;
 		this.owner = undefined;

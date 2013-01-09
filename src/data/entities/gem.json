@@ -33,9 +33,7 @@
 		        "sound-collect-gem": {sound:"collect-gem", interrupt:"early"}
 		    }
 //		},{
-//		    "type": "render-debug",
-//		    "regY": 220,
-//		    "regX": 110
+//		    "type": "render-debug"
 		}
 	],
 	"properties":{

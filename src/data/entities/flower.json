@@ -17,8 +17,8 @@
             "regX":   36
 //		},{
 //		    "type": "render-debug",
-//            "regX": 60,
-//            "regY": 120
+//          "regX": 120,
+//          "regY": 240
         }
 	],
 	"properties":{

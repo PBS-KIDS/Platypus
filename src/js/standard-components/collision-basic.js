@@ -15,6 +15,7 @@ This component causes this entity to collide with other entities. It must be par
   > @param message.x (number) - Required. The new x coordinate.
   > @param message.y (number) - Required. The new y coordinate.
   > @param message.relative (boolean) - Optional. Determines whether the provided x,y coordinates are relative to the entity's current position. Defaults to `false`.
+- **resolve-momentum** - On receiving this message, this component adds the currently stored momentum in x and y to its coordinates. 
 - **hit-by-[collision-types specified in definition]** - When the entity collides with a listed collision-type, this message is received and re-triggered as a new message according to the component definition.
 
 ### Local Broadcasts

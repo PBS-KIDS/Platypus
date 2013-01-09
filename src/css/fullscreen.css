@@ -1,0 +1,13 @@
+/**
+ * This CSS file is used by js/fullscreen.js to make the game appear full-screen.
+ */
+
+#root.full-screen {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+}

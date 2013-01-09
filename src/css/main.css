@@ -26,3 +26,18 @@ body {
     -o-user-select: none;
     user-select: none;
 }
+
+.toggle-full-screen {
+    cursor: pointer;
+    font-family: arial;
+    background: rgba(0,0,0,0.2);
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    width: 10em;
+    font-size: 1em;
+    color: #fff;
+    line-height: 1.9em;
+    text-align: center;
+    margin: auto;
+    position: relative;
+}

@@ -5,6 +5,7 @@ This class is used to create the `platformer.game` object. The `game` object han
 ## Methods
 - **constructor** - Creates an object from the game class.
   > @param definition (object) - Collection of settings from config.json.
+  > @param onFinishedLoading (function) - An optional function to run once the game has begun.
 - **tick** - Called by the CreateJS ticker. This calls tick on the scene.
   > @param deltaT (number) - The time passed since the last tick.
 - **loadScene** - Loads a scene. If there's a transition, performs the transition.
@@ -27,20 +28,34 @@ This class is used to create the `platformer.game` object. The `game` object han
 
 platformer.classes.game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
-	var game      = function (definition){
+	var game      = function (definition, onFinishedLoading){
+		var innerRootElement = document.createElement('div'),
+		outerRootElement = null;
+		
 		this.currentScene = undefined;
 		this.tickContent = {
 			deltaT: 0,
 			count: 0
 		};
 		this.settings = definition;
+		
 		if(document.getElementById(definition.global.rootElement || "root")){
-			this.rootElement = document.getElementById(definition.global.rootElement || "root");
+			outerRootElement = document.getElementById(definition.global.rootElement || "root");
 		} else {
-			this.rootElement = document.createElement('div');
-			this.rootElement.id = definition.global.rootElement || "root";
-			document.getElementsByTagName('body')[0].appendChild(this.rootElement);
+			outerRootElement = document.createElement('div');
+			outerRootElement.id = definition.global.rootElement || "root";
+			document.getElementsByTagName('body')[0].appendChild(outerRootElement);
 		}
+		for (var i in definition.supports){
+			if(definition.supports[i]){
+				outerRootElement.className += ' supports-' + i;
+			}
+		}
+
+		innerRootElement.id = 'inner-' + outerRootElement.id;
+		outerRootElement.appendChild(innerRootElement);
+		this.rootElement = innerRootElement;
+		this.containerElement = outerRootElement;
 		
 		this.loadScene(definition.global.initialScene);
 		
@@ -56,10 +71,10 @@ platformer.classes.game = (function(){
 		// If aspect ratio of game area should be maintained on resizing, create new callback to handle it
 		if(definition.global.aspectRatio){
 			callback = function(eventId, event){
-				var element = self.rootElement;
+				var element = innerRootElement;
 				var ratio   = definition.global.aspectRatio;
-				var newW = window.innerWidth;
-				var newH = window.innerHeight;
+				var newW = outerRootElement.offsetWidth;
+				var newH = outerRootElement.offsetHeight;
 				if(definition.global.maxWidth && (definition.global.maxWidth < newW)){
 					newW = definition.global.maxWidth;
 				}
@@ -84,13 +99,17 @@ platformer.classes.game = (function(){
 			callback('resize');
 		} else if(definition.global.resizeFont) {
 			callback = function(eventId, event){
-				self.rootElement.style.fontSize = parseInt(window.innerWidth / 100) + 'px';
+				self.rootElement.style.fontSize = parseInt(self.rootElement.offsetWidth / 100) + 'px';
 				self.currentScene.trigger(eventId, event);
 			};
 			callback('resize');
 		}
 		this.addEventListener(window, 'orientationchange', callback);
 		this.addEventListener(window, 'resize',            callback);
+		
+		if(onFinishedLoading){
+			onFinishedLoading(this);
+		}
 	};
 	var proto = game.prototype;
 	
@@ -119,10 +138,10 @@ platformer.classes.game = (function(){
 			element.style.background = '#000';
 			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
 				self.loadNextScene(sceneId);
+				self.completeSceneTransition();
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
 				element = undefined;
-				self.completeSceneTransition();
 			});
 			break;
 		case 'instant':

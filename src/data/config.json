@@ -7,9 +7,8 @@
 		"initialScene": "menu",                  // Once the game is loaded, this scene is automatically loaded.
 		"fps": 60,                               // Target FPS to be used by the game engine.
 		"rootElement": "root",                   // Optional. Defines the id of the root DOM element used by the game. The default is "root" and this element is created if it does not already exist.
+        "aspectRatio": 1.333,                    // Optional. Whether the rootElement should be automatically resized to maintain aspect ratio. Leave this off if the rootElement is to be strictly styled using CSS.
 		"nativeAssetResolution": 960,            // Optional. Screen width in pixels that the source images were originally designed for.
-		"maxWidth": 960,                         // Optional. Game area will not exceed this size: useful for tablet devices where scaling up hinders performance.
-		"aspectRatio": 1.333,                    // Optional. Whether the rootElement should be automatically resized to maintain aspect ratio. Leave this off if the rootElement is to be strictly styled using CSS.
 		"resizeFont": true                       // Optional. Whether to adjust the body element's fontSize to proportionally match current window size. Useful for cascading the value of em's across all game DOM elements.
 	},
 	"builds": [                                  // Builds and their respective settings
@@ -54,17 +53,13 @@
 		    {"id": "buttons",    	 "src": "../images/buttons.png"},
             {"id": "dirt",           "src": "../images/dirt.png",         "data": {"rows": 2, "columns": 3}},
 			{"id": "mookie",         "src": "../images/mookie.png",       "data": {"rows": 4, "columns": 4}},
-//            {"id": "tilemap",        "src": "../images/tile-map.png"},
             {"id": "sprites",        "src": "../images/game-sprites.png", "data": {"rows": 9, "columns": 9}},
-//			{"id": "test",           "src": "../images/test.png"},
-//			{"id": "test-animation", "src": "../images/test-animation.png"},
             {"id": "tiles",          "src": "../images/tiles.png",        "data": {"rows": 5, "columns": 9}},
             {"id": "gem",    		 "src": "../images/gem.png",          "data": {"rows": 1, "columns": 3}},
             {"id": "gem-bar",        "src": "../images/gem-bar.png"},
             {"id": "title-screen",   "src": "../images/title-screen.png"},
             {"id": "objects",        "src": "../images/objects.png",      "data": {"rows": 4, "columns": 8}},
             {"id": "beetle",         "src": "../images/beetle.png",       "data": {"rows": 1, "columns": 4}},
-        //    {"id": "flower",         "src": "../images/flower.png"},
             {"id": "briar",        	 "src": "../images/briar.png",        "data": {"rows": 1, "columns": 4}}
 		],
 		"classes": [
@@ -149,18 +144,20 @@
             {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
 		],
 		"includes": [
-			{"id": "EaselJS",	"src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
-			{"id": "TweenJS",   "src": "http://code.createjs.com/tweenjs-0.3.0.min.js"},
-			{"id": "SoundJS",   "src": "http://code.createjs.com/soundjs-0.3.0.min.js"},
-			{"id": "PreloadJS", "src": "http://code.createjs.com/preloadjs-0.2.0.min.js"},
-			{"id": "Browser",   "src": "../js/browser.js"},
-            {"id": "iOSAudio",  "src": "../js/HTMLiOSAudioPlugin.js"},
-            {"id": "SoundJSm4a","src": "../js/SoundJSm4aOverride.js"},
-            {"id": "Main",      "src": "../js/main.js"},
-            {"id": "ButtonCSS", "src": "../css/button.css"},
-            {"id": "MainCSS",   "src": "../css/main.css"},
-            {"id": "GameCSS",   "src": "../css/game.css"},
-            {"id": "GUI CSS",   "src": "../css/gui.css"}
+			{"id": "EaselJS",	    "src": "http://code.createjs.com/easeljs-0.5.0.min.js"},
+			{"id": "TweenJS",       "src": "http://code.createjs.com/tweenjs-0.3.0.min.js"},
+			{"id": "SoundJS",       "src": "http://code.createjs.com/soundjs-0.3.0.min.js"},
+			{"id": "PreloadJS",     "src": "http://code.createjs.com/preloadjs-0.2.0.min.js"},
+            {"id": "Browser",       "src": "../js/browser.js"},
+            {"id": "iOSAudio",      "src": "../js/HTMLiOSAudioPlugin.js"},
+            {"id": "SoundJSm4a",    "src": "../js/SoundJSm4aOverride.js"},
+            {"id": "Main",          "src": "../js/main.js"},
+            {"id": "ButtonCSS",     "src": "../css/button.css"},
+            {"id": "MainCSS",       "src": "../css/main.css"},
+            {"id": "GameCSS",       "src": "../css/game.css"},
+            {"id": "GUI CSS",       "src": "../css/gui.css"},
+            {"id": "FullScreen",    "src": "../js/fullscreen.js"},
+            {"id": "FullScreenCSS", "src": "../css/fullscreen.css"}
 		],
 		"scenes": [ // JSON files describing scenes
 			{"id": "menu",        "src": "scenes/menu.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

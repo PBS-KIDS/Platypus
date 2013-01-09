@@ -79,14 +79,16 @@ platformer.components['camera'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.addListeners(['tick', 'camera', 'follow', 'resize', 'orientationchange', 'world-loaded', 'child-entity-added', 'child-entity-removed']);
+		this.addListeners(['load', 'tick', 'camera', 'follow', 'resize', 'orientationchange', 'world-loaded', 'child-entity-added', 'child-entity-removed']);
 		
+		this.element = null;
+
 		//The dimensions of the camera in the window
 		this.window = {
-			viewportTop: this.owner.rootElement.innerTop,
-			viewportLeft: this.owner.rootElement.innerLeft,
-			viewportWidth: this.owner.rootElement.offsetWidth,
-			viewportHeight: this.owner.rootElement.offsetHeight
+			viewportTop:    0,
+			viewportLeft:   0,
+			viewportWidth:  0,
+			viewportHeight: 0
 		};
 		
 		//The dimensions of the camera in the game world
@@ -110,7 +112,6 @@ platformer.components['camera'] = (function(){
 		// 0 == fluid scaling
 		// set the windowWidth multiple that triggers zooming in
 		this.scaleWidth = definition.scaleWidth || 0;
-		this.resize();
 		
 		// The dimensions of the entire world
 		this.worldWidth  = 0; //definition.worldWidth;
@@ -127,11 +128,16 @@ platformer.components['camera'] = (function(){
 		this.bBInnerWidth = this.world.viewportWidth - (2 * this.bBBorderX);
 		this.bBInnerHeight = this.world.viewportHeight - (2 * this.bBBorderY);
 		
-		
 		this.direction = true;  
 	};
 	var proto = component.prototype; 
 
+	proto['load'] = function(){
+		this.element = this.owner.element || this.owner.rootElement;
+		
+		this.resize();
+	};
+	
 	proto['child-entity-added'] = function(entity){
 		var messageIds = entity.getMessageIds(); 
 		
@@ -219,10 +225,10 @@ platformer.components['camera'] = (function(){
 	proto['resize'] = proto['orientationchange'] = function ()
 	{
 		//The dimensions of the camera in the window
-		this.window.viewportTop = this.owner.rootElement.innerTop;
-		this.window.viewportLeft = this.owner.rootElement.innerLeft;
-		this.window.viewportWidth = this.owner.rootElement.offsetWidth;
-		this.window.viewportHeight = this.owner.rootElement.offsetHeight;
+		this.window.viewportTop = this.element.innerTop;
+		this.window.viewportLeft = this.element.innerLeft;
+		this.window.viewportWidth = this.element.offsetWidth;
+		this.window.viewportHeight = this.element.offsetHeight;
 
 		if(this.scaleWidth){
 			this.world.viewportWidth = this.window.viewportWidth / Math.ceil(this.window.viewportWidth / this.scaleWidth);

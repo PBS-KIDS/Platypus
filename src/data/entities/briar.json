@@ -39,9 +39,7 @@
 			},
 			"state": "up"
 //		},{
-//		    "type": "render-debug",
-//            "regX": 60,
-//            "regY": 120
+//		    "type": "render-debug"
         }
 	],
 	"properties":{

@@ -17,6 +17,7 @@ This component checks for collisions between entities in its group which typical
 - **relocate-group** - This message causes the collision group to trigger `relocate-entity` on entities in the collision group.
   > @param message.x (number) - Required. The new x coordinate.
   > @param message.y (number) - Required. The new y coordinate.
+- **relocate-entity** - When this message is triggered, the collision group updates its record of the owner's last (x, y) coordinate.
 
 ### Child Broadcasts
 - **prepare-for-collision** - This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
@@ -67,6 +68,7 @@ platformer.components['collision-group'] = (function(){
 		yMomentum: 0,
 		relative: false
 	},
+	
 	triggerCollisionMessages = function(entity, collision, x, y){
 		var otherEntity = collision.entity;
 
@@ -141,8 +143,8 @@ platformer.components['collision-group'] = (function(){
 		var shapes = entity.shapes || entity.getShapes();
 			aabb   = shapes[0].getAABB();
 		
-		preciseColls = [];
-//		preciseColls.length = 0;
+//		preciseColls = [];
+		preciseColls.length = 0;
 		
 		if(originalY){
 			for(var i = 0; i < entities.length; i++){

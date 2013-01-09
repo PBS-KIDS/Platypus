@@ -29,8 +29,8 @@ window.addEventListener('load', function(){
 	loader     = new createjs.PreloadJS(),
 	loadAssets = [],
 	optimizeImages = platformer.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
-//	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * window.devicePixelRatio / optimizeImages):1,
-	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
+	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * window.devicePixelRatio / optimizeImages):1,
+//	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
 	scaleImage = function(img, columns, rows){
 		var r          = rows    || 1,
 		c              = columns || 1,
@@ -74,7 +74,11 @@ window.addEventListener('load', function(){
 	};
 	
 	loader.onComplete = function (event) {
-		platformer.game = new platformer.classes.game(platformer.settings);
+		platformer.game = new platformer.classes.game(platformer.settings, function(game){
+			platformer.loadFullScreenButton(game.containerElement, game.settings.supports.touch, function(){
+				game.bindings['resize'].callback();
+			});
+		});
 		createjs.Ticker.useRAF = true;
 		createjs.Ticker.setFPS(platformer.settings.global.fps);
 		createjs.Ticker.addListener(platformer.game);
