@@ -128,7 +128,9 @@ platformer.components['camera'] = (function(){
 		this.bBInnerWidth = this.world.viewportWidth - (2 * this.bBBorderX);
 		this.bBInnerHeight = this.world.viewportHeight - (2 * this.bBBorderY);
 		
-		this.direction = true;  
+		this.direction = true;
+		
+		this.newChild = false;
 	};
 	var proto = component.prototype; 
 
@@ -146,6 +148,7 @@ platformer.components['camera'] = (function(){
 			if (messageIds[x] == 'camera-update')
 			{
 				this.entities.push(entity);
+				this.newChild = true;
 				break;
 			}
 		}
@@ -172,7 +175,9 @@ platformer.components['camera'] = (function(){
 	
 	proto['tick'] = proto['camera'] = function(resp){
 		var deltaT = resp.deltaT,
-		broadcastUpdate = false;
+		broadcastUpdate = this.newChild;
+		
+		this.newChild = false;
 		
 		switch (this.state)
 		{

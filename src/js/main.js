@@ -29,7 +29,7 @@ window.addEventListener('load', function(){
 	loader     = new createjs.PreloadJS(),
 	loadAssets = [],
 	optimizeImages = platformer.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
-	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * window.devicePixelRatio / optimizeImages):1,
+	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages):1,
 //	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
 	scaleImage = function(img, columns, rows){
 		var r          = rows    || 1,
@@ -47,14 +47,14 @@ window.addEventListener('load', function(){
 	};
 	
 	loader.onProgress = function (event) {
-		console.log('Progress:', event);	
+//		console.log('Progress:', event);
 	};
 	
 	loader.onFileLoad = function (event) {
 		var data = event.data,
 		result   = event.result;
 		
-		console.log('Load:', event);
+//		console.log('Load:', event);
 		
 		if(event.type == "image"){
 			if(optimizeImages && (scale !== 1) && (event.type == "image")){
@@ -70,7 +70,7 @@ window.addEventListener('load', function(){
 	};
 	
 	loader.onError = function (event) {
-		console.log('Your stuff broke!');
+//		console.log('Your stuff broke!');
 	};
 	
 	loader.onComplete = function (event) {

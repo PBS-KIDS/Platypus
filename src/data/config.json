@@ -28,7 +28,8 @@
 			"cssCompression": false,
 			"jsCompression": false,
 			"manifest": false,      // Determines whether this build uses Application Cache.
-			"pngCompression": 256   // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"pngCompression": 256,  // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
+			"debug": true           // Whether to show debug components and entities.
 		}
 	],
 	"source": { 

@@ -54,8 +54,6 @@ platformer.components['render-debug'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
 		
-		//this.controllerEvents = undefined;
-		
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
 			this.click = definition.acceptInput.click || false;
@@ -177,6 +175,10 @@ platformer.components['render-debug'] = (function(){
 					entity: self.owner
 				});
 			};
+		}
+
+		if(!platformer.settings.debug){
+			this.owner.removeComponent(this);
 		}
 	};
 	

@@ -44,6 +44,10 @@ platformer.components['logic-fps-counter'] = (function(){
 	var proto = component.prototype;
 	
 	proto['handle-logic'] = function(){
+		if(!platformer.settings.debug && this.owner.parent){
+			this.owner.parent.removeEntity(this.owner);
+		}
+
 		if(this.timeElapsed){ //to make sure we're not including 0's from multiple logic calls between time elapsing.
 			this.timeElapsed = false;
 			this.count--;

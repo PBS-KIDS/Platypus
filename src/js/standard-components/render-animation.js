@@ -315,6 +315,11 @@ platformer.components['render-animation'] = (function(){
 			if(this.state[i] !== state[i]){
 				this.stateChange = true;
 				this.state[i] = state[i];
+				
+				//Special case affecting rotation of the animation
+				if(i === 'orientation'){
+					this.anim.rotation = (state[i] * 180) / Math.PI;
+				}
 			}
 		}
 	};

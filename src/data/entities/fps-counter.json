@@ -14,6 +14,7 @@
                 "fontSize": "2em",
                 "fontWeight": "bold",
                 "fontFamily": "Arial",
+                "pointerEvents": "none",
                 "zIndex": 11
             }
         }

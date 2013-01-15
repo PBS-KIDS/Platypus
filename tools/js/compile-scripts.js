@@ -160,6 +160,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		    }
 	    }
 	    delete game.source;
+	    
+	    game.debug = build.debug || false;
 
 	    for(i = 0; i < nsArray.length - 1; i++){
 	    	nsName = '';

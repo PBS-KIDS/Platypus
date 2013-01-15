@@ -213,12 +213,14 @@ platformer.components['render-tiles'] = (function(){
 		
 		tile.x = 0;
 		tile.y = 0;
-		tile.gotoAndPlay(imageArray[0]);
+		tile.gotoAndStop(imageArray[0]);
 		tile.cache(0,0,this.tileWidth,this.tileHeight);
 		
 		for (; i < imageArray.length; i++){
-			tile.gotoAndPlay(imageArray[i]);
-			tile.updateCache('source-over');
+			if(imageArray[i] !== 'tile-1'){
+				tile.gotoAndStop(imageArray[i]);
+				tile.updateCache('source-over');
+			}
 		}
 
 		return tile;
