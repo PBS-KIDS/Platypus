@@ -55,7 +55,7 @@ platformer.components['handler-controller'] = (function(){
 		}; 
 	};
 	
-	var keyMap = {
+	var keyMap = { //Note: if this list is changed, be sure to update https://git.pbs.org/html5-platformer-engine/pages/Handler-Controller-Key-List
 		kc0:   'unknown',         
 		kc8:   'backspace',
 		kc9:   'tab',

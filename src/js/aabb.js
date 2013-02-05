@@ -94,10 +94,20 @@ platformer.classes.aABB = (function(){
 	};
 	
 	proto.move = function(x, y){
+		this.moveX(x);
+		this.moveY(y);
+		return this;
+	};
+
+	proto.moveX = function(x){
 		this.x = x;
-		this.y = y;
 		this.left   = -this.halfWidth + this.x;
 		this.right  = this.halfWidth + this.x;
+		return this;
+	};
+
+	proto.moveY = function(y){
+		this.y = y;
 		this.top    = -this.halfHeight + this.y;
 		this.bottom = this.halfHeight + this.y;
 		return this;

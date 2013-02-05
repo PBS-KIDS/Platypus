@@ -135,7 +135,11 @@ platformer.components['render-animation'] = (function(){
 		self = this,
 		x = 0,
 		lastAnimation = '';
+		
 		this.owner = owner;
+		this.rotate = definition.rotate || false;
+		this.mirror = definition.mirror || false;
+		this.flip   = definition.flip   || false;
 		
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
@@ -191,8 +195,8 @@ platformer.components['render-animation'] = (function(){
 			}
 		};
 		this.currentAnimation = this.owner.state || definition.state || lastAnimation || 'default';
-		this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
-		this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
+		this.scaleX = this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
+		this.scaleY = this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
 		this.state = {};
 		this.stateChange = false;
 		this.waitingAnimation = false;
@@ -311,6 +315,8 @@ platformer.components['render-animation'] = (function(){
 	};
 	
 	proto['logical-state'] = function(state){
+		var angle = null;
+		
 		for(var i in state){
 			if(this.state[i] !== state[i]){
 				this.stateChange = true;
@@ -318,7 +324,29 @@ platformer.components['render-animation'] = (function(){
 				
 				//Special case affecting rotation of the animation
 				if(i === 'orientation'){
-					this.anim.rotation = (state[i] * 180) / Math.PI;
+					if(this.rotate || this.mirror || this.flip){
+						angle = ((state[i] * 180) / Math.PI + 360) % 360;
+						
+						if(this.rotate){
+							this.anim.rotation = angle;
+						}
+						
+						if(this.mirror){
+							if((angle > 90) && (angle < 270)){
+								this.anim.scaleX = -this.scaleX;
+							} else {
+								this.anim.scaleX = this.scaleX;
+							}
+						}
+						
+						if(this.flip){
+							if(angle > 180){
+								this.anim.scaleY = this.scaleY;
+							} else {
+								this.anim.scaleY = -this.scaleY;
+							}
+						}
+					}
 				}
 			}
 		}

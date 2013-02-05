@@ -40,8 +40,12 @@ platformer.components['collision-group'] = (function(){
 	var tempAABB = new platformer.classes.aABB(),
 	tempArray1   = [],
 	tempArray2   = [],
+	tempArray3   = [],
 	tempArray4   = [],
+	tempArray5   = [],
+	emptyArray   = [],
 	preciseColls = [],
+	diff         = null,
 	triggerMessage = {
 		entity: null,
 		type:   null,
@@ -50,16 +54,20 @@ platformer.components['collision-group'] = (function(){
 		y: 0
 	},
 	entityCollisionMessage = {
-		atX: null,
-		atY: null,
+		x: null,
+		y: null,
 		aABB: null,
-		shape: null
+		shape: null,
+		thisType: null,
+		thatType: null
 	},
 	tileCollisionMessage = {
-		atX: null,
-		atY: null,
+		x: null,
+		y: null,
 		aABB: null,
-		shape: null
+		shape: null,
+		thisType: null,
+		thatType: null
 	},
 	xyPair = {
 		x: 0,
@@ -74,18 +82,18 @@ platformer.components['collision-group'] = (function(){
 
 		triggerMessage.entity = collision.entity;
 
-		triggerMessage.type   = otherEntity.collisionType;
+		triggerMessage.type   = collision.thatType;
 		triggerMessage.shape  = otherEntity.shape;
 		triggerMessage.x      = x;
 		triggerMessage.y      = y;
-		entity.trigger('hit-by-' + otherEntity.collisionType, triggerMessage);
+		entity.trigger('hit-by-' + collision.thatType, triggerMessage);
 		
 		triggerMessage.entity = entity;
-		triggerMessage.type   = entity.collisionType;
+		triggerMessage.type   = collision.thisType;
 		triggerMessage.shape  = entity.shape;
 		triggerMessage.x      = -x;
 		triggerMessage.y      = -y;
-		otherEntity.trigger('hit-by-' + entity.collisionType, triggerMessage);
+		otherEntity.trigger('hit-by-' + collision.thisType, triggerMessage);
 	},
 	triggerTileCollisionMessage = function(entity, shape, x, y){
 		triggerMessage.entity = null;
@@ -191,7 +199,7 @@ platformer.components['collision-group'] = (function(){
 		}
 		return value;
 	},
-	checkAgainst = function(thisEntity, thisAABB, thatEntity, thatAABB, collisionType, xDirection, yDirection, collision, group){
+	checkAgainst = function(thisEntity, thisAABB, thatEntity, thatAABB, xDirection, yDirection, collision, group, thisCollisionType, thatCollisionType){
 		var position  = null,
 		lastPosition  = null,
 		groupPosition = null,
@@ -226,27 +234,14 @@ platformer.components['collision-group'] = (function(){
 			}
 
 			if(position !== null){
-				if (collision.aABB === null) {
-					collision.atX = position * x;
-					collision.atY = position * y;
+				if ((collision.aABB === null) || (((xDirection > 0) && (position < collision.x)) || ((yDirection > 0) && (position < collision.y))) || (((xDirection < 0) && (position > collision.x)) || ((yDirection < 0) && (position > collision.y)))) {
+					collision.x = position * x;
+					collision.y = position * y;
 					collision.aABB = thatAABB;
 					collision.shape = thatEntity.shapes?thatEntity.shapes[0]:null;
 					collision.entity = thatEntity;
-					collision.type = thatEntity.collisionType;
-				} else if (((xDirection > 0) && (position < collision.atX)) || ((yDirection > 0) && (position < collision.atY))) {
-					collision.atX = position * x;
-					collision.atY = position * y;
-					collision.aABB = thatAABB;
-					collision.shape = thatEntity.shapes?thatEntity.shapes[0]:null;
-					collision.entity = thatEntity;
-					collision.type = thatEntity.collisionType;
-				} else if (((xDirection < 0) && (position > collision.atX)) || ((yDirection < 0) && (position > collision.atY))) {
-					collision.atX = position * x;
-					collision.atY = position * y;
-					collision.aABB = thatAABB;
-					collision.shape = thatEntity.shapes?thatEntity.shapes[0]:null;
-					collision.entity = thatEntity;
-					collision.type = thatEntity.collisionType;
+					collision.thisType = thisCollisionType;
+					collision.thatType = thatCollisionType;
 				}
 			}
 			return collision;
@@ -293,8 +288,6 @@ platformer.components['collision-group'] = (function(){
 		this.cameraLogicAABB = new platformer.classes.aABB(0, 0);
 		this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
 		
-		this.unitStepSize = 1000;
-
 		//defined here so we aren't continually recreating new arrays
 		this.collisionGroups = [];
 		
@@ -309,42 +302,62 @@ platformer.components['collision-group'] = (function(){
 	var proto = component.prototype; 
 
 	proto['child-entity-added'] = proto['add-collision-entity'] = function(entity){
-		var messageIds = entity.getMessageIds(); 
+		var i = 0,
+		types = entity.collisionTypes,
+		solid = false,
+		soft  = false;
 		
 		if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
 			this.terrain = entity;
 			this.groupCollisionMessage.terrain = entity;
 		} else {
-			for (var x = 0; x < messageIds.length; x++){
-				if (messageIds[x] == 'prepare-for-collision'){
-					if(!this.entitiesByType[entity.collisionType]){
-						this.entitiesByType[entity.collisionType] = [];
-						this.entitiesByTypeLive[entity.collisionType] = [];
+			if(types){
+				for(; i < types.length; i++){
+					if(!this.entitiesByType[types[i]]){
+						this.entitiesByType[types[i]] = [];
+						this.entitiesByTypeLive[types[i]] = [];
 					}
-					this.entitiesByType[entity.collisionType][this.entitiesByType[entity.collisionType].length] = entity;
-					if(entity.solidCollisions.length && !entity.immobile){
-						this.solidEntities[this.solidEntities.length] = entity;
+					this.entitiesByType[types[i]][this.entitiesByType[types[i]].length] = entity;
+					if(entity.solidCollisions[types[i]].length && !entity.immobile){
+						solid = true;
 					}
-					if(entity.softCollisions.length){
-						this.softEntities[this.softEntities.length] = entity;
+					if(entity.softCollisions[types[i]].length){
+						soft = true;
 					}
-					break;
+				}
+				if(solid && !entity.immobile){
+					this.solidEntities[this.solidEntities.length] = entity;
+				}
+				if(soft){
+					this.softEntities[this.softEntities.length] = entity;
 				}
 			}
 		}
 	};
 	
 	proto['child-entity-removed'] = proto['remove-collision-entity'] = function(entity){
-		var x = 0;
+		var x = 0,
+		i     = 0,
+		types = entity.collisionTypes,
+		solid = false,
+		soft  = false;
 
-		for (x in this.entitiesByType[entity.collisionType]) {
-			if(this.entitiesByType[entity.collisionType][x] === entity){
-				this.entitiesByType[entity.collisionType].splice(x, 1);
-				break;
+		for(; i < types.length; i++){
+			for (x in this.entitiesByType[types[i]]) {
+				if(this.entitiesByType[types[i]][x] === entity){
+					this.entitiesByType[types[i]].splice(x, 1);
+					break;
+				}
+			}
+			if(entity.solidCollisions[types[i]].length){
+				solid = true;
+			}
+			if(entity.softCollisions[types[i]].length){
+				soft = true;
 			}
 		}
 		
-		if(entity.solidCollisions.length){
+		if(solid){
 			for (x in this.solidEntities) {
 				if(this.solidEntities[x] === entity){
 					this.solidEntities.splice(x, 1);
@@ -353,7 +366,7 @@ platformer.components['collision-group'] = (function(){
 			}
 		}
 
-		if(entity.softCollisions.length){
+		if(soft){
 			for (x in this.softEntities) {
 				if(this.softEntities[x] === entity){
 					this.softEntities.splice(x, 1);
@@ -508,16 +521,7 @@ platformer.components['collision-group'] = (function(){
 				if(entity.trigger('prepare-for-collision', resp)){
 					entity.collisionUnresolved = true;
 					entities[entities.length] = entity;
-/*				} else { // remove the entity because it no longer has a collision handler
-					var typeEntities = this.entitiesByType[this.entities[x].collisionType];
-					for (y = typeEntities.length - 1; y > -1; y--)
-					{
-						if(typeEntities[y] === this.entities[x]){
-							typeEntities.splice(y, 1);
-							break;
-						}
-					}
-					this.entities.splice(x, 1);*/ //temp removed since this line must now find the actual listed entity, not the live entity index
+//				} else { // possible TODO: remove the entity because it no longer has a collision handler
 				}
 			}
 		}
@@ -535,276 +539,281 @@ platformer.components['collision-group'] = (function(){
 	};
 	
 	proto.checkSolidEntityCollision = function(ent, groupCheck, finalMovement){
-		var y    = 0,
-		z        = 0,
-		initialX = 0,
-		initialY = 0,
-		xy       = xyPair,
-		unitStepSize = this.unitStepSize,
+		var i     = 0,
+		y         = 0,
+		z         = 0,
+		initialX  = 0,
+		initialY  = 0,
+		xy        = xyPair,
+		sweepAABB = tempAABB,
+		collisionType = null,
 		collisionGroup = ((groupCheck && ent.getCollisionGroup)?ent.getCollisionGroup():null),
-		checkAABBCollision = AABBCollision;
-		
-		var currentAABB = groupCheck?ent.getCollisionGroupAABB():ent.getAABB();
-		var previousAABB = groupCheck?ent.getPreviousCollisionGroupAABB():ent.getPreviousAABB();//ent.getAABB().getCopy().move(ent.getPreviousX() + ent.getShapes()[0].getXOffset(), ent.getPreviousY() + ent.getShapes()[0].getYOffset());
-		
-		var sweepTop = Math.min(currentAABB.top, previousAABB.top);
-		var sweepBottom = Math.max(currentAABB.bottom, previousAABB.bottom);
-		var sweepHeight = sweepBottom - sweepTop;
-		var sweepLeft = Math.min(currentAABB.left, previousAABB.left);
-		var sweepRight = Math.max(currentAABB.right, previousAABB.right);
-		var sweepWidth = sweepRight - sweepLeft;
-		var sweepX = sweepLeft + (sweepWidth / 2);
-		var sweepY = sweepTop + (sweepHeight / 2); 
-		var sweepAABB = tempAABB.setAll(sweepX, sweepY, sweepWidth, sweepHeight);
-		var otherEntity = undefined;
-		var include = false;
-		
-		var potentialTiles = tempArray1,
+		checkAABBCollision = AABBCollision,
+		currentAABB  = null,
+		previousAABB = null,
+		otherEntity  = null,
+		include      = false,
+		potentialTiles = tempArray1,
 		potentialsEntities = tempArray2,
-		collisionsY        = tempArray4;
-		potentialTiles.length = 0;
-		potentialsEntities.length = 0;
-		collisionsY.length = 0;
+		thatTypes    = tempArray3,
+		thisTypes    = tempArray4,
+		thisTileTypes= tempArray5,
+		aabbOffsetX  = 0,
+		aabbOffsetY  = 0,
+		finalX       = null,
+		finalY       = null,
+		finalQ       = null;
+		
+		if(groupCheck){
+			currentAABB  = ent.getCollisionGroupAABB();
+			previousAABB = ent.getPreviousCollisionGroupAABB();
+			
+			sweepAABB.reset();
+			sweepAABB.include(currentAABB);
+			sweepAABB.include(previousAABB);
 
-		for (y = 0; y < ent.solidCollisions.length; y++) {
-			if(this.entitiesByTypeLive[ent.solidCollisions[y]]){
-				for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[y]].length; z++){
-					include = true;
-					otherEntity = this.entitiesByTypeLive[ent.solidCollisions[y]][z];
-					if(collisionGroup){
-						for(var i in collisionGroup){
-							if(otherEntity === collisionGroup[i]){
+			potentialTiles.length = 0;
+			potentialsEntities.length = 0;
+
+			for(; i < ent.collisionTypes.length; i++){
+				collisionType = ent.collisionTypes[i];
+				
+				for (y = 0; y < ent.solidCollisions[collisionType].length; y++) {
+					if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
+						for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
+							include = true;
+							otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
+							if(collisionGroup){
+								for(var i in collisionGroup){
+									if(otherEntity === collisionGroup[i]){
+										include = false;
+									}
+								}
+							} else if (otherEntity === ent){
 								include = false;
 							}
+							if(include && (checkAABBCollision(sweepAABB, otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y])))) {
+								potentialsEntities[potentialsEntities.length] = otherEntity;
+								otherEntity.currentCollisionType = ent.solidCollisions[collisionType][y]; //used for messaging later on
+							}
 						}
-					} else if (otherEntity === ent){
-						include = false;
-					}
-					if(include && (checkAABBCollision(sweepAABB, otherEntity.collisionUnresolved?otherEntity.getPreviousAABB():otherEntity.getAABB()))) {
-						potentialsEntities[potentialsEntities.length] = this.entitiesByTypeLive[ent.solidCollisions[y]][z];
-						connectedToGroup = true; // still touching another entity
+					} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')){
+						potentialTiles = this.terrain.getTiles(sweepAABB);
 					}
 				}
-			} else if (this.terrain && (ent.solidCollisions[y] === 'tiles')){
-				potentialTiles = this.terrain.getTiles(sweepAABB);
 			}
-		}
-		
-		
-		initialX  = previousAABB.x;//ent.getPreviousX();
-		var xPos  = initialX;
-		var xGoal = currentAABB.x;//ent.x;
-		var xStep  = (xPos < xGoal) ? unitStepSize : -unitStepSize;
-		var finalX = undefined; 
-		var aabbOffsetX = groupCheck?0:(previousAABB.x - ent.getPreviousX());//previousAABB.x - initialX;
-		
-		initialY  = previousAABB.y;//ent.getPreviousY();
-		var yPos  = initialY;
-		var yGoal = currentAABB.y;//ent.y;
-		var yStep  = (yPos < yGoal) ? unitStepSize : -unitStepSize;
-		var finalY = undefined;
-		var aabbOffsetY = groupCheck?0:(previousAABB.y - ent.getPreviousY());//previousAABB.y - initialY;
 
-		var tileCollision    = tileCollisionMessage;
-		var entityCollision  = entityCollisionMessage;
-		
-		//////////////////////////////////////////////////////////////////////
-		//MOVE IN THE X DIRECTION
-		//////////////////////////////////////////////////////////////////////
-		tileCollision.aABB   = null;
-		tileCollision.atX    = null;
-		tileCollision.atY    = null;
-		entityCollision.aABB = null;
-		entityCollision.atX  = null;
-		entityCollision.atY  = null;
+			initialX  = previousAABB.x;//ent.getPreviousX();
+			initialY  = previousAABB.y;//ent.getPreviousY();
+			
+			finalX = this.linearMovement(ent, 'x', previousAABB, currentAABB, groupCheck, collisionGroup, potentialTiles, potentialsEntities);
+			previousAABB.moveX(finalX);
+			finalY = this.linearMovement(ent, 'y', previousAABB, currentAABB, groupCheck, collisionGroup, potentialTiles, potentialsEntities);
 
-		while (xPos != xGoal && (potentialTiles.length || potentialsEntities.length)){
-			if (Math.abs(xGoal - xPos) < unitStepSize)
-			{
-				if(collisionGroup){
-					for(var i in collisionGroup){
-						collisionGroup[i].x += xGoal - xPos;
-						collisionGroup[i].trigger('prepare-for-collision');
-					}
-				}
-				xPos = xGoal;
-			} else {
-				if(collisionGroup){
-					for(var i in collisionGroup){
-						collisionGroup[i].x += xStep;
-						collisionGroup[i].trigger('prepare-for-collision');
-					}
-				}
-				xPos += xStep;
-			}
-			previousAABB.move(xPos, yPos);
-			
-			//CHECK AGAINST TILES
-			for (var t = 0; t < potentialTiles.length; t++) {
-				checkAgainst(ent, previousAABB, potentialTiles[t], potentialTiles[t].shapes[0].getAABB(), 'tiles', xStep, 0, tileCollision, collisionGroup);
-			}
-			
-			//CHECK AGAINST SOLID ENTITIES
-			for (var u = 0; u < potentialsEntities.length; u++) {
-				checkAgainst(ent, previousAABB, potentialsEntities[u], potentialsEntities[u].collisionUnresolved?potentialsEntities[u].getPreviousAABB():potentialsEntities[u].getAABB(), potentialsEntities[u].collisionType, xStep, 0, entityCollision, collisionGroup);
-			}
-			
-			if((entityCollision.atX !== null) && (((xStep > 0) && (!tileCollision.aABB || (entityCollision.atX < tileCollision.atX))) || ((xStep < 0) && (!tileCollision.aABB || (entityCollision.atX > tileCollision.atX))))){
-				if(!groupCheck){
-					triggerCollisionMessages(ent, entityCollision, xStep / Math.abs(xStep), 0);
-				}
-					
-				if(((entityCollision.atX > initialX) && (xStep > 0)) || ((entityCollision.atX < initialX) && (xStep < 0))){
-					finalX = entityCollision.atX;
-				} else {
-					finalX = initialX;
-				}
-			} else if(typeof finalX === 'undefined' && tileCollision.aABB){
-				if(!groupCheck){
-					triggerTileCollisionMessage(ent, tileCollision.shape, xStep / Math.abs(xStep), 0);
-				}
-
-				if(((tileCollision.atX > initialX) && (xStep > 0)) || ((tileCollision.atX < initialX) && (xStep < 0))){
-					finalX = tileCollision.atX;
-				} else {
-					finalX = initialX;
-				}
-			}
-			
-			if(typeof finalX !== 'undefined')
-			{
-				break;
-			}
-		}
-		
-		if(typeof finalX === 'undefined')
-		{
-			
-			finalX = xGoal;
-		}
-		
-		//////////////////////////////////////////////////////////////////////
-		//MOVE IN THE Y DIRECTION
-		//////////////////////////////////////////////////////////////////////
-		tileCollision.aABB   = null;
-		tileCollision.atX    = null;
-		tileCollision.atY    = null;
-		entityCollision.aABB = null;
-		entityCollision.atX  = null;
-		entityCollision.atY  = null;
-
-		while (yPos != yGoal && (potentialTiles.length || potentialsEntities.length))
-		{
-			if (Math.abs(yGoal - yPos) < unitStepSize)
-			{
-				if(collisionGroup){
-					for(var i in collisionGroup){
-						collisionGroup[i].y += yGoal - yPos;
-						collisionGroup[i].trigger('prepare-for-collision');
-					}
-				}
-				yPos = yGoal;
-			} else {
-				if(collisionGroup){
-					for(var i in collisionGroup){
-						collisionGroup[i].y += yStep;
-						collisionGroup[i].trigger('prepare-for-collision');
-					}
-				}
-				yPos += yStep;
-			}
-			previousAABB.move(finalX, yPos);
-			
-			//CHECK AGAINST TILES
-			for (var t = 0; t < potentialTiles.length; t++) {
-				checkAgainst(ent, previousAABB, potentialTiles[t], potentialTiles[t].shapes[0].getAABB(), 'tiles', 0, yStep, tileCollision, collisionGroup);
-			}
-			
-			//CHECK AGAINST SOLID ENTITIES
-			for (var u = 0; u < potentialsEntities.length; u++) {
-				checkAgainst(ent, previousAABB, potentialsEntities[u], potentialsEntities[u].collisionUnresolved?potentialsEntities[u].getPreviousAABB():potentialsEntities[u].getAABB(), potentialsEntities[u].collisionType, 0, yStep, entityCollision, collisionGroup);
-			}
-			
-			if((entityCollision.atY !== null) && (((yStep > 0) && (!tileCollision.aABB || (entityCollision.atY < tileCollision.atY))) || ((yStep < 0) && (!tileCollision.aABB || (entityCollision.atY > tileCollision.atY))))){
-				if(!groupCheck){
-					triggerCollisionMessages(ent, entityCollision, 0, yStep / Math.abs(yStep));
-				}
-					
-				if(((entityCollision.atY > initialY) && (yStep > 0)) || ((entityCollision.atY < initialY) && (yStep < 0))){
-					finalY = entityCollision.atY;
-				} else {
-					finalY = initialY;
-				}
-			} else if(typeof finalY === 'undefined' && tileCollision.aABB){
-				if(!groupCheck){
-					triggerTileCollisionMessage(ent, tileCollision.shape, 0, yStep / Math.abs(yStep));
-				}
-
-				if(((tileCollision.atY > initialY) && (yStep > 0)) || ((tileCollision.atY < initialY) && (yStep < 0))){
-					finalY = tileCollision.atY;
-				} else {
-					finalY = initialY;
-				}
-			}
-			
-			if(typeof finalY !== 'undefined')
-			{
-				break;
-			}
-		}
-		
-		
-		if(typeof finalY === 'undefined')
-		{
-			finalY = yGoal;
-		}
-
-		xy.relative = false;
-		if(groupCheck){
-			xy.xMomentum = xGoal - finalX;
-			xy.yMomentum = yGoal - finalY;
+			xy.relative = false;
+			xy.xMomentum = currentAABB.x - finalX;
+			xy.yMomentum = currentAABB.y - finalY;
 			xy.x = finalX - initialX;
 			xy.y = finalY - initialY;
 			ent.trigger('relocate-group', xy);
 		} else {
-			xy.x = finalX - aabbOffsetX;
-			xy.y = finalY - aabbOffsetY;
-			if(finalMovement){
-				xy.xMomentum = 0;
-				xy.yMomentum = 0;
-			} else {
-				xy.xMomentum = xGoal - finalX;
-				xy.yMomentum = yGoal - finalY;
+			thatTypes.length = 0;
+			thisTypes.length = 0;
+			potentialTiles.length = 0;
+			potentialsEntities.length = 0;
+
+			for(; i < ent.collisionTypes.length; i++){
+				collisionType = ent.collisionTypes[i];
+
+				currentAABB  = ent.getAABB(collisionType);
+				previousAABB = ent.getPreviousAABB(collisionType);
+
+				sweepAABB.reset();
+				sweepAABB.include(currentAABB);
+				sweepAABB.include(previousAABB);
+
+				for (y = 0; y < ent.solidCollisions[collisionType].length; y++) {
+					if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
+						for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
+							include = true;
+							otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
+							if (otherEntity === ent){
+								include = false;
+							}
+							if(include && (checkAABBCollision(sweepAABB, otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y])))) {
+								potentialsEntities[potentialsEntities.length] = otherEntity;
+								thisTypes[thisTypes.length] = collisionType;
+								thatTypes[thatTypes.length] = ent.solidCollisions[collisionType][y];
+								//otherEntity.currentCollisionType = ent.solidCollisions[collisionType][y]; //used for messaging later on
+							}
+						}
+					} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')){
+						potentialTiles = this.terrain.getTiles(sweepAABB);
+						for(z = 0; z < potentialTiles.length; z++){
+							thisTileTypes[thisTileTypes.length] = collisionType;
+						}
+					}
+				}
 			}
+
+			diff = null;
+			for(i = 0; i < ent.collisionTypes.length; i++){
+				collisionType = ent.collisionTypes[i];
+				currentAABB  = ent.getAABB(collisionType); //<-- do this inside lienar movement
+				previousAABB = ent.getPreviousAABB(collisionType); //ditto
+				initialX  = previousAABB.x;//ent.getPreviousX();
+				aabbOffsetX = initialX - ent.getPreviousX(collisionType);//previousAABB.x - initialX;
+				finalQ = this.linearDifference(ent, 'x', previousAABB, currentAABB, initialX, potentialTiles, potentialsEntities, thisTypes, thatTypes, thisTileTypes);
+				if(finalQ !== false){
+					finalX = finalQ;
+					xy.x = finalX - aabbOffsetX;
+					if(finalMovement){
+						xy.xMomentum = 0;
+					} else {
+						xy.xMomentum = currentAABB.x - finalX;
+					}
+				}
+			}
+
+			diff = null;
+			for(i = 0; i < ent.collisionTypes.length; i++){
+				collisionType = ent.collisionTypes[i];
+				currentAABB  = ent.getAABB(collisionType);
+				previousAABB = ent.getPreviousAABB(collisionType);
+				previousAABB.moveX(finalX);
+				initialY  = previousAABB.y;//ent.getPreviousY();
+				aabbOffsetY = initialY - ent.getPreviousY(collisionType);//previousAABB.y - initialY;
+				finalQ = this.linearDifference(ent, 'y', previousAABB, currentAABB, initialY, potentialTiles, potentialsEntities, thisTypes, thatTypes, thisTileTypes);
+				if(finalQ !== false){
+					finalY = finalQ;
+					xy.y = finalY - aabbOffsetY;
+					if(finalMovement){
+						xy.yMomentum = 0;
+					} else {
+						xy.yMomentum = currentAABB.y - finalY;
+					}
+				}
+			}
+
+			xy.relative = false;
 			ent.trigger('relocate-entity', xy);
 		}
 	};
 	
-	proto.checkSoftCollisions = function (resp)
-	{
+	proto.linearDifference = function(ent, axis, previousAABB, currentAABB, initial, potentialTiles, potentialsEntities, thisTypes, thatTypes, thisTileTypes){
+		var finalPoint      = this.linearMovement(ent, axis, previousAABB, currentAABB, false, false, potentialTiles, potentialsEntities, thisTypes, thatTypes, thisTileTypes);
+		
+		if((diff !== null) && (Math.abs(finalPoint - initial) > diff)){
+			return false;
+		} else {
+			diff = Math.abs(finalPoint - initial);
+			return finalPoint;
+		}
+	};
+	
+	proto.linearMovement = function (ent, axis, previousAABB, currentAABB, groupCheck, collisionGroup, tiles, entities, thisCollisionTypes, thatCollisionTypes, tileCollisionTypes)	{
+		var xStep        = 0,
+		yStep            = 0,
+		initialPoint     = previousAABB[axis],
+		goalPoint        = currentAABB[axis],
+		step             = (initialPoint < goalPoint) ? 1 : -1,
+		tileCollision    = tileCollisionMessage,
+		entityCollision  = entityCollisionMessage;
+		
+		tileCollision.aABB = null;
+		tileCollision.x    = null;
+		tileCollision.y    = null;
+		entityCollision.aABB = null;
+		entityCollision.x  = null;
+		entityCollision.y  = null;
+
+		if(tiles.length || entities.length) {
+			if(collisionGroup){
+				for(var i in collisionGroup){
+					collisionGroup[i][axis] += goalPoint - initialPoint;
+					collisionGroup[i].trigger('prepare-for-collision');
+				}
+			}
+			
+			if(axis === 'x'){
+				previousAABB.moveX(goalPoint);
+				xStep = step;
+			} else if(axis === 'y'){
+				previousAABB.moveY(goalPoint);
+				yStep = step;
+			}
+			
+			//CHECK AGAINST TILES
+			for (var t = 0; t < tiles.length; t++) {
+				checkAgainst(ent, previousAABB, tiles[t], tiles[t].shapes[0].getAABB(), xStep, yStep, tileCollision, collisionGroup, (tileCollisionTypes || emptyArray)[t]);
+			}
+			
+			//CHECK AGAINST SOLID ENTITIES
+			for (var u = 0; u < entities.length; u++) {
+				checkAgainst(ent, previousAABB, entities[u], entities[u].collisionUnresolved?entities[u].getPreviousAABB(entities[u].currentCollisionType):entities[u].getAABB(entities[u].currentCollisionType), xStep, yStep, entityCollision, collisionGroup, (thisCollisionTypes || emptyArray)[u], (thatCollisionTypes || emptyArray)[u]);
+			}
+			
+			if((entityCollision[axis] !== null) && (((step > 0) && (!tileCollision.aABB || (entityCollision[axis] < tileCollision[axis]))) || ((step < 0) && (!tileCollision.aABB || (entityCollision[axis] > tileCollision[axis]))))){
+				if(!groupCheck){
+					triggerCollisionMessages(ent, entityCollision, xStep, yStep);
+				}
+					
+				if(((entityCollision[axis] > initialPoint) && (step > 0)) || ((entityCollision[axis] < initialPoint) && (step < 0))){
+					return entityCollision[axis];
+				} else {
+					return initialPoint;
+				}
+			} else if(tileCollision.aABB){
+				if(!groupCheck){
+					triggerTileCollisionMessage(ent, tileCollision.shape, xStep, yStep);
+				}
+
+				if(((tileCollision[axis] > initialPoint) && (step > 0)) || ((tileCollision[axis] < initialPoint) && (step < 0))){
+					return tileCollision[axis];
+				} else {
+					return initialPoint;
+				}
+			}
+		}
+		
+		return goalPoint;
+	};
+	
+	proto.checkSoftCollisions = function (resp)	{
 		var otherEntity = undefined,
 		ent = undefined,
 		message = triggerMessage,
+		i   = 0,
 		x   = 0,
 		y   = 0,
 		z   = 0,
-		checkAABBCollision = AABBCollision;
+		checkAABBCollision = AABBCollision,
+		softCollisions = null,
+		otherEntities  = null,
+		otherCollisionType = null;
 
 		message.x = 0;
 		message.y = 0;
 		
 		for(x = 0; x < this.softEntitiesLive.length; x++){
 			ent = this.softEntitiesLive[x];
-			for (y = 0; y < ent.softCollisions.length; y++){
-				if(this.entitiesByTypeLive[ent.softCollisions[y]]){
-					for(z = 0; z < this.entitiesByTypeLive[ent.softCollisions[y]].length; z++){
-						otherEntity = this.entitiesByTypeLive[ent.softCollisions[y]][z];
-						if((otherEntity !== ent) && (checkAABBCollision(ent.getAABB(), otherEntity.getAABB()))) {
-							if (preciseCollision(ent, otherEntity)){
-								message.entity = otherEntity;
-								message.type   = otherEntity.collisionType;
-								message.shape  = otherEntity.shape;
-								ent.trigger('hit-by-' + otherEntity.collisionType, message);
+			for (i = 0; i < ent.collisionTypes.length; i++){
+				softCollisions = ent.softCollisions[ent.collisionTypes[i]];
+				for (y = 0; y < softCollisions.length; y++){
+					otherCollisionType = softCollisions[y];
+					otherEntities = this.entitiesByTypeLive[otherCollisionType]; 
+					if(otherEntities){
+						for(z = 0; z < otherEntities.length; z++){
+							otherEntity = otherEntities[z];
+							if((otherEntity !== ent) && (checkAABBCollision(ent.getAABB(ent.collisionTypes[i]), otherEntity.getAABB(otherCollisionType)))) {
+								if (preciseCollision(ent, otherEntity)){
+									message.entity = otherEntity;
+									message.type   = otherCollisionType;
+									message.shape  = otherEntity.shape;
+									message.debug = true;
+									ent.trigger('hit-by-' + otherCollisionType, message);
+									message.debug = false;
+								}
 							}
 						}
 					}

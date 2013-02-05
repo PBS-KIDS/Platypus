@@ -1,6 +1,3 @@
-/*
- * 
- */
 {
 	"id": "hero",
 	"components":[
@@ -21,15 +18,15 @@
 		},{
             "type": "logic-portable"
         },{
-			"type": "collision-basic",
-			"collisionType": "hero",
-			"solidCollisions": {
-			    "block": "hit-solid",
-			    "dirt": "hit-solid",
+            "type": "collision-basic",
+            "collisionType": "hero",
+            "solidCollisions": {
+                "block": "hit-solid",
+                "dirt": "hit-solid",
                 "tiles": "hit-solid",
                 "beetle": "hit-solid",
                 "briar": "hit-solid"
-			}
+            }
 		},{
 			"type": "render-animation",
             "animationMap":{
@@ -69,8 +66,8 @@
 		        "ground, moving": {"sound": "walk", "interrupt": "none"},
 		        "jumping": "jump"
 		    }
-//		},{
-//		    "type": "render-debug"
+		},{
+		    "type": "render-debug"
 		}
 	],
 	"properties":{

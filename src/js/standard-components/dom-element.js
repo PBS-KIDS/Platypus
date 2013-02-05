@@ -105,6 +105,17 @@ platformer.components['dom-element'] = (function(){
 		if(resp.element){
 			this.parentElement = resp.element;
 			this.parentElement.appendChild(this.element);
+
+			if(this.owner.entities){
+				var message = {};
+				for (var item in resp){
+					message[item] = resp[item];
+				}
+				message.element = this.element;
+				for (var entity in this.owner.entities){
+					this.owner.entities[entity].trigger('handle-render-load', message);
+				}
+			}
 		}
 	};
 	

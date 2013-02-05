@@ -101,7 +101,7 @@ platformer.components['entity-container'] = (function(){
 		if(entities){
 			for (x = 0; x < entities.length; x++)
 			{
-				 this.addEntity(new platformer.classes.entity(platformer.settings.entities[entities[x].type], entities[x]));
+				 this.addEntity(new platformer.classes.entity(entities[x].id?entities[x]:platformer.settings.entities[entities[x].type], entities[x]));
 			}
 		}
 	};

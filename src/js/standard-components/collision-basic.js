@@ -2,6 +2,8 @@
 # COMPONENT **collision-basic**
 This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
 
+Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance. 
+
 ## Dependencies:
 - [[Collision-Group]] (on entity's parent) - This component listens for 'prepare-for-collision', 'relocate-entity', and 'hit-by' messages, commonly triggered by [[Collision-Group]] on the parent entity.
 
@@ -48,6 +50,19 @@ This component causes this entity to collide with other entities. It must be par
         // Required. Specifies the top-left and bottom-right corners of the rectangle, with the center at [0,0].
       },
       
+      //The following four properties are optional and can be specified instead of the more specific `shape` above. 
+      "width": 160,
+      // Optional. Sets the width of the collision area in world coordinates.
+      
+      "height": 240,
+      // Optional. Sets the height of the collision area in world coordinates.
+      
+      "regX": 80,
+      // Optional. Determines the x-axis center of the collision shape.
+
+      "regY": 120,
+      // Optional. Determines the y-axis center of the collision shape.
+      
       "solidCollisions":{
       // Optional. Determines which collision types this entity should consider solid, meaning this entity should not pass through them.
 
@@ -85,8 +100,21 @@ platformer.components['collision-basic'] = (function(){
 				}
 			};
 		}
-	};
-	var component = function(owner, definition){
+	},
+	reassignFunction = function(oldFunction, newFunction, collisionType){
+		if(oldFunction){
+			return function(collision){
+				if(collision === collisionType){
+					return newFunction(collision);
+				} else {
+					return oldFunction(collision);
+				}
+			};
+		} else {
+			return newFunction;
+		}
+	},
+	component = function(owner, definition){
 		var x  = 0; 
 		var self   = this;
 		
@@ -106,10 +134,10 @@ platformer.components['collision-basic'] = (function(){
 		} else if (definition.shape) {
 			shapes = [definition.shape];
 		} else {
-			var halfWidth = this.owner.width/2;
-			var halfHeight = this.owner.height/2;
-			var points = [[-halfWidth, -halfHeight],[halfWidth, halfHeight]];
-			var offset = [(this.owner.regX?halfWidth-this.owner.regX:0), (this.owner.regY?halfHeight-this.owner.regY:0)];
+			var halfWidth  = (definition.width  || this.owner.width)  / 2;
+			var halfHeight = (definition.height || this.owner.height) / 2;
+			var points = [[-halfWidth, -halfHeight], [halfWidth, halfHeight]];
+			var offset = [(definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)), (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0))];
 			shapes = [{offset: offset, points: points, shape: 'rectangle'}];
 		}
 		
@@ -129,29 +157,36 @@ platformer.components['collision-basic'] = (function(){
 			this.aabb.include(this.shapes[x].getAABB());
 		}
 
-		this.owner.getAABB = function(){
-			return self.getAABB();
-		};
-		this.owner.getPreviousAABB = function(){
-			return self.getPreviousAABB();
-		};
-		this.owner.getShapes = function(){
-			return self.getShapes();
-		};
-		this.owner.getPreviousX = function(){
-			return self.lastX;
-		};
-		this.owner.getPreviousY = function(){
-			return self.lastY;
-		};
+		this.collisionType = definition.collisionType || 'none';
 		
-		this.owner.collisionType = definition.collisionType || 'none';
-		//this.prevCollisionType = 'none';
+		this.owner.collisionTypes = this.owner.collisionTypes || [];
+		this.owner.collisionTypes[this.owner.collisionTypes.length] = this.collisionType;
 
-		this.owner.solidCollisions = [];
+		this.owner.getAABB = reassignFunction(this.owner.getAABB, function(collisionType){
+			return self.getAABB();
+		}, this.collisionType);
+
+		this.owner.getPreviousAABB = reassignFunction(this.owner.getPreviousAABB, function(collisionType){
+			return self.getPreviousAABB();
+		}, this.collisionType);
+
+		this.owner.getShapes = reassignFunction(this.owner.getShapes, function(collisionType){
+			return self.getShapes();
+		}, this.collisionType);
+			
+		this.owner.getPreviousX = reassignFunction(this.owner.getPreviousX, function(collisionType){
+			return self.lastX;
+		}, this.collisionType);
+
+		this.owner.getPreviousY = reassignFunction(this.owner.getPreviousY, function(collisionType){
+			return self.lastY;
+		}, this.collisionType);
+		
+		this.owner.solidCollisions = this.owner.solidCollisions || {};
+		this.owner.solidCollisions[this.collisionType] = [];
 		if(definition.solidCollisions){
 			for(var i in definition.solidCollisions){
-				this.owner.solidCollisions.push(i);
+				this.owner.solidCollisions[this.collisionType].push(i);
 				if(definition.solidCollisions[i]){
 					this.addListener('hit-by-' + i);
 					this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i]);
@@ -159,10 +194,11 @@ platformer.components['collision-basic'] = (function(){
 			}
 		}
 
-		this.owner.softCollisions = [];
+		this.owner.softCollisions = this.owner.softCollisions || {};
+		this.owner.softCollisions[this.collisionType] = [];
 		if(definition.softCollisions){
 			for(var i in definition.softCollisions){
-				this.owner.softCollisions.push(i);
+				this.owner.softCollisions[this.collisionType].push(i);
 				if(definition.softCollisions[i]){
 					this.addListener('hit-by-' + i);
 					this['hit-by-' + i] = entityBroadcast(definition.softCollisions[i]);
@@ -180,13 +216,15 @@ platformer.components['collision-basic'] = (function(){
 		this.owner.parent.trigger('remove-collision-entity', this.owner);
 	};
 	
-	proto['prepare-for-collision'] = function(){
-		this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
-		this.aabb.reset();
-		for (var x = 0; x < this.shapes.length; x++){
-			this.shapes[x].update(this.owner.x, this.owner.y);
-			this.aabb.include(this.shapes[x].getAABB());
-		}
+	proto['prepare-for-collision'] = function(collisionType){
+//		if(collisionType === this.collisionType){
+			this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
+			this.aabb.reset();
+			for (var x = 0; x < this.shapes.length; x++){
+				this.shapes[x].update(this.owner.x, this.owner.y);
+				this.aabb.include(this.shapes[x].getAABB());
+			}
+//		}
 	};
 	
 	
