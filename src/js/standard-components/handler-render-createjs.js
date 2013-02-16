@@ -93,7 +93,9 @@ platformer.components['handler-render-createjs'] = (function(){
 		}
 		for (var x = this.stage.children.length - 1; x > -1; x--){
 			child = this.stage.children[x];
-			if(child.name !== 'entity-managed'){
+			if (child.hidden) {
+				if(child.visible) child.visible = false;
+			} else if(child.name !== 'entity-managed'){
 				if((child.x >= this.camera.x - this.camera.buffer) && (child.x <= this.camera.x + this.camera.width + this.camera.buffer) && (child.y >= this.camera.y - this.camera.buffer) && (child.y <= this.camera.y + this.camera.height + this.camera.buffer)){
 					if(!child.visible) child.visible = true;
 				} else {

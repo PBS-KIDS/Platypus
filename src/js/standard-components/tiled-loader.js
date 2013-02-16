@@ -254,12 +254,11 @@ platformer.components['tiled-loader'] = (function(){
 					properties = {};
 					//Copy properties from Tiled
 
-					if(tileset.tileproperties[entity.gid - tileset.firstgid]){
+					if(tileset.tileproperties && tileset.tileproperties[entity.gid - tileset.firstgid]){
 						for (x in tileset.tileproperties[entity.gid - tileset.firstgid]){
 							//This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
 							numberProperty = parseFloat(tileset.tileproperties[entity.gid - tileset.firstgid][x]);
-							if (numberProperty == 0 || (!!numberProperty))
-							{
+							if (numberProperty == 0 || (!!numberProperty)) {
 								properties[x] = numberProperty;
 							} else if(tileset.tileproperties[entity.gid - tileset.firstgid][x] == 'true') {
 								properties[x] = true;
@@ -330,6 +329,7 @@ platformer.components['tiled-loader'] = (function(){
 						properties.z = this.layerZ;
 					}
 					
+					properties.parent = this.owner;
 					entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
 					if(entity){
 						if(entity.camera){

@@ -276,6 +276,8 @@ platformer.components['collision-group'] = (function(){
 		this.solidEntitiesLive = [];
 		this.softEntities = [];
 		this.softEntitiesLive = [];
+		this.allEntities = [];
+		this.allEntitiesLive = [];
 		this.entitiesByTypeLive = {};
 		this.terrain = undefined;
 		this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
@@ -331,6 +333,8 @@ platformer.components['collision-group'] = (function(){
 				if(soft){
 					this.softEntities[this.softEntities.length] = entity;
 				}
+				this.allEntities[this.allEntities.length] = entity;
+				
 			}
 		}
 	};
@@ -338,42 +342,56 @@ platformer.components['collision-group'] = (function(){
 	proto['child-entity-removed'] = proto['remove-collision-entity'] = function(entity){
 		var x = 0,
 		i     = 0,
+		j	  = 0,
 		types = entity.collisionTypes,
 		solid = false,
 		soft  = false;
 
-		for(; i < types.length; i++){
-			for (x in this.entitiesByType[types[i]]) {
-				if(this.entitiesByType[types[i]][x] === entity){
-					this.entitiesByType[types[i]].splice(x, 1);
-					break;
+		if (types)
+		{
+			for(; i < types.length; i++){
+				for (x in this.entitiesByType[types[i]]) {
+					if(this.entitiesByType[types[i]][x] === entity){
+						this.entitiesByType[types[i]].splice(x, 1);
+						break;
+					}
+				}
+				if(entity.solidCollisions[types[i]].length){
+					solid = true;
+				}
+				if(entity.softCollisions[types[i]].length){
+					soft = true;
 				}
 			}
-			if(entity.solidCollisions[types[i]].length){
-				solid = true;
+			
+			if(solid){
+				for (x in this.solidEntities) {
+					if(this.solidEntities[x] === entity){
+						this.solidEntities.splice(x, 1);
+						break;
+					}
+				}
 			}
-			if(entity.softCollisions[types[i]].length){
-				soft = true;
+	
+			if(soft){
+				for (x in this.softEntities) {
+					if(this.softEntities[x] === entity){
+						this.softEntities.splice(x, 1);
+						break;
+					}
+				}
+			}
+			
+			for (j = 0; j < this.allEntities.length; j++)
+			{
+				if (this.allEntities[j] === entity)
+				{
+					this.allEntities.splice(j,1);
+					break;
+				}
 			}
 		}
 		
-		if(solid){
-			for (x in this.solidEntities) {
-				if(this.solidEntities[x] === entity){
-					this.solidEntities.splice(x, 1);
-					break;
-				}
-			}
-		}
-
-		if(soft){
-			for (x in this.softEntities) {
-				if(this.softEntities[x] === entity){
-					this.softEntities.splice(x, 1);
-					break;
-				}
-			}
-		}
 	};
 	
 	proto['check-collision-group'] = function(resp){
@@ -400,6 +418,7 @@ platformer.components['collision-group'] = (function(){
 			this.owner.trigger('prepare-for-collision');
 		
 			this.checkGroupCollisions(resp);
+			this.prepareCollisions(resp);
 			this.checkSolidCollisions(resp, false);
 	
 			this.aabb.reset();
@@ -417,6 +436,7 @@ platformer.components['collision-group'] = (function(){
 			}
 		} else {
 			this.checkGroupCollisions(resp);
+			this.prepareCollisions(resp);
 			this.checkSolidCollisions(resp, true);
 			this.checkSoftCollisions(resp);
 		}
@@ -433,8 +453,10 @@ platformer.components['collision-group'] = (function(){
 	proto.checkCamera = function(camera){
 		var i  = 0,
 		j      = 0,
+		k      = 0,
 		length = 0,
-		list   = this.solidEntitiesLive,
+		list   = null,
+		otherList = null,
 		width  = camera.width,
 		height = camera.height,
 		x      = camera.left + width  / 2,
@@ -442,24 +464,37 @@ platformer.components['collision-group'] = (function(){
 		buffer = camera.buffer * 2,
 		entities = undefined,
 		entity = undefined,
-		check  = AABBCollision;
+		check  = AABBCollision,
+		types = null;
 		
 		this.cameraLogicAABB.setAll(x, y, width + buffer, height + buffer);
+		
+		list = this.allEntitiesLive;
 		list.length = 0;
-		length = this.solidEntities.length;
-		for (; i < length; i++){
-			entity = this.solidEntities[i];
-			if(entity.alwaysOn || check(entity.getAABB(), this.cameraLogicAABB)){
-				list[list.length] = entity;
-			}
-		}
-		list = this.softEntitiesLive;
-		list.length = 0;
-		length = this.softEntities.length;
+		length = this.allEntities.length;
 		for (i = 0; i < length; i++){
-			entity = this.softEntities[i];
+			entity = this.allEntities[i];
 			if(entity.alwaysOn || check(entity.getAABB(), this.cameraLogicAABB)){
 				list[list.length] = entity;
+			} 
+		}
+		
+		list = this.solidEntitiesLive;
+		list.length = 0;
+		otherList = this.softEntitiesLive;
+		otherList.length = 0;
+		length = this.allEntitiesLive.length;
+		for (i = 0; i < length; i++){
+			entity = this.allEntitiesLive[i];
+			types = entity.collisionTypes;
+			for (k = 0; k < types.length; k++)
+			{
+				if(entity.solidCollisions[types[k]].length && !entity.immobile){
+					list[list.length] = entity;
+				}
+				if(entity.softCollisions[types[k]].length){
+					otherList[otherList.length] = entity;
+				}
 			}
 		}
 		
@@ -508,6 +543,17 @@ platformer.components['collision-group'] = (function(){
 		}
 	};
 
+	proto.prepareCollisions = function (resp) {
+		var entity = null;
+		for (x = this.allEntitiesLive.length - 1; x > -1; x--)
+		{
+			entity = this.allEntitiesLive[x];
+			entity.trigger('prepare-for-collision', resp);
+		}
+	};
+
+	//TODO: FINISH THIS!	
+	
 	proto.checkSolidCollisions = function (resp, finalMovement){
 		var x    = 0,
 		entity   = null,
@@ -518,11 +564,11 @@ platformer.components['collision-group'] = (function(){
 		{
 			entity = this.solidEntitiesLive[x];
 			if(this.owner !== entity){
-				if(entity.trigger('prepare-for-collision', resp)){
+//				if(entity.trigger('prepare-for-collision', resp)){
 					entity.collisionUnresolved = true;
 					entities[entities.length] = entity;
 //				} else { // possible TODO: remove the entity because it no longer has a collision handler
-				}
+//				}
 			}
 		}
 		
@@ -810,7 +856,6 @@ platformer.components['collision-group'] = (function(){
 									message.entity = otherEntity;
 									message.type   = otherCollisionType;
 									message.shape  = otherEntity.shape;
-									message.debug = true;
 									ent.trigger('hit-by-' + otherCollisionType, message);
 									message.debug = false;
 								}

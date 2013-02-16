@@ -11,6 +11,8 @@ This component is attached to entities that will appear in the game world. It re
 - **handle-render** - Repositions the image in preparation for rendering
 - **handle-render-load** - The image added to the stage. Setting up the mouse input stuff.
   > @param obj.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
+- **logical-state** - This component listens for logical state changes. Handles orientation of the object and visibility.
+  > @param message (object) - Required. Lists parameters and their values. For example: {hidden: false, orientation: 90}. Accepted parameters: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the image is rendered.
 
 ### Local Broadcasts:
 - **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
@@ -57,6 +59,14 @@ This component is attached to entities that will appear in the game world. It re
       //Optional - The X scaling factor for the image.  Will default to 1.
       "scaleY": 1
       //Optional - The Y scaling factor for the image.  Will default to 1.
+      "rotate": false,
+      //Optional - Whether this object can be rotated. It's rotational angle is set by sending an orientation value in the logical state.
+      "mirror": true,
+      //Optional - Whether this object can be mirrored over X. To mirror it over X set the orientation value in the logical state to be great than 90 but less than 270.
+      "flip": false,
+      //Optional - Whether this object can be flipped over Y. To flip it over Y set the orientation value in the logical state to be great than 180.
+      "hidden": false
+      //Optional - Whether this object is visible or not. To change the hidden value dynamically add a 'hidden' property to the logical state object and set it to true or false.
     }
     
 [link1]: http://createjs.com/Docs/EaselJS/Stage.html
@@ -68,6 +78,12 @@ platformer.components['render-image'] = (function(){
 		source    = definition.source;
 		
 		this.owner = owner;
+		this.rotate = definition.rotate || false;
+		this.mirror = definition.mirror || false;
+		this.flip   = definition.flip   || false;
+		this.hidden   = definition.hidden   || false;
+		
+		this.state = {};
 		
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
@@ -80,14 +96,17 @@ platformer.components['render-image'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['handle-render-load', 'handle-render']);
+		this.addListeners(['handle-render-load', 'handle-render', 'logical-state']);
 		this.stage = undefined;
 		this.image = new createjs.Bitmap(platformer.assets[image]);
 		var scaleX = platformer.assets[image].scaleX || 1,
 		scaleY     = platformer.assets[image].scaleY || 1;
 		if(source){
+			source.x = source.x || 0;
+			source.y = source.y || 0;
 			this.image.sourceRect = new createjs.Rectangle(source.x * scaleX, source.y * scaleY, source.width * scaleX, source.height * scaleY);
 		}
+		this.image.hidden = this.hidden;
 		this.image.regX   = (definition.regX || 0) * scaleX;
 		this.image.regY   = (definition.regY || 0) * scaleY;
 		this.image.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
@@ -169,6 +188,46 @@ platformer.components['render-image'] = (function(){
 		this.image.x = this.owner.x;
 		this.image.y = this.owner.y;
 		this.image.z = this.owner.z;
+	};
+	
+	proto['logical-state'] = function(state){
+		var angle = null;
+		
+		for(var i in state){
+			if(this.state[i] !== state[i]){
+				this.state[i] = state[i];
+				
+				if(i === 'orientation'){
+					if(this.rotate || this.mirror || this.flip){
+						angle = ((state[i] * 180) / Math.PI + 360) % 360;
+						
+						if(this.rotate){
+							this.image.rotation = angle;
+						}
+						
+						if(this.mirror){
+							if((angle > 90) && (angle < 270)){
+								this.image.scaleX = -this.scaleX;
+							} else {
+								this.image.scaleX = this.scaleX;
+							}
+						}
+						
+						if(this.flip){
+							if(angle > 180){
+								this.image.scaleY = this.scaleY;
+							} else {
+								this.image.scaleY = -this.scaleY;
+							}
+						}
+					}
+				}
+				if(i === 'hidden') {
+					this.hidden = state[i];
+					this.image.hidden = this.hidden;
+				}
+			}
+		}
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

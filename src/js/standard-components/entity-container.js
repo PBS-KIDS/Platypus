@@ -107,6 +107,9 @@ platformer.components['entity-container'] = (function(){
 	};
 	
 	proto.addEntity = proto['add-entity'] = function (entity) {   
+		entity.parent = this.owner;
+		entity.trigger('adopted');
+		
 		for (var x = 0; x < this.entities.length; x++)
 		{
 			entity.trigger('peer-entity-added', this.entities[x]);
@@ -118,7 +121,6 @@ platformer.components['entity-container'] = (function(){
 		}
 		this.entities.push(entity);
 		this.owner.trigger('child-entity-added', entity);
-		entity.parent = this.owner;
 		return entity;
 	};
 	

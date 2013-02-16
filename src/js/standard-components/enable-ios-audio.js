@@ -20,7 +20,6 @@ platformer.components['enable-ios-audio'] = (function(){
 	var iOSAudioEnabled = false,
 	component = function(owner, definition){
 		var self = this;
-		
 		this.owner = owner;
 		
 		if(!iOSAudioEnabled){
@@ -43,22 +42,21 @@ platformer.components['enable-ios-audio'] = (function(){
 		
 		iOSAudioEnabled = true;
 		click = function(e){
-			var cjsAudio = createjs.SoundJS.play(audioId),
-			audio        = cjsAudio.tag,
-			forceStop    = function () {
-			    audio.removeEventListener('play', forceStop, false);
+			var audio = createjs.Sound.play(audioId),
+			forceStop = function () {
+			    audio.removeEventListener('succeeded', forceStop);
 			    audio.pause();
 			},
 			progress  = function () {
-			    audio.removeEventListener('canplaythrough', progress, false);
+			    audio.removeEventListener('ready', progress);
 			    if (callback) callback();
 			};
 			
-			if(cjsAudio.playState === 'playSucceeded'){
-				cjsAudio.stop();
+			if(audio.playState === 'playSucceeded'){
+				audio.stop();
 			} else {
-				audio.addEventListener('play', forceStop, false);
-			    audio.addEventListener('canplaythrough', progress, false);
+				audio.addEventListener('succeeded', forceStop);
+			    audio.addEventListener('ready', progress);
 
 			    try {
 					audio.play();

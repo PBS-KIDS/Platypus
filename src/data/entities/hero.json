@@ -62,12 +62,12 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
-                "swingHit": {"sound": "pickaxe-other", "interrupt": "none"},
-		        "ground, moving": {"sound": "walk", "interrupt": "none"},
+                "swingHit": {"sound": "pickaxe-other"},
+		        "ground, moving": {"sound": "walk", "loop": 5000},
 		        "jumping": "jump"
 		    }
-		},{
-		    "type": "render-debug"
+//		},{
+//		    "type": "render-debug"
 		}
 	],
 	"properties":{

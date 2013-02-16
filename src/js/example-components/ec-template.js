@@ -25,62 +25,57 @@ Summarize the purpose of this component here.
       // List all additional parameters and their possible values here.
     }
 */
-platformer.components['name-of-component'] = (function(){ //TODO: Change the name of the component!
-	var component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-
-		/**************************************************
-		 TODO: Add message ids that this component is listening for here.
-		 	
-		 	e.g.
-		 	this.addListeners(['load']);
-		 *************************************************/
-		this.addListeners([/*MESSAGE IDS HERE!*/]);
-	};
-	var proto = component.prototype;
-	
+(function(){
 	/*********************************************************************
-	 TODO: Add functions that handle the various messages. There should be a corresponding function for each 
-	       listener added above. 
+	 TODO: Place helper functions here that are suitable across all
+	       component instances and should never be accessible from
+	       outside this component.
+	*********************************************************************/
+
+	return platformer.createComponentClass({
+		/*********************************************************************
+		 "createComponentClass" creates the component class and adds the
+		 following methods and properties that can be referenced from your
+		 own methods and events:
+		 
+		 Property this.owner - a reference to the component's Entity
+		 Property this.type  - identical to the id provided below
+		 Method addListener(event, callback) - adds an event to listen for
+		 Method removeListener(event, callback) - removes an event
+		*********************************************************************/
 		
-		e.g.
-		proto['load'] = function(resp){
-			// Run loading code here
-		};
-	**********************************************************************/
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
+		id: 'name-of-component', //TODO: Change the name of the component!
+		
+		constructor: function(definition){
+			/*********************************************************************
+			 TODO: Place code here for anything that should happen on component
+			       instantiation. Use the "load" event shown below for anything
+			       that should happen once all of the entity's components are
+			       finished loading.
+			*********************************************************************/
+		},
 
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+		/*********************************************************************
+	     TODO: Additional methods that are *not* events may be added using the
+	           same format as above. No method names should match the event
+	           names listed below.
+	           
+			   e.g.
+			   "destroy": function(){
+			       // clean up component properties here
+			   }
+	    *********************************************************************/
+		
+		events: {// These are messages that this component listens for
+			/*********************************************************************
+			 TODO: Add messages and their accompanying methods to handle the
+			       the events that this component is listening for.
+				
+				   e.g.
+				   "load": function(resp){
+				       // Run loading code here
+				   }
+			*********************************************************************/
+		}
+	});
 })();

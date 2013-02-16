@@ -43,7 +43,7 @@ This component creates a DOM element associated with the entity. In addition to 
       //Optional. In addition to the event syntax above, an Array of strings may be provided, causing multiple messages to be triggered in the order listed.
     }
 */
-platformer.components['dom-element'] = (function(){
+(function(){
 	var createFunction = function(message, entity){
 		if(typeof message === 'string'){
 			return function(e){
@@ -58,134 +58,103 @@ platformer.components['dom-element'] = (function(){
 				e.preventDefault();
 			};
 		}
-	},
-	component = function(owner, definition){
-		var elementType = definition.element   || 'div';
-		
-		this.owner = owner;
-		this.updateClassName = definition.updateClassName || false;
-		this.className = '';
-		this.states = {};
-		this.stateChange = false;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-render-load', 'handle-render', 'update-content', 'logical-state']);
-		
-		this.element = this.owner.element = document.createElement(elementType);
-		this.element.ondragstart = function() {return false;}; //prevent element dragging by default
-
-		for(var i in definition){
-			if(i === 'style'){
-				for(var j in definition[i]){
-					this.element.style[j] = definition[i][j]; 
-				}
-			} else if((i !== 'type') && (i !== 'element') && (i !== 'updateClassName')){
-				if(i.indexOf('on') === 0){
-					this.element[i] = createFunction(definition[i], this.owner);
-				} else {
-					this.element[i] = definition[i];
-					if(i == 'className'){
-						this.className = definition[i];
+	};
+	
+	return platformer.createComponentClass({
+		id: 'dom-element',
+		constructor: function(definition){
+			var elementType = definition.element   || 'div';
+			
+			this.updateClassName = definition.updateClassName || false;
+			this.className = '';
+			this.states = {};
+			this.stateChange = false;
+			
+			this.element = this.owner.element = document.createElement(elementType);
+			this.element.ondragstart = function() {return false;}; //prevent element dragging by default
+	
+			for(var i in definition){
+				if(i === 'style'){
+					for(var j in definition[i]){
+						this.element.style[j] = definition[i][j]; 
+					}
+				} else if((i !== 'type') && (i !== 'element') && (i !== 'updateClassName')){
+					if(i.indexOf('on') === 0){
+						this.element[i] = createFunction(definition[i], this.owner);
+					} else {
+						this.element[i] = definition[i];
+						if(i == 'className'){
+							this.className = definition[i];
+						}
 					}
 				}
 			}
-		}
+			
+			if(this.owner.className){
+				this.className = this.element.className = this.owner.className;
+			}
+			if(this.owner.innerHTML){
+				this.element.innerHTML = this.owner.innerHTML;
+			}
+		},
+		events:{
+			"handle-render-load": function(resp){
+				if(resp.element){
+					this.parentElement = resp.element;
+					this.parentElement.appendChild(this.element);
 		
-		if(this.owner.className){
-			this.className = this.element.className = this.owner.className;
-		}
-		if(this.owner.innerHTML){
-			this.element.innerHTML = this.owner.innerHTML;
-		}
-	};
-	var proto = component.prototype;
-	
-	proto['handle-render-load'] = function(resp){
-		if(resp.element){
-			this.parentElement = resp.element;
-			this.parentElement.appendChild(this.element);
-
-			if(this.owner.entities){
-				var message = {};
-				for (var item in resp){
-					message[item] = resp[item];
+					if(this.owner.entities){
+						var message = {};
+						for (var item in resp){
+							message[item] = resp[item];
+						}
+						message.element = this.element;
+						for (var entity in this.owner.entities){
+							this.owner.entities[entity].trigger('handle-render-load', message);
+						}
+					}
 				}
-				message.element = this.element;
-				for (var entity in this.owner.entities){
-					this.owner.entities[entity].trigger('handle-render-load', message);
-				}
-			}
-		}
-	};
-	
-	proto['handle-render'] = function(resp){
-		var i     = 0,
-		className = this.className;
+			},
 		
-		if(this.stateChange && this.updateClassName){
-			for(i in this.states){
-				if(this.states[i]){
-					className += ' ' + i;
+			"handle-render": function(resp){
+				var i     = 0,
+				className = this.className;
+				
+				if(this.stateChange && this.updateClassName){
+					for(i in this.states){
+						if(this.states[i]){
+							className += ' ' + i;
+						}
+					}
+					this.element.className = className;
+					this.stateChange = false;
+				}
+			},
+		
+			"update-content": function(resp){
+				if(resp && (typeof resp.text == 'string') && (resp.text !== this.element.innerHTML)){
+					this.element.innerHTML = resp.text;
+				}
+			},
+		
+			"logical-state": function(state){
+				for(var i in state){
+					if(this.states[i] !== state[i]){
+						this.stateChange = true;
+						this.states[i] = state[i];
+					}
 				}
 			}
-			this.element.className = className;
-			this.stateChange = false;
-		}
-	};
-	
-	proto['update-content'] = function(resp){
-		if(resp && resp.text && (resp.text !== this.element.innerHTML)){
-			this.element.innerHTML = resp.text;
-		}
-	};
-	
-	proto['logical-state'] = function(state){
-		for(var i in state){
-			if(this.states[i] !== state[i]){
-				this.stateChange = true;
-				this.states[i] = state[i];
+		},
+		destroy: function(){
+			if(this.parentElement){
+				this.parentElement.removeChild(this.element);
+				this.parentElement = undefined;
 			}
+			if(this.owner.element === this.element){
+				this.owner.element = undefined;
+			}
+			this.element = undefined;
 		}
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		if(this.parentElement){
-			this.parentElement.removeChild(this.element);
-			this.parentElement = undefined;
-		}
-		if(this.owner.element === this.element){
-			this.owner.element = undefined;
-		}
-		this.element = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

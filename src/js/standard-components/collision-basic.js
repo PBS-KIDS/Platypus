@@ -126,6 +126,13 @@ platformer.components['collision-basic'] = (function(){
 		this.yMomentum= 0;
 		this.aabb     = new platformer.classes.aABB();
 		this.prevAABB = new platformer.classes.aABB();
+		this.relocateObj = {
+								x: 0,
+								y: 0,
+								relative: false,
+								xMomentum: 0,
+								yMomentum: 0
+							};
 
 		var shapes = [];
 		if(definition.shapes)
@@ -224,9 +231,14 @@ platformer.components['collision-basic'] = (function(){
 				this.shapes[x].update(this.owner.x, this.owner.y);
 				this.aabb.include(this.shapes[x].getAABB());
 			}
+			if(this.owner.solidCollisions.length == 0)
+			{
+				this.relocateObj.x = this.owner.x;
+				this.relocateObj.y = this.owner.y;
+				this['relocate-entity'](this.relocateObj);
+			}
 //		}
 	};
-	
 	
 	proto['relocate-entity'] = function(resp){
 		if(resp.relative){

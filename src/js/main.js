@@ -26,7 +26,7 @@ window.addEventListener('load', function(){
 			list.push(asset);
 		}
 	},
-	loader     = new createjs.PreloadJS(),
+	loader     = new createjs.LoadQueue(),
 	loadAssets = [],
 	optimizeImages = platformer.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
 	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages):1,
@@ -46,18 +46,13 @@ window.addEventListener('load', function(){
 		return element;
 	};
 	
-	loader.onProgress = function (event) {
-//		console.log('Progress:', event);
-	};
-	
-	loader.onFileLoad = function (event) {
-		var data = event.data,
-		result   = event.result;
+	loader.addEventListener('fileload', function (event) {
+		var item = event.item,
+		data     = item.data,
+		result   = item.tag;
 		
-//		console.log('Load:', event);
-		
-		if(event.type == "image"){
-			if(optimizeImages && (scale !== 1) && (event.type == "image")){
+		if(event.item.type == "image"){
+			if(optimizeImages && (scale !== 1)){
 				if(data){
 					result = scaleImage(result, data.columns, data.rows);
 				} else {
@@ -66,14 +61,10 @@ window.addEventListener('load', function(){
 			}
 		}
 		
-		platformer.assets[event.id] = result;
-	};
+		platformer.assets[event.item.id] = result;
+	});
 	
-	loader.onError = function (event) {
-//		console.log('Your stuff broke!');
-	};
-	
-	loader.onComplete = function (event) {
+	loader.addEventListener('complete', function (event) {
 		platformer.game = new platformer.classes.game(platformer.settings, function(game){
 			platformer.loadFullScreenButton(game.containerElement, game.settings.supports.touch, function(){
 				game.bindings['resize'].callback();
@@ -82,7 +73,7 @@ window.addEventListener('load', function(){
 		createjs.Ticker.useRAF = true;
 		createjs.Ticker.setFPS(platformer.settings.global.fps);
 		createjs.Ticker.addListener(platformer.game);
-	};
+	});
 	
 	for(var i in platformer.settings.assets){
 		if(typeof platformer.settings.assets[i].src === 'string'){
@@ -125,12 +116,19 @@ window.addEventListener('load', function(){
 			}
 		}
 	}
-	if(platformer.settings.supports.android){ //Android thinks HTMLAudioPlugin works, so we avoid that misconception here
-		createjs.SoundJS.registerPlugin(createjs.HTMLiOSAudioPlugin);
-	} else {
-		createjs.SoundJS.registerPlugins([createjs.HTMLAudioPlugin, createjs.HTMLiOSAudioPlugin]);
-	}
-	loader.installPlugin(createjs.SoundJS);
+
+	// Allow iOS 5- to play HTML5 audio using SoundJS by overriding the isSupported check. (Otherwise there is no audio support for iOS 5-.)
+	createjs.HTMLAudioPlugin.isSupported = function () {
+		createjs.HTMLAudioPlugin.generateCapabilities();
+		var t = createjs.HTMLAudioPlugin.tag;
+		if (t == null || createjs.HTMLAudioPlugin.capabilities == null) {
+			return false;
+		}
+		return true;
+	};
+	createjs.Sound.initializeDefaultPlugins();
+
+	loader.installPlugin(createjs.Sound);
 	loader.loadManifest(loadAssets);
 	platformer.assets = [];
 

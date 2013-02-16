@@ -12,8 +12,8 @@ This component is attached to entities that will appear in the game world. It re
 - **handle-render-load** - This event is triggered when the entity is added to the render handler before 'handle-render' is called. It adds the animation to the Stage and sets up the mouse input if necessary.
   > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
 - **handle-render** - On each `handle-render` message, this component checks to see if there has been a change in the state of the entity. If so, it updates its animation play-back accordingly.
-- **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played.
-  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
+- **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
+  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the animation is rendered.
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing the corresponding animations.
 
 ### Local Broadcasts:
@@ -88,6 +88,14 @@ This component is attached to entities that will appear in the game world. It re
       
       "scaleY": 1
       //Optional - The Y scaling factor for the image. Will default to 1.
+      "rotate": false,
+      //Optional - Whether this object can be rotated. It's rotational angle is set by sending an orientation value in the logical state.
+      "mirror": true,
+      //Optional - Whether this object can be mirrored over X. To mirror it over X set the orientation value in the logical state to be great than 90 but less than 270.
+      "flip": false,
+      //Optional - Whether this object can be flipped over Y. To flip it over Y set the orientation value in the logical state to be great than 180.
+      "hidden": false
+      //Optional - Whether this object is visible or not. To change the hidden value dynamically add a 'hidden' property to the logical state object and set it to true or false.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -140,6 +148,7 @@ platformer.components['render-animation'] = (function(){
 		this.rotate = definition.rotate || false;
 		this.mirror = definition.mirror || false;
 		this.flip   = definition.flip   || false;
+		this.hidden   = definition.hidden   || false;
 		
 		if(definition.acceptInput){
 			this.hover = definition.acceptInput.hover || false;
@@ -183,6 +192,7 @@ platformer.components['render-animation'] = (function(){
 		spriteSheet = new createjs.SpriteSheet(spriteSheet);
 		this.anim = new createjs.BitmapAnimation(spriteSheet);
 		this.anim.onAnimationEnd = function(animationInstance, lastAnimation){
+			self.owner.trigger('animation-ended', lastAnimation);
 			if(self.waitingAnimation){
 				self.currentAnimation = self.waitingAnimation;
 				self.waitingAnimation = false;
@@ -194,6 +204,7 @@ platformer.components['render-animation'] = (function(){
 				self.animationFinished = true;
 			}
 		};
+		this.anim.hidden = this.hidden;
 		this.currentAnimation = this.owner.state || definition.state || lastAnimation || 'default';
 		this.scaleX = this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
 		this.scaleY = this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
@@ -347,6 +358,10 @@ platformer.components['render-animation'] = (function(){
 							}
 						}
 					}
+				}
+				if(i === 'hidden') {
+					this.hidden = state[i];
+					this.anim.hidden = this.hidden;
 				}
 			}
 		}

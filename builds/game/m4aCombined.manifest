@@ -1,13 +1,13 @@
 CACHE MANIFEST
-# Version 136010203
+# Version 136103874
 
 CACHE:
 
 # m4aCombined:
 
 a/combined.m4a
-j/compressed136010203.js
-s/compressed136010203.css
+j/compressed136103874.js
+s/compressed136103874.css
 
 i/buttons.png
 i/dirt.png
@@ -20,10 +20,7 @@ i/title-screen.png
 i/objects.png
 i/beetle.png
 i/briar.png
-http://code.createjs.com/easeljs-0.5.0.min.js
-http://code.createjs.com/tweenjs-0.3.0.min.js
-http://code.createjs.com/soundjs-0.3.0.min.js
-http://code.createjs.com/preloadjs-0.2.0.min.js
+http://code.createjs.com/createjs-2013.02.12.min.js
 
 FALLBACK:
 

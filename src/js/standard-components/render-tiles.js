@@ -38,7 +38,21 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 */
 
 platformer.components['render-tiles'] = (function(){
-	var component = function(owner, definition){
+	var initializeCanvasConservation = function(displayObject){ //To make CreateJS Display Object have better canvas conservation.
+		var canvas = [document.createElement("canvas"), document.createElement("canvas")],
+		current    = 0;
+		
+		displayObject.___cache = displayObject.cache;
+		
+		displayObject.cache = function(x, y, width, height, scale) {
+			current = 1 - current;
+			this.cacheCanvas = canvas[current];
+			this.___cache(x, y, width, height, scale);
+		};
+		
+		return displayObject;
+	},
+	component = function(owner, definition){
 		var spriteSheet = {
 			images: definition.spriteSheet.images.slice(),
 			frames: definition.spriteSheet.frames,
@@ -80,7 +94,8 @@ platformer.components['render-tiles'] = (function(){
 			maxY: -1
 		};
 		
-		//this.state = definition.state || 'tile';
+		this.doubleBuffer = [null, null];
+		this.currentBuffer = 0;
 		
 		// Messages that this component listens for
 		this.listeners = [];
@@ -96,7 +111,7 @@ platformer.components['render-tiles'] = (function(){
 		imgMapDefinition = this.imageMap,
 		newImgMap = [];
 		
-		this.tilesToRender = new createjs.Container();
+		this.tilesToRender = initializeCanvasConservation(new createjs.Container());
 		this.tilesToRender.snapToPixel = true;
 		this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
 		
