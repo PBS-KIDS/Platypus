@@ -30,8 +30,8 @@
 		},{
 			"type": "render-animation",
             "animationMap":{
-                "swingHit,left":   "swing-left",
-                "swingHit,right":  "swing-right",
+                "swingHit,left":   "swing-left!",
+                "swingHit,right":  "swing-right!",
                 "air,left":     "jumping-left",
                 "air,right":    "jumping-right",
                 "moving,left":  "walking-left",

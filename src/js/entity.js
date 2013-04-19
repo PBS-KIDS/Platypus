@@ -1,6 +1,6 @@
 /**
 # CLASS entity
-The Entity object acts as a container for components, facilitating communication between them and other game objects. The entity object serves as the foundation for most of the objects in the Platformer engine.
+The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the Platformer engine.
 
 ## Messages
 
@@ -18,17 +18,24 @@ The Entity object acts as a container for components, facilitating communication
 - **removeComponent** - Removes the mentioned component from the entity.
   > @param component (object) - Must be a [[Component]] attached to the entity.
   > @return component|false - Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
-- **bind** - Used by components' to bind handler functions to triggered events on the entity. 
-  > @param messageId (string) - This is the message for which the component is listening.
+- **bind** - Used by components to bind handler functions to triggered events on the entity. 
+  > @param event (string) - This is the message for which the component is listening.
   > @param func (function) - This is the function that will be run when the message is triggered.
-- **unbind** - Used by components' to unbind handler functions on the entity, typically called when a component is removed from the entity.
-  > @param messageId (string) - This is the message the component is currently listening to.
-  > @param func (function) - This is the function that was attached to the message.
+- **toString** - Returns a string describing the entity.
+  > @return string - Returns the entity type as a string of the form "[entity entity-type]".
 - **trigger** - This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run component functions as appropriate.
-  > @param messageId (string) - This is the message to process.
+  > @param event (variant) - This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
   > @param value (variant) - This is a message object or other value to pass along to component functions.
   > @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
   > @return integer - The number of handlers for the triggered message: this is useful for determining whether the entity cares about a given message.
+- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run component functions as appropriate.
+  > @param event (string) - This is the message to process.
+  > @param value (variant) - This is a message object or other value to pass along to component functions.
+  > @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+  > @return integer - The number of handlers for the triggered message: this is useful for determining whether the entity cares about a given message.
+- **unbind** - Used by components to unbind handler functions on the entity, typically called when a component is removed from the entity.
+  > @param event (string) - This is the message the component is currently listening to.
+  > @param func (function) - This is the function that was attached to the message.
 - **getMessageIds** - This method returns all the messages that this entity is concerned about.
   > @return Array - An array of strings listing all the messages for which this entity has handlers.
 - **destroy** - This method removes all components from the entity.
@@ -64,7 +71,7 @@ The Entity object acts as a container for components, facilitating communication
     }
 */
 platformer.classes.entity = (function(){
-	var entity = function(definition, instanceDefinition){
+	var entity = function (definition, instanceDefinition){
 		var self             = this,
 		index                = undefined,
 		componentDefinition  = undefined,
@@ -86,6 +93,11 @@ platformer.classes.entity = (function(){
 			self[index] = instanceProperties[index];
 		}
 		
+		if(!self.state){
+			self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
+		}
+		self.lastState = {}; //This is used to determine if the state of the entity has changed.
+		
 		for (index in componentDefinitions){
 			componentDefinition = componentDefinitions[index];
 			if(platformer.components[componentDefinition.type]){
@@ -94,9 +106,14 @@ platformer.classes.entity = (function(){
 				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
 			}
 		}
+		
 		self.trigger('load');
 	};
 	var proto = entity.prototype;
+	
+	proto.toString = function(){
+		return "[entity " + this.type + "]";
+	};
 	
 	proto.addComponent = function(component){
 	    this.components.push(component);
@@ -114,40 +131,60 @@ platformer.classes.entity = (function(){
 	    return false;
 	};
 	
-	proto.bind = function(messageId, func){
-		if(!this.messages[messageId]) this.messages[messageId] = [];
-		this.messages[messageId].push(func);
+	proto.bind = function(event, func){
+		if(!this.messages[event]) this.messages[event] = [];
+		this.messages[event].push(func);
 	};
 	
-	proto.unbind = function(messageId, func){
-		if(!this.messages[messageId]) this.messages[messageId] = [];
-		for (var x in this.messages[messageId]){
-			if(this.messages[messageId][x] === func){
-				this.messages[messageId].splice(x,1);
+	proto.unbind = function(event, func){
+		if(!this.messages[event]) this.messages[event] = [];
+		for (var x in this.messages[event]){
+			if(this.messages[event][x] === func){
+				this.messages[event].splice(x,1);
 				break;
 			}
 		}
 	};
 	
-	proto.trigger = function(messageId, value, debug){
+	// This handles multiple event structures: "", [], and {}
+	proto.trigger = function(events, message, debug){
+		var i = 0, count = 0;
+		
+		if(typeof events === 'string') {
+			return this.triggerEvent(events, message, debug);
+		} else if (events.length) {
+			for (; i < events.length; i++){
+				count += this.trigger(events[i], message, debug);
+			}
+			return count;
+		} else if (events.event) {
+			return this.triggerEvent(events.event, events.message || message, debug);
+		} else {
+			console.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.');
+			return 0;
+		}
+	};
+	
+	// This handles string events only
+	proto.triggerEvent = function(event, value, debug){
 		var i = 0;
 		if(this.debug || debug || (value && value.debug)){
-			if(this.messages[messageId] && this.messages[messageId].length){
-				console.log('Entity "' + this.type + '": Event "' + messageId + '" has ' + this.messages[messageId].length + ' subscriber' + ((this.messages[messageId].length>1)?'s':'') + '.', value);
+			if(this.messages[event] && this.messages[event].length){
+				console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length>1)?'s':'') + '.', value);
 			} else {
-				console.warn('Entity "' + this.type + '": Event "' + messageId + '" has no subscribers.', value);
+				console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
 			}
 		}
 		for (i = 0; i < this.loopCheck.length; i++){
-			if(this.loopCheck[i] === messageId){
-				throw "Endless loop detected for '" + messageId + "'.";
+			if(this.loopCheck[i] === event){
+				throw "Endless loop detected for '" + event + "'.";
 			}
 		}
 		i = 0;
-		this.loopCheck.push(messageId);
-		if(this.messages[messageId]){
-			for (i = 0; i < this.messages[messageId].length; i++){
-				this.messages[messageId][i](value, debug);
+		this.loopCheck.push(event);
+		if(this.messages[event]){
+			for (i = 0; i < this.messages[event].length; i++){
+				this.messages[event][i](value, debug);
 			}
 		}
 		this.loopCheck.length = this.loopCheck.length - 1; 
@@ -155,16 +192,15 @@ platformer.classes.entity = (function(){
 	};
 	
 	proto.getMessageIds = function(){
-		var messageIds = [];
-		for (var messageId in this.messages){
-			messageIds.push(messageId);
+		var events = [];
+		for (var event in this.messages){
+			events.push(event);
 		}
-		return messageIds;
+		return events;
 	};
 	
 	proto.destroy = function(){
-		for (var x in this.components)
-		{
+		for (var x in this.components) {
 			this.components[x].destroy();
 		}
 		this.components.length = 0;

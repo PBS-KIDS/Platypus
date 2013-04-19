@@ -15,6 +15,9 @@
 			}
 		},{
 			"type": "render-animation",
+            "animationMap":{
+                "default": "default"
+            }, 
 			"spriteSheet": {
 				"images": ["gem"],
 				"frames": {

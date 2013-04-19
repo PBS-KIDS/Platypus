@@ -1,6 +1,3 @@
-/*
- * 
- */
 {
 	"id": "dirt",
 	"components":[
@@ -21,7 +18,8 @@
         },{
             "type": "render-animation",
             "animationMap":{
-                "destroy-me": "explosion"
+                "destroy-me": "explosion",
+                "default": "stationary"
             }, 
 		 	"spriteSheet": {
 				"images": ["dirt"],
@@ -35,8 +33,7 @@
 					"stationary": 0,
 					"explosion": {"frames": [1, 2, 3, 4, 5], "frequency": 4}
 				  }
-			},
-			"state": "stationary"
+			}
 		}
 	],
 	"properties":{

@@ -47,8 +47,11 @@ This component is attached to entities that will appear in the game world. It re
           // On receiving a "standing" message, or a "logical-state" where message.standing == true, the "default" animation will begin playing.
           
           "ground,moving": "walking",
-          // comma separated values have a special meaning when evaluating "logical-state" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+          // Comma separated values have a special meaning when evaluating "logical-state" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
           
+          "ground,striking": "!swing",
+          // Putting an exclamation before an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+
           "default": "default-animation",
           // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
       }  
@@ -70,12 +73,10 @@ This component is attached to entities that will appear in the game world. It re
 	      "animations":{
 	      //Required: The list of animation ids and the frames that make up that animation. The frequency determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
 			"default-animation":[2],
-			"walking": {"frames": [0, 1, 2], "frequency": 4}
+			"walking": {"frames": [0, 1, 2], "frequency": 4},
+			"swing": {"frames": [3, 4, 5], "frequency": 4}
 		  }
       }
-      
-      "state": "default",
-      //Optional: The starting animation. This defaults to "default".
       
       "acceptInput": {
       	//Optional - What types of input the object should take.
@@ -101,7 +102,7 @@ This component is attached to entities that will appear in the game world. It re
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-platformer.components['render-animation'] = (function(){
+(function(){
 	var changeState = function(state){
 		return function(value){
 			if(this.currentAnimation !== state){
@@ -133,274 +134,270 @@ platformer.components['render-animation'] = (function(){
 				return animation;
 			};
 		}
-	},
-	component = function(owner, definition){
-		var spriteSheet = {
-			images: definition.spriteSheet.images.slice(),
-			frames: definition.spriteSheet.frames,
-			animations: definition.spriteSheet.animations
-		},
-		self = this,
-		x = 0,
-		lastAnimation = '';
+	};
+	
+	return platformer.createComponentClass({
 		
-		this.owner = owner;
-		this.rotate = definition.rotate || false;
-		this.mirror = definition.mirror || false;
-		this.flip   = definition.flip   || false;
-		this.hidden   = definition.hidden   || false;
+		id: 'render-animation',
 		
-		if(definition.acceptInput){
-			this.hover = definition.acceptInput.hover || false;
-			this.click = definition.acceptInput.click || false;
-			this.touch = definition.acceptInput.touch || false;
-		} else {
-			this.hover = false;
-			this.click = false;
-			this.touch = false;
-		}
-		
-		// Messages that this component listens for
-		this.listeners = [];
-
-		this.addListeners(['handle-render-load', 'handle-render', 'logical-state']);
-
-		if(definition.animationMap){
-			this.checkStates = [];
-			for(var i in definition.animationMap){
-				this.addListener(i);
-				this[i] = changeState(definition.animationMap[i]);
-				this.checkStates.push(createTest(i, definition.animationMap[i]));
-				lastAnimation = definition.animationMap[i];
-			}
-		}
-		
-		this.stage = undefined;
-		for (x = 0; x < spriteSheet.images.length; x++){
-			spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
-		}
-		var scaleX = spriteSheet.images[0].scaleX || 1,
-		scaleY     = spriteSheet.images[0].scaleY || 1;
-		if((scaleX !== 1) || (scaleY !== 1)){
-			spriteSheet.frames = {
-				width: spriteSheet.frames.width * scaleX,	
-				height: spriteSheet.frames.height * scaleY,	
-				regX: spriteSheet.frames.regX * scaleX,	
-				regY: spriteSheet.frames.regY * scaleY
-			};
-		}
-		spriteSheet = new createjs.SpriteSheet(spriteSheet);
-		this.anim = new createjs.BitmapAnimation(spriteSheet);
-		this.anim.onAnimationEnd = function(animationInstance, lastAnimation){
-			self.owner.trigger('animation-ended', lastAnimation);
-			if(self.waitingAnimation){
-				self.currentAnimation = self.waitingAnimation;
-				self.waitingAnimation = false;
-				self.lastState = self.waitingState;
-				
-				self.animationFinished = false;
-				self.anim.gotoAndPlay(self.currentAnimation);
+		constructor: function(definition){
+			var spriteSheet = {
+				images: definition.spriteSheet.images.slice(),
+				frames: definition.spriteSheet.frames,
+				animations: definition.spriteSheet.animations
+			},
+			self = this,
+			x = 0,
+			animation = '',
+			lastAnimation = '';
+			
+			this.rotate = definition.rotate || false;
+			this.mirror = definition.mirror || false;
+			this.flip   = definition.flip   || false;
+			this.hidden   = definition.hidden   || false;
+			
+			if(definition.acceptInput){
+				this.hover = definition.acceptInput.hover || false;
+				this.click = definition.acceptInput.click || false;
+				this.touch = definition.acceptInput.touch || false;
 			} else {
-				self.animationFinished = true;
+				this.hover = false;
+				this.click = false;
+				this.touch = false;
 			}
-		};
-		this.anim.hidden = this.hidden;
-		this.currentAnimation = this.owner.state || definition.state || lastAnimation || 'default';
-		this.scaleX = this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
-		this.scaleY = this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
-		this.state = {};
-		this.stateChange = false;
-		this.waitingAnimation = false;
-		this.waitingState = 0;
-		this.playWaiting = false;
-		this.animationFinished = false;
-		if(this.currentAnimation){
-			this.anim.gotoAndPlay(this.currentAnimation);
-		}
-	};
-	var proto = component.prototype;
-	
-	proto['handle-render-load'] = function(obj){
-		var self = this,
-		over     = false;
-		
-		this.stage = obj.stage;
-		if(!this.stage){
-			console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
-			this.owner.removeComponent(this);
-			return;
-		}
-		this.stage.addChild(this.anim);
-		
-		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.click || this.touch){
-			if(this.touch && createjs.Touch.isSupported()){
-				createjs.Touch.enable(this.stage);
+			
+			this.followThroughs = {};
+			
+			if(definition.animationMap){
+				this.checkStates = [];
+				for(var i in definition.animationMap){
+					this.addListener(i);
+					animation = definition.animationMap[i];
+					
+					if(animation[animation.length - 1] === '!'){
+						animation = animation.substring(0, animation.length - 1);
+						this.followThroughs[animation] = true;
+					} else {
+						this.followThroughs[animation] = false;
+					}
+					
+					this[i] = changeState(animation);
+					this.checkStates.push(createTest(i, animation));
+				}
+				lastAnimation = animation;
 			}
+			
+			this.stage = undefined;
+			for (x = 0; x < spriteSheet.images.length; x++){
+				spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
+			}
+			var scaleX = spriteSheet.images[0].scaleX || 1,
+			scaleY     = spriteSheet.images[0].scaleY || 1;
+			if((scaleX !== 1) || (scaleY !== 1)){
+				spriteSheet.frames = {
+					width: spriteSheet.frames.width * scaleX,	
+					height: spriteSheet.frames.height * scaleY,	
+					regX: spriteSheet.frames.regX * scaleX,	
+					regY: spriteSheet.frames.regY * scaleY
+				};
+			}
+			spriteSheet = new createjs.SpriteSheet(spriteSheet);
+			this.anim = new createjs.BitmapAnimation(spriteSheet);
+			this.anim.onAnimationEnd = function(animationInstance, lastAnimation){
+				self.owner.trigger('animation-ended', lastAnimation);
+				if(self.waitingAnimation){
+					self.currentAnimation = self.waitingAnimation;
+					self.waitingAnimation = false;
+					self.lastState = self.waitingState;
+					
+					self.animationFinished = false;
+					self.anim.gotoAndPlay(self.currentAnimation);
+				} else {
+					self.animationFinished = true;
+				}
+			};
+			this.anim.hidden = this.hidden;
+			definition.animationMap['default'] ? this.currentAnimation = definition.animationMap['default'] : this.currentAnimation = lastAnimation;
+			this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
+			this.scaleX = this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
+			this.scaleY = this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
+			this.state = {};
+			this.stateChange = false;
+			this.waitingAnimation = false;
+			this.waitingState = 0;
+			this.playWaiting = false;
+			this.animationFinished = false;
+			if(this.currentAnimation){
+				this.anim.gotoAndPlay(this.currentAnimation);
+			}
+		},
+		
+		events: {
+			"handle-render-load": function(obj){
+				var self = this,
+				over     = false;
+				
+				this.stage = obj.stage;
+				if(!this.stage){
+					return;
+				}
+				this.stage.addChild(this.anim);
+				
+				// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+				if(this.click || this.touch){
+					if(this.touch && createjs.Touch.isSupported()){
+						createjs.Touch.enable(this.stage);
+					}
 
-			this.anim.onPress     = function(event) {
-				self.owner.trigger('mousedown', {
-					//debug: true,
-					event: event.nativeEvent,
-					over: over,
-					x: event.stageX,
-					y: event.stageY,
-					entity: self.owner
-				});
-				event.onMouseUp = function(event){
-					self.owner.trigger('mouseup', {
-						//debug: true,
-						event: event.nativeEvent,
-						over: over,
-						x: event.stageX,
-						y: event.stageY,
-						entity: self.owner
-					});
-				};
-				event.onMouseMove = function(event){
-					self.owner.trigger('mousemove', {
-						event: event.nativeEvent,
-						over: over,
-						x: event.stageX,
-						y: event.stageY,
-						entity: self.owner
-					});
-				};
-			};
-			this.anim.onMouseOut  = function(){over = false;};
-			this.anim.onMouseOver = function(){over = true;};
-		}
-		if(this.hover){
-			this.stage.enableMouseOver();
-			this.anim.onMouseOut  = function(event){
-				over = false;
-				self.owner.trigger('mouseout', {
-					event: event.nativeEvent,
-					over: over,
-					x: event.stageX,
-					y: event.stageY,
-					entity: self.owner
-				});
-			};
-			this.anim.onMouseOver = function(event){
-				over = true;
-				self.owner.trigger('mouseover', {
-					event: event.nativeEvent,
-					over: over,
-					x: event.stageX,
-					y: event.stageY,
-					entity: self.owner
-				});
-			};
-		}
-	};
-	
-	proto['handle-render'] = function(){
-		var testCase = false, i = 0;
-		this.anim.x = this.owner.x;
-		this.anim.y = this.owner.y;
-		this.anim.z = this.owner.z;
-		
-		if(this.stateChange){
-			if(this.checkStates){
-				for(; i < this.checkStates.length; i++){
-					testCase = this.checkStates[i](this.state);
-					if(testCase){
-						if(this.currentAnimation !== testCase){
-							if(this.animationFinished || (this.lastState >= +i)){
-								this.currentAnimation = testCase;
-								this.lastState = +i;
-								this.animationFinished = false;
-								this.anim.gotoAndPlay(testCase);
-							} else {
-								this.waitingAnimation = testCase;
-								this.waitingState = +i;
-							}
-						}
-						break;
+					this.anim.onPress     = function(event) {
+						self.owner.trigger('mousedown', {
+							//debug: true,
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
+						});
+						event.onMouseUp = function(event){
+							self.owner.trigger('mouseup', {
+								//debug: true,
+								event: event.nativeEvent,
+								over: over,
+								x: event.stageX,
+								y: event.stageY,
+								entity: self.owner
+							});
+						};
+						event.onMouseMove = function(event){
+							self.owner.trigger('mousemove', {
+								event: event.nativeEvent,
+								over: over,
+								x: event.stageX,
+								y: event.stageY,
+								entity: self.owner
+							});
+						};
+					};
+					this.anim.onMouseOut  = function(){over = false;};
+					this.anim.onMouseOver = function(){over = true;};
+				}
+				if(this.hover){
+					this.stage.enableMouseOver();
+					this.anim.onMouseOut  = function(event){
+						over = false;
+						self.owner.trigger('mouseout', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
+						});
+					};
+					this.anim.onMouseOver = function(event){
+						over = true;
+						self.owner.trigger('mouseover', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
+						});
+					};
+				}
+			},
+			
+			"handle-render": function(resp){
+				var testCase = false, i = 0,
+				angle = null;
+				
+				if(!this.stage) { //In case this component was added after handler-render is initiated
+					this['handle-render-load'](resp);
+					if(!this.stage){
+						console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
+						this.owner.removeComponent(this);
+						return;
 					}
 				}
-			}
-			this.stateChange = false;
-		}
-	};
-	
-	proto['logical-state'] = function(state){
-		var angle = null;
-		
-		for(var i in state){
-			if(this.state[i] !== state[i]){
-				this.stateChange = true;
-				this.state[i] = state[i];
+				
+				this.anim.x = this.owner.x;
+				this.anim.y = this.owner.y;
+				this.anim.z = this.owner.z;
 				
 				//Special case affecting rotation of the animation
-				if(i === 'orientation'){
-					if(this.rotate || this.mirror || this.flip){
-						angle = ((state[i] * 180) / Math.PI + 360) % 360;
-						
-						if(this.rotate){
-							this.anim.rotation = angle;
+				if(this.rotate || this.mirror || this.flip){
+					angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
+					
+					if(this.rotate){
+						this.anim.rotation = angle;
+					}
+					
+					if(this.mirror){
+						if((angle > 90) && (angle < 270)){
+							this.anim.scaleX = -this.scaleX;
+						} else {
+							this.anim.scaleX = this.scaleX;
 						}
-						
-						if(this.mirror){
-							if((angle > 90) && (angle < 270)){
-								this.anim.scaleX = -this.scaleX;
-							} else {
-								this.anim.scaleX = this.scaleX;
-							}
-						}
-						
-						if(this.flip){
-							if(angle > 180){
-								this.anim.scaleY = this.scaleY;
-							} else {
-								this.anim.scaleY = -this.scaleY;
-							}
+					}
+					
+					if(this.flip){
+						if(angle > 180){
+							this.anim.scaleY = this.scaleY;
+						} else {
+							this.anim.scaleY = -this.scaleY;
 						}
 					}
 				}
-				if(i === 'hidden') {
-					this.hidden = state[i];
-					this.anim.hidden = this.hidden;
+				
+				if(this.stateChange){
+					if(this.checkStates){
+						for(; i < this.checkStates.length; i++){
+							testCase = this.checkStates[i](this.state);
+							if(testCase){
+								if(this.currentAnimation !== testCase){
+									if(!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))){
+										this.currentAnimation = testCase;
+										this.lastState = +i;
+										this.animationFinished = false;
+										this.anim.gotoAndPlay(testCase);
+									} else {
+										this.waitingAnimation = testCase;
+										this.waitingState = +i;
+									}
+								} else if(this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
+									this.waitingAnimation = false;
+								}
+								break;
+							}
+						}
+					}
+					this.stateChange = false;
 				}
+			},
+			
+			"logical-state": function(state){
+				for(var i in state){
+					if(this.state[i] !== state[i]){
+						this.stateChange = true;
+						this.state[i] = state[i];
+						
+						if(i === 'hidden') {
+							this.hidden = state[i];
+							this.anim.hidden = this.hidden;
+						}
+					}
+				}
+			}			
+		},
+		
+		methods: {
+			destroy: function(){
+				if (this.stage){
+					this.stage.removeChild(this.anim);
+					this.stage = undefined;
+				}
+				this.followThroughs = null;
+				this.anim = undefined;
 			}
 		}
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		if (this.stage){
-			this.stage.removeChild(this.anim);
-			this.stage = undefined;
-		}
-		this.anim = undefined;
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

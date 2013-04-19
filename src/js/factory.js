@@ -1,5 +1,5 @@
 /*
- * This file includes a few helper functions to handle code that is repeated across multiple components.
+ * This file includes a few helper functions to handle component code that is repeated across multiple components.
  */
 (function (ns){
 	ns.components = {};
@@ -26,25 +26,34 @@
 		proto = component.prototype;
 		
 		// Have to copy rather than replace so definition is not corrupted
+		proto.constructor = componentDefinition.constructor;
 		if(componentDefinition.events){
 			for(func in componentDefinition.events){
 				proto[func] = componentDefinition.events[func];
 			}
 		}
-		for(func in componentDefinition){
-			if((func !== 'id') && (func !== 'events') && (func !== 'destroy')){
-				proto[func] = componentDefinition[func];
-			} else if(func === 'destroy'){
-				proto['___' + func] = componentDefinition[func];
+		for(func in componentDefinition.methods){
+			if(func === 'destroy'){
+				proto['___' + func] = componentDefinition.methods[func];
+			} else {
+				proto[func] = componentDefinition.methods[func];
 			}
 		}
-		
+
+		proto.toString = function(){
+			return "[component " + this.type + "]";
+		};
+
 		// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 		proto.destroy = function(){
 			this.removeListeners(this.listeners);
 			if(this.___destroy){
 				this.___destroy();
 			}
+		};
+		
+		proto.setProperty = function(property, value){
+			this[property] = value;
 		};
 
 		proto.addListeners = function(messageIds){
