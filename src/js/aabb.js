@@ -39,11 +39,13 @@ This class defines an axis-aligned bounding box (AABB) which is used during the 
 
 platformer.classes.aABB = (function(){
 	var aABB = function(x, y, width, height){
+		this.empty = true;
 		this.setAll(x, y, width, height);
 	};
 	var proto = aABB.prototype;
 	
 	proto.setAll = function(x, y, width, height){
+		this.empty = false;
 		this.x = x;
 		this.y = y;
 		this.width  = width || 0;
@@ -51,15 +53,13 @@ platformer.classes.aABB = (function(){
 		this.halfWidth = this.width / 2;
 		this.halfHeight = this.height / 2;
 		if(typeof x === 'undefined'){
-			this.left = undefined;
-			this.right = undefined;
+			this.empty = true;
 		} else {
 			this.left = -this.halfWidth + this.x;
 			this.right = this.halfWidth + this.x;
 		}
 		if(typeof y === 'undefined'){
-			this.top = undefined;
-			this.bottom = undefined;
+			this.empty = true;
 		} else {
 			this.top = -this.halfHeight + this.y;
 			this.bottom = this.halfHeight + this.y;
@@ -67,30 +67,50 @@ platformer.classes.aABB = (function(){
 		return this;
 	};
 	
+	proto.set = function(aabb){
+		this.empty = false;
+		this.x = aabb.x;
+		this.y = aabb.y;
+		this.width  = aabb.width;
+		this.height = aabb.height;
+		this.halfWidth = aabb.halfWidth;
+		this.halfHeight = aabb.halfHeight;
+		this.left = aabb.left;
+		this.right = aabb.right;
+		this.top = aabb.top;
+		this.bottom = aabb.bottom;
+		return this;
+	};
+	
 	proto.reset = function(){
-		return this.setAll(undefined, undefined, 0, 0);
+		this.empty = true;
+		return this;
 	};
 	
 	proto.include = function(aabb){
-		if((this.left > aabb.left)     || (typeof this.left === 'undefined')){
-			this.left = aabb.left;
+		if(this.empty){
+			this.setAll(aabb.x, aabb.y, aabb.width, aabb.height);
+		} else {
+			if(this.left > aabb.left){
+				this.left = aabb.left;
+			}
+			if(this.right < aabb.right){
+				this.right = aabb.right;
+			}
+			if(this.top > aabb.top){
+				this.top = aabb.top;
+			}
+			if(this.bottom < aabb.bottom){
+				this.bottom = aabb.bottom;
+			}
+			
+			this.width      = this.right  - this.left;
+			this.height     = this.bottom - this.top;
+			this.halfWidth  = this.width / 2;
+			this.halfHeight = this.height / 2;
+			this.x          = this.left + this.halfWidth;
+			this.y          = this.top  + this.halfHeight;
 		}
-		if((this.right < aabb.right)   || (typeof this.right === 'undefined')){
-			this.right = aabb.right;
-		}
-		if((this.top > aabb.top)       || (typeof this.top === 'undefined')){
-			this.top = aabb.top;
-		}
-		if((this.bottom < aabb.bottom) || (typeof this.bottom === 'undefined')){
-			this.bottom = aabb.bottom;
-		}
-		
-		this.width      = this.right  - this.left;
-		this.height     = this.bottom - this.top;
-		this.halfWidth  = this.width / 2;
-		this.halfHeight = this.height / 2;
-		this.x          = this.left + this.halfWidth;
-		this.y          = this.top  + this.halfHeight;
 	};
 	
 	proto.move = function(x, y){
@@ -115,6 +135,18 @@ platformer.classes.aABB = (function(){
 
 	proto.getCopy = function(){
 		return new aABB(this.x, this.y, this.width, this.height);
+	};
+
+	proto.matches = function(x, y, width, height){
+		return !((this.x !== x) || (this.y !== y) || (this.width !== width) || (this.height !== height));
+	};
+
+	proto.contains = function(aabb){
+		return !((aabb.top < this.top) || (aabb.bottom > this.bottom) || (aabb.left < this.left) || (aabb.right > this.right));
+	};
+	
+	proto.intersects = function(aabb){
+		return !((aabb.bottom < this.top) || (aabb.top > this.bottom) || (aabb.right < this.left) || (aabb.left > this.right));
 	};
 	
 	return aABB;

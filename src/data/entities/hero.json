@@ -4,19 +4,26 @@
 		{
 			"type": "entity-controller",
 			"controlMap":{
-			    "button-jump":      "key-jump",
-                "key:z":            "key-jump",
+			    "button-jump":      "jump",
+                "key:z":            "jump",
                 "button-pickaxe":   "key-swing",
                 "key:x":            "key-swing",
-                "key:left-arrow":   "key-left",
-                "button-left":      "key-left",
-				"key:right-arrow": 	"key-right",
-				"button-right":     "key-right"
+                "key:left-arrow":   "go-left",
+                "button-left":      "go-left",
+				"key:right-arrow": 	"go-right",
+				"button-right":     "go-right"
 			}
+        },{ 
+            "type": "logic-portable"
+        },{
+            "type": "logic-gravity"
+        },{
+            "type": "logic-jump"
         },{
             "type": "logic-hero"
 		},{
-            "type": "logic-portable"
+            "type": "logic-directional-movement",
+            "speed": 2
         },{
             "type": "collision-basic",
             "collisionType": "hero",
@@ -32,8 +39,8 @@
             "animationMap":{
                 "swingHit,left":   "swing-left!",
                 "swingHit,right":  "swing-right!",
-                "air,left":     "jumping-left",
-                "air,right":    "jumping-right",
+                "falling,left":     "jumping-left",
+                "falling,right":    "jumping-right",
                 "moving,left":  "walking-left",
                 "moving,right": "walking-right",
                 "left":         "standing-left",
@@ -62,9 +69,9 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
-                "swingHit": {"sound": "pickaxe-other"},
+                "swingHit": "pickaxe-other",
 		        "ground, moving": {"sound": "walk", "loop": 5000},
-		        "jumping": "jump"
+		        "just-jumped": "jump"
 		    }
 //		},{
 //		    "type": "render-debug"
@@ -75,6 +82,6 @@
 		"z": 200,
 		"width": 80,
 		"height": 240,
-		"camera": "bounding"
+		"camera": "forward"
 	}
 }

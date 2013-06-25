@@ -185,43 +185,41 @@ platformer.components['render-image'] = (function(){
 	};
 	
 	proto['handle-render'] = function(obj){
+		var angle = null;
+		if(this.rotate || this.mirror || this.flip){
+			angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
+			
+			if(this.rotate){
+				this.image.rotation = angle;
+			}
+			
+			if(this.mirror){
+				if((angle > 90) && (angle < 270)){
+					this.image.scaleX = -this.scaleX;
+				} else {
+					this.image.scaleX = this.scaleX;
+				}
+			}
+			
+			if(this.flip){
+				if(angle > 180){
+					this.image.scaleY = this.scaleY;
+				} else {
+					this.image.scaleY = -this.scaleY;
+				}
+			}
+		}
+		
 		this.image.x = this.owner.x;
 		this.image.y = this.owner.y;
 		this.image.z = this.owner.z;
 	};
 	
 	proto['logical-state'] = function(state){
-		var angle = null;
-		
 		for(var i in state){
 			if(this.state[i] !== state[i]){
 				this.state[i] = state[i];
 				
-				if(i === 'orientation'){
-					if(this.rotate || this.mirror || this.flip){
-						angle = ((state[i] * 180) / Math.PI + 360) % 360;
-						
-						if(this.rotate){
-							this.image.rotation = angle;
-						}
-						
-						if(this.mirror){
-							if((angle > 90) && (angle < 270)){
-								this.image.scaleX = -this.scaleX;
-							} else {
-								this.image.scaleX = this.scaleX;
-							}
-						}
-						
-						if(this.flip){
-							if(angle > 180){
-								this.image.scaleY = this.scaleY;
-							} else {
-								this.image.scaleY = -this.scaleY;
-							}
-						}
-					}
-				}
 				if(i === 'hidden') {
 					this.hidden = state[i];
 					this.image.hidden = this.hidden;

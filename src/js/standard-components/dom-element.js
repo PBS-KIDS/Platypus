@@ -15,6 +15,14 @@ This component creates a DOM element associated with the entity. In addition to 
   > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
 - **update-content** - This message updates the innerHTML of the DOM element.
   > @param message.text (string) - Required. The text that should replace the DOM element's innerHTML.
+- **set-parent** - This message appends the element to the provided parent element.
+  > @param parent (DOM Element) - Required. The DOM Element that this element should be appended to.
+- **set-attribute** - This message updates an attribute of the DOM element.
+  > @param message.attribute (string) - Required. The attribute that is to be changed.
+  > @param message.value (string) - Required. The value the changed attribute should have.
+- **set-style** - This message updates the style of the DOM element.
+  > @param message.attribute (string) - Required. The CSS attribute that is to be changed.
+  > @param message.value (string) - Required. The value the changed CSS attribute should have.
 
 ### Local Broadcasts:
 - **[Messages specified in definition]** - Element event handlers will trigger messages as defined in the JSON definition.
@@ -70,15 +78,23 @@ This component creates a DOM element associated with the entity. In addition to 
 			this.states = {};
 			this.stateChange = false;
 			
-			this.element = this.owner.element = document.createElement(elementType);
+			this.element = document.createElement(elementType);
+			if(!this.owner.element){
+				this.owner.element = this.element;
+			}
 			this.element.ondragstart = function() {return false;}; //prevent element dragging by default
 	
+			if(definition.parent){
+				this.parentElement = document.getElementById(definition.parent);
+				this.parentElement.appendChild(this.element);
+			}
+			
 			for(var i in definition){
 				if(i === 'style'){
 					for(var j in definition[i]){
 						this.element.style[j] = definition[i][j]; 
 					}
-				} else if((i !== 'type') && (i !== 'element') && (i !== 'updateClassName')){
+				} else if((i !== 'type') && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')){
 					if(i.indexOf('on') === 0){
 						this.element[i] = createFunction(definition[i], this.owner);
 					} else {
@@ -96,12 +112,26 @@ This component creates a DOM element associated with the entity. In addition to 
 			if(this.owner.innerHTML){
 				this.element.innerHTML = this.owner.innerHTML;
 			}
+			
+			if(definition.messageMap)
+			{
+				for (var j = 0 ; j < definition.messageMap.length; j++)
+				{
+					if (this[definition.messageMap[j][0]] && definition.messageMap[j][1])
+					{
+						this[definition.messageMap[j][1]] = this[definition.messageMap[j][0]];
+						this.addListener(definition.messageMap[j][1]);
+					}
+				}
+			}
 		},
 		events:{
 			"handle-render-load": function(resp){
 				if(resp.element){
-					this.parentElement = resp.element;
-					this.parentElement.appendChild(this.element);
+					if(!this.parentElement){
+						this.parentElement = resp.element;
+						this.parentElement.appendChild(this.element);
+					}
 		
 					if(this.owner.entities){
 						var message = {};
@@ -115,7 +145,15 @@ This component creates a DOM element associated with the entity. In addition to 
 					}
 				}
 			},
-		
+			
+			"set-parent": function(element){
+				if(this.parentElement){
+					this.parentElement.removeChild(this.element);
+				}
+				this.parentElement = element;
+				this.parentElement.appendChild(this.element);
+			},
+			
 			"handle-render": function(resp){
 				var i     = 0,
 				className = this.className;
@@ -130,7 +168,15 @@ This component creates a DOM element associated with the entity. In addition to 
 					this.stateChange = false;
 				}
 			},
-		
+			
+			"set-attribute": function(resp){
+				this.element.setAttribute(resp.attribute, resp.value);
+			},
+			
+			"set-style": function(resp){
+				this.element.style[resp.attribute] = resp.value;
+			},
+			
 			"update-content": function(resp){
 				if(resp && (typeof resp.text == 'string') && (resp.text !== this.element.innerHTML)){
 					this.element.innerHTML = resp.text;
@@ -146,15 +192,17 @@ This component creates a DOM element associated with the entity. In addition to 
 				}
 			}
 		},
-		destroy: function(){
-			if(this.parentElement){
-				this.parentElement.removeChild(this.element);
-				this.parentElement = undefined;
+		methods: {
+			destroy: function(){
+				if(this.parentElement){
+					this.parentElement.removeChild(this.element);
+					this.parentElement = undefined;
+				}
+				if(this.owner.element === this.element){
+					this.owner.element = undefined;
+				}
+				this.element = undefined;
 			}
-			if(this.owner.element === this.element){
-				this.owner.element = undefined;
-			}
-			this.element = undefined;
 		}
 	});
 })();

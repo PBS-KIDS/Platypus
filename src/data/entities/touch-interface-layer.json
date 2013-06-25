@@ -13,6 +13,7 @@
         {"type": "handler-render-dom"},
         {"type": "entity-container", 
             "entities": [
+                {"type": "button-fullscreen"},
                 {"type": "button-jump-left"},
                 {"type": "button-jump-right"},
                 {"type": "button-jump", "properties": {"className": "game-button jump-center-button"}},

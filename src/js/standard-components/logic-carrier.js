@@ -9,6 +9,7 @@ This component allows this entity carry other entities with which it collides. E
 ## Messages
 
 ### Listens for:
+- **load** - On receiving this message, the component ensures that it has a peer collision group component, and adds one if not.
 - **carry-me** - On receiving this message, the component triggers `add-collision-entity` on the entity to add the peer entity to its collision group.
   > @param message.entity ([[Entity]]) - Required. The peer entity requesting to be carried.
 - **release-me** - On receiving this message, the component triggers `remove-collision-entity` on the entity to remove the peer entity from its collision group.
@@ -33,18 +34,21 @@ platformer.components['logic-carrier'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['carry-me', 'release-me']);
+		this.addListeners(['load', 'carry-me', 'release-me']);
 		
 	};
 	var proto = component.prototype;
 	
-	proto['carry-me'] = function(resp){
-		if(!this.owner.trigger('add-collision-entity', resp.entity)){
+	proto['load'] = function(resp){
+		if(!this.owner.trigger('add-collision-entity', this.owner)){
 			// This message wasn't handled, so add a collision-group component and try again!
 			this.owner.addComponent(new platformer.components['collision-group'](this.owner, {}));
 			this.owner.trigger('add-collision-entity', this.owner);
-			this.owner.trigger('add-collision-entity', resp.entity);
 		}
+	};
+	
+	proto['carry-me'] = function(resp){
+		this.owner.trigger('add-collision-entity', resp.entity);
 	};
 	
 	proto['release-me'] = function(resp){

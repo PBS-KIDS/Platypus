@@ -57,19 +57,6 @@
                  "y":264
                 }, 
                 {
-                 "gid":46,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "type":"hero",
-                 "width":0,
-                 "x":48,
-                 "y":312
-                }, 
-                {
                  "gid":70,
                  "height":0,
                  "name":"",
@@ -2940,6 +2927,19 @@
                  "width":0,
                  "x":1512,
                  "y":480
+                }, 
+                {
+                 "gid":46,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"hero",
+                 "width":0,
+                 "x":48,
+                 "y":312
                 }],
          "opacity":1,
          "type":"objectgroup",

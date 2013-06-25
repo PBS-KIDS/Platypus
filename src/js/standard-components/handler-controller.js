@@ -162,7 +162,7 @@ platformer.components['handler-controller'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.addListeners(['tick', 'child-entity-added', 'check-inputs', 'keydown', 'keyup']);
+		this.addListeners(['tick', 'child-entity-added', 'child-entity-updated', 'check-inputs', 'keydown', 'keyup']);
 		
 		this.timeElapsed = {
 				name: 'Controller',
@@ -190,8 +190,7 @@ platformer.components['handler-controller'] = (function(){
 
 		for (var x = this.entities.length - 1; x > -1; x--)
 		{
-			if(!this.entities[x].trigger('handle-controller', resp))	
-			{
+			if(!this.entities[x].trigger('handle-controller', resp)) {
 				this.entities.splice(x, 1);
 			}
 		}
@@ -200,29 +199,37 @@ platformer.components['handler-controller'] = (function(){
 		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 	};
 
-	proto['child-entity-added'] = function(entity){
-		var messageIds = entity.getMessageIds(); 
+	proto['child-entity-added'] = proto['child-entity-updated'] = function(entity){
+		var messageIds = entity.getMessageIds(),
+		alreadyHere = false; 
 		
-		for (var x = 0; x < messageIds.length; x++)
-		{
-			if (messageIds[x] == 'handle-controller')
-			{
-				// Check for custom input messages that should be relayed from scene.
-				if(entity.controlMap){
-					for(var y in entity.controlMap){
-						if((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)){
-							if(!this[y]){
-								this.addListeners([y, y + ':up', y + ':down']);
-								this[y]           = relayUpDown(y,     this);
-								this[y + ':up']   = relay(y + ':up',   this);
-								this[y + ':down'] = relay(y + ':down', this);
-							}
-						}
+		for (var x = 0; x < messageIds.length; x++){
+			if (messageIds[x] == 'handle-controller'){
+				for (var j = 0; j < this.entities.length; j++){
+					if(this.entities[j] == entity){
+						alreadyHere = true;
+						break;
 					}
 				}
 				
-				this.entities.push(entity);
-				entity.trigger('controller-load');
+				if(!alreadyHere){
+					// Check for custom input messages that should be relayed from scene.
+					if(entity.controlMap){
+						for(var y in entity.controlMap){
+							if((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)){
+								if(!this[y]){
+									this.addListeners([y, y + ':up', y + ':down']);
+									this[y]           = relayUpDown(y,     this);
+									this[y + ':up']   = relay(y + ':up',   this);
+									this[y + ':down'] = relay(y + ':down', this);
+								}
+							}
+						}
+					}
+					
+					this.entities.push(entity);
+					entity.trigger('controller-load');
+				}
 				break;
 			}
 		}

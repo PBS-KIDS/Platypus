@@ -46,3 +46,14 @@
     height: 100%;
     bottom: 0;
 }
+
+/* This is the "Loading..." text in the opening scene */
+.progress-bar {
+font-size: 3em;
+top: 50%;
+position: absolute;
+text-align: center;
+width: 100%;
+margin-top: -1.5em;
+text-shadow: 0 0.1em 0.1em #000;
+}

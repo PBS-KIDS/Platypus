@@ -16,11 +16,12 @@
            	}
 		},{
 			"type": "render-animation",
+			"rotate": true,
 			"animationMap":{
-                "facing-up":    "up",
                 "facing-down":  "down",
                 "facing-left":  "left",
-                "facing-right": "right"
+                "facing-right": "right",
+                "facing-up":    "up"
 			},
             "spriteSheet": {
 				"images": ["briar"],
@@ -36,8 +37,7 @@
 					"right": [1],
 					"left":  [2]
 				}
-			},
-			"state": "up"
+			}
 //		},{
 //		    "type": "render-debug"
         }

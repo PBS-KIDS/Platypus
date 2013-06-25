@@ -8,6 +8,11 @@ This component allows the entity to initiate a change from the current scene to 
 - **new-scene** - On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
   > @param message.scene (string) - This is a label corresponding with a predefined scene.
   > @param message.transition (string) - This can be "instant" or "fade-to-black". Defaults to an instant transition.
+  > @param message.persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
+- **set-scene** - On receiving this message, a scene value is stored, waiting for a `new-scene` to make the transition.
+  > @param scene (string) - This is a label corresponding with a predefined scene.
+- **set-persistent-scene-data** - On receiving this message, persistent data is stored, waiting for a `new-scene` to make the transition.
+  > @param persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
 
 ## JSON Definition:
     {
@@ -18,60 +23,44 @@ This component allows the entity to initiate a change from the current scene to 
       
       "transition": "fade-to-black",
       // Optional. This can be "instant" or "fade-to-black". Defaults to an "instant" transition.
+      
+      "persistentData": {"runningScore": 1400}
+      // Optional. An object containing key/value pairs of information that should be passed into the new scene on the new scenes "scene-loaded" call.
     }
 */
-platformer.components['change-scene'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
+(function(){
+	return platformer.createComponentClass({
+		id: 'change-scene',
 		
-		// Messages that this component listens for
-		this.listeners = [];
+		constructor: function(definition){
+			this.scene = this.owner.scene || definition.scene;
+			this.transition = this.owner.transition || definition.transition || 'instant';
+			this.persistentData = {};
+			
+			if(definition.message){
+				this.addListener(definition.message);
+				this[definition.message] = this['new-scene'];
+			}
+		},
 
-		this.scene = this.owner.scene || definition.scene;
-		this.transition = this.owner.transition || definition.transition || 'instant';
-		
-		this.addListeners(['new-scene']);
-	};
-	var proto = component.prototype;
-	
-	proto['new-scene'] = function(response){
-		var resp   = response || this,
-		scene      = resp.scene || this.scene,
-		transition = resp.transition || this.transition;
-
-		platformer.game.loadScene(scene, transition);
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+		events: {
+			"new-scene": function(response){
+				var resp   = response || this,
+				scene      = resp.scene || this.scene,
+				transition = resp.transition || this.transition;
+				data 	   = resp.persistentData || this.persistentData;
+			
+				platformer.game.loadScene(scene, transition, data);
+			},
+			"set-scene": function(scene){
+				this.scene = scene;
+			},
+			"set-persistent-scene-data": function(dataObj){
+				for (var x in dataObj)
+				{
+					this.persistentData[x] = dataObj[x];    
+				}
+			}
+		}
+	});
 })();

@@ -31,7 +31,7 @@ platformer.classes.game = (function(){
 	var game      = function (definition, onFinishedLoading){
 		var innerRootElement = document.createElement('div'),
 		outerRootElement = null;
-		
+
 		this.currentScene = undefined;
 		this.tickContent = {
 			deltaT: 0,
@@ -51,18 +51,21 @@ platformer.classes.game = (function(){
 				outerRootElement.className += ' supports-' + i;
 			}
 		}
-
+		
 		innerRootElement.id = 'inner-' + outerRootElement.id;
 		outerRootElement.appendChild(innerRootElement);
 		this.rootElement = innerRootElement;
 		this.containerElement = outerRootElement;
 		
 		this.loadScene(definition.global.initialScene);
-		
+
 		// Send the following events along to the scene to handle as necessary:
 		var self = this,
 		callback = function(eventId, event){
 			self.currentScene.trigger(eventId, event);
+//			if(event.metaKey && event.keyCode == 37){ //This causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+				event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of gameplay.
+//			}
 		};
 		this.bindings = [];
 		this.addEventListener(window, 'keydown', callback);
@@ -73,8 +76,8 @@ platformer.classes.game = (function(){
 			callback = function(eventId, event){
 				var element = innerRootElement;
 				var ratio   = definition.global.aspectRatio;
-				var newW = outerRootElement.offsetWidth;
-				var newH = outerRootElement.offsetHeight;
+				var newW    = outerRootElement.offsetWidth;
+				var newH    = outerRootElement.offsetHeight;
 				if(definition.global.maxWidth && (definition.global.maxWidth < newW)){
 					newW = definition.global.maxWidth;
 				}
@@ -90,16 +93,18 @@ platformer.classes.game = (function(){
 				    element.style.height = newH + 'px';
 				}
 				if(definition.global.resizeFont){
-					element.style.fontSize = Math.round(newW / 100) + 'px';
+					outerRootElement.style.fontSize = Math.round(newW / 100) + 'px';
 				}
 				element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
 				element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
+				element.style.top = '50%';
+				element.style.left = '50%';
 				self.currentScene.trigger(eventId, event);
 			};
 			callback('resize');
 		} else if(definition.global.resizeFont) {
 			callback = function(eventId, event){
-				self.rootElement.style.fontSize = parseInt(self.rootElement.offsetWidth / 100) + 'px';
+				outerRootElement.style.fontSize = parseInt(self.rootElement.offsetWidth / 100) + 'px';
 				self.currentScene.trigger(eventId, event);
 			};
 			callback('resize');
@@ -122,7 +127,7 @@ platformer.classes.game = (function(){
 		}
 	};
 	
-	proto.loadScene = function(sceneId, transition){
+	proto.loadScene = function(sceneId, transition, persistantData){
 		var self = this;
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
@@ -137,7 +142,7 @@ platformer.classes.game = (function(){
 			element.style.opacity = '0';
 			element.style.background = '#000';
 			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				self.loadNextScene(sceneId);
+				self.loadNextScene(sceneId, persistantData);
 				self.completeSceneTransition();
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
@@ -146,13 +151,25 @@ platformer.classes.game = (function(){
 			break;
 		case 'instant':
 		default:
-			this.loadNextScene(sceneId);
+			this.loadNextScene(sceneId, persistantData);
 			this.completeSceneTransition();
 		}
 	};
 	
-	proto.loadNextScene = function(sceneId){
-		this.currentScene = new platformer.classes.scene(this.settings.scenes[sceneId], this.rootElement);
+	proto.loadNextScene = function(sceneId, persistantData){
+		var scene = null;
+		
+		if(typeof sceneId === 'string'){
+			scene = this.settings.scenes[sceneId];
+		} else {
+			scene = sceneId;
+		}
+		
+		this.currentScene = new platformer.classes.scene(scene, this.rootElement);
+		
+		this.currentScene.trigger('scene-loaded', persistantData);
+		console.log('Scene loaded: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
+		
 	};
 	
 	proto.completeSceneTransition = function(){

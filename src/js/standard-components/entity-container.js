@@ -93,15 +93,29 @@ platformer.components['entity-container'] = (function(){
 	
 	proto['load'] = function(){
 		// putting this here so all other components will have been loaded and can listen for "entity-added" calls.
-		var x    = 0,
-		entities = this.definedEntities;
+		var i    = 0,
+		j        = 0,
+		k        = 0,
+		entities = this.definedEntities,
+		definition = null;
 		
 		this.definedEntities = false;
 		
 		if(entities){
-			for (x = 0; x < entities.length; x++)
+			for (i = 0; i < entities.length; i++)
 			{
-				 this.addEntity(new platformer.classes.entity(entities[x].id?entities[x]:platformer.settings.entities[entities[x].type], entities[x]));
+				definition = {properties:{parent: this.owner}};
+				for (j in entities[i]){
+					if (j === 'properties'){
+						for (k in entities[i].properties){
+							definition.properties[k] = entities[i].properties[k];
+						}
+					} else {
+						definition[j] = entities[i][j];
+					}
+				}
+
+				this.addEntity(new platformer.classes.entity(entities[i].id?entities[i]:platformer.settings.entities[entities[i].type], definition));
 			}
 		}
 	};
@@ -109,7 +123,6 @@ platformer.components['entity-container'] = (function(){
 	proto.addEntity = proto['add-entity'] = function (entity) {   
 		entity.parent = this.owner;
 		entity.trigger('adopted');
-		
 		for (var x = 0; x < this.entities.length; x++)
 		{
 			entity.trigger('peer-entity-added', this.entities[x]);
@@ -132,7 +145,7 @@ platformer.components['entity-container'] = (function(){
 						this.entities[y].trigger('peer-entity-removed', entity);
 					}
 				}
-		    	entity.parent = undefined;
+		    	entity.parent = null;
 		    	this.entities.splice(x, 1);
 				this.owner.trigger('child-entity-removed', entity);
 		    	entity.destroy();

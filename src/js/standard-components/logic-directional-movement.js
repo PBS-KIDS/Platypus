@@ -31,187 +31,228 @@ This component changes the (x, y) position of an object according to its current
       // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
     }
 */
-platformer.components['logic-directional-movement'] = (function(){
+(function(){
 	var processDirection = function(direction){
 		return function (state){
 			if(state){
-				this[direction] = state.pressed;
+				this[direction] = (state.pressed !== false);
+//				this.stopped = !state.pressed;
 			} else {
 				this[direction] = true;
+//				this.stopped = false;
 			}
 		};
 	},
-	component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
+	getAngle = function(x, y){
+		var m = Math.sqrt(x * x + y * y),
+		a     = 0;
 
-		this.addListeners(['handle-logic',
-   		    'go-down',       'go-south',
-   		    'go-down-left',  'go-southwest',
-		    'go-left',       'go-west',
-		    'go-up-left',    'go-northwest',
-		    'go-up',         'go-north',
-		    'go-up-right',   'go-northeast',
-		    'go-right',      'go-east',
-		    'go-down-right', 'go-southeast',
-		    'stop'
-		]);
-		
-		this.speed = definition.speed || .3;
-
-		this.state = {
-			moving: false,
-			left: false,
-			right: false,
-			up: false,
-			down: false
-		};
-		
-		this.moving = false;
-		this.left = false;
-		this.right = false;
-		this.up = false;
-		this.down = false;
-		this.upLeft = false;
-		this.upRight = false;
-		this.downLeft = false;
-		this.downRight = false;
-	};
-	var proto = component.prototype;
-	
-	proto['handle-logic'] = function(resp){
-		var vX    = 0,
-		vY        = 0,
-		up        = this.up        || this.upLeft || this.downLeft,
-		upLeft    = this.upLeft    || (this.up   && this.left),
-		left      = this.left      || this.upLeft || this.downLeft,
-		downLeft  = this.downLeft  || (this.down && this.left),
-		down      = this.down      || this.downLeft || this.downRight,
-		downRight = this.downRight || (this.down && this.right),
-		right     = this.right     || this.upRight || this.downRight,
-		upRight   = this.upRight   || (this.up   && this.right),
-		stateChanged = false;
-		
-		if (this.up && this.down){
-			this.moving = false;
-		} else if (this.left && this.right) {
-			this.moving = false;
-		} else if (upLeft) {
-			vX = -this.speed / 1.414;
-			vY = -this.speed / 1.414;
-			this.moving = true;
-		} else if (upRight) {
-			vY = -this.speed / 1.414;
-			vX =  this.speed / 1.414;
-			this.moving = true;
-		} else if (downLeft) {
-			vY =  this.speed / 1.414;
-			vX = -this.speed / 1.414;
-			this.moving = true;
-		} else if (downRight) {
-			vY =  this.speed / 1.414;
-			vX =  this.speed / 1.414;
-			this.moving = true;
-		} else if(this.left)	{
-			vX = -this.speed;
-			this.moving = true;
-		} else if (this.right) {
-			vX =  this.speed;
-			this.moving = true;
-		} else if (this.up) {
-			vY = -this.speed;
-			this.moving = true;
-		} else if (this.down) {
-			vY =  this.speed;
-			this.moving = true;
-		} else {
-			this.moving = false;
+		if (m != 0){
+			a = Math.acos(x / m);
+			if (y < 0){
+				a = (Math.PI * 2) - a;
+			}
 		}
-
-		this.owner.x += (vX * resp.deltaT);
-		this.owner.y += (vY * resp.deltaT);
-		
-		if(this.state.moving !== this.moving){
-			this.state.moving = this.moving;
-			stateChanged = true;
-		}
-		if(this.state.up !== up){
-			this.state.up = up;
-			stateChanged = true;
-		}
-		if(this.state.right !== right){
-			this.state.right = right;
-			stateChanged = true;
-		}
-		if(this.state.down !== down){
-			this.state.down = down;
-			stateChanged = true;
-		}
-		if(this.state.left !== left){
-			this.state.left = left;
-			stateChanged = true;
-		}
-		
-		if(stateChanged){
-			this.owner.trigger('logical-state', this.state);
-		}
+		return a;
 	};
 	
-	proto['go-down']       = proto['go-south']     = processDirection('down');
-	proto['go-down-left']  = proto['go-southwest'] = processDirection('downLeft');
-	proto['go-left']       = proto['go-west']      = processDirection('left');
-	proto['go-up-left']    = proto['go-northwest'] = processDirection('upLeft');
-	proto['go-up']         = proto['go-north']     = processDirection('up');
-	proto['go-up-right']   = proto['go-northeast'] = processDirection('upRight');
-	proto['go-right']      = proto['go-east']      = processDirection('right');
-	proto['go-down-right'] = proto['go-southeast'] = processDirection('downRight');
+	return platformer.createComponentClass({
+		id: 'logic-directional-movement',
+		
+		constructor: function(definition){
+			var self = this;
+			
+			this.speed = definition.speed || .3;
+			
+			this.boost = false;
+			this.paused = false;
+			
+			if(definition.pause || definition.boost){
+				if(typeof definition.pause === 'string'){
+					this.pausers = [definition.pause];
+				} else {
+					this.pausers = definition.pause;
+				}
+				this.addListener('logical-state');
+				this['logical-state'] = function(state){
+					var paused = false;
+					if(definition.pause){
+						for(var i = 0; i < self.pausers.length; i++){
+							paused = paused || state[self.pausers[i]];
+						}
+						this.paused = paused;
+					}
+					
+					if(definition.boost){
+						if(self.boost){
+							if(state[definition.boost] === false){
+								self.boost = false;
+							}
+						} else if(state[definition.boost] === true){
+							self.boost = true;
+						}
+					}
+				};
+			}
 
-	proto['stop'] = function(state){
-		if(!state || state.pressed)
-		{
-			this.down = false;
-			this.downLeft = false;
+			this.state = this.owner.state;
+			this.state.moving = false;
+			this.state.left = false;
+			this.state.right = false;
+			this.state.up = false;
+			this.state.down = false;
+
+			this.owner.orientation = 0;
+			
+			this.moving = false;
 			this.left = false;
-			this.upLeft = false;
-			this.up = false;
-			this.upRight = false;
 			this.right = false;
+			this.up = false;
+			this.down = false;
+			this.upLeft = false;
+			this.upRight = false;
+			this.downLeft = false;
 			this.downRight = false;
+			this.facing = 'right';
+		},
+		events:{
+			"handle-logic": function(resp){
+				var vX    = 0,
+				vY        = 0,
+				up        = this.up        || this.upLeft || this.downLeft,
+				upLeft    = this.upLeft    || (this.up   && this.left),
+				left      = this.left      || this.upLeft || this.downLeft,
+				downLeft  = this.downLeft  || (this.down && this.left),
+				down      = this.down      || this.downLeft || this.downRight,
+				downRight = this.downRight || (this.down && this.right),
+				right     = this.right     || this.upRight || this.downRight,
+				upRight   = this.upRight   || (this.up   && this.right),
+				orientation = 0;
+				
+				if (up && down){
+					this.moving = false;
+				} else if (left && right) {
+					this.moving = false;
+				} else if (upLeft) {
+					vX = -this.speed / 1.414;
+					vY = -this.speed / 1.414;
+					this.moving = true;
+					this.facing = 'up-left';
+				} else if (upRight) {
+					vY = -this.speed / 1.414;
+					vX =  this.speed / 1.414;
+					this.moving = true;
+					this.facing = 'up-right';
+				} else if (downLeft) {
+					vY =  this.speed / 1.414;
+					vX = -this.speed / 1.414;
+					this.moving = true;
+					this.facing = 'down-left';
+				} else if (downRight) {
+					vY =  this.speed / 1.414;
+					vX =  this.speed / 1.414;
+					this.moving = true;
+					this.facing = 'down-right';
+				} else if(left)	{
+					vX = -this.speed;
+					this.moving = true;
+					this.facing = 'left';
+				} else if (right) {
+					vX =  this.speed;
+					this.moving = true;
+					this.facing = 'right';
+				} else if (up) {
+					vY = -this.speed;
+					this.moving = true;
+					this.facing = 'up';
+				} else if (down) {
+					vY =  this.speed;
+					this.moving = true;
+					this.facing = 'down';
+				} else {
+					this.moving = false;
+					
+					// This is to retain the entity's direction even if there is no movement. There's probably a better way to do this since this is a bit of a retrofit. - DDD
+					switch(this.facing){
+					case 'up': up = true; break;
+					case 'down': down = true; break;
+					case 'left': left = true; break;
+					case 'right': right = true; break;
+					case 'up-left': up = true; left = true; break;
+					case 'up-right': up = true; right = true; break;
+					case 'down-left': down = true; left = true; break;
+					case 'down-right': right = true; right = true; break;
+					}
+				}
+				
+				if(this.moving){
+					if(!this.paused){
+						if(this.boost) {
+							vX *= 1.5;
+							vY *= 1.5;
+						}
+
+						this.owner.x += (vX * resp.deltaT);
+						this.owner.y += (vY * resp.deltaT);
+					}
+					
+					orientation = getAngle(vX, vY);
+					if(this.owner.orientation !== orientation){
+						this.owner.orientation = orientation;
+					}
+				}
+				
+				//TODO: possibly remove the separation of this.state.direction and this.direction to just use state?
+				if(this.state.moving !== this.moving){
+					this.state.moving = this.moving;
+				}
+				if(this.state.up !== up){
+					this.state.up = up;
+				}
+				if(this.state.right !== right){
+					this.state.right = right;
+				}
+				if(this.state.down !== down){
+					this.state.down = down;
+				}
+				if(this.state.left !== left){
+					this.state.left = left;
+				}
+			},
+			
+			"go-down": processDirection('down'),
+			"go-south": processDirection('down'),
+			"go-down-left": processDirection('downLeft'),
+			"go-southwest": processDirection('downLeft'),
+			"go-left": processDirection('left'),
+			"go-west": processDirection('left'),
+			"go-up-left": processDirection('upLeft'),
+			"go-northwest": processDirection('upLeft'),
+			"go-up": processDirection('up'),
+			"go-north": processDirection('up'),
+			"go-up-right": processDirection('upRight'),
+			"go-northeast": processDirection('upRight'),
+			"go-right": processDirection('right'),
+			"go-east": processDirection('right'),
+			"go-down-right": processDirection('downRight'),
+			"go-southeast": processDirection('downRight'),
+
+			"stop": function(state){
+				if(!state || (state.pressed !== false)){
+					this.left = false;
+					this.right = false;
+					this.up = false;
+					this.down = false;
+					this.upLeft = false;
+					this.upRight = false;
+					this.downLeft = false;
+					this.downRight = false;
+				}
+			},
+			
+			"accelerate": function(velocity) {
+				this.speed = velocity;
+			}
 		}
-	};
-
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

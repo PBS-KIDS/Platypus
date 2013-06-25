@@ -140,7 +140,7 @@
 	background: url('../i/buttons.png') 60% 0 no-repeat;
 	background-size: 600%;
 	top: 1em;
-	left: 1em;
+	left: 9em;
 	width: 7em;
 	height: 7em;
 	z-index: 10;
@@ -151,7 +151,7 @@
 	background: url('../i/buttons.png') 60% 33.333% no-repeat;
 	background-size: 600%;
 	top: 1em;
-	left: 1em;
+	left: 9em;
 	width: 7em;
 	height: 7em;
 	z-index: 10;
@@ -259,6 +259,17 @@ body {
     bottom: 0;
 }
 
+/* This is the "Loading..." text in the opening scene */
+.progress-bar {
+font-size: 3em;
+top: 50%;
+position: absolute;
+text-align: center;
+width: 100%;
+margin-top: -1.5em;
+text-shadow: 0 0.1em 0.1em #000;
+}
+
 /*--------------------------------------------------
  *   GUI CSS - ../src/css/gui.css
  */
@@ -307,4 +318,28 @@ height: 1.6em;
     top: 0;
     margin: 0;
     padding: 0;
+}
+
+.button-fullscreen {
+background: url('../i/buttons.png') 80% 66.666% no-repeat;
+background-size: 600%;
+top: 1em;
+left: 1em;
+width: 7em;
+height: 7em;
+z-index: 10;
+position: absolute;
+cursor: pointer;
+}
+
+.full-screen .button-fullscreen {
+background: url('../i/buttons.png') 80% 100% no-repeat;
+background-size: 600%;
+top: 1em;
+left: 1em;
+width: 7em;
+height: 7em;
+z-index: 10;
+position: absolute;
+cursor: pointer;
 }

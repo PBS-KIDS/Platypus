@@ -13,7 +13,18 @@ A component that causes the object to move according to a specified gravity.
   > @param resp.deltaT (number) - The time since the last tick.
 - **hit-solid** - Received when we collide with an object that is solid to the entity. We stop the movement in the direction of that object.
   > @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
-  > @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all. 
+  > @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
+- **glide** - Changes the maximum gravitational velocity.
+  > @param message.maxVelocity, message.maxVelocityX, message.maxVelocityY (number) - The new maximum velocity the entity should have due to gravity.
+  > @param message.duration, message.durationX, message.durationY (number) - Time in milliseconds to make the transition form current velocity to the maximum velocity.
+  > @param message.acceleration, message.accelerationX, message.acclerationY (number) - How quickly to transition to new maximum velocity.
+- **gravitate** - Changes the gravitational acceleration.
+  > @param message.gravity, message.gravityX, message.gravityY (number) - Sets the new gravitational pull on the entity.
+- **hover** - Causes gravitational affect on the entity's velocity to cease.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop gravity.
+- **fall** - Causes the gravitational affect on the entity's velocity to continue.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not start gravity.
+ 
 
 ## JSON Definition
     {
@@ -37,81 +48,162 @@ A component that causes the object to move according to a specified gravity.
     }
 */
 
-platformer.components['logic-gravity'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
-		var self = this;
-		// Messages that this component listens for
-		this.listeners = [];
-
-		this.addListeners(['handle-logic', 'hit-solid']);
+(function(){
+	return platformer.createComponentClass({
+		id: 'logic-gravity',
 		
-		this.vX = definition.velocityX || 0; 
-		this.vY = definition.velocityY || 0;
-		this.maxVX = definition.maxVelocityX || definition.maxVelocity || 3;
-		this.maxVY = definition.maxVelocityY || definition.maxVelocity || 3;
-		this.yGravity = definition.gravity || definition.yGravity || .01;
-		this.xGravity = definition.xGravity || 0;
-	};
-	var proto = component.prototype;
-	
-	proto['handle-logic'] = function(resp){
-		var deltaT = resp.deltaT;
+		constructor: function(definition){
+			this.vY = definition.gravity || definition.yGravity || .01;
+			this.vX = definition.xGravity || 0;
+			
+			this.maxVelocity = definition.maxVelocity || 0;
+			this.newMaxX = this.maxVelocityX = definition.maxVelocityX || this.maxVelocity;
+			this.newMaxY = this.maxVelocityY = definition.maxVelocityY || this.maxVelocity;
+			this.accelerationX = 0;
+			this.accelerationY = 0;
+			this.durationX = 0;
+			this.durationY = 0;
+			
+			if(typeof this.owner.dx !== 'number'){
+				this.owner.dx = 0;
+			}
+			if(typeof this.owner.dy !== 'number'){
+				this.owner.dy = 0;
+			}
+			
+			this.state = this.owner.state;
+			
+			this.hovering = this.state.hovering = this.state.hovering || false;
+			this.falling  = this.state.falling  = this.state.falling  || false;
+			this.grounded = this.state.grounded = this.state.grounded || !this.falling;
+		},
 		
-		this.vY += this.yGravity * deltaT;
-		if (this.vY > this.maxVY)
-		{
-			this.vY = this.maxVY;
-		}
-		this.vX += this.xGravity * deltaT;
-		if (this.vX > this.maxVX)
-		{
-			this.vX = this.maxVX;
-		}
+		events:{
+			"handle-logic": function(resp){
+				var deltaT = resp.deltaT;
+				
+				if(!this.hovering){
+					if(this.newMaxX !== this.maxVelocityX){
+						if(this.durationX - deltaT > 0){
+							this.maxVelocityX += (this.newMaxX - this.maxVelocityX) * (deltaT / this.durationX);
+							this.durationX -= deltaT;
+						} else if(this.accelerationX){
+							if(this.newMaxX > this.maxVelocityX){
+								if(this.owner.dx > this.maxVelocityX) {
+									this.maxVelocityX = this.owner.dx;
+								}
+								this.maxVelocityX = Math.min(this.maxVelocityX + (this.accelerationX * resp.deltaT), this.newMaxX);
+							} else {
+								if(this.owner.dx < this.maxVelocityX) {
+									this.maxVelocityX = this.owner.dx;
+								}
+								this.maxVelocityX = Math.max(this.maxVelocityX - (this.accelerationX * resp.deltaT), this.newMaxX);
+							}
+						} else {
+							this.maxVelocityX = this.newMaxX;
+							this.durationX = 0;
+						}
+					}
+					
+					if(this.newMaxY !== this.maxVelocityY){
+						if(this.durationY - deltaT > 0){
+							this.maxVelocityY += (this.newMaxY - this.maxVelocityY) * (deltaT / this.durationY);
+							this.durationY -= deltaT;
+						} else if(this.accelerationY){
+							if(this.newMaxY > this.maxVelocityY){
+								if(this.owner.dy > this.maxVelocityY) {
+									this.maxVelocityY = this.owner.dy;
+								}
+								this.maxVelocityY = Math.min(this.maxVelocityY + (this.accelerationY * resp.deltaT), this.newMaxY);
+							} else {
+								if(this.owner.dy < this.maxVelocityY) {
+									this.maxVelocityY = this.owner.dy;
+								}
+								this.maxVelocityY = Math.max(this.maxVelocityY - (this.accelerationY * resp.deltaT), this.newMaxY);
+							}
+						} else {
+							this.maxVelocityY = this.newMaxY;
+							this.durationY = 0;
+						}
+					}
+					
+					this.owner.dx += this.vX * deltaT;
+					this.owner.dy += this.vY * deltaT;
+					
+					if(this.vX && this.maxVelocityX && (this.owner.dx > this.maxVelocityX)){
+						this.owner.dx = this.maxVelocityX;
+					}
+					if(this.vY && this.maxVelocityY && (this.owner.dy > this.maxVelocityY)){
+						this.owner.dy = this.maxVelocityY;
+					}
+				}
+				
+				if(this.state.hovering !== this.hovering){
+					this.state.hovering = this.hovering;
+				}
+				if(this.state.falling !== this.falling){
+					this.state.falling = this.falling;
+				}
+				if(this.state.grounded !== this.grounded){
+					this.state.grounded = this.grounded;
+				}
+				this.grounded = false;
+				this.falling  = true;
+			},
+			"hit-solid": function(collisionInfo){
+				if(!this.hovering){
+					if(((collisionInfo.y > 0) && (this.vY > 0)) || ((collisionInfo.y < 0) && (this.vY < 0))){
+						this.owner.dy = 0;
+						this.falling = false;
+						this.grounded = true;
+					} else if(((collisionInfo.x < 0) && (this.vX < 0)) || ((collisionInfo.x > 0) && (this.vX > 0))){
+						this.owner.dx = 0;
+						this.falling = false;
+						this.grounded = true;
+					}
+				}
+				return true;
+			},
+			"glide": function(resp) {
+				var max      = resp.maxVelocity || this.maxVelocity,
+				duration     = resp.duration || 0,
+				acceleration = resp.acceleration || 0;				
+				
+				this.durationX = resp.durationX || duration;
+				this.durationY = resp.durationY || duration;
+				
+				this.accelerationX = resp.accelerationX || acceleration;
+				this.accelerationY = resp.accelerationY || acceleration;
+				
+				this.newMaxX = resp.maxVelocityX || max || this.maxVelocityX;
+				this.newMaxY = resp.maxVelocityY || max || this.maxVelocityY;
+				
+				if(!this.durationX && !this.accelerationX){
+					this.maxVelocityX = this.newMaxX;
+				}
+				if(!this.durationY && !this.accelerationY){
+					this.maxVelocityY = this.newMaxY;
+				}
+			},
+			"gravitate": function(value) {
+				this.vY = value.gravity || value.yGravity || 0;
+				this.vX = value.xGravity || 0;
+			},
+			"hover": function(value){
+				this.owner.dx = 0;
+				this.owner.dy = 0;
+				this.hovering = !value || (value.pressed !== false);
+			},
+			"fall": function(value){
+				this.hovering = !!value && (value.pressed === false);
+			}
+		},
 		
-		this.owner.x += (this.vX * deltaT);
-		this.owner.y += (this.vY * deltaT);
-	};
-	
-	proto['hit-solid'] = function(collisionInfo){
-		if(((collisionInfo.y > 0) && (this.vY > 0)) || ((collisionInfo.y < 0) && (this.vY < 0))){
-			this.vY = 0;
-		} else if(((collisionInfo.y < 0) && (this.vX < 0)) || ((collisionInfo.x > 0) && (this.vX > 0))){
-			this.vX = 0;
+		methods: {
+			destroy: function(){
+				this.owner.dx = 0;
+				this.owner.dy = 0;
+			}
 		}
-		return true;
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

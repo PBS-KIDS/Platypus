@@ -45,7 +45,10 @@ This component listens for input messages triggered on the entity and updates th
     }
 */
 platformer.components['entity-controller'] = (function(){
-	var state = function(){
+	var state = function(event, trigger){
+	    this.event = event;
+	    this.trigger = trigger;
+	    this.filters = false;
 		this.current = false;
 		this.last    = false;
 		this.state   = false;
@@ -58,20 +61,57 @@ platformer.components['entity-controller'] = (function(){
 	},
 	mouseMap = ['left-button', 'middle-button', 'right-button'],
 	createUpHandler = function(state){
-		return function(value){
-			state.state = false;
-		};
+		if(state.length){
+			return function(value){
+				for (var i = 0; i < state.length; i++){
+					state[i].state = false;
+				}
+			};
+		} else {
+			return function(value){
+				state.state = false;
+			};
+		}
 	},
 	createDownHandler = function(state){
-		return function(value){
-			state.current = true;
-			state.state   = true;
-			if(value && (typeof (value.over) !== 'undefined')) state.over = value.over;
-		};
+		if(state.length){
+			return function(value){
+				for (var i = 0; i < state.length; i++){
+					state[i].current = true;
+					state[i].state   = true;
+					if(value && (typeof (value.over) !== 'undefined')) state[i].over = value.over;
+				}
+			};
+		} else {
+			return function(value){
+				state.current = true;
+				state.state   = true;
+				if(value && (typeof (value.over) !== 'undefined')) state.over = value.over;
+			};
+		}
+	},
+	addActionState = function(actionList, action, trigger, requiredState){
+		var actionState = actionList[action]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
+		if(!actionState){                                // Otherwise create a new state storage object
+			actionState = actionList[action] = new state(action, trigger);
+		}
+		if(requiredState){
+			actionState.setFilter(requiredState);
+		}
+		return actionState;
 	},
 	component = function(owner, definition){
-		var key     = '',
-		actionState = undefined;
+		var i       = 0,
+		j           = 0,
+		k           = 0,
+		key         = '',
+		actionState = undefined,
+		self        = this,
+		trigger     = function(event, obj){
+			self.owner.trigger(event, obj);
+		};
+		
+		this.type   = 'entity-controller';
 		this.owner  = owner;
 		
 		// Messages that this component listens for
@@ -82,9 +122,28 @@ platformer.components['entity-controller'] = (function(){
 			this.owner.controlMap = definition.controlMap; // this is used and expected by the handler-controller to handle messages not covered by key and mouse inputs.
 			this.actions  = {};
 			for(key in definition.controlMap){
-				actionState = this.actions[definition.controlMap[key]]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
-				if(!actionState){                                // Otherwise create a new state storage object
-					actionState = this.actions[definition.controlMap[key]] = new state();
+				if(typeof definition.controlMap[key] === 'string'){
+					actionState = addActionState(this.actions, definition.controlMap[key], trigger);
+				} else {
+					actionState = [];
+					if(definition.controlMap[key].length){
+						for (i = 0; i < definition.controlMap[key].length; i++){
+							actionState[i] = addActionState(this.actions, definition.controlMap[key][i], trigger);
+						}
+					} else {
+						k = 0;
+						for (j in definition.controlMap[key]){
+							if(typeof definition.controlMap[key][j] === 'string'){
+								actionState[k] = addActionState(this.actions, definition.controlMap[key][j], trigger, j);
+								k += 1;
+							} else {
+								for (i = 0; i < definition.controlMap[key][j].length; i++){
+									actionState[k] = addActionState(this.actions, definition.controlMap[key][j][i], trigger, j);
+									k += 1;
+								}
+							}
+						}
+					}
 				}
 				this[key + ':up']   = createUpHandler(actionState);
 				this[key + ':down'] = createDownHandler(actionState);
@@ -97,8 +156,35 @@ platformer.components['entity-controller'] = (function(){
 	proto      = component.prototype;
 	
 	stateProto.update = function(){
+		var i = 0;
+		
+		if(this.current || this.last){
+			this.stateSummary.pressed   = this.current;
+			this.stateSummary.released  = !this.current && this.last;
+			this.stateSummary.triggered = this.current && !this.last;
+			this.stateSummary.over      = this.over;
+			if(this.filters){
+				for(; i < this.filters.length; i++){
+					if(this.stateSummary[this.filters[i]]){
+						this.trigger(this.event, this.stateSummary);
+					}
+				}
+			} else {
+				this.trigger(this.event, this.stateSummary);
+			}
+		}
+		
 		this.last    = this.current;
 		this.current = this.state;
+	};
+	
+	stateProto.setFilter = function(filter){
+		if(!this.filters){
+			this.filters = [filter];
+		} else {
+			this.filters.push(filter);
+		}
+		return this;
 	};
 
 	stateProto.isPressed = function(){
@@ -113,25 +199,12 @@ platformer.components['entity-controller'] = (function(){
 		return !this.current && this.last;
 	};
 	
-	stateProto.getState = function(){
-		this.stateSummary.pressed   = this.current;
-		this.stateSummary.released  = !this.current && this.last;
-		this.stateSummary.triggered = this.current && !this.last;
-		this.stateSummary.over      = this.over;
-		return this.stateSummary;
-	};
-	
 	proto['handle-controller'] = function(){
-		var state = undefined,
-		action    = '';
+		var action    = '';
 		
 		if(this.actions){
 			for (action in this.actions){
-				state = this.actions[action];
-				if(state.current || state.last){
-					this.owner.trigger(action, state.getState());
-				}
-				state.update();
+				this.actions[action].update();
 			}
 		}
 	};

@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-rotional-movement**
+# COMPONENT **logic-rotational-movement**
 This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]] and [[Logic-Gravity]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
 
 ## Dependencies:
@@ -10,25 +10,27 @@ This component changes the (x, y) position of an object according to its current
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
   > @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
-- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement orientation.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
-- **stop** - Stops motion in all directions until movement messages are again received.
+- **[directional message]** - Directional messages include `turn-left`, `turn-right`, `go-forward`, and `go-backward`. On receiving one of these messages, the entity adjusts its movement and orientation.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
+- **stop** - Stops rotational and linear motion movement messages are again received.
   > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-
-### Local Broadcasts:
-- **logical-state** - this component will trigger this message when its movement or direction changes. Note that directions are not mutually exclusive: adjacent directions can both be true, establishing that the entity is facing a diagonal direction.
-  > @param message.moving (boolean) - whether the entity is in motion.
-  > @param message.left (boolean)   - whether the entity is facing left.
-  > @param message.right (boolean)  - whether the entity is facing right.
-  > @param message.up (boolean)     - whether the entity is facing up.
-  > @param message.down (boolean)   - whether the entity is facing down.
+- **stop-turning** - Stops rotational motion until movement messages are again received.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+- **stop-moving** - Stops linear motion until movement messages are again received.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
 
 ## JSON Definition:
     {
-      "type": "logic-directional-movement",
+      "type": "logic-rotational-movement",
       
-      "speed": 4.5
+      "speed": 4.5,
       // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
+      
+      "angle": 0,
+      // Optional: Radian orientation that entity should begin in. Defaults to 0 (facing right).
+      
+      "degree": 0.1
+      // Optional: Unit in radian that the angle should change per millisecond.
     }
 */
 platformer.components['logic-rotational-movement'] = (function(){
@@ -58,12 +60,12 @@ platformer.components['logic-rotational-movement'] = (function(){
 		this.degree = (definition.degree || 1) * pi / 180;
 		this.angle = definition.angle || 0;
 		
-		this.state = {
-			moving: false,
-			turningRight: false,
-			turningLeft: false,
-			orientation: 0
-		};
+		this.state = this.owner.state;
+		this.state.moving       = false;
+		this.state.turningRight = false;
+		this.state.turningLeft  = false;
+
+		this.owner.orientation  = 0;
 		
 		this.moving = false;
 		this.turningRight = false;
@@ -73,15 +75,14 @@ platformer.components['logic-rotational-movement'] = (function(){
 	
 	proto['handle-logic'] = function(resp){
 		var vX    = 0,
-		vY        = 0,
-		stateChanged = false;
+		vY        = 0;
 		
 		if(this.turningRight){
-			this.angle += this.degree;
+			this.angle += this.degree * resp.deltaT / 15;
 		}
 
 		if(this.turningLeft){
-			this.angle -= this.degree;
+			this.angle -= this.degree * resp.deltaT / 15;
 		}
 		
 		if(this.moving){
@@ -94,23 +95,15 @@ platformer.components['logic-rotational-movement'] = (function(){
 		
 		if(this.state.moving !== this.moving){
 			this.state.moving = this.moving;
-			stateChanged = true;
 		}
 		if(this.state.turningLeft !== this.turningLeft){
 			this.state.turningLeft = this.turningLeft;
-			stateChanged = true;
 		}
 		if(this.state.turningRight !== this.turningRight){
 			this.state.turningRight = this.turningRight;
-			stateChanged = true;
 		}
-		if(this.state.orientation !== this.angle){
-			this.state.orientation = this.angle;
-			stateChanged = true;
-		}
-		
-		if(stateChanged){
-			this.owner.trigger('logical-state', this.state);
+		if(this.owner.orientation !== this.angle){
+			this.owner.orientation = this.angle;
 		}
 	};
 	

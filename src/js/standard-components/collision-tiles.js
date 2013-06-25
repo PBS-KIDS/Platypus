@@ -37,7 +37,8 @@ platformer.components['collision-tiles'] = (function(){
 		var self = this;
 		this.owner = owner;
 		
-		this.collisionMap   = definition.collisionMap   || [];
+		this.collisionMap   = definition.collisionMap  || [];
+		this.platformIndex  = definition.platformIndex || -2;
 		this.tileWidth      = definition.tileWidth  || this.owner.tileWidth  || 10;
 		this.tileHeight     = definition.tileHeight || this.owner.tileHeight || 10;
 		this.tileHalfWidth  = this.tileWidth  / 2;
@@ -46,8 +47,8 @@ platformer.components['collision-tiles'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.owner.getTiles = function(aabb){
-			return self.getTiles(aabb);
+		this.owner.getTiles = function(aabb, prevAABB){
+			return self.getTiles(aabb, prevAABB);
 		};
 		this.owner.getAABB = function(){
 			return self.getAABB();
@@ -68,16 +69,14 @@ platformer.components['collision-tiles'] = (function(){
 	};
 	
 	proto.isTile = function (x, y) {
-		if (x >=0 && x < this.collisionMap.length && y >=0 && y < this.collisionMap[0].length && this.collisionMap[x][y] != -1) 
-		{
+		if (x >=0 && x < this.collisionMap.length && y >=0 && y < this.collisionMap[0].length && this.collisionMap[x][y] != -1){
 			return true;
-		} else {
-			//If there's not a tile or we're outside the map.
+		} else { //If there's not a tile or we're outside the map.
 			return false;
 		}
 	};
 	
-	proto.getTiles = function(aabb){
+	proto.getTiles = function(aabb, prevAABB){
 		var left = Math.max(Math.floor(aabb.left   / this.tileWidth),  0),
 		top      = Math.max(Math.floor(aabb.top    / this.tileHeight), 0),
 		right    = Math.min(Math.ceil(aabb.right   / this.tileWidth),  this.collisionMap.length),
@@ -89,14 +88,13 @@ platformer.components['collision-tiles'] = (function(){
 		for (x = left; x < right; x++){
 			for (y = top; y < bottom; y++){
 				if (this.collisionMap[x][y] != -1) {
-					tiles.push({ //TODO: Make some optimizations here. Remove creation of objects if possible. - DDD
-								gridX: x,
-								gridY: y,
-								//type: this.collisionMap[x][y],
-								shapes: [new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]])]
-								});
-					
-					//shapes.push(new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]]));
+					if(!(this.platformIndex === this.collisionMap[x][y]) || (prevAABB.bottom <= y * this.tileHeight)){
+						tiles.push({ //TODO: Make some optimizations here. Remove creation of objects if possible. - DDD
+							gridX: x,
+							gridY: y,
+							shapes: [new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]])]
+						});
+					}
 				}
 			}
 		}

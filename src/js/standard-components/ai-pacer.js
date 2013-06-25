@@ -30,75 +30,41 @@ This component acts as a simple AI that will reverse the movement direction of a
       // Optional: "up", "right", "down", or "left". This specifies the initial direction of movement. Defaults to "up", or "left" if `movement` is horizontal.
     }
 */
-platformer.components['ai-pacer'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
+(function(){
+	return platformer.createComponentClass({
+		id: "ai-pacer",
 		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-ai', 'turn-around']);
+		constructor: function(definition){
+			this.movement         = definition.movement  || 'both';
+			this.lastDirection    = '';
+			this.currentDirection = definition.direction || ((this.movement === 'horizontal')?'left':'up');
+		},
 		
-		this.movement         = definition.movement  || 'both';
-		this.lastDirection    = '';
-		this.currentDirection = definition.direction || ((this.movement === 'horizontal')?'left':'up');
-	};
-	var proto = component.prototype;
-	
-	proto['handle-ai'] = function(obj){
-		if(this.currentDirection !== this.lastDirection){
-			this.lastDirection = this.currentDirection;
-			this.owner.trigger('stop');
-			this.owner.trigger('go-' + this.currentDirection);
+		events: {
+			"handle-ai": function(obj){
+				if(this.currentDirection !== this.lastDirection){
+					this.lastDirection = this.currentDirection;
+					this.owner.trigger('stop');
+					this.owner.trigger('go-' + this.currentDirection);
+				}
+			},
+			
+			"turn-around": function(collisionInfo){
+				if ((this.movement === 'both') || (this.movement === 'horizontal')){
+					if(collisionInfo.x > 0){
+						this.currentDirection = 'left';
+					} else if (collisionInfo.x < 0) {
+						this.currentDirection = 'right';
+					}
+				} 
+				if ((this.movement === 'both') || (this.movement === 'vertical')){
+					if(collisionInfo.y > 0){
+						this.currentDirection = 'up';
+					} else if (collisionInfo.y < 0) {
+						this.currentDirection = 'down';
+					}
+				} 
+			}
 		}
-	};
-	
-	proto['turn-around'] = function(collisionInfo){
-		if ((this.movement === 'both') || (this.movement === 'horizontal')){
-			if(collisionInfo.x > 0){
-				this.currentDirection = 'left';
-			} else if (collisionInfo.x < 0) {
-				this.currentDirection = 'right';
-			}
-		} 
-		if ((this.movement === 'both') || (this.movement === 'vertical')){
-			if(collisionInfo.y > 0){
-				this.currentDirection = 'up';
-			} else if (collisionInfo.y < 0) {
-				this.currentDirection = 'down';
-			}
-		} 
-	};
-	
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

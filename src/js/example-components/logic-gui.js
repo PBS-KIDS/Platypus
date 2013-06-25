@@ -14,7 +14,7 @@ platformer.components['logic-gui'] = (function(){
 	};
 	
 	proto['gui-gem-collected'] = function(data){
-		this.owner.trigger('count-gems', {count: data.count, debug: true});
+		this.owner.trigger('count-gems', data.count);
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

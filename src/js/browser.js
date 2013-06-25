@@ -20,6 +20,7 @@ All of this information is added to platformer.settings.supports and used throug
 			ie:        (uagent.search('msie')    > -1),
 		    firefox:   (uagent.search('firefox') > -1),
 			android:   (uagent.search('android') > -1),
+			chrome:    (uagent.search('chrome')  > -1),
 			silk:      (uagent.search('silk')    > -1),
 			iOS:       false, //determined below
 			mobile:    false, //determined below

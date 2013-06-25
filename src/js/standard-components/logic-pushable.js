@@ -45,7 +45,7 @@ platformer.components['logic-pushable'] = (function(){
 		this.maxVX = definition.maxVelocityX || definition.maxVelocity || 3;
 		this.maxVY = definition.maxVelocityY || definition.maxVelocity || 3;
 		*/
-		this.yPush = definition.push || definition.yPush || .01;
+		this.yPush = definition.push || definition.yPush || 0;
 		this.xPush = definition.push || definition.xPush || .01;
 		this.currentPushX = 0;
 		this.currentPushY = 0;

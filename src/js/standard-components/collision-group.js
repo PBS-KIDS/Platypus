@@ -51,7 +51,9 @@ platformer.components['collision-group'] = (function(){
 		type:   null,
 		shape:  null,
 		x: 0,
-		y: 0
+		y: 0,
+		hitType: null,
+		myType: null
 	},
 	entityCollisionMessage = {
 		x: null,
@@ -77,30 +79,35 @@ platformer.components['collision-group'] = (function(){
 		relative: false
 	},
 	
-	triggerCollisionMessages = function(entity, collision, x, y){
+	triggerCollisionMessages = function(entity, collision, x, y, hitType){
 		var otherEntity = collision.entity;
 
 		triggerMessage.entity = collision.entity;
 
 		triggerMessage.type   = collision.thatType;
+		triggerMessage.myType = collision.thisType;
 		triggerMessage.shape  = otherEntity.shape;
 		triggerMessage.x      = x;
 		triggerMessage.y      = y;
+		triggerMessage.hitType= hitType;
 		entity.trigger('hit-by-' + collision.thatType, triggerMessage);
 		
 		triggerMessage.entity = entity;
 		triggerMessage.type   = collision.thisType;
+		triggerMessage.myType = collision.thatType;
 		triggerMessage.shape  = entity.shape;
 		triggerMessage.x      = -x;
 		triggerMessage.y      = -y;
 		otherEntity.trigger('hit-by-' + collision.thisType, triggerMessage);
 	},
-	triggerTileCollisionMessage = function(entity, shape, x, y){
+	triggerTileCollisionMessage = function(entity, shape, x, y, myType){
 		triggerMessage.entity = null;
 		triggerMessage.type   = 'tiles';
+		triggerMessage.myType = myType;
 		triggerMessage.shape  = shape;
 		triggerMessage.x      = x;
 		triggerMessage.y      = y;
+		triggerMessage.hitType= 'solid';
 		entity.trigger('hit-by-tiles', triggerMessage);
 	},
 	AABBCollisionX = function (boxX, boxY)
@@ -278,6 +285,7 @@ platformer.components['collision-group'] = (function(){
 		this.softEntitiesLive = [];
 		this.allEntities = [];
 		this.allEntitiesLive = [];
+		this.groupsLive = [];
 		this.entitiesByTypeLive = {};
 		this.terrain = undefined;
 		this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
@@ -287,6 +295,7 @@ platformer.components['collision-group'] = (function(){
 		this.xMomentum = 0;
 		this.yMomentum = 0;
 		
+		this.updateLiveList = true;
 		this.cameraLogicAABB = new platformer.classes.aABB(0, 0);
 		this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
 		
@@ -300,6 +309,11 @@ platformer.components['collision-group'] = (function(){
 			tick: null,
 			camera: null
 		};
+		
+		this.timeElapsed = {
+			name: 'Col',
+			time: 0
+		};
 	};
 	var proto = component.prototype; 
 
@@ -312,6 +326,7 @@ platformer.components['collision-group'] = (function(){
 		if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
 			this.terrain = entity;
 			this.groupCollisionMessage.terrain = entity;
+			this.updateLiveList = true;
 		} else {
 			if(types){
 				for(; i < types.length; i++){
@@ -333,8 +348,12 @@ platformer.components['collision-group'] = (function(){
 				if(soft){
 					this.softEntities[this.softEntities.length] = entity;
 				}
-				this.allEntities[this.allEntities.length] = entity;
-				
+//				if(entity.jumpThrough){ // Need to do jumpthrough last, since everything else needs to check against it's original position
+					this.allEntities[this.allEntities.length] = entity;
+//				} else {
+//					this.allEntities.splice(0, 0, entity);
+//				}
+				this.updateLiveList = true;
 			}
 		}
 	};
@@ -390,17 +409,28 @@ platformer.components['collision-group'] = (function(){
 					break;
 				}
 			}
+			this.updateLiveList = true;
 		}
 		
 	};
 	
 	proto['check-collision-group'] = function(resp){
-		var entitiesLive = null;
+		var entitiesLive = null,
+		time = new Date().getTime();
 		
 		if(resp.camera){
 			this.checkCamera(resp.camera);
-		}
-		
+		}/*
+		if(resp.movers){
+			this.checkMovers(resp.camera, resp.movers);
+		}*/
+
+		this.timeElapsed.name = 'Col-Cam';
+		this.timeElapsed.time = new Date().getTime() - time;
+		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+		time += this.timeElapsed.time;
+
+//		this.tester = 0;
 		if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
 			if (resp.entities){
 				entitiesLive = this.entitiesByTypeLive; //save to reattach later so entities live grouping is not corrupted 
@@ -415,48 +445,91 @@ platformer.components['collision-group'] = (function(){
 
 			this.owner.x = this.lastX;
 			this.owner.y = this.lastY;
-			this.owner.trigger('prepare-for-collision');
-		
-			this.checkGroupCollisions(resp);
-			this.prepareCollisions(resp);
-			this.checkSolidCollisions(resp, false);
+
+			this.owner.triggerEvent('prepare-for-collision');
+
+			if(this.allEntitiesLive.length > 1){
+				this.checkGroupCollisions(resp);
+				this.prepareCollisions(resp);
+				this.checkSolidCollisions(resp, false);
+				this.resolveNonCollisions(resp);
+			}
 	
 			this.aabb.reset();
+			this.aabb.include(this.owner.getAABB());
 			for (var x = 0; x < this.solidEntitiesLive.length; x++){
-				this.aabb.include(((this.solidEntitiesLive[x] !== this.owner) && this.solidEntitiesLive[x].getCollisionGroupAABB)?this.solidEntitiesLive[x].getCollisionGroupAABB():this.solidEntitiesLive[x].getAABB());
+				this.aabb.include(this.solidEntitiesLive[x].getCollisionGroupAABB?this.solidEntitiesLive[x].getCollisionGroupAABB():this.solidEntitiesLive[x].getAABB());
 			}
 	
 			this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
 			this.aabb.move(this.aabb.x + goalX, this.aabb.y + goalY);
 	
+//			if(test) console.log('set: ' + this.aabb.y);
+			
 			this.checkSoftCollisions(resp);
 			
 			if (resp.entities){
 				this.entitiesByTypeLive = entitiesLive; //from above so entities live grouping is not corrupted 
 			}
 		} else {
+//			this.tester = 0;
+
 			this.checkGroupCollisions(resp);
+
+			this.timeElapsed.name = 'Col-Group';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
+
 			this.prepareCollisions(resp);
+
+			this.timeElapsed.name = 'Col-Prep';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
+
 			this.checkSolidCollisions(resp, true);
+
+			this.timeElapsed.name = 'Col-Solid';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
+
+			this.resolveNonCollisions(resp);
+
+			this.timeElapsed.name = 'Col-None';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
+
 			this.checkSoftCollisions(resp);
+
+			this.timeElapsed.name = 'Col-Soft';
+			this.timeElapsed.time = new Date().getTime() - time;
+			platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			time += this.timeElapsed.time;
+
 		}
 	};
 	
 	proto.getAABB = function(){
 		return this.aabb;
+//		if(test) console.log('get: ' + this.aabb.y);
 	};
 
 	proto.getPreviousAABB = function(){
 		return this.prevAABB;
 	};
-	
-	proto.checkCamera = function(camera){
+
+	proto.checkCamera = function(camera, movers){
 		var i  = 0,
 		j      = 0,
-		k      = 0,
 		length = 0,
 		list   = null,
-		otherList = null,
+		all    = null,
+		softs  = null,
+		solids = null,
+		groups = null,
 		width  = camera.width,
 		height = camera.height,
 		x      = camera.left + width  / 2,
@@ -465,126 +538,171 @@ platformer.components['collision-group'] = (function(){
 		entities = undefined,
 		entity = undefined,
 		check  = AABBCollision,
-		types = null;
+		aabbLogic     = this.cameraLogicAABB,
+		aabbCollision = this.cameraCollisionAABB,
+		types = null,
+		createdGroupList = false;
 		
-		this.cameraLogicAABB.setAll(x, y, width + buffer, height + buffer);
+		// store buffered size since the actual width x height is not used below.
+		width += buffer * 2;
+		height += buffer * 2;
 		
-		list = this.allEntitiesLive;
-		list.length = 0;
-		length = this.allEntities.length;
-		for (i = 0; i < length; i++){
-			entity = this.allEntities[i];
-			if(entity.alwaysOn || check(entity.getAABB(), this.cameraLogicAABB)){
-				list[list.length] = entity;
-			} 
-		}
-		
-		list = this.solidEntitiesLive;
-		list.length = 0;
-		otherList = this.softEntitiesLive;
-		otherList.length = 0;
-		length = this.allEntitiesLive.length;
-		for (i = 0; i < length; i++){
-			entity = this.allEntitiesLive[i];
-			types = entity.collisionTypes;
-			for (k = 0; k < types.length; k++)
-			{
-				if(entity.solidCollisions[types[k]].length && !entity.immobile){
-					list[list.length] = entity;
+		if(this.updateLiveList || !aabbLogic.matches(x, y, width, height)){
+			
+			aabbLogic.setAll(x, y, width, height);
+			
+			if(this.updateLiveList || !aabbCollision.contains(aabbLogic)){ //if the camera has not moved beyond the original buffer, we do not continue these calculations
+				this.updateLiveList = false;
+
+				all = this.allEntitiesLive;
+				all.length = 0;
+				
+				solids = this.solidEntitiesLive;
+				solids.length = 0;
+				
+				softs = this.softEntitiesLive;
+				softs.length = 0;
+
+				groups = this.groupsLive;
+				groups.length = 0;
+				createdGroupList = true;
+
+				length = this.allEntities.length;// console.log(length);
+				for (i = 0; i < length; i++){
+					entity = this.allEntities[i];
+					if(entity.checkCollision || check(entity.getAABB(), aabbLogic)){
+						all[all.length] = entity;
+
+						types = entity.collisionTypes;
+						if(entity !== this.owner){
+							if(!entity.immobile){
+								for (j = 0; j < types.length; j++) {
+									if(entity.solidCollisions[types[j]].length){
+										solids[solids.length] = entity;
+										break;
+									}
+								}
+							}
+							
+							if(entity.getCollisionGroup){
+								if(entity.getCollisionGroup().length > 1){
+									groups[groups.length] = entity;
+								}
+							}
+						}
+						for (j = 0; j < types.length; j++) {
+							if(entity.softCollisions[types[j]].length){
+								softs[softs.length] = entity;
+								break;
+							}
+						}
+					} 
 				}
-				if(entity.softCollisions[types[k]].length){
-					otherList[otherList.length] = entity;
+				
+				// add buffer again to capture stationary entities along the border that may be collided against 
+				aabbCollision.setAll(x, y, width + buffer, height + buffer);
+				
+				for (i in this.entitiesByType){
+					entities = this.entitiesByType[i];
+					list = this.entitiesByTypeLive[i];
+					list.length = 0;
+					length = entities.length;
+					for (j = 0; j < length; j++){
+						entity = entities[j];
+						if(entity.alwaysOn || check(entity.getAABB(), aabbCollision)){
+							list[list.length] = entity;
+						}
+					}
 				}
 			}
 		}
 		
-		buffer *= 2;
-		this.cameraCollisionAABB.setAll(x, y, width + buffer, height + buffer);
-		for (i in this.entitiesByType){
-			entities = this.entitiesByType[i];
-			list = this.entitiesByTypeLive[i];
-			list.length = 0;
-			length = entities.length;
-			for (j = 0; j < length; j++){
-				entity = entities[j];
-				if(entity.alwaysOn || check(entity.getAABB(), this.cameraCollisionAABB)){
-					list[list.length] = entity;
+		if(!createdGroupList){ //If the camera has not moved, the groupings still need to be checked and updated.
+			groups = this.groupsLive;
+			groups.length = 0;
+
+			length = this.allEntitiesLive.length;// console.log(length);
+			for (i = 0; i < length; i++){
+				entity = this.allEntitiesLive[i];
+				if(entity !== this.owner){
+					if(entity.getCollisionGroup){
+						if(entity.getCollisionGroup().length > 1){
+							groups[groups.length] = entity;
+						}
+					}
 				}
 			}
-		}	};
+		}
+	};
 
 	proto.checkGroupCollisions = function (resp){
-		var groups = this.collisionGroups;
-		groups.length = 0;
-		
-		this.groupCollisionMessage.deltaT = resp.deltaT;
-		this.groupCollisionMessage.tick = resp.tick;
-		this.groupCollisionMessage.camera = resp.camera;
-		
-		// values inherited from primary world collision group
-		if(resp.terrain){
-			this.groupCollisionMessage.terrain = resp.terrain;
-		}
-		if(resp.entities){
-			this.groupCollisionMessage.entities = resp.entities;
-		}
-
-		for (var x = 0; x < this.solidEntitiesLive.length; x++){
-			if(this.solidEntitiesLive[x] !== this.owner){
-				if(this.solidEntitiesLive[x].trigger('check-collision-group', this.groupCollisionMessage)){
-					this.solidEntitiesLive[x].collisionUnresolved = true;
-					groups[groups.length] = this.solidEntitiesLive[x];
-				};
-			}
-		}
-
+		var groups = this.groupsLive;
 		if(groups.length > 0){
-			this.resolveCollisionList(groups, true);
+			this.groupCollisionMessage.deltaT = resp.deltaT;
+			this.groupCollisionMessage.tick = resp.tick;
+			this.groupCollisionMessage.camera = resp.camera;
+			
+			// values inherited from primary world collision group
+			if(resp.terrain){
+				this.groupCollisionMessage.terrain = resp.terrain;
+			}
+			if(resp.entities){
+				this.groupCollisionMessage.entities = resp.entities;
+			}
+	
+			for (var x = 0; x < groups.length; x++){
+				groups[x].trigger('check-collision-group', this.groupCollisionMessage);
+				groups[x].collisionUnresolved = true;
+			}
+
+			this.resolveCollisionList(groups, true, false, resp);
 		}
 	};
 
 	proto.prepareCollisions = function (resp) {
 		var entity = null;
-		for (x = this.allEntitiesLive.length - 1; x > -1; x--)
-		{
+		for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
 			entity = this.allEntitiesLive[x];
-			entity.trigger('prepare-for-collision', resp);
+			entity.collisionUnresolved = true;
+			if(entity !== this.owner){
+				entity.triggerEvent('prepare-for-collision', resp);
+			}
 		}
 	};
 
-	//TODO: FINISH THIS!	
-	
-	proto.checkSolidCollisions = function (resp, finalMovement){
-		var x    = 0,
-		entity   = null,
-		entities = this.collisionGroups;
-		entities.length = 0;
+	proto.resolveNonCollisions = function (resp) {
+		var entity = null,
+		xy         = xyPair;
+
+		xy.relative = false;
+		xy.xMomentum = 0;
+		xy.yMomentum = 0;
 		
-		for (x = this.solidEntitiesLive.length - 1; x > -1; x--)
-		{
-			entity = this.solidEntitiesLive[x];
-			if(this.owner !== entity){
-//				if(entity.trigger('prepare-for-collision', resp)){
-					entity.collisionUnresolved = true;
-					entities[entities.length] = entity;
-//				} else { // possible TODO: remove the entity because it no longer has a collision handler
-//				}
+		for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
+			entity = this.allEntitiesLive[x];
+			if(entity.collisionUnresolved){
+				xy.x = entity.x;
+				xy.y = entity.y;
+				entity.trigger('relocate-entity', xy);
 			}
 		}
-		
-		this.resolveCollisionList(entities, false, finalMovement);
 	};
 	
-	proto.resolveCollisionList = function(entities, group, finalMovement){
+	proto.checkSolidCollisions = function (resp, finalMovement){
+		this.resolveCollisionList(this.solidEntitiesLive, false, finalMovement);
+	};
+	
+	proto.resolveCollisionList = function(entities, group, finalMovement, resp){
 		for (var x = entities.length - 1; x > -1; x--){
+//		for (var x = 0; x < entities.length; x++){
 			if(entities[x].collisionUnresolved){
-				this.checkSolidEntityCollision(entities[x], group, finalMovement);
+				this.checkSolidEntityCollision(entities[x], group, finalMovement, resp);
 				entities[x].collisionUnresolved = false;
 			}
 		}
 	};
 	
-	proto.checkSolidEntityCollision = function(ent, groupCheck, finalMovement){
+	proto.checkSolidEntityCollision = function(ent, groupCheck, finalMovement, resp){
 		var i     = 0,
 		y         = 0,
 		z         = 0,
@@ -608,8 +726,15 @@ platformer.components['collision-group'] = (function(){
 		aabbOffsetY  = 0,
 		finalX       = null,
 		finalY       = null,
-		finalQ       = null;
+		finalQ       = null,
+		otherAABB    = null;
 		
+		potentialTiles.length = 0;
+		potentialsEntities.length = 0;
+		thatTypes.length = 0;
+		thisTypes.length = 0;
+		thisTileTypes.length = 0;
+
 		if(groupCheck){
 			currentAABB  = ent.getCollisionGroupAABB();
 			previousAABB = ent.getPreviousCollisionGroupAABB();
@@ -618,33 +743,37 @@ platformer.components['collision-group'] = (function(){
 			sweepAABB.include(currentAABB);
 			sweepAABB.include(previousAABB);
 
-			potentialTiles.length = 0;
-			potentialsEntities.length = 0;
-
-			for(; i < ent.collisionTypes.length; i++){
-				collisionType = ent.collisionTypes[i];
-				
-				for (y = 0; y < ent.solidCollisions[collisionType].length; y++) {
-					if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
-						for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
-							include = true;
-							otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
-							if(collisionGroup){
-								for(var i in collisionGroup){
-									if(otherEntity === collisionGroup[i]){
-										include = false;
+			if(!ent.jumpThrough || (currentAABB.y < previousAABB.y)){
+				for(; i < ent.collisionTypes.length; i++){
+					collisionType = ent.collisionTypes[i];
+					
+					for (y = 0; y < ent.solidCollisions[collisionType].length; y++) {
+						if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
+							for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
+								include = true;
+								otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
+								otherAABB = otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
+								if(collisionGroup){
+									for(var i in collisionGroup){
+										if(otherEntity === collisionGroup[i]){
+											include = false;
+										}
 									}
+								} else if (otherEntity === ent){
+									include = false;
+								} else if (otherEntity.jumpThrough && (previousAABB.bottom > otherAABB.top)) {
+									include = false;
+								} else if (ent.jumpThrough && (otherAABB.bottom > previousAABB.top)) {
+									include = false;
 								}
-							} else if (otherEntity === ent){
-								include = false;
+								if(include && (checkAABBCollision(sweepAABB, otherAABB))) {
+									potentialsEntities[potentialsEntities.length] = otherEntity;
+									otherEntity.currentCollisionType = ent.solidCollisions[collisionType][y]; //used for messaging later on
+								}
 							}
-							if(include && (checkAABBCollision(sweepAABB, otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y])))) {
-								potentialsEntities[potentialsEntities.length] = otherEntity;
-								otherEntity.currentCollisionType = ent.solidCollisions[collisionType][y]; //used for messaging later on
-							}
+						} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')){
+							potentialTiles = this.terrain.getTiles(sweepAABB, previousAABB);
 						}
-					} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')){
-						potentialTiles = this.terrain.getTiles(sweepAABB);
 					}
 				}
 			}
@@ -652,9 +781,9 @@ platformer.components['collision-group'] = (function(){
 			initialX  = previousAABB.x;//ent.getPreviousX();
 			initialY  = previousAABB.y;//ent.getPreviousY();
 			
-			finalX = this.linearMovement(ent, 'x', previousAABB, currentAABB, groupCheck, collisionGroup, potentialTiles, potentialsEntities);
+			finalX = this.linearMovement(ent, 'x', previousAABB, currentAABB, groupCheck, collisionGroup, potentialTiles, potentialsEntities, null, null, null, resp);
 			previousAABB.moveX(finalX);
-			finalY = this.linearMovement(ent, 'y', previousAABB, currentAABB, groupCheck, collisionGroup, potentialTiles, potentialsEntities);
+			finalY = this.linearMovement(ent, 'y', previousAABB, currentAABB, groupCheck, collisionGroup, potentialTiles, potentialsEntities, null, null, null, resp);
 
 			xy.relative = false;
 			xy.xMomentum = currentAABB.x - finalX;
@@ -663,40 +792,43 @@ platformer.components['collision-group'] = (function(){
 			xy.y = finalY - initialY;
 			ent.trigger('relocate-group', xy);
 		} else {
-			thatTypes.length = 0;
-			thisTypes.length = 0;
-			potentialTiles.length = 0;
-			potentialsEntities.length = 0;
-
 			for(; i < ent.collisionTypes.length; i++){
 				collisionType = ent.collisionTypes[i];
 
 				currentAABB  = ent.getAABB(collisionType);
 				previousAABB = ent.getPreviousAABB(collisionType);
 
-				sweepAABB.reset();
-				sweepAABB.include(currentAABB);
-				sweepAABB.include(previousAABB);
+				if(!ent.jumpThrough || (currentAABB.y < previousAABB.y)){ //TODO: shouldn't do this here. Need to extend jumpthrough to handle different directions and forward motion - DDD
 
-				for (y = 0; y < ent.solidCollisions[collisionType].length; y++) {
-					if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
-						for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
-							include = true;
-							otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
-							if (otherEntity === ent){
-								include = false;
+					sweepAABB.reset();
+					sweepAABB.include(currentAABB);
+					sweepAABB.include(previousAABB);
+
+					for (y = 0; y < ent.solidCollisions[collisionType].length; y++) {
+						if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
+							for(z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
+								include = true;
+								otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
+								otherAABB = otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
+								if (otherEntity === ent){
+									include = false;
+								} else if (otherEntity.jumpThrough && (previousAABB.bottom > otherAABB.top)) {
+									include = false;
+								} else if (ent.jumpThrough && (otherAABB.bottom > previousAABB.top)) { // This will allow platforms to hit something solid sideways if it runs into them from the side even though originally they were above the top. - DDD
+									include = false;
+								}
+								if(include && (checkAABBCollision(sweepAABB, otherAABB))) {
+									potentialsEntities[potentialsEntities.length] = otherEntity;
+									thisTypes[thisTypes.length] = collisionType;
+									thatTypes[thatTypes.length] = ent.solidCollisions[collisionType][y];
+									//otherEntity.currentCollisionType = ent.solidCollisions[collisionType][y]; //used for messaging later on
+								}
 							}
-							if(include && (checkAABBCollision(sweepAABB, otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y])))) {
-								potentialsEntities[potentialsEntities.length] = otherEntity;
-								thisTypes[thisTypes.length] = collisionType;
-								thatTypes[thatTypes.length] = ent.solidCollisions[collisionType][y];
-								//otherEntity.currentCollisionType = ent.solidCollisions[collisionType][y]; //used for messaging later on
+						} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')){
+							potentialTiles = this.terrain.getTiles(sweepAABB, previousAABB);
+							for(z = 0; z < potentialTiles.length; z++){
+								thisTileTypes[thisTileTypes.length] = collisionType;
 							}
-						}
-					} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')){
-						potentialTiles = this.terrain.getTiles(sweepAABB);
-						for(z = 0; z < potentialTiles.length; z++){
-							thisTileTypes[thisTileTypes.length] = collisionType;
 						}
 					}
 				}
@@ -777,7 +909,7 @@ platformer.components['collision-group'] = (function(){
 			if(collisionGroup){
 				for(var i in collisionGroup){
 					collisionGroup[i][axis] += goalPoint - initialPoint;
-					collisionGroup[i].trigger('prepare-for-collision');
+					collisionGroup[i].triggerEvent('prepare-for-collision');
 				}
 			}
 			
@@ -801,7 +933,7 @@ platformer.components['collision-group'] = (function(){
 			
 			if((entityCollision[axis] !== null) && (((step > 0) && (!tileCollision.aABB || (entityCollision[axis] < tileCollision[axis]))) || ((step < 0) && (!tileCollision.aABB || (entityCollision[axis] > tileCollision[axis]))))){
 				if(!groupCheck){
-					triggerCollisionMessages(ent, entityCollision, xStep, yStep);
+					triggerCollisionMessages(ent, entityCollision, xStep, yStep, 'solid');
 				}
 					
 				if(((entityCollision[axis] > initialPoint) && (step > 0)) || ((entityCollision[axis] < initialPoint) && (step < 0))){
@@ -811,7 +943,7 @@ platformer.components['collision-group'] = (function(){
 				}
 			} else if(tileCollision.aABB){
 				if(!groupCheck){
-					triggerTileCollisionMessage(ent, tileCollision.shape, xStep, yStep);
+					triggerTileCollisionMessage(ent, tileCollision.shape, xStep, yStep, tileCollision.thisType);
 				}
 
 				if(((tileCollision[axis] > initialPoint) && (step > 0)) || ((tileCollision[axis] < initialPoint) && (step < 0))){
@@ -855,7 +987,9 @@ platformer.components['collision-group'] = (function(){
 								if (preciseCollision(ent, otherEntity)){
 									message.entity = otherEntity;
 									message.type   = otherCollisionType;
+									message.myType = ent.collisionTypes[i];
 									message.shape  = otherEntity.shape;
+									message.hitType= 'soft';
 									ent.trigger('hit-by-' + otherCollisionType, message);
 									message.debug = false;
 								}
@@ -883,12 +1017,21 @@ platformer.components['collision-group'] = (function(){
 		for (var x = 0; x < this.solidEntities.length; x++){
 			this.aabb.include(((this.solidEntities[x] !== this.owner) && this.solidEntities[x].getCollisionGroupAABB)?this.solidEntities[x].getCollisionGroupAABB():this.solidEntities[x].getAABB());
 		}
+//		if(test) console.log('rlc: ' + this.aabb.y);
 		this.resolveMomentum();
 	};
+	
+//	var test = false;
 	
 	proto['relocate-entity'] = function(resp){
 		this.lastX = this.owner.x;
 		this.lastY = this.owner.y;
+		
+/*		if(test || (this.allEntitiesLive.length > 1)){
+			test = true;
+			console.log('r0' + this.tester + ': ' + this.lastY + ': ' + this.allEntitiesLive.length);
+			this.tester += 1;
+		}*/
 	};
 	
 	proto.resolveMomentum = function(){

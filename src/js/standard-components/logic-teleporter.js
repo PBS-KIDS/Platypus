@@ -9,17 +9,12 @@ This component listens for redirected collision messages and fires a message on 
 ## Messages
 
 ### Listens for:
-- **load** - If the owner only teleports entities colliding from a certain side, this message fires `logical-state` to notify entity of current facing direction
 - **peer-entity-added** - This teleporter listens as other entities are added so it can recognize the entity it should teleport colliding objects to.
   > @param message (object) - expects an entity as the message object in order to determine whether it is the requested teleportation destination.
 - **teleport-entity** - On receiving this message, the component will fire `teleport` on the colliding entity, sending this.destination. The colliding entity must handle the `teleport` message and relocate itself.
   > @param message.x (integer) - uses `x` to determine if collision occurred on the left (-1) or right (1) of this entity.
   > @param message.y (integer) - uses `y` to determine if collision occurred on the top (-1) or bottom (1) of this entity.
   > @param message.entity (object) - triggers a `teleport` message on `entity`.
-
-### Local Broadcasts:
-- **logical-state** - On load, this component will send the state as the this.facing value if it exists.
-  > @param message (object) - the current `this.facing` value is passed as a property of the message object: "facing-up", "facing-down", "facing-left", or "facing-right" set to `true`.
 
 ### Peer Broadcasts:
 - **teleport** - On receiving a `teleport-entity` message, if the colliding entity is colliding on the teleporter's facing side, this message is triggered on the colliding entity.
@@ -37,95 +32,62 @@ This component listens for redirected collision messages and fires a message on 
     }
 
 */
-platformer.components['logic-teleporter'] = (function(){
+(function(){
+	return platformer.createComponentClass({
+        id: 'logic-teleporter',
 
-	var component = function(owner, definition){
-		this.owner = owner;
+        constructor: function(definition){
+			
+			this.destination = undefined;
+			this.linkId = this.owner.teleportId || definition.teleportId;
+			this.facing = this.owner.facing || definition.facing || false;
 		
-		// Messages that this component listens for
-		this.listeners = [];
+			if(this.facing){
+				this.owner.state['facing-' + this.facing] = true;
+			}
+        },
 
-		this.addListeners(['load', 'peer-entity-added', 'teleport-entity']);
+		events: {// These are messages that this component listens for
+			"peer-entity-added": function(entity){
+				if(!this.destination && (entity.linkId === this.linkId)){
+					this.destination = entity;
+				}
+			},
+	
+			"teleport-entity": function(collisionInfo){
+				switch(this.facing){
+				case 'up':
+					if(collisionInfo.y < 0) {
+						collisionInfo.entity.trigger('teleport', this.destination);
+					}
+					break;
+				case 'right':
+					if(collisionInfo.x > 0) {
+						collisionInfo.entity.trigger('teleport', this.destination);
+					}
+					break;
+				case 'down':
+					if(collisionInfo.y > 0) {
+						collisionInfo.entity.trigger('teleport', this.destination);
+					}
+					break;
+				case 'left':
+					if(collisionInfo.x < 0) {
+						collisionInfo.entity.trigger('teleport', this.destination);
+					}
+					break;
+				default:
+					collisionInfo.entity.trigger('teleport', this.destination);
+					break;
+				}
+			}
+		},
 		
-		this.destination = undefined;
-		this.linkId = this.owner.teleportId || definition.teleportId;
-		this.facing = this.owner.facing || definition.facing || false;
-	};
-	var proto = component.prototype;
-	
-	proto['load'] = function(resp){
-		var state = {};
-		if(this.facing){
-			state['facing-' + this.facing] = true;
-			this.owner.trigger('logical-state', state);
+		methods: {// These are methods that are called on the component
+			"destroy": function(){
+				this.destination = undefined;
+			}
 		}
-	};
-	
-	proto['peer-entity-added'] = function(entity){
-		if(!this.destination && (entity.linkId === this.linkId)){
-			this.destination = entity;
-		}
-	};
-	
-	proto['teleport-entity'] = function(collisionInfo){
-		switch(this.facing){
-		case 'up':
-			if(collisionInfo.y < 0) {
-				collisionInfo.entity.trigger('teleport', this.destination);
-			}
-			break;
-		case 'right':
-			if(collisionInfo.x > 0) {
-				collisionInfo.entity.trigger('teleport', this.destination);
-			}
-			break;
-		case 'down':
-			if(collisionInfo.y > 0) {
-				collisionInfo.entity.trigger('teleport', this.destination);
-			}
-			break;
-		case 'left':
-			if(collisionInfo.x < 0) {
-				collisionInfo.entity.trigger('teleport', this.destination);
-			}
-			break;
-		default:
-			collisionInfo.entity.trigger('teleport', this.destination);
-			break;
-		}
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.destination = undefined;
-		this.removeListeners(this.listeners);
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value){
-			self[messageId](value);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+		
+	});
 })();

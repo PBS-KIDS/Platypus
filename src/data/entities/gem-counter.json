@@ -6,7 +6,7 @@
 	"components":[
 		{
 			"type": "counter",
-			"message": "count-gems"
+			"countMessage": "count-gems"
 		},{
             "type": "dom-element",
             "className": "gem-counter",

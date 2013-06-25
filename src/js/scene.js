@@ -38,12 +38,16 @@ platformer.classes.scene = (function(){
 		var layers = definition.layers,
 		supportedLayer = true,
 		layerDefinition = false,
-		properties = false;
+		properties = false,
+		messages = null;
+		
+		this.storedMessages = [];
+		
 		this.rootElement = rootElement;
 		this.layers = [];
 		for(var layer in layers){
 			layerDefinition = layers[layer];
-			properties = {rootElement: this.rootElement};
+			properties = {rootElement: this.rootElement, parent: this};
 			if (layerDefinition.properties){
 				for(i in layerDefinition.properties){
 					properties[i] = layerDefinition.properties[i];
@@ -78,6 +82,13 @@ platformer.classes.scene = (function(){
 				}));
 			}
 		}
+		// This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
+		messages = this.storedMessages;
+		this.storedMessages = false;
+		for(var i = 0; i < messages.length; i++){
+			this.trigger(messages[i].message, messages[i].value);
+		}
+		messages.length = 0;
 		
 		this.time = new Date().getTime();
 		this.timeElapsed = {
@@ -89,22 +100,30 @@ platformer.classes.scene = (function(){
 	
 	proto.trigger = function(eventId, event){
 		var time = 0;
-		if(eventId === 'tick'){
-			time = new Date().getTime();
-			this.timeElapsed.name = 'Non-Engine';
-			this.timeElapsed.time = time - this.time;
-			this.trigger('time-elapsed', this.timeElapsed);
-			this.time = time;
-		}
-		for(var layer in this.layers){
-			this.layers[layer].trigger(eventId, event);
-		}
-		if(eventId === 'tick'){
-			time = new Date().getTime();
-			this.timeElapsed.name = 'Engine Total';
-			this.timeElapsed.time = time - this.time;
-			this.trigger('time-elapsed', this.timeElapsed);
-			this.time = time;
+		
+		if(this.storedMessages){
+			this.storedMessages.push({
+				message: eventId,
+				value: event
+			});
+		} else {
+			if(eventId === 'tick'){
+				time = new Date().getTime();
+				this.timeElapsed.name = 'Non-Engine';
+				this.timeElapsed.time = time - this.time;
+				this.trigger('time-elapsed', this.timeElapsed);
+				this.time = time;
+			}
+			for(var layer in this.layers){
+				this.layers[layer].trigger(eventId, event);
+			}
+			if(eventId === 'tick'){
+				time = new Date().getTime();
+				this.timeElapsed.name = 'Engine Total';
+				this.timeElapsed.time = time - this.time;
+				this.trigger('time-elapsed', this.timeElapsed);
+				this.time = time;
+			}
 		}
 	};
 	

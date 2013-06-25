@@ -13,6 +13,7 @@
         {"type": "entity-container", 
             "entities": [
                 {"type": "button-mute"},
+                {"type": "button-fullscreen"},
                 {"type": "button-play"},
                 {"type": "gui"},
             	{"type": "fps-counter"}

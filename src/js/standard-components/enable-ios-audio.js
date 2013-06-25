@@ -18,6 +18,7 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 */
 platformer.components['enable-ios-audio'] = (function(){
 	var iOSAudioEnabled = false,
+//	console = {log:function(txt){document.title += txt;}},
 	component = function(owner, definition){
 		var self = this;
 		this.owner = owner;
@@ -40,28 +41,37 @@ platformer.components['enable-ios-audio'] = (function(){
 		var callback = false,
 	    click        = false;
 		
+//		document.title = '';
 		iOSAudioEnabled = true;
 		click = function(e){
 			var audio = createjs.Sound.play(audioId),
 			forceStop = function () {
 			    audio.removeEventListener('succeeded', forceStop);
 			    audio.pause();
+//			    console.log('g');
 			},
 			progress  = function () {
 			    audio.removeEventListener('ready', progress);
+//			    console.log('h');
 			    if (callback) callback();
 			};
+//		    console.log('a');
 			
-			if(audio.playState === 'playSucceeded'){
+			if(audio.playState !== 'playFailed'){
+//			    console.log('b(' + audio.playState + ')');
 				audio.stop();
 			} else {
+//			    console.log('c(' + audio.playState + ')');
 				audio.addEventListener('succeeded', forceStop);
 			    audio.addEventListener('ready', progress);
 
 			    try {
 					audio.play();
+//				    console.log('d(' + audio.playState + ')');
 			    } catch (e) {
+//				    console.log('e');
 			    	callback = function () {
+					    console.log('i');
 			    		callback = false;
 			    		audio.play();
 			    	};
@@ -69,6 +79,7 @@ platformer.components['enable-ios-audio'] = (function(){
 			}
 			element.removeEventListener('touchstart', click, false);
 			if(functionCallback){
+//			    console.log('f');
 				functionCallback();
 			}
 		};
@@ -81,7 +92,9 @@ platformer.components['enable-ios-audio'] = (function(){
 	};
 	
 	proto.destroy = function(){
-		this.owner.rootElement.removeChild(this.touchOverlay);
+		if(this.touchOverlay){
+			this.owner.rootElement.removeChild(this.touchOverlay);
+		}
 		this.touchOverlay = undefined;
 	};
 	

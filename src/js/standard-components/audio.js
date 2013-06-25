@@ -17,6 +17,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
   > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is muted.
 - **audio-unmute** - On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
   > @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is unmuted.
+- **audio-stop** - On receiving this message all audio will stop playing.
 - **logical-state** - This component listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
   > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with [SoundJS play parameters] [link2].
@@ -27,6 +28,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
   > @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
   > @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
   > @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+  > @param message.next (string) - Optional. Used to specify the next audio clip to play once this one is complete.
 
 ## JSON Definition:
     {
@@ -62,8 +64,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
           "volume": 0.75,
           // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
           
-          "pan": -0.25
+          "pan": -0.25,
           // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+
+          "next": ["audio-id"]
+          // Optional. Used to specify a list of audio clips to play once this one is finished.
         }
       }
     }
@@ -79,10 +84,12 @@ platformer.components['audio'] = (function(){
 		loop:      0,
 		volume:    1,
 		pan:       0,
-		length:    0
+		length:    0,
+		next:      false
 	},
 	stop = {
-		stop: true
+		stop: true,
+		playthrough: true
 	},
 	playSound = function(soundDefinition){
 		var sound = '',
@@ -104,12 +111,25 @@ platformer.components['audio'] = (function(){
 			sound = platformer.settings.assets[sound].assetId;
 		}
 		return function(value){
-			var audio = undefined,
+			var self = this,
+			audio = undefined,
+			next = false,
 			length    = 0;
+			
 			value = value || attributes;
 			if(value && value.stop){
 				if(instance) {
-					instance.remainingLoops = 0;
+					if(value.playthrough){
+						instance.remainingLoops = 0;
+					} else {
+						instance.stop();
+						for (var i in self.activeAudioClips){
+							if (self.activeAudioClips[i] === instance){
+								self.activeAudioClips.splice(i,1);
+								break;
+							}
+						}
+					}
 				}
 			} else {
 				if(value){
@@ -118,12 +138,49 @@ platformer.components['audio'] = (function(){
 					offset        = value.offset    || attributes.offset || defaultSettings.offset,
 					loop          = value.loop      || attributes.loop   || defaultSettings.loop,
 					volume        = (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
-					pan           = value.pan       || attributes.pan    || defaultSettings.pan;
+					pan           = value.pan       || attributes.pan    || defaultSettings.pan,
 					length        = value.length    || attributes.length || defaultSettings.length;
 					
+					next          = value.next      || attributes.next   || defaultSettings.next;
+					
 					audio = instance = createjs.Sound.play(sound, interrupt, delay, offset, loop, volume, pan);
+					
 				} else {
 					audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
+				}
+
+				if(next){
+					audio.addEventListener('complete', function(){
+						if((typeof next === 'string') || !next.length){
+							self.owner.trigger(next);
+						} else {
+							var arr = next.slice();
+							arr.splice(0,1);
+							if(arr.length > 0){
+								(playSound(next[0])).call(self, {'next': arr});
+//								self.owner.trigger(next[0], {'next': arr});
+							} else {
+								(playSound(next[0])).call(self);
+//								self.owner.trigger(next[0]);
+							}
+						}
+
+						for (var i in self.activeAudioClips){
+							if (self.activeAudioClips[i] === audio){
+								self.activeAudioClips.splice(i,1);
+								break;
+							}
+						}
+					});
+				} else {
+					audio.addEventListener('complete', function(){
+						for (var i in self.activeAudioClips){
+							if (self.activeAudioClips[i] === audio){
+								self.activeAudioClips.splice(i,1);
+								break;
+							}
+						}
+					});
 				}
 
 				if(audio.playState === 'playFailed'){
@@ -132,8 +189,9 @@ platformer.components['audio'] = (function(){
 					}
 				} else {
 					if(length){ // Length is specified so we need to turn off the sound at some point.
-						this.timedAudioClips.push({length: length, progress: 0, audio: audio});
+						this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next});
 					}
+					this.activeAudioClips.push(audio);
 				}
 			}
 		};
@@ -157,16 +215,22 @@ platformer.components['audio'] = (function(){
 	},
 	component = function(owner, definition){
 		this.owner = owner;
-		this.timedAudioClips = [],
-		
+		this.timedAudioClips = [];
+		this.activeAudioClips = [];		
+
 		// Messages that this component listens for
 		this.listeners = [];
-		this.addListeners(['handle-render', 'audio-mute-toggle', 'audio-mute', 'audio-unmute', 'logical-state']);
+		this.addListeners(['handle-render', 'audio-mute-toggle', 'audio-mute', 'audio-unmute', 'audio-stop', 'logical-state']);
 
 		this.state = {};
 		this.stateChange = false;
 		this.currentState = false;
 
+		this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough;
+		if(typeof this.forcePlaythrough !== 'boolean') {
+			this.forcePlaythrough = true;
+		}
+		
 		if(definition.audioMap){
 			this.checkStates = [];
 			for (var key in definition.audioMap){
@@ -188,23 +252,40 @@ platformer.components['audio'] = (function(){
 			audioClip = undefined;
 			newArray  = undefined;
 			if(this.timedAudioClips.length){
-				newArray = [];
-				for (i in this.timedAudioClips){
-					audioClip = this.timedAudioClips[i];
+				newArray = this.timedAudioClips;
+				this.timedAudioClips = [];
+				for (i in newArray){
+					audioClip = newArray[i];
 					audioClip.progress += resp.deltaT;
 					if(audioClip.progress >= audioClip.length){
 						audioClip.audio.stop();
+						if(audioClip.next){
+							if((typeof audioClip.next === 'string') || !audioClip.next.length){
+								this.owner.trigger(audioClip.next);
+							} else {
+								var arr = audioClip.next.slice();
+								arr.splice(0,1);
+								if(arr.length > 0){
+									(playSound(audioClip.next[0])).call(this, {'next': arr});
+//									this.owner.trigger(audioClip.next[0], {'next': arr});
+								} else {
+									(playSound(audioClip.next[0])).call(this);
+//									this.owner.trigger(audioClip.next[0]);
+								}
+							}
+						}
 					} else {
-						newArray.push(audioClip);
+						this.timedAudioClips.push(audioClip);
 					}
 				}
-				this.timedAudioClips = newArray;
+//				this.timedAudioClips = newArray;
 			}
 
 			i = 0;
 			if(this.stateChange){
 				if(this.checkStates){
 					if(this.currentState){
+						stop.playthrough = this.forcePlaythrough;
 						this[this.currentState](stop);
 					}
 					this.currentState = false;
@@ -239,6 +320,14 @@ platformer.components['audio'] = (function(){
 		createjs.Sound.setMute(!createjs.Sound.getMute());
 	};
 	
+	proto['audio-stop'] = function(){
+		for (var i in this.activeAudioClips){
+			this.activeAudioClips[i].stop();
+		}
+		this.activeAudioClips.length = 0;
+		this.timedAudioClips.length = 0;
+	};
+
 	proto['audio-mute'] = function(){
 		createjs.Sound.setMute(true);
 	};

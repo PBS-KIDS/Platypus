@@ -22,6 +22,12 @@ A component that handles the rendering of DOM elements. It creates a div element
 ## JSON Definition
     {
       "type": "handler-render-dom",
+
+      "className": "top-band",
+      //Optional. Any standard properties of the element can be set by listing property names and their values. "className" is one example, but other element properties can be specified in the same way.
+      
+      "onmousedown": "turn-green",
+      //Optional. If specified properties begin with "on", it is assumed that the property is an event handler and the listed value is broadcast as a message on the entity where the message object is the event handler's event object.
     }
 */
 
@@ -37,6 +43,21 @@ platformer.components['handler-render-dom'] = (function(){
 		this.element = this.owner.element = document.createElement('div');
 		this.owner.rootElement.appendChild(this.element);
 		this.owner.element = this.element;
+
+		for(var i in definition){
+			if(i === 'style'){
+				for(var j in definition[i]){
+					this.element.style[j] = definition[i][j]; 
+				}
+			} else if(i !== 'type'){
+				if(i.indexOf('on') === 0){
+					this.element[i] = createFunction(definition[i], this.owner);
+				} else {
+					this.element[i] = definition[i];
+				}
+			}
+		}
+
 	},
 	proto = component.prototype; 
 

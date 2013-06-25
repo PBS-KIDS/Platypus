@@ -49,8 +49,8 @@ This component is attached to entities that will appear in the game world. It re
           "ground,moving": "walking",
           // Comma separated values have a special meaning when evaluating "logical-state" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
           
-          "ground,striking": "!swing",
-          // Putting an exclamation before an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+          "ground,striking": "swing!",
+          // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
 
           "default": "default-animation",
           // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
@@ -149,7 +149,8 @@ This component is attached to entities that will appear in the game world. It re
 			self = this,
 			x = 0,
 			animation = '',
-			lastAnimation = '';
+			lastAnimation = '',
+			map = definition.animationMap;
 			
 			this.rotate = definition.rotate || false;
 			this.mirror = definition.mirror || false;
@@ -168,24 +169,29 @@ This component is attached to entities that will appear in the game world. It re
 			
 			this.followThroughs = {};
 			
-			if(definition.animationMap){
-				this.checkStates = [];
-				for(var i in definition.animationMap){
-					this.addListener(i);
-					animation = definition.animationMap[i];
-					
-					if(animation[animation.length - 1] === '!'){
-						animation = animation.substring(0, animation.length - 1);
-						this.followThroughs[animation] = true;
-					} else {
-						this.followThroughs[animation] = false;
-					}
-					
-					this[i] = changeState(animation);
-					this.checkStates.push(createTest(i, animation));
+			if(!map){ // create animation map if none exists
+				map = {};
+				for (x in spriteSheet.animations){
+					map[x] = x;
 				}
-				lastAnimation = animation;
 			}
+			
+			this.checkStates = [];
+			for(var i in map){
+				this.addListener(i);
+				animation = map[i];
+				
+				if(animation[animation.length - 1] === '!'){
+					animation = animation.substring(0, animation.length - 1);
+					this.followThroughs[animation] = true;
+				} else {
+					this.followThroughs[animation] = false;
+				}
+				
+				this[i] = changeState(animation);
+				this.checkStates.push(createTest(i, animation));
+			}
+			lastAnimation = animation;
 			
 			this.stage = undefined;
 			for (x = 0; x < spriteSheet.images.length; x++){
@@ -217,7 +223,7 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			};
 			this.anim.hidden = this.hidden;
-			definition.animationMap['default'] ? this.currentAnimation = definition.animationMap['default'] : this.currentAnimation = lastAnimation;
+			this.currentAnimation = map['default'] || lastAnimation;
 			this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
 			this.scaleX = this.anim.scaleX = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
 			this.scaleY = this.anim.scaleY = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;

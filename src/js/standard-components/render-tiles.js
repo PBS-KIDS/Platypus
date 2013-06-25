@@ -36,248 +36,325 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-
-platformer.components['render-tiles'] = (function(){
+(function(){
 	var initializeCanvasConservation = function(displayObject){ //To make CreateJS Display Object have better canvas conservation.
 		var canvas = [document.createElement("canvas"), document.createElement("canvas")],
 		current    = 0;
 		
-		displayObject.___cache = displayObject.cache;
-		
-		displayObject.cache = function(x, y, width, height, scale) {
-			current = 1 - current;
-			this.cacheCanvas = canvas[current];
-			this.___cache(x, y, width, height, scale);
-		};
+		if(!displayObject.___cache){ //make sure this is only set up once
+			displayObject.___cache = displayObject.cache;
+			
+			displayObject.cache = function(x, y, width, height, scale) {
+				current = 1 - current;
+				this.cacheCanvas = canvas[current];
+				this.___cache(x, y, width, height, scale);
+			};
+		}
 		
 		return displayObject;
 	},
-	component = function(owner, definition){
-		var spriteSheet = {
-			images: definition.spriteSheet.images.slice(),
-			frames: definition.spriteSheet.frames,
-			animations: definition.spriteSheet.animations
-		},
-		scaleX = spriteSheet.images[0].scaleX || 1,
-		scaleY = spriteSheet.images[0].scaleY || 1;
-		if((scaleX !== 1) || (scaleY !== 1)){
-			spriteSheet.frames = {
-				width: spriteSheet.frames.width * scaleX,	
-				height: spriteSheet.frames.height * scaleY,	
-				regX: spriteSheet.frames.regX * scaleX,	
-				regY: spriteSheet.frames.regY * scaleY
-			};
-		}
+	transform = {
+		x: 1,
+		y: 1,
+		t: -1,
+		r: 0
+	},
+	transformCheck = function(value){
+		var v = +(value.substring(4)),
+		resp  = transform,
+		a = !!(0x20000000 & v),
+		b = !!(0x40000000 & v),
+		c = !!(0x80000000 & v);
+		
+		resp.t = 0x0fffffff & v;
+		resp.x = 1;
+		resp.y = 1;
+		resp.r = 0;
 
-		this.owner = owner;
-		
-		this.controllerEvents = undefined;
-		this.spriteSheet   = new createjs.SpriteSheet(spriteSheet);
-		this.imageMap      = definition.imageMap   || [];
-		this.tiles         = {};
-		this.tilesToRender = undefined;
-		this.scaleX        = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
-		this.scaleY        = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
-		this.tileWidth     = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
-		this.tileHeight    = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
-		
-		var buffer = (definition.buffer || (this.tileWidth / 2)) * this.scaleX;
-		this.camera = {
-			x: -buffer - 1, //to force camera update
-			y: -buffer - 1,
-			buffer: buffer
-		};
-		this.cache = {
-			minX: -1,
-			minY: -1,
-			maxX: -1,
-			maxY: -1
-		};
-		
-		this.doubleBuffer = [null, null];
-		this.currentBuffer = 0;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-render-load', 'camera-update', 'add-tiles']);
-	};
-	var proto = component.prototype;
-
-	proto['handle-render-load'] = function(resp){
-		var x = 0,
-		y     = 0,
-		stage = this.stage = resp.stage,
-		index = '',
-		imgMapDefinition = this.imageMap,
-		newImgMap = [];
-		
-		this.tilesToRender = initializeCanvasConservation(new createjs.Container());
-		this.tilesToRender.snapToPixel = true;
-		this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
-		
-		for(x = 0; x < imgMapDefinition.length; x++){
-			newImgMap[x] = [];
-			for (y = 0; y < imgMapDefinition[x].length; y++){
-				newImgMap[x][y] = index = imgMapDefinition[x][y];
-				if(!this.tiles[index]){
-					this.tiles[index] = this.createTile(index);
-				}
+		if(a || b || c){
+			if(a && b && c){
+				resp.x = -1;
+				resp.r = 90;
+			} else if (a && c){
+				resp.r = 90;
+			} else if (b && c){
+				resp.r = 180;
+			} else if (a && b){
+				resp.r = 270;
+			} else if (a){
+				resp.y = -1;
+				resp.r = 90;
+			} else if (b){
+				resp.y = -1;
+			} else if (c){
+				resp.x = -1;
 			}
 		}
-		this.imageMap = newImgMap;
-		
-		this.tilesToRender.scaleX = this.scaleX;
-		this.tilesToRender.scaleY = this.scaleY;
-		this.tilesToRender.z = this.owner.z;
-
-		stage.addChild(this.tilesToRender);
-		stage.autoClear = false; //since tile map is re-painted every time, the canvas does not require clearing.
-	};
-	
-	proto['add-tiles'] = function(definition){
-		var x = 0,
-		y     = 0,
-		map   = definition.imageMap,
-		index = '',
-		newIndex = 0;
-		
-		if(map){
-			for(x = 0; x < this.imageMap.length; x++){
-				for (y = 0; y < this.imageMap[x].length; y++){
-					newIndex = map[x][y];
-					index = this.imageMap[x][y];
-					if(this.tiles[index]){
-						delete this.tiles[index];
-					}
-					index = this.imageMap[x][y] += ' ' + newIndex;
-					if(!this.tiles[index]){
-						this.tiles[index] = this.createTile(index);
-					}
-				}
-			}
-		}
+		return resp;
 	};
 
-	proto['camera-update'] = function(camera){
-		var x  = 0,
-		y      = 0,
-		buffer = this.camera.buffer,
-		cache  = this.cache,
-		context= null,
-		canvas = null,
-		width  = 0,
-		height = 0,
-		maxX   = 0,
-		maxY   = 0,
-		minX   = 0,
-		minY   = 0,
-		vpL    = Math.floor(camera.viewportLeft / this.tileWidth)  * this.tileWidth,
-		vpT    = Math.floor(camera.viewportTop  / this.tileHeight) * this.tileHeight,
-		tile   = null;
-				
-		if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)){
-			this.camera.x = vpL;
-			this.camera.y = vpT;
+	return platformer.createComponentClass({
+		
+		id: 'render-tiles', 
+		
+		constructor: function(definition){
+			var x = 0,
+			images = definition.spriteSheet.images.slice(),
+			spriteSheet = null,
+			scaleX = 1,
+			scaleY = 1;
 			
-			//only attempt to draw children that are relevant
-			maxX = Math.min(Math.ceil((vpL + camera.viewportWidth + buffer) / (this.tileWidth * this.scaleX)), this.imageMap.length) - 1;
-			minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
-			maxY = Math.min(Math.ceil((vpT + camera.viewportHeight + buffer) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
-			minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
-
-			if((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)){
-				if(this.tilesToRender.cacheCanvas){
-					canvas = this.tilesToRender.cacheCanvas;
-					this.tilesToRender.uncache();
+			if(images[0] && (typeof images[0] === 'string')){
+				images = images.slice(); //so we do not overwrite settings array
+				for (x = 0; x < images.length; x++){
+					if(platformer.assets[images[x]]){
+						images[x] = platformer.assets[images[x]];
+					}
 				}
+			}
+	
+			spriteSheet = {
+				images: images,
+				frames: definition.spriteSheet.frames,
+				animations: definition.spriteSheet.animations
+			};
+			scaleX = spriteSheet.images[0].scaleX || 1;
+			scaleY = spriteSheet.images[0].scaleY || 1;
+	
+			if((scaleX !== 1) || (scaleY !== 1)){
+				spriteSheet.frames = {
+					width: spriteSheet.frames.width * scaleX,	
+					height: spriteSheet.frames.height * scaleY,	
+					regX: spriteSheet.frames.regX * scaleX,	
+					regY: spriteSheet.frames.regY * scaleY
+				};
+			}
+	
+			this.controllerEvents = undefined;
+			this.spriteSheet   = new createjs.SpriteSheet(spriteSheet);
+			this.imageMap      = definition.imageMap   || [];
+			this.tiles         = {};
+			this.tilesToRender = undefined;
+			this.scaleX        = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
+			this.scaleY        = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
+			this.tileWidth     = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
+			this.tileHeight    = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
+			
+			// temp values
+			this.worldWidth    = this.tilesWidth    = this.tileWidth;
+			this.worldHeight   = this.tilesHeight   = this.tileHeight;
+			
+			
+			var buffer = (definition.buffer || (this.tileWidth * 3 / 4)) * this.scaleX;
+			this.camera = {
+				x: -buffer - 1, //to force camera update
+				y: -buffer - 1,
+				buffer: buffer
+			};
+			this.cache = {
+				minX: -1,
+				minY: -1,
+				maxX: -1,
+				maxY: -1
+			};
+			
+			this.doubleBuffer = [null, null];
+			this.currentBuffer = 0;
+		},
+
+		events: {// These are messages that this component listens for
+			"handle-render-load": function(resp){
+				var x = 0,
+				y     = 0,
+				stage = this.stage = resp.stage,
+				index = '',
+				imgMapDefinition = this.imageMap,
+				newImgMap = [];
 				
-				this.tilesToRender.removeChildAt(0);
-				this.tilesToRender.cache(minX * this.tileWidth, minY * this.tileHeight, (maxX - minX + 1) * this.tileWidth, (maxY - minY + 1) * this.tileHeight);
+				this.tilesToRender = initializeCanvasConservation(new createjs.Container());
+				this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
 				
-				for(x = minX; x <= maxX; x++){
-					for (y = minY; y <= maxY; y++){
-						if((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)){
-							tile = this.tiles[this.imageMap[x][y]];
-							this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
-							this.tilesToRender.addChild(tile);
-							tile.x = x * this.tileWidth;
-							tile.y = y * this.tileHeight;
-							this.tilesToRender.updateCache('source-over');
+				for(x = 0; x < imgMapDefinition.length; x++){
+					newImgMap[x] = [];
+					for (y = 0; y < imgMapDefinition[x].length; y++){
+						newImgMap[x][y] = index = imgMapDefinition[x][y];
+						if(!this.tiles[index]){
+							this.tiles[index] = this.createTile(index);
 						}
 					}
 				}
+				this.imageMap = newImgMap;
+				
+				this.tilesWidth  = x * this.tileWidth;
+				this.tilesHeight = y * this.tileHeight;
+				
+				this.tilesToRender.scaleX = this.scaleX;
+				this.tilesToRender.scaleY = this.scaleY;
+				this.tilesToRender.z = this.owner.z;
+		
+				stage.addChild(this.tilesToRender);
+			},
+	
+			"add-tiles": function(definition){
+				var x = 0,
+				y     = 0,
+				map   = definition.imageMap,
+				index = '',
+				newIndex = 0;
+				
+				if(map){
+					for(x = 0; x < this.imageMap.length; x++){
+						for (y = 0; y < this.imageMap[x].length; y++){
+							newIndex = map[x][y];
+							index = this.imageMap[x][y];
+							if(this.tiles[index]){
+								delete this.tiles[index];
+							}
+							index = this.imageMap[x][y] += ' ' + newIndex;
+							if(!this.tiles[index]){
+								this.tiles[index] = this.createTile(index);
+							}
+						}
+					}
+				}
+			},
 
-				if(canvas){
-					context = this.tilesToRender.cacheCanvas.getContext('2d');
-					width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
-					height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
-					context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
-					cache.minX = minX;
-					cache.minY = minY;
-					cache.maxX = maxX;
-					cache.maxY = maxY;
+			"world-loaded": function(dimensions){
+				this.worldWidth  = dimensions.width;
+				this.worldHeight = dimensions.height;
+			},
+
+			"camera-update": function(camera){
+				var x  = 0,
+				y      = 0,
+				buffer = this.camera.buffer,
+				cache  = this.cache,
+				context= null,
+				canvas = null,
+				width  = 0,
+				height = 0,
+				maxX   = 0,
+				maxY   = 0,
+				minX   = 0,
+				minY   = 0,
+				camL   = this.convertCamera(camera.viewportLeft, this.worldWidth, this.tilesWidth, camera.viewportWidth),
+				camT   = this.convertCamera(camera.viewportTop, this.worldHeight, this.tilesHeight, camera.viewportHeight),
+				vpL    = Math.floor(camL / this.tileWidth)  * this.tileWidth,
+				vpT    = Math.floor(camT / this.tileHeight) * this.tileHeight,
+				tile   = null;
+				
+				this.tilesToRender.x = camera.viewportLeft - camL;
+				this.tilesToRender.y = camera.viewportTop  - camT;
+						
+				if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)){
+					this.camera.x = vpL;
+					this.camera.y = vpT;
+					
+					//only attempt to draw children that are relevant
+					maxX = Math.min(Math.ceil((vpL + camera.viewportWidth + buffer) / (this.tileWidth * this.scaleX)), this.imageMap.length) - 1;
+					minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
+					maxY = Math.min(Math.ceil((vpT + camera.viewportHeight + buffer) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
+					minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
+		
+					if((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)){
+						if(this.tilesToRender.cacheCanvas){
+							canvas = this.tilesToRender.cacheCanvas;
+							this.tilesToRender.uncache();
+						}
+						
+						this.tilesToRender.removeChildAt(0);
+						this.tilesToRender.cache(minX * this.tileWidth, minY * this.tileHeight, (maxX - minX + 1) * this.tileWidth, (maxY - minY + 1) * this.tileHeight, 1);
+						
+						for(x = minX; x <= maxX; x++){
+							for (y = minY; y <= maxY; y++){
+								if((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)){
+									tile = this.tiles[this.imageMap[x][y]];
+									this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
+									this.tilesToRender.addChild(tile);
+									tile.x = (x + 0.5) * this.tileWidth;
+									tile.y = (y + 0.5) * this.tileHeight;
+									this.tilesToRender.updateCache('source-over');
+								}
+							}
+						}
+		
+						if(canvas){
+							context = this.tilesToRender.cacheCanvas.getContext('2d');
+							width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
+							height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
+							context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
+							cache.minX = minX;
+							cache.minY = minY;
+							cache.maxX = maxX;
+							cache.maxY = maxY;
+						}
+					}
 				}
 			}
-		}
-	};
+		},
 	
-	proto.createTile = function(imageName){
-		var i = 1,
-		imageArray = imageName.split(' ');
-		tile  = new createjs.BitmapAnimation(this.spriteSheet);
-		
-		tile.x = 0;
-		tile.y = 0;
-		tile.gotoAndStop(imageArray[0]);
-		tile.cache(0,0,this.tileWidth,this.tileHeight);
-		
-		for (; i < imageArray.length; i++){
-			if(imageArray[i] !== 'tile-1'){
-				tile.gotoAndStop(imageArray[i]);
-				tile.updateCache('source-over');
+		methods:{
+			convertCamera: function(distance, worldDistance, tileDistance, viewportDistance){
+				if((worldDistance / this.scaleX) == tileDistance){
+					return distance;
+				} else {
+					return distance * (tileDistance - viewportDistance) / ((worldDistance / this.scaleX) - viewportDistance);
+				}
+			},
+			
+			createTile: function(imageName){
+				var i = 1,
+				imageArray = imageName.split(' '),
+				mergedTile = null,
+				tile  = new createjs.BitmapAnimation(this.spriteSheet),
+				layer = transformCheck(imageArray[0]);
+				
+				tile.x = 0;
+				tile.y = 0;
+				tile.regX = this.tileWidth / 2;
+				tile.regY = this.tileHeight / 2;
+				tile.scaleX = layer.x;
+				tile.scaleY = layer.y;
+				tile.rotation = layer.r;
+				tile.gotoAndStop('tile' + layer.t);
+				
+				for (; i < imageArray.length; i++){
+					if(imageArray[i] !== 'tile-1'){
+						if(!mergedTile){
+							mergedTile = new createjs.Container();
+							mergedTile.addChild(tile);
+							mergedTile.cache(-this.tileWidth/2,-this.tileHeight/2,this.tileWidth,this.tileHeight,1);
+							
+//							document.getElementsByTagName('body')[0].appendChild(mergedTile.cacheCanvas);
+//							mergedTile.cacheCanvas.setAttribute('title', imageName + ': ' + mergedTile._cacheOffsetX + 'x' + mergedTile._cacheOffsetY + ', ' + mergedTile.cacheCanvas.width + 'x' + mergedTile.cacheCanvas.height + ', ' + mergedTile._cacheScale + ', ' + mergedTile.cacheID + ', ' + !!mergedTile.filters);
+							//console.log(imageName);
+						}
+						layer = transformCheck(imageArray[i]);
+						tile.scaleX = layer.x;
+						tile.scaleY = layer.y;
+						tile.rotation = layer.r;
+						tile.gotoAndStop('tile' + layer.t);
+						mergedTile.updateCache('source-over');
+					}
+				}
+
+				if(mergedTile){
+					return mergedTile;
+				} else {
+					tile.cache(0,0,this.tileWidth,this.tileHeight,1);
+					return tile;
+				}
+			},
+			
+			destroy: function(){
+				this.tilesToRender.removeAllChildren();
+				this.stage.removeChild(this.tilesToRender);
+				this.imageMap.length = 0;
+				this.tiles = undefined;
+				this.camera = undefined;
+				this.stage = undefined;
+				this.tilesToRender = undefined;
 			}
 		}
-
-		return tile;
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.tilesToRender.removeAllChildren();
-		this.stage.removeChild(this.tilesToRender);
-		this.imageMap.length = 0;
-		this.tiles = undefined;
-		this.camera = undefined;
-		this.stage = undefined;
-		this.tilesToRender = undefined;
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-	
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

@@ -12,6 +12,7 @@
         {"type": "handler-render-dom"},
         {"type": "entity-container", 
             "entities": [
+            {"type": "button-fullscreen"},
             {"type": "button-jump"},
             {"type": "button-pickaxe"},
             {"type": "button-left"},

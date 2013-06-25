@@ -38,11 +38,10 @@ platformer.components['logic-button'] = (function(){
 		this.listeners = [];
 		
 		// Create state object to send with messages here so it's not recreated each time.
-		this.state = {
-			released: true,
-			pressed: false
-		};
-		this.stateChange = true;
+		this.state = this.owner.state;
+		this.state.released = true;
+		this.state.pressed  = false;
+		this.stateChange = '';
 
 		if(definition.state === 'pressed'){
 			this.pressed();
@@ -60,11 +59,7 @@ platformer.components['logic-button'] = (function(){
 	var proto = component.prototype;
 	
 	proto['mousedown'] = proto['pressed'] = function(){
-		if(this.state.released){
-			this.stateChange = true;
-			this.state.pressed = true;
-			this.state.released = false;
-		}
+		this.stateChange = 'pressed';
 	};
 	
 	proto['mouseup'] = function(){
@@ -80,17 +75,19 @@ platformer.components['logic-button'] = (function(){
 	};
 	
 	proto['released'] = function(){
-		if(this.state.pressed){
-			this.stateChange = true;
-			this.state.pressed = false;
-			this.state.released = true;
-		}
+		this.stateChange = 'released';
 	};
 	
-	proto['handle-logic'] = function(){
-		if(this.stateChange){
-			this.stateChange = false;
-			this.owner.trigger('logical-state', this.state);
+	proto['handle-logic'] = function(resp){
+		if(this.state.released && (this.stateChange === 'pressed')){
+			this.stateChange = '';
+			this.state.pressed = true;
+			this.state.released = false;
+		}
+		if(this.state.pressed && (this.stateChange === 'released')){
+			this.stateChange = '';
+			this.state.pressed = false;
+			this.state.released = true;
 		}
 	};
 

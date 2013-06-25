@@ -32,146 +32,165 @@ A component that handles updating rendering for components that are rendering vi
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
+(function(){
 
-platformer.components['handler-render-createjs'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
-		this.entities = [];
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['tick', 'child-entity-added', 'render', 'camera-update']);
-		
-		this.canvas = this.owner.canvas = document.createElement('canvas');
-		this.owner.rootElement.appendChild(this.canvas);
-		this.owner.element = this.canvas; 
-		
-		this.stage = new createjs.Stage(this.canvas);
-		this.stage.snapToPixelEnabled = true;
-		
-		this.camera = {
-			left: 0,
-			top: 0,
-			width: 0,
-			height: 0,
-			buffer: definition.buffer || 0
-		};
-		this.firstChild = undefined;
-		this.timeElapsed = {
-			name: 'Render',
-			time: 0
-		};
-	},
-	proto = component.prototype; 
+	return platformer.createComponentClass({
 
-	proto['child-entity-added'] = function(entity){
-		var self = this,
-		messageIds = entity.getMessageIds(); 
+		id: "handler-render-createjs",
 		
-		for (var x = 0; x < messageIds.length; x++)
-		{
-			if ((messageIds[x] == 'handle-render') || (messageIds[x] == 'handle-render-load')){
-				this.entities.push(entity);
-				entity.trigger('handle-render-load', {
-					stage: self.stage,
-					parentElement: self.owner.rootElement
-				});
-				break;
+		constructor: function(definition){
+			this.entities = [];
+			
+			this.canvas = this.owner.canvas = document.createElement('canvas');
+			if(this.owner.element){
+				this.owner.element.appendChild(this.canvas);
+			} else {
+				this.owner.rootElement.appendChild(this.canvas);
+				this.owner.element = this.canvas; 
 			}
-		}
-	};
-	
-	proto['tick'] = proto['render'] = function(resp){
-		var child = undefined,
-		time    = new Date().getTime();
+			
+			this.stage = new createjs.Stage(this.canvas);
+			
+			if(definition.autoClear !== true){
+				this.stage.autoClear = false; //since most tile maps are re-painted every time, the canvas does not require clearing.
+			}
+			
+			this.camera = {
+				left: 0,
+				top: 0,
+				width: 0,
+				height: 0,
+				buffer: definition.buffer || 0
+			};
+			this.lastChild = undefined;
+			
+			this.timeElapsed = {
+				name: 'Render',
+				time: 0
+			};
+			
+			this.renderMessage = {
+				deltaT: 0,
+				stage:  this.stage
+			};
+		},
 		
-		for (var x = this.entities.length - 1; x > -1; x--){
-			if(!this.entities[x].trigger('handle-render', resp))
-			{
-				this.entities.splice(x, 1);
-			}
-		}
-		for (var x = this.stage.children.length - 1; x > -1; x--){
-			child = this.stage.children[x];
-			if (child.hidden) {
-				if(child.visible) child.visible = false;
-			} else if(child.name !== 'entity-managed'){
-				if((child.x >= this.camera.x - this.camera.buffer) && (child.x <= this.camera.x + this.camera.width + this.camera.buffer) && (child.y >= this.camera.y - this.camera.buffer) && (child.y <= this.camera.y + this.camera.height + this.camera.buffer)){
-					if(!child.visible) child.visible = true;
-				} else {
-					if(child.visible) child.visible = false;
+		events:{
+			"child-entity-added": function(entity){
+				var self = this,
+				messageIds = entity.getMessageIds(); 
+				
+				for (var x = 0; x < messageIds.length; x++)
+				{
+					if ((messageIds[x] == 'handle-render') || (messageIds[x] == 'handle-render-load')){
+						this.entities.push(entity);
+						entity.trigger('handle-render-load', {
+							stage: self.stage,
+							parentElement: self.owner.rootElement
+						});
+						break;
+					}
 				}
+			},
+			"pause-render": function(resp){
+				if(resp && resp.time){
+					this.paused = resp.time;
+				} else {
+					this.paused = -1;
+				}
+			},
+			"unpause-render": function(){
+				this.paused = 0;
+			},
+			"tick": function(resp){
+				var lastIndex = 0,
+				child   = undefined,
+				time    = new Date().getTime(),
+				message = this.renderMessage;
+				
+				message.deltaT = resp.deltaT;
+
+				if(this.paused > 0){
+					this.paused -= resp.deltaT;
+					if(this.paused < 0){
+						this.paused = 0;
+					}
+				}
+
+				for (var x = this.entities.length - 1; x > -1; x--){
+					if(!this.entities[x].trigger('handle-render', message)) {
+						this.entities.splice(x, 1);
+					}
+				}
+				for (var x = this.stage.children.length - 1; x > -1; x--){
+					child = this.stage.children[x];
+					if (child.hidden) {
+						if(child.visible) child.visible = false;
+					} else if(child.name !== 'entity-managed'){
+						if((child.x >= this.camera.x - this.camera.buffer) && (child.x <= this.camera.x + this.camera.width + this.camera.buffer) && (child.y >= this.camera.y - this.camera.buffer) && (child.y <= this.camera.y + this.camera.height + this.camera.buffer)){
+							if(!child.visible) child.visible = true;
+						} else {
+							if(child.visible) child.visible = false;
+						}
+					}
+					
+					if(child.visible){
+						if (child.paused && !this.paused){
+							child.paused = false;
+						} else if (this.paused) {
+							child.paused = true;
+						}
+					}
+					
+					if(!child.scaleX || !child.scaleY || (this.children && !this.children.length)){
+						console.log ('uh oh', child);
+//						this.cacheCanvas || this.children.length;
+	//					return !!(this.visible && this.alpha > 0 && this.scaleX != 0 && this.scaleY != 0 && hasContent);
+					}
+				}
+
+				lastIndex = this.stage.getNumChildren() - 1; //checked here, since handle-render could add a child
+				if (this.stage.getChildAt(lastIndex) !== this.lastChild) {
+					this.stage.sortChildren(function(a, b) {
+						return a.z - b.z;
+					});
+					this.lastChild = this.stage.getChildAt(lastIndex);
+				}
+				
+				this.timeElapsed.name = 'Render-Prep';
+				this.timeElapsed.time = new Date().getTime() - time;
+				platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+				time += this.timeElapsed.time;
+
+				this.stage.update();
+				this.timeElapsed.name = 'Render';
+				this.timeElapsed.time = new Date().getTime() - time;
+				platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			},
+			"camera-update": function(cameraInfo){
+				var dpr = (window.devicePixelRatio || 1);
+				
+				this.camera.x = cameraInfo.viewportLeft;
+				this.camera.y = cameraInfo.viewportTop;
+				this.camera.width = cameraInfo.viewportWidth;
+				this.camera.height = cameraInfo.viewportHeight;
+				if(!this.camera.buffer){
+					this.camera.buffer = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				
+				this.canvas.width  = this.canvas.offsetWidth * dpr;
+				this.canvas.height = this.canvas.offsetHeight * dpr;
+				this.stage.setTransform(-cameraInfo.viewportLeft * cameraInfo.scaleX * dpr, -cameraInfo.viewportTop * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr);
+			}
+		},
+		methods:{
+			destroy: function(){
+				this.stage = undefined;
+				this.owner.rootElement.removeChild(this.canvas);
+				this.owner.element = null;
+				this.canvas = undefined;
+				this.entities.length = 0;
 			}
 		}
-		
-		if (this.stage.getChildAt(0) !== this.firstChild)
-		{
-			this.stage.sortChildren(function(a, b) {
-				return a.z - b.z;
-			});
-			this.firstChild = this.stage.getChildAt(0);
-		}
-
-		this.timeElapsed.name = 'Render-Prep';
-		this.timeElapsed.time = new Date().getTime() - time;
-		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-		time += this.timeElapsed.time;
-
-		this.stage.update();
-		this.timeElapsed.name = 'Render';
-		this.timeElapsed.time = new Date().getTime() - time;
-		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-	};
-	
-	proto['camera-update'] = function(cameraInfo){
-		this.camera.x = cameraInfo.viewportLeft;
-		this.camera.y = cameraInfo.viewportTop;
-		this.camera.width = cameraInfo.viewportWidth;
-		this.camera.height = cameraInfo.viewportHeight;
-		if(!this.camera.buffer){
-			this.camera.buffer = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-		}
-		
-		this.canvas.width  = this.canvas.offsetWidth;
-		this.canvas.height = this.canvas.offsetHeight;
-		this.stage.setTransform(-cameraInfo.viewportLeft * cameraInfo.scaleX, -cameraInfo.viewportTop * cameraInfo.scaleY, cameraInfo.scaleX, cameraInfo.scaleY);
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.stage = undefined;
-		this.owner.rootElement.removeChild(this.canvas);
-		this.owner.element = null;
-		this.canvas = undefined;
-		this.entities.length = 0;
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here can be left alone. 
-	 *********************************************************************************************************/
-	
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

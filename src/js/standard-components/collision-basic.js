@@ -88,15 +88,60 @@ Multiple collision components may be added to a single entity if distinct messag
     }
 */
 platformer.components['collision-basic'] = (function(){
-	var entityBroadcast = function(event){
+	var twinBroadcast = function(component, funcA, funcB){
+		return function (value) {
+			funcA.call(component, value);
+			funcB.call(component, value);
+		  };
+	};
+	
+	var entityBroadcast = function(event, solidOrSoft, collisionType){
 		if(typeof event === 'string'){
 			return function(value){
-				this.owner.trigger(event, value);
+				if(value.myType === collisionType){
+					if(value.hitType === solidOrSoft){
+						this.owner.triggerEvent(event, value);
+					}
+				}
+			};
+		} else if(event.length){
+			return function(value){
+				if(value.myType === collisionType){
+					if(value.hitType === solidOrSoft){
+						for (var e in event){
+							this.owner.triggerEvent(event[e], value);
+						}
+					}
+				}
 			};
 		} else {
-			return function(value){
-				for (var e in event){
-					this.owner.trigger(event[e], value);
+			return function(collisionInfo){
+				var dx = collisionInfo.x,
+				dy     = collisionInfo.y;
+				
+				if(collisionInfo.entity && !(dx || dy)){
+					dx = collisionInfo.entity.x - this.owner.x;
+					dy = collisionInfo.entity.y - this.owner.y;
+				}
+				
+				if(collisionInfo.myType === collisionType){
+					if(collisionInfo.hitType === solidOrSoft){
+						if((dy > 0) && event['bottom']){
+							this.owner.trigger(event['bottom'], collisionInfo);
+						}
+						if((dy < 0) && event['top']){
+							this.owner.trigger(event['top'], collisionInfo);
+						}
+						if((dx > 0) && event['right']){
+							this.owner.trigger(event['right'], collisionInfo);
+						}
+						if((dx < 0) && event['left']){
+							this.owner.trigger(event['left'], collisionInfo);
+						}
+						if(event['all']){
+							this.owner.trigger(event['all'], collisionInfo);
+						}
+					}
 				}
 			};
 		}
@@ -115,6 +160,7 @@ platformer.components['collision-basic'] = (function(){
 		}
 	},
 	component = function(owner, definition){
+		this.type  = 'collision-basic';
 		var x  = 0; 
 		var self   = this;
 		
@@ -135,16 +181,20 @@ platformer.components['collision-basic'] = (function(){
 							};
 
 		var shapes = [];
-		if(definition.shapes)
-		{
+		if(definition.shapes){
 			shapes = definition.shapes;
 		} else if (definition.shape) {
 			shapes = [definition.shape];
 		} else {
 			var halfWidth  = (definition.width  || this.owner.width)  / 2;
 			var halfHeight = (definition.height || this.owner.height) / 2;
-			var points = [[-halfWidth, -halfHeight], [halfWidth, halfHeight]];
-			var offset = [(definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)), (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0))];
+			var margin = definition.margin || 0;
+			var marginLeft   = definition.marginLeft   || margin;
+			var marginRight  = definition.marginRight  || margin;
+			var marginTop    = definition.marginTop    || margin;
+			var marginBottom = definition.marginBottom || margin;
+			var points = [[-halfWidth - marginLeft, -halfHeight - marginTop], [halfWidth + marginRight, halfHeight + marginBottom]];
+			var offset = [(definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2, (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2];
 			shapes = [{offset: offset, points: points, shape: 'rectangle'}];
 		}
 		
@@ -153,7 +203,7 @@ platformer.components['collision-basic'] = (function(){
 
 		this.addListeners(['collide-on',
 		                   'collide-off',
-		                   'prepare-for-collision', 
+		                   'prepare-for-collision', 'handle-logic', 
 		                   'relocate-entity',
 		                   'resolve-momentum']);
 		this.shapes = [];
@@ -165,6 +215,10 @@ platformer.components['collision-basic'] = (function(){
 		}
 
 		this.collisionType = definition.collisionType || 'none';
+		
+		if(definition.jumpThrough){
+			this.owner.jumpThrough = true;
+		}
 		
 		this.owner.collisionTypes = this.owner.collisionTypes || [];
 		this.owner.collisionTypes[this.owner.collisionTypes.length] = this.collisionType;
@@ -196,7 +250,7 @@ platformer.components['collision-basic'] = (function(){
 				this.owner.solidCollisions[this.collisionType].push(i);
 				if(definition.solidCollisions[i]){
 					this.addListener('hit-by-' + i);
-					this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i]);
+					this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType);
 				}
 			}
 		}
@@ -207,8 +261,14 @@ platformer.components['collision-basic'] = (function(){
 			for(var i in definition.softCollisions){
 				this.owner.softCollisions[this.collisionType].push(i);
 				if(definition.softCollisions[i]){
-					this.addListener('hit-by-' + i);
-					this['hit-by-' + i] = entityBroadcast(definition.softCollisions[i]);
+					if(this['hit-by-' + i]) {
+						//this['hit-by-' + i + '-solid'] = this['hit-by-' + i];
+						//this['hit-by-' + i + '-soft'] = entityBroadcast(definition.softCollisions[i], 'soft');
+						this['hit-by-' + i] = twinBroadcast(this, this['hit-by-' + i], entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
+					} else {
+						this.addListener('hit-by-' + i);
+						this['hit-by-' + i] = entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType);
+					}
 				}
 			}
 		}
@@ -223,21 +283,32 @@ platformer.components['collision-basic'] = (function(){
 		this.owner.parent.trigger('remove-collision-entity', this.owner);
 	};
 	
-	proto['prepare-for-collision'] = function(collisionType){
-//		if(collisionType === this.collisionType){
-			this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
-			this.aabb.reset();
-			for (var x = 0; x < this.shapes.length; x++){
-				this.shapes[x].update(this.owner.x, this.owner.y);
-				this.aabb.include(this.shapes[x].getAABB());
+	proto['handle-logic'] = function(){
+		if(this.accelerationAbsorbed){
+			this.accelerationAbsorbed = false;
+		}
+	};
+
+	proto['prepare-for-collision'] = function(resp){
+		this.prevAABB.set(this.aabb);
+		this.aabb.reset();
+		
+		// absorb velocities from the last logic tick
+		if(!this.accelerationAbsorbed && resp){
+			this.accelerationAbsorbed = true;
+			if(this.owner.dx){
+				this.owner.x += this.owner.dx * (resp.deltaT || 0);
 			}
-			if(this.owner.solidCollisions.length == 0)
-			{
-				this.relocateObj.x = this.owner.x;
-				this.relocateObj.y = this.owner.y;
-				this['relocate-entity'](this.relocateObj);
+			if(this.owner.dy){
+				this.owner.y += this.owner.dy * (resp.deltaT || 0);
 			}
-//		}
+		}
+		
+		// update shapes
+		for (var x = 0; x < this.shapes.length; x++){
+			this.shapes[x].update(this.owner.x, this.owner.y);
+			this.aabb.include(this.shapes[x].getAABB());
+		}
 	};
 	
 	proto['relocate-entity'] = function(resp){
