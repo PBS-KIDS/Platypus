@@ -320,7 +320,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    timestamp  = ((new Date().getTime()) + '').substring(0, 9),
    gameConfig = getText('config.json');
    game       = eval('(' + gameConfig + ')');
-   workingDir = '../src/',
+   workingDir = '../game/',
    buildDir   = '../builds/',
    html       = getText(workingDir + 'template.html'),
    manifest   = getText(workingDir + 'template.manifest'),

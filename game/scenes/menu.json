@@ -1,0 +1,36 @@
+{
+	"layers":[
+		{
+			"id": "menu-layer",
+			"components": [
+				{"type": "handler-logic"},
+				{"type": "handler-render-dom"},
+				{"type": "handler-controller"},
+				{"type": "entity-container",
+					"entities": [
+                        {"type": "title-screen"},
+                        {"type": "button-play-game"},{
+            				"type": "button-play-game",
+            				"properties":{
+            				    "innerHTML": "Map Test",
+                				"className": "menu-button map-test",
+                				"scene": "scene-map-test-1"
+                			}
+            			},{
+            				"type": "button-play-game",
+                            "properties":{
+                                "innerHTML": "Entity Test",
+                				"className": "menu-button entity-test",
+                				"scene": "scene-entity-test-1"
+                		    }
+            			}
+					]
+				}
+			]
+        },{
+            "id": "enable-ios-audio-layer",
+            "filter": {"includes": ["iOS"]},
+            "components": [{"type": "enable-ios-audio", "audioId": "combined"}]
+		}
+	]
+}

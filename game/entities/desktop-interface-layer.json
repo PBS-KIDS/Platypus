@@ -1,0 +1,24 @@
+{
+    "id": "desktop-interface-layer",
+    "filter": {
+        "excludes": ["touch"]
+    },
+    "components": [
+        {
+            "type": "camera",
+            "width": 4000
+        },
+        {"type": "handler-logic"},
+        {"type": "handler-render-dom"},
+        {"type": "entity-container", 
+            "entities": [
+                {"type": "button-mute"},
+                {"type": "button-fullscreen"},
+                {"type": "button-play"},
+                {"type": "gui"},
+            	{"type": "fps-counter"}
+            ],
+            "childEvents": ['gui-gem-collected', 'time-elapsed']
+        }
+    ]
+}

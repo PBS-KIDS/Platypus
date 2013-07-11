@@ -1,0 +1,20 @@
+/*
+ * 
+ */
+{
+	"id": "button-play-game",
+	"components":[
+		{
+		    "type": "dom-element",
+		    "element": "div",
+		    "innerHTML": "Play Game",
+		    "className": "menu-button",
+		    "onmouseup": "new-scene",
+		    "ontouchend": "new-scene"
+		},{
+		    "type": "change-scene",
+		    "scene": "scene-level-1",
+		    "transition": "fade-to-black"
+        }
+	]
+}

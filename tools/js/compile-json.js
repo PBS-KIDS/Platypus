@@ -89,7 +89,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === 'json');
    },
-   workingDir = '../src/data/',
+   workingDir = '../game/',
    subDir     = '',
    gameConfig = getText(workingDir + 'config.json'),
    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
@@ -101,7 +101,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    retainId   = '',
    srcId      = '';
     
-    print('Composing full config.json from /data/config.json.');
+    print('Composing full config.json from /game/config.json.');
     
     for(sectionId in source){
     	print('..Handling "' + sectionId + '" section.');

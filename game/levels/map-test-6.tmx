@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="400" height="400" tilewidth="24" tileheight="24">
+ <tileset firstgid="1" source="tiles.tsx"/>
+ <tileset firstgid="46" name="objects" tilewidth="24" tileheight="24">
+  <image source="../../images/objects.png" width="192" height="96"/>
+  <tile id="0">
+   <properties>
+    <property name="entity" value="hero"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="entity" value="flower"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="entity" value="dirt"/>
+   </properties>
+  </tile>
+  <tile id="8">
+   <properties>
+    <property name="entity" value="beetle"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="entity" value="gem"/>
+   </properties>
+  </tile>
+  <tile id="10">
+   <properties>
+    <property name="entity" value="block"/>
+   </properties>
+  </tile>
+  <tile id="17">
+   <properties>
+    <property name="entity" value="briar"/>
+   </properties>
+  </tile>
+  <tile id="18">
+   <properties>
+    <property name="entity" value="briar"/>
+    <property name="facing" value="right"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="entity" value="briar"/>
+    <property name="facing" value="left"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="entity" value="timer"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="background" width="400" height="400">
+  <data encoding="base64" compression="zlib">
+   eJzt1zEKgDAMBdC6urqqm3r/G+pcsKC2RuENDzIEUkig/C6l1AEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFDVkol+DwD/4M8A4A75A4AzfcFyUrcwHebGM74u+hYArhgK8vxR6n1qPWyNZ3xd9C0A1Dbyiug9A9SW5xDaiN4zwBU7qbSTxg==
+  </data>
+ </layer>
+ <layer name="action" width="400" height="400">
+  <properties>
+   <property name="entity" value="tile-layer"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt1TEKhEAQRcEGYQ101cT7X1UzDVXE6Yb6UMwBeuCNETECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQFK/3UoKfYP7Azz1j2PTzdfe3RDt/wPAVed+WNvpB1CJfuSZfgCV6Eee6QdQiX7kmX4AlehHnukHUIl+5Jl+AJXMu44Ulgb3BwCAL23Nwy3c
+  </data>
+ </layer>
+ <objectgroup name="entities" width="400" height="400">
+  <object type="hero" gid="46" x="24" y="9456"/>
+  <object gid="70" x="0" y="9384"/>
+  <object type="level-portal" x="816" y="9504" width="48" height="48">
+   <properties>
+    <property name="destination" value="scene-map-test-7"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

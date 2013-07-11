@@ -1,0 +1,29 @@
+/*
+ * 
+ */
+{
+	"id": "flower",
+	"components":[
+		{
+			"type": "render-image",
+            "image": "sprites",
+            "source": {
+                    "width":  72,
+                    "height": 72,
+                    "y": 360,
+                    "x": 72   
+            },
+            "regY":   72,
+            "regX":   36
+//		},{
+//		    "type": "render-debug",
+//          "regX": 120,
+//          "regY": 240
+        }
+	],
+	"properties":{
+		"x": 10,
+		"y": 10,
+		"z": 50
+	}
+}

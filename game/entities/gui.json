@@ -1,0 +1,19 @@
+/*
+ * 
+ */
+{
+	"id": "gui",
+	"components":[
+		{
+			"type": "logic-gui"
+		},{
+            "type": "dom-element",
+            "element": "div",
+            "className": "gem-bar"
+        },{
+			"type": "entity-container", 
+				"entities": [{"type": "gem-counter"}],
+				"childEvents": ['count-gems', 'handle-logic', 'handle-render', 'handle-render-load']
+		}
+	]
+}

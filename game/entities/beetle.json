@@ -1,0 +1,58 @@
+{
+	"id": "beetle",
+	"components":[
+		{	
+			"type": "ai-pacer",
+			"movement": "horizontal"
+		},{	
+			"type": "logic-directional-movement"
+		},{	
+			"type": "logic-gravity"
+//        },{ //TODO: Currently logic-carrier doesn't work correctly on entities with a gravity component. I believe the core issue lies within the collision-group component. - DDD
+//            "type": "logic-carrier"
+        },{
+            "type": "logic-portable"
+        },{
+            "type": "collision-group"
+        },{
+            "type": "collision-basic",
+			"collisionType": "beetle",
+			"solidCollisions": {
+				"beetle": ["turn-around", "hit-solid"],
+				"hero":   ["turn-around", "hit-solid"],
+			    "block":  ["turn-around", "hit-solid"],
+			    "dirt":   ["turn-around", "hit-solid"],
+                "tiles":  ["turn-around", "hit-solid"],
+                "briar":  ["turn-around", "hit-solid"]
+			}
+		},{
+			"type": "render-animation",
+			"animationMap":{
+                "moving,left":  "walking-left",
+                "moving,right": "walking-right",
+                "default":      "standing"
+            }, 
+            "spriteSheet": {
+				"images": ["beetle"],
+				"frames": {
+					"width":  72,
+					"height": 72,
+					"regY":   72,
+					"regX":   36
+				},
+				"animations": {
+					"standing":[0],
+					"walking-right": {"frames": [2, 3, 1], "frequency": 4},
+					"walking-left":  {"frames": [3, 2, 1], "frequency": 4}
+				}
+			}
+//		},{
+//		    "type": "render-debug"
+		}
+	],
+	"properties":{
+	    "width": 180,
+	    "height": 240,
+		"z": 150
+	}
+}

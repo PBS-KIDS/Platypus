@@ -55,17 +55,17 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 		    if(asset !== ''){
 		    	fileName = hypPath(asset);
 		        if(compression && (asset.substring(asset.length - 4).toLowerCase() === '.png')){
-	                if(!fileSystem.FileExists('../src/images/compressed/q' + compression + '-' + fileName)){
+	                if(!fileSystem.FileExists('../game/images/compressed/q' + compression + '-' + fileName)){
 				    	print('....Compressing "' + asset + '".');
 	                 	if(shell.isBash){
-	                 		shell.Run("pngquant/pngquant -ext -q" + compression + ".png " + compression + " " + asset, 7, true);
+	                 		shell.Run("pngquant/pngquant --ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	} else {
-	                 		shell.Run("pngquant\\pngquant.exe -ext -q" + compression + ".png " + compression + " " + asset, 7, true);
+	                 		shell.Run("pngquant\\pngquant.exe --ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	}
-		                fileSystem.MoveFile(asset.substring(0, asset.length - 4) + '-q' + compression + '.png', '../src/images/compressed/q' + compression + '-' + fileName);
+		                fileSystem.MoveFile(asset.substring(0, asset.length - 4) + '-q' + compression + '.png', '../game/images/compressed/q' + compression + '-' + fileName);
 	                }
 			    	print('....Copying compressed asset to "' + destination + fileName + '".');
-	                fileSystem.CopyFile('../src/images/compressed/q' + compression + '-' + fileName, destination + fileName);
+	                fileSystem.CopyFile('../game/images/compressed/q' + compression + '-' + fileName, destination + fileName);
 		        } else {
 			    	print('....Copying asset to "' + destination + fileName + '".');
 					fileSystem.CopyFile(asset, destination + fileName); 

@@ -1,0 +1,16 @@
+/*
+ * 
+ */
+{
+	"id": "gem-counter",
+	"components":[
+		{
+			"type": "counter",
+			"countMessage": "count-gems"
+		},{
+            "type": "dom-element",
+            "className": "gem-counter",
+            "innerHTML": "0"
+        }
+	]
+}

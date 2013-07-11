@@ -1,0 +1,18 @@
+/*
+ * 
+ */
+{
+	"id": "collectible-manager",
+	"components":[
+		{
+			"type": "logic-collectible-manager"
+		},{
+			"type": "broadcast-events",
+			"events": {"broadcast-gem-collected": "gui-gem-collected"}
+		}
+	],
+	"properties":{
+		"x": 10,
+		"y": 10
+	}
+}

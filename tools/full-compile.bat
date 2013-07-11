@@ -1,4 +1,4 @@
-del ..\src\images\compressed\*.* /Q
+del ..\game\images\compressed\*.* /Q
 cscript.exe js/compile-json.js
 cscript.exe js/compile-assets.js
 cscript.exe js/compile-scripts.js

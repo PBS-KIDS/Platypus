@@ -1,0 +1,7 @@
+AddType text/cache-manifest .manifest
+
+
+RewriteEngine on
+
+RewriteCond %{HTTP_USER_AGENT} "a|c|android|blackberry|ipad|iphone|ipod|iemobile|opera mobile|palmos|webos|googlebot-mobile" [NC]
+RewriteRule ^cache\.manifest$ mp3-mobile.manifest [L]
