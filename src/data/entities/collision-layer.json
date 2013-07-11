@@ -1,9 +1,0 @@
-{
-	"id": "collision-layer",
-	"components":[
-		{
-			"type": "collision-tiles",
-			"collisionMap": "import"
-		}
-	]
-}
