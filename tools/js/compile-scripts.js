@@ -61,7 +61,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   return item;
    },
    hypPath    = function(path){
-	   return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/src-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
+	   return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/game-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
    },
    putInFolder= function(path){
 	   if(isImage(path)){

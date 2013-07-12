@@ -42,7 +42,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	   return !itIsThere;
    },
    hypPath    = function(path){
-	   return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/src-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
+	   return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/game-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
    },
    copyFiles  = function(assets, destination, compression){
 	    var assetIndex = 0,
@@ -60,7 +60,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	                 	if(shell.isBash){
 	                 		shell.Run("pngquant/pngquant --ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	} else {
-	                 		shell.Run("pngquant\\pngquant.exe --ext -q" + compression + ".png " + compression + " " + asset, 7, true);
+	                 		shell.Run("pngquant\\pngquant.exe -ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	}
 		                fileSystem.MoveFile(asset.substring(0, asset.length - 4) + '-q' + compression + '.png', '../game/images/compressed/q' + compression + '-' + fileName);
 	                }
@@ -147,7 +147,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
     for (buildIndex in builds){
         print('..Copying assets to build "' + builds[buildIndex].id + '".');
 	    if (!fileSystem.FolderExists(buildDir + builds[buildIndex].id + '/')) fileSystem.CreateFolder(buildDir + builds[buildIndex].id + '/');
-	    if (builds[buildIndex].pngCompression && !fileSystem.FolderExists('../src/images/compressed/')) fileSystem.CreateFolder('../src/images/compressed/');
+	    if (builds[buildIndex].pngCompression && !fileSystem.FolderExists('../game/images/compressed/')) fileSystem.CreateFolder('../game/images/compressed/');
     	copyFiles(images, buildDir + builds[buildIndex].id + '/i/', builds[buildIndex].pngCompression);
     	copyFiles(audio,  buildDir + builds[buildIndex].id + '/a/');
     	copyFiles(fonts,  buildDir + builds[buildIndex].id + '/f/');
