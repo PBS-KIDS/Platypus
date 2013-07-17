@@ -177,8 +177,7 @@
             {"id": "scene-map-test-3", "src": "scenes/scene-map-test-3.json"},
             {"id": "scene-map-test-4", "src": "scenes/scene-map-test-4.json"},
             {"id": "scene-map-test-5", "src": "scenes/scene-map-test-5.json"},
-            {"id": "scene-map-test-6", "src": "scenes/scene-map-test-6.json"}//,
-            //{"id": "scene-map-test-7", "src": "scenes/scene-map-test-7.json"}
+            {"id": "scene-map-test-6", "src": "scenes/scene-map-test-6.json"}
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
@@ -195,8 +194,7 @@
             {"id": "map-test-3", "src": "levels/map-test-3.json"},
             {"id": "map-test-4", "src": "levels/map-test-4.json"},
             {"id": "map-test-5", "src": "levels/map-test-5.json"},
-            {"id": "map-test-6", "src": "levels/map-test-6.json"}//,
-            //{"id": "map-test-7", "src": "levels/map-test-7.json"}
+            {"id": "map-test-6", "src": "levels/map-test-6.json"}
 		]
 	},
 	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.
