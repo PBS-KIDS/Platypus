@@ -55,11 +55,11 @@
             {"id": "dirt",           "src": "images/dirt.png",         "data": {"rows": 2, "columns": 3}},
 			{"id": "mookie",         "src": "images/mookie.png",       "data": {"rows": 4, "columns": 4}},
             {"id": "sprites",        "src": "images/game-sprites.png", "data": {"rows": 9, "columns": 9}},
-            {"id": "tiles",          "src": "images/tiles.png",        "data": {"rows": 5, "columns": 9}},
+            {"id": "tiles",          "src": "images/tiles.png",        "data": {"rows": 1, "columns": 3}},
             {"id": "gem",    		 "src": "images/gem.png",          "data": {"rows": 1, "columns": 3}},
             {"id": "gem-bar",        "src": "images/gem-bar.png"},
             {"id": "title-screen",   "src": "images/title-screen.png"},
-            {"id": "objects",        "src": "images/objects.png",      "data": {"rows": 4, "columns": 8}},
+            {"id": "objects",        "src": "images/objects.png",      "data": {"rows": 1, "columns": 3}},
             {"id": "beetle",         "src": "images/beetle.png",       "data": {"rows": 1, "columns": 4}},
             {"id": "briar",        	 "src": "images/briar.png",        "data": {"rows": 1, "columns": 4}}
 		],
@@ -163,38 +163,11 @@
 		"scenes": [ // JSON files describing scenes
             {"id": "load",        "src": "scenes/load.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
             {"id": "menu",        "src": "scenes/menu.json"},
-			{"id": "scene-level-1", "src": "scenes/scene-level-1.json"},
-            {"id": "scene-level-2", "src": "scenes/scene-level-2.json"},
-            {"id": "scene-entity-test-1", "src": "scenes/scene-entity-test-1.json"},
-            {"id": "scene-entity-test-2", "src": "scenes/scene-entity-test-2.json"},
-            {"id": "scene-entity-test-3", "src": "scenes/scene-entity-test-3.json"},
-            {"id": "scene-entity-test-4", "src": "scenes/scene-entity-test-4.json"},
-            {"id": "scene-entity-test-5", "src": "scenes/scene-entity-test-5.json"},
-            {"id": "scene-entity-test-6", "src": "scenes/scene-entity-test-6.json"},
-            {"id": "scene-entity-test-7", "src": "scenes/scene-entity-test-7.json"},
-            {"id": "scene-map-test-1", "src": "scenes/scene-map-test-1.json"},
-            {"id": "scene-map-test-2", "src": "scenes/scene-map-test-2.json"},
-            {"id": "scene-map-test-3", "src": "scenes/scene-map-test-3.json"},
-            {"id": "scene-map-test-4", "src": "scenes/scene-map-test-4.json"},
-            {"id": "scene-map-test-5", "src": "scenes/scene-map-test-5.json"},
-            {"id": "scene-map-test-6", "src": "scenes/scene-map-test-6.json"}
+			{"id": "scene-level-1", "src": "scenes/scene-level-1.json"}
 		],
 		"levels": [ // JSON files describing levels
-            {"id": "level-1", "src": "levels/level-1.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "level-2", "src": "levels/level-2.json"},
-            {"id": "entity-test-1", "src": "levels/entity-test-1.json"},
-            {"id": "entity-test-2", "src": "levels/entity-test-2.json"},
-            {"id": "entity-test-3", "src": "levels/entity-test-3.json"},
-            {"id": "entity-test-4", "src": "levels/entity-test-4.json"},
-            {"id": "entity-test-5", "src": "levels/entity-test-5.json"},
-            {"id": "entity-test-6", "src": "levels/entity-test-6.json"},
-            {"id": "entity-test-7", "src": "levels/entity-test-7.json"},
-            {"id": "map-test-1", "src": "levels/map-test-1.json"},
-            {"id": "map-test-2", "src": "levels/map-test-2.json"},
-            {"id": "map-test-3", "src": "levels/map-test-3.json"},
-            {"id": "map-test-4", "src": "levels/map-test-4.json"},
-            {"id": "map-test-5", "src": "levels/map-test-5.json"},
-            {"id": "map-test-6", "src": "levels/map-test-6.json"}
+            {"id": "level-1", "src": "levels/level-1.json"} // If "src" key is included, this will be replaced by the JSON structure in the linked file.
+
 		]
 	},
 	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.

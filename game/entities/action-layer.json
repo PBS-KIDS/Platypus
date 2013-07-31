@@ -15,7 +15,8 @@
         },{
             "type": "tiled-loader",
             "unitsPerPixel": 10,
-            "images": ["sprites"], //optional: will use source images from Tiled JSON if not specified here.
+           //"images": ["tiles","objects"], //optional: will use source images from Tiled JSON if not specified here.
+           "images": ["sprites"], //optional: will use source images from Tiled JSON if not specified here.
             "imagesScale": 3.3333333333       //size of image pixels in world coordinates
         }
     ]
