@@ -6,11 +6,14 @@
 			"controlMap":{
 			    "button-jump":      "jump",
                 "key:z":            "jump",
-                "button-pickaxe":   "key-swing",
-                "key:x":            "key-swing",
+                "key:space":   		"jump",
+                "key:up-arrow":		"jump",
+                "key:w":            "jump",
                 "key:left-arrow":   "go-left",
+                "key:a":   			"go-left",
                 "button-left":      "go-left",
 				"key:right-arrow": 	"go-right",
+				"key:d": 			"go-right",
 				"button-right":     "go-right"
 			}
         },{ 
@@ -37,8 +40,6 @@
 		},{
 			"type": "render-animation",
             "animationMap":{
-                "swingHit,left":   "swing-left!",
-                "swingHit,right":  "swing-right!",
                 "falling,left":     "jumping-left",
                 "falling,right":    "jumping-right",
                 "moving,left":  "walking-left",
@@ -61,15 +62,14 @@
 					"walking-right": {"frames": [3, 0, 1, 2], "frequency": 4},
 					"walking-left":  {"frames": [4, 7, 6, 5], "frequency": 4},
 					"jumping-right": {"frames": [0]},
-					"jumping-left":  {"frames": [6]},
-                    "swing-right":   {"frames": [ 8,  9, 10, 10, 2], "frequency": 4},
-                    "swing-left":    {"frames": [14, 13, 12, 12, 5], "frequency": 4}
+					"jumping-left":  {"frames": [6]}
+                    //"swing-right":   {"frames": [ 8,  9, 10, 10, 2], "frequency": 4},
+                    //"swing-left":    {"frames": [14, 13, 12, 12, 5], "frequency": 4}
 				}
 			}
 		},{
 		    "type": "audio",
 		    "audioMap": {
-                "swingHit": "pickaxe-other",
 		        "ground, moving": {"sound": "walk", "loop": 5000},
 		        "just-jumped": "jump"
 		    }
