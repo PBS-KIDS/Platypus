@@ -35,11 +35,11 @@
 	"source": { 
 		"assets": [ // Assets such as images and audio
 		
-			// Audio
+			// Audio. Using different assets for browser compatability, as well as audio sprite for older iOS Safari compatability
             {"id": "walk",           "src": {"ogg": "audio/walk.ogg",     	  "mp3": "audio/walk.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "audio/combined.m4a", "data": {"offset": 3200,  "length": 330}}}},
             {"id": "jump",           "src": {"ogg": "audio/jump.ogg",     	  "mp3": "audio/jump.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "audio/combined.m4a", "data": {"offset": 1500,  "length": 250}}}},
 
-			// Images
+			// Images. Sprite sheets are evenly split into rows and columns. Could add support for sprite sheet definition files later.
 		    {"id": "buttons",    	 "src": "images/buttons.png"},
 			{"id": "mookie",         "src": "images/mookie.png",       "data": {"rows": 4, "columns": 4}},
             {"id": "sprites",        "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
