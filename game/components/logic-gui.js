@@ -5,7 +5,7 @@ platformer.components['logic-gui'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['load', 'gui-gem-collected']);
+		this.addListeners(['load']);
 	};
 	var proto = component.prototype;
 	
@@ -13,9 +13,6 @@ platformer.components['logic-gui'] = (function(){
 		this.owner.trigger('logical-state', {state: 'default'});
 	};
 	
-	proto['gui-gem-collected'] = function(data){
-		this.owner.trigger('count-gems', data.count);
-	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 	proto.destroy = function(){

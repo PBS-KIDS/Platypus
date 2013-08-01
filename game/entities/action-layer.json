@@ -10,8 +10,7 @@
            "width": 3200
         },
         {"type": "handler-render-createjs"},
-        {"type": "entity-container", 
-            "entities": [{"type": "collectible-manager"}]
+        {"type": "entity-container"
         },{
             "type": "tiled-loader",
             "unitsPerPixel": 10,

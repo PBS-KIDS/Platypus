@@ -33,9 +33,7 @@
             "solidCollisions": {
                 "block": "hit-solid",
                 "dirt": "hit-solid",
-                "tiles": "hit-solid",
-                "beetle": "hit-solid",
-                "briar": "hit-solid"
+                "tiles": "hit-solid"
             }
 		},{
 			"type": "render-animation",
@@ -63,8 +61,6 @@
 					"walking-left":  {"frames": [4, 7, 6, 5], "frequency": 4},
 					"jumping-right": {"frames": [0]},
 					"jumping-left":  {"frames": [6]}
-                    //"swing-right":   {"frames": [ 8,  9, 10, 10, 2], "frequency": 4},
-                    //"swing-left":    {"frames": [14, 13, 12, 12, 5], "frequency": 4}
 				}
 			}
 		},{
