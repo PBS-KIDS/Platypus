@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="30" height="10" tilewidth="24" tileheight="24">
  <tileset firstgid="1" name="tiles" tilewidth="24" tileheight="24">
-  <image source="../images/tiles.png" width="72" height="24"/>
+  <image source="../images/tiles.png" width="96" height="72"/>
  </tileset>
- <tileset firstgid="4" name="objects" tilewidth="24" tileheight="24">
-  <image source="../images/objects.png" width="72" height="24"/>
+ <tileset firstgid="13" name="objects" tilewidth="24" tileheight="24">
+  <image source="../images/objects.png" width="96" height="24"/>
   <tile id="0">
    <properties>
     <property name="entity" value="hero"/>
@@ -23,7 +23,7 @@
  </tileset>
  <layer name="background" width="30" height="10">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgHMWjeIhiZigeKfaOdAwAJQ/3v7AEAAA=
+   H4sIAAAAAAAAA2NkYGBgHMWjeIhiViBmGwB7OYGYaxD4f6RhAFjZAvuwBAAA
   </data>
  </layer>
  <layer name="action" width="30" height="10">
@@ -31,7 +31,7 @@
    <property name="entity" value="tile-layer"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NiYGBgYqAfYELDo/aO2juc7B3FtMUAKKKRTrAEAAA=
+   H4sIAAAAAAAAA2NkYGBgZKAfYETDo/YOTnuZgJgZiFlobC8he4h1x0CHM/MAYfYRhgGwN33ksAQAAA==
   </data>
  </layer>
  <objectgroup name="entities" width="30" height="10">
@@ -40,7 +40,7 @@
     <property name="destination" value="menu"/>
    </properties>
   </object>
-  <object type="hero" gid="4" x="72" y="144"/>
-  <object gid="6" x="0" y="24"/>
+  <object type="hero" gid="13" x="72" y="144"/>
+  <object gid="15" x="0" y="24"/>
  </objectgroup>
 </map>

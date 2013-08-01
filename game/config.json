@@ -42,10 +42,10 @@
 			// Images
 		    {"id": "buttons",    	 "src": "images/buttons.png"},
 			{"id": "mookie",         "src": "images/mookie.png",       "data": {"rows": 4, "columns": 4}},
-            {"id": "sprites",        "src": "images/game-sprites.png", "data": {"rows": 9, "columns": 9}},
-            {"id": "tiles",          "src": "images/tiles.png",        "data": {"rows": 1, "columns": 3}},
+            {"id": "sprites",        "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
+            {"id": "tiles",          "src": "images/tiles.png",        "data": {"rows": 3, "columns": 4}},
             {"id": "title-screen",   "src": "images/title-screen.png"},
-            {"id": "objects",        "src": "images/objects.png",      "data": {"rows": 1, "columns": 3}}
+            {"id": "objects",        "src": "images/objects.png",      "data": {"rows": 1, "columns": 4}}
 		],
 		"classes": [ // JavaScript files containing core game engine functionality
 			{"id": "Game",			  "src": "../engine/game.js"},
