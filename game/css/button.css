@@ -83,27 +83,6 @@
 	background-size: 600%;
 }
 
-.pickaxe-button {
-	background: url('../i/buttons.png') 100% 66.666% no-repeat;
-	background-size: 600%;
-	bottom: 1em;
-	right: 17em;
-}
-.pickaxe-button:active {
-	background: url('../i/buttons.png') 100% 100% no-repeat;
-	background-size: 600%;
-}
-.pickaxe-above-button {
-	background: url('../i/buttons.png') 100% 66.666% no-repeat;
-	background-size: 600%;
-	bottom: 17em;
-	right: 1em;
-}
-.pickaxe-above-button:active {
-	background: url('../i/buttons.png') 100% 100% no-repeat;
-	background-size: 600%;
-}
-
 .go-left-button {
 	background: url('../i/buttons.png') 0 0 no-repeat;
 	background-size: 600%;

@@ -109,7 +109,6 @@
             {"id": "button-jump-left",  "src": "entities/button-jump-left.json"},
             {"id": "button-jump-right", "src": "entities/button-jump-right.json"},
             {"id": "button-left",     "src": "entities/button-left.json"},
-            {"id": "button-pickaxe",  "src": "entities/button-pickaxe.json"},
             {"id": "button-play-game","src": "entities/button-play-game.json"},
             {"id": "button-right",    "src": "entities/button-right.json"},
             {"id": "button-mute",     "src": "entities/button-mute.json"},
