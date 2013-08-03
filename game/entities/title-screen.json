@@ -6,9 +6,8 @@
 	"components":[
 		{
 		    "type": "dom-element",
-		    "element": "img",
-		    "className": "title-screen",
-		    "src": "i/title-screen.png"
+		    "element": "div",
+		    "className": "title-screen"
         }
 	]
 }

@@ -28,51 +28,51 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 (function(){
    var alert  = function(val){print(val);},
    getText    = function(path){
-	   var file = undefined,
-	   text     = '';
-	   try {
-		   file = fileSystem.OpenTextFile(path);
-		   try {
-			   text = file.ReadAll();
-		   } catch(e){
-			   alert('Error reading from "' + path + '": ' + e.description);
-		   }
-		   file.Close();
-	   } catch (e) {
-		   alert('Error opening "' + path + '": ' + e.description);
-	   }
-	   return text;
-   },
-   getJSON    = function(path){return eval('(' + getText(path) + ')');}, //Using "eval" to allow comments in JSON definition files
-   setText    = function(path, text){
-	   var file = fileSystem.CreateTextFile(path, true);
-	   file.Write(text);
-	   file.Close();
-	   return text;
-   },
-   checkPush  = function(list, item){
-	   var itIsThere = false;
-	   if(list){
-		   for (var index in list){
-			   if(list[index] === item) itIsThere = true;
-		   }
-		   if(!itIsThere) list.push(item);
-	   }
-	   return item;
-   },
-   hypPath    = function(path){
-	   return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/game-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
-   },
-   putInFolder= function(path){
-	   if(isImage(path)){
-		   return 'i/' + path;
-	   } else if(isAudio(path)){
-		   return 'a/' + path;
-	   } else if(isFont(path)){
-		   return 'f/' + path;
-	   }
-	   return path;
-   },
+	    var file = undefined,
+	    text     = '';
+	    try {
+		    file = fileSystem.OpenTextFile(path);
+		    try {
+			    text = file.ReadAll();
+		    } catch(e){
+			    alert('Error reading from "' + path + '": ' + e.description);
+		    }
+		    file.Close();
+	    } catch (e) {
+		    alert('Error opening "' + path + '": ' + e.description);
+	    }
+	    return text;
+    },
+    getJSON    = function(path){return eval('(' + getText(path) + ')');}, //Using "eval" to allow comments in JSON definition files
+    setText    = function(path, text){
+	    var file = fileSystem.CreateTextFile(path, true);
+	    file.Write(text);
+	    file.Close();
+	    return text;
+    },
+    checkPush  = function(list, item){
+	    var itIsThere = false;
+	    if(list){
+		    for (var index in list){
+			    if(list[index] === item) itIsThere = true;
+		    }
+		    if(!itIsThere) list.push(item);
+	    }
+	    return item;
+    },
+    hypPath    = function(path){
+	    return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/game-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
+    },
+    putInFolder= function(path){
+	    if(isImage(path)){
+		    return 'i/' + path;
+	    } else if(isAudio(path)){
+		    return 'a/' + path;
+	    } else if(isFont(path)){
+		    return 'f/' + path;
+	    }
+	    return path;
+    },
     buildGame = function(build, config, html, manifest, timestamp){
 	    var jsFile = 'combined',
 	    cssFile    = 'combined',
@@ -261,8 +261,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
 	    
 	    // setup index from template
-	    html = html.replace(/js\/default\.js/,   path + 'j/' + jsFile  + timestamp + '.js');
-	    html = html.replace(/css\/default\.css/, path + 's/' + cssFile + timestamp + '.css');
+	    html = html.replace(/default\.js/,   path + 'j/' + jsFile  + timestamp + '.js');
+	    html = html.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/' + cssFile + timestamp + '.css" type="text/css" />' + '\n' + ' </head>');
     	html = html.replace('</head>', result.extStyles + '</head>');
     	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
 	    setText('index.html', html);
@@ -292,13 +292,21 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   var check = path.substring(path.length - 3).toLowerCase();
 	   return (check === '.js');
    },
+   assetConversions = {}, //This is used to identify assets in CSS files and rename them in the compiled CSS. NOTE: Assets must be loaded prior to CSS compilation for this to work.
+   renameStyleAssets = function(cssText){
+	   for (var src in assetConversions){
+		   cssText = cssText.replace(new RegExp(src.substring(workingDir.length).replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"),"g"), assetConversions[src]);
+	   }
+	   return cssText;
+   },
    handleAsset = function(id, src, assets, absolutePath, result){
 		if(src.substring(0,4).toLowerCase() !== 'http'){
 			if(isImage(src) || isAudio(src) || isFont(src)){
-				return checkPush(assets, absolutePath + putInFolder(hypPath(src)));
+				assetConversions[src] = absolutePath + putInFolder(hypPath(src));
+				return checkPush(assets, assetConversions[src]);
 			} else if(isCSS(src)) {
 				result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
-				result.styles  += getText(src) + '\n';
+				result.styles  += renameStyleAssets(getText(src)) + '\n';
 		 	    return src;
 			} else if(isJS(src)) {
 				result.scripts += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';

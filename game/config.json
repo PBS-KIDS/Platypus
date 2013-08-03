@@ -63,6 +63,16 @@
             {"id": "beetle",         "src": "images/beetle.png",       "data": {"rows": 1, "columns": 4}},
             {"id": "briar",        	 "src": "images/briar.png",        "data": {"rows": 1, "columns": 4}}
 		],
+        "includes": [
+            {"id": "CreateJS",      "src": "http://code.createjs.com/createjs-2013.02.12.min.js"},
+            {"id": "Browser",       "src": "../engine/browser.js"},
+            {"id": "Main",          "src": "../engine/main.js"},
+            {"id": "ButtonCSS",     "src": "css/button.css"},
+            {"id": "MainCSS",       "src": "css/main.css"},
+            {"id": "GameCSS",       "src": "css/game.css"},
+            {"id": "GUI CSS",       "src": "css/gui.css"},
+            {"id": "FullScreenCSS", "src": "css/fullscreen.css"}
+        ],
 		"classes": [
 			{"id": "Game",			  "src": "../engine/game.js"},
             {"id": "ComponentFactory","src": "../engine/factory.js"},
@@ -149,16 +159,6 @@
             {"id": "flower",	      "src": "entities/flower.json"},
             {"id": "briar",	    	  "src": "entities/briar.json"},
             {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
-		],
-		"includes": [
-			{"id": "CreateJS",	    "src": "http://code.createjs.com/createjs-2013.02.12.min.js"},
-            {"id": "Browser",       "src": "../engine/browser.js"},
-            {"id": "Main",          "src": "../engine/main.js"},
-            {"id": "ButtonCSS",     "src": "css/button.css"},
-            {"id": "MainCSS",       "src": "css/main.css"},
-            {"id": "GameCSS",       "src": "css/game.css"},
-            {"id": "GUI CSS",       "src": "css/gui.css"},
-            {"id": "FullScreenCSS", "src": "css/fullscreen.css"}
 		],
 		"scenes": [ // JSON files describing scenes
             {"id": "load",        "src": "scenes/load.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

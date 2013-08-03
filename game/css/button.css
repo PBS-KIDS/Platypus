@@ -14,7 +14,7 @@
 	height: 2.5em;
 	text-align: center;
 	cursor: pointer;
-	background: url('../i/buttons.png') 0 66.667% no-repeat;
+	background: url('../images/buttons.png') 0 66.667% no-repeat;
 	background-size: 150% 400%;
 	line-height: 2.5em;
 	color: white;
@@ -29,7 +29,7 @@
 	user-select: none;
 }
 .menu-button:active {
-    background: url('../i/buttons.png') 0 100% no-repeat;
+    background: url('../images/buttons.png') 0 100% no-repeat;
     background-size: 150% 400%;
 }
 .map-test {
@@ -48,92 +48,92 @@
 }
 
 .jump-button {
-	background: url('../i/buttons.png') 20% 0 no-repeat;
+	background: url('../images/buttons.png') 20% 0 no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	right: 1em;
 }
 .jump-button:active {
-	background: url('../i/buttons.png') 20% 33.333% no-repeat;
+	background: url('../images/buttons.png') 20% 33.333% no-repeat;
 	background-size: 600%;
 }
 .jump-center-button {
-	background: url('../i/buttons.png') 20% 0 no-repeat;
+	background: url('../images/buttons.png') 20% 0 no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	right: 17em;
 	z-index: 11;
 }
 .jump-center-button:active {
-	background: url('../i/buttons.png') 20% 33.333% no-repeat;
+	background: url('../images/buttons.png') 20% 33.333% no-repeat;
 	background-size: 600%;
 }
 .jump-left-button {
-	background: url('../i/buttons.png') 80% 0 no-repeat;
+	background: url('../images/buttons.png') 80% 0 no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	right: 33em;
 }
 .jump-left-button:active {
-	background: url('../i/buttons.png') 80% 33.333% no-repeat;
+	background: url('../images/buttons.png') 80% 33.333% no-repeat;
 	background-size: 600%;
 }
 .jump-right-button {
-	background: url('../i/buttons.png') 100% 0 no-repeat;
+	background: url('../images/buttons.png') 100% 0 no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	right: 1em;
 }
 .jump-right-button:active {
-	background: url('../i/buttons.png') 100% 33.333% no-repeat;
+	background: url('../images/buttons.png') 100% 33.333% no-repeat;
 	background-size: 600%;
 }
 
 .pickaxe-button {
-	background: url('../i/buttons.png') 100% 66.666% no-repeat;
+	background: url('../images/buttons.png') 100% 66.666% no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	right: 17em;
 }
 .pickaxe-button:active {
-	background: url('../i/buttons.png') 100% 100% no-repeat;
+	background: url('../images/buttons.png') 100% 100% no-repeat;
 	background-size: 600%;
 }
 .pickaxe-above-button {
-	background: url('../i/buttons.png') 100% 66.666% no-repeat;
+	background: url('../images/buttons.png') 100% 66.666% no-repeat;
 	background-size: 600%;
 	bottom: 17em;
 	right: 1em;
 }
 .pickaxe-above-button:active {
-	background: url('../i/buttons.png') 100% 100% no-repeat;
+	background: url('../images/buttons.png') 100% 100% no-repeat;
 	background-size: 600%;
 }
 
 .go-left-button {
-	background: url('../i/buttons.png') 0 0 no-repeat;
+	background: url('../images/buttons.png') 0 0 no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	left: 1em;
 }
 .go-left-button:active {
-	background: url('../i/buttons.png') 0 33.333% no-repeat;
+	background: url('../images/buttons.png') 0 33.333% no-repeat;
 	background-size: 600%;
 }
 .go-right-button {
-	background: url('../i/buttons.png') 40% 0 no-repeat;
+	background: url('../images/buttons.png') 40% 0 no-repeat;
 	background-size: 600%;
 	bottom: 1em;
 	left: 17em;
 }
 .go-right-button:active {
-	background: url('../i/buttons.png') 40% 33.333% no-repeat;
+	background: url('../images/buttons.png') 40% 33.333% no-repeat;
 	background-size: 600%;
 }
 
 /* Since mobile HTML5 audio does not generally support mute, this button only shows on desktop and is smaller than the other game-buttons */
 .mute-button.released {
-	background: url('../i/buttons.png') 60% 0 no-repeat;
+	background: url('../images/buttons.png') 60% 0 no-repeat;
 	background-size: 600%;
 	top: 1em;
 	left: 9em;
@@ -144,7 +144,7 @@
 	cursor: pointer;
 }
 .mute-button.pressed {
-	background: url('../i/buttons.png') 60% 33.333% no-repeat;
+	background: url('../images/buttons.png') 60% 33.333% no-repeat;
 	background-size: 600%;
 	top: 1em;
 	left: 9em;

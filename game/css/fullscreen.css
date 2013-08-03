@@ -13,7 +13,7 @@
 }
 
 .button-fullscreen {
-background: url('../i/buttons.png') 80% 66.666% no-repeat;
+background: url('../images/buttons.png') 80% 66.666% no-repeat;
 background-size: 600%;
 top: 1em;
 left: 1em;
@@ -25,7 +25,7 @@ cursor: pointer;
 }
 
 .full-screen .button-fullscreen {
-background: url('../i/buttons.png') 80% 100% no-repeat;
+background: url('../images/buttons.png') 80% 100% no-repeat;
 background-size: 600%;
 top: 1em;
 left: 1em;
