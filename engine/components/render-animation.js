@@ -17,19 +17,19 @@ This component is attached to entities that will appear in the game world. It re
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing the corresponding animations.
 
 ### Local Broadcasts:
-- **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+- **mousedown** - This component captures this event from CreateJS and triggers it on the entity.
   > @param event (event object) - The event from Javascript.
   > @param over (boolean) - Whether the mouse is over the object or not.
   > @param x (number) - The x-location of the mouse in stage coordinates.
   > @param y (number) - The y-location of the mouse in stage coordinates.
   > @param entity ([[Entity]]) - The entity clicked on.  
-- **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+- **mouseup** - This component captures this event from CreateJS and triggers it on the entity.
   > @param event (event object) - The event from Javascript.
   > @param over (boolean) - Whether the mouse is over the object or not.
   > @param x (number) - The x-location of the mouse in stage coordinates.
   > @param y (number) - The y-location of the mouse in stage coordinates.
   > @param entity ([[Entity]]) - The entity clicked on.  
-- **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
+- **mousemove** - This component captures this event from CreateJS and triggers it on the entity.
   > @param event (event object) - The event from Javascript.
   > @param over (boolean) - Whether the mouse is over the object or not.
   > @param x (number) - The x-location of the mouse in stage coordinates.
@@ -79,7 +79,7 @@ This component is attached to entities that will appear in the game world. It re
       }
       
       "acceptInput": {
-      	//Optional - What types of input the object should take.
+      	//Optional - What types of input the object should take. This component defaults to not accept any input.
       	"hover": false;
       	"click": false; 
       }, 
@@ -255,7 +255,7 @@ This component is attached to entities that will appear in the game world. It re
 						createjs.Touch.enable(this.stage);
 					}
 
-					this.anim.onPress     = function(event) {
+					this.anim.addEventListener('mousedown', function(event) {
 						self.owner.trigger('mousedown', {
 							//debug: true,
 							event: event.nativeEvent,
@@ -264,7 +264,7 @@ This component is attached to entities that will appear in the game world. It re
 							y: event.stageY,
 							entity: self.owner
 						});
-						event.onMouseUp = function(event){
+						event.addEventListener('mouseup', function(event){
 							self.owner.trigger('mouseup', {
 								//debug: true,
 								event: event.nativeEvent,
@@ -273,8 +273,8 @@ This component is attached to entities that will appear in the game world. It re
 								y: event.stageY,
 								entity: self.owner
 							});
-						};
-						event.onMouseMove = function(event){
+						});
+						event.addEventListener('mousemove', function(event){
 							self.owner.trigger('mousemove', {
 								event: event.nativeEvent,
 								over: over,
@@ -282,14 +282,14 @@ This component is attached to entities that will appear in the game world. It re
 								y: event.stageY,
 								entity: self.owner
 							});
-						};
-					};
-					this.anim.onMouseOut  = function(){over = false;};
-					this.anim.onMouseOver = function(){over = true;};
+						});
+					});
+					this.anim.addEventListener('mouseout', function(){over = false;});
+					this.anim.addEventListener('mouseover', function(){over = true;});
 				}
 				if(this.hover){
 					this.stage.enableMouseOver();
-					this.anim.onMouseOut  = function(event){
+					this.anim.addEventListener('mouseout', function(event){
 						over = false;
 						self.owner.trigger('mouseout', {
 							event: event.nativeEvent,
@@ -298,8 +298,8 @@ This component is attached to entities that will appear in the game world. It re
 							y: event.stageY,
 							entity: self.owner
 						});
-					};
-					this.anim.onMouseOver = function(event){
+					});
+					this.anim.addEventListener('mouseover', function(event){
 						over = true;
 						self.owner.trigger('mouseover', {
 							event: event.nativeEvent,
@@ -308,7 +308,7 @@ This component is attached to entities that will appear in the game world. It re
 							y: event.stageY,
 							entity: self.owner
 						});
-					};
+					});
 				}
 			},
 			

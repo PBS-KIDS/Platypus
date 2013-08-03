@@ -16,6 +16,25 @@ A component that handles updating rendering for components that are rendering vi
 - **camera-update** - Called when the camera moves in the world, or if the window is resized. This function sets the canvas size and the stage transform.
   > @param cameraInfo (object) - An object containing the camera information. 
 
+### Local Broadcasts:
+- **mousedown** - This component captures this event on the canvas and triggers it on the entity.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mouseup** - This component captures this event on the canvas and triggers it on the entity.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
+- **mousemove** - This component captures this event on the canvas and triggers it on the entity.
+  > @param event (event object) - The event from Javascript.
+  > @param over (boolean) - Whether the mouse is over the object or not.
+  > @param x (number) - The x-location of the mouse in stage coordinates.
+  > @param y (number) - The y-location of the mouse in stage coordinates.
+  > @param entity ([[Entity]]) - The entity clicked on.  
 
 ### Child Broadcasts:
 - **handle-render** - Sent to entities to run their render for the tick.
@@ -26,7 +45,13 @@ A component that handles updating rendering for components that are rendering vi
 
 ## JSON Definition
     {
-      "type": "handler-render-createjs"
+      "type": "handler-render-createjs",
+      
+      "acceptInput": {
+      	//Optional - What types of input the object should take. This component defaults to not accept any input.
+      	"hover": false;
+      	"click": false; 
+      }
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -39,6 +64,8 @@ A component that handles updating rendering for components that are rendering vi
 		id: "handler-render-createjs",
 		
 		constructor: function(definition){
+			var self = this;
+			
 			this.entities = [];
 			
 			this.canvas = this.owner.canvas = document.createElement('canvas');
@@ -53,6 +80,40 @@ A component that handles updating rendering for components that are rendering vi
 			
 			if(definition.autoClear !== true){
 				this.stage.autoClear = false; //since most tile maps are re-painted every time, the canvas does not require clearing.
+			}
+			
+			// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+			if(definition.acceptInput){
+				if(definition.acceptInput.click || definition.acceptInput.touch){
+					if(definition.acceptInput.touch && createjs.Touch.isSupported()){
+						createjs.Touch.enable(this.stage);
+					}
+
+					this.stage.addEventListener('stagemousedown', function(event) {
+						self.owner.trigger('mousedown', {
+							event: event.nativeEvent,
+							x: event.stageX / self.stage.scaleX,
+							y: event.stageY / self.stage.scaleY,
+							entity: self.owner
+						});
+						event.addEventListener('stagemouseup', function(event){
+							self.owner.trigger('mouseup', {
+								event: event.nativeEvent,
+								x: event.stageX / self.stage.scaleX,
+								y: event.stageY / self.stage.scaleY,
+								entity: self.owner
+							});
+						});
+						event.addEventListener('stagemousemove', function(event){
+							self.owner.trigger('mousemove', {
+								event: event.nativeEvent,
+								x: event.stageX / self.stage.scaleX,
+								y: event.stageY / self.stage.scaleY,
+								entity: self.owner
+							});
+						});
+					});
+				}
 			}
 			
 			this.camera = {
