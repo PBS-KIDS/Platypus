@@ -17,13 +17,12 @@
                 {"type": "button-jump-left"},
                 {"type": "button-jump-right"},
                 {"type": "button-jump", "properties": {"className": "game-button jump-center-button"}},
-                {"type": "button-pickaxe", "properties": {"className": "game-button pickaxe-above-button"}},
                 {"type": "button-left"},
                 {"type": "button-right"},
                 {"type": "gui"},
             	{"type": "fps-counter"}
             ],
-            "childEvents": ['gui-gem-collected', 'time-elapsed']
+            "childEvents": ['time-elapsed']
          }
     ]
 }
