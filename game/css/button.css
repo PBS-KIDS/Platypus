@@ -7,8 +7,8 @@
 /* This is the main menu play button */
 .menu-button {
 	position: absolute;
-	bottom: 6.8em;
-	left: 7.5em;
+	bottom: 7em;
+	left: 15em;
 	margin-left: -5em;
 	width: 10em;
 	height: 2.5em;
@@ -31,12 +31,6 @@
 .menu-button:active {
     background: url('../images/buttons.png') 0 100% no-repeat;
     background-size: 150% 400%;
-}
-.map-test {
-    bottom: 3.8em;
-}
-.entity-test {
-    bottom: 0.8em;
 }
 
 /* The following styles determine in-game buttons, all of which use game-button as their base style */
@@ -86,27 +80,6 @@
 }
 .jump-right-button:active {
 	background: url('../images/buttons.png') 100% 33.333% no-repeat;
-	background-size: 600%;
-}
-
-.pickaxe-button {
-	background: url('../images/buttons.png') 100% 66.666% no-repeat;
-	background-size: 600%;
-	bottom: 1em;
-	right: 17em;
-}
-.pickaxe-button:active {
-	background: url('../images/buttons.png') 100% 100% no-repeat;
-	background-size: 600%;
-}
-.pickaxe-above-button {
-	background: url('../images/buttons.png') 100% 66.666% no-repeat;
-	background-size: 600%;
-	bottom: 17em;
-	right: 1em;
-}
-.pickaxe-above-button:active {
-	background: url('../images/buttons.png') 100% 100% no-repeat;
 	background-size: 600%;
 }
 

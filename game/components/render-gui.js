@@ -5,7 +5,7 @@ platformer.components['render-gui'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 
-		this.addListeners(['handle-render', 'handle-render-load', 'logic-gem-added', 'logic-gem-collected']);
+		this.addListeners(['handle-render', 'handle-render-load']);
 		
 		this.background = undefined;
 		this.stage = undefined;

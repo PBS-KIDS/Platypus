@@ -9,21 +9,7 @@
 				{"type": "entity-container",
 					"entities": [
                         {"type": "title-screen"},
-                        {"type": "button-play-game"},{
-            				"type": "button-play-game",
-            				"properties":{
-            				    "innerHTML": "Map Test",
-                				"className": "menu-button map-test",
-                				"scene": "scene-map-test-1"
-                			}
-            			},{
-            				"type": "button-play-game",
-                            "properties":{
-                                "innerHTML": "Entity Test",
-                				"className": "menu-button entity-test",
-                				"scene": "scene-entity-test-1"
-                		    }
-            			}
+                        {"type": "button-play-game"}
 					]
 				}
 			]
