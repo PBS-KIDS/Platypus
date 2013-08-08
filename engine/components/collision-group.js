@@ -571,6 +571,7 @@ platformer.components['collision-group'] = (function(){
 				for (i = 0; i < length; i++){
 					entity = this.allEntities[i];
 					if(entity.checkCollision || check(entity.getAABB(), aabbLogic)){
+						entity.checkCollision = false;
 						all[all.length] = entity;
 
 						types = entity.collisionTypes;

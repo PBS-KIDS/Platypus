@@ -187,7 +187,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    try{
 	        fileSystem.DeleteFile(buildDir + build.id + '/*.*');
 	    } catch(e) {}
-		fileSystem.CopyFile(workingDir + 'server/*.*', buildDir + build.id + '/');
+	    if (fileSystem.FolderExists(workingDir + 'server/')){ // if there are files that should be copied to root as-is in a /server/ folder, do so.
+			fileSystem.CopyFile(workingDir + 'server/*.*', buildDir + build.id + '/');
+	    }
 
 		// create JS file
 	    setText('combined.js', result.scripts);   
