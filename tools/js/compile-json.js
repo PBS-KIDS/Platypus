@@ -89,7 +89,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === 'json');
    },
-   workingDir = '../game/',
+   compConfig = getJSON('tools-config.json'),
+   workingDir = compConfig["source-folder"] || '../game/',
    subDir     = '',
    gameConfig = getText(workingDir + 'config.json'),
    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
@@ -101,7 +102,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    retainId   = '',
    srcId      = '';
     
-    print('Composing full config.json from /game/config.json.');
+    print('Composing full config.json from ' + workingDir + 'config.json.');
     
     for(sectionId in source){
     	print('..Handling "' + sectionId + '" section.');
@@ -150,6 +151,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
     }
    
+    game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
+
     //insert entities and scenes into compiled config file
     setJSON('config.json', game);
     print('Completed full config.json.');

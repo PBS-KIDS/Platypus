@@ -61,7 +61,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    return item;
     },
     hypPath    = function(path){
-	    return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/game-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
+	    return path.replace(workingDir, '').replace(/\.\.\//g, '').replace(/\//g, '-').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
     },
     putInFolder= function(path){
 	    if(isImage(path)){
@@ -104,6 +104,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 
 	    delete game.builds;
 	    delete game['client-supports'];
+	    delete game.toolsConfig;
 
 	    if(supports){ // Prepare multiple manifest files
 		    print('...Creating arrays to store cache.manifest file versions.');
@@ -330,13 +331,13 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    timestamp  = ((new Date().getTime()) + '').substring(0, 9),
    gameConfig = getText('config.json');
    game       = eval('(' + gameConfig + ')');
-   workingDir = '../game/',
-   buildDir   = '../builds/',
+   workingDir = game.toolsConfig["source-folder"] || '../game/',
+   buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
    html       = getText(workingDir + 'template.html'),
    manifest   = getText(workingDir + 'template.manifest'),
    builds     = game.builds,
    buildIndex = 0;
-   
+
     //Create builds
     print('Preparing to compile scripts.');
     for (buildIndex in builds){

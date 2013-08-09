@@ -42,7 +42,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	   return !itIsThere;
    },
    hypPath    = function(path){
-	   return path.replace(/\.\.\//g, '').replace(/\//g, '-').replace(/game-/, '').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
+	   return path.replace(workingDir, '').replace(/\.\.\//g, '').replace(/\//g, '-').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
    },
    copyFiles  = function(assets, destination, compression){
 	    var assetIndex = 0,
@@ -55,17 +55,17 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 		    if(asset !== ''){
 		    	fileName = hypPath(asset);
 		        if(compression && (asset.substring(asset.length - 4).toLowerCase() === '.png')){
-	                if(!fileSystem.FileExists('../game/images/compressed/q' + compression + '-' + fileName)){
+	                if(!fileSystem.FileExists(workingDir + 'images/compressed/q' + compression + '-' + fileName)){
 				    	print('....Compressing "' + asset + '".');
 	                 	if(shell.isBash){
 	                 		shell.Run("pngquant/pngquant --ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	} else {
 	                 		shell.Run("pngquant\\pngquant.exe -ext -q" + compression + ".png " + compression + " " + asset, 7, true);
 	                 	}
-		                fileSystem.MoveFile(asset.substring(0, asset.length - 4) + '-q' + compression + '.png', '../game/images/compressed/q' + compression + '-' + fileName);
+		                fileSystem.MoveFile(asset.substring(0, asset.length - 4) + '-q' + compression + '.png', workingDir + 'images/compressed/q' + compression + '-' + fileName);
 	                }
 			    	print('....Copying compressed asset to "' + destination + fileName + '".');
-	                fileSystem.CopyFile('../game/images/compressed/q' + compression + '-' + fileName, destination + fileName);
+	                fileSystem.CopyFile(workingDir + 'images/compressed/q' + compression + '-' + fileName, destination + fileName);
 		        } else {
 			    	print('....Copying asset to "' + destination + fileName + '".');
 					fileSystem.CopyFile(asset, destination + fileName); 
@@ -86,7 +86,8 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	   return (check === '.ttf') || (check === '.otf');
    },
    game       = getJSON('config.json'), // need to have run compile-json.js prior to this if assets have changed.
-   buildDir   = '../builds/',
+   workingDir = game.toolsConfig["source-folder"] || '../game/',
+   buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
    builds     = game.builds,
    buildIndex = 0,
    assets     = [],
@@ -147,7 +148,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
     for (buildIndex in builds){
         print('..Copying assets to build "' + builds[buildIndex].id + '".');
 	    if (!fileSystem.FolderExists(buildDir + builds[buildIndex].id + '/')) fileSystem.CreateFolder(buildDir + builds[buildIndex].id + '/');
-	    if (builds[buildIndex].pngCompression && !fileSystem.FolderExists('../game/images/compressed/')) fileSystem.CreateFolder('../game/images/compressed/');
+	    if (builds[buildIndex].pngCompression && !fileSystem.FolderExists(workingDir + 'images/compressed/')) fileSystem.CreateFolder(workingDir + 'images/compressed/');
     	copyFiles(images, buildDir + builds[buildIndex].id + '/i/', builds[buildIndex].pngCompression);
     	copyFiles(audio,  buildDir + builds[buildIndex].id + '/a/');
     	copyFiles(fonts,  buildDir + builds[buildIndex].id + '/f/');
