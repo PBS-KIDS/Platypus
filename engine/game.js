@@ -61,12 +61,19 @@ platformer.classes.game = (function(){
 
 		// Send the following events along to the scene to handle as necessary:
 		var self = this,
-		callback = function(eventId, event){
-			self.currentScene.trigger(eventId, event);
-//			if(event.metaKey && event.keyCode == 37){ //This causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-				event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of gameplay.
-//			}
-		};
+		callback = null;
+		
+		if(definition.debug){ //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
+			callback = function(eventId, event){
+				self.currentScene.trigger(eventId, event);
+			};
+		} else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
+			callback = function(eventId, event){
+				self.currentScene.trigger(eventId, event);
+				event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+			};
+		}
+		
 		this.bindings = [];
 		this.addEventListener(window, 'keydown', callback);
 		this.addEventListener(window, 'keyup',   callback);
