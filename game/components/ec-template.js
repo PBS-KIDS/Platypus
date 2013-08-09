@@ -55,17 +55,6 @@ Summarize the purpose of this component here.
 			*********************************************************************/
 		},
 
-		/*********************************************************************
-	     TODO: Additional methods that are *not* events may be added using the
-	           same format as above. No method names should match the event
-	           names listed below.
-	           
-			   e.g.
-			   "destroy": function(){
-			       // clean up component properties here
-			   }
-	    *********************************************************************/
-		
 		events: {// These are messages that this component listens for
 			/*********************************************************************
 			 TODO: Add messages and their accompanying methods to handle the
@@ -76,6 +65,20 @@ Summarize the purpose of this component here.
 				       // Run loading code here
 				   }
 			*********************************************************************/
+		},
+		
+		methods: {// These are methods that are called by this component
+			/*********************************************************************
+		     TODO: Additional methods that are *not* events may be added using the
+		           same format as above. No method names should match the event
+		           names listed above.
+		           
+				   e.g.
+				   "destroy": function(){
+				       // clean up component properties here
+				   }
+		    *********************************************************************/
+			
 		}
 	});
 })();
