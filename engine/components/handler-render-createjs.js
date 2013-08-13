@@ -49,8 +49,9 @@ A component that handles updating rendering for components that are rendering vi
       
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
-      	"hover": false;
-      	"click": false; 
+      	"touch": false, // Whether to listen for touch events (triggers mouse events)
+      	"click": false, // Whether to listen for mouse events
+      	"camera": false // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
       }
     }
     
@@ -85,34 +86,7 @@ A component that handles updating rendering for components that are rendering vi
 			// The following appends necessary information to displayed objects to allow them to receive touches and clicks
 			if(definition.acceptInput){
 				if(definition.acceptInput.click || definition.acceptInput.touch){
-					if(definition.acceptInput.touch && createjs.Touch.isSupported()){
-						createjs.Touch.enable(this.stage);
-					}
-
-					this.stage.addEventListener('stagemousedown', function(event) {
-						self.owner.trigger('mousedown', {
-							event: event.nativeEvent,
-							x: event.stageX / self.stage.scaleX,
-							y: event.stageY / self.stage.scaleY,
-							entity: self.owner
-						});
-						event.addEventListener('stagemouseup', function(event){
-							self.owner.trigger('mouseup', {
-								event: event.nativeEvent,
-								x: event.stageX / self.stage.scaleX,
-								y: event.stageY / self.stage.scaleY,
-								entity: self.owner
-							});
-						});
-						event.addEventListener('stagemousemove', function(event){
-							self.owner.trigger('mousemove', {
-								event: event.nativeEvent,
-								x: event.stageX / self.stage.scaleX,
-								y: event.stageY / self.stage.scaleY,
-								entity: self.owner
-							});
-						});
-					});
+					this.setupInput(definition.acceptInput.touch, definition.acceptInput.camera);
 				}
 			}
 			
@@ -242,9 +216,73 @@ A component that handles updating rendering for components that are rendering vi
 				this.canvas.width  = this.canvas.offsetWidth * dpr;
 				this.canvas.height = this.canvas.offsetHeight * dpr;
 				this.stage.setTransform(-cameraInfo.viewportLeft * cameraInfo.scaleX * dpr, -cameraInfo.viewportTop * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr);
+				
+				if(this.moveMouse){
+					this.moveMouse(cameraInfo);
+				}
 			}
 		},
 		methods:{
+			setupInput: function(enableTouch, cameraMovementMovesMouse){
+				var self = this,
+				originalEvent   = null,
+				x        = 0,
+				y        = 0,
+				setXY   = function(event){
+					originalEvent = event;
+					x  = event.stageX / self.stage.scaleX + self.camera.x;
+					y  = event.stageY / self.stage.scaleY + self.camera.y;
+				};
+				
+				if(enableTouch && createjs.Touch.isSupported()){
+					createjs.Touch.enable(this.stage);
+				}
+
+				this.stage.addEventListener('stagemousedown', function(event) {
+					setXY(event);
+					self.owner.trigger('mousedown', {
+						event: event.nativeEvent,
+						x: x,
+						y: y,
+						entity: self.owner
+					});
+					
+					// This function is used to trigger a move event when the camera moves and the mouse is still triggered.
+					if(cameraMovementMovesMouse){
+						self.moveMouse = function(){
+							setXY(originalEvent);
+							self.owner.trigger('mousemove', {
+								event: event.nativeEvent,
+								x: x,
+								y: y,
+								entity: self.owner
+							});
+						};
+					}
+				});
+				this.stage.addEventListener('stagemouseup', function(event){
+					setXY(event);
+					self.owner.trigger('mouseup', {
+						event: event.nativeEvent,
+						x: x,
+						y: y,
+						entity: self.owner
+					});
+					if(cameraMovementMovesMouse){
+						self.moveMouse = null;
+					}
+				});
+				this.stage.addEventListener('stagemousemove', function(event){
+					setXY(event);
+					self.owner.trigger('mousemove', {
+						event: event.nativeEvent,
+						x: x,
+						y: y,
+						entity: self.owner
+					});
+				});
+			},
+			
 			destroy: function(){
 				this.stage = undefined;
 				this.owner.rootElement.removeChild(this.canvas);
