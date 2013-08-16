@@ -236,6 +236,9 @@ This component is attached to entities that will appear in the game world. It re
 			if(this.currentAnimation){
 				this.anim.gotoAndPlay(this.currentAnimation);
 			}
+			
+			//Check state against entity's prior state to update animation if necessary on instantiation.
+			this['logical-state'](this.owner.state);
 		},
 		
 		events: {
@@ -327,7 +330,11 @@ This component is attached to entities that will appear in the game world. It re
 				
 				this.anim.x = this.owner.x;
 				this.anim.y = this.owner.y;
-				this.anim.z = this.owner.z;
+				
+				if(this.anim.z !== this.owner.z){
+					this.stage.reorder = true;
+					this.anim.z = this.owner.z;
+				}
 				
 				//Special case affecting rotation of the animation
 				if(this.rotate || this.mirror || this.flip){

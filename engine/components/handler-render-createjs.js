@@ -123,7 +123,6 @@ A component that handles updating rendering for components that are rendering vi
 				height: 0,
 				buffer: definition.buffer || 0
 			};
-			this.lastChild = undefined;
 			
 			this.timeElapsed = {
 				name: 'Render',
@@ -164,10 +163,9 @@ A component that handles updating rendering for components that are rendering vi
 				this.paused = 0;
 			},
 			"tick": function(resp){
-				var lastIndex = 0,
-				child   = undefined,
-				time    = new Date().getTime(),
-				message = this.renderMessage;
+				var child = undefined,
+				time      = new Date().getTime(),
+				message   = this.renderMessage;
 				
 				message.deltaT = resp.deltaT;
 
@@ -210,12 +208,11 @@ A component that handles updating rendering for components that are rendering vi
 					}
 				}
 
-				lastIndex = this.stage.getNumChildren() - 1; //checked here, since handle-render could add a child
-				if (this.stage.getChildAt(lastIndex) !== this.lastChild) {
+				if (this.stage.reorder) {
+					this.stage.reorder = false;
 					this.stage.sortChildren(function(a, b) {
 						return a.z - b.z;
 					});
-					this.lastChild = this.stage.getChildAt(lastIndex);
 				}
 				
 				this.timeElapsed.name = 'Render-Prep';
