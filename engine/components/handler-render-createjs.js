@@ -271,12 +271,14 @@ A component that handles updating rendering for components that are rendering vi
 				});
 				this.stage.addEventListener('stagemousemove', function(event){
 					setXY(event);
-					self.owner.trigger('mousemove', {
-						event: event.nativeEvent,
-						x: x,
-						y: y,
-						entity: self.owner
-					});
+					if(event.nativeEvent.which || event.nativeEvent.touches){
+						self.owner.trigger('mousemove', {
+							event: event.nativeEvent,
+							x: x,
+							y: y,
+							entity: self.owner
+						});
+					}
 				});
 			},
 			
