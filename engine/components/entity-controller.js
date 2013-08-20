@@ -20,6 +20,10 @@ This component listens for input messages triggered on the entity and updates th
 ### Local Broadcasts:
 - **mouse:mouse-left:down, mouse:mouse-left:up, mouse:mouse-middle:down, mouse:mouse-middle:up, mouse:mouse-right:down, mouse:mouse-right:up** - This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
   > @param message (DOM Event object) - The original mouse event object is passed along with the control message.
+- **north, north-northeast, northeast, east-northeast, east, east-southeast, southeast, south-southeast, south, south-southwest, southwest, west-southwest, west, west-northwest, northwest, north-northwest** - If the soft joystick is enabled on this component, it will broadcast these directional messages if the joystick is in use.
+  > @param message (DOM Event object) - Mirrors the mouse event object that moved the joystick.
+- **joystick-orientation** - If the soft joystick is enabled on this component, this message will trigger to provide the current orientation of the joystick.
+  > @param orientation (number) - A number in radians representing the orientation of the joystick.
 - **[Messages specified in definition]** - Broadcasts active states using the JSON-defined message on each `handle-controller` message. Active states include `pressed` being true or `released` being true. If both of these states are false, the message is not broadcasted.
   > @param message.pressed (boolean) - Whether the current input is active.
   > @param message.released (boolean) - Whether the current input was active last tick but is no longer active.
@@ -41,11 +45,51 @@ This component listens for input messages triggered on the entity and updates th
         
         "mouse:left-button"
         // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `render-animation` component).
-      }
+      },
+	  
+	  "joystick":{
+	  // Optional. Determines whether this entity should listen for mouse events to trigger directional events. Can be set simply to "true" to accept all joystick defaults
+	      
+	      "directions": 8,
+		  // Optional: 4, 8, or 16. Determines how many directions to broadcast. Default is 4 ("north", "east", "south", and "west").
+		  
+		  "innerRadius": 30,
+		  // Optional. Number determining how far the mouse must be from the entity's position before joystick events should be triggered. Default is 0.
+		  
+		  "outerRadius": 60
+		  // Optional. Number determining how far the mouse can move away from the entity's position before the joystick stops triggering events. Default is Infinity.
+	  }
     }
 */
 platformer.components['entity-controller'] = (function(){
-	var state = function(event, trigger){
+	var distance = function(origin, destination){
+		var x = destination.x - origin.x,
+		y = destination.y - origin.y;
+		
+		return Math.sqrt(x*x + y*y);
+	},
+	angle = function(origin, destination, distance){
+		var x = destination.x - origin.x,
+		y     = destination.y - origin.y,
+		a     = 0,
+		circle= Math.PI * 2;
+		
+		if(!distance){
+			return a;
+		}
+
+		a = Math.acos(x/distance);
+		if (y < 0){
+			a = circle - a;
+		}
+		return a;
+	},
+	directions = [null,null,null,null, //joystick directions
+		['east', 'south', 'west', 'north'], null, null, null,
+		['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
+		['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
+	],
+	state = function(event, trigger){
 	    this.event = event;
 	    this.trigger = trigger;
 	    this.filters = false;
@@ -151,6 +195,13 @@ platformer.components['entity-controller'] = (function(){
 				this.addListener(key + ':down');
 			}
 		}
+		
+		if(definition.joystick){
+			this.joystick = {};
+			this.joystick.directions = definition.joystick.directions || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
+			this.joystick.innerRadius = definition.joystick.innerRadius || 0;
+			this.joystick.outerRadius = definition.joystick.outerRadius || Infinity;
+		}
 	},
 	stateProto = state.prototype,
 	proto      = component.prototype;
@@ -211,18 +262,46 @@ platformer.components['entity-controller'] = (function(){
 	
 	// The following translate CreateJS mouse and touch events into messages that this controller can handle in a systematic way
 	
+	proto.handleJoy = function(event){
+		var segment = Math.PI / (this.joystick.directions / 2),
+		dist        = distance(this.owner, event),
+		orientation = 0,
+		direction   = '';
+		
+		if((dist > this.joystick.outerRadius) || (dist < this.joystick.innerRadius)){
+			return;
+		} else {
+			orientation = angle(this.owner, event, dist);
+			direction = directions[this.joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
+			
+			this.owner.trigger(direction, event);
+			this.owner.trigger("joystick-orientation", orientation);
+		}
+	};
+	
 	proto['mousedown'] = function(value){
 		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+		if(this.joystick){
+			this.owner.trigger('joystick:down', value.event);
+			this.handleJoy(value);
+		}
 	}; 
 		
 	proto['mouseup'] = function(value){
 		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+		if(this.joystick){
+			this.owner.trigger('joystick:up', value.event);
+			this.handleJoy(value);
+		}
 	};
 	
 	proto['mousemove'] = function(value){
 		if(this.actions['mouse:left-button'] && (this.actions['mouse:left-button'].over !== value.over))     this.actions['mouse:left-button'].over = value.over;
 		if(this.actions['mouse:middle-button'] && (this.actions['mouse:middle-button'].over !== value.over)) this.actions['mouse:middle-button'].over = value.over;
 		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
+		if(this.joystick){
+			this.handleJoy(value);
+		}
 	};
 /*
 	proto['mouseover'] = function(value){
