@@ -200,12 +200,28 @@ This component is attached to entities that will appear in the game world. It re
 			var scaleX = spriteSheet.images[0].scaleX || 1,
 			scaleY     = spriteSheet.images[0].scaleY || 1;
 			if((scaleX !== 1) || (scaleY !== 1)){
-				spriteSheet.frames = {
-					width: spriteSheet.frames.width * scaleX,	
-					height: spriteSheet.frames.height * scaleY,	
-					regX: spriteSheet.frames.regX * scaleX,	
-					regY: spriteSheet.frames.regY * scaleY
-				};
+				if(spriteSheet.frames.length){ //frames are an array
+					var arr = [];
+					for (var i = 0; i < spriteSheet.frames.length; i++){
+						arr.push([
+						  spriteSheet.frames[i][0] * scaleX,
+						  spriteSheet.frames[i][1] * scaleY,
+						  spriteSheet.frames[i][2] * scaleX,
+						  spriteSheet.frames[i][3] * scaleY,
+						  spriteSheet.frames[i][4],
+						  spriteSheet.frames[i][5] * scaleX,
+						  spriteSheet.frames[i][6] * scaleY
+						]);
+					}
+					spriteSheet.frames = arr;
+				} else {
+					spriteSheet.frames = {
+						width: spriteSheet.frames.width * scaleX,	
+						height: spriteSheet.frames.height * scaleY,	
+						regX: spriteSheet.frames.regX * scaleX,	
+						regY: spriteSheet.frames.regY * scaleY
+					};
+				}
 			}
 			spriteSheet = new createjs.SpriteSheet(spriteSheet);
 			this.anim = new createjs.BitmapAnimation(spriteSheet);
