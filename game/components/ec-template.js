@@ -67,16 +67,36 @@ Summarize the purpose of this component here.
 			*********************************************************************/
 		},
 		
-		methods: {// These are methods that are called by this component
+		methods: {// These are methods that are called by this component.
 			/*********************************************************************
 		     TODO: Additional methods that are *not* events may be added using the
 		           same format as above. No method names should match the event
 		           names listed above.
 		           
 				   e.g.
-				   "destroy": function(){
+				   destroy: function(){
 				       // clean up component properties here
 				   }
+		    *********************************************************************/
+			
+		},
+		
+		publicMethods: {// These are methods that are available on the entity.
+			/*********************************************************************
+		     TODO: Additional methods that should be invoked at the entity level,
+		           not just the local component level. Only one method of a given
+		           name can be used on the entity, so be aware other components
+		           may attempt to add an identically named method to the entity.
+		           No method names should match the event or method names listed
+		           above, since they can also be called at the component level.
+		           
+				   e.g.
+				   "whatIsMyFavoriteColor": function(){
+				       return '#ffff00';
+				   }
+				   
+				   This function is callable on the entity as
+				   entity.whatIsMyFavoriteColor().
 		    *********************************************************************/
 			
 		}
