@@ -117,6 +117,11 @@ platformer.components['entity-linker'] = (function(){
 			linkId: this.linkId,
 			reciprocate: false
 		};
+		
+		// In case linker is added after adoption
+		if(this.owner.parent){
+			this['adopted']();
+		}
 	};
 	var proto = component.prototype;
 	
