@@ -6,7 +6,12 @@
 	ns.components = {};
 	
 	ns.createComponentClass = function(componentDefinition){
-		var component = function(owner, definition){
+		var	createWrapper = function(self, name){
+			return function(value, debug){
+				self[name](value, debug);
+			};
+		},
+		component = function(owner, definition){
 			var func = null,
 			name     = '';
 			
@@ -20,9 +25,8 @@
 					name = func;
 					if(definition.aliases && definition.aliases[name]){
 						name = definition.aliases[name];
-						this[name] = this[func];
 					}
-					this.addListener(name);
+					this.addListener(name, createWrapper(this, func));
 				}
 			}
 			
@@ -93,10 +97,7 @@
 		};
 		
 		proto.addListener = function(messageId, callback){
-			var self = this,
-			func = callback || function(value, debug){
-				self[messageId](value, debug);
-			};
+			var func = callback || createWrapper(this, messageId);
 			this.owner.bind(messageId, func);
 			this.listeners[messageId] = func;
 		};
