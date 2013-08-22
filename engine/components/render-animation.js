@@ -352,6 +352,10 @@ This component is attached to entities that will appear in the game world. It re
 					this.anim.z = this.owner.z;
 				}
 				
+				if(this.owner.opacity || (this.owner.opacity === 0)){
+					this.anim.alpha = this.owner.opacity;
+				}
+				
 				//Special case affecting rotation of the animation
 				if(this.rotate || this.mirror || this.flip){
 					angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;

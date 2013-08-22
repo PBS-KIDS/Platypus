@@ -86,12 +86,11 @@ platformer.classes.entity = (function(){
 		self.loopCheck  = [];
 		self.type = def.id;
 
-		for (index in defaultProperties){ // This takes the list of properties in the JSON definition and appends them directly to the object.
-			self[index] = defaultProperties[index];
-		}
-		for (index in instanceProperties){ // This takes the list of options for this particular instance and appends them directly to the object.
-			self[index] = instanceProperties[index];
-		}
+		this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
+		this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
+		this.bind('set-property', function(keyValuePairs){
+			self.setProperty(keyValuePairs);
+		});
 		
 		if(!self.state){
 			self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
@@ -189,6 +188,14 @@ platformer.classes.entity = (function(){
 		}
 		this.loopCheck.length = this.loopCheck.length - 1; 
 		return i;
+	};
+	
+	proto.setProperty = function(keyValuePairs){
+		var index = '';
+		
+		for (index in keyValuePairs){ // This takes a list of properties and appends them directly to the object.
+			this[index] = keyValuePairs[index];
+		}
 	};
 	
 	proto.getMessageIds = function(){

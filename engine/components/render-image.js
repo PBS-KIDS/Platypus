@@ -186,6 +186,16 @@ platformer.components['render-image'] = (function(){
 	
 	proto['handle-render'] = function(obj){
 		var angle = null;
+		
+		if(!this.stage) { //In case this component was added after handler-render is initiated
+			this['handle-render-load'](resp);
+			if(!this.stage){
+				console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
+				this.owner.removeComponent(this);
+				return;
+			}
+		}
+
 		if(this.rotate || this.mirror || this.flip){
 			angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
 			
@@ -212,7 +222,15 @@ platformer.components['render-image'] = (function(){
 		
 		this.image.x = this.owner.x;
 		this.image.y = this.owner.y;
-		this.image.z = this.owner.z;
+
+		if(this.anim.z !== this.owner.z){
+			this.stage.reorder = true;
+			this.anim.z = this.owner.z;
+		}
+		
+		if(this.owner.opacity || (this.owner.opacity === 0)){
+			this.anim.alpha = this.owner.opacity;
+		}
 	};
 	
 	proto['logical-state'] = function(state){
