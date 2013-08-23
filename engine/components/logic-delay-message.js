@@ -34,8 +34,11 @@ This component allows certain messages to trigger new messages at a later time. 
           "delay": 1500,
           // This is the delay in milliseconds before which the new message should be triggered.
           
-          "singleInstance": true
+          "singleInstance": true,
           // This determines whether more "saw-clown" events triggered during the delayed response period should be treated as new messages to be triggered or whether the initial instance prevents additional instances from occurring.
+
+          "cancelEvent": "dropped-popcorn"
+          // If set, on receiving this event, the component will not trigger the "laugh" event after all if it's currently planning to.
         },
         
         // Multiple delay messages can be set up on this component.
