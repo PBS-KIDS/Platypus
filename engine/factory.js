@@ -13,7 +13,9 @@
 		},
 		component = function(owner, definition){
 			var func = null,
-			name     = '';
+			alias    = '',
+			name     = '',
+			wrapped  = null;
 			
 			this.owner = owner;
 			this.listeners = [];
@@ -22,19 +24,28 @@
 			
 			if(componentDefinition.events){
 				for(func in componentDefinition.events){
-					name = func;
-					if(definition.aliases && definition.aliases[name]){
-						name = definition.aliases[name];
+					wrapped = createWrapper(this, func);
+					this.addListener(func, wrapped);
+					
+					if(definition.aliases){
+						for (var alias in definition.aliases){
+							if(definition.aliases[alias] === func){
+								this.addListener(alias, wrapped);
+							}
+						}
 					}
-					this.addListener(name, createWrapper(this, func));
 				}
 			}
 			
 			if(componentDefinition.publicMethods){
 				for(func in componentDefinition.publicMethods){
 					name = func;
-					if(definition.aliases && definition.aliases[name]){
-						name = definition.aliases[name];
+					if(definition.aliases){
+						for (var alias in definition.aliases){
+							if(definition.aliases[alias] === func){
+								name = alias;
+							}
+						}
 					}
 					this.addMethod(name, componentDefinition.publicMethods[func]);
 				}
