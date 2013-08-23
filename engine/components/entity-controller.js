@@ -15,6 +15,8 @@ This component listens for input messages triggered on the entity and updates th
   > @param message.event (DOM Event object) - This event object is passed along with the new message.
 - **mousemove** - Updates mouse action states with whether the mouse is currently over the entity.
   > @param message.over (boolean) - Whether the mouse is over the input entity.
+- **pause-controls** - This message will stop the controller from triggering messages until "unpause-controls" is triggered on the entity.
+- **unpause-controls** - This message will allow the controller to trigger messages until "pause-controls" is triggered on the entity.
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, sets the appropriate state and broadcasts the associated message on the next `handle-controller` message. These messages come in pairs and typically have the form of "keyname:up" and "keyname:down" specifying the current state of the input.
   
 ### Local Broadcasts:
@@ -33,6 +35,9 @@ This component listens for input messages triggered on the entity and updates th
 ## JSON Definition:
     {
       "type": "entity-controller",
+      
+      "paused": true,
+      // Optional. Whether input controls should start deactivated. Default is false.
       
       "controlMap":{
       // Required. Use the controlMap property object to map inputs to messages that should be triggered. At least one control mapping should be included. The following are a few examples:
@@ -61,7 +66,7 @@ This component listens for input messages triggered on the entity and updates th
 	  }
     }
 */
-platformer.components['entity-controller'] = (function(){
+(function(){
 	var distance = function(origin, destination){
 		var x = destination.x - origin.x,
 		y = destination.y - origin.y;
@@ -89,6 +94,7 @@ platformer.components['entity-controller'] = (function(){
 		['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
 		['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
 	],
+	mouseMap = ['left-button', 'middle-button', 'right-button'],
 	state = function(event, trigger){
 	    this.event = event;
 	    this.trigger = trigger;
@@ -103,7 +109,6 @@ platformer.components['entity-controller'] = (function(){
 			over:      false
 		};
 	},
-	mouseMap = ['left-button', 'middle-button', 'right-button'],
 	createUpHandler = function(state){
 		if(state.length){
 			return function(value){
@@ -144,67 +149,7 @@ platformer.components['entity-controller'] = (function(){
 		}
 		return actionState;
 	},
-	component = function(owner, definition){
-		var i       = 0,
-		j           = 0,
-		k           = 0,
-		key         = '',
-		actionState = undefined,
-		self        = this,
-		trigger     = function(event, obj){
-			self.owner.trigger(event, obj);
-		};
-		
-		this.type   = 'entity-controller';
-		this.owner  = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-controller', 'mousedown', 'mouseup', 'mousemove']);
-		
-		if(definition && definition.controlMap){
-			this.owner.controlMap = definition.controlMap; // this is used and expected by the handler-controller to handle messages not covered by key and mouse inputs.
-			this.actions  = {};
-			for(key in definition.controlMap){
-				if(typeof definition.controlMap[key] === 'string'){
-					actionState = addActionState(this.actions, definition.controlMap[key], trigger);
-				} else {
-					actionState = [];
-					if(definition.controlMap[key].length){
-						for (i = 0; i < definition.controlMap[key].length; i++){
-							actionState[i] = addActionState(this.actions, definition.controlMap[key][i], trigger);
-						}
-					} else {
-						k = 0;
-						for (j in definition.controlMap[key]){
-							if(typeof definition.controlMap[key][j] === 'string'){
-								actionState[k] = addActionState(this.actions, definition.controlMap[key][j], trigger, j);
-								k += 1;
-							} else {
-								for (i = 0; i < definition.controlMap[key][j].length; i++){
-									actionState[k] = addActionState(this.actions, definition.controlMap[key][j][i], trigger, j);
-									k += 1;
-								}
-							}
-						}
-					}
-				}
-				this[key + ':up']   = createUpHandler(actionState);
-				this[key + ':down'] = createDownHandler(actionState);
-				this.addListener(key + ':up');
-				this.addListener(key + ':down');
-			}
-		}
-		
-		if(definition.joystick){
-			this.joystick = {};
-			this.joystick.directions = definition.joystick.directions || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
-			this.joystick.innerRadius = definition.joystick.innerRadius || 0;
-			this.joystick.outerRadius = definition.joystick.outerRadius || Infinity;
-		}
-	},
-	stateProto = state.prototype,
-	proto      = component.prototype;
+	stateProto = state.prototype;
 	
 	stateProto.update = function(){
 		var i = 0;
@@ -249,100 +194,132 @@ platformer.components['entity-controller'] = (function(){
 	stateProto.isReleased = function(){
 		return !this.current && this.last;
 	};
-	
-	proto['handle-controller'] = function(){
-		var action    = '';
+
+	return platformer.createComponentClass({
+		id: 'entity-controller',
 		
-		if(this.actions){
-			for (action in this.actions){
-				this.actions[action].update();
+		constructor: function(definition){
+			var i       = 0,
+			j           = 0,
+			k           = 0,
+			key         = '',
+			actionState = undefined,
+			self        = this,
+			trigger     = function(event, obj){
+				if(!self.paused){
+					self.owner.trigger(event, obj);
+				}
+			};
+			
+			this.paused = definition.paused || false;
+			
+			if(definition && definition.controlMap){
+				this.owner.controlMap = definition.controlMap; // this is used and expected by the handler-controller to handle messages not covered by key and mouse inputs.
+				this.actions  = {};
+				for(key in definition.controlMap){
+					if(typeof definition.controlMap[key] === 'string'){
+						actionState = addActionState(this.actions, definition.controlMap[key], trigger);
+					} else {
+						actionState = [];
+						if(definition.controlMap[key].length){
+							for (i = 0; i < definition.controlMap[key].length; i++){
+								actionState[i] = addActionState(this.actions, definition.controlMap[key][i], trigger);
+							}
+						} else {
+							k = 0;
+							for (j in definition.controlMap[key]){
+								if(typeof definition.controlMap[key][j] === 'string'){
+									actionState[k] = addActionState(this.actions, definition.controlMap[key][j], trigger, j);
+									k += 1;
+								} else {
+									for (i = 0; i < definition.controlMap[key][j].length; i++){
+										actionState[k] = addActionState(this.actions, definition.controlMap[key][j][i], trigger, j);
+										k += 1;
+									}
+								}
+							}
+						}
+					}
+					this[key + ':up']   = createUpHandler(actionState);
+					this[key + ':down'] = createDownHandler(actionState);
+					this.addListener(key + ':up');
+					this.addListener(key + ':down');
+				}
+			}
+			
+			if(definition.joystick){
+				this.joystick = {};
+				this.joystick.directions = definition.joystick.directions || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
+				this.joystick.innerRadius = definition.joystick.innerRadius || 0;
+				this.joystick.outerRadius = definition.joystick.outerRadius || Infinity;
+			}
+		},
+		
+		events:{
+			'handle-controller': function(){
+				var action    = '';
+				
+				if(this.actions){
+					for (action in this.actions){
+						this.actions[action].update();
+					}
+				}
+			},
+			
+			'mousedown': function(value){
+				this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+				if(this.joystick){
+					this.owner.trigger('joystick:down', value.event);
+					this.handleJoy(value);
+				}
+			},
+			
+			'mouseup': function(value){
+				this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+				if(this.joystick){
+					this.owner.trigger('joystick:up', value.event);
+					this.handleJoy(value);
+				}
+			},
+			
+			'mousemove': function(value){
+				if(this.actions['mouse:left-button'] && (this.actions['mouse:left-button'].over !== value.over))     this.actions['mouse:left-button'].over = value.over;
+				if(this.actions['mouse:middle-button'] && (this.actions['mouse:middle-button'].over !== value.over)) this.actions['mouse:middle-button'].over = value.over;
+				if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
+				if(this.joystick){
+					this.handleJoy(value);
+				}
+			},
+			
+			'pause-controls': function(){
+				this.paused = true;
+			},
+			
+			'unpause-controls': function(){
+				this.paused = false;
+			}
+		},
+		
+		methods:{
+			handleJoy: function(event){
+				// The following translate CreateJS mouse and touch events into messages that this controller can handle in a systematic way
+				var segment = Math.PI / (this.joystick.directions / 2),
+				dist        = distance(this.owner, event),
+				orientation = 0,
+				direction   = '';
+				
+				if((dist > this.joystick.outerRadius) || (dist < this.joystick.innerRadius)){
+					return;
+				} else {
+					orientation = angle(this.owner, event, dist);
+					direction = directions[this.joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
+					
+					if(!this.paused){
+						this.owner.trigger(direction, event);
+						this.owner.trigger("joystick-orientation", orientation);
+					}
+				}
 			}
 		}
-	};
-	
-	// The following translate CreateJS mouse and touch events into messages that this controller can handle in a systematic way
-	
-	proto.handleJoy = function(event){
-		var segment = Math.PI / (this.joystick.directions / 2),
-		dist        = distance(this.owner, event),
-		orientation = 0,
-		direction   = '';
-		
-		if((dist > this.joystick.outerRadius) || (dist < this.joystick.innerRadius)){
-			return;
-		} else {
-			orientation = angle(this.owner, event, dist);
-			direction = directions[this.joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
-			
-			this.owner.trigger(direction, event);
-			this.owner.trigger("joystick-orientation", orientation);
-		}
-	};
-	
-	proto['mousedown'] = function(value){
-		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
-		if(this.joystick){
-			this.owner.trigger('joystick:down', value.event);
-			this.handleJoy(value);
-		}
-	}; 
-		
-	proto['mouseup'] = function(value){
-		this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
-		if(this.joystick){
-			this.owner.trigger('joystick:up', value.event);
-			this.handleJoy(value);
-		}
-	};
-	
-	proto['mousemove'] = function(value){
-		if(this.actions['mouse:left-button'] && (this.actions['mouse:left-button'].over !== value.over))     this.actions['mouse:left-button'].over = value.over;
-		if(this.actions['mouse:middle-button'] && (this.actions['mouse:middle-button'].over !== value.over)) this.actions['mouse:middle-button'].over = value.over;
-		if(this.actions['mouse:right-button'] && (this.actions['mouse:right-button'].over !== value.over))   this.actions['mouse:right-button'].over = value.over;
-		if(this.joystick){
-			this.handleJoy(value);
-		}
-	};
-/*
-	proto['mouseover'] = function(value){
-		this.owner.trigger('mouse:' + mouseMap[value.event.button] + ':over', value.event);
-	};
-
-	proto['mouseout'] = function(value){
-		this.owner.trigger('mouse:' + mouseMap[value.event.button] + ':out', value.event);
-	};
-*/
-	
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();
