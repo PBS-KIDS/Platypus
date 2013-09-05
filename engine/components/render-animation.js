@@ -570,7 +570,7 @@ This component is attached to entities that will appear in the game world. It re
 			
 			addPins: function(pins, regXs, regYs){
 				var i = 0, j = 0, pin = null, regX = 0, regY = 0,
-				isRegArray = !((typeof regX === 'number') && (typeof regY === 'number'));
+				isRegArray = !((typeof regXs === 'number') && (typeof regYs === 'number'));
 				
 				if(!isRegArray){
 					regX = regXs;

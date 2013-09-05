@@ -312,12 +312,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		},
 		
 		methods: {
-			checkTimeEvents: function(audioClip){
+			checkTimeEvents: function(audioClip, finished){
 				var currentTime = 0;
 				
 				if(audioClip.sequenceEvents){
 					currentTime = audioClip.getPosition();
-					while(audioClip.sequenceEvents.length && (audioClip.sequenceEvents[0].time <= currentTime)){
+					while(audioClip.sequenceEvents.length && (finished || (audioClip.sequenceEvents[0].time <= currentTime))){
 						this.owner.trigger(audioClip.sequenceEvents[0].event, audioClip.sequenceEvents[0].message);
 						audioClip.sequenceEvents.splice(0,1);
 					}
@@ -328,7 +328,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				//clean up active clips
 				this.removeClip(audioClip);
 				
-				this.checkTimeEvents(audioClip);
+				this.checkTimeEvents(audioClip, true);
 				
 				this.owner.triggerEvent('clip-complete');
 				
