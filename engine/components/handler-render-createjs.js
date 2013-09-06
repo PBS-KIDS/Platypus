@@ -229,13 +229,8 @@ A component that handles updating rendering for components that are rendering vi
 					originalEvent = event;
 					x  = event.stageX / self.stage.scaleX + self.camera.x;
 					y  = event.stageY / self.stage.scaleY + self.camera.y;
-				};
-				
-				if(enableTouch && createjs.Touch.isSupported()){
-					createjs.Touch.enable(this.stage);
-				}
-
-				this.stage.addEventListener('stagemousedown', function(event) {
+				},
+				mousedown = function(event) {
 					setXY(event);
 					self.owner.trigger('mousedown', {
 						event: event.nativeEvent,
@@ -256,8 +251,8 @@ A component that handles updating rendering for components that are rendering vi
 							});
 						};
 					}
-				});
-				this.stage.addEventListener('stagemouseup', function(event){
+				},
+				mouseup = function(event){
 					setXY(event);
 					self.owner.trigger('mouseup', {
 						event: event.nativeEvent,
@@ -268,8 +263,8 @@ A component that handles updating rendering for components that are rendering vi
 					if(cameraMovementMovesMouse){
 						self.moveMouse = null;
 					}
-				});
-				this.stage.addEventListener('stagemousemove', function(event){
+				},
+				mousemove = function(event){
 					setXY(event);
 					if(event.nativeEvent.which || event.nativeEvent.touches){
 						self.owner.trigger('mousemove', {
@@ -279,10 +274,27 @@ A component that handles updating rendering for components that are rendering vi
 							entity: self.owner
 						});
 					}
-				});
+				};
+				
+				if(enableTouch && createjs.Touch.isSupported()){
+					createjs.Touch.enable(this.stage);
+				}
+
+				this.stage.addEventListener('stagemousedown', mousedown);
+				this.stage.addEventListener('stagemouseup', mouseup);
+				this.stage.addEventListener('stagemousemove', mousemove);
+				
+				this.removeStageListeners = function(){
+					this.stage.removeEventListener('stagemousedown', mousedown);
+					this.stage.removeEventListener('stagemouseup', mouseup);
+					this.stage.removeEventListener('stagemousemove', mousemove);
+				};
 			},
 			
 			destroy: function(){
+				if(this.removeStageListeners){
+					this.removeStageListeners();
+				}
 				this.stage = undefined;
 				this.owner.rootElement.removeChild(this.canvas);
 				this.owner.element = null;
