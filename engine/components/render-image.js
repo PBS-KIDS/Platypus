@@ -236,11 +236,11 @@ This component is attached to entities that will appear in the game world. It re
 						this.stage.reorder = true;
 						this.container.z = this.owner.z;
 					}
+
+					if(this.owner.opacity || (this.owner.opacity === 0)){
+						this.container.alpha = this.owner.opacity;
+					}
 				}				
-				
-				if(this.owner.opacity || (this.owner.opacity === 0)){
-					this.container.alpha = this.owner.opacity;
-				}
 
 				if(this.skewX){
 					this.container.skewX = this.skewX;
