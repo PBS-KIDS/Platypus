@@ -47,8 +47,8 @@ platformer.components['collision-tiles'] = (function(){
 		// Messages that this component listens for
 		this.listeners = [];
 		
-		this.owner.getTiles = function(aabb, prevAABB){
-			return self.getTiles(aabb, prevAABB);
+		this.owner.getTileShapes = function(aabb, prevAABB){
+			return self.getTileShapes(aabb, prevAABB);
 		};
 		this.owner.getAABB = function(){
 			return self.getAABB();
@@ -76,30 +76,27 @@ platformer.components['collision-tiles'] = (function(){
 		}
 	};
 	
-	proto.getTiles = function(aabb, prevAABB){
+	proto.getTileShapes = function(aabb, prevAABB){
 		var left = Math.max(Math.floor(aabb.left   / this.tileWidth),  0),
 		top      = Math.max(Math.floor(aabb.top    / this.tileHeight), 0),
 		right    = Math.min(Math.ceil(aabb.right   / this.tileWidth),  this.collisionMap.length),
 		bottom   = Math.min(Math.ceil(aabb.bottom  / this.tileHeight), this.collisionMap[0].length),
 		x        = 0,
 		y        = 0,
-		tiles   = [];
+		shapes   = [];
 		
 		for (x = left; x < right; x++){
 			for (y = top; y < bottom; y++){
 				if (this.collisionMap[x][y] != -1) {
 					if(!(this.platformIndex === this.collisionMap[x][y]) || (prevAABB.bottom <= y * this.tileHeight)){
-						tiles.push({ //TODO: Make some optimizations here. Remove creation of objects if possible. - DDD
-							gridX: x,
-							gridY: y,
-							shapes: [new platformer.classes.collisionShape([x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]])]
-						});
+						//TODO: Make some optimizations here. Remove creation of objects if possible. - DDD
+						shapes[shapes.length] = new platformer.classes.collisionShape(null, [x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]], [0,0], 'tiles');
 					}
 				}
 			}
 		}
 		
-		return tiles;
+		return shapes;
 	};
 	
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

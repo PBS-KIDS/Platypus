@@ -84,6 +84,8 @@ platformer.components['render-debug'] = (function(){
 		comps    = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
 		components = [],
 		over     = false;
+		var collShape = undefined;
+		
 		
 		for (var i in comps) components[i] = comps[i].type;
 		
@@ -102,9 +104,16 @@ platformer.components['render-debug'] = (function(){
 			var aabb   = this.owner.getAABB();
 			width      = this.initialWidth  = aabb.width;
 			height     = this.initialHeight = aabb.height;
-			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,0,255,0.1)").setStrokeStyle(3).beginStroke("#f0f").rect(0, 0, width, height));
 			this.regX  = width  / 2;
 			this.regY  = height / 2;
+			collShape = (this.owner.getShapes())[0];
+			//if (collShape.type == 'rectangle')
+			//{
+			
+			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,0,255,0.1)").setStrokeStyle(3).beginStroke("#f0f").rect(0, 0, width, height));
+			if (collShape.type == 'circle') {
+				this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,0,255,0.1)").setStrokeStyle(3).beginStroke("#f0f").drawCircle(width/2, height/2, collShape.radius));
+			}
 		} else {
 			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
 		}

@@ -195,8 +195,14 @@ platformer.components['collision-basic'] = (function(){
 			var marginBottom = definition.marginBottom || margin;
 			var points = [[-halfWidth - marginLeft, -halfHeight - marginTop], [halfWidth + marginRight, halfHeight + marginBottom]];
 			var offset = [(definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2, (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2];
-			shapes = [{offset: offset, points: points, shape: 'rectangle'}];
+			var shapeType = definition.shapeType || 'rectangle';
+			shapes = [{offset: offset, points: points, type: shapeType}];
 		}
+		
+		this.collisionType = definition.collisionType || 'none';
+		
+		this.owner.collisionTypes = this.owner.collisionTypes || [];
+		this.owner.collisionTypes[this.owner.collisionTypes.length] = this.collisionType;
 		
 		// Messages that this component listens for
 		this.listeners = [];
@@ -207,21 +213,22 @@ platformer.components['collision-basic'] = (function(){
 		                   'relocate-entity',
 		                   'resolve-momentum']);
 		this.shapes = [];
+		this.prevShapes = [];
 		this.entities = undefined;
 		for (x in shapes){
-			this.shapes.push(new platformer.classes.collisionShape([this.owner.x, this.owner.y], shapes[x].type, shapes[x].points, shapes[x].offset, shapes[x].radius));
-			this.prevAABB.include(this.shapes[x].getAABB());
+			this.shapes.push(new platformer.classes.collisionShape(this.owner, [this.owner.x, this.owner.y], shapes[x].type, shapes[x].points, shapes[x].offset, this.collisionType)); //, shapes[x].radius
+			this.prevShapes.push(new platformer.classes.collisionShape(this.owner, [this.owner.x, this.owner.y], shapes[x].type, shapes[x].points, shapes[x].offset, this.collisionType)); //, shapes[x].radius
+			this.prevAABB.include(this.prevShapes[x].getAABB());
 			this.aabb.include(this.shapes[x].getAABB());
 		}
-
-		this.collisionType = definition.collisionType || 'none';
+		
+		
 		
 		if(definition.jumpThrough){
 			this.owner.jumpThrough = true;
 		}
 		
-		this.owner.collisionTypes = this.owner.collisionTypes || [];
-		this.owner.collisionTypes[this.owner.collisionTypes.length] = this.collisionType;
+		
 
 		this.owner.getAABB = reassignFunction(this.owner.getAABB, function(collisionType){
 			return self.getAABB();
@@ -233,6 +240,10 @@ platformer.components['collision-basic'] = (function(){
 
 		this.owner.getShapes = reassignFunction(this.owner.getShapes, function(collisionType){
 			return self.getShapes();
+		}, this.collisionType);
+		
+		this.owner.getPrevShapes = reassignFunction(this.owner.getPrevShapes, function(collisionType){
+			return self.getPrevShapes();
 		}, this.collisionType);
 			
 		this.owner.getPreviousX = reassignFunction(this.owner.getPreviousX, function(collisionType){
@@ -290,8 +301,13 @@ platformer.components['collision-basic'] = (function(){
 	};
 
 	proto['prepare-for-collision'] = function(resp){
+		var tempShapes = this.prevShapes;
+		this.prevShapes = this.shapes;
+		this.shapes = tempShapes;
+		
 		this.prevAABB.set(this.aabb);
 		this.aabb.reset();
+		
 		
 		// absorb velocities from the last logic tick
 		if(!this.accelerationAbsorbed && resp){
@@ -322,7 +338,7 @@ platformer.components['collision-basic'] = (function(){
 
 		this.aabb.reset();
 		for (var x in this.shapes){
-			this.shapes[x].reset(this.owner.x, this.owner.y);
+			this.shapes[x].update(this.owner.x, this.owner.y);
 			this.aabb.include(this.shapes[x].getAABB());
 		}
 
@@ -349,16 +365,11 @@ platformer.components['collision-basic'] = (function(){
 	};
 	
 	proto.getShapes = function(){
-		var shapes = this.shapes.slice();
-		
-/*		if(this.entities && (this.entities.length > 1)){
-			for (var x = 0; x < this.entities.length; x++){
-				if(this.entities[x] !== this.owner){
-					shapes = shapes.concat(this.entities[x].shapes || this.entities[x].getShapes());
-				}
-			}
-		}*/
-		return shapes;
+		return this.shapes;
+	};
+	
+	proto.getPrevShapes = function(){
+		return this.prevShapes;
 	};
 
 	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.

@@ -68,7 +68,7 @@ platformer.classes.aABB = (function(){
 	};
 	
 	proto.set = function(aabb){
-		this.empty = false;
+		this.empty = (typeof aabb.x === 'undefined') ? true: false;
 		this.x = aabb.x;
 		this.y = aabb.y;
 		this.width  = aabb.width;
@@ -89,7 +89,7 @@ platformer.classes.aABB = (function(){
 	
 	proto.include = function(aabb){
 		if(this.empty){
-			this.setAll(aabb.x, aabb.y, aabb.width, aabb.height);
+			this.set(aabb);
 		} else {
 			if(this.left > aabb.left){
 				this.left = aabb.left;
@@ -128,6 +128,20 @@ platformer.classes.aABB = (function(){
 
 	proto.moveY = function(y){
 		this.y = y;
+		this.top    = -this.halfHeight + this.y;
+		this.bottom = this.halfHeight + this.y;
+		return this;
+	};
+	
+	proto.moveXBy = function(deltaX){
+		this.x += deltaX;
+		this.left   = -this.halfWidth + this.x;
+		this.right  = this.halfWidth + this.x;
+		return this;
+	};
+
+	proto.moveYBy = function(deltaY){
+		this.y += deltaY;
 		this.top    = -this.halfHeight + this.y;
 		this.bottom = this.halfHeight + this.y;
 		return this;

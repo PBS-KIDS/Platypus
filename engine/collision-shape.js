@@ -50,24 +50,31 @@ This class defines a collision shape, which defines the 'space' an entity occupi
 */
 
 platformer.classes.collisionShape = (function(){
-	var collisionShape = function(ownerLocation, type, points, offset){
+	var collisionShape = function(owner, ownerLocation, type, points, offset, collisionType){
+		this.owner = owner || null;
+		this.collisionType = collisionType || null;
 		this.offset = offset || [0,0];
 		this.x = ownerLocation[0] + this.offset[0];
 		this.y = ownerLocation[1] + this.offset[1];
-		this.prevX = this.x;
-		this.prevY = this.y;
+		//this.prevX = this.x;
+		//this.prevY = this.y;
 		this.type = type || 'rectangle';
 		this.subType = '';
 		this.points = points; //Points should distributed so that the center of the AABB is at (0,0).
 		this.aABB = undefined;
-		this.prevAABB = undefined;
+		//this.prevAABB = undefined;
+		this.radius = undefined;
 		
 		var width = 0;
 		var height = 0; 
 		switch (this.type)
 		{
-		case 'rectangle': //need TL and BR points
 		case 'circle': //need TL and BR points
+			width = this.points[1][0] - this.points[0][0];
+			height = width;
+			this.radius = width / 2;
+			break;
+		case 'rectangle': //need TL and BR points
 			width = this.points[1][0] - this.points[0][0];
 			height = this.points[1][1] - this.points[0][1];
 			break;
@@ -104,21 +111,22 @@ platformer.classes.collisionShape = (function(){
 		}
 		
 		this.aABB     = new platformer.classes.aABB(this.x, this.y, width, height);
-		this.prevAABB = new platformer.classes.aABB(this.x, this.y, width, height);
+		//this.prevAABB = new platformer.classes.aABB(this.x, this.y, width, height);
 	};
 	var proto = collisionShape.prototype;
 	
 	proto.update = function(ownerX, ownerY){
-		var swap = this.prevAABB; 
-		this.prevAABB = this.aABB;
-		this.aABB     = swap;
-		this.prevX = this.x;
-		this.prevY = this.y;
+		//var swap = this.prevAABB; 
+		//this.prevAABB = this.aABB;
+		//this.aABB     = swap;
+		//this.prevX = this.x;
+		//this.prevY = this.y;
 		this.x = ownerX + this.offset[0];
 		this.y = ownerY + this.offset[1];
 		this.aABB.move(this.x, this.y);
 	};
 	
+	/*
 	proto.reset = function (ownerX, ownerY) {
 		this.prevX = ownerX + this.offset[0];
 		this.prevY = ownerY + this.offset[1];
@@ -126,6 +134,27 @@ platformer.classes.collisionShape = (function(){
 		this.y = ownerY + this.offset[1];
 		this.prevAABB.move(this.x, this.y);
 		this.aABB.move(this.x, this.y);
+	};
+	*/
+	
+	proto.moveX = function(x){
+		this.x = x;
+		this.aABB.moveX(this.x);
+	};
+	
+	proto.moveY = function(y){
+		this.y = y;
+		this.aABB.moveY(this.y);
+	};
+	
+	proto.moveXBy = function(deltaX){
+		this.x += deltaX;
+		this.aABB.moveX(this.x);
+	};
+	
+	proto.moveYBy = function(deltaY){
+		this.y += deltaY;
+		this.aABB.moveY(this.y);
 	};
 	
 	proto.getXY = function () {
@@ -140,6 +169,7 @@ platformer.classes.collisionShape = (function(){
 		return this.y;
 	};
 	
+	/*
 	proto.getPrevXY = function () {
 		return [this.prevX, this.prevY];
 	};
@@ -151,15 +181,15 @@ platformer.classes.collisionShape = (function(){
 	proto.getPrevY = function () {
 		return this.prevY;
 	};
-
+	*/
 	proto.getAABB = function(){
 		return this.aABB;
 	};
-	
+	/*
 	proto.getPreviousAABB = function(){
 		return this.prevAABB;
 	};
-	
+	*/
 	proto.getXOffset = function(){
 		return this.offset[0];
 	};
@@ -168,8 +198,19 @@ platformer.classes.collisionShape = (function(){
 		return this.offset[1];
 	};
 	
+	proto.setXWithEntityX = function(entityX){
+		this.x = entityX + this.offset[0];
+		this.aABB.moveX(this.x);
+	};
+	
+	proto.setYWithEntityY = function(entityY){
+		this.y = entityY + this.offset[1];
+		this.aABB.moveY(this.y);
+	};
+	
 	proto.destroy = function(){
 		this.aABB = undefined;
+		//this.prevAABB = undefined;
 		this.points = undefined;
 	};
 	
