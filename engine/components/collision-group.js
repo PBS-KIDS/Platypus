@@ -184,6 +184,8 @@ platformer.components['collision-group'] = (function(){
 				return true;
 			} 
 		} else if (shapeA.type == 'circle' && shapeB.type == 'rectangle' || shapeA.type == 'rectangle' && shapeB.type == 'circle' ) {
+			debug('In Circle VS Rectangle Collision');
+			
 			if (shapeA.type == 'circle')
 			{
 				circle = shapeA;
@@ -203,10 +205,15 @@ platformer.components['collision-group'] = (function(){
 		    if (shapeDistanceX < (rectAabb.halfWidth)) { return true; } 
 		    if (shapeDistanceY < (rectAabb.halfHeight)) { return true; }
 
-		    cornerDistanceSq = Math.pow((shapeDistanceX - rectAabb.halfWidth), 2) + Math.pow((shapeDistanceY - rectAabb.halfHeight), 2);
+			debug('- Circle is on a corner');
+
+			cornerDistanceSq = Math.pow((shapeDistanceX - rectAabb.halfWidth), 2) + Math.pow((shapeDistanceY - rectAabb.halfHeight), 2);
 		    if (cornerDistanceSq < Math.pow(circle.radius, 2)) {
+				debug('- We have a collision!');
+				showDebug();
 		    	return true;
 		    }
+		    resetDebug();
 		}
 		return false;
 	},
@@ -261,16 +268,35 @@ platformer.components['collision-group'] = (function(){
 		}
 	},
 	*/
+	getCornerOnCircleComplex = function(circlePos, radius, rectanglePos, half){
+		var corner = Math.abs(circlePos - rectanglePos) - half;
+		return Math.sqrt(Math.pow(radius, 2) - Math.pow(corner, 2));
+	},
+	getCornerOnCircle = function(circle, rectangle, axis){
+		if(axis === 'x'){
+			return getCornerOnCircleComplex(circle.y, circle.radius, rectangle.y, rectangle.aABB.halfHeight);
+		} else if(axis === 'y'){
+			return getCornerOnCircleComplex(circle.x, circle.radius, rectangle.x, rectangle.aABB.halfWidth );
+		}
+		return null;
+	},
+	getRelocatedPosition = function(positionThat, direction, halfThis, halfThat){
+		return positionThat - direction * (halfThat + halfThis);
+	},
+	getRelocatedPositionForAABB = function(xDirection, yDirection, thisAABB, thatAABB){
+		if (xDirection) {
+			return getRelocatedPosition(thatAABB.x, xDirection, thatAABB.halfWidth, thisAABB.halfWidth);
+		} else if (yDirection) {
+			return getRelocatedPosition(thatAABB.y, yDirection, thatAABB.halfHeight, thisAABB.halfHeight);
+		}
+		return null;
+	},
 	
 	findAxisCollisionPosition = function(axis, direction, thisShape, thatShape){
 		//Returns the value of the axis at which point thisShape collides with thatShape
-		var value = null;
 		var radiiSquared = null;
-		var offset = 0;
 		var rect = null;
 		var circle = null;
-		var cornerY = null;
-		var cornerX = null;
 		var thisAABB = thisShape.getAABB();
 		var thatAABB = thatShape.getAABB();
 		var xDirection = 0;
@@ -291,72 +317,42 @@ platformer.components['collision-group'] = (function(){
 			}
 		}
 		
-		if (thisShape.type == 'rectangle' && thatShape.type == 'rectangle')
-		{
-			if (xDirection > 0) {
-				value = thatAABB.left - thisAABB.halfWidth;
-			} else if (xDirection < 0) {
-				value = thatAABB.right + thisAABB.halfWidth;
-			} else if (yDirection > 0) {
-				value = thatAABB.top - thisAABB.halfHeight;
-			} else if (yDirection < 0) {
-				value = thatAABB.bottom + thisAABB.halfHeight;
-			}
-		} else if (thisShape.type == 'rectangle' && thatShape.type == 'circle' || thisShape.type == 'circle' && thatShape.type == 'rectangle') {
-			if (thisShape.type == 'rectangle')
-			{
+		if (thisShape.type == 'rectangle' && thatShape.type == 'rectangle') {
+			return getRelocatedPositionForAABB(xDirection, yDirection, thisAABB, thatAABB);
+		} else if ((thisShape.type == 'rectangle' && thatShape.type == 'circle') || (thisShape.type == 'circle' && thatShape.type == 'rectangle')) {
+			if (thisShape.type == 'rectangle'){
 				rect = thisShape;
 				circle = thatShape;
 			} else {
 				rect = thatShape;
 				circle = thisShape;
 			}
-			if (xDirection > 0) {
-				if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom)
-				{
-					value = thatAABB.left - thisAABB.halfWidth;
+			
+			if (xDirection) {
+				if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom) {
+					return getRelocatedPosition(thatAABB.x, xDirection, rect.aABB.halfWidth, circle.radius);
 				} else {
-					cornerY = Math.abs(circle.y - rect.y) - rect.aABB.halfHeight;
-					value = thatAABB.left - Math.sqrt(Math.pow(circle.radius, 2) - Math.pow(cornerY, 2));
+					return getRelocatedPosition(thatAABB.x, xDirection, rect.aABB.halfWidth, getCornerOnCircle(circle, rect, 'x'));
 				}
-			} else if (xDirection < 0) {
-				if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom)
-				{
-					value = thatAABB.right + thisAABB.halfWidth;
+			} else if (yDirection) {
+				if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right) {
+					return getRelocatedPosition(thatAABB.y, yDirection, rect.aABB.halfHeight, circle.radius);
 				} else {
-					cornerY = Math.abs(circle.y - rect.y) - rect.aABB.halfHeight;
-					value = thatAABB.right + Math.sqrt(Math.pow(circle.radius, 2) - Math.pow(cornerY, 2));
-				}
-			} else if (yDirection > 0) {
-				if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right)
-				{
-					value = thatAABB.top - thisAABB.halfHeight;
-				} else {
-					cornerX = Math.abs(circle.x - rect.x) - rect.aABB.halfWidth;
-					value = thatAABB.top - Math.sqrt(Math.pow(circle.radius, 2) - Math.pow(cornerX, 2));
-				}
-			} else if (yDirection < 0) {
-				if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right)
-				{
-					value = thatAABB.bottom + thisAABB.halfHeight;
-				} else {
-					cornerX = Math.abs(circle.x - rect.x) - rect.aABB.halfWidth;
-					value = thatAABB.bottom + Math.sqrt(Math.pow(circle.radius, 2) - Math.pow(cornerX, 2));
+					return getRelocatedPosition(thatAABB.y, yDirection, rect.aABB.halfHeight, getCornerOnCircle(circle, rect, 'y'));
 				}
 			}
 		} else if (thisShape.type == 'circle' && thatShape.type == 'circle') {
 			radiiSquared = Math.pow(thisShape.radius + thatShape.radius, 2);
 			if (xDirection > 0) {
-				value = thatShape.x - Math.sqrt(radiiSquared - Math.pow(thisShape.y - thatShape.y, 2));
+				return thatShape.x - Math.sqrt(radiiSquared - Math.pow(thisShape.y - thatShape.y, 2));
 			} else if (xDirection < 0) {
-				value = thatShape.x + Math.sqrt(radiiSquared - Math.pow(thisShape.y - thatShape.y, 2));
+				return thatShape.x + Math.sqrt(radiiSquared - Math.pow(thisShape.y - thatShape.y, 2));
 			} else if (yDirection > 0) {
-				value = thatShape.y - Math.sqrt(radiiSquared - Math.pow(thisShape.x - thatShape.x, 2));
+				return thatShape.y - Math.sqrt(radiiSquared - Math.pow(thisShape.x - thatShape.x, 2));
 			} else if (yDirection < 0) {
-				value = thatShape.y + Math.sqrt(radiiSquared - Math.pow(thisShape.x - thatShape.x, 2));
+				return thatShape.y + Math.sqrt(radiiSquared - Math.pow(thisShape.x - thatShape.x, 2));
 			}
 		}
-		return value;
 	},
 	
 	/*
@@ -531,6 +527,17 @@ platformer.components['collision-group'] = (function(){
 		}
 	},
 	*/
+	deb = '',
+	debug = function(str){
+		deb += str + '\n';
+	},
+	resetDebug = function(){
+		deb = '';
+	},
+	showDebug = function(){
+		console.log(deb);
+		resetDebug();
+	},
 	
 	component = function(owner, definition){
 		this.owner = owner;
