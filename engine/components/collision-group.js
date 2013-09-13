@@ -1147,24 +1147,20 @@ This component checks for collisions between entities in its group which typical
 				return finalMovementInfo;
 			},
 			
-			findMinAxisMovement: function (ent, collisionType, axis, potentialCollidingShapes, bestCollisionData)
-			{
+			findMinAxisMovement: function (ent, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
 				//Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
 				
 				var shapes = ent.getShapes(collisionType);
 				var prevShapes = ent.getPrevShapes(collisionType);
 				
-				var diff = Infinity;
-				
 				for (var i = 0; i < shapes.length; i++) {
 					shapeCollisionData.clear();
 					shapeCollisionData = this.findMinShapeMovementCollision(prevShapes[i], shapes[i], axis, potentialCollidingShapes, shapeCollisionData);
 					
-					if (shapeCollisionData.occurred && !bestCollisionData.occurred)
-					{ 
-						//if a collision occurred and we haven't already had a collision.
+					if (shapeCollisionData.occurred && !bestCollisionData.occurred){
+						//if a collision occurred and we haven't already have a collision.
 						bestCollisionData.copy(shapeCollisionData);
-					} else if (shapeCollisionData.occurred && !bestCollisionData.occurred && shapeCollisionData.deltaMovement < bestCollisionData.deltaMovement) {
+					} else if (shapeCollisionData.occurred && bestCollisionData.occurred && (shapeCollisionData.deltaMovement < bestCollisionData.deltaMovement)) {
 						//if a collision occurred and the diff is smaller than our best diff.
 						bestCollisionData.copy(shapeCollisionData);
 					}

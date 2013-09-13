@@ -219,26 +219,17 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 		}
 		return level;
 	},
-	transformCheck = function(value){
-		var v = value,
-		a = !!(0x20000000 & v),
-		b = !!(0x40000000 & v),
-		c = !!(0x80000000 & v);
+	transformCheck = function(v){
+		var a = !!(0x20000000 & v),
+		b     = !!(0x40000000 & v),
+		c     = !!(0x80000000 & v);
 		
-		if(a && b && c){
-			return -5;
-		} else if (a && c){
+		if (a && c){
 			return -3;
-		} else if (b && c){
-			return -4;
-		} else if (a && b){
-			return -5;
 		} else if (a){
-			return -3;
+			return -5;
 		} else if (b){
 			return -4;
-		} else if (c){
-			return -2;
 		} else {
 			return -2;
 		}

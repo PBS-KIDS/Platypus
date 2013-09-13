@@ -37,18 +37,19 @@ Multiple collision components may be added to a single entity if distinct messag
       "immobile": true,
       // Optional. Defaults to `false`, but should be set to true if entity doesn't move for better optimization.
       
-      "shape": {
-      //Optional. Defines the shape of the collision area. Defaults to the width, height, regX, and regY properties of the entity.
+      "shapes": [{
+      //Optional. Defines one or more shapes to create the collision area. Defaults to a single shape with the width, height, regX, and regY properties of the entity if not specified.
       
         "type": "rectangle",
         // Optional. Defaults to "rectangle". Rectangles are currently the only supported shape.
         
-        "offset": [0,-120]
-        // Optional. Specifies the collision shape's position relative to the entity's x,y coordinates. Defaults to [0, 0].
+        "offsetX": 0,
+        "offsetY": -120,
+        // Optional. Specifies the collision shape's position relative to the entity's x,y coordinates. Defaults to 0. Alternatively, can specify regX and regY values.
         
         "points": [[-80,-120],[80, 120]]
         // Required. Specifies the top-left and bottom-right corners of the rectangle, with the center at [0,0].
-      },
+      }],
       
       //The following four properties are optional and can be specified instead of the more specific `shape` above. 
       "width": 160,
@@ -186,23 +187,28 @@ platformer.components['collision-basic'] = (function(){
 		} else if (definition.shape) {
 			shapes = [definition.shape];
 		} else {
-			var halfWidth  = (definition.width  || this.owner.width)  / 2;
-			var halfHeight = (definition.height || this.owner.height) / 2;
+			var halfWidth  = (definition.width  || this.owner.width  || 0) / 2;
+			var halfHeight = (definition.height || this.owner.height || 0) / 2;
 			var margin = definition.margin || 0;
 			var marginLeft   = definition.marginLeft   || margin;
 			var marginRight  = definition.marginRight  || margin;
 			var marginTop    = definition.marginTop    || margin;
 			var marginBottom = definition.marginBottom || margin;
-			var points = [[-halfWidth - marginLeft, -halfHeight - marginTop], [halfWidth + marginRight, halfHeight + marginBottom]];
-			var offset = [(definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2, (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2];
-			var shapeType = definition.shapeType || 'rectangle';
-			shapes = [{offset: offset, points: points, type: shapeType}];
+			shapes = [{
+				offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
+				offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,
+				points: definition.points,
+				width:  halfWidth  * 2 + marginLeft + marginRight,
+				height: halfHeight * 2 + marginTop  + marginBottom,
+				radius: definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2),
+				type: definition.shapeType || 'rectangle'
+			}];
 		}
 		
 		this.collisionType = definition.collisionType || 'none';
 		
 		this.owner.collisionTypes = this.owner.collisionTypes || [];
-		this.owner.collisionTypes[this.owner.collisionTypes.length] = this.collisionType;
+		this.owner.collisionTypes.push(this.collisionType);
 		
 		// Messages that this component listens for
 		this.listeners = [];
@@ -216,8 +222,8 @@ platformer.components['collision-basic'] = (function(){
 		this.prevShapes = [];
 		this.entities = undefined;
 		for (x in shapes){
-			this.shapes.push(new platformer.classes.collisionShape(this.owner, [this.owner.x, this.owner.y], shapes[x].type, shapes[x].points, shapes[x].offset, this.collisionType)); //, shapes[x].radius
-			this.prevShapes.push(new platformer.classes.collisionShape(this.owner, [this.owner.x, this.owner.y], shapes[x].type, shapes[x].points, shapes[x].offset, this.collisionType)); //, shapes[x].radius
+			this.shapes.push(new platformer.classes.collisionShape(this.owner, shapes[x], this.collisionType));
+			this.prevShapes.push(new platformer.classes.collisionShape(this.owner, shapes[x], this.collisionType));
 			this.prevAABB.include(this.prevShapes[x].getAABB());
 			this.aabb.include(this.shapes[x].getAABB());
 		}

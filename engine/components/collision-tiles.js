@@ -58,30 +58,40 @@ platformer.components['collision-tiles'] = (function(){
 	};
 	var proto = component.prototype;
 	
-	proto.addShape = function(shapes, prevAABB, x, y){
+	proto.createShape = function(prevAABB, x, y){
 		//TODO: Make some optimizations here. Remove creation of objects if possible. - DDD
+		return new platformer.classes.collisionShape(null, {
+			x:      x * this.tileWidth  + this.tileHalfWidth,
+			y:      y * this.tileHeight + this.tileHalfHeight,
+			type:   'rectangle',
+			width:  this.tileWidth,
+			height: this.tileHeight
+		}, 'tiles');
+	};
+	
+	proto.addShape = function(shapes, prevAABB, x, y){
 		if (this.collisionMap[x][y] > -1) {
-			shapes[shapes.length] = new platformer.classes.collisionShape(null, [x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]], [0,0], 'tiles');
+			shapes.push(this.createShape(prevAABB, x, y));
 		} else if (this.collisionMap[x][y] < -1) {
 			switch(this.collisionMap[x][y]){
 			case -2: //Top
 				if(prevAABB.bottom <= y * this.tileHeight){
-					shapes[shapes.length] = new platformer.classes.collisionShape(null, [x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]], [0,0], 'tiles');
+					shapes.push(this.createShape(prevAABB, x, y));
 				}
 				break;
 			case -3: //Right
 				if(prevAABB.left >= (x + 1) * this.tileWidth){
-					shapes[shapes.length] = new platformer.classes.collisionShape(null, [x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]], [0,0], 'tiles');
+					shapes.push(this.createShape(prevAABB, x, y));
 				}
 				break;
 			case -4: //Bottom
 				if(prevAABB.top >= (y + 1) * this.tileHeight){
-					shapes[shapes.length] = new platformer.classes.collisionShape(null, [x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]], [0,0], 'tiles');
+					shapes.push(this.createShape(prevAABB, x, y));
 				}
 				break;
 			case -5: //Left
 				if(prevAABB.right <= x * this.tileWidth){
-					shapes[shapes.length] = new platformer.classes.collisionShape(null, [x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight], 'rectangle', [[-this.tileHalfWidth, -this.tileHalfHeight],[this.tileHalfWidth, this.tileHalfHeight]], [0,0], 'tiles');
+					shapes.push(this.createShape(prevAABB, x, y));
 				}
 				break;
 			}
