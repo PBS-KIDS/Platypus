@@ -1173,8 +1173,18 @@ This component checks for collisions between entities in its group which typical
 				return bestCollisionData;
 			},
 			
+			/**
+			 * Find the earliest point at which this shape collides with one of the potential colliding shapes along this axis.
+			 * For example, cycles through shapes a, b, and c to find the earliest position:
+			 * 
+			 *    O---->   [b]  [a]     [c]
+			 *    
+			 *    Returns collision location for:
+			 *    
+			 *            O[b]
+			 * 
+			 */
 			findMinShapeMovementCollision: (function(){
-				//Find the earliest point at which this shape collides with one of the potential colliding shapes along this axis.
 
 				var storeCollisionData = function(collisionData, direction, position, initial, thisShape, thatShape){
 					collisionData.occurred = true;
@@ -1208,7 +1218,6 @@ This component checks for collisions between entities in its group which typical
 								if (shapeCollision(translatedShape, potentialCollidingShapes[i])) {
 									position = findAxisCollisionPosition(axis, direction, translatedShape, potentialCollidingShapes[i]);
 									
-									//Find the earliest position
 									if (direction > 0) {
 										if (position < finalPosition) {
 											if (position < initialPoint){ // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
