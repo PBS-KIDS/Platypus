@@ -184,8 +184,6 @@ This component checks for collisions between entities in its group which typical
 				return true;
 			} 
 		} else if (shapeA.type == 'circle' && shapeB.type == 'rectangle' || shapeA.type == 'rectangle' && shapeB.type == 'circle' ) {
-			debug('In Circle VS Rectangle Collision');
-			
 			if (shapeA.type == 'circle')
 			{
 				circle = shapeA;
@@ -205,15 +203,10 @@ This component checks for collisions between entities in its group which typical
 		    if (shapeDistanceX < (rectAabb.halfWidth)) { return true; } 
 		    if (shapeDistanceY < (rectAabb.halfHeight)) { return true; }
 
-			debug('- Circle is on a corner');
-
 			cornerDistanceSq = Math.pow((shapeDistanceX - rectAabb.halfWidth), 2) + Math.pow((shapeDistanceY - rectAabb.halfHeight), 2);
 		    if (cornerDistanceSq < Math.pow(circle.radius, 2)) {
-				debug('- We have a collision!');
-				showDebug();
 		    	return true;
 		    }
-		    resetDebug();
 		}
 		return false;
 	},
@@ -514,8 +507,6 @@ This component checks for collisions between entities in its group which typical
 		id: 'collision-group',
 		
 		constructor: function(definition){
-			var self = this;
-			
 			this.entitiesByType = {};
 			this.solidEntities = [];
 			this.solidEntitiesLive = [];
@@ -1220,11 +1211,17 @@ This component checks for collisions between entities in its group which typical
 									//Find the earliest position
 									if (direction > 0) {
 										if (position < finalPosition) {
+											if (position < initialPoint){ // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
+												position = initialPoint;
+											}
 											finalPosition = position;
 											storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, potentialCollidingShapes[i]);
 										}
 									} else {
 										if (position > finalPosition) {
+											if (position > initialPoint){ // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
+												position = initialPoint;
+											}
 											finalPosition = position;
 											storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, potentialCollidingShapes[i]);
 										}
