@@ -104,25 +104,29 @@ This component is attached to entities that will appear in the game world. It se
 				y        = this.owner.y      = this.owner.y || 0,
 				z        = this.owner.z      = (this.owner.z || 0) + 10000,
 				i        = 0,
+				j        = 0,
 				width    = this.owner.width  = this.owner.width  || 300,
 				height   = this.owner.height = this.owner.height || 100,
 				over     = false,
-				shapes   = null;
+				shapes   = null,
+				aabb     = null;
 				
 				this.stage = resp.stage;
 				
 				if(this.owner.getAABB){
-					var aabb   = this.owner.getAABB();
-					width      = this.initialWidth  = aabb.width;
-					height     = this.initialHeight = aabb.height;
-					shapes     = this.owner.getShapes();
-					
-					this.shapes.push(createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--));
-					this.stage.addChild(this.shapes[0]);
-					
-					for(i = 0; i < shapes.length; i++){
-						this.shapes.push(createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--));
-						this.stage.addChild(this.shapes[+i + 1]);
+					for(j = 0; j < this.owner.collisionTypes.length; j++){
+						aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
+						width  = this.initialWidth  = aabb.width;
+						height = this.initialHeight = aabb.height;
+						shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
+						
+						this.shapes.push(createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--));
+						this.stage.addChild(this.shapes[this.shapes.length - 1]);
+						
+						for(i = 0; i < shapes.length; i++){
+							this.shapes.push(createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--));
+							this.stage.addChild(this.shapes[this.shapes.length - 1]);
+						}
 					}
 				} else {
 					this.shapes.push(createShape('rectangle', 'render', width, height, width/2, height/2, z--));
@@ -202,11 +206,11 @@ This component is attached to entities that will appear in the game world. It se
 			"handle-render": function(){
 				var i = 0;
 				
-				if(this.owner.getAABB){
+/*				if(this.owner.getAABB){
 					var aabb   = this.owner.getAABB();
 					this.shapes[0].scaleX = aabb.width / this.initialWidth;
 					this.shapes[0].scaleY = aabb.height / this.initialHeight;
-				}
+				}*/
 				
 				for(i = 0; i < this.shapes.length; i++){
 					this.shapes[i].x = this.owner.x;

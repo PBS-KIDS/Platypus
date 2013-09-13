@@ -519,8 +519,8 @@ This component checks for collisions between entities in its group which typical
 			this.terrain = undefined;
 			this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
 			this.prevAABB = new platformer.classes.aABB(this.owner.x, this.owner.y);
-			this.lastX = this.owner.getPreviousX?this.owner.getPreviousX():this.owner.x;
-			this.lastY = this.owner.getPreviousY?this.owner.getPreviousY():this.owner.y;
+			this.owner.previousX = this.owner.previousX || this.owner.x;
+			this.owner.previousY = this.owner.previousY || this.owner.y;
 			this.xMomentum = 0;
 			this.yMomentum = 0;
 			
@@ -677,11 +677,11 @@ This component checks for collisions between entities in its group which typical
 						this.terrain = resp.terrain;
 					}
 					
-					var goalX = this.owner.x - this.lastX,
-					goalY     = this.owner.y - this.lastY;
+					var goalX = this.owner.x - this.owner.previousX,
+					goalY     = this.owner.y - this.owner.previousY;
 
-					this.owner.x = this.lastX;
-					this.owner.y = this.lastY;
+					this.owner.x = this.owner.previousX;
+					this.owner.y = this.owner.previousY;
 
 					this.owner.triggerEvent('prepare-for-collision');
 
@@ -768,8 +768,8 @@ This component checks for collisions between entities in its group which typical
 			},
 			
 			"relocate-entity": function(resp){
-				this.lastX = this.owner.x;
-				this.lastY = this.owner.y;
+				this.owner.previousX = this.owner.x;
+				this.owner.previousY = this.owner.y;
 				
 		/*		if(test || (this.allEntitiesLive.length > 1)){
 					test = true;
@@ -837,9 +837,8 @@ This component checks for collisions between entities in its group which typical
 						length = this.allEntities.length;// console.log(length);
 						for (i = 0; i < length; i++){
 							entity = this.allEntities[i];
-							if(entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)){
+							if(entity.alwaysOn || entity.checkCollision || true/*TODO add this back with full AABB - DDD|| check(entity.getAABB(), aabbLogic)*/){
 								entity.checkCollision = false;  //TML - This should be here. I think. :)
-								entity.checkCollision = false;
 								all[all.length] = entity;
 
 								types = entity.collisionTypes;
@@ -878,7 +877,7 @@ This component checks for collisions between entities in its group which typical
 							length = entities.length;
 							for (j = 0; j < length; j++){
 								entity = entities[j];
-								if(entity.alwaysOn || check(entity.getAABB(), aabbCollision)){
+								if(entity.alwaysOn  || true/*TODO add this back with full AABB - DDD|| check(entity.getAABB(), aabbCollision)*/){
 									list[list.length] = entity;
 								}
 							}
@@ -986,8 +985,7 @@ This component checks for collisions between entities in its group which typical
 				}
 			},
 			
-			checkSolidEntityCollision: function (ent, ignoredEntities, collisionDataCollection, xyInfo)
-			{
+			checkSolidEntityCollision: function (ent, ignoredEntities, collisionDataCollection, xyInfo) {
 				var potentialCollision = false;
 				var potentialCollidingShapes = [];
 				var minDeltaMovementVector = [Infinity, Infinity];
@@ -1010,11 +1008,10 @@ This component checks for collisions between entities in its group which typical
 				finalMovementInfo.y = ent.y;
 				finalMovementInfo.yMomentum = 0;
 				
-				var entityDeltaX = ent.x - ent.getPreviousX();
-				var entityDeltaY = ent.y - ent.getPreviousY();
+				var entityDeltaX = ent.x - ent.previousX;
+				var entityDeltaY = ent.y - ent.previousY;
 				
-				if (entityDeltaX || entityDeltaY)
-				{
+				if (entityDeltaX || entityDeltaY) {
 					for(var i = 0; i < collisionTypes.length; i++){
 						//Sweep the full movement of each collision type
 						potentialCollidingShapes[i] = [];
@@ -1054,9 +1051,9 @@ This component checks for collisions between entities in its group which typical
 										if(include && (AABBCollision(sweepAABB, otherAABB))) {
 											if (otherEntity.collisionUnresolved)
 											{
-												otherShapes = otherEntity.getPrevShapes(collisionType);
+												otherShapes = otherEntity.getPrevShapes(ent.solidCollisions[collisionType][y]);
 											} else {
-												otherShapes = otherEntity.getShapes(collisionType);
+												otherShapes = otherEntity.getShapes(ent.solidCollisions[collisionType][y]);
 											}
 											
 											for (var q = 0; q < otherShapes.length; q++)
@@ -1085,8 +1082,7 @@ This component checks for collisions between entities in its group which typical
 					
 					if(potentialCollision)
 					{
-						if (entityDeltaX != 0)
-						{
+						if (entityDeltaX != 0) {
 							for(var i = 0; i < collisionTypes.length; i++){
 								//Move each collision type in X to find the min X movement
 								typeCollisionData.clear();
@@ -1099,10 +1095,9 @@ This component checks for collisions between entities in its group which typical
 							}
 						}
 						
-						if (collisionDataCollection.xCount > 0)
-						{
+						if (collisionDataCollection.xCount > 0) {
 							typeCollisionData.copy(collisionDataCollection.getXEntry(0));
-							finalMovementInfo.x = ent.getPreviousX() + typeCollisionData.deltaMovement * typeCollisionData.direction;
+							finalMovementInfo.x = ent.previousX + typeCollisionData.deltaMovement * typeCollisionData.direction;
 							finalMovementInfo.xMomentum = ent.x - finalMovementInfo.x;
 						} else {
 							finalMovementInfo.x = ent.x;
@@ -1135,7 +1130,7 @@ This component checks for collisions between entities in its group which typical
 						if (collisionDataCollection.yCount > 0)
 						{
 							typeCollisionData.copy(collisionDataCollection.getYEntry(0));
-							finalMovementInfo.y = ent.getPreviousY() + typeCollisionData.deltaMovement * typeCollisionData.direction;
+							finalMovementInfo.y = ent.previousY + typeCollisionData.deltaMovement * typeCollisionData.direction;
 							finalMovementInfo.yMomentum = ent.y - finalMovementInfo.y;
 						} else {
 							finalMovementInfo.y = ent.y;
