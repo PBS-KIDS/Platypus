@@ -701,14 +701,12 @@ This component checks for collisions between entities in its group which typical
 					this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
 					this.aabb.move(this.aabb.x + goalX, this.aabb.y + goalY);
 						
-					this.checkSoftCollisions(resp);
+//					this.checkSoftCollisions(resp);
 					
 					if (resp.entities){
 						this.entitiesByTypeLive = entitiesLive; //from above so entities live grouping is not corrupted 
 					}
 				} else {
-//					this.tester = 0;
-
 					this.checkGroupCollisions(resp);
 
 					this.timeElapsed.name = 'Col-Group';
@@ -923,7 +921,7 @@ This component checks for collisions between entities in its group which typical
 						groups[x].collisionUnresolved = true;
 					}
 
-					this.resolveCollisionList(groups, true, false, resp);
+//TODO: Put back in some time? - DDD					this.resolveCollisionList(groups, true, false, resp);
 				}
 			},
 			
@@ -1045,152 +1043,140 @@ This component checks for collisions between entities in its group which typical
 				return finalMovementInfo;
 			},
 			
+			includeEntity: function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
+				var otherAABB   = otherEntity.getAABB(otherCollisionType);
+				if(ignoredEntities){
+					for (var i = 0; i < ignoredEntities.length; i++) {
+						if(otherEntity === ignoredEntities[i]) {
+							return false;
+						}
+					}
+				} else if (otherEntity === thisEntity){
+					return false;
+				} else if (otherEntity.jumpThrough && (aabb.bottom > otherAABB.top)) {
+					return false;
+				} else if (thisEntity.jumpThrough  && (otherAABB.bottom > aabb.top)) { // This will allow platforms to hit something solid sideways if it runs into them from the side even though originally they were above the top. - DDD
+					return false;
+				}
+				return true;
+			},
+			
 			processCollisionStep: function (ent, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY) {
 				var potentialCollision = false;
 				var potentialCollidingShapes = [];
-				var minDeltaMovementVector = [Infinity, Infinity];
 				var collisionTypes = ent.collisionTypes;
-				var sweeps = [];
 				var previousAABB = null;
 				var currentAABB = null;
 				var sweepAABB = tempAABB;
 				var collisionType = null;
 				
-				var include = true;
 				var otherEntity = null;
+				var otherCollisionType = '';
 				var otherShapes = null;
-				var otherAABB = null;
 				var myShapes = null;
 				
+				if(!ent.jumpThrough || (entityDeltaY >= 0)){ //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
 
-				potentialCollision = false;
-				for(var i = 0; i < collisionTypes.length; i++){
-					//Sweep the full movement of each collision type
-					potentialCollidingShapes[i] = [];
-					collisionType = collisionTypes[i];
-					previousAABB = ent.getPreviousAABB(collisionType);
-					currentAABB = ent.getAABB(collisionType);
+					for(var i = 0; i < collisionTypes.length; i++){
+						//Sweep the full movement of each collision type
+						potentialCollidingShapes[i] = [];
+						collisionType = collisionTypes[i];
+						previousAABB = ent.getPreviousAABB(collisionType);
+						currentAABB = ent.getAABB(collisionType);
+						
+						sweepAABB.reset();
+						sweepAABB.include(currentAABB);
+						sweepAABB.include(previousAABB);
 					
-					sweepAABB.reset();
-					sweepAABB.include(currentAABB);
-					sweepAABB.include(previousAABB);
-					
-					if(!ent.jumpThrough || (currentAABB.y < previousAABB.y)){ //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
 						for (var y = 0; y < ent.solidCollisions[collisionType].length; y++) {
-							if(this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]]){
-								for(var z = 0; z < this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]].length; z++){
+							otherCollisionType = ent.solidCollisions[collisionType][y];
+
+							if(this.entitiesByTypeLive[otherCollisionType]){
+								for(var z = 0; z < this.entitiesByTypeLive[otherCollisionType].length; z++){
 									
 									//Chop out all the special case entities we don't want to check against.
-									include = true;
-									otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
-//									otherAABB = otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
-									//Removed prev check since it doesn't seem to apply due to the prepare-for-collision changes - DDD
-									otherAABB = otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
-									if(ignoredEntities){
-										for (var w = 0; w < ignoredEntities.length; w++)
-										{
-											if(otherEntity === ignoredEntities[w])
-											{
-												include = false;
-											}
-										}
-									} else if (otherEntity === ent){
-										include = false;
-									} else if (otherEntity.jumpThrough && (previousAABB.bottom > otherAABB.top)) {
-										include = false;
-									} else if (ent.jumpThrough && (otherAABB.bottom > previousAABB.top)) { // This will allow platforms to hit something solid sideways if it runs into them from the side even though originally they were above the top. - DDD
-										include = false;
-									}
+									otherEntity = this.entitiesByTypeLive[otherCollisionType][z];
 									
 									//Do our sweep check against the AABB of the other object and add potentially colliding shapes to our list.
-									if(include && (AABBCollision(sweepAABB, otherAABB))) {
-// Removed this test because prevShapes are likely still from the last tick due to the prepare-for-collision changes - DDD
-//										if (otherEntity.collisionUnresolved)
-//										{
-//											otherShapes = otherEntity.getPrevShapes(ent.solidCollisions[collisionType][y]);
-//										} else {
-											otherShapes = otherEntity.getShapes(ent.solidCollisions[collisionType][y]);
-//										}
+									if(this.includeEntity(ent, previousAABB, otherEntity, otherCollisionType, ignoredEntities) && (AABBCollision(sweepAABB, otherEntity.getAABB(otherCollisionType)))) {
+										otherShapes = otherEntity.getShapes(otherCollisionType);
 										
-										for (var q = 0; q < otherShapes.length; q++)
-										{
+										for (var q = 0; q < otherShapes.length; q++) {
 											//Push the shapes on the end!
 											potentialCollidingShapes[i].push(otherShapes[q]);
-											
 										} 
 										potentialCollision = true;
 									}
 								}
-							} else if (this.terrain && (ent.solidCollisions[collisionType][y] === 'tiles')) {
+							} else if (this.terrain && (otherCollisionType === 'tiles')) {
 								//Do our sweep check against the tiles and add potentially colliding shapes to our list.
 								otherShapes = this.terrain.getTileShapes(sweepAABB, previousAABB);
-								for (var q = 0; q < otherShapes.length; q++)
-								{
+								for (var q = 0; q < otherShapes.length; q++) {
 									//Push the shapes on the end!
 									potentialCollidingShapes[i].push(otherShapes[q]);
 									potentialCollision = true;
 								}
+							}
+						}
+					}
+
+					if (potentialCollision) {
+						if (entityDeltaX != 0) {
+							for(var j = 0; j < collisionTypes.length; j++){
+								//Move each collision type in X to find the min X movement
+								typeCollisionData.clear();
+								typeCollisionData = this.findMinAxisMovement(ent, ent.collisionTypes[j], 'x', potentialCollidingShapes[j], typeCollisionData);
 								
+								if (typeCollisionData.occurred)
+								{
+									collisionDataCollection.tryToAddX(typeCollisionData);
+								}
 							}
 						}
-					}
-				}
-				
-				if (potentialCollision) {
-					if (entityDeltaX != 0) {
+						
+						if (collisionDataCollection.xCount > 0) {
+							typeCollisionData.copy(collisionDataCollection.getXEntry(0));
+							finalMovementInfo.x = ent.previousX + typeCollisionData.deltaMovement * typeCollisionData.direction;
+							finalMovementInfo.xMomentum = ent.x - finalMovementInfo.x;
+						} else {
+							finalMovementInfo.x = ent.x;
+							finalMovementInfo.xMomentum = 0;
+						}
+						
 						for(var j = 0; j < collisionTypes.length; j++){
-							//Move each collision type in X to find the min X movement
-							typeCollisionData.clear();
-							typeCollisionData = this.findMinAxisMovement(ent, ent.collisionTypes[j], 'x', potentialCollidingShapes[j], typeCollisionData);
-							
-							if (typeCollisionData.occurred)
+							ent.getPreviousAABB(collisionTypes[j]).moveX(finalMovementInfo.x);
+							myShapes = ent.getPrevShapes(collisionTypes[j]);
+							for(var k = 0; k < myShapes.length; k++)
 							{
-								collisionDataCollection.tryToAddX(typeCollisionData);
+								myShapes[k].setXWithEntityX(finalMovementInfo.x);
 							}
 						}
-					}
-					
-					if (collisionDataCollection.xCount > 0) {
-						typeCollisionData.copy(collisionDataCollection.getXEntry(0));
-						finalMovementInfo.x = ent.previousX + typeCollisionData.deltaMovement * typeCollisionData.direction;
-						finalMovementInfo.xMomentum = ent.x - finalMovementInfo.x;
-					} else {
-						finalMovementInfo.x = ent.x;
-						finalMovementInfo.xMomentum = 0;
-					}
-					
-					for(var j = 0; j < collisionTypes.length; j++){
-						ent.getPreviousAABB(collisionTypes[j]).moveX(finalMovementInfo.x);
-						myShapes = ent.getPrevShapes(collisionTypes[j]);
-						for(var k = 0; k < myShapes.length; k++)
+						
+						if (entityDeltaY != 0)
 						{
-							myShapes[k].setXWithEntityX(finalMovementInfo.x);
-						}
-					}
-					
-					if (entityDeltaY != 0)
-					{
-						for(var j = 0; j < collisionTypes.length; j++){
-							//Move each collision type in Y to find the min Y movement
-							typeCollisionData.clear();
-							typeCollisionData = this.findMinAxisMovement(ent, ent.collisionTypes[j], 'y', potentialCollidingShapes[j], typeCollisionData);
-							
-							if (typeCollisionData.occurred)
-							{
-								collisionDataCollection.tryToAddY(typeCollisionData);
+							for(var j = 0; j < collisionTypes.length; j++){
+								//Move each collision type in Y to find the min Y movement
+								typeCollisionData.clear();
+								typeCollisionData = this.findMinAxisMovement(ent, ent.collisionTypes[j], 'y', potentialCollidingShapes[j], typeCollisionData);
+								
+								if (typeCollisionData.occurred)
+								{
+									collisionDataCollection.tryToAddY(typeCollisionData);
+								}
 							}
 						}
+						
+						if (collisionDataCollection.yCount > 0)
+						{
+							typeCollisionData.copy(collisionDataCollection.getYEntry(0));
+							finalMovementInfo.y = ent.previousY + typeCollisionData.deltaMovement * typeCollisionData.direction;
+							finalMovementInfo.yMomentum = ent.y - finalMovementInfo.y;
+						} else {
+							finalMovementInfo.y = ent.y;
+							finalMovementInfo.yMomentum = 0;
+						}
 					}
-					
-					if (collisionDataCollection.yCount > 0)
-					{
-						typeCollisionData.copy(collisionDataCollection.getYEntry(0));
-						finalMovementInfo.y = ent.previousY + typeCollisionData.deltaMovement * typeCollisionData.direction;
-						finalMovementInfo.yMomentum = ent.y - finalMovementInfo.y;
-					} else {
-						finalMovementInfo.y = ent.y;
-						finalMovementInfo.yMomentum = 0;
-					}
+
 				}
 				
 				return finalMovementInfo;

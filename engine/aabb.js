@@ -68,7 +68,7 @@ platformer.classes.aABB = (function(){
 	};
 	
 	proto.set = function(aabb){
-		this.empty = (typeof aabb.x === 'undefined') ? true: false;
+		this.empty = aabb.empty;
 		this.x = aabb.x;
 		this.y = aabb.y;
 		this.width  = aabb.width;

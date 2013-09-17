@@ -220,13 +220,15 @@ This component is attached to entities that will appear in the game world. It se
 				if(this.owner.getCollisionGroupAABB){
 					var aabb = this.owner.getCollisionGroupAABB();
 					if(!this.groupShape){
-						this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,255,0,0.1)").setStrokeStyle(3).beginStroke("#0f0").rect(0, 0, aabb.width, aabb.height));
-						this.groupShapeInitialWidth  = aabb.width;
-						this.groupShapeInitialHeight = aabb.height;
+						this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
+						this.groupShape.regX  = 0.5;
+						this.groupShape.regY  = 0.5;
+						this.groupShape.z     = (this.owner.z || 0) + 10000;
 						this.stage.addChild(this.groupShape);
+						console.log(aabb);
 					}
-					this.groupShape.scaleX = aabb.width  / this.groupShapeInitialWidth;
-					this.groupShape.scaleY = aabb.height / this.groupShapeInitialHeight;
+					this.groupShape.scaleX = aabb.width;
+					this.groupShape.scaleY = aabb.height;
 					this.groupShape.x      = aabb.x;
 					this.groupShape.y      = aabb.y;
 				}

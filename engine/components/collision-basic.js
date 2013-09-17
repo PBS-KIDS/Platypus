@@ -166,6 +166,7 @@ Multiple collision components may be added to a single entity if distinct messag
 			entity.getAABB = function(collisionType){
 				if(!collisionType){
 					var aabb = entity.aabb = entity.aabb || new platformer.classes.aABB();
+					aabb.reset();
 					for(var i in entity.collisionFunctions){
 						aabb.include(entity.collisionFunctions[i].getAABB());
 					}
