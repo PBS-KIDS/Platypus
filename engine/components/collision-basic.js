@@ -164,7 +164,13 @@ Multiple collision components may be added to a single entity if distinct messag
 		if(!entity.collisionFunctions){
 			entity.collisionFunctions = {};
 			entity.getAABB = function(collisionType){
-				if(entity.collisionFunctions[collisionType]){
+				if(!collisionType){
+					var aabb = entity.aabb = entity.aabb || new platformer.classes.aABB();
+					for(var i in entity.collisionFunctions){
+						aabb.include(entity.collisionFunctions[i].getAABB());
+					}
+					return aabb;
+				} else if(entity.collisionFunctions[collisionType]){
 					return entity.collisionFunctions[collisionType].getAABB();
 				} else {
 					return null;
@@ -194,6 +200,12 @@ Multiple collision components may be added to a single entity if distinct messag
 					return null;
 				}
 			};
+			
+			entity.prepareCollision = function(x, y){
+				for(var i in entity.collisionFunctions){
+					entity.collisionFunctions[i].prepareCollision(x, y);
+				}
+			};
 		}
 
 		entity.collisionFunctions[self.collisionType] = {
@@ -208,9 +220,13 @@ Multiple collision components may be added to a single entity if distinct messag
 			getShapes: function(){
 				return self.getShapes();
 			},
-				
+			
 			getPrevShapes: function(){
 				return self.getPrevShapes();
+			},
+			
+			prepareCollision: function(x, y){
+				self.prepareCollision(x, y);
 			}
 		};
 		
@@ -333,30 +349,23 @@ Multiple collision components may be added to a single entity if distinct messag
 			},
 			
 			"prepare-for-collision": function(resp){
-				var tempShapes = this.prevShapes;
-				this.prevShapes = this.shapes;
-				this.shapes = tempShapes;
-				
-				this.prevAABB.set(this.aabb);
-				this.aabb.reset();
-				
+				var x = this.owner.x,
+				y     = this.owner.y;
 				
 				// absorb velocities from the last logic tick
 				if(!this.owner.accelerationAbsorbed && resp){
 					this.owner.accelerationAbsorbed = true;
 					if(this.owner.dx){
-						this.owner.x += this.owner.dx * (resp.deltaT || 0);
+						x += this.owner.dx * (resp.deltaT || 0);
 					}
 					if(this.owner.dy){
-						this.owner.y += this.owner.dy * (resp.deltaT || 0);
+						y += this.owner.dy * (resp.deltaT || 0);
 					}
 				}
 				
-				// update shapes
-				for (var x = 0; x < this.shapes.length; x++){
-					this.shapes[x].update(this.owner.x, this.owner.y);
-					this.aabb.include(this.shapes[x].getAABB());
-				}
+//				this.prepareCollision(x, y);
+				this.owner.x = x;
+				this.owner.y = y;
 			},
 			
 			"relocate-entity": function(resp){
@@ -404,6 +413,25 @@ Multiple collision components may be added to a single entity if distinct messag
 			
 			getPrevShapes: function(){
 				return this.prevShapes;
+			},
+			
+			prepareCollision: function(x, y){
+				var tempShapes = this.prevShapes;
+				
+				this.owner.x = x;
+				this.owner.y = y;
+				
+				this.prevShapes = this.shapes;
+				this.shapes = tempShapes;
+				
+				this.prevAABB.set(this.aabb);
+				this.aabb.reset();
+				
+				// update shapes
+				for (var x = 0; x < this.shapes.length; x++){
+					this.shapes[x].update(this.owner.x, this.owner.y);
+					this.aabb.include(this.shapes[x].getAABB());
+				}
 			}
 		}
 	});
