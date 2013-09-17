@@ -269,15 +269,26 @@ Multiple collision components may be added to a single entity if distinct messag
 				var marginRight  = definition.marginRight  || margin;
 				var marginTop    = definition.marginTop    || margin;
 				var marginBottom = definition.marginBottom || margin;
-				shapes = [{
-					offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
-					offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,
-					points: definition.points,
-					width:  halfWidth  * 2 + marginLeft + marginRight,
-					height: halfHeight * 2 + marginTop  + marginBottom,
-					radius: definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2),
-					type: definition.shapeType || 'rectangle'
-				}];
+				if(definition.shapeType === 'circle'){
+					var radius = definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2);
+					shapes = [{
+						offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
+						offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,
+						radius: radius,
+						width:  radius * 2,
+						height: radius * 2,
+						type: definition.shapeType
+					}];
+				} else {
+					shapes = [{
+						offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
+						offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,
+						points: definition.points,
+						width:  halfWidth  * 2 + marginLeft + marginRight,
+						height: halfHeight * 2 + marginTop  + marginBottom,
+						type: definition.shapeType
+					}];
+				}
 			}
 			
 			this.collisionType = definition.collisionType || 'none';

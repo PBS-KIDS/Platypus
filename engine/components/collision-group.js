@@ -1102,12 +1102,13 @@ This component checks for collisions between entities in its group which typical
 									
 									//Do our sweep check against the AABB of the other object and add potentially colliding shapes to our list.
 									if(include && (AABBCollision(sweepAABB, otherAABB))) {
-										if (otherEntity.collisionUnresolved)
-										{
-											otherShapes = otherEntity.getPrevShapes(ent.solidCollisions[collisionType][y]);
-										} else {
+// Removed this test because prevShapes are likely still from the last tick due to the prepare-for-collision changes - DDD
+//										if (otherEntity.collisionUnresolved)
+//										{
+//											otherShapes = otherEntity.getPrevShapes(ent.solidCollisions[collisionType][y]);
+//										} else {
 											otherShapes = otherEntity.getShapes(ent.solidCollisions[collisionType][y]);
-										}
+//										}
 										
 										for (var q = 0; q < otherShapes.length; q++)
 										{
