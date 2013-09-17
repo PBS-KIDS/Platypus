@@ -1083,7 +1083,9 @@ This component checks for collisions between entities in its group which typical
 									//Chop out all the special case entities we don't want to check against.
 									include = true;
 									otherEntity = this.entitiesByTypeLive[ent.solidCollisions[collisionType][y]][z];
-									otherAABB = otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
+//									otherAABB = otherEntity.collisionUnresolved?otherEntity.getPreviousAABB(ent.solidCollisions[collisionType][y]):otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
+									//Removed prev check since it doesn't seem to apply due to the prepare-for-collision changes - DDD
+									otherAABB = otherEntity.getAABB(ent.solidCollisions[collisionType][y]);
 									if(ignoredEntities){
 										for (var w = 0; w < ignoredEntities.length; w++)
 										{
