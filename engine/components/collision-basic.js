@@ -240,13 +240,14 @@ Multiple collision components may be added to a single entity if distinct messag
 			var x  = 0; 
 			var self   = this;
 			
-			this.immobile = this.owner.immobile = this.owner.immobile || definition.immobile || false;
+			this.immobile  = this.owner.immobile = this.owner.immobile || definition.immobile || false;
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
-			this.xMomentum= 0;
-			this.yMomentum= 0;
-			this.aabb     = new platformer.classes.aABB();
-			this.prevAABB = new platformer.classes.aABB();
+			this.xMomentum = 0;
+			this.yMomentum = 0;
+			this.aabb      = new platformer.classes.aABB();
+			this.prevAABB  = new platformer.classes.aABB();
+			this.owner.bullet = this.owner.bullet || definition.bullet;
 			this.relocateObj = {
 									x: 0,
 									y: 0,

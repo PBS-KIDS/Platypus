@@ -1002,19 +1002,24 @@ This component checks for collisions between entities in its group which typical
 				finalMovementInfo.yMomentum = 0;
 
 				if (entityDeltaX || entityDeltaY) {
-					for(var i in ent.collisionTypes){
-						aabb = ent.getAABB(ent.collisionTypes[i]);
-						sW = Math.min(sW, aabb.width);
-						sH = Math.min(sH, aabb.height);
-					}
-
-					//Stepping to catch really fast entities - this is not perfect, but should prevent the majority of fallthrough cases.
-					steps = Math.ceil(Math.max(Math.abs(entityDeltaX) / sW, Math.abs(entityDeltaY) / sH));
-					steps = Math.min(steps, 100); //Prevent memory overflow if things move exponentially far.
-					dX    = entityDeltaX / steps;
-					dY    = entityDeltaY / steps;
 					
-					//steps = 1;
+					if(ent.bullet){
+						for(var i in ent.collisionTypes){
+							aabb = ent.getAABB(ent.collisionTypes[i]);
+							sW = Math.min(sW, aabb.width);
+							sH = Math.min(sH, aabb.height);
+						}
+
+						//Stepping to catch really fast entities - this is not perfect, but should prevent the majority of fallthrough cases.
+						steps = Math.ceil(Math.max(Math.abs(entityDeltaX) / sW, Math.abs(entityDeltaY) / sH));
+						steps = Math.min(steps, 100); //Prevent memory overflow if things move exponentially far.
+						dX    = entityDeltaX / steps;
+						dY    = entityDeltaY / steps;
+					} else {
+						steps = 1;
+						dX    = entityDeltaX;
+						dY    = entityDeltaY;
+					}
 					
 					for(step = 0; step < steps; step++){
 						ent.prepareCollision(ent.previousX + dX, ent.previousY + dY);
@@ -1033,11 +1038,7 @@ This component checks for collisions between entities in its group which typical
 							break;
 						} else {
 							ent.trigger('relocate-entity', finalMovementInfo);
-//							ent.previousX = finalMovementInfo.x;
-//							ent.previousY = finalMovementInfo.y;
 						}
-						
-						if(steps > 1) console.log('stepping!')
 					}
 				}
 				
