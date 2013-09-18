@@ -207,6 +207,18 @@ Multiple collision components may be added to a single entity if distinct messag
 					entity.collisionFunctions[i].prepareCollision(x, y);
 				}
 			};
+			
+			entity.relocateEntity = function(x, y){
+				entity.triggerEvent('relocate-entity', {x:x, y:y});
+			};
+			
+			entity.getCollisionTypes = function(){
+				return entity.collisionTypes;
+			};
+
+			entity.getSolidCollisions = function(){
+				return entity.solidCollisions;
+			};
 		}
 
 		entity.collisionFunctions[self.collisionType] = {

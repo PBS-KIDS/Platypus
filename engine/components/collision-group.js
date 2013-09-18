@@ -121,7 +121,7 @@ This component checks for collisions between entities in its group which typical
 		triggerMessage.x      = x;
 		triggerMessage.y      = y;
 		triggerMessage.hitType= hitType;
-		entity.trigger('hit-by-' + thatType, triggerMessage);
+		entity.triggerEvent('hit-by-' + thatType, triggerMessage);
 		
 		if (otherEntity)
 		{
@@ -131,7 +131,7 @@ This component checks for collisions between entities in its group which typical
 			triggerMessage.x      = -x;
 			triggerMessage.y      = -y;
 			triggerMessage.hitType= hitType;
-			otherEntity.trigger('hit-by-' + thisType, triggerMessage);
+			otherEntity.triggerEvent('hit-by-' + thisType, triggerMessage);
 		}
 	},
 	
@@ -525,6 +525,9 @@ This component checks for collisions between entities in its group which typical
 	},
 	createCollisionGroup = function(self){
 		return {
+			getSize: function(){
+				return self.solidEntities.length;
+			},
 			getCollisionTypes: function(){
 				return self.getCollisionTypes();
 			},
@@ -548,6 +551,9 @@ This component checks for collisions between entities in its group which typical
 			},
 			relocateEntity: function(x, y){
 				return self.relocateEntity(x, y);
+			},
+			getSolidEntities: function(){
+				return self.solidEntities;
 			},
 			jumpThrough: false //TODO: this introduces odd behavior - not sure how to resolve yet. - DDD
 		};
@@ -711,8 +717,7 @@ This component checks for collisions between entities in its group which typical
 			},
 			
 			"check-collision-group": function(resp){
-				var entitiesLive = null,
-				time = new Date().getTime(); //TODO: TML - Why create this in here?
+				var time = new Date().getTime(); //TODO: TML - Why create this in here?
 				
 				if(resp.camera){
 					this.checkCamera(resp.camera);
@@ -727,7 +732,7 @@ This component checks for collisions between entities in its group which typical
 				time += this.timeElapsed.time;
 
 //				this.tester = 0;
-				if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
+		/*		if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
 					var goalX = this.owner.x - this.owner.previousX,
 					goalY     = this.owner.y - this.owner.previousY;
 
@@ -761,13 +766,13 @@ This component checks for collisions between entities in its group which typical
 					
 					
 //					this.checkSoftCollisions(resp);
-				} else {
-					this.checkGroupCollisions(resp);
+				} else { */
+/*					this.checkGroupCollisions(resp);
 
 					this.timeElapsed.name = 'Col-Group';
 					this.timeElapsed.time = new Date().getTime() - time;
 					platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-					time += this.timeElapsed.time;
+					time += this.timeElapsed.time;*/
 
 					this.prepareCollisions(resp);
 
@@ -797,7 +802,7 @@ This component checks for collisions between entities in its group which typical
 					platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 					time += this.timeElapsed.time;
 
-				}
+				//}
 			},
 			
 			"relocate-group": function(resp){
@@ -830,7 +835,7 @@ This component checks for collisions between entities in its group which typical
 				
 				for (var x = 0; x < this.solidEntities.length; x++){
 					childEntity = this.solidEntities[x];
-					if(childEntity.collisionGroup){
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
 					compiledList = appendUniqueItems(compiledList, childEntity.getCollisionTypes());
@@ -846,7 +851,7 @@ This component checks for collisions between entities in its group which typical
 				
 				for (var x = 0; x < this.solidEntities.length; x++){
 					childEntity = this.solidEntities[x];
-					if(childEntity.collisionGroup){
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
 					entityList = childEntity.getSolidCollisions();
@@ -867,12 +872,11 @@ This component checks for collisions between entities in its group which typical
 					var aabb = new platformer.classes.aABB();
 					for (var x = 0; x < this.solidEntities.length; x++){
 						childEntity = this.solidEntities[x];
-						if(childEntity.collisionGroup){
+						if((childEntity !== this.owner) && childEntity.collisionGroup){
 							childEntity = childEntity.collisionGroup;
 						}
-						if(childEntity.collisionTypes[collisionType]){
-							aabb.include(childEntity.getAABB(collisionType));
-						}
+						
+						aabb.include(childEntity.getAABB(collisionType));
 					}
 					return aabb;
 				}
@@ -887,12 +891,11 @@ This component checks for collisions between entities in its group which typical
 					var aabb = new platformer.classes.aABB();
 					for (var x = 0; x < this.solidEntities.length; x++){
 						childEntity = this.solidEntities[x];
-						if(childEntity.collisionGroup){
+						if((childEntity !== this.owner) && childEntity.collisionGroup){
 							childEntity = childEntity.collisionGroup;
 						}
-						if(childEntity.collisionTypes[collisionType]){
-							aabb.include(childEntity.getPreviousAABB(collisionType));
-						}
+
+						aabb.include(childEntity.getPreviousAABB(collisionType));
 					}
 					return aabb;
 				}
@@ -907,15 +910,17 @@ This component checks for collisions between entities in its group which typical
 			
 			getShapes: function(collisionType){
 				var childEntity = null,
-				shapes = [];
+				shapes = [],
+				newShapes = null;
 				
 				for (var x = 0; x < this.solidEntities.length; x++){
 					childEntity = this.solidEntities[x];
-					if(childEntity.collisionGroup){
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					if(childEntity.collisionTypes[collisionType]){
-						shapes = shapes.concat(childEntity.getShapes(collisionType));
+					newShapes = childEntity.getShapes(collisionType);
+					if(newShapes){
+						shapes = shapes.concat(newShapes);
 					}
 				}
 				return shapes;
@@ -927,13 +932,15 @@ This component checks for collisions between entities in its group which typical
 				
 				for (var x = 0; x < this.solidEntities.length; x++){
 					childEntity = this.solidEntities[x];
-					if(childEntity.collisionGroup){
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					if(childEntity.collisionTypes[collisionType]){
-						shapes = shapes.concat(childEntity.getPrevShapes(collisionType));
+					newShapes = childEntity.getPrevShapes(collisionType);
+					if(newShapes){
+						shapes = shapes.concat(newShapes);
 					}
 				}
+				return shapes;
 			},
 			
 			prepareCollision: function(x, y){
@@ -941,47 +948,38 @@ This component checks for collisions between entities in its group which typical
 				oX = 0,
 				oY = 0;
 				
-				if(this.owner.prepareCollision){
-					this.owner.prepareCollision(x, y);
-				}
-				
 				for (var i = 0; i < this.solidEntities.length; i++){
 					childEntity = this.solidEntities[i];
 					childEntity.saveDX = childEntity.x - childEntity.previousX;
 					childEntity.saveDY = childEntity.y - childEntity.previousY;
-					oX = self.previousX - childEntity.previousX;
-					oY = self.previousY - childEntity.previousY;
-					if(childEntity.collisionGroup){
+					oX = childEntity.saveOX = this.owner.previousX - childEntity.previousX;
+					oY = childEntity.saveOY = this.owner.previousY - childEntity.previousY;
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					if(childEntity.collisionTypes[collisionType]){
-						childEntity.prepareCollision(x + oX, y + oY);
-					}
+					childEntity.prepareCollision(x - oX, y - oY);
 				}
 			},
 
 			relocateEntity: function(x, y){
 				var childEntity = null,
-				entity = null,
-				oX = 0,
-				oY = 0;
+				entity = null;
 				
-				if(this.owner.relocateEntity){
-					this.owner.relocateEntity(x, y);
+				this.owner.saveDX -= x - this.owner.previousX;
+				this.owner.saveDY -= y - this.owner.previousY;
+				
+				if(this.owner.saveDY < 0){
+					console.log(this.owner.saveDY);
 				}
-				
+					
 				for (var i = 0; i < this.solidEntities.length; i++){
 					childEntity = entity = this.solidEntities[i];
-					oX = self.previousX - childEntity.previousX;
-					oY = self.previousY - childEntity.previousY;
-					if(childEntity.collisionGroup){
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					if(childEntity.collisionTypes[collisionType]){
-						childEntity.relocateEntity(x + oX, y + oY);
-						entity.saveDX = childEntity.x - childEntity.previousX;
-						entity.saveDY = childEntity.y - childEntity.previousY;
-					}
+					childEntity.relocateEntity(x - entity.saveOX, y - entity.saveOY);
+					entity.x += entity.saveDX;
+					entity.y += entity.saveDY;
 				}
 			},
 			
@@ -1173,13 +1171,14 @@ This component checks for collisions between entities in its group which typical
 				var messageData = null;
 				for (var x = entities.length - 1; x > -1; x--){
 					if(entities[x].collisionUnresolved){
+						if(entities[x].collisionGroup && entities[x].collisionGroup.getSize() > 1){
+							entityCollisionDataContainer.reset();
+							clearXYPair(xyPair);
+							xyPair = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, xyPair);
+						}
 						entityCollisionDataContainer.reset();
 						clearXYPair(xyPair);
-						
-						if(entities[x].collisionGroup && entities[x].collisionGroup.size > 1){
-							xyPair = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, null, entityCollisionDataContainer, xyPair);
-						}
-						xyPair = this.checkSolidEntityCollision(entities[x], entities[x], null, entityCollisionDataContainer, xyPair);
+						xyPair = this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer, xyPair);
 						
 						for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
 						{
@@ -1197,8 +1196,7 @@ This component checks for collisions between entities in its group which typical
 				}
 			},
 			
-			//TODO: remove ignoredEntities if we don't need it. - DDD
-			checkSolidEntityCollision: function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, xyInfo) {
+			checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection, xyInfo) {
 				var steps         = 0,
 				step              = 0,
 				finalMovementInfo = xyInfo,
@@ -1208,7 +1206,13 @@ This component checks for collisions between entities in its group which typical
 				dX                = 0,
 				dY                = 0,
 				sW                = Infinity,
-				sH                = Infinity;
+				sH                = Infinity,
+				collisionTypes    = entityOrGroup.getCollisionTypes(),
+				ignoredEntities   = false;
+				
+				if(entityOrGroup.getSolidEntities){
+					ignoredEntities = entityOrGroup.getSolidEntities();
+				}
 				
 				finalMovementInfo.x = ent.x;
 				finalMovementInfo.y = ent.y;
@@ -1218,8 +1222,8 @@ This component checks for collisions between entities in its group which typical
 				if (entityDeltaX || entityDeltaY) {
 					
 					if(ent.bullet){
-						for(var i in ent.collisionTypes){
-							aabb = ent.getAABB(ent.collisionTypes[i]);
+						for(var i in collisionTypes){
+							aabb = entityOrGroup.getAABB(collisionTypes[i]);
 							sW = Math.min(sW, aabb.width);
 							sH = Math.min(sH, aabb.height);
 						}
@@ -1236,22 +1240,22 @@ This component checks for collisions between entities in its group which typical
 					}
 					
 					for(step = 0; step < steps; step++){
-						ent.prepareCollision(ent.previousX + dX, ent.previousY + dY);
+						entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
 
 						finalMovementInfo.x = ent.x;
 						finalMovementInfo.y = ent.y;
 						finalMovementInfo.xMomentum = 0;
 						finalMovementInfo.yMomentum = 0;
 						
-						finalMovementInfo = this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY);
+						finalMovementInfo = this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY, collisionTypes);
 						
 						
 						if((finalMovementInfo.x === ent.previousX) && (finalMovementInfo.y === ent.previousY)){
-							ent.trigger('relocate-entity', finalMovementInfo);
+							entityOrGroup.relocateEntity(finalMovementInfo.x, finalMovementInfo.y);
 							//No more movement so we bail!
 							break;
 						} else {
-							ent.trigger('relocate-entity', finalMovementInfo);
+							entityOrGroup.relocateEntity(finalMovementInfo.x, finalMovementInfo.y);
 						}
 					}
 				}
@@ -1277,11 +1281,10 @@ This component checks for collisions between entities in its group which typical
 					}
 					return true;
 				};
-				
-				return function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY) {
+
+				return function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY, collisionTypes) {
 					var potentialCollision = false;
 					var potentialCollidingShapes = [];
-					var collisionTypes = ent.collisionTypes;
 					var previousAABB = null;
 					var currentAABB = null;
 					var sweepAABB = tempAABB;
@@ -1292,23 +1295,24 @@ This component checks for collisions between entities in its group which typical
 					var otherShapes = null;
 					var entitiesByTypeLive = this.getWorldEntities();
 					var otherEntities = null;
-					var terrain = this.getWorldTerrain();
+					var terrain = this.getWorldTerrain(),
+					solidCollisions = entityOrGroup.getSolidCollisions();
 					
-					if(!ent.jumpThrough || (entityDeltaY >= 0)){ //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
+					if(!entityOrGroup.jumpThrough || (entityDeltaY >= 0)){ //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
 	
 						for(var i = 0; i < collisionTypes.length; i++){
 							//Sweep the full movement of each collision type
 							potentialCollidingShapes[i] = [];
 							collisionType = collisionTypes[i];
-							previousAABB = ent.getPreviousAABB(collisionType);
-							currentAABB = ent.getAABB(collisionType);
+							previousAABB = entityOrGroup.getPreviousAABB(collisionType);
+							currentAABB = entityOrGroup.getAABB(collisionType);
 							
 							sweepAABB.reset();
 							sweepAABB.include(currentAABB);
 							sweepAABB.include(previousAABB);
 						
-							for (var y = 0; y < ent.solidCollisions[collisionType].length; y++) {
-								otherCollisionType = ent.solidCollisions[collisionType][y];
+							for (var y = 0; y < solidCollisions[collisionType].length; y++) {
+								otherCollisionType = solidCollisions[collisionType][y];
 	
 								if(entitiesByTypeLive[otherCollisionType]){
 									otherEntities = entitiesByTypeLive[otherCollisionType];
@@ -1342,7 +1346,7 @@ This component checks for collisions between entities in its group which typical
 						}
 	
 						if (potentialCollision) {
-							finalMovementInfo = this.resolveCollisionPosition(ent, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY);
+							finalMovementInfo = this.resolveCollisionPosition(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY);
 						}
 	
 					}
@@ -1351,7 +1355,7 @@ This component checks for collisions between entities in its group which typical
 				};
 			})(),
 			
-			resolveCollisionPosition: function(ent, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY){
+			resolveCollisionPosition: function(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY){
 				var myShapes = null,
 				collisionData = typeCollisionData;
 
@@ -1359,7 +1363,7 @@ This component checks for collisions between entities in its group which typical
 					for(var j = 0; j < collisionTypes.length; j++){
 						//Move each collision type in X to find the min X movement
 						collisionData.clear();
-						collisionData = this.findMinAxisMovement(ent, ent.collisionTypes[j], 'x', potentialCollidingShapes[j], collisionData);
+						collisionData = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'x', potentialCollidingShapes[j], collisionData);
 						
 						if (collisionData.occurred)
 						{
@@ -1378,8 +1382,8 @@ This component checks for collisions between entities in its group which typical
 				}
 				
 				for(var j = 0; j < collisionTypes.length; j++){
-					ent.getPreviousAABB(collisionTypes[j]).moveX(finalMovementInfo.x);
-					myShapes = ent.getPrevShapes(collisionTypes[j]);
+					entityOrGroup.getPreviousAABB(collisionTypes[j]).moveX(finalMovementInfo.x);
+					myShapes = entityOrGroup.getPrevShapes(collisionTypes[j]);
 					for(var k = 0; k < myShapes.length; k++)
 					{
 						myShapes[k].setXWithEntityX(finalMovementInfo.x);
@@ -1391,7 +1395,7 @@ This component checks for collisions between entities in its group which typical
 					for(var j = 0; j < collisionTypes.length; j++){
 						//Move each collision type in Y to find the min Y movement
 						collisionData.clear();
-						collisionData = this.findMinAxisMovement(ent, ent.collisionTypes[j], 'y', potentialCollidingShapes[j], collisionData);
+						collisionData = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'y', potentialCollidingShapes[j], collisionData);
 						
 						if (collisionData.occurred)
 						{
@@ -1413,11 +1417,11 @@ This component checks for collisions between entities in its group which typical
 				return finalMovementInfo;
 			},
 			
-			findMinAxisMovement: function (ent, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
+			findMinAxisMovement: function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
 				//Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
 				
-				var shapes = ent.getShapes(collisionType);
-				var prevShapes = ent.getPrevShapes(collisionType);
+				var shapes = entityOrGroup.getShapes(collisionType);
+				var prevShapes = entityOrGroup.getPrevShapes(collisionType);
 				
 				for (var i = 0; i < shapes.length; i++) {
 					shapeCollisionData.clear();
@@ -1600,15 +1604,6 @@ This component checks for collisions between entities in its group which typical
 			
 			getCollisionGroupAABB: function(){
 				return this.getAABB();
-			},
-			
-			getCollisionGroupShapes: function(){
-				//TODO: Nee to return shapes of all entities in this group, maybe - not sure yet. - DDD
-				var shapes = [];
-				
-				for (var x = 0; x < this.solidEntities.length; x++){
-				}
-				return shapes;
 			},
 			
 			getWorldEntities: function(){

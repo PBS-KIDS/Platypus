@@ -88,28 +88,30 @@ platformer.classes.aABB = (function(){
 	};
 	
 	proto.include = function(aabb){
-		if(this.empty){
-			this.set(aabb);
-		} else {
-			if(this.left > aabb.left){
-				this.left = aabb.left;
+		if(aabb){
+			if(this.empty){
+				this.set(aabb);
+			} else {
+				if(this.left > aabb.left){
+					this.left = aabb.left;
+				}
+				if(this.right < aabb.right){
+					this.right = aabb.right;
+				}
+				if(this.top > aabb.top){
+					this.top = aabb.top;
+				}
+				if(this.bottom < aabb.bottom){
+					this.bottom = aabb.bottom;
+				}
+				
+				this.width      = this.right  - this.left;
+				this.height     = this.bottom - this.top;
+				this.halfWidth  = this.width / 2;
+				this.halfHeight = this.height / 2;
+				this.x          = this.left + this.halfWidth;
+				this.y          = this.top  + this.halfHeight;
 			}
-			if(this.right < aabb.right){
-				this.right = aabb.right;
-			}
-			if(this.top > aabb.top){
-				this.top = aabb.top;
-			}
-			if(this.bottom < aabb.bottom){
-				this.bottom = aabb.bottom;
-			}
-			
-			this.width      = this.right  - this.left;
-			this.height     = this.bottom - this.top;
-			this.halfWidth  = this.width / 2;
-			this.halfHeight = this.height / 2;
-			this.x          = this.left + this.halfWidth;
-			this.y          = this.top  + this.halfHeight;
 		}
 	};
 	
