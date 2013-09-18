@@ -587,6 +587,10 @@ This component checks for collisions between entities in its group which typical
 //							this.allEntities.splice(0, 0, entity);
 //						}
 						this.updateLiveList = true;
+
+						if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
+							this.updateAABB();
+						}
 					}
 				}
 			},
@@ -647,6 +651,10 @@ This component checks for collisions between entities in its group which typical
 						}
 					}
 					this.updateLiveList = true;
+					
+					if(this.owner.x && this.owner.y){ // is this collision group attached to a collision entity?
+						this.updateAABB();
+					}
 				}
 				
 			},
@@ -687,7 +695,7 @@ This component checks for collisions between entities in its group which typical
 
 					if(this.allEntitiesLive.length > 1){
 						this.checkGroupCollisions(resp);
-						this.prepareCollisions(resp);
+						this.prepareCollisionsInGroup(goalX, goalY);
 						this.checkSolidCollisions(resp, false);
 						this.resolveNonCollisions(resp);
 					}
@@ -695,12 +703,18 @@ This component checks for collisions between entities in its group which typical
 					this.aabb.reset();
 					this.aabb.include(this.owner.getAABB());
 					for (var x = 0; x < this.solidEntitiesLive.length; x++){
+						this.solidEntitiesLive[x].x += this.solidEntitiesLive[x].saveDX;
+						this.solidEntitiesLive[x].y += this.solidEntitiesLive[x].saveDY;
 						this.aabb.include(this.solidEntitiesLive[x].getCollisionGroupAABB?this.solidEntitiesLive[x].getCollisionGroupAABB():this.solidEntitiesLive[x].getAABB());
 					}
 			
 					this.prevAABB.setAll(this.aabb.x, this.aabb.y, this.aabb.width, this.aabb.height);
 					this.aabb.move(this.aabb.x + goalX, this.aabb.y + goalY);
-						
+					
+					this.owner.x += goalX;
+					this.owner.y += goalY;
+					
+					
 //					this.checkSoftCollisions(resp);
 					
 					if (resp.entities){
@@ -757,10 +771,7 @@ This component checks for collisions between entities in its group which typical
 				for (var i = 0; i < this.solidEntities.length; i++){
 					this.solidEntities[i].trigger('relocate-entity', xy);
 				}
-				this.aabb.reset();
-				for (var x = 0; x < this.solidEntities.length; x++){
-					this.aabb.include(((this.solidEntities[x] !== this.owner) && this.solidEntities[x].getCollisionGroupAABB)?this.solidEntities[x].getCollisionGroupAABB():this.solidEntities[x].getAABB());
-				}
+				this.updateAABB();
 //				if(test) console.log('rlc: ' + this.aabb.y);
 				this.resolveMomentum();
 			},
@@ -768,6 +779,7 @@ This component checks for collisions between entities in its group which typical
 			"relocate-entity": function(resp){
 				this.owner.previousX = this.owner.x;
 				this.owner.previousY = this.owner.y;
+				this.updateAABB();
 				
 		/*		if(test || (this.allEntitiesLive.length > 1)){
 					test = true;
@@ -784,6 +796,13 @@ This component checks for collisions between entities in its group which typical
 
 			getPreviousAABB: function(){
 				return this.prevAABB;
+			},
+			
+			updateAABB: function(){
+				this.aabb.reset();
+				for (var x = 0; x < this.solidEntities.length; x++){
+					this.aabb.include(((this.solidEntities[x] !== this.owner) && this.solidEntities[x].getCollisionGroupAABB)?this.solidEntities[x].getCollisionGroupAABB():this.solidEntities[x].getAABB());
+				}
 			},
 
 			checkCamera: function(camera, movers){
@@ -921,7 +940,8 @@ This component checks for collisions between entities in its group which typical
 						groups[x].collisionUnresolved = true;
 					}
 
-//TODO: Put back in some time? - DDD					this.resolveCollisionList(groups, true, false, resp);
+//TODO: Put back in some time? - DDD
+					this.resolveCollisionList(groups, true, false, resp);
 				}
 			},
 			
@@ -932,6 +952,20 @@ This component checks for collisions between entities in its group which typical
 					entity.collisionUnresolved = true;
 					if(entity !== this.owner){
 						entity.triggerEvent('prepare-for-collision', resp);
+					}
+				}
+			},
+			
+			prepareCollisionsInGroup: function (dx, dy) {
+				var entity = null;
+				for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
+					entity = this.allEntitiesLive[x];
+					entity.collisionUnresolved = true;
+					if(entity !== this.owner){
+						entity.saveDX = entity.x - entity.previousX;
+						entity.saveDY = entity.y - entity.previousY;
+						entity.x = entity.previousX + dx;
+						entity.y = entity.previousY + dy;
 					}
 				}
 			},
