@@ -549,8 +549,11 @@ This component checks for collisions between entities in its group which typical
 			prepareCollision: function(x, y){
 				return self.prepareCollision(x, y);
 			},
-			relocateEntity: function(x, y){
-				return self.relocateEntity(x, y);
+			relocateEntity: function(x, y, collisionData){
+				return self.relocateEntity(x, y, collisionData);
+			},
+			movePreviousX: function(x){
+				return self.movePreviousX(x);
 			},
 			getSolidEntities: function(){
 				return self.solidEntities;
@@ -960,26 +963,66 @@ This component checks for collisions between entities in its group which typical
 					childEntity.prepareCollision(x - oX, y - oY);
 				}
 			},
-
-			relocateEntity: function(x, y){
+			
+			movePreviousX: function(x){
 				var childEntity = null,
-				entity = null;
+				offset = 0,
+				i = 0;
+				
+				for (; i < this.solidEntities.length; i++){
+					childEntity = this.solidEntities[i];
+					offset = childEntity.saveOX;
+					if((childEntity !== this.owner) && childEntity.collisionGroup){
+						childEntity = childEntity.collisionGroup;
+					}
+					childEntity.movePreviousX(x - offset);
+				}
+			},
+			
+			/*				for(var j = 0; j < collisionTypes.length; j++){
+				entityOrGroup.getPreviousAABB(collisionTypes[j]).moveX(finalMovementInfo.x);
+				myShapes = entityOrGroup.getPrevShapes(collisionTypes[j]);
+				for(var k = 0; k < myShapes.length; k++)
+				{
+					myShapes[k].setXWithEntityX(finalMovementInfo.x);
+				}
+			}*/
+
+
+			relocateEntity: function(x, y, collisionData){
+				var childEntity = null,
+				entity = null,
+				i = 0;
 				
 				this.owner.saveDX -= x - this.owner.previousX;
 				this.owner.saveDY -= y - this.owner.previousY;
-				
-				if(this.owner.saveDY < 0){
-					console.log(this.owner.saveDY);
+
+				for(i = 0; i < collisionData.xCount; i++){
+					if(collisionData.getXEntry(i).thisEntity === this.owner){
+						this.owner.saveDX = 0;
+						break;
+					}
 				}
-					
+				
+				for(i = 0; i < collisionData.yCount; i++){
+					if(collisionData.getYEntry(i).thisEntity === this.owner){
+						this.owner.saveDY = 0;
+						break;
+					}
+				}
+				
 				for (var i = 0; i < this.solidEntities.length; i++){
 					childEntity = entity = this.solidEntities[i];
 					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					childEntity.relocateEntity(x - entity.saveOX, y - entity.saveOY);
+					childEntity.relocateEntity(x - entity.saveOX, y - entity.saveOY, collisionData);
 					entity.x += entity.saveDX;
 					entity.y += entity.saveDY;
+					if(entity !== this.owner){
+						entity.x += this.owner.saveDX;
+						entity.y += this.owner.saveDY;
+					}
 				}
 			},
 			
@@ -1183,13 +1226,13 @@ This component checks for collisions between entities in its group which typical
 						for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
 						{
 							messageData = entityCollisionDataContainer.getXEntry(i);
-							triggerCollisionMessages(entities[x], messageData.thatEntity, messageData.thisCollisionType, messageData.thatCollisionType, messageData.direction, 0, 'solid');
+							triggerCollisionMessages(messageData.thisEntity, messageData.thatEntity, messageData.thisCollisionType, messageData.thatCollisionType, messageData.direction, 0, 'solid');
 						}
 						
 						for (i = 0; i < entityCollisionDataContainer.yCount; i++)
 						{
 							messageData = entityCollisionDataContainer.getYEntry(i);
-							triggerCollisionMessages(entities[x], messageData.thatEntity, messageData.thisCollisionType, messageData.thatCollisionType, 0, messageData.direction, 'solid');
+							triggerCollisionMessages(messageData.thisEntity, messageData.thatEntity, messageData.thisCollisionType, messageData.thatCollisionType, 0, messageData.direction, 'solid');
 						}
 						entities[x].collisionUnresolved = false;
 					}
@@ -1251,11 +1294,11 @@ This component checks for collisions between entities in its group which typical
 						
 						
 						if((finalMovementInfo.x === ent.previousX) && (finalMovementInfo.y === ent.previousY)){
-							entityOrGroup.relocateEntity(finalMovementInfo.x, finalMovementInfo.y);
+							entityOrGroup.relocateEntity(finalMovementInfo.x, finalMovementInfo.y, collisionDataCollection);
 							//No more movement so we bail!
 							break;
 						} else {
-							entityOrGroup.relocateEntity(finalMovementInfo.x, finalMovementInfo.y);
+							entityOrGroup.relocateEntity(finalMovementInfo.x, finalMovementInfo.y, collisionDataCollection);
 						}
 					}
 				}
@@ -1381,17 +1424,9 @@ This component checks for collisions between entities in its group which typical
 					finalMovementInfo.xMomentum = 0;
 				}
 				
-				for(var j = 0; j < collisionTypes.length; j++){
-					entityOrGroup.getPreviousAABB(collisionTypes[j]).moveX(finalMovementInfo.x);
-					myShapes = entityOrGroup.getPrevShapes(collisionTypes[j]);
-					for(var k = 0; k < myShapes.length; k++)
-					{
-						myShapes[k].setXWithEntityX(finalMovementInfo.x);
-					}
-				}
+				entityOrGroup.movePreviousX(finalMovementInfo.x);
 				
-				if (entityDeltaY != 0)
-				{
+				if (entityDeltaY != 0) {
 					for(var j = 0; j < collisionTypes.length; j++){
 						//Move each collision type in Y to find the min Y movement
 						collisionData.clear();
@@ -1458,6 +1493,7 @@ This component checks for collisions between entities in its group which typical
 					collisionData.position = position;
 					collisionData.deltaMovement = Math.abs(position - initial);
 					collisionData.aABB = thatShape.getAABB();
+					collisionData.thisEntity = thisShape.owner;
 					collisionData.thatEntity = thatShape.owner;
 					collisionData.thisCollisionType = thisShape.collisionType;
 					collisionData.thatCollisionType = thatShape.collisionType;

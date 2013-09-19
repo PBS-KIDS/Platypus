@@ -212,6 +212,12 @@ Multiple collision components may be added to a single entity if distinct messag
 				entity.triggerEvent('relocate-entity', {x:x, y:y});
 			};
 			
+			entity.movePreviousX = function(x){
+				for(var i in entity.collisionFunctions){
+					entity.collisionFunctions[i].movePreviousX(x);
+				}
+			};
+			
 			entity.getCollisionTypes = function(){
 				return entity.collisionTypes;
 			};
@@ -240,6 +246,10 @@ Multiple collision components may be added to a single entity if distinct messag
 			
 			prepareCollision: function(x, y){
 				self.prepareCollision(x, y);
+			},
+			
+			movePreviousX: function(x){
+				self.movePreviousX(x);
 			}
 		};
 		
@@ -456,6 +466,13 @@ Multiple collision components may be added to a single entity if distinct messag
 				for (var x = 0; x < this.shapes.length; x++){
 					this.shapes[x].update(this.owner.x, this.owner.y);
 					this.aabb.include(this.shapes[x].getAABB());
+				}
+			},
+			
+			movePreviousX: function(x){
+				this.prevAABB.moveX(x);
+				for(var k = 0; k < this.prevShapes.length; k++) {
+					this.prevShapes[k].setXWithEntityX(x);
 				}
 			}
 		}
