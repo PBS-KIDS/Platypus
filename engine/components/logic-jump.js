@@ -46,7 +46,10 @@ This component will cause the entity to jump with a certain amount of accelerati
 			}
 			
 			this.aX = this.owner.accelerationX || definition.accelerationX || 0;
-			this.aY = this.owner.accelerationY || definition.accelerationY || -4;
+			this.aY = this.owner.accelerationY || definition.accelerationY;
+			if(typeof this.aY !== 'number'){
+				this.aY = -4;
+			}
 			if(typeof this.owner.dx !== 'number'){
 				this.owner.dx = 0;
 			}
