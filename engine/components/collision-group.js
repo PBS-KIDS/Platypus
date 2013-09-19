@@ -78,23 +78,24 @@ This component checks for collisions between entities in its group which typical
 	typeCollisionData  = new platformer.classes.collisionData(),
 	shapeCollisionData = new platformer.classes.collisionData(),
 	entityCollisionDataContainer = new platformer.classes.collisionDataContainer(),
-	triggerCollisionMessages = function(entity, otherEntity, thisType, thatType, x, y, hitType){
+	triggerCollisionMessages = function(entity, otherEntity, thisType, thatType, x, y, hitType, vector){
 		
 		triggerMessage.entity = otherEntity;
 		triggerMessage.myType = thisType;
 		triggerMessage.type   = thatType;
 		triggerMessage.x      = x;
 		triggerMessage.y      = y;
+		triggerMessage.direction = vector;
 		triggerMessage.hitType= hitType;
 		entity.triggerEvent('hit-by-' + thatType, triggerMessage);
 		
-		if (otherEntity)
-		{
+		if (otherEntity) {
 			triggerMessage.entity = entity;
 			triggerMessage.type   = thisType;
 			triggerMessage.myType = thatType;
 			triggerMessage.x      = -x;
 			triggerMessage.y      = -y;
+			triggerMessage.direction = vector.getInverse();
 			triggerMessage.hitType= hitType;
 			otherEntity.triggerEvent('hit-by-' + thisType, triggerMessage);
 		}
@@ -152,12 +153,17 @@ This component checks for collisions between entities in its group which typical
 		return false;
 	},
 	findAxisCollisionPosition = (function(){
-		var getMovementDistance = function(currentDistance, minimumDistance){
+		var v = new vector(),
+		returnInfo = {
+			position: 0,
+			contactVector: v
+		}, 
+		getMovementDistance = function(currentDistance, minimumDistance){
 			return Math.sqrt(Math.pow(minimumDistance, 2) - Math.pow(currentDistance, 2));
 		},
-		getCornerOnCircle = function(circlePos, radius, rectanglePos, half){
-			var corner = Math.abs(circlePos - rectanglePos) - half;
-			return getMovementDistance(corner, radius);
+		getCorner = function(circlePos, rectanglePos, half){
+			var diff = circlePos - rectanglePos;
+			return diff - (diff/Math.abs(diff)) * half;
 		},
 		getOffsetForAABB = function(axis, thisAABB, thatAABB){
 			if (axis === 'x') {
@@ -166,18 +172,38 @@ This component checks for collisions between entities in its group which typical
 				return thatAABB.halfHeight + thisAABB.halfHeight;
 			}
 		},
-		getOffsetForCircleVsAABB = function(axis, circle, rect){
+		
+		getOffsetForCircleVsAABB = function(axis, circle, rect, moving, direction){
+			var newAxisPosition = 0;
+			
 			if (axis === 'x') {
 				if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom) {
 					return rect.aABB.halfWidth + circle.radius;
 				} else {
-					return rect.aABB.halfWidth + getCornerOnCircle(circle.y, circle.radius, rect.y, rect.aABB.halfHeight);
+					newAxisPosition = rect.aABB.halfWidth + getMovementDistance(getCorner(circle.y, rect.y, rect.aABB.halfHeight), circle.radius);
+					if(moving === circle){
+						v.x = -getCorner(circle.x - direction * newAxisPosition, rect.x, rect.aABB.halfWidth) / 2;
+						v.y = -getCorner(circle.y, rect.y, rect.aABB.halfHeight);
+					} else {
+						v.x = getCorner(circle.x, rect.x - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
+						v.y = getCorner(circle.y, rect.y, rect.aABB.halfHeight);
+					}
+					v.normalize();
+					return newAxisPosition;
 				}
 			} else if (axis === 'y') {
 				if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right) {
 					return rect.aABB.halfHeight + circle.radius;
 				} else {
-					return rect.aABB.halfHeight + getCornerOnCircle(circle.x, circle.radius, rect.x, rect.aABB.halfWidth );
+					if(moving === circle){
+						v.x = -getCorner(circle.x, rect.x, rect.aABB.halfWidth);
+						v.y = -getCorner(circle.y - direction * newAxisPosition, rect.y, rect.aABB.halfWidth) / 2;
+					} else {
+						v.x = getCorner(circle.x, rect.x, rect.aABB.halfWidth);
+						v.y = getCorner(circle.y, rect.y - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
+					}
+					v.normalize();
+					return rect.aABB.halfHeight + getMovementDistance(v.x, circle.radius);
 				}
 			}
 		},
@@ -194,15 +220,33 @@ This component checks for collisions between entities in its group which typical
 			
 			if (thisShape.type == 'rectangle') {
 				if(thatShape.type == 'rectangle'){
-					return thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.getAABB(), thatShape.getAABB());
+					returnInfo.position = thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.getAABB(), thatShape.getAABB());
+					v.x = 0;
+					v.y = 0;
+					v[axis] = direction;
+					return returnInfo;
 				} else if (thatShape.type == 'circle'){
-					return thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thatShape, thisShape);
+					v.x = 0;
+					v.y = 0;
+					v[axis] = direction;
+					returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thatShape, thisShape, thisShape, direction);
+//					v.x = -v.x;
+//					v.y = -v.y;
+					return returnInfo;
 				}
 			} else if (thisShape.type == 'circle') {
 				if(thatShape.type == 'rectangle'){
-					return thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thisShape, thatShape);
+					v.x = 0;
+					v.y = 0;
+					v[axis] = direction;
+					returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thisShape, thatShape, thisShape, direction);
+					return returnInfo;
 				} else if (thatShape.type == 'circle'){
-					return thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
+					returnInfo.position = thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
+					v.x = thatShape.x - thisShape.x;
+					v.y = thatShape.y - thisShape.y;
+					v.normalize();
+					return returnInfo;
 				}
 			}
 		};
@@ -596,14 +640,14 @@ This component checks for collisions between entities in its group which typical
 				this.owner.saveDY -= y - this.owner.previousY;
 
 				for(i = 0; i < collisionData.xCount; i++){
-					if(collisionData.getXEntry(i).thisEntity === this.owner){
+					if(collisionData.getXEntry(i).thisShape.owner === this.owner){
 						this.owner.saveDX = 0;
 						break;
 					}
 				}
 				
 				for(i = 0; i < collisionData.yCount; i++){
-					if(collisionData.getYEntry(i).thisEntity === this.owner){
+					if(collisionData.getYEntry(i).thisShape.owner === this.owner){
 						this.owner.saveDY = 0;
 						break;
 					}
@@ -755,13 +799,13 @@ This component checks for collisions between entities in its group which typical
 						for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
 						{
 							messageData = entityCollisionDataContainer.getXEntry(i);
-							triggerCollisionMessages(messageData.thisEntity, messageData.thatEntity, messageData.thisCollisionType, messageData.thatCollisionType, messageData.direction, 0, 'solid');
+							triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
 						}
 						
 						for (i = 0; i < entityCollisionDataContainer.yCount; i++)
 						{
 							messageData = entityCollisionDataContainer.getYEntry(i);
-							triggerCollisionMessages(messageData.thisEntity, messageData.thatEntity, messageData.thisCollisionType, messageData.thatCollisionType, 0, messageData.direction, 'solid');
+							triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
 						}
 						entities[x].collisionUnresolved = false;
 					}
@@ -1008,16 +1052,15 @@ This component checks for collisions between entities in its group which typical
 			 */
 			findMinShapeMovementCollision: (function(){
 
-				var storeCollisionData = function(collisionData, direction, position, initial, thisShape, thatShape){
+				var storeCollisionData = function(collisionData, direction, position, initial, thisShape, thatShape, vector){
 					collisionData.occurred = true;
 					collisionData.direction = direction;
 					collisionData.position = position;
 					collisionData.deltaMovement = Math.abs(position - initial);
 					collisionData.aABB = thatShape.getAABB();
-					collisionData.thisEntity = thisShape.owner;
-					collisionData.thatEntity = thatShape.owner;
-					collisionData.thisCollisionType = thisShape.collisionType;
-					collisionData.thatCollisionType = thatShape.collisionType;
+					collisionData.thisShape = thisShape;
+					collisionData.thatShape = thatShape;
+					collisionData.vector = vector.copy();
 				};
 				
 				return function (prevShape, currentShape, axis, potentialCollidingShapes, collisionData) {
@@ -1026,6 +1069,7 @@ This component checks for collisions between entities in its group which typical
 					var translatedShape = prevShape;
 					var direction = (initialPoint < goalPoint) ? 1 : -1;
 					var position = goalPoint;
+					var collisionInfo = null;
 					var finalPosition = goalPoint;
 					
 					if (initialPoint != goalPoint) {
@@ -1039,7 +1083,8 @@ This component checks for collisions between entities in its group which typical
 							position = goalPoint;
 							if(AABBCollision(translatedShape.getAABB(), potentialCollidingShapes[i].getAABB())) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
 								if (shapeCollision(translatedShape, potentialCollidingShapes[i])) {
-									position = findAxisCollisionPosition(axis, direction, translatedShape, potentialCollidingShapes[i]);
+									collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, potentialCollidingShapes[i]);
+									position = collisionInfo.position;
 									
 									if (direction > 0) {
 										if (position < finalPosition) {
@@ -1047,7 +1092,7 @@ This component checks for collisions between entities in its group which typical
 												position = initialPoint;
 											}
 											finalPosition = position;
-											storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, potentialCollidingShapes[i]);
+											storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, potentialCollidingShapes[i], collisionInfo.contactVector);
 										}
 									} else {
 										if (position > finalPosition) {
@@ -1055,7 +1100,7 @@ This component checks for collisions between entities in its group which typical
 												position = initialPoint;
 											}
 											finalPosition = position;
-											storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, potentialCollidingShapes[i]);
+											storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, potentialCollidingShapes[i], collisionInfo.contactVector);
 										}
 									}
 								}

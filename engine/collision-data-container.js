@@ -1,15 +1,14 @@
 
 platformer.classes.collisionData = (function(){
-	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisEntity, thatEntity, thisCollisionType, thatCollisionType){
+	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector){
 		this.occurred = occurred || false;
 		this.direction = direction || null;
 		this.position = position || null;
 		this.deltaMovement = deltaMovement || null;
 		this.aABB = aABB || null;
-		this.thisEntity = thisEntity || null;
-		this.thatEntity = thatEntity || null;
-		this.thisCollisionType = thisCollisionType || null;
-		this.thatCollisionType = thatCollisionType || null;
+		this.thisShape = thisShape || null;
+		this.thatShape = thatShape || null;
+		this.vector = vector || null;
 	};
 	var proto = collisionData.prototype;
 	
@@ -19,10 +18,9 @@ platformer.classes.collisionData = (function(){
 		this.position 		= dataToCopy.position;
 		this.deltaMovement 	= dataToCopy.deltaMovement;
 		this.aABB 			= dataToCopy.aABB;
-		this.thisEntity 	= dataToCopy.thisEntity;
-		this.thatEntity 	= dataToCopy.thatEntity;
-		this.thisCollisionType = dataToCopy.thisCollisionType;
-		this.thatCollisionType = dataToCopy.thatCollisionType;
+		this.thisShape      = dataToCopy.thisShape;
+		this.thatShape      = dataToCopy.thatShape;
+		this.vector         = dataToCopy.vector;
 	};
 	proto.clear = function (){
 		this.occurred 		   = false;
@@ -30,10 +28,9 @@ platformer.classes.collisionData = (function(){
 		this.position 		   = null;
 		this.deltaMovement 	   = null;
 		this.aABB 			   = null;
-		this.thisEntity 	   = null;
-		this.thatEntity 	   = null;
-		this.thisCollisionType = null;
-		this.thatCollisionType = null;
+		this.thisShape  	   = null;
+		this.thatShape  	   = null;
+		this.vector            = null;
 	};
 	return collisionData;
 })();
