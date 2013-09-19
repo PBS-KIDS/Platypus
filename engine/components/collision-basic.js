@@ -17,7 +17,6 @@ Multiple collision components may be added to a single entity if distinct messag
   > @param message.x (number) - Required. The new x coordinate.
   > @param message.y (number) - Required. The new y coordinate.
   > @param message.relative (boolean) - Optional. Determines whether the provided x,y coordinates are relative to the entity's current position. Defaults to `false`.
-- **resolve-momentum** - On receiving this message, this component adds the currently stored momentum in x and y to its coordinates. 
 - **hit-by-[collision-types specified in definition]** - When the entity collides with a listed collision-type, this message is received and re-triggered as a new message according to the component definition.
 
 ### Local Broadcasts
@@ -260,23 +259,18 @@ Multiple collision components may be added to a single entity if distinct messag
 		id: 'collision-basic',
 		
 		constructor: function(definition){
-			var x  = 0; 
-			var self   = this;
+			var x  = 0;
 			
 			this.immobile  = this.owner.immobile = this.owner.immobile || definition.immobile || false;
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
-			this.xMomentum = 0;
-			this.yMomentum = 0;
 			this.aabb      = new platformer.classes.aABB();
 			this.prevAABB  = new platformer.classes.aABB();
 			this.owner.bullet = this.owner.bullet || definition.bullet;
 			this.relocateObj = {
 									x: 0,
 									y: 0,
-									relative: false,
-									xMomentum: 0,
-									yMomentum: 0
+									relative: false
 								};
 	
 			var shapes = [];
@@ -420,16 +414,6 @@ Multiple collision components may be added to a single entity if distinct messag
 
 				this.owner.previousX = this.owner.x;
 				this.owner.previousY = this.owner.y;
-				
-				this.xMomentum = resp.xMomentum || 0;
-				this.yMomentum = resp.yMomentum || 0;
-			},
-			
-			"resolve-momentum": function(){
-				this.owner.x += this.xMomentum;
-				this.owner.y += this.yMomentum;
-				this.xMomentum = 0;
-				this.yMomentum = 0;
 			}
 		},
 		
