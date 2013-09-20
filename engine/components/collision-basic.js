@@ -358,8 +358,8 @@ Multiple collision components may be added to a single entity if distinct messag
 			},
 			
 			"handle-logic": function(){
-				if(this.owner.accelerationAbsorbed){
-					this.owner.accelerationAbsorbed = false;
+				if(this.owner.movementAbsorbed){
+					this.owner.movementAbsorbed = false;
 				}
 			},
 			
@@ -368,8 +368,8 @@ Multiple collision components may be added to a single entity if distinct messag
 				y     = this.owner.y;
 				
 				// absorb velocities from the last logic tick
-				if(!this.owner.accelerationAbsorbed && resp){
-					this.owner.accelerationAbsorbed = true;
+				if(!this.owner.movementAbsorbed && resp){
+					this.owner.movementAbsorbed = true;
 					if(this.owner.dx){
 						x += this.owner.dx * (resp.deltaT || 0);
 					}

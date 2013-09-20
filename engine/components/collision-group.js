@@ -263,13 +263,15 @@ This component checks for collisions between entities in its group which typical
 			var self = this;
 			
 			this.entitiesByType = {};
+			this.entitiesByTypeLive = {};
 			this.solidEntities = [];
 			this.solidEntitiesLive = [];
 			this.softEntities = [];
 			this.softEntitiesLive = [];
 			this.allEntities = [];
 			this.allEntitiesLive = [];
-			this.entitiesByTypeLive = {};
+			this.groupsLive = [];
+			
 			this.terrain = undefined;
 			this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
 			this.prevAABB = new platformer.classes.aABB(this.owner.x, this.owner.y);
@@ -281,6 +283,21 @@ This component checks for collisions between entities in its group which typical
 			this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
 			
 			this.collisionGroup = this.owner.collisionGroup = {
+				getAllEntities: function(){
+					var count = 0,
+					childEntity = null;
+					
+					for (var x = 0; x < self.solidEntities.length; x++){
+						childEntity = this.solidEntities[x];
+						if((childEntity !== this.owner) && childEntity.collisionGroup){
+							count += childEntity.collisionGroup.getAllEntities();
+						} else {
+							count += 1;
+						}
+					}
+
+					return count;
+				},
 				getSize: function(){
 					return self.solidEntities.length;
 				},
@@ -384,8 +401,7 @@ This component checks for collisions between entities in its group which typical
 				solid = false,
 				soft  = false;
 
-				if (types)
-				{
+				if (types) {
 					for(; i < types.length; i++){
 						for (x in this.entitiesByType[types[i]]) {
 							if(this.entitiesByType[types[i]][x] === entity){
@@ -454,6 +470,13 @@ This component checks for collisions between entities in its group which typical
 				this.prepareCollisions(resp);
 
 				this.timeElapsed.name = 'Col-Prep';
+				this.timeElapsed.time = new Date().getTime() - time;
+				platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+				time += this.timeElapsed.time;
+
+				this.checkGroupCollisions();
+
+				this.timeElapsed.name = 'Col-Group';
 				this.timeElapsed.time = new Date().getTime() - time;
 				platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 				time += this.timeElapsed.time;
@@ -672,91 +695,105 @@ This component checks for collisions between entities in its group which typical
 				}
 			},
 			
-			checkCamera: function(camera, movers){
-				var i  = 0,
-				j      = 0,
-				length = 0,
-				list   = null,
-				all    = null,
-				softs  = null,
-				solids = null,
-				width  = camera.width,
-				height = camera.height,
-				x      = camera.left + width  / 2,
-				y      = camera.top  + height / 2,
-				buffer = camera.buffer * 2,
-				entities = undefined,
-				entity = undefined,
-				check  = AABBCollision,
-				aabbLogic     = this.cameraLogicAABB,
-				aabbCollision = this.cameraCollisionAABB,
-				types = null;
-				
-				// store buffered size since the actual width x height is not used below.
-				width += buffer * 2;
-				height += buffer * 2;
-				
-				if(this.updateLiveList || !aabbLogic.matches(x, y, width, height)){
+			checkCamera: (function(){
+				var groupSortBySize = function(a, b){
+					return a.getAllEntities() - b.getAllEntities();
+				};
+				return function(camera, movers){
+					var i  = 0,
+					j      = 0,
+					length = 0,
+					list   = null,
+					all    = null,
+					softs  = null,
+					solids = null,
+					width  = camera.width,
+					height = camera.height,
+					x      = camera.left + width  / 2,
+					y      = camera.top  + height / 2,
+					buffer = camera.buffer * 2,
+					entities = undefined,
+					entity = undefined,
+					check  = AABBCollision,
+					aabbLogic     = this.cameraLogicAABB,
+					aabbCollision = this.cameraCollisionAABB,
+					types = null;
 					
-					aabbLogic.setAll(x, y, width, height);
+					// store buffered size since the actual width x height is not used below.
+					width += buffer * 2;
+					height += buffer * 2;
 					
-					if(this.updateLiveList || !aabbCollision.contains(aabbLogic)){ //if the camera has not moved beyond the original buffer, we do not continue these calculations
-						this.updateLiveList = false;
-
-						all = this.allEntitiesLive;
-						all.length = 0;
+					if(this.updateLiveList || !aabbLogic.matches(x, y, width, height)){
 						
-						solids = this.solidEntitiesLive;
-						solids.length = 0;
+						aabbLogic.setAll(x, y, width, height);
 						
-						softs = this.softEntitiesLive;
-						softs.length = 0;
-
-						length = this.allEntities.length;// console.log(length);
-						for (i = 0; i < length; i++){
-							entity = this.allEntities[i];
-							if(entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)){
-								entity.checkCollision = false;  //TML - This should be here. I think. :)
-								all[all.length] = entity;
-
-								types = entity.collisionTypes;
-								if(entity !== this.owner){
-									if(!entity.immobile){
-										for (j = 0; j < types.length; j++) {
-											if(entity.solidCollisions[types[j]].length){
-												solids[solids.length] = entity;
-												break;
+						if(this.updateLiveList || !aabbCollision.contains(aabbLogic)){ //if the camera has not moved beyond the original buffer, we do not continue these calculations
+							this.updateLiveList = false;
+	
+							all = this.allEntitiesLive;
+							all.length = 0;
+							
+							solids = this.solidEntitiesLive;
+							solids.length = 0;
+							
+							softs = this.softEntitiesLive;
+							softs.length = 0;
+							
+							groups = this.groupsLive;
+							groups.length = 0;
+	
+							length = this.allEntities.length;// console.log(length);
+							for (i = 0; i < length; i++){
+								entity = this.allEntities[i];
+								if(entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)){
+									entity.checkCollision = false;  //TML - This should be here. I think. :)
+									all[all.length] = entity;
+	
+									types = entity.collisionTypes;
+									if(entity !== this.owner){
+										if(!entity.immobile){
+											for (j = 0; j < types.length; j++) {
+												if(entity.solidCollisions[types[j]].length){
+													solids[solids.length] = entity;
+													break;
+												}
 											}
 										}
 									}
-								}
-								for (j = 0; j < types.length; j++) {
-									if(entity.softCollisions[types[j]].length){
-										softs[softs.length] = entity;
-										break;
+									for (j = 0; j < types.length; j++) {
+										if(entity.softCollisions[types[j]].length){
+											softs[softs.length] = entity;
+											break;
+										}
 									}
-								}
-							} 
-						}
-						
-						// add buffer again to capture stationary entities along the border that may be collided against 
-						aabbCollision.setAll(x, y, width + buffer, height + buffer);
-						
-						for (i in this.entitiesByType){
-							entities = this.entitiesByType[i];
-							list = this.entitiesByTypeLive[i];
-							list.length = 0;
-							length = entities.length;
-							for (j = 0; j < length; j++){
-								entity = entities[j];
-								if(entity.alwaysOn  || check(entity.getAABB(), aabbCollision)){
-									list[list.length] = entity;
+									
+									if(entity.collisionGroup){
+										groups.push(entity);
+									}
+								} 
+							}
+							
+							groups.sort(groupSortBySize);
+							
+							// add buffer again to capture stationary entities along the border that may be collided against 
+							aabbCollision.setAll(x, y, width + buffer, height + buffer);
+							
+							for (i in this.entitiesByType){
+								entities = this.entitiesByType[i];
+								list = this.entitiesByTypeLive[i];
+								list.length = 0;
+								length = entities.length;
+								for (j = 0; j < length; j++){
+									entity = entities[j];
+									if(entity.alwaysOn  || check(entity.getAABB(), aabbCollision)){
+										list[list.length] = entity;
+									}
 								}
 							}
 						}
 					}
-				}
-			},
+				};
+			})(),
 			
 			prepareCollisions: function (resp) {
 				var entity = null;
@@ -785,17 +822,22 @@ This component checks for collisions between entities in its group which typical
 				}
 			},
 			
+			checkGroupCollisions: function (){
+				var entities = this.groupsLive;
+				
+				for (var x = entities.length - 1; x > -1; x--){
+					entityCollisionDataContainer.reset();
+					clearXYPair(xyPair);
+					xyPair = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, xyPair);
+				}
+			},
+			
 			checkSolidCollisions: function (){
 				var messageData = null,
 				entities = this.solidEntitiesLive;
 				
 				for (var x = entities.length - 1; x > -1; x--){
 					if(entities[x].collisionUnresolved){
-						if(entities[x].collisionGroup && entities[x].collisionGroup.getSize() > 1){
-							entityCollisionDataContainer.reset();
-							clearXYPair(xyPair);
-							xyPair = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, xyPair);
-						}
 						entityCollisionDataContainer.reset();
 						clearXYPair(xyPair);
 						xyPair = this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer, xyPair);
