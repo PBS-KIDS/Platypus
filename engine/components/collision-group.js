@@ -271,6 +271,7 @@ This component checks for collisions between entities in its group which typical
 			this.allEntities = [];
 			this.allEntitiesLive = [];
 			this.groupsLive = [];
+			this.nonColliders = [];
 			
 			this.terrain = undefined;
 			this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
@@ -797,11 +798,13 @@ This component checks for collisions between entities in its group which typical
 			
 			prepareCollisions: function (resp) {
 				var entity = null;
+				
+				this.nonColliders.length = 0;
+				
 				for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
 					entity = this.allEntitiesLive[x];
-					entity.collisionUnresolved = true;
-					if(entity !== this.owner){
-						entity.triggerEvent('prepare-for-collision', resp);
+					if(!entity.triggerEvent('prepare-for-collision', resp)){
+						this.nonColliders.push(entity);
 					}
 				}
 			},
@@ -812,13 +815,11 @@ This component checks for collisions between entities in its group which typical
 
 				xy.relative = false;
 				
-				for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
-					entity = this.allEntitiesLive[x];
-					if(entity.collisionUnresolved){
-						xy.x = entity.x;
-						xy.y = entity.y;
-						entity.trigger('relocate-entity', xy);
-					}
+				for (var x = this.nonColliders.length - 1; x > -1; x--) {
+					entity = this.nonColliders[x];
+					xy.x = entity.x;
+					xy.y = entity.y;
+					entity.trigger('relocate-entity', xy);
 				}
 			},
 			
@@ -837,23 +838,20 @@ This component checks for collisions between entities in its group which typical
 				entities = this.solidEntitiesLive;
 				
 				for (var x = entities.length - 1; x > -1; x--){
-					if(entities[x].collisionUnresolved){
-						entityCollisionDataContainer.reset();
-						clearXYPair(xyPair);
-						xyPair = this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer, xyPair);
-						
-						for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
-						{
-							messageData = entityCollisionDataContainer.getXEntry(i);
-							triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
-						}
-						
-						for (i = 0; i < entityCollisionDataContainer.yCount; i++)
-						{
-							messageData = entityCollisionDataContainer.getYEntry(i);
-							triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
-						}
-						entities[x].collisionUnresolved = false;
+					entityCollisionDataContainer.reset();
+					clearXYPair(xyPair);
+					xyPair = this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer, xyPair);
+					
+					for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
+					{
+						messageData = entityCollisionDataContainer.getXEntry(i);
+						triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
+					}
+					
+					for (i = 0; i < entityCollisionDataContainer.yCount; i++)
+					{
+						messageData = entityCollisionDataContainer.getYEntry(i);
+						triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
 					}
 				}
 			},
