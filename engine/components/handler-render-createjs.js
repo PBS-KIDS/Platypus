@@ -49,8 +49,9 @@ A component that handles updating rendering for components that are rendering vi
       
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
-      	"hover": false;
-      	"click": false; 
+      	"touch": false, // Whether to listen for touch events (triggers mouse events)
+      	"click": false, // Whether to listen for mouse events
+      	"camera": false // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
       }
     }
     
@@ -85,34 +86,7 @@ A component that handles updating rendering for components that are rendering vi
 			// The following appends necessary information to displayed objects to allow them to receive touches and clicks
 			if(definition.acceptInput){
 				if(definition.acceptInput.click || definition.acceptInput.touch){
-					if(definition.acceptInput.touch && createjs.Touch.isSupported()){
-						createjs.Touch.enable(this.stage);
-					}
-
-					this.stage.addEventListener('stagemousedown', function(event) {
-						self.owner.trigger('mousedown', {
-							event: event.nativeEvent,
-							x: event.stageX / self.stage.scaleX,
-							y: event.stageY / self.stage.scaleY,
-							entity: self.owner
-						});
-						event.addEventListener('stagemouseup', function(event){
-							self.owner.trigger('mouseup', {
-								event: event.nativeEvent,
-								x: event.stageX / self.stage.scaleX,
-								y: event.stageY / self.stage.scaleY,
-								entity: self.owner
-							});
-						});
-						event.addEventListener('stagemousemove', function(event){
-							self.owner.trigger('mousemove', {
-								event: event.nativeEvent,
-								x: event.stageX / self.stage.scaleX,
-								y: event.stageY / self.stage.scaleY,
-								entity: self.owner
-							});
-						});
-					});
+					this.setupInput(definition.acceptInput.touch, definition.acceptInput.camera);
 				}
 			}
 			
@@ -123,7 +97,6 @@ A component that handles updating rendering for components that are rendering vi
 				height: 0,
 				buffer: definition.buffer || 0
 			};
-			this.lastChild = undefined;
 			
 			this.timeElapsed = {
 				name: 'Render',
@@ -164,10 +137,9 @@ A component that handles updating rendering for components that are rendering vi
 				this.paused = 0;
 			},
 			"tick": function(resp){
-				var lastIndex = 0,
-				child   = undefined,
-				time    = new Date().getTime(),
-				message = this.renderMessage;
+				var child = undefined,
+				time      = new Date().getTime(),
+				message   = this.renderMessage;
 				
 				message.deltaT = resp.deltaT;
 
@@ -210,12 +182,11 @@ A component that handles updating rendering for components that are rendering vi
 					}
 				}
 
-				lastIndex = this.stage.getNumChildren() - 1; //checked here, since handle-render could add a child
-				if (this.stage.getChildAt(lastIndex) !== this.lastChild) {
+				if (this.stage.reorder) {
+					this.stage.reorder = false;
 					this.stage.sortChildren(function(a, b) {
 						return a.z - b.z;
 					});
-					this.lastChild = this.stage.getChildAt(lastIndex);
 				}
 				
 				this.timeElapsed.name = 'Render-Prep';
@@ -242,10 +213,88 @@ A component that handles updating rendering for components that are rendering vi
 				this.canvas.width  = this.canvas.offsetWidth * dpr;
 				this.canvas.height = this.canvas.offsetHeight * dpr;
 				this.stage.setTransform(-cameraInfo.viewportLeft * cameraInfo.scaleX * dpr, -cameraInfo.viewportTop * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr);
+				
+				if(this.moveMouse){
+					this.moveMouse(cameraInfo);
+				}
 			}
 		},
 		methods:{
+			setupInput: function(enableTouch, cameraMovementMovesMouse){
+				var self = this,
+				originalEvent   = null,
+				x        = 0,
+				y        = 0,
+				setXY   = function(event){
+					originalEvent = event;
+					x  = event.stageX / self.stage.scaleX + self.camera.x;
+					y  = event.stageY / self.stage.scaleY + self.camera.y;
+				},
+				mousedown = function(event) {
+					setXY(event);
+					self.owner.trigger('mousedown', {
+						event: event.nativeEvent,
+						x: x,
+						y: y,
+						entity: self.owner
+					});
+					
+					// This function is used to trigger a move event when the camera moves and the mouse is still triggered.
+					if(cameraMovementMovesMouse){
+						self.moveMouse = function(){
+							setXY(originalEvent);
+							self.owner.trigger('mousemove', {
+								event: event.nativeEvent,
+								x: x,
+								y: y,
+								entity: self.owner
+							});
+						};
+					}
+				},
+				mouseup = function(event){
+					setXY(event);
+					self.owner.trigger('mouseup', {
+						event: event.nativeEvent,
+						x: x,
+						y: y,
+						entity: self.owner
+					});
+					if(cameraMovementMovesMouse){
+						self.moveMouse = null;
+					}
+				},
+				mousemove = function(event){
+					setXY(event);
+					if(event.nativeEvent.which || event.nativeEvent.touches){
+						self.owner.trigger('mousemove', {
+							event: event.nativeEvent,
+							x: x,
+							y: y,
+							entity: self.owner
+						});
+					}
+				};
+				
+				if(enableTouch && createjs.Touch.isSupported()){
+					createjs.Touch.enable(this.stage);
+				}
+
+				this.stage.addEventListener('stagemousedown', mousedown);
+				this.stage.addEventListener('stagemouseup', mouseup);
+				this.stage.addEventListener('stagemousemove', mousemove);
+				
+				this.removeStageListeners = function(){
+					this.stage.removeEventListener('stagemousedown', mousedown);
+					this.stage.removeEventListener('stagemouseup', mouseup);
+					this.stage.removeEventListener('stagemousemove', mousemove);
+				};
+			},
+			
 			destroy: function(){
+				if(this.removeStageListeners){
+					this.removeStageListeners();
+				}
 				this.stage = undefined;
 				this.owner.rootElement.removeChild(this.canvas);
 				this.owner.element = null;

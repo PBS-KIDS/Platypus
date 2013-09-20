@@ -2,3 +2,6 @@
 /tools/mp4box
 /tools/texturepacker
 /tools/rhino1_7R4
+/.settings
+/.externalToolBuilders
+.project

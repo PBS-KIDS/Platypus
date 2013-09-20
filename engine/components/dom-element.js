@@ -58,11 +58,16 @@ This component creates a DOM element associated with the entity. In addition to 
 				entity.trigger(message, e);
 				e.preventDefault();
 			};
-		} else {
+		} else if (message.length){
 			return function(e){
 				for (var i = 0; i < message.length; i++){
 					entity.trigger(message[i], e);
 				}
+				e.preventDefault();
+			};
+		} else {
+			return function(e){
+				entity.trigger(message.event, message.message);
 				e.preventDefault();
 			};
 		}
@@ -77,24 +82,21 @@ This component creates a DOM element associated with the entity. In addition to 
 			this.className = '';
 			this.states = {};
 			this.stateChange = false;
+			this.potentialParent = definition.parent;
+			this.handleRenderLoadMessage = null;
 			
 			this.element = document.createElement(elementType);
 			if(!this.owner.element){
 				this.owner.element = this.element;
 			}
 			this.element.ondragstart = function() {return false;}; //prevent element dragging by default
-	
-			if(definition.parent){
-				this.parentElement = document.getElementById(definition.parent);
-				this.parentElement.appendChild(this.element);
-			}
 			
 			for(var i in definition){
 				if(i === 'style'){
 					for(var j in definition[i]){
 						this.element.style[j] = definition[i][j]; 
 					}
-				} else if((i !== 'type') && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')){
+				} else if(((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')){
 					if(i.indexOf('on') === 0){
 						this.element[i] = createFunction(definition[i], this.owner);
 					} else {
@@ -128,13 +130,19 @@ This component creates a DOM element associated with the entity. In addition to 
 		events:{
 			"handle-render-load": function(resp){
 				if(resp.element){
+					
 					if(!this.parentElement){
-						this.parentElement = resp.element;
-						this.parentElement.appendChild(this.element);
+						if(this.potentialParent){
+							this.parentElement = document.getElementById(this.potentialParent);
+							this.parentElement.appendChild(this.element);
+						} else {
+							this.parentElement = resp.element;
+							this.parentElement.appendChild(this.element);
+						}
 					}
 		
 					if(this.owner.entities){
-						var message = {};
+						var message = this.handleRenderLoadMessage = {};
 						for (var item in resp){
 							message[item] = resp[item];
 						}
@@ -143,6 +151,12 @@ This component creates a DOM element associated with the entity. In addition to 
 							this.owner.entities[entity].trigger('handle-render-load', message);
 						}
 					}
+				}
+			},
+			
+			"child-entity-added": function(entity){
+				if(this.handleRenderLoadMessage){
+					entity.trigger("handle-render-load", this.handleRenderLoadMessage);
 				}
 			},
 			

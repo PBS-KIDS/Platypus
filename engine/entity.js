@@ -81,17 +81,17 @@ platformer.classes.entity = (function(){
 		instance             = instanceDefinition || {},
 		instanceProperties   = instance.properties || {};
 		
-		self.components = [];
-		self.messages   = [];
-		self.loopCheck  = [];
+		self.components  = [];
+		self.messages    = [];
+		self.loopCheck   = [];
+		self.unbindLater = [];
 		self.type = def.id;
 
-		for (index in defaultProperties){ // This takes the list of properties in the JSON definition and appends them directly to the object.
-			self[index] = defaultProperties[index];
-		}
-		for (index in instanceProperties){ // This takes the list of options for this particular instance and appends them directly to the object.
-			self[index] = instanceProperties[index];
-		}
+		this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
+		this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
+		this.bind('set-property', function(keyValuePairs){
+			self.setProperty(keyValuePairs);
+		});
 		
 		if(!self.state){
 			self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
@@ -137,6 +137,25 @@ platformer.classes.entity = (function(){
 	};
 	
 	proto.unbind = function(event, func){
+		var found = false, j = 0;
+		
+		if(this.loopCheck.length){
+			for(j = 0; j < this.loopCheck.length; j++){
+				if(this.loopCheck[j] === event){
+					found = true;
+					break;
+				}
+			}
+		}
+			
+		if(found){ //We're currently busy triggering messages like this, so we shouldn't remove message handlers until we're finished.
+			this.unbindLater.push({event: event, func: func});
+		} else {
+			this.safelyUnbind(event, func);
+		}
+	};
+
+	proto.safelyUnbind = function(event, func){
 		if(!this.messages[event]) this.messages[event] = [];
 		for (var x in this.messages[event]){
 			if(this.messages[event][x] === func){
@@ -167,7 +186,8 @@ platformer.classes.entity = (function(){
 	
 	// This handles string events only
 	proto.triggerEvent = function(event, value, debug){
-		var i = 0;
+		var i = 0, j = 0;
+		
 		if(this.debug || debug || (value && value.debug)){
 			if(this.messages[event] && this.messages[event].length){
 				console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length>1)?'s':'') + '.', value);
@@ -187,8 +207,24 @@ platformer.classes.entity = (function(){
 				this.messages[event][i](value, debug);
 			}
 		}
-		this.loopCheck.length = this.loopCheck.length - 1; 
+		this.loopCheck.length = this.loopCheck.length - 1;
+		
+		if(!this.loopCheck.length && this.unbindLater.length){
+			for(j = 0; j < this.unbindLater.length; j++){
+				this.safelyUnbind(this.unbindLater.event, this.unbindLater.func);
+			}
+			this.unbindLater.length = 0;
+		}
+		
 		return i;
+	};
+	
+	proto.setProperty = function(keyValuePairs){
+		var index = '';
+		
+		for (index in keyValuePairs){ // This takes a list of properties and appends them directly to the object.
+			this[index] = keyValuePairs[index];
+		}
 	};
 	
 	proto.getMessageIds = function(){

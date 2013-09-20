@@ -95,7 +95,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 
 	return platformer.createComponentClass({
 		
-		id: 'render-tiles', 
+		id: 'render-tiles',
 		
 		constructor: function(definition){
 			var x = 0,

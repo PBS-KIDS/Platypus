@@ -76,7 +76,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
-platformer.components['audio'] = (function(){
+(function(){
 	var defaultSettings = {
 		interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
 		delay:     0,
@@ -85,11 +85,15 @@ platformer.components['audio'] = (function(){
 		volume:    1,
 		pan:       0,
 		length:    0,
-		next:      false
+		next:      false,
+		events:    false
 	},
 	stop = {
 		stop: true,
 		playthrough: true
+	},
+	sortByTime = function(a,b){
+		return a.time - b.time;
 	},
 	playSound = function(soundDefinition){
 		var sound = '',
@@ -114,6 +118,8 @@ platformer.components['audio'] = (function(){
 			var self = this,
 			audio = undefined,
 			next = false,
+			events = false,
+			offset = defaultSettings.offset,
 			length    = 0;
 			
 			value = value || attributes;
@@ -123,65 +129,43 @@ platformer.components['audio'] = (function(){
 						instance.remainingLoops = 0;
 					} else {
 						instance.stop();
-						for (var i in self.activeAudioClips){
-							if (self.activeAudioClips[i] === instance){
-								self.activeAudioClips.splice(i,1);
-								break;
-							}
-						}
+						self.removeClip(instance);
 					}
 				}
 			} else {
 				if(value){
 					var interrupt = value.interrupt || attributes.interrupt || defaultSettings.interrupt,
 					delay         = value.delay     || attributes.delay  || defaultSettings.delay,
-					offset        = value.offset    || attributes.offset || defaultSettings.offset,
 					loop          = value.loop      || attributes.loop   || defaultSettings.loop,
 					volume        = (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
 					pan           = value.pan       || attributes.pan    || defaultSettings.pan,
 					length        = value.length    || attributes.length || defaultSettings.length;
 					
+					offset        = value.offset    || attributes.offset || defaultSettings.offset;
 					next          = value.next      || attributes.next   || defaultSettings.next;
+					events        = value.events    || attributes.events || defaultSettings.events;
 					
 					audio = instance = createjs.Sound.play(sound, interrupt, delay, offset, loop, volume, pan);
 					
 				} else {
 					audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
 				}
-
-				if(next){
-					audio.addEventListener('complete', function(){
-						if((typeof next === 'string') || !next.length){
-							self.owner.trigger(next);
-						} else {
-							var arr = next.slice();
-							arr.splice(0,1);
-							if(arr.length > 0){
-								(playSound(next[0])).call(self, {'next': arr});
-//								self.owner.trigger(next[0], {'next': arr});
-							} else {
-								(playSound(next[0])).call(self);
-//								self.owner.trigger(next[0]);
-							}
-						}
-
-						for (var i in self.activeAudioClips){
-							if (self.activeAudioClips[i] === audio){
-								self.activeAudioClips.splice(i,1);
-								break;
-							}
-						}
-					});
-				} else {
-					audio.addEventListener('complete', function(){
-						for (var i in self.activeAudioClips){
-							if (self.activeAudioClips[i] === audio){
-								self.activeAudioClips.splice(i,1);
-								break;
-							}
-						}
-					});
+				
+				if(events){
+					audio.sequenceEvents = [];
+					for(var i = 0; i < events.length; i++){
+						audio.sequenceEvents.push({
+							event: events[i].event,
+							time: +events[i].time + offset,
+							message: events[i].message
+						});
+					}
+					audio.sequenceEvents.sort(sortByTime);
 				}
+
+				audio.addEventListener('complete', function(){
+					self.onComplete(audio, next);
+				});
 
 				if(audio.playState === 'playFailed'){
 					if(this.owner.debug){
@@ -212,160 +196,172 @@ platformer.components['audio'] = (function(){
 				return testStates;
 			};
 		}
-	},
-	component = function(owner, definition){
-		this.owner = owner;
-		this.timedAudioClips = [];
-		this.activeAudioClips = [];		
-
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-render', 'audio-mute-toggle', 'audio-mute', 'audio-unmute', 'audio-stop', 'logical-state']);
-
-		this.state = {};
-		this.stateChange = false;
-		this.currentState = false;
-
-		this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough;
-		if(typeof this.forcePlaythrough !== 'boolean') {
-			this.forcePlaythrough = true;
-		}
-		
-		if(definition.audioMap){
-			this.checkStates = [];
-			for (var key in definition.audioMap){
-				this.addListener(key);
-				this[key] = playSound(definition.audioMap[key]);
-				this.checkStates.push(createTest(key, definition.audioMap[key]));
-			}
-		}
 	};
-	var proto = component.prototype;
 	
-	proto['handle-render'] = function(resp){
-		if (this.destroyMe && this.timedAudioClips.length == 0)
-		{
-			this.timedAudioClips = undefined;
-			this.removeListeners(this.listeners);
-		} else {
-			var i     = 0,
-			audioClip = undefined;
-			newArray  = undefined;
-			if(this.timedAudioClips.length){
-				newArray = this.timedAudioClips;
-				this.timedAudioClips = [];
-				for (i in newArray){
-					audioClip = newArray[i];
-					audioClip.progress += resp.deltaT;
-					if(audioClip.progress >= audioClip.length){
-						audioClip.audio.stop();
-						if(audioClip.next){
-							if((typeof audioClip.next === 'string') || !audioClip.next.length){
-								this.owner.trigger(audioClip.next);
+	return platformer.createComponentClass({
+		id: 'audio',
+			
+		constructor: function(definition){
+			this.timedAudioClips = [];
+			this.activeAudioClips = [];		
+	
+			this.state = {};
+			this.stateChange = false;
+			this.currentState = false;
+	
+			this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough;
+			if(typeof this.forcePlaythrough !== 'boolean') {
+				this.forcePlaythrough = true;
+			}
+			
+			if(definition.audioMap){
+				this.checkStates = [];
+				for (var key in definition.audioMap){
+					this.addListener(key);
+					this[key] = playSound(definition.audioMap[key]);
+					this.checkStates.push(createTest(key, definition.audioMap[key]));
+				}
+			}
+		},
+
+		events: {// These are messages that this component listens for
+		    "handle-render": function(resp){
+				if (this.destroyMe && this.timedAudioClips.length == 0)
+				{
+					this.timedAudioClips = undefined;
+					this.removeListeners(this.listeners);
+				} else {
+					var i     = 0,
+					audioClip = undefined;
+					newArray  = undefined;
+					
+					for(i = 0; i < this.activeAudioClips.length; i++){
+						this.checkTimeEvents(this.activeAudioClips[i]);
+					}
+					
+					if(this.timedAudioClips.length){
+						newArray = this.timedAudioClips;
+						this.timedAudioClips = [];
+						for (i in newArray){
+							audioClip = newArray[i];
+							audioClip.progress += resp.deltaT;
+							if(audioClip.progress >= audioClip.length){
+								audioClip.audio.stop();
+								this.onComplete(audioClip.audio, audioClip.next);
 							} else {
-								var arr = audioClip.next.slice();
-								arr.splice(0,1);
-								if(arr.length > 0){
-									(playSound(audioClip.next[0])).call(this, {'next': arr});
-//									this.owner.trigger(audioClip.next[0], {'next': arr});
-								} else {
-									(playSound(audioClip.next[0])).call(this);
-//									this.owner.trigger(audioClip.next[0]);
+								this.timedAudioClips.push(audioClip);
+							}
+						}
+//						this.timedAudioClips = newArray;
+					}
+
+					i = 0;
+					if(this.stateChange){
+						if(this.checkStates){
+							if(this.currentState){
+								stop.playthrough = this.forcePlaythrough;
+								this[this.currentState](stop);
+							}
+							this.currentState = false;
+							for(; i < this.checkStates.length; i++){
+								audioClip = this.checkStates[i](this.state);
+								if(audioClip){
+									this.currentState = audioClip;
+									this[this.currentState]();
+									break;
 								}
 							}
 						}
-					} else {
-						this.timedAudioClips.push(audioClip);
+						this.stateChange = false;
+					}
+					
+//					if(this.currentState){
+//						this[this.currentState]();
+//					}
+				}
+	 	    },
+	 	    
+	 		"logical-state": function(state){
+	 			for(var i in state){
+	 				if(this.state[i] !== state[i]){
+	 					this.stateChange = true;
+	 					this.state[i] = state[i];
+	 				}
+	 			}
+	 		},
+	 	    
+	 		"audio-mute-toggle": function(){
+	 			createjs.Sound.setMute(!createjs.Sound.getMute());
+	 		},
+	 	    
+	 		"audio-stop": function(){
+	 			for (var i in this.activeAudioClips){
+	 				this.activeAudioClips[i].stop();
+	 			}
+	 			this.activeAudioClips.length = 0;
+	 			this.timedAudioClips.length = 0;
+	 		},
+	 	    
+	 		"audio-mute": function(){
+	 			createjs.Sound.setMute(true);
+	 		},
+	 	    
+	 		"audio-unmute": function(){
+	 			createjs.Sound.setMute(false);
+	 		}
+		},
+		
+		methods: {
+			checkTimeEvents: function(audioClip, finished){
+				var currentTime = 0;
+				
+				if(audioClip.sequenceEvents){
+					currentTime = audioClip.getPosition();
+					while(audioClip.sequenceEvents.length && (finished || (audioClip.sequenceEvents[0].time <= currentTime))){
+						this.owner.trigger(audioClip.sequenceEvents[0].event, audioClip.sequenceEvents[0].message);
+						audioClip.sequenceEvents.splice(0,1);
 					}
 				}
-//				this.timedAudioClips = newArray;
-			}
-
-			i = 0;
-			if(this.stateChange){
-				if(this.checkStates){
-					if(this.currentState){
-						stop.playthrough = this.forcePlaythrough;
-						this[this.currentState](stop);
-					}
-					this.currentState = false;
-					for(; i < this.checkStates.length; i++){
-						audioClip = this.checkStates[i](this.state);
-						if(audioClip){
-							this.currentState = audioClip;
-							this[this.currentState]();
-							break;
+			},
+		
+			onComplete: function(audioClip, next){
+				//clean up active clips
+				this.removeClip(audioClip);
+				
+				this.checkTimeEvents(audioClip, true);
+				
+				this.owner.triggerEvent('clip-complete');
+				
+				if(next){
+					if(typeof next === 'string'){
+						(playSound(next)).call(this);
+					} else {
+						var arr = next.slice();
+						arr.splice(0,1);
+						if(arr.length > 0){
+							(playSound(next[0])).call(this, {'next': arr});
+						} else {
+							(playSound(next[0])).call(this);
 						}
 					}
+				} else {
+					this.owner.triggerEvent('sequence-complete');
 				}
-				this.stateChange = false;
-			}
+			},
 			
-//			if(this.currentState){
-//				this[this.currentState]();
-//			}
-		}
-	};
-
-	proto['logical-state'] = function(state){
-		for(var i in state){
-			if(this.state[i] !== state[i]){
-				this.stateChange = true;
-				this.state[i] = state[i];
+			removeClip: function(audioClip){
+				for (var i in this.activeAudioClips){
+					if (this.activeAudioClips[i] === audioClip){
+						this.activeAudioClips.splice(i,1);
+						break;
+					}
+				}
+			},
+			
+			destroy: function(){
+				//Handling things in 'render'
+				this.destroyMe = true;
 			}
 		}
-	};
-	
-	proto['audio-mute-toggle'] = function(){
-		createjs.Sound.setMute(!createjs.Sound.getMute());
-	};
-	
-	proto['audio-stop'] = function(){
-		for (var i in this.activeAudioClips){
-			this.activeAudioClips[i].stop();
-		}
-		this.activeAudioClips.length = 0;
-		this.timedAudioClips.length = 0;
-	};
-
-	proto['audio-mute'] = function(){
-		createjs.Sound.setMute(true);
-	};
-	
-	proto['audio-unmute'] = function(){
-		createjs.Sound.setMute(false);
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		//Handling things in 'render'
-		this.destroyMe = true;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
-})();
+	});
+})();	

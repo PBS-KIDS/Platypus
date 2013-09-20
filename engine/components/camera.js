@@ -398,7 +398,7 @@ This component controls the game camera deciding where and how it should move. T
 				ratioX      = (this.transitionX?Math.min(time / this.transitionX, 1):1),
 				iratioX     = 1 - ratioX,
 				ratioY      = (this.transitionY?Math.min(time / this.transitionY, 1):1),
-				iratioY     = 1 - ratioY
+				iratioY     = 1 - ratioY;
 
 				return this.move(ratioX * newLeft + iratioX * this.world.viewportLeft, ratioY * newTop + iratioY * this.world.viewportTop);
 			},

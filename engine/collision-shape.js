@@ -50,26 +50,49 @@ This class defines a collision shape, which defines the 'space' an entity occupi
 */
 
 platformer.classes.collisionShape = (function(){
-	var collisionShape = function(ownerLocation, type, points, offset){
-		this.offset = offset || [0,0];
-		this.x = ownerLocation[0] + this.offset[0];
-		this.y = ownerLocation[1] + this.offset[1];
-		this.prevX = this.x;
-		this.prevY = this.y;
-		this.type = type || 'rectangle';
+	var collisionShape = function(owner, definition, collisionType){
+		var regX = definition.regX,
+		regY     = definition.regY;
+		
+		this.owner = owner;
+		this.collisionType = collisionType;
+		
+		this.width  = definition.width  || definition.radius || 0;
+		this.height = definition.height || definition.radius || 0;
+		this.radius = definition.radius || 0;
+		
+		if(typeof regX !== 'number'){
+			regX = this.width / 2;
+		}
+		if(typeof regY !== 'number'){
+			regY = this.height / 2;
+		}
+		this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
+		this.offsetY = definition.offsetY || ((this.height / 2) - regY);
+		
+		if(owner){
+			this.x = owner.x + this.offsetX;
+			this.y = owner.y + this.offsetY;
+		} else {
+			this.x = definition.x + this.offsetX;
+			this.y = definition.y + this.offsetY;
+		}
+
+		this.type = definition.type || 'rectangle';
 		this.subType = '';
-		this.points = points; //Points should distributed so that the center of the AABB is at (0,0).
+		this.points = definition.points; //Points should distributed so that the center of the AABB is at (0,0).
 		this.aABB = undefined;
-		this.prevAABB = undefined;
 		
 		var width = 0;
 		var height = 0; 
 		switch (this.type)
 		{
-		case 'rectangle': //need TL and BR points
 		case 'circle': //need TL and BR points
-			width = this.points[1][0] - this.points[0][0];
-			height = this.points[1][1] - this.points[0][1];
+			width = height = this.radius * 2;
+			break;
+		case 'rectangle': //need TL and BR points
+			width = this.width;
+			height = this.height;
 			break;
 		case 'triangle': //Need three points, start with the right angle corner and go clockwise.
 			if (this.points[0][1] == this.points[1][1] && this.points[0][0] == this.points[2][0])
@@ -104,28 +127,33 @@ platformer.classes.collisionShape = (function(){
 		}
 		
 		this.aABB     = new platformer.classes.aABB(this.x, this.y, width, height);
-		this.prevAABB = new platformer.classes.aABB(this.x, this.y, width, height);
 	};
 	var proto = collisionShape.prototype;
 	
 	proto.update = function(ownerX, ownerY){
-		var swap = this.prevAABB; 
-		this.prevAABB = this.aABB;
-		this.aABB     = swap;
-		this.prevX = this.x;
-		this.prevY = this.y;
-		this.x = ownerX + this.offset[0];
-		this.y = ownerY + this.offset[1];
+		this.x = ownerX + this.offsetX;
+		this.y = ownerY + this.offsetY;
 		this.aABB.move(this.x, this.y);
 	};
 	
-	proto.reset = function (ownerX, ownerY) {
-		this.prevX = ownerX + this.offset[0];
-		this.prevY = ownerY + this.offset[1];
-		this.x = ownerX + this.offset[0];
-		this.y = ownerY + this.offset[1];
-		this.prevAABB.move(this.x, this.y);
-		this.aABB.move(this.x, this.y);
+	proto.moveX = function(x){
+		this.x = x;
+		this.aABB.moveX(this.x);
+	};
+	
+	proto.moveY = function(y){
+		this.y = y;
+		this.aABB.moveY(this.y);
+	};
+	
+	proto.moveXBy = function(deltaX){
+		this.x += deltaX;
+		this.aABB.moveX(this.x);
+	};
+	
+	proto.moveYBy = function(deltaY){
+		this.y += deltaY;
+		this.aABB.moveY(this.y);
 	};
 	
 	proto.getXY = function () {
@@ -140,32 +168,26 @@ platformer.classes.collisionShape = (function(){
 		return this.y;
 	};
 	
-	proto.getPrevXY = function () {
-		return [this.prevX, this.prevY];
-	};
-	
-	proto.getPrevX = function () {
-		return this.prevX;
-	};
-	
-	proto.getPrevY = function () {
-		return this.prevY;
-	};
-
 	proto.getAABB = function(){
 		return this.aABB;
 	};
-	
-	proto.getPreviousAABB = function(){
-		return this.prevAABB;
-	};
-	
+
 	proto.getXOffset = function(){
-		return this.offset[0];
+		return this.offsetX;
 	};
 	
 	proto.getYOffset = function(){
-		return this.offset[1];
+		return this.offsetY;
+	};
+	
+	proto.setXWithEntityX = function(entityX){
+		this.x = entityX + this.offsetX;
+		this.aABB.moveX(this.x);
+	};
+	
+	proto.setYWithEntityY = function(entityY){
+		this.y = entityY + this.offsetY;
+		this.aABB.moveY(this.y);
 	};
 	
 	proto.destroy = function(){

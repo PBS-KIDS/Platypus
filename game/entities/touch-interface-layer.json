@@ -5,10 +5,6 @@
         "excludes": ["multitouch"]
     },
     "components": [
-        {
-            "type": "camera",
-            "width": 4000
-        },
         {"type": "handler-logic"},
         {"type": "handler-render-dom"},
         {"type": "entity-container", 
