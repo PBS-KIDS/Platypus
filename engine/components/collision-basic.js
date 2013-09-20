@@ -246,11 +246,41 @@ Multiple collision components may be added to a single entity if distinct messag
 		id: 'collision-basic',
 		
 		constructor: function(definition){
-			var x  = 0,
-			shapes = null,
-			regX = definition.regX,
-			regY = definition.regY;
+			var x        = 0,
+			shapes       = null,
+			regX         = definition.regX,
+			regY         = definition.regY,
+			width        = definition.width,
+			height       = definition.height,
+			radius       = definition.radius,
+			margin       = definition.margin || 0,
+			marginLeft   = definition.marginLeft   || margin,
+			marginRight  = definition.marginRight  || margin,
+			marginTop    = definition.marginTop    || margin,
+			marginBottom = definition.marginBottom || margin;
 			
+			if(isNaN(width)){
+				width = this.owner.width;
+				if(isNaN(regX)){
+					regX = this.owner.regX;
+				}
+			}
+			if(isNaN(height)){
+				height = this.owner.height;
+				if(isNaN(regY)){
+					regY = this.owner.regY;
+				}
+			}
+			if(isNaN(radius)){
+				radius = this.owner.radius;
+				if(isNaN(regX)){
+					regX = this.owner.regX;
+				}
+				if(isNaN(regY)){
+					regY = this.owner.regY;
+				}
+			}
+
 			this.immobile  = this.owner.immobile = this.owner.immobile || definition.immobile || false;
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
@@ -265,18 +295,11 @@ Multiple collision components may be added to a single entity if distinct messag
 			} else if (definition.shape) {
 				shapes = [definition.shape];
 			} else {
-				var halfWidth  = (definition.width  || this.owner.width  || 0) / 2;
-				var halfHeight = (definition.height || this.owner.height || 0) / 2;
-				var margin = definition.margin || 0;
-				var marginLeft   = definition.marginLeft   || margin;
-				var marginRight  = definition.marginRight  || margin;
-				var marginTop    = definition.marginTop    || margin;
-				var marginBottom = definition.marginBottom || margin;
 				if(definition.shapeType === 'circle'){
-					var radius = halfWidth = halfHeight = definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2);
+					radius = radius || (((width || 0) + (height || 0)) / 4);
 					shapes = [{
-						regX: (isNaN(regX)?radius:regX) - (marginRight - marginLeft)/2,
-						regY: (isNaN(regY)?radius:regY) - (marginBottom - marginTop)/2,
+						regX: (isNaN(regX)?radius:regX) - (marginRight - marginLeft) / 2,
+						regY: (isNaN(regY)?radius:regY) - (marginBottom - marginTop) / 2,
 						radius: radius,
 						width:  radius * 2,
 						height: radius * 2,
@@ -284,11 +307,11 @@ Multiple collision components may be added to a single entity if distinct messag
 					}];
 				} else {
 					shapes = [{
-						regX: (isNaN(regX)?halfWidth :regX) - (marginRight  - marginLeft)/2,
-						regY: (isNaN(regY)?halfHeight:regY) - (marginBottom - marginTop )/2,
+						regX: (isNaN(regX)?(width  || 0) / 2:regX) - (marginRight  - marginLeft)/2,
+						regY: (isNaN(regY)?(height || 0) / 2:regY) - (marginBottom - marginTop )/2,
 						points: definition.points,
-						width:  halfWidth  * 2 + marginLeft + marginRight,
-						height: halfHeight * 2 + marginTop  + marginBottom,
+						width:  (width  || 0) + marginLeft + marginRight,
+						height: (height || 0) + marginTop  + marginBottom,
 						type: definition.shapeType
 					}];
 				}

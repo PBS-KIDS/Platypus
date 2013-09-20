@@ -64,7 +64,8 @@
 			{"id": "Scene",           			"src": "../engine/scene.js"},
 			{"id": "Collision-Shape", 			"src": "../engine/collision-shape.js"},
 			{"id": "Collision-Data-Container", 	"src": "../engine/collision-data-container.js"},
-			{"id": "AABB", 			  			"src": "../engine/aabb.js"}
+			{"id": "AABB", 			  			"src": "../engine/aabb.js"},
+            {"id": "Vector2D",                  "src": "../engine/vector2D.js"}
 		],
 		"components": [ // JavaScript files defining component modules
 			// Engine Compoenents
