@@ -145,19 +145,6 @@ Multiple collision components may be added to a single entity if distinct messag
 			};
 		}
 	},
-	reassignFunction = function(oldFunction, newFunction, collisionType){
-		if(oldFunction){
-			return function(collision){
-				if(collision === collisionType){
-					return newFunction(collision);
-				} else {
-					return oldFunction(collision);
-				}
-			};
-		} else {
-			return newFunction;
-		}
-	},
 	setupCollisionFunctions = function(self, entity){
 		// This allows the same component type to be added multiple times.
 		if(!entity.collisionFunctions){
