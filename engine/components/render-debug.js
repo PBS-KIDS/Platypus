@@ -100,8 +100,6 @@ This component is attached to entities that will appear in the game world. It se
 		events: {// These are messages that this component listens for
 			"handle-render-load": function(resp){
 				var self = this,
-				x        = this.owner.x      = this.owner.x || 0,
-				y        = this.owner.y      = this.owner.y || 0,
 				z        = (this.owner.z || 0) + 10000,
 				i        = 0,
 				j        = 0,

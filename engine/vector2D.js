@@ -77,8 +77,8 @@ platformer.classes.vector2D = (function(){
 	};
 	
 	proto.copyValues = function(otherVector){
-		this.x = otherVector.x();
-		this.y = otherVector.y();
+		this.x = otherVector.x;
+		this.y = otherVector.y;
 		return this;
 	};
 	
@@ -155,14 +155,14 @@ platformer.classes.vector2D = (function(){
 	};
 	
 	proto.addVector = function(otherVector){
-		this.x += otherVector.x();
-		this.y += otherVector.y();
+		this.x += otherVector.x;
+		this.y += otherVector.y;
 		return this;
 	};
 	
 	proto.subtractVector = function(otherVector){
-		this.x -= otherVector.x();
-		this.y -= otherVector.y();
+		this.x -= otherVector.x;
+		this.y -= otherVector.y;
 		return this;
 	};
 	
@@ -173,7 +173,7 @@ platformer.classes.vector2D = (function(){
 	};
 	
 	proto.dot = function(otherVector) {
-		return this.x * otherVector.x() + this.y * otherVector.y();
+		return this.x * otherVector.x + this.y * otherVector.y;
 	};
 	
 	proto.shortestAngleTo = function(otherVector) {
