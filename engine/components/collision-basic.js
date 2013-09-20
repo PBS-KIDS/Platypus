@@ -5,7 +5,7 @@ This component causes this entity to collide with other entities. It must be par
 Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance. 
 
 ## Dependencies:
-- [[Collision-Group]] (on entity's parent) - This component listens for 'prepare-for-collision', 'relocate-entity', and 'hit-by' messages, commonly triggered by [[Collision-Group]] on the parent entity.
+- [[handler-collision]] (on entity's parent) - This component listens for 'prepare-for-collision', 'relocate-entity', and 'hit-by' messages, commonly triggered by [[handler-collision]] on the parent entity.
 
 ## Messages
 
@@ -39,23 +39,23 @@ Multiple collision components may be added to a single entity if distinct messag
       "shapes": [{
       //Optional. Defines one or more shapes to create the collision area. Defaults to a single shape with the width, height, regX, and regY properties of the entity if not specified.
       
-        "type": "rectangle",
-        // Optional. Defaults to "rectangle". Rectangles are currently the only supported shape.
+        "type": "circle",
+        // Optional. Defaults to "rectangle".
         
         "offsetX": 0,
         "offsetY": -120,
-        // Optional. Specifies the collision shape's position relative to the entity's x,y coordinates. Defaults to 0. Alternatively, can specify regX and regY values.
-        
-        "points": [[-80,-120],[80, 120]]
-        // Required. Specifies the top-left and bottom-right corners of the rectangle, with the center at [0,0].
+        // Optional. Specifies the collision shape's position relative to the entity's x,y coordinates. Defaults to 0. Alternatively, can specify regX and regY values, which are determined from the top-right of the collision object.
       }],
       
-      //The following four properties are optional and can be specified instead of the more specific `shape` above. 
+      //The following five properties are optional and can be specified instead of the more specific `shape` above. 
       "width": 160,
       // Optional. Sets the width of the collision area in world coordinates.
       
       "height": 240,
       // Optional. Sets the height of the collision area in world coordinates.
+      
+      "radius": 60,
+      // Optional. Sets the radius of a circle collision area in world coordinates.
       
       "regX": 80,
       // Optional. Determines the x-axis center of the collision shape.

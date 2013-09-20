@@ -70,6 +70,7 @@
 			// Engine Compoenents
             {"id": "asset-loader",               "src": "../engine/components/asset-loader.js"},
             {"id": "enable-ios-audio",           "src": "../engine/components/enable-ios-audio.js"},
+            {"id": "handler-collision",          "src": "../engine/components/handler-collision.js"},
 			{"id": "handler-controller",         "src": "../engine/components/handler-controller.js"},
 			{"id": "tiled-loader",               "src": "../engine/components/tiled-loader.js"},
             {"id": "handler-render-createjs",    "src": "../engine/components/handler-render-createjs.js"},

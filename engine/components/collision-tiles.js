@@ -3,7 +3,7 @@
 This component causes the tile-map to collide with other entities. It must be part of a collision group and will cause "hit-by-tile" messages to fire on colliding entities.
 
 ## Dependencies:
-- [[Collision-Group]] (on entity's parent) - This component handles the collision state of the map for the [[Collision-Group]] component on the parent entity.
+- [[handler-collision]] (on entity's parent) - This component handles the collision state of the map for the [[handler-collision]] component on the parent entity.
 - [[CollisionShape]] object - This component uses collisionShape objects to expose individual tiles to the collision group.
 
 ## Methods
