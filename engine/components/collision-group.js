@@ -89,6 +89,10 @@ This component checks for collisions between entities in its group which typical
 		triggerMessage.hitType= hitType;
 		entity.triggerEvent('hit-by-' + thatType, triggerMessage);
 		
+/*		if(vector.x && vector.y){
+			console.log(entity.type + ' vector: ' + vector.x + ', ' + vector.y);
+		}*/
+		
 		if (otherEntity) {
 			triggerMessage.entity = entity;
 			triggerMessage.type   = thisType;
@@ -180,13 +184,13 @@ This component checks for collisions between entities in its group which typical
 				if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom) {
 					return rect.aABB.halfWidth + circle.radius;
 				} else {
-					newAxisPosition = rect.aABB.halfWidth + getMovementDistance(getCorner(circle.y, rect.y, rect.aABB.halfHeight), circle.radius);
+					v.y = getCorner(circle.y, rect.y, rect.aABB.halfHeight);
+					newAxisPosition = rect.aABB.halfWidth + getMovementDistance(v.y, circle.radius);
 					if(moving === circle){
 						v.x = -getCorner(circle.x - direction * newAxisPosition, rect.x, rect.aABB.halfWidth) / 2;
-						v.y = -getCorner(circle.y, rect.y, rect.aABB.halfHeight);
+						v.y = -v.y;
 					} else {
 						v.x = getCorner(circle.x, rect.x - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
-						v.y = getCorner(circle.y, rect.y, rect.aABB.halfHeight);
 					}
 					v.normalize();
 					return newAxisPosition;
@@ -195,15 +199,16 @@ This component checks for collisions between entities in its group which typical
 				if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right) {
 					return rect.aABB.halfHeight + circle.radius;
 				} else {
+					v.x = getCorner(circle.x, rect.x, rect.aABB.halfWidth);
+					newAxisPosition = rect.aABB.halfHeight + getMovementDistance(v.x, circle.radius);
 					if(moving === circle){
-						v.x = -getCorner(circle.x, rect.x, rect.aABB.halfWidth);
+						v.x = -v.x;
 						v.y = -getCorner(circle.y - direction * newAxisPosition, rect.y, rect.aABB.halfWidth) / 2;
 					} else {
-						v.x = getCorner(circle.x, rect.x, rect.aABB.halfWidth);
 						v.y = getCorner(circle.y, rect.y - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
 					}
 					v.normalize();
-					return rect.aABB.halfHeight + getMovementDistance(v.x, circle.radius);
+					return newAxisPosition;
 				}
 			}
 		},
@@ -230,8 +235,6 @@ This component checks for collisions between entities in its group which typical
 					v.y = 0;
 					v[axis] = direction;
 					returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thatShape, thisShape, thisShape, direction);
-//					v.x = -v.x;
-//					v.y = -v.y;
 					return returnInfo;
 				}
 			} else if (thisShape.type == 'circle') {
@@ -245,6 +248,7 @@ This component checks for collisions between entities in its group which typical
 					returnInfo.position = thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
 					v.x = thatShape.x - thisShape.x;
 					v.y = thatShape.y - thisShape.y;
+					v[axis] = thatShape[axis] - returnInfo.position; 
 					v.normalize();
 					return returnInfo;
 				}

@@ -287,7 +287,7 @@ Multiple collision components may be added to a single entity if distinct messag
 				var marginTop    = definition.marginTop    || margin;
 				var marginBottom = definition.marginBottom || margin;
 				if(definition.shapeType === 'circle'){
-					var radius = definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2);
+					var radius = halfWidth = halfHeight = definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2);
 					shapes = [{
 						offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
 						offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,

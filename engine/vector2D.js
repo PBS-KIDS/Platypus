@@ -127,7 +127,7 @@ platformer.classes.vector2D = (function(){
 	};
 	
 	proto.getInverse = function(){
-		return new platformer.classes.vector2D(this.x * -1, this.y * -1);
+		return new platformer.classes.vector2D(-this.x, -this.y);
 	};
 	
 	proto.normalize = function(){
