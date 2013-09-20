@@ -51,173 +51,168 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 [link1]: http://www.mapeditor.org/
 */
 (function(){
-	var numSort = function(a,b){return a - b;},
-	shuffle = function(o){
-	    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-	    return o;
-	},
-	mergeData = function(data1, oldWidth, data2, width, height){
-		var x = 0,
-		y     = 0,
-		combined = data1.slice();
+	var mergeData = function(levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis){
+		var x = 0;
+		var y = 0;
+		var combined = levelData.slice();
 		
-		for (y=height-1; y >= 0; y--) {
-			for (x=y*width, z=0; x < (y+1)*width; x++, z++){
-				combined.splice(((y+1)*oldWidth) + z, 0, data2[x]);
+		if (mergeAxis == 'horizontal')
+		{
+			for (y = nonMergeAxisLength - 1; y >= 0; y--) 
+			{
+				for ( x = y * segmentMergeAxisLength, z = 0; x < (y + 1) * segmentMergeAxisLength; x++, z++)
+				{
+					combined.splice(((y + 1) * levelMergeAxisLength) + z, 0, segmentData[x]);
+				}
 			}
+			return combined;
+		} else if (mergeAxis == 'vertical') {
+			return levelData.concat(segmentData);
 		}
-		
-		return combined;
 	},
-	mergeObjects  = function(obj1s, width, obj2s){
-		var i = 0,
-		list  = obj1s.slice(),
-		obj   = null;
+	mergeObjects  = function(obj1s, obj2s, mergeAxisLength, mergeAxis){
+		var i 	 = 0;
+		var list = obj1s.slice();
+		var obj  = null;
 		
 		for (; i < obj2s.length; i++){
 			obj = {};
 			for (j in obj2s[i]){
 				obj[j] = obj2s[i][j];
 			}
-			obj.x += width;
+			if (mergeAxis == 'horizontal') {
+				obj.x += mergeAxisLength;
+			} else if (mergeAxis == 'vertical') {
+				obj.y += mergeAxisLength;
+			}
 			list.push(obj);
 		}
-		
 		return list;
 	},
-	mergeSegment  = function(segment, level){
-		var i = 0,
-		j     = 0;
+	mergeSegment  = function(level, segment, mergeAxis){
+		var i = 0;
+		var j = 0;
 
-		level.height     = segment.height;
-		level.tilewidth  = segment.tilewidth;
-		level.tileheight = segment.tileheight;
+		if (!level.tilewidth && !level.tileheight) {
+			//set level tile size data if it's not already set.
+			level.tilewidth  = segment.tilewidth;
+			level.tileheight = segment.tileheight;
+		} else if (level.tilewidth != segment.tilewidth || level.tileheight != segment.tileheight) {
+			console.warn('Tiled-Loader: Your map has segments with different tile sizes. All tile sizes must match. Segment: ' + segment);
+		}
+		
+		if (mergeAxis == 'horizontal') {
+			if (level.height == 0)
+			{
+				level.height = segment.height;
+			} else if (level.height != segment.height) {
+				console.warn('Tiled-Loader: You are trying to merge segments with different heights. All segments need to have the same height. Level: ' + level + ' Segment: ' + segment);
+			}
+		} else if (mergeAxis == 'vertical') {
+			if (level.width == 0)
+			{
+				level.width = segment.width;
+			} else if (level.width != segment.width) {
+				console.warn('Tiled-Loader: You are trying to merge segments with different widths. All segments need to have the same width. Level: ' + level + ' Segment: ' + segment);
+			}
+		}
+		
 		for (; i < segment.layers.length; i++){
 			if (!level.layers[i]){
+				//if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
 				level.layers[i] = {};
 				for (j in segment.layers[i]){
 					level.layers[i][j] = segment.layers[i][j];
 				}
 			} else {
-				if(level.layers[i].data && segment.layers[i].data) {
-					level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height);
-					level.layers[i].width += segment.width;
-				} else if (level.layers[i].objects && segment.layers[i].objects) {
-					level.layers[i].objects = mergeObjects(level.layers[i].objects, level.width * level.tilewidth, segment.layers[i].objects);
+				if (level.layers[i].type == segment.layers[i].type)
+				{
+					//if the level does have a layer, we're appending the new data to it.
+					if(level.layers[i].data && segment.layers[i].data) {
+						if (mergeAxis == 'horizontal') {
+							level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
+							level.layers[i].width += segment.width;
+						} else if (mergeAxis == 'vertical') {
+							level.layers[i].data = mergeData(level.layers[i].data, level.height, segment.layers[i].data, segment.height, level.width, mergeAxis);
+							level.layers[i].height += segment.height;
+						}
+					} else if (level.layers[i].objects && segment.layers[i].objects) {
+						if (mergeAxis == 'horizontal') {
+							level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.width * level.tilewidth, mergeAxis);
+						} else if (mergeAxis == 'vertical') {
+							level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.height * level.tileheight, mergeAxis);
+						}
+					}
+				} else {
+					console.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
 				}
+				
 			}
 		}
-		level.width += segment.width;
+		
+		if (mergeAxis == 'horizontal') {
+			level.width += segment.width;	
+		} else if (mergeAxis == 'vertical') {
+			level.height += segment.height;	
+		}
+		
+		//Go through all the STUFF in segment and copy it to the level if it's not already there.
 		for(i in segment){
 			if(!level[i]){
 				level[i] = segment[i];
 			}
 		}
 	},
-	calculateGroups = function(level){
-		var i    = 0,
-		j        = 0,
-		k        = 0,
-		min      = 0,
-		max      = 0,
-		multiplier = 0,
-		skill    = 0,
-		endThis  = false,
-		lastInt  = 0,
-		copy     = null,
-		copySk   = null,
-		groups   = [],
-		choices  = level.choose,
-		length   = level.sections.length,
-		remove   = length - choices,
-		removals = [];
-
-		for(j = 0; j < remove; j++){
-			removals[j] = +j;
-		}
+	mergeLevels = function(levelSegments){
+		var i  = 0;
+		var j  = 0;
+		var levelDefinitions = platformer.settings.levels;
+		var row =   {
+						height: 0,
+						width:  0,
+						layers: []
+					};
+		var level = {
+						height: 0,
+						width:  0,
+						layers: []
+					};
+		var segmentsWide = levelSegments[i].length;
 		
-		if(level.skills){
-			copy = level.skills.slice().sort(numSort);
-			min = 0;
-			for(j = 0; j < choices; j++){
-				min += copy[j];
+		for (; i < levelSegments.length; i++)
+		{
+			if (segmentsWide != levelSegments[i].length) {
+				console.warn('Tiled-Loader: Your map is not square. Maps must have an equal number of segments in every row.');
 			}
-			max = 0;
-			for(j = 1; j <= choices; j++){
-				max += copy[length - j];
+			row = 	{
+						height: 0,
+						width:  0,
+						layers: []
+					};
+			for (j = 0; j < levelSegments[i].length; j++)
+			{
+				//Merge horizontally
+				mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
 			}
-			multiplier = (1 / (max - min));
-		}
-		
-		while (!endThis) {
-			copy = level.sections.slice();
-			copySk = level.skills.slice();
-			skill = 0;
-			for(j = remove - 1; j >= 0; j--){
-				copy.splice(removals[j], 1);
-				copySk.splice(removals[j], 1);
-			}
-			for(j = 0; j < copySk.length; j++){
-				skill += copySk[j];
-			}
-			groups.push({
-				levels: copy,
-				skill: (skill - min) * multiplier
-			});
-			
-			endThis = true;
-			lastInt = length;
-			for(j = remove - 1; j >= 0; j--){
-				if(removals[j] !== lastInt - 1){
-					removals[j] += 1;
-					endThis = false;
-					k = 0;
-					for (i = j + 1; i < remove; i++){
-						k += 1;
-						removals[i] = removals[j] + k;
-					}
-					break;
-				} else {
-					lastInt = removals[j];
-				}
-			}
-		}
-		
-		return groups;
-	},
-	mergeLevels   = function(levels, skill){
-		var i  = 0,
-		j      = 0,
-		levelDefinitions = platformer.settings.levels,
-		level  = {
-			height: 0,
-			width:  0,
-			layers: []
-		},
-		groups = null,
-		group = null,
-		abs = Math.abs;
-		
-		for (; i < levels.length; i++){
-			if(typeof levels[i] === 'string') {
-				mergeSegment(levelDefinitions[levels[i]], level);
-			} else {
-				if(!levels[i].calculatedGroups){
-					levels[i].calculatedGroups = calculateGroups(levels[i]);
-				}
-				groups = levels[i].calculatedGroups.slice().sort(function(a,b){
-					return abs(skill - a.skill) - abs(skill - b.skill);
-				});
-					
-				group = groups[Math.floor(Math.random() * groups.length / 3)]; //3 is arbitrary at the moment.
-				
-				shuffle(group.levels);
-				for (j = 0; j < group.levels.length; j++) {
-					mergeSegment(levelDefinitions[group.levels[j]], level);
-				}
-			}
+			//Then merge vertically
+			mergeSegment(level, row, 'vertical');
 		}
 		return level;
+	},
+	transformCheck = function(v){
+		var a = !!(0x20000000 & v),
+		b     = !!(0x40000000 & v),
+		c     = !!(0x80000000 & v);
+		
+		if (a && c){
+			return -3;
+		} else if (a){
+			return -5;
+		} else if (b){
+			return -4;
+		} else {
+			return -2;
+		}
 	};
 	
 	return platformer.createComponentClass({
@@ -253,7 +248,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				if(typeof this.level === 'string'){
 					this.level = platformer.settings.levels[this.level];
 				} else {
-					this.level = mergeLevels(this.level, skill);
+					this.level = mergeLevels(this.level);
 				}
 				
 				for(; actionLayer < this.level.layers.length; actionLayer++){
@@ -349,7 +344,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							if(jumpthroughs){
 								for (var z = 0; z < jumpthroughs.length; z++){
 									if(jumpthroughs[z] === (0x0fffffff & index)){
-										index = -2;
+										index = transformCheck(index);
 									}
 									break;
 								}
@@ -434,6 +429,8 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					if(entity === 'tile-layer'){
 						createLayer('collision-layer');
 						return createLayer('render-layer', combineRenderLayer);
+					} else if (entity === 'collision-layer') {
+						createLayer(entity, combineRenderLayer);
 					} else {
 						return createLayer(entity, combineRenderLayer);
 					}

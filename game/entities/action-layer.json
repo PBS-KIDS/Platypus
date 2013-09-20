@@ -4,7 +4,7 @@
         {"type": "handler-controller"},
         {"type": "handler-ai"},
         {"type": "handler-logic"},
-        {"type": "collision-group"},
+        {"type": "handler-collision"},
         {
            "type": "camera",
            "width": 3200
