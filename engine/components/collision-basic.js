@@ -246,21 +246,20 @@ Multiple collision components may be added to a single entity if distinct messag
 		id: 'collision-basic',
 		
 		constructor: function(definition){
-			var x  = 0;
+			var x  = 0,
+			shapes = null,
+			regX = definition.regX,
+			regY = definition.regY;
 			
 			this.immobile  = this.owner.immobile = this.owner.immobile || definition.immobile || false;
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
-			this.aabb      = new platformer.classes.aABB();
-			this.prevAABB  = new platformer.classes.aABB();
+			
+			this.aabb     = new platformer.classes.aABB();
+			this.prevAABB = new platformer.classes.aABB();
+			
 			this.owner.bullet = this.owner.bullet || definition.bullet;
-			this.relocateObj = {
-									x: 0,
-									y: 0,
-									relative: false
-								};
-	
-			var shapes = [];
+
 			if(definition.shapes){
 				shapes = definition.shapes;
 			} else if (definition.shape) {
@@ -276,8 +275,8 @@ Multiple collision components may be added to a single entity if distinct messag
 				if(definition.shapeType === 'circle'){
 					var radius = halfWidth = halfHeight = definition.radius || this.owner.radius || ((halfWidth + halfHeight) / 2);
 					shapes = [{
-						offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
-						offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,
+						regX: (isNaN(regX)?radius:regX) - (marginRight - marginLeft)/2,
+						regY: (isNaN(regY)?radius:regY) - (marginBottom - marginTop)/2,
 						radius: radius,
 						width:  radius * 2,
 						height: radius * 2,
@@ -285,8 +284,8 @@ Multiple collision components may be added to a single entity if distinct messag
 					}];
 				} else {
 					shapes = [{
-						offsetX: (definition.regX?halfWidth-definition.regX:(this.owner.regX?halfWidth-this.owner.regX:0)) + (marginRight - marginLeft)/2,
-						offsetY: (definition.regY?halfHeight-definition.regY:(this.owner.regY?halfHeight-this.owner.regY:0)) + (marginBottom - marginTop)/2,
+						regX: (isNaN(regX)?halfWidth :regX) - (marginRight  - marginLeft)/2,
+						regY: (isNaN(regY)?halfHeight:regY) - (marginBottom - marginTop )/2,
 						points: definition.points,
 						width:  halfWidth  * 2 + marginLeft + marginRight,
 						height: halfHeight * 2 + marginTop  + marginBottom,
