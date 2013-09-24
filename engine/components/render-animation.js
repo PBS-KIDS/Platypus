@@ -289,6 +289,7 @@ This component is attached to entities that will appear in the game world. It re
 			if(definition.pins){
 				this.container = new createjs.Container();
 				this.container.addChild(this.anim);
+				this.anim.z = 0;
 				this.addPins(definition.pins, regX, regY);
 			} else {
 				this.container = this.anim;
@@ -356,113 +357,124 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			"handle-render": function(resp){
-				var testCase = false, i = 0,
-				angle = null;
+			"handle-render": (function(){
+				var sort = function(a, b) {
+					return a.z - b.z;
+				};
 				
-				if(!this.stage){
-					if(!this.pinTo) { //In case this component was added after handler-render is initiated
-						this['handle-render-load'](resp);
-						if(!this.stage){
-							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
-							this.owner.removeComponent(this);
+				return function(resp){
+					var testCase = false, i = 0,
+					angle = null;
+					
+					if(!this.stage){
+						if(!this.pinTo) { //In case this component was added after handler-render is initiated
+							this['handle-render-load'](resp);
+							if(!this.stage){
+								console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
+								this.owner.removeComponent(this);
+								return;
+							}
+						} else {
 							return;
 						}
-					} else {
-						return;
-					}
-				}
-				
-				if(this.pinnedTo){
-					if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.animation.currentFrame]){
-						this.container.x = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].x;
-						this.container.y = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].y;
-						if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z){
-							this.stage.reorder = true;
-							this.container.z = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z;
-						}
-						this.container.visible = true;
-					} else if (this.pinnedTo.defaultPin) {
-						this.container.x = this.pinnedTo.defaultPin.x;
-						this.container.y = this.pinnedTo.defaultPin.y;
-						if(this.container.z !== this.pinnedTo.defaultPin.z){
-							this.stage.reorder = true;
-							this.container.z = this.pinnedTo.defaultPin.z;
-						}
-						this.container.visible = true;
-					} else {
-						this.container.visible = false;
-					}
-				} else {
-					this.container.x = this.owner.x;
-					this.container.y = this.owner.y;
-					if(this.container.z !== this.owner.z){
-						this.stage.reorder = true;
-						this.container.z = this.owner.z;
-					}
-
-					if(this.owner.opacity || (this.owner.opacity === 0)){
-						this.container.alpha = this.owner.opacity;
-					}
-				}				
-				
-				if(this.skewX){
-					this.container.skewX = this.skewX;
-				}
-				if(this.skewY){
-					this.container.skewY = this.skewY;
-				}
-		
-				//Special case affecting rotation of the animation
-				if(this.rotate || this.mirror || this.flip){
-					angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
-					
-					if(this.rotate){
-						this.container.rotation = angle;
 					}
 					
-					if(this.mirror){
-						if((angle > 90) && (angle < 270)){
-							this.container.scaleX = -this.scaleX;
+					if(this.pinnedTo){
+						if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.animation.currentFrame]){
+							this.container.x = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].x;
+							this.container.y = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].y;
+							if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z){
+								this.stage.reorder = true;
+								this.container.z = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z;
+							}
+							this.container.visible = true;
+						} else if (this.pinnedTo.defaultPin) {
+							this.container.x = this.pinnedTo.defaultPin.x;
+							this.container.y = this.pinnedTo.defaultPin.y;
+							if(this.container.z !== this.pinnedTo.defaultPin.z){
+								this.stage.reorder = true;
+								this.container.z = this.pinnedTo.defaultPin.z;
+							}
+							this.container.visible = true;
 						} else {
-							this.container.scaleX = this.scaleX;
+							this.container.visible = false;
+						}
+					} else {
+						this.container.x = this.owner.x;
+						this.container.y = this.owner.y;
+						if(this.container.z !== this.owner.z){
+							this.stage.reorder = true;
+							this.container.z = this.owner.z;
+						}
+	
+						if(this.owner.opacity || (this.owner.opacity === 0)){
+							this.container.alpha = this.owner.opacity;
 						}
 					}
 					
-					if(this.flip){
-						if(angle > 180){
-							this.container.scaleY = this.scaleY;
-						} else {
-							this.container.scaleY = -this.scaleY;
-						}
+					if(this.container.reorder){
+						this.container.reorder = false;
+						this.container.sortChildren(sort);
 					}
-				}
-				
-				if(this.stateChange){
-					if(this.checkStates){
-						for(; i < this.checkStates.length; i++){
-							testCase = this.checkStates[i](this.state);
-							if(testCase){
-								if(this.currentAnimation !== testCase){
-									if(!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))){
-										this.currentAnimation = testCase;
-										this.lastState = +i;
-										this.animationFinished = false;
-										this.anim.gotoAndPlay(testCase);
-									} else {
-										this.waitingAnimation = testCase;
-										this.waitingState = +i;
-									}
-								} else if(this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
-									this.waitingAnimation = false;
-								}
-								break;
+					
+					if(this.skewX){
+						this.container.skewX = this.skewX;
+					}
+					if(this.skewY){
+						this.container.skewY = this.skewY;
+					}
+			
+					//Special case affecting rotation of the animation
+					if(this.rotate || this.mirror || this.flip){
+						angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
+						
+						if(this.rotate){
+							this.container.rotation = angle;
+						}
+						
+						if(this.mirror){
+							if((angle > 90) && (angle < 270)){
+								this.container.scaleX = -this.scaleX;
+							} else {
+								this.container.scaleX = this.scaleX;
+							}
+						}
+						
+						if(this.flip){
+							if(angle > 180){
+								this.container.scaleY = this.scaleY;
+							} else {
+								this.container.scaleY = -this.scaleY;
 							}
 						}
 					}
-					this.stateChange = false;
-				}
-			},
+					
+					if(this.stateChange){
+						if(this.checkStates){
+							for(; i < this.checkStates.length; i++){
+								testCase = this.checkStates[i](this.state);
+								if(testCase){
+									if(this.currentAnimation !== testCase){
+										if(!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))){
+											this.currentAnimation = testCase;
+											this.lastState = +i;
+											this.animationFinished = false;
+											this.anim.gotoAndPlay(testCase);
+										} else {
+											this.waitingAnimation = testCase;
+											this.waitingState = +i;
+										}
+									} else if(this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
+										this.waitingAnimation = false;
+									}
+									break;
+								}
+							}
+						}
+						this.stateChange = false;
+					}
+				};
+			})(),
 			
 			"logical-state": function(state){
 				this.stateChange = true;
