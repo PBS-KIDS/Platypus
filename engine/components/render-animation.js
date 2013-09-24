@@ -143,7 +143,9 @@ This component is attached to entities that will appear in the game world. It re
 (function(){
 	var changeState = function(state){
 		return function(value){
-			if(this.currentAnimation !== state){
+			//9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
+			//				We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
+			//if(this.currentAnimation !== state){
 				if(this.animationFinished || (this.lastState >= -1)){
 					this.currentAnimation = state;
 					this.lastState = -1;
@@ -153,7 +155,7 @@ This component is attached to entities that will appear in the game world. It re
 					this.waitingAnimation = state;
 					this.waitingState = -1;
 				}
-			}
+			//}
 		};
 	},
 	createTest = function(testStates, animation){

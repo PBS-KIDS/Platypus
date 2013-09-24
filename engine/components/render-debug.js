@@ -237,7 +237,7 @@ This component is attached to entities that will appear in the game world. It se
 			destroy: function(){
 				var i = 0;
 				
-				for(i = 0; i < shapes.length; i++){
+				for(i = 0; i < this.shapes.length; i++){
 					this.stage.removeChild(this.shapes[i]);
 				}
 				this.shapes.length = 0;
