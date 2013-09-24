@@ -100,6 +100,9 @@ This component is attached to entities that will appear in the game world. It re
       "scaleY": 1
       //Optional - The Y scaling factor for the image.  Will default to 1.
       
+      "offsetZ": -1
+      //Optional - How much the z-index of the image should be relative to the entity's z-index. Will default to 0.
+
       "rotate": false,
       //Optional - Whether this object can be rotated. It's rotational angle is set by sending an orientation value in the logical state.
       
@@ -178,6 +181,8 @@ This component is attached to entities that will appear in the game world. It re
 
 			this.skewX = this.owner.skewX || definition.skewX;
 			this.skewY = this.owner.skewY || definition.skewY;
+			
+			this.offsetZ = definition.offsetZ || 0;
 		},
 		
 		events: {
@@ -238,9 +243,9 @@ This component is attached to entities that will appear in the game world. It re
 					} else {
 						this.container.x = this.owner.x;
 						this.container.y = this.owner.y;
-						if(this.container.z !== this.owner.z){
+						if(this.container.z !== (this.owner.z + this.offsetZ)){
 							this.stage.reorder = true;
-							this.container.z = this.owner.z;
+							this.container.z = (this.owner.z + this.offsetZ);
 						}
 	
 						if(this.owner.opacity || (this.owner.opacity === 0)){
