@@ -420,15 +420,55 @@ This component checks for collisions between entities which typically have eithe
 				}
 			},
 			
-			checkGroupCollisions: function (){
-				var entities = this.groupsLive;
-				
-				for (var x = entities.length - 1; x > -1; x--){
-					entityCollisionDataContainer.reset();
-					clearXYPair(xyPair);
-					xyPair = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, xyPair);
-				}
-			},
+			checkGroupCollisions:  (function(){
+				var triggerCollisionMessages = function(entity, otherEntity, thisType, thatType, x, y, hitType, vector){
+					
+					triggerMessage.entity = otherEntity;
+					triggerMessage.myType = thisType;
+					triggerMessage.type   = thatType;
+					triggerMessage.x      = x;
+					triggerMessage.y      = y;
+					triggerMessage.direction = vector;
+					triggerMessage.hitType= hitType;
+					entity.triggerEvent('hit-by-' + thatType, triggerMessage);
+					
+					if (otherEntity) {
+						triggerMessage.entity = entity;
+						triggerMessage.type   = thisType;
+						triggerMessage.myType = thatType;
+						triggerMessage.x      = -x;
+						triggerMessage.y      = -y;
+						triggerMessage.direction = vector.getInverse();
+						triggerMessage.hitType= hitType;
+						otherEntity.triggerEvent('hit-by-' + thisType, triggerMessage);
+					}
+
+				};
+
+				return function (){
+					var entities = this.groupsLive;
+					
+					for (var x = entities.length - 1; x > -1; x--){
+						if(entities[x].collisionGroup.getSize() > 1){
+							entityCollisionDataContainer.reset();
+							clearXYPair(xyPair);
+							xyPair = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, xyPair);
+							
+							for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
+							{
+								messageData = entityCollisionDataContainer.getXEntry(i);
+								triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
+							}
+							
+							for (i = 0; i < entityCollisionDataContainer.yCount; i++)
+							{
+								messageData = entityCollisionDataContainer.getYEntry(i);
+								triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
+							}
+						}
+					}
+				};
+			})(),
 			
 			checkSolidCollisions: (function(){
 				var triggerCollisionMessages = function(entity, otherEntity, thisType, thatType, x, y, hitType, vector){
@@ -452,6 +492,7 @@ This component checks for collisions between entities which typically have eithe
 						triggerMessage.hitType= hitType;
 						otherEntity.triggerEvent('hit-by-' + thisType, triggerMessage);
 					}
+
 				};
 
 				return function (){

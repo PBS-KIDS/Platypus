@@ -211,7 +211,7 @@ platformer.classes.entity = (function(){
 		
 		if(!this.loopCheck.length && this.unbindLater.length){
 			for(j = 0; j < this.unbindLater.length; j++){
-				this.safelyUnbind(this.unbindLater.event, this.unbindLater.func);
+				this.safelyUnbind(this.unbindLater[j].event, this.unbindLater[j].func);
 			}
 			this.unbindLater.length = 0;
 		}

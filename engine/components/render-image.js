@@ -171,11 +171,18 @@ This component is attached to entities that will appear in the game world. It re
 			this.image.regX   = (definition.regX || 0) * scaleX;
 			this.image.regY   = (definition.regY || 0) * scaleY;
 			
+			this.worldScaleX = definition.scaleX;
+			this.worldScaleY = definition.scaleY;
+			this.imageScaleX = scaleX;
+			this.imageScaleY = scaleY;
+			this.lastOwnerScaleX = this.owner.scaleX;
+			this.lastOwnerScaleY = this.owner.scaleY;
+			
 			//This applies scaling to the correct objects if container and image are separate, and applies them both to the image if the container is also the image. - DDD
-			this.container.scaleX = (definition.scaleX || 1) * (this.owner.scaleX || 1);
-			this.container.scaleY = (definition.scaleY || 1) * (this.owner.scaleY || 1);
-			this.image.scaleX /= scaleX;
-			this.image.scaleY /= scaleY;
+			this.container.scaleX = (this.worldScaleX || 1) * (this.owner.scaleX || 1);
+			this.container.scaleY = (this.worldScaleY || 1) * (this.owner.scaleY || 1);
+			this.image.scaleX /= this.imageScaleX;
+			this.image.scaleY /= this.imageScaleY;
 			this.scaleX = this.container.scaleX;
 			this.scaleY = this.container.scaleY;
 
@@ -263,6 +270,18 @@ This component is attached to entities that will appear in the game world. It re
 					}
 					if(this.skewY){
 						this.container.skewY = this.skewY;
+					}
+					
+					if (this.owner.scaleX != this.lastOwnerScaleX || this.owner.scaleY != this.lastOwnerScaleY) {
+						this.container.scaleX = (this.worldScaleX || 1) * (this.owner.scaleX || 1);
+						this.container.scaleY = (this.worldScaleY || 1) * (this.owner.scaleY || 1);
+						this.image.scaleX /= this.imageScaleX;
+						this.image.scaleY /= this.imageScaleY;
+						this.scaleX = this.container.scaleX;
+						this.scaleY = this.container.scaleY;
+						
+						this.lastOwnerScaleX = this.owner.scaleX;
+						this.lastOwnerScaleY = this.owner.scaleY;
 					}
 			
 					//Special case affecting rotation of the animation
