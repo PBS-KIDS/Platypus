@@ -102,6 +102,25 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
 			attributes = {};
+		} else if (soundDefinition.length){
+			if(typeof soundDefinition[0] === 'string'){
+				sound      = soundDefinition[0];
+				attributes = {next: []};
+			} else {
+				sound      = soundDefinition[0].sound;
+				attributes = {};
+				for (var property in soundDefinition[0]){
+					attributes[property] = soundDefinition[0][property];
+				}
+				if(attributes.next){
+					attributes.next = attributes.next.slice();
+				} else {
+					attributes.next = [];
+				}
+			}
+			for(var i = 1; i < soundDefinition.length; i++){
+				attributes.next.push(soundDefinition[i]);
+			}
 		} else {
 			sound      = soundDefinition.sound;
 			attributes = soundDefinition;
