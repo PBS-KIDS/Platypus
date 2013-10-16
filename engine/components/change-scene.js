@@ -24,6 +24,9 @@ This component allows the entity to initiate a change from the current scene to 
       "transition": "fade-to-black",
       // Optional. This can be "instant" or "fade-to-black". Defaults to an "instant" transition.
       
+      "preload": true,
+      // Optional. Whether the scene should already be loaded in the background.
+      
       "persistentData": {"runningScore": 1400}
       // Optional. An object containing key/value pairs of information that should be passed into the new scene on the new scenes "scene-loaded" call.
     }
@@ -35,15 +38,23 @@ This component allows the entity to initiate a change from the current scene to 
 		constructor: function(definition){
 			this.scene = this.owner.scene || definition.scene;
 			this.transition = this.owner.transition || definition.transition || 'instant';
-			this.persistentData = {};
+			this.persistentData = definition.persistentData || {};
 			
 			if(definition.message){
 				this.addListener(definition.message);
 				this[definition.message] = this['new-scene'];
 			}
+			
+			this.preload = definition.preload || false;
 		},
 
 		events: {
+			"scene-live": function(){
+				//Makes sure we're in the current scene before preloading the next one.
+				if(this.preload){
+					platformer.game.loadScene(this.scene, this.transition, this.persistentData, true);
+				}
+			},
 			"new-scene": function(response){
 				var resp   = response || this,
 				scene      = resp.scene || this.scene,

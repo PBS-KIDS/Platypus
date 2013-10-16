@@ -33,6 +33,7 @@ platformer.classes.game = (function(){
 		outerRootElement = null;
 
 		this.currentScene = undefined;
+		this.loaded    = null;
 		this.tickContent = {
 			deltaT: 0,
 			count: 0
@@ -129,15 +130,24 @@ platformer.classes.game = (function(){
 		this.tickContent.deltaT = deltaT;
 		this.tickContent.count += 1;
 		
+		if(this.loadedScene){
+			this.loadedScene.trigger('tick', this.tickContent);
+		}
 		if(this.currentScene){
 			this.currentScene.trigger('tick', this.tickContent);
 		}
 	};
 	
-	proto.loadScene = function(sceneId, transition, persistantData){
+	proto.loadScene = function(sceneId, transition, persistantData, preloading){
 		var self = this;
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
+		
+		if(preloading){
+			this.loadNextScene(sceneId);
+			return;
+		}
+		
 		switch(transition){
 		case 'fade-to-black':
 			var element = document.createElement('div');
@@ -149,8 +159,10 @@ platformer.classes.game = (function(){
 			element.style.opacity = '0';
 			element.style.background = '#000';
 			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				self.loadNextScene(sceneId, persistantData);
-				self.completeSceneTransition();
+				if(!this.loaded) {
+					self.loadNextScene(sceneId, persistantData);
+				}
+				self.completeSceneTransition(persistantData);
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
 				element = undefined;
@@ -158,8 +170,10 @@ platformer.classes.game = (function(){
 			break;
 		case 'instant':
 		default:
-			this.loadNextScene(sceneId, persistantData);
-			this.completeSceneTransition();
+			if(!this.loaded){
+				self.loadNextScene(sceneId, persistantData);
+			}
+			this.completeSceneTransition(persistantData);
 		}
 	};
 	
@@ -172,19 +186,28 @@ platformer.classes.game = (function(){
 			scene = sceneId;
 		}
 		
-		this.currentScene = new platformer.classes.scene(scene, this.rootElement);
-		
-		this.currentScene.trigger('scene-loaded', persistantData);
+		this.loaded = sceneId;
+		this.loadedScene = new platformer.classes.scene(scene, this.rootElement);
+
 		console.log('Scene loaded: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
-		
+		this.loadedScene.trigger('scene-loaded', persistantData);
 	};
 	
-	proto.completeSceneTransition = function(){
+	proto.completeSceneTransition = function(persistantData){
+		var sceneId = this.loaded;
+		
+		this.currentScene = this.loadedScene;
+		this.loadedScene  = null;
+		
+		this.loaded = false;
 		this.inTransition = false;
 		if(this.leavingScene){
 			this.leavingScene.destroy();
 			this.leavingScene = false;
 		}
+
+		console.log('Scene live: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
+		this.currentScene.trigger('scene-live', persistantData);
 	};
 	
 	proto.addEventListener = function(element, event, callback){
