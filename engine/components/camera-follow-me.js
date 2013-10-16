@@ -26,9 +26,6 @@ This component can request that the camera focus on this entity.
     {
       "type": "camera-follow-me",
       
-      "message": "exciting-event",
-      // Optional. Alternative event that will also trigger "follow-me"
-      
       "pause": true,
       // Optional. Whether to pause the game while the camera is focused. Defaults to false. 
       
@@ -58,74 +55,36 @@ This component can request that the camera focus on this entity.
     }
 
 */
-platformer.components['camera-follow-me'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
+(function(){
+	return platformer.createComponentClass({
+		id: 'camera-follow-me',
 		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['follow-me']);
+		constructor: function(definition){
+			this.pauseGame = definition.pause?{
+				time: definition.time
+			}:null;
+			
+			this.followMeMessage = {
+				mode: this.owner.cameraMode || definition.mode || 'forward',
+				entity: this.owner,
+				top: definition.top || undefined,
+				left: definition.left || undefined,
+				offsetX: definition.offsetX || undefined,
+				offsetY: definition.offsetY || undefined,
+				width: definition.width || undefined,
+				height: definition.height || undefined,
+				time: definition.time || 0
+			};
+		},
 		
-		if(definition.message){
-			this.addListener(definition.message);
-			this[definition.message] = this['follow-me'];
+		"events": {
+			'follow-me': function(){
+				if(this.pauseGame){
+					this.owner.parent.trigger('pause-logic',  this.pauseGame);
+					this.owner.parent.trigger('pause-render', this.pauseGame);
+				}
+				this.owner.parent.trigger('follow', this.followMeMessage);
+			}
 		}
-		
-		this.pauseGame = definition.pause?{
-			time: definition.time
-		}:null;
-		
-		this.followMeMessage = {
-			mode: this.owner.cameraMode || definition.mode || 'bounding',
-			entity: this.owner,
-			top: definition.top || undefined,
-			left: definition.left || undefined,
-			offsetX: definition.offsetX || undefined,
-			offsetY: definition.offsetY || undefined,
-			width: definition.width || undefined,
-			height: definition.height || undefined,
-			time: definition.time || 0
-		};
-	};
-	var proto = component.prototype;
-	
-	proto['follow-me'] = function(){
-		if(this.pauseGame){
-			this.owner.parent.trigger('pause-logic',  this.pauseGame);
-			this.owner.parent.trigger('pause-render', this.pauseGame);
-		}
-		this.owner.parent.trigger('follow', this.followMeMessage);
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

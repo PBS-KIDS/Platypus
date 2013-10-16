@@ -114,8 +114,16 @@ This component controls the game camera deciding where and how it should move. T
 
 			// on resize should the view be stretched or should the world's initial aspect ratio be maintained?
 			this.stretch = definition.stretch || false;
-			this.transitionX = definition.transitionX || definition.transition || 400;
-			this.transitionY = definition.transitionY || definition.transition || 600;
+			
+			this.transitionX = definition.transitionX || definition.transition;
+			this.transitionY = definition.transitionY || definition.transition;
+			if(isNaN(this.transitionX)){
+				this.transitionX = 400;
+			}
+			if(isNaN(this.transitionY)){
+				this.transitionY = 600;
+			}
+
 			this.threshold = definition.threshold || 1;
 			this.element = null;
 	
