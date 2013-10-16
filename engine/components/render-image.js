@@ -152,7 +152,7 @@ This component is attached to entities that will appear in the game world. It re
 				this.container = new createjs.Container();
 				this.container.addChild(this.image);
 				this.image.z = 0;
-				this.addPins(definition.pins, (definition.regX || 0) / scaleX, (definition.regY || 0) / scaleY);
+				this.addPins(definition.pins, definition.regX || 0, definition.regY || 0);
 			} else {
 				this.container = this.image;
 			}

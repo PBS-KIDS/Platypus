@@ -47,6 +47,9 @@ A component that handles updating rendering for components that are rendering vi
     {
       "type": "handler-render-createjs",
       
+      "autoClear": true,
+      // Optional. Whether the canvas should clear between paints. Defaults to `false`.
+      
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
       	"touch": false, // Whether to listen for touch events (triggers mouse events)
