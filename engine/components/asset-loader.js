@@ -9,6 +9,8 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 
 ### Listens for:
 - **load** - On receiving this event, the asset loader begins downloading the list of assets.
+- **fileload** - This message used to update a progress bar if one has been defined by JSON.
+  > @param fraction (Number) - Value of (progress / total) is used to set the width of the progress bar element.
 
 ### Local Broadcasts:
 - **fileload** - This message is broadcast when an asset has been loaded.
@@ -22,6 +24,16 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
     {
       "type": "asset-loader",
       
+      "assets": [
+      // Optional. A list of assets to load; typically the asset list is pulled directly from the config.json file.
+        {"id": "item-1",         "src": "images/item-1.png"},
+        {"id": "item-2",         "src": "images/item-2.png"},
+        {"id": "item-3",         "src": "images/item-3.png"}
+      ]
+      
+      "progressBar": "progress-bar",
+      // Optional. A DOM element id for a DIV that should be updated as assets are loaded.
+      
       "useXHR": true
       // Whether to use XHR for asset downloading. The default is `true`.
     }
@@ -32,10 +44,14 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		
 		constructor: function(definition){
 			this.useXHR = true;
-
+			
 			if(definition.useXHR === false){
 				this.useXHR = false;
 			}
+			
+			this.assets = definition.assets || platformer.settings.assets;
+			
+			this.progressBar = definition.progressBar || false;
 			
 			this.message = {
 				complete: false,
@@ -110,43 +126,43 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 	    			self.owner.trigger('complete');
 		    	});
 		    	
-		    	for(var i in platformer.settings.assets){
-		    		if(typeof platformer.settings.assets[i].src === 'string'){
-		    			checkPush(platformer.settings.assets[i], loadAssets);
+		    	for(var i in this.assets){
+		    		if(typeof this.assets[i].src === 'string'){
+		    			checkPush(this.assets[i], loadAssets);
 		    		} else {
-		    			for(var j in platformer.settings.assets[i].src){
-		    				if(platformer.settings.aspects[j] && platformer.settings.assets[i].src[j]){
-		    					if(typeof platformer.settings.assets[i].src[j] === 'string'){
-		    						platformer.settings.assets[i].src  = platformer.settings.assets[i].src[j];
-		    						checkPush(platformer.settings.assets[i], loadAssets);
+		    			for(var j in this.assets[i].src){
+		    				if(platformer.settings.aspects[j] && this.assets[i].src[j]){
+		    					if(typeof this.assets[i].src[j] === 'string'){
+		    						this.assets[i].src  = this.assets[i].src[j];
+		    						checkPush(this.assets[i], loadAssets);
 		    					} else {
-		    						platformer.settings.assets[i].data    = platformer.settings.assets[i].src[j].data || platformer.settings.assets[i].data;
-		    						platformer.settings.assets[i].assetId = platformer.settings.assets[i].src[j].assetId;
-		    						platformer.settings.assets[i].src     = platformer.settings.assets[i].src[j].src;
+		    						this.assets[i].data    = this.assets[i].src[j].data || this.assets[i].data;
+		    						this.assets[i].assetId = this.assets[i].src[j].assetId;
+		    						this.assets[i].src     = this.assets[i].src[j].src;
 		    						checkPush({
-		    							id:  platformer.settings.assets[i].assetId || platformer.settings.assets[i].id,
-		    							src: platformer.settings.assets[i].src
+		    							id:  this.assets[i].assetId || this.assets[i].id,
+		    							src: this.assets[i].src
 		    						}, loadAssets);
 		    					}
 		    					break;
 		    				}
 		    			}
-		    			if(typeof platformer.settings.assets[i].src !== 'string'){
-		    				if(platformer.settings.assets[i].src['default']){
-		    					if(typeof platformer.settings.assets[i].src['default'] === 'string'){
-		    						platformer.settings.assets[i].src  = platformer.settings.assets[i].src['default'];
-		    						checkPush(platformer.settings.assets[i], loadAssets);
+		    			if(typeof this.assets[i].src !== 'string'){
+		    				if(this.assets[i].src['default']){
+		    					if(typeof this.assets[i].src['default'] === 'string'){
+		    						this.assets[i].src  = this.assets[i].src['default'];
+		    						checkPush(this.assets[i], loadAssets);
 		    					} else {
-		    						platformer.settings.assets[i].data    = platformer.settings.assets[i].src['default'].data || platformer.settings.assets[i].data;
-		    						platformer.settings.assets[i].assetId = platformer.settings.assets[i].src['default'].assetId;
-		    						platformer.settings.assets[i].src     = platformer.settings.assets[i].src['default'].src;
+		    						this.assets[i].data    = this.assets[i].src['default'].data || this.assets[i].data;
+		    						this.assets[i].assetId = this.assets[i].src['default'].assetId;
+		    						this.assets[i].src     = this.assets[i].src['default'].src;
 		    						checkPush({
-		    							id:  platformer.settings.assets[i].assetId || platformer.settings.assets[i].id,
-		    							src: platformer.settings.assets[i].src
+		    							id:  this.assets[i].assetId || this.assets[i].id,
+		    							src: this.assets[i].src
 		    						}, loadAssets);
 		    					}
 		    				} else {
-		    					console.warn('Asset has no valid source for this browser.', platformer.settings.assets[i]);
+		    					console.warn('Asset has no valid source for this browser.', this.assets[i]);
 		    				}
 		    			}
 		    		}
@@ -168,6 +184,20 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	loader.installPlugin(createjs.Sound);
 		    	loader.loadManifest(loadAssets);
 		    	platformer.assets = [];
+		    },
+		
+		    "fileload": function(resp) {
+		    	var pb = null;
+		    	
+		    	if(this.progressBar){
+		    		pb = document.getElementById(this.progressBar);
+		    		if(pb){
+		    			pb = pb.style;
+		    			
+		    			pb.width = (resp.fraction * 100) + '%';
+		    			pb.backgroundSize = ((1 / resp.fraction) * 100) + '%';
+		    		}
+		    	}
 		    }
 		}
 		
