@@ -258,31 +258,31 @@ This component is attached to entities that will appear in the game world. It re
 						  spriteSheet.frames[i][5] * scaleX,
 						  spriteSheet.frames[i][6] * scaleY
 						]);
-						regX.push(spriteSheet.frames[i][5] / scaleX);
-						regY.push(spriteSheet.frames[i][6] / scaleY);
+						regX.push(spriteSheet.frames[i][5]);
+						regY.push(spriteSheet.frames[i][6]);
 					}
 					spriteSheet.frames = arr;
 				} else {
+					regX = spriteSheet.frames.regX;
+					regY = spriteSheet.frames.regY;
 					spriteSheet.frames = {
 						width: spriteSheet.frames.width * scaleX,	
 						height: spriteSheet.frames.height * scaleY,	
 						regX: spriteSheet.frames.regX * scaleX,	
 						regY: spriteSheet.frames.regY * scaleY
 					};
-					regX = spriteSheet.frames.regX / scaleX;
-					regY = spriteSheet.frames.regY / scaleY;
 				}
 			} else {
 				if(spriteSheet.frames.length){ //frames are an array
 					regX = [];
 					regY = [];
 					for (var i = 0; i < spriteSheet.frames.length; i++){
-						regX.push(spriteSheet.frames[i][5] / scaleX);
-						regY.push(spriteSheet.frames[i][6] / scaleY);
+						regX.push(spriteSheet.frames[i][5]);
+						regY.push(spriteSheet.frames[i][6]);
 					}
 				} else {
-					regX = spriteSheet.frames.regX / scaleX;
-					regY = spriteSheet.frames.regY / scaleY;
+					regX = spriteSheet.frames.regX;
+					regY = spriteSheet.frames.regY;
 				}
 			}
 
@@ -342,6 +342,7 @@ This component is attached to entities that will appear in the game world. It re
 
 			this.state = this.owner.state;
 			this.stateChange = false;
+			this.lastState = -1;
 
 			this.waitingAnimation = false;
 			this.waitingState = 0;

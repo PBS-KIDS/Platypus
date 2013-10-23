@@ -114,18 +114,6 @@ This component creates a DOM element associated with the entity. In addition to 
 			if(this.owner.innerHTML){
 				this.element.innerHTML = this.owner.innerHTML;
 			}
-			
-			if(definition.messageMap)
-			{
-				for (var j = 0 ; j < definition.messageMap.length; j++)
-				{
-					if (this[definition.messageMap[j][0]] && definition.messageMap[j][1])
-					{
-						this[definition.messageMap[j][1]] = this[definition.messageMap[j][0]];
-						this.addListener(definition.messageMap[j][1]);
-					}
-				}
-			}
 		},
 		events:{
 			"handle-render-load": function(resp){

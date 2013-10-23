@@ -249,7 +249,8 @@ This component listens for input messages triggered on the entity and updates th
 			
 			if(definition.joystick){
 				this.joystick = {};
-				this.joystick.directions = definition.joystick.directions || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
+				this.joystick.directions  = definition.joystick.directions  || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
+				this.joystick.handleEdge  = definition.joystick.handleEdge  || false;
 				this.joystick.innerRadius = definition.joystick.innerRadius || 0;
 				this.joystick.outerRadius = definition.joystick.outerRadius || Infinity;
 			}
@@ -306,18 +307,24 @@ This component listens for input messages triggered on the entity and updates th
 				var segment = Math.PI / (this.joystick.directions / 2),
 				dist        = distance(this.owner, event),
 				orientation = 0,
-				direction   = '';
+				direction   = '',
+				accuracy    = '';
 				
 				if((dist > this.joystick.outerRadius) || (dist < this.joystick.innerRadius)){
 					return;
-				} else {
+				} else if(!this.paused){
 					orientation = angle(this.owner, event, dist);
-					direction = directions[this.joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
+					direction   = directions[this.joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
 					
-					if(!this.paused){
-						this.owner.trigger(direction, event);
-						this.owner.trigger("joystick-orientation", orientation);
+					if(this.joystick.handleEdge){
+						segment  = Math.PI / this.joystick.directions;
+						accuracy = directions[this.joystick.directions * 2][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
+						if(accuracy !== direction){
+							this.owner.trigger(accuracy.replace(direction, '').replace('-',''), event);  //There's probably a better way to perform this, but the current method is functional. - DDD
+						}
 					}
+					this.owner.trigger(direction, event);
+					this.owner.trigger("joystick-orientation", orientation);
 				}
 			}
 		}

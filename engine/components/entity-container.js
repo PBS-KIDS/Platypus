@@ -84,9 +84,6 @@ This component allows the entity to contain child entities. It will add several 
 			this.definedEntities = definition.entities; //saving for load message
 			
 			this.owner.entities     = self.entities;
-			//TODO: come back to this
-///			this.owner.addEntity    = function(entity){return self['add-entity'](entity);};
-	//		this.owner.removeEntity = function(entity){return self['remove-entity'](entity);};
 			
 			if(definition.childEvents){
 				for(var event in definition.childEvents){

@@ -245,58 +245,48 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 
 		events: {// These are messages that this component listens for
 		    "handle-render": function(resp){
-				if (this.destroyMe && this.timedAudioClips.length == 0)
-				{
-					this.timedAudioClips = undefined;
-					this.removeListeners(this.listeners);
-				} else {
-					var i     = 0,
-					audioClip = undefined;
-					newArray  = undefined;
-					
-					for(i = 0; i < this.activeAudioClips.length; i++){
-						this.checkTimeEvents(this.activeAudioClips[i]);
-					}
-					
-					if(this.timedAudioClips.length){
-						newArray = this.timedAudioClips;
-						this.timedAudioClips = [];
-						for (i in newArray){
-							audioClip = newArray[i];
-							audioClip.progress += resp.deltaT;
-							if(audioClip.progress >= audioClip.length){
-								audioClip.audio.stop();
-								this.onComplete(audioClip.audio, audioClip.next);
-							} else {
-								this.timedAudioClips.push(audioClip);
-							}
+				var i     = 0,
+				audioClip = undefined;
+				newArray  = undefined;
+				
+				for(i = 0; i < this.activeAudioClips.length; i++){
+					this.checkTimeEvents(this.activeAudioClips[i]);
+				}
+				
+				if(this.timedAudioClips.length){
+					newArray = this.timedAudioClips;
+					this.timedAudioClips = [];
+					for (i in newArray){
+						audioClip = newArray[i];
+						audioClip.progress += resp.deltaT;
+						if(audioClip.progress >= audioClip.length){
+							audioClip.audio.stop();
+							this.onComplete(audioClip.audio, audioClip.next);
+						} else {
+							this.timedAudioClips.push(audioClip);
 						}
+					}
 //						this.timedAudioClips = newArray;
-					}
+				}
 
-					i = 0;
-					if(this.stateChange){
-						if(this.checkStates){
-							if(this.currentState){
-								stop.playthrough = this.forcePlaythrough;
-								this[this.currentState](stop);
-							}
-							this.currentState = false;
-							for(; i < this.checkStates.length; i++){
-								audioClip = this.checkStates[i](this.state);
-								if(audioClip){
-									this.currentState = audioClip;
-									this[this.currentState]();
-									break;
-								}
+				i = 0;
+				if(this.stateChange){
+					if(this.checkStates){
+						if(this.currentState){
+							stop.playthrough = this.forcePlaythrough;
+							this[this.currentState](stop);
+						}
+						this.currentState = false;
+						for(; i < this.checkStates.length; i++){
+							audioClip = this.checkStates[i](this.state);
+							if(audioClip){
+								this.currentState = audioClip;
+								this[this.currentState]();
+								break;
 							}
 						}
-						this.stateChange = false;
 					}
-					
-//					if(this.currentState){
-//						this[this.currentState]();
-//					}
+					this.stateChange = false;
 				}
 	 	    },
 	 	    
@@ -378,8 +368,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			},
 			
 			destroy: function(){
-				//Handling things in 'render'
-				this.destroyMe = true;
+				this['audio-stop']();
 			}
 		}
 	});
