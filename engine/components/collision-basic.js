@@ -345,6 +345,7 @@ Multiple collision components may be added to a single entity if distinct messag
 			if(definition.solidCollisions){
 				for(var i in definition.solidCollisions){
 					this.owner.solidCollisions[this.collisionType].push(i);
+					this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
 					if(definition.solidCollisions[i]){
 						this.addListener('hit-by-' + i);
 						this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType);

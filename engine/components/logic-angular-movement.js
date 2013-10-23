@@ -24,6 +24,9 @@ This component changes the (x, y) position of an object according to its current
       
       "acceleration": .04
       // Optional. Defines how quickly the entity should accelerate. Defaults to 0.01.
+      
+      "visualOrientationOffset": 1.57
+      // Optional. Defines how much to rotate the image in addition to the movement rotation.
     }
 */
 (function(){
@@ -39,6 +42,8 @@ This component changes the (x, y) position of an object according to its current
 			this.a         = this.owner.acceleration || definition.acceleration || .01;
 			this.moving    = false;
 			this.piOverTwo = Math.PI / 2;
+			this.visualOffset = definition.visualOrientationOffset || 0;
+			this.owner.orientation = this.owner.orientation || this.visualOffset;
 		},
 
 		events: {// These are messages that this component listens for
@@ -77,8 +82,8 @@ This component changes the (x, y) position of an object according to its current
 					
 					this.owner.x += this.v[0];
 					this.owner.y += this.v[1];
-				}
-				this.owner.orientation = currentAngle;
+					this.owner.orientation = currentAngle + this.visualOffset;
+				}				
 			},
 			"set-angle": function(angle){
 				this.angle = angle;

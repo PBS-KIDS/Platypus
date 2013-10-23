@@ -295,7 +295,7 @@ This component checks for collisions between entities which typically have eithe
 		methods: {
 			checkCamera: (function(){
 				var groupSortBySize = function(a, b){
-					return a.getAllEntities() - b.getAllEntities();
+					return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
 				};
 				return function(camera, movers){
 					var i  = 0,
@@ -400,7 +400,8 @@ This component checks for collisions between entities which typically have eithe
 				
 				for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
 					entity = this.allEntitiesLive[x];
-					if(!entity.triggerEvent('prepare-for-collision', resp)){
+					entity.triggerEvent('prepare-for-collision', resp);
+					if(!entity.collides){
 						this.nonColliders.push(entity);
 					}
 				}

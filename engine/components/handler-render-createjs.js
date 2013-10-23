@@ -55,7 +55,8 @@ A component that handles updating rendering for components that are rendering vi
       	"touch": false, // Whether to listen for touch events (triggers mouse events)
       	"click": false, // Whether to listen for mouse events
       	"camera": false // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
-      }
+      },
+      "autoClear": false //By default this is set to false. If true the canvas will be cleared each tick.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -73,9 +74,12 @@ A component that handles updating rendering for components that are rendering vi
 			this.entities = [];
 			
 			this.canvas = this.owner.canvas = document.createElement('canvas');
+			this.owner.canvasParent = null;
 			if(this.owner.element){
+				this.owner.canvasParent = this.owner.element;
 				this.owner.element.appendChild(this.canvas);
 			} else {
+				this.owner.canvasParent = this.owner.rootElement;
 				this.owner.rootElement.appendChild(this.canvas);
 				this.owner.element = this.canvas; 
 			}
@@ -303,7 +307,8 @@ A component that handles updating rendering for components that are rendering vi
 					this.removeStageListeners();
 				}
 				this.stage = undefined;
-				this.owner.rootElement.removeChild(this.canvas);
+				this.owner.canvasParent.removeChild(this.canvas);
+				this.owner.canvasParent = null;
 				this.owner.element = null;
 				this.canvas = undefined;
 				this.entities.length = 0;

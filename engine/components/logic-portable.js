@@ -32,7 +32,6 @@ This component allows this entity to be carried by other entities with which it 
 platformer.components['logic-portable'] = (function(){
 	var component = function(owner, definition){
 		this.owner = owner;
-		var self = this;
 		// Messages that this component listens for
 		this.listeners = [];
 

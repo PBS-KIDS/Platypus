@@ -341,7 +341,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				
 				this.owner.triggerEvent('clip-complete');
 				
-				if(next){
+				if(next && next.length){
 					if(typeof next === 'string'){
 						(playSound(next)).call(this);
 					} else {
