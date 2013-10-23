@@ -90,6 +90,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
    buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
    builds     = game.builds,
    buildIndex = 0,
+   buildPath  = '',
    assets     = [],
    images     = [],
    audio      = [],
@@ -147,11 +148,19 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
     if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
     for (buildIndex in builds){
         print('..Copying assets to build "' + builds[buildIndex].id + '".');
-	    if (!fileSystem.FolderExists(buildDir + builds[buildIndex].id + '/')) fileSystem.CreateFolder(buildDir + builds[buildIndex].id + '/');
+        
+        buildPath = buildDir + builds[buildIndex].id + '/';
+	    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
+	    
+	    if(builds[buildIndex].index === false){
+	        buildPath += builds[buildIndex].id + '/';
+		    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
+	    }
+	    
 	    if (builds[buildIndex].pngCompression && !fileSystem.FolderExists(workingDir + 'images/compressed/')) fileSystem.CreateFolder(workingDir + 'images/compressed/');
-    	copyFiles(images, buildDir + builds[buildIndex].id + '/i/', builds[buildIndex].pngCompression);
-    	copyFiles(audio,  buildDir + builds[buildIndex].id + '/a/');
-    	copyFiles(fonts,  buildDir + builds[buildIndex].id + '/f/');
+    	copyFiles(images, buildPath + 'i/', builds[buildIndex].pngCompression);
+    	copyFiles(audio,  buildPath + 'a/');
+    	copyFiles(fonts,  buildPath + 'f/');
 	}
     
     print('Completed asset compilation.');

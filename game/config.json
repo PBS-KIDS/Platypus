@@ -13,15 +13,16 @@
 	},
 	"builds": [                                  // Builds and their respective settings
 		{
-			"id": "game",                        // This is the id of the build and is matched to a folder name in the "builds/" folder. Build tools create this folder if needed.
+			"id": "production",                  // This is the id of the build and is matched to a folder name in the "builds/" folder. Build tools create this folder if needed.
 			"namespace": "PBS.KIDS.platformer",  // Optional namespace for the game - defaults to "PBS.KIDS.platformer"
+            "index": true,                       // Optional. If false, page is saved as the id + '.html' and resources are saved to a separate subfolder matching the id. Defaults to true, wherein the index and resources are in a single folder.
 			"cssCompression": true,
 			"jsCompression": true,
 			"manifest": true,                    // Determines whether this build uses Application Cache.
 			"pngCompression": 256,               // Whether to compress PNGs: 0 = No, # > 0 compresses to # of colors per image.
 			"paths": {
-				//"default": "",                                  // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
-				//"assets":  ""  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
+				//"default": "",                 // If a path is specified here, all files use this absolute path; otherwise files default to relative path names.
+				//"assets":  ""                  // The list of assets can have an alternative absolute path (for example, when using a CDN). If not defined, assets use the default path above.
 			}
 		},{
 			"id": "debug",          // This is the id of the build and is matched to a folder name in the "builds/" folder. Build tools create this folder if needed.

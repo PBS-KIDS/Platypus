@@ -90,6 +90,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    source     = game.source,
 	    paths      = build.paths || {},
 	    path       = '',
+	    buildPath  = '',
+	    indexPath  = '',
+	    maniPath   = 'cache.manifest',
 	    aspects    = {"default": []},
 	    supports   = game['client-supports'] || false,
 	    section    = undefined,
@@ -100,7 +103,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    i          = 0,
 	    j          = 0,
 	    htaccess   = '',
-	    divider    = '';
+	    divider    = '',
+	    remSF      = (build.index === false)?build.id + '/':false;
 
 	    delete game.builds;
 	    delete game['client-supports'];
@@ -129,19 +133,22 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 //	    		game[sectionId] = {};
 	    		path = paths["default"] || '';
 	    	}
+	    	if(build.index === false){
+	    		path += build.id + '/';
+	    	}
 		    for (assetId in section){
 		    	asset = section[assetId];
 			    print('.....Adding "' + asset.id + '".');
 			    try {
 				    if(asset.src){
 				    	if((typeof asset.src) == 'string'){
-				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result);
+				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result, remSF);
 				    	} else {
 				    		for(srcId in asset.src){
 						    	if((typeof asset.src[srcId]) == 'string'){
-					    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result);
+					    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result, remSF);
 						    	} else {
-					    			asset.src[srcId].src = handleAsset(asset.id, asset.src[srcId].src, aspects[srcId], path, result);
+					    			asset.src[srcId].src = handleAsset(asset.id, asset.src[srcId].src, aspects[srcId], path, result, remSF);
 						    	}
 				    		}
 				    	}
@@ -180,16 +187,23 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    manifest = manifest.replace('# Version', '# Version ' + timestamp);
 	    
 	    if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
-	    if (!fileSystem.FolderExists(buildDir + build.id + '/')) fileSystem.CreateFolder(buildDir + build.id + '/');
-	    if (!fileSystem.FolderExists(buildDir + build.id + '/j/')) fileSystem.CreateFolder(buildDir + build.id + '/j/');
-	    if (!fileSystem.FolderExists(buildDir + build.id + '/s/')) fileSystem.CreateFolder(buildDir + build.id + '/s/');
+	    buildPath = indexPath = buildDir + build.id + '/';
+	    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
+
+	    if(build.index === false){
+	        buildPath += build.id + '/';
+		    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
+	    }
+
+	    if (!fileSystem.FolderExists(buildPath + 'j/')) fileSystem.CreateFolder(buildPath + 'j/');
+	    if (!fileSystem.FolderExists(buildPath + 's/')) fileSystem.CreateFolder(buildPath + 's/');
 
 	    // handle server files
 	    try{
-	        fileSystem.DeleteFile(buildDir + build.id + '/*.*');
+	        fileSystem.DeleteFile(buildPath + '*.*');
 	    } catch(e) {}
 	    if (fileSystem.FolderExists(workingDir + 'server/')){ // if there are files that should be copied to root as-is in a /server/ folder, do so.
-			fileSystem.CopyFile(workingDir + 'server/*.*', buildDir + build.id + '/');
+			fileSystem.CopyFile(workingDir + 'server/*.*', buildPath);
 	    }
 
 		// create JS file
@@ -198,8 +212,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    	shell.Run("java -jar yui/yui.jar combined.js -o combined.js",   7, true);
 	    	jsFile = 'compressed';
 	    }
-	    try {fileSystem.DeleteFile(buildDir + build.id + '/j/' + jsFile + '*.js');} catch(e) {}
-	    fileSystem.MoveFile("combined.js", buildDir + build.id + '/j/' + jsFile + timestamp + '.js');
+	    try {fileSystem.DeleteFile(buildPath + 'j/' + jsFile + '*.js');} catch(e) {}
+	    fileSystem.MoveFile("combined.js", buildPath + 'j/' + jsFile + timestamp + '.js');
 
 	    // create CSS file
 	    setText('combined.css', result.styles);   
@@ -207,16 +221,19 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    	shell.Run("java -jar yui/yui.jar combined.css -o combined.css", 7, true);
 	    	cssFile = 'compressed';
 	    }
-	    try {fileSystem.DeleteFile(buildDir + build.id + '/s/' + cssFile + '*.css');} catch(e) {}
-	    fileSystem.MoveFile("combined.css", buildDir + build.id + '/s/' + cssFile + timestamp + '.css');
+	    try {fileSystem.DeleteFile(buildPath + 's/' + cssFile + '*.css');} catch(e) {}
+	    fileSystem.MoveFile("combined.css", buildPath + 's/' + cssFile + timestamp + '.css');
 
 	    // setup manifest from template
 		path = paths["default"] || '';
 	    if(build.manifest){
 		    print('...Handling multiple app cache manifests.');
 
+		    if(build.index === false){
+		    	maniPath = build.id + '/cache.manifest';
+		    }
 		    htaccess = 'AddType text\/cache-manifest .manifest\n';
-	    	html     = html.replace('<html>', '<html manifest="cache.manifest">');
+	    	html     = html.replace('<html>', '<html manifest="' + maniPath + '">');
 	    	manifest = manifest.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + jsFile + timestamp + '.js\n' + path + 's\/' + cssFile + timestamp + '.css\n');
 
 		    if(supports){ // Prepare multiple manifest files
@@ -253,27 +270,36 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    	}
 			    	htaccess += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + aspectVariations[i] + '.manifest [L]\n';
 				    setText(aspectVariations[i] + '.manifest', tempMan);
-				    try {fileSystem.DeleteFile(buildDir + build.id + '/' + aspectVariations[i] + '.manifest');} catch(e) {}
-				    fileSystem.MoveFile(aspectVariations[i] + '.manifest', buildDir + build.id + '/' + aspectVariations[i] + '.manifest');
+				    try {fileSystem.DeleteFile(buildPath + aspectVariations[i] + '.manifest');} catch(e) {}
+				    fileSystem.MoveFile(aspectVariations[i] + '.manifest', buildPath + aspectVariations[i] + '.manifest');
 		    	}
 		    } else {
 			    setText('cache.manifest', manifest);
-			    try {fileSystem.DeleteFile(buildDir + build.id + '/cache.manifest');} catch(e) {}
-			    fileSystem.MoveFile("cache.manifest", buildDir + build.id + '/cache.manifest');
+			    try {fileSystem.DeleteFile(buildPath + 'cache.manifest');} catch(e) {}
+			    fileSystem.MoveFile("cache.manifest", buildPath + 'cache.manifest');
 		    }
 	    }
 	    
+		if(build.index === false){
+    		path += build.id + '/';
+    	}
 	    // setup index from template
 	    html = html.replace(/default\.js/,   path + 'j/' + jsFile  + timestamp + '.js');
 	    html = html.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/' + cssFile + timestamp + '.css" type="text/css" />' + '\n' + ' </head>');
     	html = html.replace('</head>', result.extStyles + '</head>');
     	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
 	    setText('index.html', html);
-	    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
+	    
+	    if(build.index === false){
+	    	try {fileSystem.DeleteFile(indexPath + build.id + '.html');} catch(e) {}
+		    fileSystem.MoveFile("index.html", indexPath + build.id + '.html');
+	    } else {
+		    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
+	    }
 
 	    setText('.htaccess', htaccess);
-	    try {fileSystem.DeleteFile(buildDir + build.id + '/.htaccess');} catch(e) {}
-	    fileSystem.MoveFile('.htaccess', buildDir + build.id + '/.htaccess');
+	    try {fileSystem.DeleteFile(buildPath + '.htaccess');} catch(e) {}
+	    fileSystem.MoveFile('.htaccess', buildPath + '.htaccess');
    },
    isImage    = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();
@@ -302,11 +328,20 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   }
 	   return cssText;
    },
-   handleAsset = function(id, src, assets, absolutePath, result){
+   handleAsset = function(id, src, assets, absolutePath, result, removeSubFolder){
+	    var path = '';
+	   
 		if(src.substring(0,4).toLowerCase() !== 'http'){
 			if(isImage(src) || isAudio(src) || isFont(src)){
-				assetConversions[src] = absolutePath + putInFolder(hypPath(src));
-				return checkPush(assets, assetConversions[src]);
+				path = absolutePath + putInFolder(hypPath(src));
+				if(removeSubFolder){
+					assetConversions[src] = path.replace(removeSubFolder, '');
+					checkPush(assets, assetConversions[src]);
+					return path;
+				} else {
+					assetConversions[src] = path;
+					return checkPush(assets, path);
+				}
 			} else if(isCSS(src)) {
 				result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
 				result.styles  += renameStyleAssets(getText(src)) + '\n';
