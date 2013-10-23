@@ -1,7 +1,7 @@
 {
     "id": "multitouch-interface-layer",
     "filter": {
-        "includes": ["multitouch"]
+        "includes": ["mobile", "multitouch"]
     },
     "components": [
         {"type": "handler-logic"},

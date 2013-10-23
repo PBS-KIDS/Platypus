@@ -10,7 +10,7 @@
     position:    absolute;
 }
 
-#root.supports-touch, #root.supports-multitouch {
+#root.supports-mobile {
 	width:       320px;
     height:      240px;
     left:        50%;
@@ -35,7 +35,7 @@
 	left: 0;
 }
 /* We change the render area to leave room for touch controls */
-.supports-touch #inner-root canvas, .supports-multitouch #inner-root canvas {
+.supports-mobile #inner-root canvas {
     height: 77%;
 }
 

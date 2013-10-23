@@ -1,7 +1,7 @@
 {
     "id": "touch-interface-layer",
     "filter": {
-        "includes": ["touch"],
+        "includes": ["mobile", "touch"],
         "excludes": ["multitouch"]
     },
     "components": [
