@@ -1,34 +1,37 @@
 /**
 # COMPONENT **logic-spawner**
-This component spawns new entities within a given area at set intervals.
+This component creates an entity and propels it away. This is useful for casting, firing, tossing, and related behaviors.
 
-## Dependencies
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to determine whether to spawn another entity.
+## Dependencies:
+- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to determine whether it should be spawning or not.
 
 ## Messages
 
 ### Listens for:
-- **handle-logic** - On a `tick` logic message, the component determines whether to spawn another entity.
-  > @param message.deltaT - To determine whether to spawn, the component keeps a running count of tick lengths.
+- **handle-logic** - On a `tick` logic message, the component checks its current state to decide whether to spawn entities.
+- **fire, [equivalent message]** - creates an entity on the following tick message.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created.
 
 ## JSON Definition
     {
-      "type": "logic-spawner",
+      "type": "logic-spawner"
       // List all additional parameters and their possible values here.
-      
-      "spawn": "teddy-bear",
-      // Required. String identifying the type of entity to spawn.
-      
-      "interval": 30000,
-      // Optional. Time in milliseconds between spawning an entity. Defaults to 1000.
-      
-      "regions": {
-      // If spawning entity covers a large area, the spawned entities can be randomly spawned over a regional grid, so that the whole area gets a somewhat uniform coverage of spawned entities
 
-        "width": 4000,
-        "height": 5000,
-        // Optional. Dimensions of a spawning region in world units. Defaults to entity's dimensions. The entity's dimensions are sliced into chunks of this size for spawn distribution.
-      }
+      "spawneeClass": "wet-noodle",
+      // Required: string identifying the type of entity to create.
+      
+      "state": "tossing",
+      // Optional. The entity state that should be true while entities are being created. Defaults to "firing".
+      
+      "speed": 4,
+      // Optional. The velocity with which the entity should start. Initial direction is determined by this entity's facing states ("top", "right", etc).
+      
+      "offsetX": 45,
+      "offsetY": -20,
+      // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).
+      
+      "message": "release-noodle",
+      // Optional. Alternative message triggered on entity that should trigger "fire" behavior.
     }
 */
 (function(){
@@ -37,82 +40,96 @@ This component spawns new entities within a given area at set intervals.
 		id: 'logic-spawner',
 		
 		constructor: function(definition){
-			var x   = 0,
-			y       = 0,
-			columns = 1,
-			rows    = 1,
-			width   = 0,
-			height  = 0,
-			rw      = 0,
-			rh      = 0;
+			this.state = this.owner.state;
+			this.stateName = definition.state || 'firing';
+			var className = this.owner.spawneeClass || definition.spawneeClass;
+			this.entityClass = platformer.settings.entities[className];
+			this.speed = definition.speed || this.owner.speed || 0;
+
+			this.state[this.stateName] = false;
 			
-			this.spawnPosition = {
-				x: 0,
-				y: 0
-			};
-			this.spawnProperties = {
-				properties: this.spawnPosition
+			this.spawneeProperties = {
+				x:0,
+				y:0,
+				dx: 0,
+				dy: 0
 			};
 			
-			this.regions = null;
-			this.usedRegions = null;
-			this.regionWidth = 0;
-			this.regionHeight = 0;
-			if(definition.regions){
-				this.regions = [];
-				this.usedRegions = [];
-				this.regionWidth  = width  = definition.regions.width  || this.owner.width;
-				this.regionHeight = height = definition.regions.height || this.owner.height;
-				columns = Math.round(this.owner.width  / width);
-				rows    = Math.round(this.owner.height / height);
-				for (x = 0; x < columns; x++){
-					for (y = 0; y < rows; y++){
-						rw = Math.min(width,  this.owner.width  - x * width);
-						rh = Math.min(height, this.owner.height - y * height);
-						this.regions.push({
-							x: x * width,
-							y: y * height,
-							width: rw,
-							height: rh
-						});
+			var prop;
+			if (definition.passOnProperties) {
+				for (var x = 0; x < definition.passOnProperties.length; x++) {
+					prop = definition.passOnProperties[x];
+					if (this.owner[prop]) {
+						this.spawneeProperties[prop] = this.owner[prop];
 					}
 				}
 			}
 			
-			this.entityClass = platformer.settings.entities[definition.spawn];
 			
-			this.interval = this.owner.interval || definition.interval || 1000;
-			this.time = 0;
+			this.propertiesContainer = {
+				properties: this.spawneeProperties
+			};
+			
+			this.offsetX = this.owner.offsetX || definition.offsetX || 0;
+			this.offsetY = this.owner.offsetY || definition.offsetY || 0;
+			
+			this.firing = false;
+			
+			if(definition.message){
+				this.addListener(definition.message);
+				this[definition.message] = this['fire'];
+			}
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-logic": function(resp){
-				var regions = this.regions,
-				region = null;
+			"handle-logic": function(){
+				var offset = 0,
+				state      = this.state;
 				
-				this.time += resp.deltaT;
-				
-				if (this.time > this.interval){
-					this.time -= this.interval;
+				if(this.firing){
+					this.spawneeProperties.x = this.owner.x;
+					this.spawneeProperties.y = this.owner.y;
 					
-					if(regions){
-						if(!regions.length){
-							this.regions = this.usedRegions;
-							this.usedRegions = regions;
-							regions = this.regions;
-						}
-						
-						region = regions[Math.floor(regions.length * Math.random())];
-						
-						this.spawnPosition.x = this.owner.x - (this.owner.regX || 0) + (region.x + (Math.random() * region.width));
-						this.spawnPosition.y = this.owner.y - (this.owner.regY || 0) + (region.y + (Math.random() * region.height));
-					} else {
-						this.spawnPosition.x = this.owner.x - (this.owner.regX || 0) + (Math.random() * this.owner.width);
-						this.spawnPosition.y = this.owner.y - (this.owner.regY || 0) + (Math.random() * this.owner.height);
+					offset = this.offsetX;
+					if(state.left){
+						offset *= -1;
 					}
-
-					this.owner.parent.addEntity(new platformer.classes.entity(this.entityClass, this.spawnProperties));
+					this.spawneeProperties.x += offset;
+					
+					offset = this.offsetY;
+					if(state.top){
+						offset *= -1;
+					}
+					this.spawneeProperties.y += offset;
+					
+					if(this.speed){
+						if(state.top){
+							this.spawneeProperties.dy = -this.speed;
+						} else if (state.bottom) {
+							this.spawneeProperties.dy = this.speed;
+						} else {
+							delete this.spawneeProperties.dy;
+						}
+						if(state.left){
+							this.spawneeProperties.dx = -this.speed;
+						} else if (state.right) {
+							this.spawneeProperties.dx = this.speed;
+						} else {
+							delete this.spawneeProperties.dx;
+						}
+					}
+					
+					this.owner.parent.addEntity(new platformer.classes.entity(this.entityClass, this.propertiesContainer));
 				}
+				
+				if(state[this.stateName] !== this.firing){
+					state[this.stateName] = this.firing;
+				}
+
+				this.firing = false;
+			},
+			"fire": function(value){
+				this.firing = !value || (value.pressed !== false);
 			}
 		}
 	});

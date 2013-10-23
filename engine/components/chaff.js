@@ -14,7 +14,10 @@ This component will destroy the entity once an animation has finished. This is u
       "type": "chaff",
       
       "animationId": "bigExplosion"
-      // Required string identifying the animation that should destroy this entity on its completion.
+      //This or animationIds Required. String identifying the animation that should destroy this entity on its completion.
+      
+      "animationIds": ["bigExplosion", "lessBigExplosion"]
+      //This or animationIds Required. Array of Strings identifying the animations that should destroy this entity on their completion.
     }
 */
 (function(){
@@ -23,12 +26,23 @@ This component will destroy the entity once an animation has finished. This is u
 
 		constructor: function(definition){
 			this.animationId = definition.animationId || '';
+			
+			this.animationIds;
+			if (definition.animationId) {
+				this.animationIds = [definition.animationId];
+			} else if (definition.animationIds) {
+				this.animationIds = definition.animationIds;
+			} else {
+				this.animationIds = [];
+			}
 		},
 
 		events: {// These are messages that this component listens for
-			"animation-ended": function(animationId){
-				if(!this.animationId || this.animationId == animationId) {
-					this.owner.parent.removeEntity(this.owner);
+			"animation-ended": function(id){
+				for (var x = 0; x < this.animationIds.length; x++) {
+					if (this.animationIds[x] == id) {
+						this.owner.parent.removeEntity(this.owner);
+					}
 				}
 			}
 		}

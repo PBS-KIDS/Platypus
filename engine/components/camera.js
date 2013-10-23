@@ -157,6 +157,8 @@ This component controls the game camera deciding where and how it should move. T
 			// set the windowWidth multiple that triggers zooming in
 			this.scaleWidth = definition.scaleWidth || 0;
 			
+			//Whether the map has finished loading.
+			this.worldIsLoaded = false;
 			// The dimensions of the entire world
 			this.worldWidth  = definition.worldWidth  || definition.width       || 0;
 			this.worldHeight = definition.worldHeight || definition.height      || 0;
@@ -214,8 +216,8 @@ This component controls the game camera deciding where and how it should move. T
 						this.entities.push(entity);
 						this.newChild = true;
 						
-						if(this.worldWidth || this.worldHeight){
-							entity.trigger('world-loaded', {
+						if(this.worldIsLoaded){
+							entity.trigger('camera-loaded', {
 								width: this.worldWidth,
 								height: this.worldHeight
 							});
@@ -236,13 +238,14 @@ This component controls the game camera deciding where and how it should move. T
 				}
 			},
 			"world-loaded": function(values){
+				this.worldIsLoaded = true;
 				this.worldWidth   = this.owner.worldWidth  = values.width;
 				this.worldHeight  = this.owner.worldHeight = values.height;
 				if(values.camera){
 					this.follow(values.camera);
 				}
 				for (var x = this.entities.length - 1; x > -1; x--) {
-					this.entities[x].trigger('world-loaded', values);
+					this.entities[x].trigger('camera-loaded', values);
 				}
 			},
 			"tick": function(resp){

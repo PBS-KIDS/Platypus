@@ -219,7 +219,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				}
 			},
 
-			"world-loaded": function(dimensions){
+			"camera-loaded": function(dimensions){
 				this.worldWidth  = dimensions.width;
 				this.worldHeight = dimensions.height;
 			},

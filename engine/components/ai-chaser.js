@@ -35,11 +35,12 @@ This component acts as a simple AI that will chase another entity.
 			this.target = null;
 			this.piOverTwo = Math.PI / 2;
 			this.prevAngle = 0;
+			this.chasing = true;
 		},
 
 		events: {// These are messages that this component listens for
 			"handle-ai": function(){
-				if (this.target)
+				if (this.target && this.chasing)
 				{
 					//figure out angle
 					this.owner.trigger('move');
@@ -70,6 +71,12 @@ This component acts as a simple AI that will chase another entity.
 			},
 			"set-target": function(entity){
 				this.target = entity;
+			},
+			"start-chasing": function(){
+				this.chasing = true;
+			},
+			"stop-chasing": function(){
+				this.chasing = false;
 			}
 				   
 		},

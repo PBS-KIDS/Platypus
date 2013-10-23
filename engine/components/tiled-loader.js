@@ -222,8 +222,9 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 			this.entities     = [];
 			this.layerZ       = 0;
 			this.followEntity = false;
-
-			this.level = this.owner.level || definition.level;
+			
+			this.manuallyLoad  = definition.manuallyLoad || false;
+			this.dataFromScene = this.owner.level || definition.level || null;
 
 			this.unitsPerPixel = this.owner.unitsPerPixel || definition.unitsPerPixel || 1;
 			this.images        = this.owner.images        || definition.images        || false;
@@ -236,6 +237,15 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 		
 		events: {
 			"scene-loaded": function(persistentData){
+				if (!this.manuallyLoad) {
+					this['load-level']({level: this.dataFromScene, persistentData: persistentData});
+				}
+			},
+			
+			"load-level": function(levelData){
+				var level = levelData.level;
+				var persistentData = levelData.persistentData;
+				
 				var skill = 0, 
 				actionLayer = 0,
 				layer = false;
@@ -245,22 +255,22 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				}
 				
 				//format level appropriately
-				if(typeof this.level === 'string'){
-					this.level = platformer.settings.levels[this.level];
+				if(typeof level === 'string'){
+					level = platformer.settings.levels[level];
 				} else {
-					this.level = mergeLevels(this.level);
+					level = mergeLevels(level);
 				}
 				
-				for(; actionLayer < this.level.layers.length; actionLayer++){
-					layer = this.setupLayer(this.level.layers[actionLayer], this.level, layer);
+				for(; actionLayer < level.layers.length; actionLayer++){
+					layer = this.setupLayer(level.layers[actionLayer], level, layer);
 					if (this.separateTiles){
 						layer = false;
 					}
 				}
 
 				this.owner.trigger('world-loaded', {
-					width:  this.level.width  * this.level.tilewidth  * this.unitsPerPixel,
-					height: this.level.height * this.level.tileheight * this.unitsPerPixel,
+					width:  level.width  * level.tilewidth  * this.unitsPerPixel,
+					height: level.height * level.tileheight * this.unitsPerPixel,
 					camera: this.followEntity
 				});
 				this.owner.removeComponent(this);

@@ -65,8 +65,8 @@ This class defines a two-dimensional vector object and a variety of methods for 
 
 platformer.classes.vector2D = (function(){
 	var vector2D = function(x, y){
-		this.x = x;
-		this.y = y;
+		this.x = x || 0;
+		this.y = y || 0;
 	};
 	var proto = vector2D.prototype;
 	

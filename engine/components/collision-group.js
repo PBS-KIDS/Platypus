@@ -64,8 +64,8 @@ This component groups other entities with this entity for collision checking. Th
 					childEntity = null;
 					
 					for (var x = 0; x < self.solidEntities.length; x++){
-						childEntity = this.solidEntities[x];
-						if((childEntity !== this.owner) && childEntity.collisionGroup){
+						childEntity = self.solidEntities[x];
+						if((childEntity !== self.owner) && childEntity.collisionGroup){
 							count += childEntity.collisionGroup.getAllEntities();
 						} else {
 							count += 1;
