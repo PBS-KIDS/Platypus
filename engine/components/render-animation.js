@@ -342,6 +342,7 @@ This component is attached to entities that will appear in the game world. It re
 
 			this.state = this.owner.state;
 			this.stateChange = false;
+			this.lastState = -1;
 
 			this.waitingAnimation = false;
 			this.waitingState = 0;
