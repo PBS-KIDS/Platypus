@@ -16,6 +16,9 @@ Platypus uses the free [Tiled](http://www.mapeditor.org/) map editor for level c
 * Component-based development model
 * [Thorough documentation](https://github.com/PBS-KIDS/Platypus/wiki)
 
+Platypus in action:
+Wild Kratts [Monkey Mayhem](http://pbskids.org/wildkratts/games/monkey-mayhem/)
+
 Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see license.txt), all assets in the example games are (c) Gopherwood Studios and/or (c) PBS KIDS.
 
 
