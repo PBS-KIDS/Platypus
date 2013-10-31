@@ -156,7 +156,7 @@ A component that handles updating logic components. Each tick it calls all the e
 						for (var j = this.entities.length - 1; j > -1; j--) {
 							child = this.entities[j];
 							if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))){
-								this.activeEntities[this.activeEntities.length] = child;
+								this.activeEntities.push(child);
 							}
 						}
 					//}
@@ -182,12 +182,14 @@ A component that handles updating logic components. Each tick it calls all the e
 								}
 							}
 						}
+						
 						this.timeElapsed.name = 'Logic';
 						this.timeElapsed.time = new Date().getTime() - time;
 						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 						time += this.timeElapsed.time;
 						
 						this.owner.trigger('check-collision-group', this.message); // If a collision group is attached, make sure collision is processed on each logic tick.
+
 						this.timeElapsed.name = 'Collision';
 						this.timeElapsed.time = new Date().getTime() - time;
 						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);

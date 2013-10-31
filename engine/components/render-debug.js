@@ -49,213 +49,200 @@ This component is attached to entities that will appear in the game world. It se
 [link1]: http://createjs.com/Docs/EaselJS/Stage.html
 */
 
-
-platformer.components['render-debug'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
+(function(){
+	var types = {
+		"aabb":      "255,128,255",
+		"render":    "128,128,128",
+		"collision": "255,0,255",
+		"group":     "0,255,0"
+	},
+	createShape = function(shape, type, width, height, regX, regY, z){
+		var newShape = null;
 		
-		if(definition.acceptInput){
-			this.hover = definition.acceptInput.hover || false;
-			this.click = definition.acceptInput.click || false;
-		} else {
-			this.hover = false;
-			this.click = false;
+		switch(shape){
+		case 'rectangle':
+			newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
+			regX += width/2;
+			regY += height/2;
+			break;
+		case 'circle':
+			regX += width/2;
+			regY += width/2;
+			newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").drawCircle(width/2, width/2, width));
+			break;
 		}
+		newShape.regX  = regX;
+		newShape.regY  = regY;
+		newShape.z = z;
 		
-		this.regX = definition.regX || 0;
-		this.regY = definition.regY || 0;
-		this.stage = undefined;
-		//this.txt = undefined;
-		this.shape = undefined;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-render', 'handle-render-load']);
+		return newShape;
 	};
-	var proto = component.prototype;
-
-	proto['handle-render-load'] = function(resp){
-		var self = this,
-		x        = this.owner.x      = this.owner.x || 0,
-		y        = this.owner.y      = this.owner.y || 0,
-		z        = this.owner.z      = this.owner.z || 0,
-		width    = this.owner.width  = this.owner.width  || 300,
-		height   = this.owner.height = this.owner.height || 100,
-		comps    = platformer.settings.entities[this.owner.type]?(platformer.settings.entities[this.owner.type].components || []):[],
-		components = [],
-		over     = false;
+	
+	return platformer.createComponentClass({
 		
-		for (var i in comps) components[i] = comps[i].type;
+		id: 'render-debug', 
 		
-		this.stage = resp.stage;
+		constructor: function(definition){
+			if(definition.acceptInput){
+				this.hover = definition.acceptInput.hover || false;
+				this.click = definition.acceptInput.click || false;
+			} else {
+				this.hover = false;
+				this.click = false;
+			}
+			
+			this.regX = definition.regX || 0;
+			this.regY = definition.regY || 0;
+			this.stage = undefined;
+			this.shapes = [];
+		},
 		
-		/*
-		this.txt   = new createjs.Text(this.owner.type + '\n(' + components.join(', ') + ')');
-		this.txt.x = x + width / 2;
-		this.txt.y = y + height / 2;
-		this.txt.z = z;
-		this.txt.textAlign = "center";
-		this.txt.textBaseline = "middle";
-		*/
+		events: {// These are messages that this component listens for
+			"handle-render-load": function(resp){
+				var self = this,
+				z        = (this.owner.z || 0) + 10000,
+				i        = 0,
+				j        = 0,
+				width    = this.owner.width  = this.owner.width  || 300,
+				height   = this.owner.height = this.owner.height || 100,
+				over     = false,
+				shapes   = null,
+				aabb     = null;
+				
+				this.stage = resp.stage;
+				
+				if(this.owner.getAABB){
+					for(j = 0; j < this.owner.collisionTypes.length; j++){
+						aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
+						width  = this.initialWidth  = aabb.width;
+						height = this.initialHeight = aabb.height;
+						shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
+						
+						this.shapes.push(createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--));
+						this.stage.addChild(this.shapes[this.shapes.length - 1]);
+						
+						for(i = 0; i < shapes.length; i++){
+							this.shapes.push(createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--));
+							this.stage.addChild(this.shapes[this.shapes.length - 1]);
+						}
+					}
+				} else {
+					this.shapes.push(createShape('rectangle', 'render', width, height, width/2, height/2, z--));
+					this.stage.addChild(this.shapes[0]);
+				}
+				
+				// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+				if(this.click && createjs.Touch.isSupported()){
+					createjs.Touch.enable(this.stage);
+				}
 		
-		if(this.owner.getAABB){
-			var aabb   = this.owner.getAABB();
-			width      = this.initialWidth  = aabb.width;
-			height     = this.initialHeight = aabb.height;
-			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,0,255,0.1)").setStrokeStyle(3).beginStroke("#f0f").rect(0, 0, width, height));
-			this.regX  = width  / 2;
-			this.regY  = height / 2;
-		} else {
-			this.shape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,0,0,0.1)").beginStroke("#880").rect(0, 0, width, height));
-		}
-		this.shape.z = z + 10000;
-		this.stage.addChild(this.shape);
-		//this.stage.addChild(this.txt);
-		
-		// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-		if(this.click && createjs.Touch.isSupported()){
-			createjs.Touch.enable(this.stage);
-		}
-
-		this.shape.onPress     = function(event) {
-			if(this.click){
-				self.owner.trigger('mousedown', {
-					event: event.nativeEvent,
-					over: over,
-					x: event.stageX,
-					y: event.stageY,
-					entity: self.owner
-				});
-				event.onMouseUp = function(event){
-					self.owner.trigger('mouseup', {
-						event: event.nativeEvent,
-						over: over,
-						x: event.stageX,
-						y: event.stageY,
-						entity: self.owner
-					});
+				this.shapes[0].onPress     = function(event) {
+					if(this.click){
+						self.owner.trigger('mousedown', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
+						});
+						event.onMouseUp = function(event){
+							self.owner.trigger('mouseup', {
+								event: event.nativeEvent,
+								over: over,
+								x: event.stageX,
+								y: event.stageY,
+								entity: self.owner
+							});
+						};
+						event.onMouseMove = function(event){
+							self.owner.trigger('mousemove', {
+								event: event.nativeEvent,
+								over: over,
+								x: event.stageX,
+								y: event.stageY,
+								entity: self.owner
+							});
+						};
+					}
+					if(event.nativeEvent.button == 2){
+						console.log('This Entity:', self.owner);
+					}
 				};
-				event.onMouseMove = function(event){
-					self.owner.trigger('mousemove', {
-						event: event.nativeEvent,
-						over: over,
-						x: event.stageX,
-						y: event.stageY,
-						entity: self.owner
-					});
-				};
+				if(this.click){
+					this.shapes[0].onMouseOut  = function(){over = false;};
+					this.shapes[0].onMouseOver = function(){over = true;};
+				}
+				if(this.hover){
+					this.stage.enableMouseOver();
+					this.shapes[0].onMouseOut  = function(event){
+						over = false;
+						self.owner.trigger('mouseout', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
+						});
+					};
+					this.shapes[0].onMouseOver = function(event){
+						over = true;
+						self.owner.trigger('mouseover', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
+						});
+					};
+				}
+		
+				if(!platformer.settings.debug){
+					this.owner.removeComponent(this);
+				}
+			},
+			
+			"handle-render": function(){
+				var i = 0;
+				
+/*				if(this.owner.getAABB){
+					var aabb   = this.owner.getAABB();
+					this.shapes[0].scaleX = aabb.width / this.initialWidth;
+					this.shapes[0].scaleY = aabb.height / this.initialHeight;
+				}*/
+				
+				for(i = 0; i < this.shapes.length; i++){
+					this.shapes[i].x = this.owner.x;
+					this.shapes[i].y = this.owner.y;
+				}
+				
+				if(this.owner.getCollisionGroupAABB){
+					var aabb = this.owner.getCollisionGroupAABB();
+					if(!this.groupShape){
+						this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
+						this.groupShape.regX  = 0.5;
+						this.groupShape.regY  = 0.5;
+						this.groupShape.z     = (this.owner.z || 0) + 10000;
+						this.stage.addChild(this.groupShape);
+						console.log(aabb);
+					}
+					this.groupShape.scaleX = aabb.width;
+					this.groupShape.scaleY = aabb.height;
+					this.groupShape.x      = aabb.x;
+					this.groupShape.y      = aabb.y;
+				}
 			}
-			if(event.nativeEvent.button == 2){
-				console.log('This Entity:', self.owner);
+		},
+		
+		methods:{
+			destroy: function(){
+				var i = 0;
+				
+				for(i = 0; i < shapes.length; i++){
+					this.stage.removeChild(this.shapes[i]);
+				}
+				this.shapes.length = 0;
+				this.stage = undefined;
 			}
-		};
-		if(this.click){
-			this.shape.onMouseOut  = function(){over = false;};
-			this.shape.onMouseOver = function(){over = true;};
 		}
-		if(this.hover){
-			this.stage.enableMouseOver();
-			this.shape.onMouseOut  = function(event){
-				over = false;
-				self.owner.trigger('mouseout', {
-					event: event.nativeEvent,
-					over: over,
-					x: event.stageX,
-					y: event.stageY,
-					entity: self.owner
-				});
-			};
-			this.shape.onMouseOver = function(event){
-				over = true;
-				self.owner.trigger('mouseover', {
-					event: event.nativeEvent,
-					over: over,
-					x: event.stageX,
-					y: event.stageY,
-					entity: self.owner
-				});
-			};
-		}
-
-		if(!platformer.settings.debug){
-			this.owner.removeComponent(this);
-		}
-	};
-	
-	proto['handle-render'] = function(){
-		if(this.owner.getAABB){
-			var aabb   = this.owner.getAABB();
-			this.shape.scaleX = aabb.width / this.initialWidth;
-			this.shape.scaleY = aabb.height / this.initialHeight;
-			this.shape.x = aabb.x - aabb.halfWidth;
-			this.shape.y = aabb.y - aabb.halfHeight;
-			this.shape.z = this.owner.z;
-			this.shape.z += 10000;
-			/*
-			this.txt.x = aabb.x;
-			this.txt.y = aabb.y;
-			this.txt.z = this.owner.z;
-			*/
-		} else {
-			this.shape.x = this.owner.x	- this.regX;
-			this.shape.y = this.owner.y	- this.regY;
-			this.shape.z = this.owner.z;
-			this.shape.z += 10000;
-			/*
-			this.txt.x = this.owner.x	- this.regX + (this.owner.width / 2);
-			this.txt.y = this.owner.y 	- this.regY + (this.owner.height / 2);
-			this.txt.z = this.owner.z;
-			*/
-		}
-		if(this.owner.getCollisionGroupAABB){
-			var aabb = this.owner.getCollisionGroupAABB();
-			if(!this.groupShape){
-				this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(0,255,0,0.1)").setStrokeStyle(3).beginStroke("#0f0").rect(0, 0, aabb.width, aabb.height));
-				this.groupShapeInitialWidth  = aabb.width;
-				this.groupShapeInitialHeight = aabb.height;
-				this.stage.addChild(this.groupShape);
-			}
-			this.groupShape.scaleX = aabb.width  / this.groupShapeInitialWidth;
-			this.groupShape.scaleY = aabb.height / this.groupShapeInitialHeight;
-			this.groupShape.x      = aabb.x      - aabb.halfWidth;
-			this.groupShape.y      = aabb.y      - aabb.halfHeight;
-		}
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.stage.removeChild(this.shape);
-		//this.stage.removeChild(this.txt);
-		this.shape = undefined;
-		//this.txt = undefined;
-		this.stage = undefined;
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-	
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

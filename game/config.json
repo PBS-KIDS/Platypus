@@ -58,17 +58,20 @@
             {"id": "FullScreenCSS", "src": "css/fullscreen.css"}
         ],
 		"classes": [
-			{"id": "Game",			  "src": "../engine/game.js"},
-            {"id": "ComponentFactory","src": "../engine/factory.js"},
-			{"id": "Entity",          "src": "../engine/entity.js"},
-			{"id": "Scene",           "src": "../engine/scene.js"},
-			{"id": "Collision-Shape", "src": "../engine/collision-shape.js"},
-			{"id": "AABB", 			  "src": "../engine/aabb.js"}
+			{"id": "Game",			  			"src": "../engine/game.js"},
+            {"id": "ComponentFactory",			"src": "../engine/factory.js"},
+			{"id": "Entity",          			"src": "../engine/entity.js"},
+			{"id": "Scene",           			"src": "../engine/scene.js"},
+			{"id": "Collision-Shape", 			"src": "../engine/collision-shape.js"},
+			{"id": "Collision-Data-Container", 	"src": "../engine/collision-data-container.js"},
+			{"id": "AABB", 			  			"src": "../engine/aabb.js"},
+            {"id": "Vector2D",                  "src": "../engine/vector2D.js"}
 		],
 		"components": [ // JavaScript files defining component modules
 			// Engine Compoenents
             {"id": "asset-loader",               "src": "../engine/components/asset-loader.js"},
             {"id": "enable-ios-audio",           "src": "../engine/components/enable-ios-audio.js"},
+            {"id": "handler-collision",          "src": "../engine/components/handler-collision.js"},
 			{"id": "handler-controller",         "src": "../engine/components/handler-controller.js"},
 			{"id": "tiled-loader",               "src": "../engine/components/tiled-loader.js"},
             {"id": "handler-render-createjs",    "src": "../engine/components/handler-render-createjs.js"},
@@ -128,7 +131,8 @@
             {"id": "level-portal",	  "src": "entities/level-portal.json"},
             {"id": "title-screen",    "src": "entities/title-screen.json"},
             {"id": "gui",    		  "src": "entities/gui.json"},
-            {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
+            {"id": "fps-counter",	  "src": "entities/fps-counter.json"},
+            {"id": "ball",	  		  "src": "entities/ball.json"}
 		],
 		"scenes": [ // JSON files describing scenes
             {"id": "load",        "src": "scenes/load.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

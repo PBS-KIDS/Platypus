@@ -53,7 +53,10 @@ A component that causes the object to move according to a specified gravity.
 		id: 'logic-gravity',
 		
 		constructor: function(definition){
-			this.vY = definition.gravity || definition.yGravity || .01;
+			this.vY = definition.gravity || definition.yGravity;
+			if(typeof this.vY !== 'number'){
+				this.vY = .01;
+			}
 			this.vX = definition.xGravity || 0;
 			
 			this.maxVelocity = definition.maxVelocity || 0;
