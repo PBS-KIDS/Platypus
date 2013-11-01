@@ -9,8 +9,8 @@ This component creates an entity and propels it away. This is useful for casting
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component checks its current state to decide whether to spawn entities.
-- **fire, [equivalent message]** - creates an entity on the following tick message.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created.
+- **spawn** - creates an entity on the following tick message.
+  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created. Is this primarily for controller input.
 
 ## JSON Definition
     {
@@ -29,9 +29,6 @@ This component creates an entity and propels it away. This is useful for casting
       "offsetX": 45,
       "offsetY": -20,
       // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).
-      
-      "message": "release-noodle",
-      // Optional. Alternative message triggered on entity that should trigger "fire" behavior.
     }
 */
 (function(){
@@ -41,7 +38,7 @@ This component creates an entity and propels it away. This is useful for casting
 		
 		constructor: function(definition){
 			this.state = this.owner.state;
-			this.stateName = definition.state || 'firing';
+			this.stateName = definition.state || 'spawning';
 			var className = this.owner.spawneeClass || definition.spawneeClass;
 			this.entityClass = platformer.settings.entities[className];
 			this.speed = definition.speed || this.owner.speed || 0;
@@ -51,6 +48,7 @@ This component creates an entity and propels it away. This is useful for casting
 			this.spawneeProperties = {
 				x:0,
 				y:0,
+				z:0,
 				dx: 0,
 				dy: 0
 			};
@@ -74,21 +72,19 @@ This component creates an entity and propels it away. This is useful for casting
 			this.offsetY = this.owner.offsetY || definition.offsetY || 0;
 			
 			this.firing = false;
-			
-			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['fire'];
-			}
 		},
 
 		events: {// These are messages that this component listens for
 			"handle-logic": function(){
-				var offset = 0,
-				state      = this.state;
+				var offset = 0;
+				var classZ = 0;
+				var state = this.state;
 				
 				if(this.firing){
 					this.spawneeProperties.x = this.owner.x;
 					this.spawneeProperties.y = this.owner.y;
+					classZ = (this.entityClass.properties && this.entityClass.properties.z) ? this.entityClass.properties.z : 0;
+					this.spawneeProperties.z = this.owner.z + classZ;
 					
 					offset = this.offsetX;
 					if(state.left){
@@ -128,7 +124,7 @@ This component creates an entity and propels it away. This is useful for casting
 
 				this.firing = false;
 			},
-			"fire": function(value){
+			"spawn": function(value){
 				this.firing = !value || (value.pressed !== false);
 			}
 		}
