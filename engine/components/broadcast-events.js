@@ -1,7 +1,8 @@
 /**
 # COMPONENT **broadcast-events**
 This component listens for specified local entity messages and re-broadcasts them on itself, its parent entity, or at the game level.
-> **Note:** Make sure that this component is never set up to receive and broadcast identical messages or an infinite loop will result, since it will receive the same message it sent.
+
+**Note:** Make sure that this component is never set up to receive and broadcast identical messages or an infinite loop will result, since it will receive the same message it sent.
 
 ## Dependencies:
 - [[Entity-Container]] (on entity's parent) - This component can broadcast messages to its parent; `this.parent` is commonly specified by being a member of an entity container.
@@ -10,19 +11,19 @@ This component listens for specified local entity messages and re-broadcasts the
 
 ### Listens for:
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages.
-  > @param message (object) - accepts a message object that it will include in the new message to be triggered.
+  - @param message (object) - accepts a message object that it will include in the new message to be triggered.
 
 ### Local Broadcasts:
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages on the entity.
-  > @param message (object) - sends the message object received by the original message.
+  - @param message (object) - sends the message object received by the original message.
 
 ### Parent Broadcasts:
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages on the entity's parent if one exists.
-  > @param message (object) - sends the message object received by the original message.
+  - @param message (object) - sends the message object received by the original message.
 
 ### Game Broadcasts:
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages at the top game level.
-  > @param message (object) - sends the message object received by the original message.
+  - @param message (object) - sends the message object received by the original message.
 
 ## JSON Definition:
     {

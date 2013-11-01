@@ -10,15 +10,15 @@ This component can request that the camera focus on this entity.
 
 ### Parent Broadcasts:
 - **follow** - This component fires this message so the camera will begin following this entity.
-  > @param message.mode (string) - Sends camera following mode according to this component's settings.
-  > @param message.entity ([[Entity]]) - sends this.owner: the entity that the camera should commence following.
-  > @param message.top (number) - The top of a bounding box according to this component's settings.
-  > @param message.left (number) - The left of a bounding box according to this component's settings.
-  > @param message.width (number) - The width of a bounding box according to this component's settings.
-  > @param message.height (number) - The height of a bounding box according to this component's settings.
-  > @param message.offsetX (number) - How far to offset the camera from the entity horizontally according to this component's settings.
-  > @param message.offsetY (number) - How far to offset the camera from the entity vertically according to this component's settings.
-  > @param message.time: (number) - How many milliseconds to follow the entity according to this component's settings.
+  - @param message.mode (string) - Sends camera following mode according to this component's settings.
+  - @param message.entity ([[Entity]]) - sends this.owner: the entity that the camera should commence following.
+  - @param message.top (number) - The top of a bounding box according to this component's settings.
+  - @param message.left (number) - The left of a bounding box according to this component's settings.
+  - @param message.width (number) - The width of a bounding box according to this component's settings.
+  - @param message.height (number) - The height of a bounding box according to this component's settings.
+  - @param message.offsetX (number) - How far to offset the camera from the entity horizontally according to this component's settings.
+  - @param message.offsetY (number) - How far to offset the camera from the entity vertically according to this component's settings.
+  - @param message.time: (number) - How many milliseconds to follow the entity according to this component's settings.
 - **pause-logic** - This component fires this message to pause logic if required.
 - **pause-render** - This component fires this message to pause rendering if required.
 

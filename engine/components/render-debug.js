@@ -3,34 +3,34 @@
 This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in grey), if the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a [[Logic-Carrier]] component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The render-debug component also allows the user to click on an object and it will print the object in the debug console. 
 
 ## Dependencies
-- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
 
 ## Messages
 
 ### Listens for:
 - **handle-render** - Repositions the pieces of the component in preparation for rendering
 - **handle-render-load** - The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too. 
-  > @param resp.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
+  - @param resp.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
 
 ### Local Broadcasts:
 - **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 
 ## JSON Definition
     {

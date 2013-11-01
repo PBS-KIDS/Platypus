@@ -3,21 +3,21 @@
 This component loads a list of assets, wrapping PreloadJS functionality into a game engine component. Settings and files are pulled from the information provided in config.js, with the expectation that this component will exist on the initial loading screen.
 
 ## Dependencies
-- [[PreloadJS]] - Requires the PreloadJS library to load a list of assets.
+- [createjs.PreloadJS][link1] - Requires the PreloadJS library to load a list of assets.
 
 ## Messages
 
 ### Listens for:
 - **load** - On receiving this event, the asset loader begins downloading the list of assets.
 - **fileload** - This message used to update a progress bar if one has been defined by JSON.
-  > @param fraction (Number) - Value of (progress / total) is used to set the width of the progress bar element.
+  - @param fraction (Number) - Value of (progress / total) is used to set the width of the progress bar element.
 
 ### Local Broadcasts:
 - **fileload** - This message is broadcast when an asset has been loaded.
-  > @param complete (Boolean) - Whether this is the final asset to be loaded.
-  > @param total (Number) - The total number of assets being loaded.
-  > @param progress (Number) - The number of assets finished loading.
-  > @param fraction (Number) - Value of (progress / total) provided for convenience.
+  - @param complete (Boolean) - Whether this is the final asset to be loaded.
+  - @param total (Number) - The total number of assets being loaded.
+  - @param progress (Number) - The number of assets finished loading.
+  - @param fraction (Number) - Value of (progress / total) provided for convenience.
 - **complete** - This message is triggered when the asset loader is finished loading assets.
 
 ## JSON Definition
@@ -37,6 +37,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
       "useXHR": true
       // Whether to use XHR for asset downloading. The default is `true`.
     }
+
+[link1]: http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html
+
 */
 (function(){
 	return platformer.createComponentClass({

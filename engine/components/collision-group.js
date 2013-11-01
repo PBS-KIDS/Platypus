@@ -9,9 +9,9 @@ This component groups other entities with this entity for collision checking. Th
 
 ### Listens for:
 - **child-entity-added, add-collision-entity** - On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-  > @param message ([[Entity]] object) - The entity to be added.
+  - @param message ([[Entity]] object) - The entity to be added.
 - **child-entity-removed, remove-collision-entity** - On receiving this message, the component looks for the entity in its collision group and removes it.
-  > @param message ([[Entity]] object) - The entity to be removed.
+  - @param message ([[Entity]] object) - The entity to be removed.
 - **relocate-entity** - When this message is triggered, the collision group updates its record of the owner's last (x, y) coordinate.
 
 ## JSON Definition:

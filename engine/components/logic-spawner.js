@@ -10,7 +10,7 @@ This component creates an entity and propels it away. This is useful for casting
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component checks its current state to decide whether to spawn entities.
 - **spawn** - creates an entity on the following tick message.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created. Is this primarily for controller input.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false results in no entities being created. Is this primarily for controller input.
 
 ## JSON Definition
     {

@@ -10,12 +10,12 @@ This component will cause the entity to jump with a certain amount of accelerati
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
 - **jump** - On receiving this message, the component causes the entity's position to change according to the preset behavior.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not make it jump.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not make it jump.
 - **[Message specified in definition]** - An alternative message can be specified in the JSON definition that will also cause the jump.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not make it jump.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not make it jump.
 - **hit-solid** - On receiving this message, the component discontinues its jump velocity.
-  > @param collisionInfo.x (number) - Either 1,0, or -1. Zeros out the jump velocity if acceleration is in the contrary direction.
-  > @param collisionInfo.y (number) - Either 1,0, or -1. Zeros out the jump velocity if acceleration is in the contrary direction.
+  - @param collisionInfo.x (number) - Either 1,0, or -1. Zeros out the jump velocity if acceleration is in the contrary direction.
+  - @param collisionInfo.y (number) - Either 1,0, or -1. Zeros out the jump velocity if acceleration is in the contrary direction.
 
 ### Local Broadcasts:
 - **just-jumped** - this component will trigger this message when it receives a "jump" message and is able to jump. This is useful for tying in a jump sound.

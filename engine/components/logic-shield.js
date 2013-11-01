@@ -10,7 +10,7 @@ This component creates an entity and connects it with the current entity. This i
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
 - **wield-shield, [equivalent message]** - creates and connects the shield entity to this entity.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
 - **drop-shield, [equivalent message]** - Removes shield entity from this entity and destroys it.
 
 ## JSON Definition

@@ -6,16 +6,16 @@ This class is instantiated by [[Game]] and contains one or more entities as laye
 
 ### Child Broadcasts:
 - **[Messages specified in definition]** - Listens for messages and on receiving them, re-triggers them on each entity layer.
-  > @param message (object) - sends the message object received by the original message.
+  - @param message (object) - sends the message object received by the original message.
 
 ## Methods
 - **[constructor]** - Creates an object from the scene class and passes in a scene definition containing a list of layers to load and a DOM element where the scene will take place.
-  > @param definition (object) - Base definition for the scene, including one or more layers with both properties, filters, and components as shown below under "JSON definition".
-  > @param rootElement (DOM element) - DOM element where scene displays layers.
-  > @return scene - returns the new scene composed of the provided layers.
+  - @param definition (object) - Base definition for the scene, including one or more layers with both properties, filters, and components as shown below under "JSON definition".
+  - @param rootElement (DOM element) - DOM element where scene displays layers.
+  - @return scene - returns the new scene composed of the provided layers.
 - **trigger** - This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
-  > @param messageId (string) - This is the message to process.
-  > @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param messageId (string) - This is the message to process.
+  - @param value (variant) - This is a message object or other value to pass along to component functions.
 - **destroy** - This method destroys all the layers in the scene.
 
 ## JSON Definition:

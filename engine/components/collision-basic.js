@@ -14,9 +14,9 @@ Multiple collision components may be added to a single entity if distinct messag
 - **collide-off** - On receiving this message, the component triggers `remove-collision-entity` on the parent.
 - **prepare-for-collision** - Updates the axis-aligned bounding box for this entity in preparation for collision checks.
 - **relocate-entity** - This message causes the entity's x,y coordinates to update.
-  > @param message.x (number) - Required. The new x coordinate.
-  > @param message.y (number) - Required. The new y coordinate.
-  > @param message.relative (boolean) - Optional. Determines whether the provided x,y coordinates are relative to the entity's current position. Defaults to `false`.
+  - @param message.x (number) - Required. The new x coordinate.
+  - @param message.y (number) - Required. The new y coordinate.
+  - @param message.relative (boolean) - Optional. Determines whether the provided x,y coordinates are relative to the entity's current position. Defaults to `false`.
 - **hit-by-[collision-types specified in definition]** - When the entity collides with a listed collision-type, this message is received and re-triggered as a new message according to the component definition.
 
 ### Local Broadcasts

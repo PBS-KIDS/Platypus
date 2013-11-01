@@ -3,16 +3,16 @@
 This component acts as a simple AI that will chase another entity.
 
 ## Dependencies:
-- [[Collision-Basic]] (on entity) - This component listens for collision messages on the entity.
-- [[Logic-Angular-Movement]] (on entity) - This component triggers messages for this component which moves the entity.
-- [[Handler-Ai]] (on entity's parent) - This component listens for an ai "tick" message to orderly perform its control logic.
+- [[collision-basic]] (on entity) - This component listens for collision messages on the entity.
+- [[logic-angular-movement]] (on entity) - This component triggers messages for this component which moves the entity.
+- [[handler-ai]] (on entity's parent) - This component listens for an ai "tick" message to orderly perform its control logic.
 
 ## Messages
 
 ### Listens for:
 - **handle-ai** - This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
 - **set-target** - On receiving this message, the component will change its target and begin chasing the new entity.
-  > @param message ([[Entity]]) - Sets this entity's target to the provided entity.
+  - @param message ([[Entity]]) - Sets this entity's target to the provided entity.
 - **start-chasing** - On receiving this message, the component will begin chasing the entity.
 - **stop-chasing** - On receiving this message, the component will cease chasing the entity.
 

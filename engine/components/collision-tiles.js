@@ -4,19 +4,19 @@ This component causes the tile-map to collide with other entities. It must be pa
 
 ## Dependencies:
 - [[handler-collision]] (on entity's parent) - This component handles the collision state of the map for the [[handler-collision]] component on the parent entity.
-- [[CollisionShape]] object - This component uses collisionShape objects to expose individual tiles to the collision group.
+- [[Collision-Shape]] object - This component uses collisionShape objects to expose individual tiles to the collision group.
 
 ## Methods
 
 - **getTiles** - Returns all the collision tiles within the provided axis-aligned bounding box.
-  > @param aabb ([[Aabb]]) - The axis-aligned bounding box for which tiles should be returned.
-  > @return tiles (Array of objects) - Each returned object provides the shape [[collisionShape]] of the tile and the grid coordinates of the returned tile.
+  - @param aabb ([[Aabb]]) - The axis-aligned bounding box for which tiles should be returned.
+  - @return tiles (Array of objects) - Each returned object provides the shape [[collisionShape]] of the tile and the grid coordinates of the returned tile.
 - **getAABB** - Returns the axis-aligned bounding box of the entire map.
-  > @return aabb (object) - The returned object provides the top, left, width, and height of the collision map.
+  - @return aabb (object) - The returned object provides the top, left, width, and height of the collision map.
 - **isTile** - Confirms whether a particular map grid coordinate contains a tile.
-  > @param x (number) - Integer specifying the row of tiles in the collision map to check.
-  > @param y (number) - Integer specifying the column of tiles in the collision map to check.
-  > @return isTile (boolean) - Returns `true` if the coordinate contains a collision tile, `false` if it does not.
+  - @param x (number) - Integer specifying the row of tiles in the collision map to check.
+  - @param y (number) - Integer specifying the column of tiles in the collision map to check.
+  - @return isTile (boolean) - Returns `true` if the coordinate contains a collision tile, `false` if it does not.
 
 ## JSON Definition:
     {

@@ -16,36 +16,36 @@ This class defines a collision shape, which defines the 'space' an entity occupi
 
 ## Methods
 - **constructor** - Creates an object from the collisionShape class.
-  > @param ownerLocation (number []) - An array [x,y] of the position.
-  > @param type (string) - The type of shape this is. Currently 'rectangle' is the default and only valid type.
-  > @param points (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
-  > @param offset (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
+  - @param ownerLocation (number []) - An array [x,y] of the position.
+  - @param type (string) - The type of shape this is. Currently 'rectangle' is the default and only valid type.
+  - @param points (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
+  - @param offset (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
 - **update** - Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
-  > @param ownerX (number) - The x position of the owner.
-  > @param ownerY (number) - The y position of the owner.
+  - @param ownerX (number) - The x position of the owner.
+  - @param ownerY (number) - The y position of the owner.
 - **reset** - Resets the location of the shape and AABBs so that the current and previous position are the same. The position you send should be that of the owner, the offset of the shape is added inside the function.
-  > @param ownerX (number) - The x position of the owner.
-  > @param ownerY (number) - The y position of the owner.
+  - @param ownerX (number) - The x position of the owner.
+  - @param ownerY (number) - The y position of the owner.
 - **getXY** - Returns an array containing the position of the shape.
-  > @return number [] - An array [x,y] of the position.
+  - @return number [] - An array [x,y] of the position.
 - **getX** - Returns the x position of the shape.
-  > @return number - The x position.
+  - @return number - The x position.
 - **getY** - Return the y position of the shape.
-  > @return number - The y position.
+  - @return number - The y position.
 - **getPrevXY** - Returns the previous position of the shape.
-  > @return number [] - An array [x,y] of the previous position.
+  - @return number [] - An array [x,y] of the previous position.
 - **getPrevX** - Returns the previous x position of the shape.
-  > @return number - The previous x position.
+  - @return number - The previous x position.
 - **getPrevY** - Returns the previous y position of the shape.
-  > @return number - The previous x position.
+  - @return number - The previous x position.
 - **getAABB** - Returns the AABB of the shape.
-  > @return AABB object - The AABB of the shape.
+  - @return AABB object - The AABB of the shape.
 - **getPreviousAABB** - Returns the previous AABB of the shape.
-  > @return AABB object - The previous AABB of the shape.
+  - @return AABB object - The previous AABB of the shape.
 - **getXOffset** - Returns the x offset of the shape.
-  > @return number - The x offset.
+  - @return number - The x offset.
 - **getYOffset** - Returns the y offset of the shape.
-  > @return number - The y offset.
+  - @return number - The y offset.
 - **destroy** - Destroys the shape so that it can be memory collected safely.
 */
 

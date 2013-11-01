@@ -17,24 +17,24 @@ This class defines an axis-aligned bounding box (AABB) which is used during the 
 
 ## Methods
 - **constructor** - Creates an object from the aabb class.
-  > @param x (number) - The x position of the AABB. The x is always located in the center of the object.
-  > @param y (number) - The y position of the AABB. The y is always located in the center of the object.
-  > @param width (number) - The width of the AABB.
-  > @param height (number) - The height of the AABB.
-  > @return aabb (object) - Returns the new aabb object.
+  - @param x (number) - The x position of the AABB. The x is always located in the center of the object.
+  - @param y (number) - The y position of the AABB. The y is always located in the center of the object.
+  - @param width (number) - The width of the AABB.
+  - @param height (number) - The height of the AABB.
+  - @return aabb (object) - Returns the new aabb object.
 - **setAll** - Sets all of the fields in the AABB.
-  > @param x (number) - The x position of the AABB. The x is always located in the center of the object.
-  > @param y (number) - The y position of the AABB. The y is always located in the center of the object.
-  > @param width (number) - The width of the AABB.
-  > @param height (number) - The height of the AABB.
+  - @param x (number) - The x position of the AABB. The x is always located in the center of the object.
+  - @param y (number) - The y position of the AABB. The y is always located in the center of the object.
+  - @param width (number) - The width of the AABB.
+  - @param height (number) - The height of the AABB.
 - **reset** - Resets all the values in the AABB so that the AABB can be reused.
 - **include** - Changes the size and position of the bounding box so that it contains the current area and the area described in the incoming AABB.
-  > @param aabb (object) - The AABB who's area will be included in the area of the current AABB.
+  - @param aabb (object) - The AABB who's area will be included in the area of the current AABB.
 - **move** - Moves the AABB to the specified location.
-  > @param x (number) - The new x position of the AABB.
-  > @param y (number) - The new y position of the AABB.
+  - @param x (number) - The new x position of the AABB.
+  - @param y (number) - The new y position of the AABB.
 - **getCopy** - Creates a new AABB with the same fields as this object.
-  > @return aabb (object) - Returns the new AABB object.
+  - @return aabb (object) - Returns the new AABB object.
 */
 
 platformer.classes.aABB = (function(){

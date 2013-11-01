@@ -10,22 +10,22 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location and triggers messages regarding its neighbors.
-  > @param message.deltaT (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
+  - @param message.deltaT (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
 - **on-node** - Sets the entity's position to the sent node, updates its coordinates, and triggers messages regarding its neighbors if any.
-  > @param node (Node) - The node that this entity should be located on.
+  - @param node (Node) - The node that this entity should be located on.
 - **leave-node** - Removes the entity from its current node if it's on one.
 - **goto-node** - Begins moving the entity along edges to get to sent node.
-  > @param node (Node) - The node that this entity should move to.
+  - @param node (Node) - The node that this entity should move to.
 - **follow** - Causes this entity to follow another entity. The leading entity must also have a `node-resident` component and exist in the node-map.
-  > @param entity (Entity) - The entity that this entity should follow.
+  - @param entity (Entity) - The entity that this entity should follow.
 
 ### Local Broadcasts:
 - **next-to-[entity-type]** - This message is triggered when the entity is placed on a node. It will trigger on all neighboring entities, as well as on itself on behalf of neighboring entities.
-  > @param entity (Entity) - The entity that is next to the listening entity.
+  - @param entity (Entity) - The entity that is next to the listening entity.
 - **with-[entity-type]** - This message is triggered when the entity is placed on a node. It will trigger on all entities residing on the same node, as well as on itself on behalf of all resident entities.
-  > @param entity (Entity) - The entity that is with the listening entity.
+  - @param entity (Entity) - The entity that is with the listening entity.
 - **left-node** - Triggered when the entity leaves a node.
-  > @param node (Node) - The node that the entity just left.
+  - @param node (Node) - The node that the entity just left.
 - **[Messages specified in definition]** - When the entity is placed on a node, it checks out the type of node and triggers a message on the entity if an event is listed for the current node type.
 
 ## States

@@ -2,65 +2,62 @@
 # CLASS vector2D
 This class defines a two-dimensional vector object and a variety of methods for manipulating the vector.
 
-## Fields
-- **v** (number []) - A array of length two containing the x and y coordinates of the vector in that order.
+## Properties
+- **x** - The x component of the vector.
+- **y** - The y component of the vector.
 
 ## Methods
 - **constructor** - Creates an object from the vector2D class.
-  > @param x (number) - The x component of the vector.
-  > @param y (number) - The y component of the vector.
+  - @param x (number) - The x component of the vector.
+  - @param y (number) - The y component of the vector.
 - **set** - Sets the x and y component of the vector.
-  > @param x (number) - The x component.
-  > @param y (number) - The y component.
+  - @param x (number) - The x component.
+  - @param y (number) - The y component.
 - **copyValues** - Sets the x and y component of the vector to values of the parameter vector.
-  > @param x (number) - The x component.
-  > @param y (number) - The y component.
-  > @return vector2D - This.
+  - @param x (number) - The x component.
+  - @param y (number) - The y component.
+  - @return vector2D - This.
 - **setX** - Sets the x component of the vector.
-  > @param x (number) - The x component.
-  > @return vector2D - This.
+  - @param x (number) - The x component.
+  - @return vector2D - This.
 - **setY** - Sets the y component of the vector.
-  > @param y (number) - The y component.
-  > @return vector2D - This.
-- **x** - Returns the x component of the vector.
-  > @return number - The x component of the vector.
-- **y** - Returns the y component of the vector.
-  > @return number - The y component of the vector.
+  - @param y (number) - The y component.
+  - @return vector2D - This.
 - **magnitude** - Returns the magnitude of the vector.
-  > @return number - The magnitude of the vector.
+  - @return number - The magnitude of the vector.
 - **direction** - Returns the direction of the vector.
-  > @return number - The direction of the vector.
+  - @return number - The direction of the vector.
 - **getUnit** - Returns a normalized copy of the vector.
-  > @return vector2D - A normalized vector in the same direction as this vector.
+  - @return vector2D - A normalized vector in the same direction as this vector.
 - **normalize** - Normalizes the vector.
-  > @return vector2D - This.
+  - @return vector2D - This.
 - **rotate** - Rotates the vector by the given amount.
-  > @param angle (number) - The amount to rotate the vector in radians.
-  > @return vector2D - This.
+  - @param angle (number) - The amount to rotate the vector in radians.
+  - @return vector2D - This.
 - **add** - Adds the given components to this vector.
-  > @param x (number) - The x component to add.
-  > @param y (number) - The y component to add.
-  > @return vector2D - This.
+  - @param x (number) - The x component to add.
+  - @param y (number) - The y component to add.
+  - @return vector2D - This.
 - **addVector** - Adds the given vector to this vector.
-  > @param otherVector (vector2D) - The vector to add.
-  > @return vector2D - This.
+  - @param otherVector (vector2D) - The vector to add.
+  - @return vector2D - This.
 - **subtractVector** - Subtracts the given vector from this vector.
-  > @param otherVector (vector2D) - The vector to subtract.  
-  > @return vector2D - This.
+  - @param otherVector (vector2D) - The vector to subtract.  
+  - @return vector2D - This.
 - **scaleVector** - Scales the vector by the given factor.
-  > @param factor (number) - The factor to scale by. 
-  > @return vector2D - This.
+  - @param factor (number) - The factor to scale by. 
+  - @return vector2D - This.
 - **dot** - Finds the dot product of the two vectors.
-  > @param otherVector (vector2D) - The other vector. 
-  > @return number - The dot product.
+  - @param otherVector (vector2D) - The other vector. 
+  - @return number - The dot product.
 - **shortestAngleTo** - Finds the shortest angle between the two vectors .
-  > @param otherVector (vector2D) - The other vector. 
+  - @param otherVector (vector2D) - The other vector. 
   > return number - The angle between this vector and the received vector.     
 - **scalarProjection** - Find the scalar value of projecting this vector onto the parameter vector or onto a vector at the specified angle away.
-  > @param vectorOrAngle (vector2D or number) - The other vector or the angle between the vectors. 
+  - @param vectorOrAngle (vector2D or number) - The other vector or the angle between the vectors. 
   > return number - The magnitude of the projection. 
 - **copy** - Returns a copy of this vector.
-  > @return vector2D - A copy of this vector.
+  - @return vector2D - A copy of this vector.
 */
 
 platformer.classes.vector2D = (function(){

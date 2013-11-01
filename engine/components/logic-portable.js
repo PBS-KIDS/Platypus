@@ -3,23 +3,23 @@
 This component allows this entity to be carried by other entities with which it collides. Entities that should carry this entity need to have a [[Logic-Carrier]] component attached.
 
 ## Dependencies:
-- [[Handler-Logic]] (on parent entity) - This component listens for 'handle-logic' messages to determine whether it should be carried or released each game step.
-- [[Logic-Carrier]] (on peer entity) - This component triggers 'carry-me' and 'release-me' message, listened for by [[Logic-Carrier]] to handle carrying this entity.
+- [[handler-logic]] (on parent entity) - This component listens for 'handle-logic' messages to determine whether it should be carried or released each game step.
+- [[logic-carrier]] (on peer entity) - This component triggers 'carry-me' and 'release-me' message, listened for by [[Logic-Carrier]] to handle carrying this entity.
 
 ## Messages
 
 ### Listens for:
 - **handle-logic** - On receiving this message, this component triggers 'carry-me' or 'release-me' if its connection to a carrying entity has changed.
 - **hit-solid** - On receiving this message, this component determines whether it is hitting its carrier or another entity. If it is hitting a new carrier, it will broadcast 'carry-me' on the next game step.
-  > @param message.entity ([[Entity]]) - The entity with which the collision occurred.
-  > @param message.x (number) - -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
-  > @param message.y (number) - -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
+  - @param message.entity ([[Entity]]) - The entity with which the collision occurred.
+  - @param message.x (number) - -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
+  - @param message.y (number) - -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
 
 ### Peer Broadcasts
 - **carry-me** - This message is triggered on a potential carrying peer, notifying the peer that this entity is portable.
-  > @param message.entity ([[Entity]]) - This entity, requesting to be carried.
+  - @param message.entity ([[Entity]]) - This entity, requesting to be carried.
 - **release-me** - This message is triggered on the current carrier, notifying them to release this entity.
-  > @param message.entity ([[Entity]]) - This entity, requesting to be released.
+  - @param message.entity ([[Entity]]) - This entity, requesting to be released.
 
 ## JSON Definition:
     {

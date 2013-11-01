@@ -1,6 +1,6 @@
 /**
 # COMPONENT **logic-destroy-me**
-This component allows an entity to be removed from the stage on certain events being triggered.
+This component allows an entity to be removed from the stage when "destroy-me" is triggered.
 
 ## Dependencies
 - [[handler-logic]] (on entity's parent) - This component listens for a logic tick message on which to enact its removal if necessary.
@@ -9,8 +9,8 @@ This component allows an entity to be removed from the stage on certain events b
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component checks whether it should be removed or not.
-  > @param message.deltaT - To measure delay before removal, the component keeps a running count of tick lengths.
-- **destroy-me, [equivalent message]** - This component will set itself up for removal on hearing this message.
+  - @param message.deltaT - To measure delay before removal, the component keeps a running count of tick lengths.
+- **destroy-me** - This component will set itself up for removal on hearing this message.
 
 ## JSON Definition
     {
@@ -18,9 +18,6 @@ This component allows an entity to be removed from the stage on certain events b
       
       "delay": 3000,
       // Optional. Time in milliseconds after the "destroy-me" message is heard before entity should be removed. Defaults to 0.
-      
-      "message": "collected",
-      // Optional. Alternative message triggered on entity that should trigger "destroy-me" behavior.
     }
 */
 
@@ -29,11 +26,6 @@ This component allows an entity to be removed from the stage on certain events b
 		id: 'logic-destroy-me',
 		
 		constructor: function(definition){
-			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['destroy-me'];
-			}
-			
 			this.destroyed = false;
 			this.delay = definition.delay || 0;
 		},

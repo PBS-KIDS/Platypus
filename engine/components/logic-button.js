@@ -3,7 +3,7 @@
 This component handles the pressed/released state of a button according to input. It can be set as a toggle button or a simple press-and-release button.
 
 ## Dependencies:
-- [[Handler-Logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
+- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
 
 ## Messages
 
@@ -16,8 +16,8 @@ This component handles the pressed/released state of a button according to input
 
 ### Local Broadcasts:
 - **logical-state** - this component will trigger this message with both "pressed" and "released" properties denoting its state. Both of these work in tandem and never equal each other.
-  > @param message.pressed (boolean) - whether the button is in a pressed state.
-  > @param message.released (boolean) - whether the button is in a released state.
+  - @param message.pressed (boolean) - whether the button is in a pressed state.
+  - @param message.released (boolean) - whether the button is in a released state.
 
 ## JSON Definition:
     {
@@ -26,7 +26,7 @@ This component handles the pressed/released state of a button according to input
       "toggle": true,
       // Optional. Determines whether this button should behave as a toggle. Defaults to "false".
       
-      "state": "pressed",
+      "state": "pressed"
       // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
     }
 */

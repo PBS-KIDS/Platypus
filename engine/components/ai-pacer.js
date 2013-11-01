@@ -12,8 +12,8 @@ This component acts as a simple AI that will reverse the movement direction of a
 ### Listens for:
 - **handle-ai** - This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
 - **turn-around** - On receiving this message, the component will check the collision side and re-orient itself accordingly.
-  > @param message.x (integer) - uses `x` to determine if collision occurred on the left (-1) or right (1) of this entity.
-  > @param message.y (integer) - uses `y` to determine if collision occurred on the top (-1) or bottom (1) of this entity.
+  - @param message.x (integer) - uses `x` to determine if collision occurred on the left (-1) or right (1) of this entity.
+  - @param message.y (integer) - uses `y` to determine if collision occurred on the top (-1) or bottom (1) of this entity.
 
 ### Local Broadcasts:
 - **stop** - Triggered by this component before triggering another direction.

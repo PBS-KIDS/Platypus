@@ -6,13 +6,13 @@ This component allows the entity to initiate a change from the current scene to 
 
 ### Listens for:
 - **new-scene** - On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
-  > @param message.scene (string) - This is a label corresponding with a predefined scene.
-  > @param message.transition (string) - This can be "instant" or "fade-to-black". Defaults to an instant transition.
-  > @param message.persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
+  - @param message.scene (string) - This is a label corresponding with a predefined scene.
+  - @param message.transition (string) - This can be "instant" or "fade-to-black". Defaults to an instant transition.
+  - @param message.persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
 - **set-scene** - On receiving this message, a scene value is stored, waiting for a `new-scene` to make the transition.
-  > @param scene (string) - This is a label corresponding with a predefined scene.
+  - @param scene (string) - This is a label corresponding with a predefined scene.
 - **set-persistent-scene-data** - On receiving this message, persistent data is stored, waiting for a `new-scene` to make the transition.
-  > @param persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
+  - @param persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
 
 ## JSON Definition:
     {

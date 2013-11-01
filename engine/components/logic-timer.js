@@ -9,16 +9,16 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 
 ### Listens for:
 - **handle-logic** - Handles the update for the timer. Increments or decrements the current time. If it's hit the max it stops the timer at the max. If it hits the alarm it sets it off. Sends an update message indicating the timer's current time for other components to use.
-  > @param data.deltaT (number) - The time passed since the last tick.
+  - @param data.deltaT (number) - The time passed since the last tick.
 - **set** - Set the time.
-  > @param data.time (number) - The new value for the time.
+  - @param data.time (number) - The new value for the time.
 - **start** - Start the timer counting.
 - **stop** - Stop the timer counting.
 
 ### Local Broadcasts:
 - **[alarm message from definition]** - The definition.alarm value from the JSON definition is used as the message id. It's sent when the alarm goes off.
 - **[update message from definition]** - The definition.update value from the JSON definition is used as the message id. It's sent every 'handle-logic' tick. 
-  > @param message.time (number) - The current time value for the timer.
+  - @param message.time (number) - The current time value for the timer.
 
 ## JSON Definition
     {

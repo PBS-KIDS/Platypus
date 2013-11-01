@@ -9,21 +9,21 @@ A component that handles updating logic components. Each tick it calls all the e
 
 ### Listens for:
 - **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities. 
-  > @param entity (Object) - The entity that is being considered for addition to the handler.
+  - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick** - Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+  - @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
 - **pause-logic** - `handle-logic` messages cease to be triggered on each tick
-  > @param resp.time (number) - If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered. 
+  - @param resp.time (number) - If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered. 
 - **unpause-logic** - `handle-logic` messages begin firing each tick.
 - **camera-update** - Changes the active logic area when the camera location changes.
-  > @param resp.viewportLeft (number) - The left side of the camera viewport in world units. 
-  > @param resp.viewportTop (number) - The top side of the camera viewport in world units. 
-  > @param resp.viewportWidth (number) - The width of the camera viewport in world units. 
-  > @param resp.viewportHeight (number) - The height of the camera viewport in world units. 
+  - @param resp.viewportLeft (number) - The left side of the camera viewport in world units. 
+  - @param resp.viewportTop (number) - The top side of the camera viewport in world units. 
+  - @param resp.viewportWidth (number) - The width of the camera viewport in world units. 
+  - @param resp.viewportHeight (number) - The height of the camera viewport in world units. 
 
 ### Child Broadcasts:
 - **handle-logic** - Sent to entities to run their logic.
-  > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
+  - @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
 
 ## JSON Definition
     {

@@ -10,27 +10,27 @@ This component listens for input messages triggered on the entity and updates th
 ### Listens for:
 - **handle-controller** - On each `handle-controller` message, this component checks its list of actions and if any of their states are currently true or were true on the last call, that action message is triggered.
 - **mousedown** - This message triggers a new message on the entity that includes what button on the mouse was pressed: "mouse:left-button:down", "mouse:middle-button:down", or "mouse:right-button:down".
-  > @param message.event (DOM Event object) - This event object is passed along with the new message.
+  - @param message.event (DOM Event object) - This event object is passed along with the new message.
 - **mouseup** - This message triggers a new message on the entity that includes what button on the mouse was released: "mouse:left-button:up", "mouse:middle-button:up", or "mouse:right-button:up".
-  > @param message.event (DOM Event object) - This event object is passed along with the new message.
+  - @param message.event (DOM Event object) - This event object is passed along with the new message.
 - **mousemove** - Updates mouse action states with whether the mouse is currently over the entity.
-  > @param message.over (boolean) - Whether the mouse is over the input entity.
+  - @param message.over (boolean) - Whether the mouse is over the input entity.
 - **pause-controls** - This message will stop the controller from triggering messages until "unpause-controls" is triggered on the entity.
 - **unpause-controls** - This message will allow the controller to trigger messages until "pause-controls" is triggered on the entity.
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, sets the appropriate state and broadcasts the associated message on the next `handle-controller` message. These messages come in pairs and typically have the form of "keyname:up" and "keyname:down" specifying the current state of the input.
   
 ### Local Broadcasts:
 - **mouse:mouse-left:down, mouse:mouse-left:up, mouse:mouse-middle:down, mouse:mouse-middle:up, mouse:mouse-right:down, mouse:mouse-right:up** - This component triggers the state of mouse inputs on the entity if a render component of the entity accepts mouse input (for example [[Render-Animation]]).
-  > @param message (DOM Event object) - The original mouse event object is passed along with the control message.
+  - @param message (DOM Event object) - The original mouse event object is passed along with the control message.
 - **north, north-northeast, northeast, east-northeast, east, east-southeast, southeast, south-southeast, south, south-southwest, southwest, west-southwest, west, west-northwest, northwest, north-northwest** - If the soft joystick is enabled on this component, it will broadcast these directional messages if the joystick is in use.
-  > @param message (DOM Event object) - Mirrors the mouse event object that moved the joystick.
+  - @param message (DOM Event object) - Mirrors the mouse event object that moved the joystick.
 - **joystick-orientation** - If the soft joystick is enabled on this component, this message will trigger to provide the current orientation of the joystick.
-  > @param orientation (number) - A number in radians representing the orientation of the joystick.
+  - @param orientation (number) - A number in radians representing the orientation of the joystick.
 - **[Messages specified in definition]** - Broadcasts active states using the JSON-defined message on each `handle-controller` message. Active states include `pressed` being true or `released` being true. If both of these states are false, the message is not broadcasted.
-  > @param message.pressed (boolean) - Whether the current input is active.
-  > @param message.released (boolean) - Whether the current input was active last tick but is no longer active.
-  > @param message.triggered (boolean) - Whether the current input is active but was not active last tick.
-  > @param message.over (boolean) - Whether the mouse was over the entity when pressed, released, or triggered. This value is always false for non-mouse input messages.
+  - @param message.pressed (boolean) - Whether the current input is active.
+  - @param message.released (boolean) - Whether the current input was active last tick but is no longer active.
+  - @param message.triggered (boolean) - Whether the current input is active but was not active last tick.
+  - @param message.over (boolean) - Whether the mouse was over the entity when pressed, released, or triggered. This value is always false for non-mouse input messages.
 
 ## JSON Definition:
     {

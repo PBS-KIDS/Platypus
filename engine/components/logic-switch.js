@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-game-button**
+# COMPONENT **logic-switch**
 This component serves as a switch in the game world, typically tied to collision events such that this entity changes state when another entity collides or passed over.
 
 ## Dependencies:
@@ -9,26 +9,26 @@ This component serves as a switch in the game world, typically tied to collision
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component determines its state and triggers messages accordingly.
-- **button-pressed** - Causes the button to be in a pressed state.
+- **switch-pressed** - Causes the switch to be in a pressed state.
 
 ### Local Broadcasts:
-- **button-on** - This message is triggered when the button has just been pressed.
-- **button-off** - This message is triggered when the button has just been released.
-- **initial-press** - This message is triggered the first time the button is pressed. This occurs before the "button-on" message is triggered.
+- **switch-on** - This message is triggered when the switch has just been pressed.
+- **switch-off** - This message is triggered when the switch has just been released.
+- **initial-press** - This message is triggered the first time the switch is pressed. This occurs before the "switch-on" message is triggered.
 
 ## JSON Definition:
     {
-      "type": "logic-game-button",
+      "type": "logic-switch",
       
       "sticky": true
-      // Optional. Whether a pressed button should stay pressed once collision messages cease. Defaults to `false`.
+      // Optional. Whether a pressed switch should stay pressed once collision messages cease. Defaults to `false`.
     }
 */
 (function(){
 
 	return platformer.createComponentClass({
 		
-		id: 'logic-game-button',
+		id: 'logic-switch',
 		
 		constructor: function(definition){
 			this.state = this.owner.state;
@@ -45,23 +45,23 @@ This component serves as a switch in the game world, typically tied to collision
 					if (this.pressed && !this.wasPressed) {
 						this.state.pressed = true;
 						this.wasPressed = true;
-						this.owner.trigger('button-on');
+						this.owner.trigger('switch-on');
 					}
 				} else {
 					if (this.pressed != this.wasPressed) {
 						if (this.pressed) {	
 							this.state.pressed = true;
-							this.owner.trigger('button-on');
+							this.owner.trigger('switch-on');
 						} else {
 							this.state.pressed = false;
-							this.owner.trigger('button-off');
+							this.owner.trigger('switch-off');
 						}
 					}
 					this.wasPressed = this.pressed;
 					this.pressed = false;
 				}
 			},
-			'button-pressed': function() {
+			'switch-pressed': function() {
 				this.pressed = true; 
 				if(this.initialPress){
 					this.owner.trigger('initial-press');

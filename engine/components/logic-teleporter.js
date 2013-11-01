@@ -10,15 +10,15 @@ This component listens for redirected collision messages and fires a message on 
 
 ### Listens for:
 - **peer-entity-added** - This teleporter listens as other entities are added so it can recognize the entity it should teleport colliding objects to.
-  > @param message (object) - expects an entity as the message object in order to determine whether it is the requested teleportation destination.
+  - @param message (object) - expects an entity as the message object in order to determine whether it is the requested teleportation destination.
 - **teleport-entity** - On receiving this message, the component will fire `teleport` on the colliding entity, sending this.destination. The colliding entity must handle the `teleport` message and relocate itself.
-  > @param message.x (integer) - uses `x` to determine if collision occurred on the left (-1) or right (1) of this entity.
-  > @param message.y (integer) - uses `y` to determine if collision occurred on the top (-1) or bottom (1) of this entity.
-  > @param message.entity (object) - triggers a `teleport` message on `entity`.
+  - @param message.x (integer) - uses `x` to determine if collision occurred on the left (-1) or right (1) of this entity.
+  - @param message.y (integer) - uses `y` to determine if collision occurred on the top (-1) or bottom (1) of this entity.
+  - @param message.entity (object) - triggers a `teleport` message on `entity`.
 
 ### Peer Broadcasts:
 - **teleport** - On receiving a `teleport-entity` message, if the colliding entity is colliding on the teleporter's facing side, this message is triggered on the colliding entity.
-  > @param message (object) - sends the destination entity as the message object, the x and y coordinates being the most important information for the listening entity.
+  - @param message (object) - sends the destination entity as the message object, the x and y coordinates being the most important information for the listening entity.
 
 ## JSON Definition:
     {

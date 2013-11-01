@@ -9,15 +9,15 @@ A component that handles the rendering of DOM elements. It creates a div element
 
 ### Listens for:
 - **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-render' or 'handle-render-load' message id it's added to the list of entities. Also the 'handle-render-load' message is called immediately.
-  > @param entity (Object) - The entity that is being considered for addition to the handler.
+  - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+  - @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
 
 ### Child Broadcasts:
 - **handle-render-load** - Sent to an entity that has been added to the handler. Passes the entity a div element that it can add itself to.
-  > @param obj.element (Object) - An object containing a DOM element that the entity should add child elements to.
+  - @param obj.element (Object) - An object containing a DOM element that the entity should add child elements to.
 - **handle-render** - Sent to entities to have them prepare to be rendered.
-  > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
+  - @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
 
 ## JSON Definition
     {
