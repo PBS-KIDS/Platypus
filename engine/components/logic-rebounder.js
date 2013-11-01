@@ -1,28 +1,35 @@
 /**
-# COMPONENT **name-of-component**
-Summarize the purpose of this component here.
+# COMPONENT **logic-rebounder**
+This component works with `collision-basic` to cause entities to bounce away on solid collisions.
 
 ## Dependencies
-- [[Required-Component]] - List other components that this component requires to function properly on an entity.
+- [[collision-basic]] - Relies on collision messages to perform rebounding movement.
 
 ## Messages
 
 ### Listens for:
-- **received-message-label** - List all messages that this component responds to here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
-
-### Local Broadcasts:
-- **local-message-label** - List all messages that are triggered by this component on this entity here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **handle-logic** - On receiving this message, `logic-rebounder` clears its stored collision information.
+- **hit-static** - On receiving this message, `logic-rebounder` rebounds.
+  > @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
+- **hit-non-static** - On receiving this message, `logic-rebounder` rebounds.
+  > @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
+  > @param message.entity ([[entity]]) - This is the entity with which this entity is colliding.
+- **share-velocity** - On receiving this message, `logic-rebounder` stores collision information.
+  > @param entity ([[entity]]) - This is the entity with which this entity is colliding.
 
 ### Peer Broadcasts:
-- **peer-message-label** - List all messages that are triggered by this component on other entities here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **share-velocity** - This component triggers this message to prevent double collision calls.
+  > @param entity ([[entity]]) - This entity.
 
 ## JSON Definition
     {
-      "type": "name-of-component"
-      // List all additional parameters and their possible values here.
+      "type": "logic-rebounder",
+      
+      "mass": 12,
+      // Optional. Relative size of the entity. Defaults to 1.
+      
+      "elasticity": 0.4
+      // Optional. Bounciness of the entity. Defaults to 0.8.
     }
 */
 (function(){
