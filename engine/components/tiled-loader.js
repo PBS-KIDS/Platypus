@@ -12,6 +12,9 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 
 ### Listens for:
 - **scene-loaded** - On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
+- **load-level** - If `manuallyLoad` is set in the JSON definition, the component will wait for this message before loading the Tiled map JSON definition.
+  > @param message.level (string or object) - Required. The level to load.
+  > @param message.persistentData (object) - Optional. Information passed from the last scene.
 
 ### Local Broadcasts:
 - **world-loaded** - Once finished loading the map, this message is triggered on the entity to notify other components of completion.
@@ -44,8 +47,11 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
       "entityPositionX": "center",
       // Optional. Can be "left", "right", or "center". Defines where entities registered X position should be when spawned. Default is "center".
 
-      "entityPositionY": "center"
+      "entityPositionY": "center",
       // Optional. Can be "top", "bottom", or "center". Defines where entities registered Y position should be when spawned. Default is "bottom".
+      
+      "manuallyLoad": true
+      // Optional. Whether to wait for a "load-level" event before before loading. Defaults to `false`;
     }
 
 [link1]: http://www.mapeditor.org/
