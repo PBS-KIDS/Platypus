@@ -9,10 +9,13 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 ## Messages
 
 ### Listens for:
-- **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
-  > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
+- **add-tiles** - This event adds a layer of tiles to render on top of the existing layer of rendered tiles.
+  > @param message.imageMap (2d array) - Required. This lists a mapping of tile indexes to be rendered.
+- **camera-loaded** - Provides the width and height of the world.
 - **camera-update** - Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.
   > @param camera (object) - Required. Provides information about the camera.
+- **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
+  > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
 
 ## JSON Definition
     {
