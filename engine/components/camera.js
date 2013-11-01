@@ -33,6 +33,9 @@ This component controls the game camera deciding where and how it should move. T
   > @param message ([[Entity]]} - Expects an entity as the message object to determine the entity to remove from its list.
 
 ### Child Broadcasts:
+- **camera-loaded** - On receiving a "world-loaded" message, the camera broadcast the world size to all children in the world.
+  > @param message.width (number) - The width of the loaded world.
+  > @param message.height (number) - The height of the loaded world.
 - **camera-update** - This component fires this message when the position of the camera in the world has changed.
   > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
   > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
@@ -42,6 +45,7 @@ This component controls the game camera deciding where and how it should move. T
   > @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
 
 ### Local Broadcasts:
+- **camera-stationary** - This event is triggered when the camera stops moving.
 - **camera-update** - This component fires this message when the position of the camera in the world has changed or if the window has been resized.
   > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
   > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
