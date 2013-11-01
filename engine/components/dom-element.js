@@ -14,15 +14,18 @@ This component creates a DOM element associated with the entity. In addition to 
 - **logical-state** - This component listens for logical state changes and updates its local record of states.
   > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
 - **update-content** - This message updates the innerHTML of the DOM element.
-  > @param message.text (string) - Required. The text that should replace the DOM element's innerHTML.
+  > @param message (string) - The text that should replace the DOM element's innerHTML.
+  > @param message.text (string) - Alternatively an object may be passed in with a text property that should replace the DOM element's innerHTML.
 - **set-parent** - This message appends the element to the provided parent element.
   > @param parent (DOM Element) - Required. The DOM Element that this element should be appended to.
 - **set-attribute** - This message updates an attribute of the DOM element.
-  > @param message.attribute (string) - Required. The attribute that is to be changed.
-  > @param message.value (string) - Required. The value the changed attribute should have.
+  > @param message.attribute (string) - The attribute that is to be changed.
+  > @param message.value (string) - The value the changed attribute should have.
+  > @param message (object) - Alternatively, multiple attributes may be changed with a list of key/value pairs where keys match the attributes whose values will be changed.
 - **set-style** - This message updates the style of the DOM element.
-  > @param message.attribute (string) - Required. The CSS attribute that is to be changed.
-  > @param message.value (string) - Required. The value the changed CSS attribute should have.
+  > @param message.attribute (string) - The CSS property that is to be changed.
+  > @param message.value (string) - The value the changed CSS property should have.
+  > @param message (object) - Alternatively, multiple CSS properties may be changed with a list of key/value pairs where keys match the properties whose values will be changed.
 
 ### Local Broadcasts:
 - **[Messages specified in definition]** - Element event handlers will trigger messages as defined in the JSON definition.
@@ -172,16 +175,38 @@ This component creates a DOM element associated with the entity. In addition to 
 			},
 			
 			"set-attribute": function(resp){
-				this.element.setAttribute(resp.attribute, resp.value);
+				var attribute = null;
+				
+				if(resp.attribute){ //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
+					this.element.setAttribute(resp.attribute, resp.value);
+				} else {
+					for (attribute in resp){
+						this.element.setAttribute(attribute, resp[attribute]);
+					}
+				}
 			},
 			
 			"set-style": function(resp){
-				this.element.style[resp.attribute] = resp.value;
+				var attribute = null;
+				
+				if(resp.attribute){ //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
+					this.element.style[resp.attribute] = resp.value;
+				} else {
+					for (attribute in resp){
+						this.element.style[attribute] = resp[attribute];
+					}
+				}
 			},
 			
 			"update-content": function(resp){
-				if(resp && (typeof resp.text == 'string') && (resp.text !== this.element.innerHTML)){
-					this.element.innerHTML = resp.text;
+				var text = resp;
+				
+				if(text && (typeof text.text === 'string')){
+					text = text.text;
+				}
+				
+				if((typeof text === 'string') && (text !== this.element.innerHTML)){
+					this.element.innerHTML = text;
 				}
 			},
 		
