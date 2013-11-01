@@ -1,28 +1,43 @@
 /**
-# COMPONENT **name-of-component**
-Summarize the purpose of this component here.
+# COMPONENT **level-scrambler**
+This component works in tandem with [[tiled-loader]] by taking several Tiled maps and combining them before `tiled-loader` processes them.
+
+Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definition so that it will wait for this component's "load-level" call.
 
 ## Dependencies
-- [[Required-Component]] - List other components that this component requires to function properly on an entity.
+- [[tiled-loader]] - Feeds information into `tiled-loader` to load a combined map.
 
 ## Messages
 
 ### Listens for:
-- **received-message-label** - List all messages that this component responds to here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **scene-loaded** - On receiving this message, `level-scrambler` uses its JSON definition to create a combined map.
+  > @param message (object) - Optional. Data passed into this scene from the last scene.
 
 ### Local Broadcasts:
-- **local-message-label** - List all messages that are triggered by this component on this entity here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
-
-### Peer Broadcasts:
-- **peer-message-label** - List all messages that are triggered by this component on other entities here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+- **load-level** - Once the combined level is ready, this message is triggered so `tiled-loader` will handle it.
+  > @param message.persistentData (obj) - Data received from the initiating "scene-loaded" call is passed on here.
+  > @param message.level (obj) - This is a JSON structure representing the combined map.
 
 ## JSON Definition
     {
-      "type": "name-of-component"
-      // List all additional parameters and their possible values here.
+      "type": "level-scrambler"
+      
+      "levelPieces": {
+      // Required. This is a list of key/value pairs listing the pieces the level template (below) will use to compose a larger map.
+        
+        "start"  : "start-map",
+        "end" 	 : "end-map",
+        // Labels include map sections by their map names
+        
+        "forest" : ["forest-1", "forest-2", "forest-3"]
+        // If one section should be chosen from many sections, maps can be listed in an array.
+      },
+
+      "levelTemplate": [["start", "forest"],["forest", "end"]]
+      // Required. This is a 2d array, laying out the map structure using the labels above to compose the larger map.
+
+      "useUniques": true
+      // Optional. If set, no single map is used twice in the creation of the combined map.
     }
 */
 (function(){
@@ -121,11 +136,6 @@ Summarize the purpose of this component here.
 				this.levelMessage.persistentData = null;
 				this.levelMessage = null;
 			}
-			
-		},
-		
-		publicMethods: {// These are methods that are available on the entity.
-			
 		}
 	});
 })();
