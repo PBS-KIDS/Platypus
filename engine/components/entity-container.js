@@ -7,33 +7,33 @@ This component allows the entity to contain child entities. It will add several 
 ### Listens for:
 - **load** - This component waits until all other entity components are loaded before it begins adding children entities. This allows other entity components to listen to entity-added messages and handle them if necessary.
 - **add-entity** - This message will added the given entity to this component's list of entities.
-  > @param message ([[Entity]] object) - Required. This is the entity to be added as a child.
+  - @param message ([[Entity]] object) - Required. This is the entity to be added as a child.
 - **remove-entity** - On receiving this message, the provided entity will be removed from the list of child entities.
-  > @param message ([[Entity]] object) - Required. The entity to remove.
+  - @param message ([[Entity]] object) - Required. The entity to remove.
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
-  > @param message (object) - accepts a message object that it will include in the new message to be triggered.
+  - @param message (object) - accepts a message object that it will include in the new message to be triggered.
 
 ### Local Broadcasts:
 - **child-entity-added** - This message is triggered when a new entity has been added to the list of children entities.
-  > @param message ([[Entity]] object) - The entity that was just added.
+  - @param message ([[Entity]] object) - The entity that was just added.
 - **child-entity-removed** - This message is triggered when an entity has been removed from the list of children entities.
-  > @param message ([[Entity]] object) - The entity that was just removed.
+  - @param message ([[Entity]] object) - The entity that was just removed.
 
 ### Child Broadcasts:
 - **peer-entity-added** - This message is triggered when a new entity has been added to the parent's list of children entities.
-  > @param message ([[Entity]] object) - The entity that was just added.
+  - @param message ([[Entity]] object) - The entity that was just added.
 - **peer-entity-removed** - This message is triggered when an entity has been removed from the parent's list of children entities.
-  > @param message ([[Entity]] object) - The entity that was just removed.
+  - @param message ([[Entity]] object) - The entity that was just removed.
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
-  > @param message (object) - sends the message object received by the original message.
+  - @param message (object) - sends the message object received by the original message.
 
 ## Methods:
 - **addEntity** -  This method will add the provided entity to this component's list of entities.
-  > @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.
-  > @return entity ([[Entity]] object) - Returns the entity that was just added.
+  - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.
+  - @return entity ([[Entity]] object) - Returns the entity that was just added.
 - **removeEntity** - This method will remove the provided entity from the list of child entities.
-  > @param message ([[Entity]] object) - Required. The entity to remove.
-  > @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
+  - @param message ([[Entity]] object) - Required. The entity to remove.
+  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
 
 ## JSON Definition:
     {

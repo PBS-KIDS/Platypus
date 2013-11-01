@@ -9,12 +9,12 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its charging counter if necessary.
-  > @param message.deltaT - To determine how much to charge, the component checks the length of the tick.
+  - @param message.deltaT - To determine how much to charge, the component checks the length of the tick.
 - **wind-up, [equivalent message]** - creates and connects the shield entity to this entity.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
 - **stop-racing** - stops the entity movement.
 - **hit-solid** - On receiving this message, the entity stops racing.
-  > @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
+  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
 
 ### Local Broadcasts:
 - **winding** - This message is triggered when the entity begins winding up.
@@ -22,7 +22,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 - **racing** - This message is triggered when winding is finished and the entity begins racing.
 - **stopped-racing** - This message is triggered when the entity stops racing.
 - **blocked** - This message is triggered if the entity collides while racing.
-  > @param message (object) - Collision information from the "hit-solid" message. 
+  - @param message (object) - Collision information from the "hit-solid" message. 
 
 ## JSON Definition
     {

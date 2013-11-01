@@ -9,50 +9,50 @@ This component controls the game camera deciding where and how it should move. T
 
 ### Listens for:
 - **tick, camera** - On a `tick` or `camera` step message, the camera updates its location according to its current state.
-  > @param message.deltaT - If necessary, the current camera update function may require the length of the tick to adjust movement rate.
+  - @param message.deltaT - If necessary, the current camera update function may require the length of the tick to adjust movement rate.
 - **follow** - On receiving this message, the camera begins following the requested object.
-  > @param message.mode (string) - Required. Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
-  > @param message.entity ([[Entity]]) - The entity that the camera should commence following.
-  > @param message.top (number) - The top of a bounding box following an entity.
-  > @param message.left (number) - The left of a bounding box following an entity.
-  > @param message.width (number) - The width of a bounding box following an entity.
-  > @param message.height (number) - The height of a bounding box following an entity.
-  > @param message.movementX (number) - Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
-  > @param message.movementY (number) - Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
-  > @param message.offsetX (number) - How far to offset the camera from the entity horizontally.
-  > @param message.offsetY (number) - How far to offset the camera from the entity vertically.
-  > @param message.time (number) - How many milliseconds to follow the entity.
+  - @param message.mode (string) - Required. Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
+  - @param message.entity ([[Entity]]) - The entity that the camera should commence following.
+  - @param message.top (number) - The top of a bounding box following an entity.
+  - @param message.left (number) - The left of a bounding box following an entity.
+  - @param message.width (number) - The width of a bounding box following an entity.
+  - @param message.height (number) - The height of a bounding box following an entity.
+  - @param message.movementX (number) - Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
+  - @param message.movementY (number) - Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
+  - @param message.offsetX (number) - How far to offset the camera from the entity horizontally.
+  - @param message.offsetY (number) - How far to offset the camera from the entity vertically.
+  - @param message.time (number) - How many milliseconds to follow the entity.
 - **resize, orientationchange** - The camera listens for these events passed along from [[Game]] (who receives them from `window`). It adjusts the camera viewport according to the new size and position of the window.
 - **world-loaded** - On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
-  > @param message.width (number) - Optional. The width of the loaded world.
-  > @param message.height (number) - Optional. The height of the loaded world.
-  > @param message.camera ([[Entity]]) - Optional. An entity that the camera should follow in the loaded world.
+  - @param message.width (number) - Optional. The width of the loaded world.
+  - @param message.height (number) - Optional. The height of the loaded world.
+  - @param message.camera ([[Entity]]) - Optional. An entity that the camera should follow in the loaded world.
 - **child-entity-added** - If children entities are listening for a `camera-update` message, they are added to an internal list.
-  > @param message ([[Entity]]} - Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+  - @param message ([[Entity]]} - Expects an entity as the message object to determine whether to trigger `camera-update` on it.
 - **child-entity-removed** - If children are removed from the entity, they are also removed from this component.
-  > @param message ([[Entity]]} - Expects an entity as the message object to determine the entity to remove from its list.
+  - @param message ([[Entity]]} - Expects an entity as the message object to determine the entity to remove from its list.
 
 ### Child Broadcasts:
 - **camera-loaded** - On receiving a "world-loaded" message, the camera broadcast the world size to all children in the world.
-  > @param message.width (number) - The width of the loaded world.
-  > @param message.height (number) - The height of the loaded world.
+  - @param message.width (number) - The width of the loaded world.
+  - @param message.height (number) - The height of the loaded world.
 - **camera-update** - This component fires this message when the position of the camera in the world has changed.
-  > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
-  > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
-  > @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
-  > @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
-  > @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
-  > @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
+  - @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
+  - @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
+  - @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
+  - @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
+  - @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
+  - @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
 
 ### Local Broadcasts:
 - **camera-stationary** - This event is triggered when the camera stops moving.
 - **camera-update** - This component fires this message when the position of the camera in the world has changed or if the window has been resized.
-  > @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
-  > @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
-  > @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
-  > @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
-  > @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
-  > @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
+  - @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
+  - @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
+  - @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
+  - @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
+  - @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
+  - @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
 
 ## JSON Definition:
     {
@@ -82,7 +82,7 @@ This component controls the game camera deciding where and how it should move. T
       "transitionY": 400,
       // Optional. Sets how quickly the camera should pan to a new position in the vertical direction. Default is 600.
       
-      "threshold": 3,
+      "threshold": 3
       // Optional. Sets how many units the followed entity can move before the camera will re-center. Default is 1.
     }
 */

@@ -11,12 +11,12 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 
 ### Listens for:
 - **scene-loaded** - On receiving this message, `level-scrambler` uses its JSON definition to create a combined map.
-  > @param message (object) - Optional. Data passed into this scene from the last scene.
+  - @param message (object) - Optional. Data passed into this scene from the last scene.
 
 ### Local Broadcasts:
 - **load-level** - Once the combined level is ready, this message is triggered so `tiled-loader` will handle it.
-  > @param message.persistentData (obj) - Data received from the initiating "scene-loaded" call is passed on here.
-  > @param message.level (obj) - This is a JSON structure representing the combined map.
+  - @param message.persistentData (obj) - Data received from the initiating "scene-loaded" call is passed on here.
+  - @param message.level (obj) - This is a JSON structure representing the combined map.
 
 ## JSON Definition
     {
@@ -33,7 +33,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
         // If one section should be chosen from many sections, maps can be listed in an array.
       },
 
-      "levelTemplate": [["start", "forest"],["forest", "end"]]
+      "levelTemplate": [ ["start", "forest"], ["forest", "end"] ]
       // Required. This is a 2d array, laying out the map structure using the labels above to compose the larger map.
 
       "useUniques": true

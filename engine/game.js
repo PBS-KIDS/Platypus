@@ -4,26 +4,26 @@ This class is used to create the `platformer.game` object. The `game` object han
 
 ## Methods
 - **constructor** - Creates an object from the game class.
-  > @param definition (object) - Collection of settings from config.json.
-  > @param onFinishedLoading (function) - An optional function to run once the game has begun.
+  - @param definition (object) - Collection of settings from config.json.
+  - @param onFinishedLoading (function) - An optional function to run once the game has begun.
 - **tick** - Called by the CreateJS ticker. This calls tick on the scene.
-  > @param deltaT (number) - The time passed since the last tick.
+  - @param deltaT (number) - The time passed since the last tick.
 - **loadScene** - Loads a scene. If there's a transition, performs the transition.
-  > @param sceneId (string) - The scene to load.
-  > @param transition (string) - What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
+  - @param sceneId (string) - The scene to load.
+  - @param transition (string) - What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
 - **loadNextScene** - Sets the currentScene to the specified scene. Called by loadScene, shouldn't be called on its own.
-  > @param sceneId (string) - The scene to load.
+  - @param sceneId (string) - The scene to load.
 - **completeSceneTransition** - Ends the transition and destroys the old scene. Called when the scene effect is finished.
 - **addEventListener** - Adding event listeners to the specified element and assigning callback functions.
-  > @param element (DOM element) - The element to add the eventListener to.
-  > @param event (DOM events) - The event to listen for.
-  > @param callback (function) - The function to call when the event occurs.
+  - @param element (DOM element) - The element to add the eventListener to.
+  - @param event (DOM events) - The event to listen for.
+  - @param callback (function) - The function to call when the event occurs.
 - **destroy** - Destroys the object so that it's ready to garbage collect.
 
 ## Helper Function
 - **bindEvent** - Returns a function which takes in an event and calls the callback function passing it the eventId and the event.
-  > @param eventId (string) - The id of the event we're binding to.
-  > @param callback (function) - The function to call.
+  - @param eventId (string) - The id of the event we're binding to.
+  - @param callback (function) - The function to call.
 */
 
 platformer.classes.game = (function(){

@@ -11,15 +11,15 @@ This component allows this entity carry other entities with which it collides. E
 ### Listens for:
 - **load** - On receiving this message, the component ensures that it has a peer collision group component, and adds one if not.
 - **carry-me** - On receiving this message, the component triggers `add-collision-entity` on the entity to add the peer entity to its collision group.
-  > @param message.entity ([[Entity]]) - Required. The peer entity requesting to be carried.
+  - @param message.entity ([[Entity]]) - Required. The peer entity requesting to be carried.
 - **release-me** - On receiving this message, the component triggers `remove-collision-entity` on the entity to remove the peer entity from its collision group.
-  > @param message.entity ([[Entity]]) - Required. The peer entity requesting to be released.
+  - @param message.entity ([[Entity]]) - Required. The peer entity requesting to be released.
 
 ### Local Broadcasts
 - **add-collision-entity** - On receiving a `carry-me` message, this component triggers this message to add the portable peer to the collision group.
-  > @param message ([[Entity]]) - The entity being added to the collision group.
+  - @param message ([[Entity]]) - The entity being added to the collision group.
 - **remove-collision-entity** - On receiving a `release-me` message, this component triggers this message to remove the portable peer to the collision group.
-  > @param message ([[Entity]]) - The entity being removed from the collision group.
+  - @param message ([[Entity]]) - The entity being removed from the collision group.
 
 ## JSON Definition:
     {

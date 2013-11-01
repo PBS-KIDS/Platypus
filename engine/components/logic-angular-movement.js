@@ -9,9 +9,9 @@ This component changes the (x, y) position of an object according to its current
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  > @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
+  - @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
 - **set-angle** - On receiving this message, the entity adjusts its movement orientation.
-  > @param angle (number) - Number in radians to set the orientation of the entity.
+  - @param angle (number) - Number in radians to set the orientation of the entity.
 - **stop** - Stops motion until a `move` message is received.
 - **move** - Begins motion until a `stop` message is received.
 

@@ -9,7 +9,7 @@ This component spawns new entities within a given area at set intervals.
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component determines whether to spawn another entity.
-  > @param message.deltaT - To determine whether to spawn, the component keeps a running count of tick lengths.
+  - @param message.deltaT - To determine whether to spawn, the component keeps a running count of tick lengths.
 
 ## JSON Definition
     {

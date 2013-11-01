@@ -9,7 +9,7 @@ This component listens for messages and, according to its preset settings, will 
 
 ### Parent Broadcasts:
 - **child-entity-updated** - This message is triggered on the parent when the entity's components change.
-  > @param entity ([[Entity]]) - This is the entity itself.
+  - @param entity ([[Entity]]) - This is the entity itself.
 
 ## JSON Definition
     {

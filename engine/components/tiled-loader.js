@@ -3,7 +3,7 @@
 This component is attached to a top-level entity (loaded by the [[Scene]]) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor] [link1] and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
 
 ## Dependencies:
-- Component [[Entity-Container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
+- Component [[entity-container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
 - Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
 - Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
 - Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
@@ -13,14 +13,14 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 ### Listens for:
 - **scene-loaded** - On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
 - **load-level** - If `manuallyLoad` is set in the JSON definition, the component will wait for this message before loading the Tiled map JSON definition.
-  > @param message.level (string or object) - Required. The level to load.
-  > @param message.persistentData (object) - Optional. Information passed from the last scene.
+  - @param message.level (string or object) - Required. The level to load.
+  - @param message.persistentData (object) - Optional. Information passed from the last scene.
 
 ### Local Broadcasts:
 - **world-loaded** - Once finished loading the map, this message is triggered on the entity to notify other components of completion.
-  > @param message.width (number) - The width of the world in world units.
-  > @param message.height (number) - The height of the world in world units.
-  > @param message.camera ([[Entity]]) - If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+  - @param message.width (number) - The width of the world in world units.
+  - @param message.height (number) - The height of the world in world units.
+  - @param message.camera ([[Entity]]) - If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
 
 ## JSON Definition:
     {

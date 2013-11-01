@@ -3,27 +3,27 @@
 This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
 
 ## Dependencies:
-- [[Handler-Logic]] (on entity) - At the top-most layer, the logic handler triggers `check-collision-group` causing this component to test collisions on all children entities.
+- [[handler-logic]] (on entity) - At the top-most layer, the logic handler triggers `check-collision-group` causing this component to test collisions on all children entities.
 
 ## Messages
 
 ### Listens for:
 - **child-entity-added, add-collision-entity** - On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-  > @param message ([[Entity]] object) - The entity to be added.
+  - @param message ([[Entity]] object) - The entity to be added.
 - **child-entity-removed, remove-collision-entity** - On receiving this message, the component looks for the entity in its collision group and removes it.
-  > @param message ([[Entity]] object) - The entity to be removed.
+  - @param message ([[Entity]] object) - The entity to be removed.
 - **check-collision-group** - This message causes the component to go through the entities and check for collisions.
-  > @param message.camera (object) - Optional. Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
+  - @param message.camera (object) - Optional. Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
 
 ### Child Broadcasts
 - **prepare-for-collision** - This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
 - **relocate-entity** - This message is triggered on an entity that has been repositioned due to a solid collision.
 - **hit-by-[collision-types specified in collision entities' definitions]** - When an entity collides with an entity of a listed collision-type, this message is triggered on the entity.
-  > @param message.entity ([[Entity]]) - The entity with which the collision occurred.
-  > @param message.type (string) - The collision type of the other entity.
-  > @param message.shape ([[CollisionShape]]) - This is the shape of the other entity that caused the collision.
-  > @param message.x (number) - Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
-  > @param message.y (number) - Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
+  - @param message.entity ([[Entity]]) - The entity with which the collision occurred.
+  - @param message.type (string) - The collision type of the other entity.
+  - @param message.shape ([[CollisionShape]]) - This is the shape of the other entity that caused the collision.
+  - @param message.x (number) - Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
+  - @param message.y (number) - Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
 
 ## JSON Definition:
     {

@@ -3,37 +3,37 @@
 This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to the linked entities as new triggered events.
 
 ## Dependencies
-- [[Entity-Linker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
+- [[entity-linker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
 
 ## Messages
 
 ### Listens for:
 - **adopted** - On receiving this message, this component triggers an `link-entity` message to connect to any peers with a matching `linkId`.
 - **link-entity** - On receiving this message, this component checks the linkId and adds it to its list of connections if it matches.
-  > @param entity ([[Entity]]) - The entity requesting a link.
-  > @param linkId (string) - The linkId of the requesting entity. If it matches this component's linkId, the link is made.
-  > @param reciprocate (boolean) - If true, "link-entity" is in-turn called on the sending entity to make the connection both ways.
+  - @param entity ([[Entity]]) - The entity requesting a link.
+  - @param linkId (string) - The linkId of the requesting entity. If it matches this component's linkId, the link is made.
+  - @param reciprocate (boolean) - If true, "link-entity" is in-turn called on the sending entity to make the connection both ways.
 - **unlink-entity** - This message will remove the requesting entity from this component's list of linked entities and no farther messages will be transmitted.
-  > @param entity ([[Entity]]) - The entity requesting an unlink.
+  - @param entity ([[Entity]]) - The entity requesting an unlink.
 - **to-[linkId]-entities** - On receiving this message from the local entity, it is broadcast as "from-[linkId]-entities" to all linked entities.
-  > @param message (string) - The message to be triggered on connected entities.
-  > @param value (object) - The value to accompany the triggered message.
+  - @param message (string) - The message to be triggered on connected entities.
+  - @param value (object) - The value to accompany the triggered message.
 - **from-[linkId]-entities** - A message received from connected entities: the packaged message and values are triggered on this entity.
-  > @param message (string) - The message to be triggered on this entity.
-  > @param value (object) - The value to accompany the triggered message.
+  - @param message (string) - The message to be triggered on this entity.
+  - @param value (object) - The value to accompany the triggered message.
 - **[events listed in JSON definition]** - on receiving these events from linked entities, the messages are re-triggered on this entity according to the JSON mapping.
 
 ### Local Broadcasts:
 - **from-[linkId]-entities** - This message is broadcast on receiving "to-[linkId]-entities" from the local entity.
-  > @param message (string) - The message to be triggered on connected entities.
-  > @param value (object) - The value to accompany the triggered message.
+  - @param message (string) - The message to be triggered on connected entities.
+  - @param value (object) - The value to accompany the triggered message.
 - **[events listed in JSON definition]** - on receiving events from linked entities, the messages are re-triggered on this entity according to the JSON mapping.
 
 ### Parent Broadcasts:
 - **link-entity** - On receiving an "adopted" message, this message is triggered to connect with any peers.
-  > @param entity ([[Entity]]) - This entity.
-  > @param linkId (string) - The linkId of this component.
-  > @param reciprocate (boolean) - Set to true so that peer entities will make a two-way connection.
+  - @param entity ([[Entity]]) - This entity.
+  - @param linkId (string) - The linkId of this component.
+  - @param reciprocate (boolean) - Set to true so that peer entities will make a two-way connection.
 
 ## JSON Definition
     {

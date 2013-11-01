@@ -10,9 +10,9 @@ This component is a general purpose state-machine for an entity, taking in vario
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component checks sustained inputs for changes in state.
 - **update-state** - Updates the entity's state according to this message's state information.
-  > @param message (object) - This is an object of key/value pairs where keys are states and the values are booleans to turn on and off states.
+  - @param message (object) - This is an object of key/value pairs where keys are states and the values are booleans to turn on and off states.
 - **logical-state** - Updates the entity's state according to this message's state information, and broadcasts any applicable messages.
-  > @param message (object) - This is an object of key/value pairs where keys are states and the values are booleans to turn on and off states.
+  - @param message (object) - This is an object of key/value pairs where keys are states and the values are booleans to turn on and off states.
 - **[input messages]** - This component listens for messages as determined by the JSON settings.
 
 ### Local Broadcasts:

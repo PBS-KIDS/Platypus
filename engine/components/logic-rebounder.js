@@ -10,16 +10,16 @@ This component works with `collision-basic` to cause entities to bounce away on 
 ### Listens for:
 - **handle-logic** - On receiving this message, `logic-rebounder` clears its stored collision information.
 - **hit-static** - On receiving this message, `logic-rebounder` rebounds.
-  > @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
+  - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
 - **hit-non-static** - On receiving this message, `logic-rebounder` rebounds.
-  > @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
-  > @param message.entity ([[entity]]) - This is the entity with which this entity is colliding.
+  - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
+  - @param message.entity ([[entity]]) - This is the entity with which this entity is colliding.
 - **share-velocity** - On receiving this message, `logic-rebounder` stores collision information.
-  > @param entity ([[entity]]) - This is the entity with which this entity is colliding.
+  - @param entity ([[entity]]) - This is the entity with which this entity is colliding.
 
 ### Peer Broadcasts:
 - **share-velocity** - This component triggers this message to prevent double collision calls.
-  > @param entity ([[entity]]) - This entity.
+  - @param entity ([[entity]]) - This entity.
 
 ## JSON Definition
     {

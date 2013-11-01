@@ -4,18 +4,18 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 
 ## Dependencies:
 - [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas functionality.
-- [[Handler-Render-Createjs]] (on entity's parent) - This component listens for a render "handle-render-load" message to setup and display the content. This component is removed from the Handler-Render-Createjs list after the first tick because it doesn't possess a handle-render function. Instead it uses the camera-update function to update itself.
+- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render-load" message to setup and display the content. This component is removed from the Handler-Render-Createjs list after the first tick because it doesn't possess a handle-render function. Instead it uses the camera-update function to update itself.
 
 ## Messages
 
 ### Listens for:
 - **add-tiles** - This event adds a layer of tiles to render on top of the existing layer of rendered tiles.
-  > @param message.imageMap (2d array) - Required. This lists a mapping of tile indexes to be rendered.
+  - @param message.imageMap (2d array) - Required. This lists a mapping of tile indexes to be rendered.
 - **camera-loaded** - Provides the width and height of the world.
 - **camera-update** - Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.
-  > @param camera (object) - Required. Provides information about the camera.
+  - @param camera (object) - Required. Provides information about the camera.
 - **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
-  > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
+  - @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
 
 ## JSON Definition
     {

@@ -6,11 +6,11 @@ This component listens for certain messages, picks a message from a related list
 
 ### Listens for:
 - **[Messages specified in definition]** - Listens for messages and on receiving them, triggers a random message from the JSON-defined list.
-  > @param message (any) - If a message object comes in with the event, it is passed along with the selected random message.
+  - @param message (any) - If a message object comes in with the event, it is passed along with the selected random message.
 
 ### Local Broadcasts:
 - **[Messages specified in definition]** - On receiving a recognized message, this component triggers one message from a JSON-defined list.
-  > @param message (any) - If a message object comes in with the triggered event, it is passed along with the selected random message.
+  - @param message (any) - If a message object comes in with the triggered event, it is passed along with the selected random message.
 
 ## JSON Definition
     {

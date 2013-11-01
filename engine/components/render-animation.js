@@ -4,53 +4,53 @@ This component is attached to entities that will appear in the game world. It re
 
 ## Dependencies:
 - [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas animation functionality.
-- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
 
 ## Messages
 
 ### Listens for:
 - **handle-render-load** - This event is triggered when the entity is added to the render handler before 'handle-render' is called. It adds the animation to the Stage and sets up the mouse input if necessary.
-  > @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
+  - @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
 - **handle-render** - On each `handle-render` message, this component checks to see if there has been a change in the state of the entity. If so, it updates its animation play-back accordingly.
 - **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
-  > @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the animation is rendered.
+  - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the animation is rendered.
 - **pin-me** - If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
-  > @param pinId (string) - Required. A string identifying the id of a pin location that the render-animation wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that the render-animation wants to be pinned to.
 - **attach-pin** - On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
-  > @param pinId (string) - Pin Id of the received pin location.
-  > @param container ([createjs.Container][link3]) - Container that render-animation should be added to.
+  - @param pinId (string) - Pin Id of the received pin location.
+  - @param container ([createjs.Container][link3]) - Container that render-animation should be added to.
 - **remove-pin** - On receiving this message, the component checks whether it is pinned, and if so, removes itself from the container.
-  > @param pinId (string) - Pin Id of the pin location to remove itself from.
+  - @param pinId (string) - Pin Id of the pin location to remove itself from.
 - **hide-animation** - Makes the animation invisible.
 - **show-animation** - Makes the animation visible.
 - **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing the corresponding animations.
 
 ### Local Broadcasts:
 - **mousedown** - This component captures this event from CreateJS and triggers it on the entity.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **mouseup** - This component captures this event from CreateJS and triggers it on the entity.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **mousemove** - This component captures this event from CreateJS and triggers it on the entity.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **pin-me** - If this component should be pinned to another animation, it will trigger this event in an attempt to initiate the pinning.
-  > @param pinId (string) - Required. A string identifying the id of a pin location that this render-animation wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that this render-animation wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other animations on the entity to attach to.
-  > @param pinId (string) - Pin Id of an available pin location.
-  > @param container ([createjs.Container][link3]) - Container that the render-animation should be added to.
+  - @param pinId (string) - Pin Id of an available pin location.
+  - @param container ([createjs.Container][link3]) - Container that the render-animation should be added to.
 - **remove-pin** - When preparing to remove itself from an entity, render-animation broadcasts this to all attached animations.
-  > @param pinId (string) - Pin Id of the pin location to be removed.
+  - @param pinId (string) - Pin Id of the pin location to be removed.
 
 ## JSON Definition
     {

@@ -15,7 +15,7 @@ This component renders the avg FPS and other developer defined debug data to the
 
 ### Local Broadcasts:
 - **update-content** - Calls the dom element to update the information that should be displayed.
-  > @param counter (object) - An object with a 'text' field which contains the html for the names and times that are to be displayed.
+  - @param counter (object) - An object with a 'text' field which contains the html for the names and times that are to be displayed.
 
 ## JSON Definition:
     {

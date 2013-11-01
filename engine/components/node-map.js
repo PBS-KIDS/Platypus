@@ -9,14 +9,14 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 
 ### Listens for:
 - **add-node** - Expects a node definition to create a node in the node-map.
-  > @param definition.id (string or array) - This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
-  > @param definition.type (string) - This determines the type of the node.
-  > @param definition.x (number) - Sets the x axis position of the node.
-  > @param definition.y (number) - Sets the y axis position of the node.
-  > @param definition.z (number) - Sets the z axis position of the node.
-  > @param definition.neighbors (object) - A list of key/value pairs where the keys are directions from the node and values are node ids. For example: {"west": "node12"}.
+  - @param definition.id (string or array) - This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
+  - @param definition.type (string) - This determines the type of the node.
+  - @param definition.x (number) - Sets the x axis position of the node.
+  - @param definition.y (number) - Sets the y axis position of the node.
+  - @param definition.z (number) - Sets the z axis position of the node.
+  - @param definition.neighbors (object) - A list of key/value pairs where the keys are directions from the node and values are node ids. For example: {"west": "node12"}.
 - **child-entity-added** - Checks the child entity for a nodeId and if found adds the child to the corresponding node.
-  > @param entity (Entity) - The entity that may be placed on a node.
+  - @param entity (Entity) - The entity that may be placed on a node.
 
 ## JSON Definition
     {

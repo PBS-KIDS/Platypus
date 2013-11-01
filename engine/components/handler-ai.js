@@ -9,13 +9,13 @@ A component that handles updating ai components. Each tick it calls all the enti
 
 ### Listens for:
 - **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-ai' message id it's added to the list of entities. 
-  > @param entity (Object) - The entity that is being considered for addition to the handler.
+  - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick** - Sends a 'handle-ai' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  > @param obj (object) - An object containing deltaT which is the time passed since the last tick. 
+  - @param obj (object) - An object containing deltaT which is the time passed since the last tick. 
 
 ### Child Broadcasts:
 - **handle-ai** - Sent to entities to run their ai for the tick.
-  > @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
+  - @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
 
 ## JSON Definition
     {

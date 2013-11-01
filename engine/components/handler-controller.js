@@ -9,24 +9,24 @@ This component handles capturing and relaying input information to the entities 
 
 ### Listens for:
 - **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-controller' message id it's added to the list of entities. Once an entity is added to the handler-controller 'controller-load' is called on the entity. If an entity has a control map that includes non-keyboard inputs, we add listeners for those and update functions to alert the entity when they happen. 
-  > @param entity (Object) - The entity that is being considered for addition to the handler.
+  - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick, check-inputs** - Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  > @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+  - @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
 - **keydown** - Sends a message to the handled entities 'key:' + the key id + ":down". 
-  > @param event (DOM event) - The DOM event that triggered the keydown event. 
+  - @param event (DOM event) - The DOM event that triggered the keydown event. 
  - **keyup** - Sends a message to the handled entities 'key:' + the key id + ":up".
-  > @param event (DOM event) - The DOM event that triggered the keyup event. 
+  - @param event (DOM event) - The DOM event that triggered the keyup event. 
 
 ### Child Broadcasts:
 - **handle-controller** - Sent to entities on each tick to handle whatever they need to regarding controls.
-  > @param resp (object) - An object containing a deltaT variable that is the time that's passed since the last tick.
+  - @param resp (object) - An object containing a deltaT variable that is the time that's passed since the last tick.
 - **controller-load** - Sent to entities when they are added to the handler-controller.
 - **key:keyid:up** - Message sent to an entity when a key goes from down to up.
-  > @param event (DOM event) - The DOM event that triggered the keyup event. 
+  - @param event (DOM event) - The DOM event that triggered the keyup event. 
 - **key:keyid:down** - Message sent to an entity when a key goes from up to down.
-  > @param event (DOM event) - The DOM event that triggered the keydown event. 
+  - @param event (DOM event) - The DOM event that triggered the keydown event. 
 - **custom:up and custom:down messages** - Messages created when an entity has a control map with non-keyboard input. The handler creates these message when it adds the entity and then fires them on the entity when the input is received.
-  > @param value (object) - A message object sent by the custom message.
+  - @param value (object) - A message object sent by the custom message.
 
 ## JSON Definition
     {

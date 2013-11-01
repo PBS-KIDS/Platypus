@@ -4,52 +4,52 @@ This component is attached to entities that will appear in the game world. It re
 
 ## Dependencies
 - [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas animation functionality.
-- [[Handler-Render]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
 
 ## Messages
 
 ### Listens for:
 - **handle-render** - Repositions the image in preparation for rendering
 - **handle-render-load** - The image added to the stage. Setting up the mouse input stuff.
-  > @param obj.stage ([createjs.Stage][link2]) - This is the stage on which the component will be displayed.
+  - @param obj.stage ([createjs.Stage][link2]) - This is the stage on which the component will be displayed.
 - **logical-state** - This component listens for logical state changes. Handles orientation of the object and visibility.
-  > @param message (object) - Required. Lists parameters and their values. For example: {hidden: false, orientation: 90}. Accepted parameters: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the image is rendered.
+  - @param message (object) - Required. Lists parameters and their values. For example: {hidden: false, orientation: 90}. Accepted parameters: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the image is rendered.
 - **pin-me** - If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
-  > @param pinId (string) - Required. A string identifying the id of a pin location that the render-image wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that the render-image wants to be pinned to.
 - **attach-pin** - On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
-  > @param pinId (string) - Pin Id of the received pin location.
-  > @param container ([createjs.Container][link3]) - Container that render-image should be added to.
+  - @param pinId (string) - Pin Id of the received pin location.
+  - @param container ([createjs.Container][link3]) - Container that render-image should be added to.
 - **remove-pin** - On receiving this message, the component checks whether it is pinned, and if so, removes itself from the container.
-  > @param pinId (string) - Pin Id of the pin location to remove itself from.
+  - @param pinId (string) - Pin Id of the pin location to remove itself from.
 - **hide-image** - Makes the image invisible.
 - **show-image** - Makes the image visible.
 
 ### Local Broadcasts:
 - **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  > @param event (event object) - The event from Javascript.
-  > @param over (boolean) - Whether the mouse is over the object or not.
-  > @param x (number) - The x-location of the mouse in stage coordinates.
-  > @param y (number) - The y-location of the mouse in stage coordinates.
-  > @param entity ([[Entity]]) - The entity clicked on.  
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **pin-me** - If this component should be pinned to another image, it will trigger this event in an attempt to initiate the pinning.
-  > @param pinId (string) - Required. A string identifying the id of a pin location that this render-image wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that this render-image wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other images on the entity to attach to.
-  > @param pinId (string) - Pin Id of an available pin location.
-  > @param container ([createjs.Container][link3]) - Container that the render-image should be added to.
+  - @param pinId (string) - Pin Id of an available pin location.
+  - @param container ([createjs.Container][link3]) - Container that the render-image should be added to.
 - **remove-pin** - When preparing to remove itself from an entity, render-image broadcasts this to all attached images.
-  > @param pinId (string) - Pin Id of the pin location to be removed.
+  - @param pinId (string) - Pin Id of the pin location to be removed.
 
 ## JSON Definition
     {

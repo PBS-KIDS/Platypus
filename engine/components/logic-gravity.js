@@ -10,20 +10,20 @@ A component that causes the object to move according to a specified gravity.
 
 ### Listens for:
 - **handle-logic** - Accelerates and moves the objects according to the set gravity. Objects will not move faster than the max velocity set. Though max velocity only limits the portion of the velocity maintained by the gravity component.
-  > @param resp.deltaT (number) - The time since the last tick.
+  - @param resp.deltaT (number) - The time since the last tick.
 - **hit-solid** - Received when we collide with an object that is solid to the entity. We stop the movement in the direction of that object.
-  > @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
-  > @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
+  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
+  - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
 - **glide** - Changes the maximum gravitational velocity.
-  > @param message.maxVelocity, message.maxVelocityX, message.maxVelocityY (number) - The new maximum velocity the entity should have due to gravity.
-  > @param message.duration, message.durationX, message.durationY (number) - Time in milliseconds to make the transition form current velocity to the maximum velocity.
-  > @param message.acceleration, message.accelerationX, message.acclerationY (number) - How quickly to transition to new maximum velocity.
+  - @param message.maxVelocity, message.maxVelocityX, message.maxVelocityY (number) - The new maximum velocity the entity should have due to gravity.
+  - @param message.duration, message.durationX, message.durationY (number) - Time in milliseconds to make the transition form current velocity to the maximum velocity.
+  - @param message.acceleration, message.accelerationX, message.acclerationY (number) - How quickly to transition to new maximum velocity.
 - **gravitate** - Changes the gravitational acceleration.
-  > @param message.gravity, message.gravityX, message.gravityY (number) - Sets the new gravitational pull on the entity.
+  - @param message.gravity, message.gravityX, message.gravityY (number) - Sets the new gravitational pull on the entity.
 - **hover** - Causes gravitational affect on the entity's velocity to cease.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop gravity.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop gravity.
 - **fall** - Causes the gravitational affect on the entity's velocity to continue.
-  > @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not start gravity.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not start gravity.
  
 
 ## JSON Definition

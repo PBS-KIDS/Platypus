@@ -9,7 +9,7 @@ This component allows certain messages to trigger new messages at a later time. 
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component checks the running counts on its delayed messages to determine whether to trigger any.
-  > @param message.deltaT - To determine whether to trigger messages, the component keeps a running count of tick lengths.
+  - @param message.deltaT - To determine whether to trigger messages, the component keeps a running count of tick lengths.
 - **[input messages]** - This component listens for messages as determined by the JSON settings.
 
 ### Local Broadcasts:

@@ -7,7 +7,7 @@ This component will listen for a particular collision message and, depending on 
 
 ### Listens for:
 - **animation-complete** - On receiving this message, the component match the animation id with its animation id setting and destroy the entity if they match.
-  > @param animationId (string) - animation id for the animation that just finished.
+  - @param animationId (string) - animation id for the animation that just finished.
 
 ## JSON Definition:
     {
