@@ -29,8 +29,13 @@ A component that handles updating logic components. Each tick it calls all the e
     {
       "type": "handler-logic",
       
-      "buffer": 10
-      //If a camera is used, this defines the buffer around the viewport where logic should be active.
+      "buffer" : 12,		//The buffer area around the camera in which entity logic is active. This value changes the buffer in all directions. Defaults to the camera width / 10.
+      "bufferWidth" : 12, 	//The buffer area around the camera in which entity logic is active. This value changes the buffer in width only and overrides the buffer value. Defaults to the camera width / 10.
+      "bufferHeight" : 12, 	//The buffer area around the camera in which entity logic is active. This value changes the buffer in height only and overrides the buffer value. Defaults to the camera width / 10.
+      "bufferLeft" : 12,	//The buffer area around the camera in which entity logic is active. This value changes the buffer at the left of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 10.
+      "bufferRight" : 12,	//The buffer area around the camera in which entity logic is active. This value changes the buffer at the right of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 10.
+      "bufferTop" : 12,		//The buffer area around the camera in which entity logic is active. This value changes the buffer at the top of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 10.
+      "bufferBottom" : 12	//The buffer area around the camera in which entity logic is active. This value changes the buffer at the bottom of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 10.
     }
 */
 
@@ -65,7 +70,10 @@ A component that handles updating logic components. Each tick it calls all the e
 				top: 0,
 				width: 0,
 				height: 0,
-				buffer: definition.buffer || 0,
+				bufferLeft: 	definition.bufferLeft 	|| definition.bufferWidth || definition.buffer || -1,
+				bufferRight: 	definition.bufferRight 	|| definition.bufferWidth || definition.buffer || -1,
+				bufferTop: 		definition.bufferTop 	|| definition.bufferHeight || definition.buffer || -1,
+				bufferBottom: 	definition.bufferBottom || definition.bufferHeight || definition.buffer || -1,
 				active: false
 			};
 			this.message = {
@@ -111,9 +119,20 @@ A component that handles updating logic components. Each tick it calls all the e
 				this.camera.top = camera.viewportTop;
 				this.camera.width = camera.viewportWidth;
 				this.camera.height = camera.viewportHeight;
-				if(!this.camera.buffer){
-					this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				
+				if(this.camera.bufferLeft == -1) {
+					this.camera.bufferLeft = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
 				}
+				if(this.camera.bufferRight == -1) {
+					this.camera.bufferRight = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				if(this.camera.bufferTop == -1) {
+					this.camera.bufferTop = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				if(this.camera.bufferBottom == -1) {
+					this.camera.bufferBottom = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				
 				this.camera.active = true;
 				
 				this.updateNeeded = true;
@@ -155,7 +174,7 @@ A component that handles updating logic components. Each tick it calls all the e
 						this.activeEntities.length = 0;
 						for (var j = this.entities.length - 1; j > -1; j--) {
 							child = this.entities[j];
-							if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))){
+							if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.bufferLeft) && (child.x <= this.camera.left + this.camera.width + this.camera.bufferRight) && (child.y >= this.camera.top - this.camera.bufferTop) && (child.y <= this.camera.top + this.camera.height + this.camera.bufferBottom))){
 								this.activeEntities.push(child);
 							}
 						}

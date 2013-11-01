@@ -47,16 +47,21 @@ A component that handles updating rendering for components that are rendering vi
     {
       "type": "handler-render-createjs",
       
-      "autoClear": true,
-      // Optional. Whether the canvas should clear between paints. Defaults to `false`.
-      
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
       	"touch": false, // Whether to listen for touch events (triggers mouse events)
       	"click": false, // Whether to listen for mouse events
       	"camera": false // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
       },
-      "autoClear": false //By default this is set to false. If true the canvas will be cleared each tick.
+      "autoClear": false, //By default this is set to false. If true the canvas will be cleared each tick.
+      
+      "buffer" : 12,		//The buffer area around the camera in which entities are rendered. This value changes the buffer in all directions. Defaults to the camera width / 12.
+      "bufferWidth" : 12, 	//The buffer area around the camera in which entities are rendered. This value changes the buffer in width only and overrides the buffer value. Defaults to the camera width / 12.
+      "bufferHeight" : 12, 	//The buffer area around the camera in which entities are rendered. This value changes the buffer in height only and overrides the buffer value. Defaults to the camera width / 12.
+      "bufferLeft" : 12,	//The buffer area around the camera in which entities are rendered. This value changes the buffer at the left of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 12.
+      "bufferRight" : 12,	//The buffer area around the camera in which entities are rendered. This value changes the buffer at the right of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 12.
+      "bufferTop" : 12,		//The buffer area around the camera in which entities are rendered. This value changes the buffer at the top of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 12.
+      "bufferBottom" : 12	//The buffer area around the camera in which entities are rendered. This value changes the buffer at the bottom of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 12.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -102,7 +107,10 @@ A component that handles updating rendering for components that are rendering vi
 				top: 0,
 				width: 0,
 				height: 0,
-				buffer: definition.buffer || 0
+				bufferLeft: 	definition.bufferLeft 	|| definition.bufferWidth || definition.buffer || -1,
+				bufferRight: 	definition.bufferRight 	|| definition.bufferWidth || definition.buffer || -1,
+				bufferTop: 		definition.bufferTop 	|| definition.bufferHeight || definition.buffer || -1,
+				bufferBottom: 	definition.bufferBottom || definition.bufferHeight || definition.buffer || -1
 			};
 			
 			this.timeElapsed = {
@@ -172,7 +180,7 @@ A component that handles updating rendering for components that are rendering vi
 						if (child.hidden) {
 							if(child.visible) child.visible = false;
 						} else if(child.name !== 'entity-managed'){
-							if((child.x >= this.camera.x - this.camera.buffer) && (child.x <= this.camera.x + this.camera.width + this.camera.buffer) && (child.y >= this.camera.y - this.camera.buffer) && (child.y <= this.camera.y + this.camera.height + this.camera.buffer)){
+							if((child.x >= this.camera.x - this.camera.bufferLeft) && (child.x <= this.camera.x + this.camera.width + this.camera.bufferRight) && (child.y >= this.camera.y - this.camera.bufferTop) && (child.y <= this.camera.y + this.camera.height + this.camera.bufferBottom)){
 								if(!child.visible) child.visible = true;
 							} else {
 								if(child.visible) child.visible = false;
@@ -217,8 +225,17 @@ A component that handles updating rendering for components that are rendering vi
 				this.camera.y = cameraInfo.viewportTop;
 				this.camera.width = cameraInfo.viewportWidth;
 				this.camera.height = cameraInfo.viewportHeight;
-				if(!this.camera.buffer){
-					this.camera.buffer = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				if(this.camera.bufferLeft == -1) {
+					this.camera.bufferLeft = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				if(this.camera.bufferRight == -1) {
+					this.camera.bufferRight = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				if(this.camera.bufferTop == -1) {
+					this.camera.bufferTop = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				}
+				if(this.camera.bufferBottom == -1) {
+					this.camera.bufferBottom = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
 				}
 				
 				this.canvas.width  = this.canvas.offsetWidth * dpr;

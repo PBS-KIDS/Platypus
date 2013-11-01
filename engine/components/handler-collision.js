@@ -309,7 +309,10 @@ This component checks for collisions between entities which typically have eithe
 					height = camera.height,
 					x      = camera.left + width  / 2,
 					y      = camera.top  + height / 2,
-					buffer = camera.buffer * 2,
+					bufferLeft = camera.bufferLeft,
+					bufferRight = camera.bufferRight,
+					bufferTop = camera.bufferTop,
+					bufferBottom = camera.bufferBottom,
 					entities = undefined,
 					entity = undefined,
 					check  = AABBCollision,
@@ -318,8 +321,8 @@ This component checks for collisions between entities which typically have eithe
 					types = null;
 					
 					// store buffered size since the actual width x height is not used below.
-					width += buffer * 2;
-					height += buffer * 2;
+					width += bufferLeft + bufferRight;
+					height += bufferTop + bufferBottom;
 					
 					if(this.updateLiveList || !aabbLogic.matches(x, y, width, height)){
 						
@@ -374,7 +377,7 @@ This component checks for collisions between entities which typically have eithe
 							groups.sort(groupSortBySize);
 							
 							// add buffer again to capture stationary entities along the border that may be collided against 
-							aabbCollision.setAll(x, y, width + buffer, height + buffer);
+							aabbCollision.setAll(x, y, width + bufferLeft + bufferRight, height + bufferTop + bufferBottom);
 							
 							for (i in this.entitiesByType){
 								entities = this.entitiesByType[i];
