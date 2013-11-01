@@ -9,15 +9,15 @@ Summarize the purpose of this component here.
 
 ### Listens for:
 - **received-message-label** - List all messages that this component responds to here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+  - @param message-object-property (type) - under each message label, list message object properties that are optional or required.
 
 ### Local Broadcasts:
 - **local-message-label** - List all messages that are triggered by this component on this entity here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+  - @param message-object-property (type) - under each message label, list message object properties that are optional or required.
 
 ### Peer Broadcasts:
 - **peer-message-label** - List all messages that are triggered by this component on other entities here.
-  > @param message-object-property (type) - under each message label, list message object properties that are optional or required.
+  - @param message-object-property (type) - under each message label, list message object properties that are optional or required.
 
 ## JSON Definition
     {
