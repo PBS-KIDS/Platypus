@@ -17,8 +17,6 @@
 				"button-right":     "go-right"
 			}
         },{ 
-            "type": "logic-portable"
-        },{
             "type": "logic-gravity"
         },{
             "type": "logic-jump"
