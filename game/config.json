@@ -84,7 +84,7 @@
             {"id": "audio",                      "src": "../engine/components/audio.js"},
             {"id": "broadcast-events",           "src": "../engine/components/broadcast-events.js"},
             {"id": "change-scene",               "src": "../engine/components/change-scene.js"},
-            {"id": "destroy-me",                 "src": "../engine/components/destroy-me.js"},
+            {"id": "destroy-me",                 "src": "../engine/components/logic-destroy-me.js"},
             {"id": "dom-element",                "src": "../engine/components/dom-element.js"},
             {"id": "entity-container",           "src": "../engine/components/entity-container.js"},
             {"id": "entity-controller",          "src": "../engine/components/entity-controller.js"},
