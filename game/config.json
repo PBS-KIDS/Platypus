@@ -100,6 +100,7 @@
             {"id": "counter",           	  "src": "../engine/components/counter.js"},
             {"id": "logic-timer",             "src": "../engine/components/logic-timer.js"},
             {"id": "logic-portal",	          "src": "../engine/components/logic-portal.js"},
+            {"id": "logic-portable",              "src": "../engine/components/logic-portable.js"},
 			{"id": "collision-basic",         "src": "../engine/components/collision-basic.js"},
 			{"id": "collision-tiles",         "src": "../engine/components/collision-tiles.js"},
 			// Game Specific Components
