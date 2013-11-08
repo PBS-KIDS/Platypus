@@ -101,7 +101,7 @@
             {"id": "logic-portal",	             "src": "../engine/components/logic-portal.js"},
 			{"id": "collision-basic",            "src": "../engine/components/collision-basic.js"},
 			{"id": "collision-tiles",            "src": "../engine/components/collision-tiles.js"},
-            {"id": "logic-fps-counter",          "src": "../engine/components/logic-fps-counter.js"}
+            {"id": "logic-fps-counter",          "src": "../engine/components/logic-fps-counter.js"},
 			
 			// These are components that were designed specifically for this game. If you want to design your own components, copy the template in game/components/ec-template.js to get started!
             {"id": "render-gui",              "src": "components/render-gui.js"},
