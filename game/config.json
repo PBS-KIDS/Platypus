@@ -69,7 +69,7 @@
             {"id": "Vector2D",                  "src": "../engine/vector2D.js"}
 		],
 		"components": [ // JavaScript files defining component modules
-			// Engine Compoenents
+			// This is a list of all the Platypus re-usable components that this game uses. For a full list of available components, check out https://github.com/PBS-KIDS/Platypus/wiki/Components-Reference
             {"id": "asset-loader",               "src": "../engine/components/asset-loader.js"},
             {"id": "enable-ios-audio",           "src": "../engine/components/enable-ios-audio.js"},
             {"id": "handler-collision",          "src": "../engine/components/handler-collision.js"},
@@ -96,18 +96,19 @@
             {"id": "logic-directional-movement", "src": "../engine/components/logic-directional-movement.js"},
             {"id": "logic-gravity",              "src": "../engine/components/logic-gravity.js"},
             {"id": "logic-jump",                 "src": "../engine/components/logic-jump.js"},
-            {"id": "counter",           	  "src": "../engine/components/counter.js"},
-            {"id": "logic-timer",             "src": "../engine/components/logic-timer.js"},
-            {"id": "logic-portal",	          "src": "../engine/components/logic-portal.js"},
-			{"id": "collision-basic",         "src": "../engine/components/collision-basic.js"},
-			{"id": "collision-tiles",         "src": "../engine/components/collision-tiles.js"},
-			// Game Specific Components
+            {"id": "counter",           	     "src": "../engine/components/counter.js"},
+            {"id": "logic-timer",                "src": "../engine/components/logic-timer.js"},
+            {"id": "logic-portal",	             "src": "../engine/components/logic-portal.js"},
+			{"id": "collision-basic",            "src": "../engine/components/collision-basic.js"},
+			{"id": "collision-tiles",            "src": "../engine/components/collision-tiles.js"},
+            {"id": "logic-fps-counter",          "src": "../engine/components/logic-fps-counter.js"}
+			
+			// These are components that were designed specifically for this game. If you want to design your own components, copy the template in game/components/ec-template.js to get started!
             {"id": "render-gui",              "src": "components/render-gui.js"},
             {"id": "render-counter",          "src": "components/render-counter.js"},
             {"id": "render-clock",            "src": "components/render-clock.js"},
             {"id": "logic-hero",              "src": "components/logic-hero.js"},
-            {"id": "logic-gui",               "src": "components/logic-gui.js"},
-            {"id": "logic-fps-counter",      "src": "../engine/components/logic-fps-counter.js"}
+            {"id": "logic-gui",               "src": "components/logic-gui.js"}
 		],
 		"entities": [ // JSON files describing entities
 		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
