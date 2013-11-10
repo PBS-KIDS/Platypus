@@ -211,7 +211,7 @@ This component is attached to entities that will appear in the game world. It re
 					return a.z - b.z;
 				};
 				
-				return function(obj){
+				return function(resp){
 					var angle = null;
 					
 					if(!this.stage){
