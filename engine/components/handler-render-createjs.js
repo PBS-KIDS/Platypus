@@ -175,47 +175,49 @@ A component that handles updating rendering for components that are rendering vi
 							this.entities.splice(x, 1);
 						}
 					}
-					for (var x = this.stage.children.length - 1; x > -1; x--){
-						child = this.stage.children[x];
-						if (child.hidden) {
-							if(child.visible) child.visible = false;
-						} else if(child.name !== 'entity-managed'){
-							if((child.x >= this.camera.x - this.camera.bufferLeft) && (child.x <= this.camera.x + this.camera.width + this.camera.bufferRight) && (child.y >= this.camera.y - this.camera.bufferTop) && (child.y <= this.camera.y + this.camera.height + this.camera.bufferBottom)){
-								if(!child.visible) child.visible = true;
-							} else {
+					if(this.stage){
+						for (var x = this.stage.children.length - 1; x > -1; x--){
+							child = this.stage.children[x];
+							if (child.hidden) {
 								if(child.visible) child.visible = false;
+							} else if(child.name !== 'entity-managed'){
+								if((child.x >= this.camera.x - this.camera.bufferLeft) && (child.x <= this.camera.x + this.camera.width + this.camera.bufferRight) && (child.y >= this.camera.y - this.camera.bufferTop) && (child.y <= this.camera.y + this.camera.height + this.camera.bufferBottom)){
+									if(!child.visible) child.visible = true;
+								} else {
+									if(child.visible) child.visible = false;
+								}
+							}
+							
+							if(child.visible){
+								if (child.paused && !this.paused){
+									child.paused = false;
+								} else if (this.paused) {
+									child.paused = true;
+								}
+							}
+							
+							if(!child.scaleX || !child.scaleY || (this.children && !this.children.length)){
+								console.log ('uh oh', child);
+//								this.cacheCanvas || this.children.length;
+			//					return !!(this.visible && this.alpha > 0 && this.scaleX != 0 && this.scaleY != 0 && hasContent);
 							}
 						}
-						
-						if(child.visible){
-							if (child.paused && !this.paused){
-								child.paused = false;
-							} else if (this.paused) {
-								child.paused = true;
-							}
+
+						if (this.stage.reorder) {
+							this.stage.reorder = false;
+							this.stage.sortChildren(sort);
 						}
 						
-						if(!child.scaleX || !child.scaleY || (this.children && !this.children.length)){
-							console.log ('uh oh', child);
-//							this.cacheCanvas || this.children.length;
-		//					return !!(this.visible && this.alpha > 0 && this.scaleX != 0 && this.scaleY != 0 && hasContent);
-						}
-					}
+						this.timeElapsed.name = 'Render-Prep';
+						this.timeElapsed.time = new Date().getTime() - time;
+						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+						time += this.timeElapsed.time;
 
-					if (this.stage.reorder) {
-						this.stage.reorder = false;
-						this.stage.sortChildren(sort);
-					}
-					
-					this.timeElapsed.name = 'Render-Prep';
-					this.timeElapsed.time = new Date().getTime() - time;
-					platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-					time += this.timeElapsed.time;
-
-					this.stage.update();
-					this.timeElapsed.name = 'Render';
-					this.timeElapsed.time = new Date().getTime() - time;
-					platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+						this.stage.update();
+						this.timeElapsed.name = 'Render';
+						this.timeElapsed.time = new Date().getTime() - time;
+						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+					} 
 				};
 			})(),
 			"camera-update": function(cameraInfo){
