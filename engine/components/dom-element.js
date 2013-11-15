@@ -119,31 +119,46 @@ This component creates a DOM element associated with the entity. In addition to 
 			}
 		},
 		events:{
-			"handle-render-load": function(resp){
-				if(resp.element){
+			"handle-render-load": (function(){
+				var getElementById = function(root, id){
+					var i = 0,
+					all   = root.getElementsByTagName('*');
+
+					for (; i < all.length; i++) {
+					    if(all[i].getAttribute('id') === id){
+					    	return all[i];
+					    }
+					}
 					
-					if(!this.parentElement){
-						if(this.potentialParent){
-							this.parentElement = document.getElementById(this.potentialParent);
-							this.parentElement.appendChild(this.element);
-						} else {
-							this.parentElement = resp.element;
-							this.parentElement.appendChild(this.element);
+					return document.getElementById(id);
+				};
+				
+				return function(resp){
+					if(resp.element){
+						
+						if(!this.parentElement){
+							if(this.potentialParent){
+								this.parentElement = getElementById(resp.element, this.potentialParent);
+								this.parentElement.appendChild(this.element);
+							} else {
+								this.parentElement = resp.element;
+								this.parentElement.appendChild(this.element);
+							}
+						}
+			
+						if(this.owner.entities){
+							var message = this.handleRenderLoadMessage = {};
+							for (var item in resp){
+								message[item] = resp[item];
+							}
+							message.element = this.element;
+							for (var entity in this.owner.entities){
+								this.owner.entities[entity].trigger('handle-render-load', message);
+							}
 						}
 					}
-		
-					if(this.owner.entities){
-						var message = this.handleRenderLoadMessage = {};
-						for (var item in resp){
-							message[item] = resp[item];
-						}
-						message.element = this.element;
-						for (var entity in this.owner.entities){
-							this.owner.entities[entity].trigger('handle-render-load', message);
-						}
-					}
-				}
-			},
+				};
+			})(),
 			
 			"child-entity-added": function(entity){
 				if(this.handleRenderLoadMessage){

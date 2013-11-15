@@ -37,8 +37,8 @@ This component works with `collision-basic` to cause entities to bounce away on 
 		id: 'logic-rebounder',
 		
 		constructor: function(definition){
-			this.owner.dx = 0;
-			this.owner.dy = 0;
+			this.owner.dx = this.owner.dx || 0;
+			this.owner.dy = this.owner.dy || 0;
 			this.owner.mass = this.owner.mass || definition.mass || 1;
 			this.elasticity = definition.elasticity || .8;
 			

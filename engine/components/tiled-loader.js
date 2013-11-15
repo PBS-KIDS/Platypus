@@ -465,6 +465,8 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 						entityType = '';
 						if(entity.type !== ''){
 							entityType = entity.type;
+						} else if(entity.name !== ''){
+							entityType = entity.name;
 						} else if(tileset.tileproperties[entity.gid - tileset.firstgid]){
 							if(tileset.tileproperties[entity.gid - tileset.firstgid].entity){
 								entityType = tileset.tileproperties[entity.gid - tileset.firstgid].entity;
