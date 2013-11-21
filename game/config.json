@@ -5,7 +5,7 @@
 {
 	"global": { // Settings for the entire game (Entities and component settings are generally found in their respective files.)
 		"initialScene": "load",                  // Once the game is ready, this scene is automatically loaded.
-		"fps": 60,                               // Target FPS to be used by the game engine.
+		"fps": 60,                               // Target FPS to be used by the game engine. Default is 60 FPS.
 		"rootElement": "root",                   // Optional. Defines the id of the root DOM element used by the game. The default is "root" and this element is created if it does not already exist.
         "aspectRatio": 1.333,                    // Optional. Whether the rootElement should be automatically resized to maintain aspect ratio. Leave this off if the rootElement is to be strictly styled using CSS.
 		"nativeAssetResolution": 960,            // Optional. Screen width in pixels that the source images were originally designed for.
