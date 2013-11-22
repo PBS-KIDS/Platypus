@@ -10,7 +10,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location and triggers messages regarding its neighbors.
-  - @param message.deltaT (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
+  - @param message.delta (Number) - This component uses the current time to determine its progress along an edge if moving from node to node on the map.
 - **on-node** - Sets the entity's position to the sent node, updates its coordinates, and triggers messages regarding its neighbors if any.
   - @param node (Node) - The node that this entity should be located on.
 - **leave-node** - Removes the entity from its current node if it's on one.
@@ -145,7 +145,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 						this['on-node'](this.destinationNode);
 						this.destinationNode = null;
 					} else {
-						this.progress += resp.deltaT * this.speed;
+						this.progress += resp.delta * this.speed;
 						ratio = this.progress / this.distance;
 						
 						if(ratio > 1){

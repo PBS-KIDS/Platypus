@@ -49,7 +49,7 @@
             {"id": "objects",        "src": "images/objects.png",      "data": {"rows": 1, "columns": 4}}
 		],
         "includes": [
-            {"id": "CreateJS",      "src": "http://code.createjs.com/createjs-2013.02.12.min.js"},
+            {"id": "CreateJS",      "src": "http://code.createjs.com/createjs-2013.09.25.min.js"},
             {"id": "Browser",       "src": "../engine/browser.js"},
             {"id": "Main",          "src": "../engine/main.js"},
             {"id": "ButtonCSS",     "src": "css/button.css"},

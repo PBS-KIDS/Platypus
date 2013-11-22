@@ -395,10 +395,10 @@ Multiple collision components may be added to a single entity if distinct messag
 				if(!this.owner.movementAbsorbed && resp){
 					this.owner.movementAbsorbed = true;
 					if(this.owner.dx){
-						x += this.owner.dx * (resp.deltaT || 0);
+						x += this.owner.dx * (resp.delta || 0);
 					}
 					if(this.owner.dy){
-						y += this.owner.dy * (resp.deltaT || 0);
+						y += this.owner.dy * (resp.delta || 0);
 					}
 				}
 				

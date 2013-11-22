@@ -7,7 +7,7 @@ This class is used to create the `platformer.game` object. The `game` object han
   - @param definition (object) - Collection of settings from config.json.
   - @param onFinishedLoading (function) - An optional function to run once the game has begun.
 - **tick** - Called by the CreateJS ticker. This calls tick on the scene.
-  - @param deltaT (number) - The time passed since the last tick.
+  - @param delta (number) - The time passed since the last tick.
 - **loadScene** - Loads a scene. If there's a transition, performs the transition.
   - @param sceneId (string) - The scene to load.
   - @param transition (string) - What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
@@ -34,10 +34,6 @@ platformer.classes.game = (function(){
 
 		this.currentScene = undefined;
 		this.loaded    = null;
-		this.tickContent = {
-			deltaT: 0,
-			count: 0
-		};
 		this.settings = definition;
 		
 		if(document.getElementById(definition.global.rootElement || "root")){
@@ -126,15 +122,12 @@ platformer.classes.game = (function(){
 	};
 	var proto = game.prototype;
 	
-	proto.tick = function(deltaT){
-		this.tickContent.deltaT = deltaT;
-		this.tickContent.count += 1;
-		
+	proto.tick = function(tickEvent){
 		if(this.loadedScene){
-			this.loadedScene.trigger('tick', this.tickContent);
+			this.loadedScene.trigger('tick', tickEvent);
 		}
 		if(this.currentScene){
-			this.currentScene.trigger('tick', this.tickContent);
+			this.currentScene.trigger('tick', tickEvent);
 		}
 	};
 	

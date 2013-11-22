@@ -9,7 +9,7 @@ This component changes the (x, y) position of an object according to its speed a
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
+  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
 
 ## JSON Definition:
     {
@@ -47,9 +47,9 @@ This component changes the (x, y) position of an object according to its speed a
 
 		events: {// These are messages that this component listens for
 			'handle-logic': function (update){
-				var deltaT = update.deltaT;
+				var delta = update.delta;
 				
-				this.time += deltaT;
+				this.time += delta;
 				if (this.time > this.period) {
 					this.time = this.time % this.period;
 				}

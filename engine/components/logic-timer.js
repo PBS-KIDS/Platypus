@@ -9,7 +9,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 
 ### Listens for:
 - **handle-logic** - Handles the update for the timer. Increments or decrements the current time. If it's hit the max it stops the timer at the max. If it hits the alarm it sets it off. Sends an update message indicating the timer's current time for other components to use.
-  - @param data.deltaT (number) - The time passed since the last tick.
+  - @param data.delta (number) - The time passed since the last tick.
 - **set** - Set the time.
   - @param data.time (number) - The new value for the time.
 - **start** - Start the timer counting.
@@ -64,7 +64,7 @@ platformer.components['logic-timer'] = (function(){
 		if (this.isOn)
 		{
 			this.prevTime = this.time;
-			this.isIncrementing ? this.time += data.deltaT : this.time -= data.deltaT;
+			this.isIncrementing ? this.time += data.delta : this.time -= data.delta;
 			if (Math.abs(this.time) > this.maxTime)
 			{
 				//If the timer hits the max time we turn it off so we don't overflow anything.

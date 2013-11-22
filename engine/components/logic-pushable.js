@@ -10,7 +10,7 @@ A component that enables an entity to be pushed.
 
 ### Listens for:
 - **handle-logic** - Checks to see if we're being pushed. If so, we get pushed. Then resets values.
-  - @param resp.deltaT (number) - The time since the last tick.
+  - @param resp.delta (number) - The time since the last tick.
 - **push-entity** - Received when we collide with an object that can push us. We resolve which side we're colliding on and set up the currentPushX and currentPushY values so we'll move on the handle-logic call.
   - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
   - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
@@ -53,9 +53,9 @@ platformer.components['logic-pushable'] = (function(){
 	var proto = component.prototype;
 	
 	proto['handle-logic'] = function(resp){
-		var deltaT = resp.deltaT;
+		var delta = resp.delta;
 		if(this.currentPushY){
-			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * deltaT;
+			this.vY += (this.currentPushY / Math.abs(this.currentPushY)) * this.yPush * delta;
 			/*
 			if (this.vY > this.maxVY)
 			{
@@ -64,7 +64,7 @@ platformer.components['logic-pushable'] = (function(){
 			*/
 		}
 		if(this.currentPushX){
-			this.vX += (this.currentPushX / Math.abs(this.currentPushX)) * this.xPush * deltaT;
+			this.vX += (this.currentPushX / Math.abs(this.currentPushX)) * this.xPush * delta;
 			/*
 			if (this.vX > this.maxVX)
 			{
@@ -73,8 +73,8 @@ platformer.components['logic-pushable'] = (function(){
 			*/
 		}
 		
-		this.owner.x += (this.vX * deltaT);
-		this.owner.y += (this.vY * deltaT);
+		this.owner.x += (this.vX * delta);
+		this.owner.y += (this.vY * delta);
 		
 		this.currentPushX = 0;
 		this.currentPushY = 0;

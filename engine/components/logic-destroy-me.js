@@ -9,7 +9,7 @@ This component allows an entity to be removed from the stage when "destroy-me" i
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component checks whether it should be removed or not.
-  - @param message.deltaT - To measure delay before removal, the component keeps a running count of tick lengths.
+  - @param message.delta - To measure delay before removal, the component keeps a running count of tick lengths.
 - **destroy-me** - This component will set itself up for removal on hearing this message.
 
 ## JSON Definition
@@ -33,7 +33,7 @@ This component allows an entity to be removed from the stage when "destroy-me" i
 		events: {// These are messages that this component listens for
 			
 			"handle-logic": function(tick){
-				var dT = tick.deltaT;
+				var dT = tick.delta;
 				if (this.destroyed)
 				{
 					this.delay -= dT;

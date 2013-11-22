@@ -10,7 +10,7 @@ A component that causes the object to move according to a specified gravity.
 
 ### Listens for:
 - **handle-logic** - Accelerates and moves the objects according to the set gravity. Objects will not move faster than the max velocity set. Though max velocity only limits the portion of the velocity maintained by the gravity component.
-  - @param resp.deltaT (number) - The time since the last tick.
+  - @param resp.delta (number) - The time since the last tick.
 - **hit-solid** - Received when we collide with an object that is solid to the entity. We stop the movement in the direction of that object.
   - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
   - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
@@ -83,24 +83,24 @@ A component that causes the object to move according to a specified gravity.
 		
 		events:{
 			"handle-logic": function(resp){
-				var deltaT = resp.deltaT;
+				var delta = resp.delta;
 				
 				if(!this.hovering){
 					if(this.newMaxX !== this.maxVelocityX){
-						if(this.durationX - deltaT > 0){
-							this.maxVelocityX += (this.newMaxX - this.maxVelocityX) * (deltaT / this.durationX);
-							this.durationX -= deltaT;
+						if(this.durationX - delta > 0){
+							this.maxVelocityX += (this.newMaxX - this.maxVelocityX) * (delta / this.durationX);
+							this.durationX -= delta;
 						} else if(this.accelerationX){
 							if(this.newMaxX > this.maxVelocityX){
 								if(this.owner.dx > this.maxVelocityX) {
 									this.maxVelocityX = this.owner.dx;
 								}
-								this.maxVelocityX = Math.min(this.maxVelocityX + (this.accelerationX * resp.deltaT), this.newMaxX);
+								this.maxVelocityX = Math.min(this.maxVelocityX + (this.accelerationX * resp.delta), this.newMaxX);
 							} else {
 								if(this.owner.dx < this.maxVelocityX) {
 									this.maxVelocityX = this.owner.dx;
 								}
-								this.maxVelocityX = Math.max(this.maxVelocityX - (this.accelerationX * resp.deltaT), this.newMaxX);
+								this.maxVelocityX = Math.max(this.maxVelocityX - (this.accelerationX * resp.delta), this.newMaxX);
 							}
 						} else {
 							this.maxVelocityX = this.newMaxX;
@@ -109,20 +109,20 @@ A component that causes the object to move according to a specified gravity.
 					}
 					
 					if(this.newMaxY !== this.maxVelocityY){
-						if(this.durationY - deltaT > 0){
-							this.maxVelocityY += (this.newMaxY - this.maxVelocityY) * (deltaT / this.durationY);
-							this.durationY -= deltaT;
+						if(this.durationY - delta > 0){
+							this.maxVelocityY += (this.newMaxY - this.maxVelocityY) * (delta / this.durationY);
+							this.durationY -= delta;
 						} else if(this.accelerationY){
 							if(this.newMaxY > this.maxVelocityY){
 								if(this.owner.dy > this.maxVelocityY) {
 									this.maxVelocityY = this.owner.dy;
 								}
-								this.maxVelocityY = Math.min(this.maxVelocityY + (this.accelerationY * resp.deltaT), this.newMaxY);
+								this.maxVelocityY = Math.min(this.maxVelocityY + (this.accelerationY * resp.delta), this.newMaxY);
 							} else {
 								if(this.owner.dy < this.maxVelocityY) {
 									this.maxVelocityY = this.owner.dy;
 								}
-								this.maxVelocityY = Math.max(this.maxVelocityY - (this.accelerationY * resp.deltaT), this.newMaxY);
+								this.maxVelocityY = Math.max(this.maxVelocityY - (this.accelerationY * resp.delta), this.newMaxY);
 							}
 						} else {
 							this.maxVelocityY = this.newMaxY;
@@ -130,8 +130,8 @@ A component that causes the object to move according to a specified gravity.
 						}
 					}
 					
-					this.owner.dx += this.vX * deltaT;
-					this.owner.dy += this.vY * deltaT;
+					this.owner.dx += this.vX * delta;
+					this.owner.dy += this.vY * delta;
 					
 					if(this.vX && this.maxVelocityX && (this.owner.dx > this.maxVelocityX)){
 						this.owner.dx = this.maxVelocityX;

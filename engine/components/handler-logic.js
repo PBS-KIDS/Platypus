@@ -11,7 +11,7 @@ A component that handles updating logic components. Each tick it calls all the e
 - **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities. 
   - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick** - Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  - @param resp (object) - An object containing deltaT which is the time passed since the last tick. 
+  - @param resp (object) - An object containing delta which is the time passed since the last tick. 
 - **pause-logic** - `handle-logic` messages cease to be triggered on each tick
   - @param resp.time (number) - If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered. 
 - **unpause-logic** - `handle-logic` messages begin firing each tick.
@@ -23,7 +23,7 @@ A component that handles updating logic components. Each tick it calls all the e
 
 ### Child Broadcasts:
 - **handle-logic** - Sent to entities to run their logic.
-  - @param object - An object containing a deltaT variable that is the time that's passed since the last tick.
+  - @param object - An object containing a delta variable that is the time that's passed since the last tick.
 
 ## JSON Definition
     {
@@ -77,7 +77,7 @@ A component that handles updating logic components. Each tick it calls all the e
 				active: false
 			};
 			this.message = {
-				deltaT: this.stepLength,
+				delta: this.stepLength,
 				tick: null,
 				camera: this.camera,
 				movers: this.activeEntities
@@ -143,19 +143,19 @@ A component that handles updating logic components. Each tick it calls all the e
 				child   = undefined,
 				time    = new Date().getTime();
 				
-				this.leftoverTime += resp.deltaT;
+				this.leftoverTime += resp.delta;
 				cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
 		
 				// This makes the frames smoother, but adds variance into the calculations
-		//		this.message.deltaT = this.leftoverTime / cycles;
+		//		this.message.delta = this.leftoverTime / cycles;
 		//		this.leftoverTime = 0;
 				
 				// This makes the frames more exact, but varying step numbers between ticks can cause movement to be jerky
-				this.message.deltaT = Math.min(this.leftoverTime, this.stepLength);
+				this.message.delta = Math.min(this.leftoverTime, this.stepLength);
 				this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
 		
 				if(this.paused > 0){
-					this.paused -= resp.deltaT;
+					this.paused -= resp.delta;
 					if(this.paused < 0){
 						this.paused = 0;
 					}

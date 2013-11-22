@@ -87,10 +87,10 @@ This component is attached to entities that will appear in the game world. It re
 	      },
 	      
 	      "animations":{
-	      //Required: The list of animation ids and the frames that make up that animation. The frequency determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
+	      //Required: The list of animation ids and the frames that make up that animation. The speed determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
 			"default-animation":[2],
-			"walking": {"frames": [0, 1, 2], "frequency": 4},
-			"swing": {"frames": [3, 4, 5], "frequency": 4}
+			"walking": {"frames": [0, 1, 2], "speed": 4},
+			"swing": {"frames": [3, 4, 5], "speed": 4}
 		  }
       }
       
@@ -185,6 +185,7 @@ This component is attached to entities that will appear in the game world. It re
 		
 		constructor: function(definition){
 			var spriteSheet = {
+				framerate: definition.spriteSheet.framerate,
 				images: definition.spriteSheet.images.slice(),
 				frames: definition.spriteSheet.frames,
 				animations: definition.spriteSheet.animations
@@ -287,7 +288,7 @@ This component is attached to entities that will appear in the game world. It re
 			}
 
 			spriteSheet = new createjs.SpriteSheet(spriteSheet);
-			this.anim = new createjs.BitmapAnimation(spriteSheet);
+			this.anim = new createjs.Sprite(spriteSheet, 0);
 
 			if(definition.pins){
 				this.container = new createjs.Container();

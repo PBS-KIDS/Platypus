@@ -9,7 +9,7 @@ This component changes the (x, y) position of an object according to its current
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
+  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
 - **set-angle** - On receiving this message, the entity adjusts its movement orientation.
   - @param angle (number) - Number in radians to set the orientation of the entity.
 - **stop** - Stops motion until a `move` message is received.
@@ -48,12 +48,12 @@ This component changes the (x, y) position of an object according to its current
 
 		events: {// These are messages that this component listens for
 			"handle-logic": function(update){
-				var deltaT = update.deltaT;
+				var delta = update.delta;
 				var currentAngle = 0;
 				if (this.moving)
 				{
-					this.v[0] += this.a * Math.cos(this.angle) * deltaT;
-					this.v[1] += this.a * Math.sin(this.angle) * deltaT;
+					this.v[0] += this.a * Math.cos(this.angle) * delta;
+					this.v[1] += this.a * Math.sin(this.angle) * delta;
 					if (this.v[0] == 0)
 					{
 						if (this.v[1] > 0) {

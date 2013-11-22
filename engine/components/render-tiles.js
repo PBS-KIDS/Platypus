@@ -309,7 +309,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				var i = 1,
 				imageArray = imageName.split(' '),
 				mergedTile = null,
-				tile  = new createjs.BitmapAnimation(this.spriteSheet),
+				tile  = new createjs.Sprite(this.spriteSheet, 0),
 				layer = transformCheck(imageArray[0]);
 				
 				tile.x = 0;

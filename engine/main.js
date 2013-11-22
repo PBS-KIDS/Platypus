@@ -16,7 +16,9 @@ window.addEventListener('load', function(){
 //	document.title = '';
 
 	platformer.game = new platformer.classes.game(platformer.settings, function(game){});
-	createjs.Ticker.useRAF = true;
+	createjs.Ticker.timingMode = 'raf';
 	createjs.Ticker.setFPS(platformer.settings.global.fps || 60);
-	createjs.Ticker.addListener(platformer.game);
+	createjs.Ticker.addEventListener("tick", function(e){
+		platformer.game.tick(e);
+	});
 }, false);

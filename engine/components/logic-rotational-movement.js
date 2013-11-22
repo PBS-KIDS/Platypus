@@ -9,7 +9,7 @@ This component changes the (x, y) position of an object according to its current
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
+  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
 - **[directional message]** - Directional messages include `turn-left`, `turn-right`, `go-forward`, and `go-backward`. On receiving one of these messages, the entity adjusts its movement and orientation.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation.
 - **stop** - Stops rotational and linear motion movement messages are again received.
@@ -78,11 +78,11 @@ platformer.components['logic-rotational-movement'] = (function(){
 		vY        = 0;
 		
 		if(this.turningRight){
-			this.angle += this.degree * resp.deltaT / 15;
+			this.angle += this.degree * resp.delta / 15;
 		}
 
 		if(this.turningLeft){
-			this.angle -= this.degree * resp.deltaT / 15;
+			this.angle -= this.degree * resp.delta / 15;
 		}
 		
 		if(this.moving){
@@ -90,8 +90,8 @@ platformer.components['logic-rotational-movement'] = (function(){
 			vY = polarToCartesianY(this.magnitude, this.angle);
 		}
 
-		this.owner.x += (vX * resp.deltaT);
-		this.owner.y += (vY * resp.deltaT);
+		this.owner.x += (vX * resp.delta);
+		this.owner.y += (vY * resp.delta);
 		
 		if(this.state.moving !== this.moving){
 			this.state.moving = this.moving;

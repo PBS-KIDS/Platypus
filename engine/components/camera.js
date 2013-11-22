@@ -9,7 +9,7 @@ This component controls the game camera deciding where and how it should move. T
 
 ### Listens for:
 - **tick, camera** - On a `tick` or `camera` step message, the camera updates its location according to its current state.
-  - @param message.deltaT - If necessary, the current camera update function may require the length of the tick to adjust movement rate.
+  - @param message.delta - If necessary, the current camera update function may require the length of the tick to adjust movement rate.
 - **follow** - On receiving this message, the camera begins following the requested object.
   - @param message.mode (string) - Required. Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
   - @param message.entity ([[Entity]]) - The entity that the camera should commence following.
@@ -260,7 +260,7 @@ This component controls the game camera deciding where and how it should move. T
 				switch (this.state)
 				{
 				case 'following':
-					broadcastUpdate = this.followingFunction(this.following, resp.deltaT);
+					broadcastUpdate = this.followingFunction(this.following, resp.delta);
 					break;
 				case 'static':
 				default:

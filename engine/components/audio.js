@@ -10,7 +10,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 
 ### Listens for:
 - **handle-render** - On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
-  - @param message.deltaT (number) - uses the value of deltaT (time since last `handle-render`) to track progess of the audio clip and stop clip if play length has been reached.
+  - @param message.delta (number) - uses the value of delta (time since last `handle-render`) to track progess of the audio clip and stop clip if play length has been reached.
 - **audio-mute-toggle** - On receiving this message, the audio will mute if unmuted, and unmute if muted.
   - @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
 - **audio-mute** - On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.
@@ -258,7 +258,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					this.timedAudioClips = [];
 					for (i in newArray){
 						audioClip = newArray[i];
-						audioClip.progress += resp.deltaT;
+						audioClip.progress += resp.delta;
 						if(audioClip.progress >= audioClip.length){
 							audioClip.audio.stop();
 							this.onComplete(audioClip.audio, audioClip.next);

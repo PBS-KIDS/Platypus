@@ -20,7 +20,7 @@ platformer.components['render-gui'] = (function(){
 			spriteSheetSpec.images[x] = platformer.assets[spriteSheetSpec.images[x]];
 		}
 		var spriteSheet = new createjs.SpriteSheet(spriteSheetSpec);
-		this.background = new createjs.BitmapAnimation(spriteSheet);
+		this.background = new createjs.Sprite(spriteSheet, 0);
 		this.currentAnimation = 'default';
 		this.background.scaleX = this.owner.scaleX || 1;
 		this.background.scaleY = this.owner.scaleY || 1;

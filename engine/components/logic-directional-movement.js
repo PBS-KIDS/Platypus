@@ -9,7 +9,7 @@ This component changes the (x, y) position of an object according to its current
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.deltaT - To determine how far to move the entity, the component checks the length of the tick.
+  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
 - **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement orientation.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
 - **stop** - Stops motion in all directions until movement messages are again received.
@@ -192,8 +192,8 @@ This component changes the (x, y) position of an object according to its current
 							vY *= 1.5;
 						}
 
-						this.owner.x += (vX * resp.deltaT);
-						this.owner.y += (vY * resp.deltaT);
+						this.owner.x += (vX * resp.delta);
+						this.owner.y += (vY * resp.delta);
 					}
 					
 					orientation = getAngle(vX, vY);

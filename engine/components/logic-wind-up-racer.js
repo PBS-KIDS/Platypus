@@ -9,7 +9,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its charging counter if necessary.
-  - @param message.deltaT - To determine how much to charge, the component checks the length of the tick.
+  - @param message.delta - To determine how much to charge, the component checks the length of the tick.
 - **wind-up, [equivalent message]** - creates and connects the shield entity to this entity.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
 - **stop-racing** - stops the entity movement.
@@ -86,7 +86,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 				} else {
 					if(this.winding){
 						if((this.right && this.state.right) || (this.left && this.state.left)){
-							this.windProgress += resp.deltaT;
+							this.windProgress += resp.delta;
 						}
 						this.owner.trigger('winding');
 					} else {

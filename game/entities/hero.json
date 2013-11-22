@@ -35,30 +35,25 @@
             }
 		},{
 			"type": "render-animation",
+			"mirror": "true",
             "animationMap":{
-                "falling,left":     "jumping-left",
-                "falling,right":    "jumping-right",
-                "moving,left":  "walking-left",
-                "moving,right": "walking-right",
-                "left":         "standing-left",
-                "right":        "standing-right",
-                "default":      "standing-right"
+                "falling": "jumping",
+                "moving":  "walking",
+                "default": "standing"
             }, 
 			"spriteSheet": {
+			    "framerate": 15,
 				"images": ["mookie"],
 				"frames": {
-					"width":  144,
-					"height": 93,
-					"regY":   93,
-					"regX":   72
+					"width":  65,
+					"height": 83,
+					"regY":   82,
+					"regX":   33
 				},
 				"animations": {
-					"standing-right":[2],
-					"standing-left": [5],
-					"walking-right": {"frames": [3, 0, 1, 2], "frequency": 4},
-					"walking-left":  {"frames": [4, 7, 6, 5], "frequency": 4},
-					"jumping-right": {"frames": [0]},
-					"jumping-left":  {"frames": [6]}
+					"standing":[2],
+					"walking": {"frames": [3, 0, 1, 2]},
+					"jumping": {"frames": [0]}
 				}
 			}
 		},{

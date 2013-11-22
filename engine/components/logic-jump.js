@@ -72,7 +72,7 @@ This component will cause the entity to jump with a certain amount of accelerati
 		
 		events:{
 			"handle-logic": function(resp){
-				var deltaT   = resp.deltaT;
+				var delta   = resp.delta;
 				
 				if(this.state.justJumped !== this.justJumped){
 					this.state.justJumped = this.justJumped;
@@ -90,10 +90,10 @@ This component will cause the entity to jump with a certain amount of accelerati
 
 				if(this.jumping){
 					if(this.time){
-						this.owner.dx += this.aX * deltaT;
-						this.owner.dy += this.aY * deltaT;
+						this.owner.dx += this.aX * delta;
+						this.owner.dy += this.aY * delta;
 						
-						this.jumpLength -= deltaT;
+						this.jumpLength -= delta;
 						if(this.jumpLength < 0){
 							this.jumping = false;
 						}

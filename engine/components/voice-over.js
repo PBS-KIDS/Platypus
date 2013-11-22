@@ -56,11 +56,11 @@ This component uses its definition to load two other components (audio and rende
 	      },
 	      
 	      "animations":{
-	      //Required: The list of animation ids and the frames that make up that animation. The frequency determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
+	      //Required: The list of animation ids and the frames that make up that animation. The speed determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
 			"mouth-o":   0,
 			"mouth-aah": 1,
 			"mouth-t":   2,
-			"mouth-closed": {"frames": [3, 4, 5], "frequency": 4}
+			"mouth-closed": {"frames": [3, 4, 5], "speed": 4}
 		  }
       }
       

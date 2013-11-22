@@ -186,7 +186,7 @@ This component is a general purpose state-machine for an entity, taking in vario
 				}
 				
 				for (i = this.queue.length - 1; i > -1; i--){
-					this.queueTimes[i] -= resp.deltaT;
+					this.queueTimes[i] -= resp.delta;
 					
 					if(this.queueTimes[i] <= 0){
 						this.owner.trigger(this.queue[i].event, this.queue[i].message);
