@@ -6,7 +6,7 @@ Platypus
 
 The Platypus Engine allows rapid development of 2D orthogonal tile based games for deployment in HTML5 compatible browsers. The engine uses a component based model, and includes many ready to use components to allow users to start adding assets and editing levels right away. The component based model lends itself to community members adding new funcitonality, we hope you'll share what you've done!
 
-Platypus uses the free [Tiled](http://www.mapeditor.org/) map editor for level creation, and uses CreateJS for rendering visuals and audio.
+Platypus uses the free [Tiled](http://www.mapeditor.org/) map editor for level creation, and uses [CreateJS](http://createjs.com/#!/CreateJS) for rendering visuals and audio.
 
 ## Key Features
 * Deploy on any HTML5 platform (supported browsers listed below)
