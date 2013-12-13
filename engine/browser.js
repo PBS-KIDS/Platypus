@@ -1,7 +1,7 @@
 /**
 # Function
 Browser.js is one large function that is used to discover what browser is being used the capabilities of the browser. In addition to browser type, we determine whether it is mobile or desktop, whether it supports multi or single-touch, what type of audio it can play, and whether it supports canvas or not. 
-All of this information is added to platformer.settings.supports and used throughout the code, including when determine which layers to display (e.g. adding a button layer for mobile devices), and in audio so that we load and play the correct sound types. 
+All of this information is added to platformer.settings.supports and used throughout the code, including when determining which layers to display (e.g. adding a button layer for mobile devices), and in audio so that we load and play the correct sound types. 
 */
 (function(){
 	var uagent   = navigator.userAgent.toLowerCase(),

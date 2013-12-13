@@ -118,7 +118,7 @@ This component allows the entity to contain child entities. It will add several 
 							}
 						}
 		
-						this.addEntity(new platformer.classes.entity(entities[i].id?entities[i]:platformer.settings.entities[entities[i].type], definition));
+						this.addEntity(new platformer.classes.entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition));
 					}
 				}
 			},

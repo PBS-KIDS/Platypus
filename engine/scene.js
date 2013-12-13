@@ -55,7 +55,7 @@ platformer.classes.scene = (function(){
 			}
 
 			if(layerDefinition.type){ // this layer should be loaded from an entity definition rather than this instance
-				layerDefinition = platformer.settings.entities[layerDefinition.type];
+				layerDefinition = platformer.game.settings.entities[layerDefinition.type];
 			}
 			
 			supportedLayer = true;
@@ -63,14 +63,14 @@ platformer.classes.scene = (function(){
 				if(layerDefinition.filter.includes){
 					supportedLayer = false;
 					for(var filter in layerDefinition.filter.includes){
-						if(platformer.settings.supports[layerDefinition.filter.includes[filter]]){
+						if(platformer.game.settings.supports[layerDefinition.filter.includes[filter]]){
 							supportedLayer = true;
 						}
 					}
 				}
 				if(layerDefinition.filter.excludes){
 					for(var filter in layerDefinition.filter.excludes){
-						if(platformer.settings.supports[layerDefinition.filter.excludes[filter]]){
+						if(platformer.game.settings.supports[layerDefinition.filter.excludes[filter]]){
 							supportedLayer = false;
 						}
 					}

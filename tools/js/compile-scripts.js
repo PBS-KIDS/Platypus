@@ -203,7 +203,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	        fileSystem.DeleteFile(buildPath + '*.*');
 	    } catch(e) {}
 	    if (fileSystem.FolderExists(workingDir + 'server/')){ // if there are files that should be copied to root as-is in a /server/ folder, do so.
-			fileSystem.CopyFile(workingDir + 'server/*.*', buildPath);
+			fileSystem.CopyFile(workingDir + 'server/*.*', indexPath);
 	    }
 
 		// create JS file

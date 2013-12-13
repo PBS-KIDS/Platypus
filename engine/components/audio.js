@@ -98,7 +98,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	playSound = function(soundDefinition){
 		var sound = '',
 		attributes = undefined,
-		instance = null;
+		instance = null,
+		assets = platformer.game.settings.assets;
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
 			attributes = {};
@@ -125,13 +126,13 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			sound      = soundDefinition.sound;
 			attributes = soundDefinition;
 		}
-		if(platformer.settings.assets[sound].data){
-			for(var item in platformer.settings.assets[sound].data){
-				attributes[item] = attributes[item] || platformer.settings.assets[sound].data[item];
+		if(assets[sound].data){
+			for(var item in assets[sound].data){
+				attributes[item] = attributes[item] || assets[sound].data[item];
 			}
 		}
-		if(platformer.settings.assets[sound].assetId){
-			sound = platformer.settings.assets[sound].assetId;
+		if(assets[sound].assetId){
+			sound = assets[sound].assetId;
 		}
 		return function(value){
 			var self = this,

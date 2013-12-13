@@ -40,7 +40,7 @@ This component creates an entity and propels it away. This is useful for casting
 			this.state = this.owner.state;
 			this.stateName = definition.state || 'spawning';
 			var className = this.owner.spawneeClass || definition.spawneeClass;
-			this.entityClass = platformer.settings.entities[className];
+			this.entityClass = platformer.game.settings.entities[className];
 			this.speed = definition.speed || this.owner.speed || 0;
 
 			this.state[this.stateName] = false;

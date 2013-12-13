@@ -44,7 +44,7 @@ This component creates an entity and connects it with the current entity. This i
 		constructor: function(definition){
 			this.state = this.owner.state;
 			this.stateName = definition.state || 'shielded';
-			this.entityClass = platformer.settings.entities[definition.shield];
+			this.entityClass = platformer.game.settings.entities[definition.shield];
 
 			if(!this.owner.linkId){
 				this.owner.linkId = 'shield-link-' + linkId++;

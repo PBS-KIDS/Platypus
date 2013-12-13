@@ -37,6 +37,12 @@ platformer.classes.game = (function(){
 		this.currentScene = undefined;
 		this.loaded    = null;
 		this.settings = definition;
+
+		// platform-specific settings should apply if not explicitly changed.
+		if(!definition.aspects)    definition.aspects    = platformer.settings.aspects;
+		if(!definition.supports)   definition.supports   = platformer.settings.supports;
+		if(!definition.classes)    definition.classes    = platformer.settings.classes;
+		if(!definition.components) definition.components = platformer.settings.components;
 		
 		if(document.getElementById(definition.global.rootElement || "root")){
 			outerRootElement = document.getElementById(definition.global.rootElement || "root");

@@ -41,7 +41,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
 			enabled = true;
 			element.className += ' full-screen';
 			if(element.webkitRequestFullscreen){
-				if(!platformer.settings.supports.safari || platformer.settings.supports.chrome){ //Safari doesn't allow all keyboard input in fullscreen which breaks game input - DDD 5/27/2013
+				if(!platformer.game.settings.supports.safari || platformer.game.settings.supports.chrome){ //Safari doesn't allow all keyboard input in fullscreen which breaks game input - DDD 5/27/2013
 					element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
 				}
 			} else if (element.mozRequestFullScreen) {

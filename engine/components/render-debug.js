@@ -196,7 +196,7 @@ This component is attached to entities that will appear in the game world. It se
 					};
 				}
 		
-				if(!platformer.settings.debug){
+				if(!platformer.game.settings.debug){
 					this.owner.removeComponent(this);
 				}
 			},

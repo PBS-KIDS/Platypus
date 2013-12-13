@@ -172,7 +172,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 	mergeLevels = function(levelSegments){
 		var i  = 0;
 		var j  = 0;
-		var levelDefinitions = platformer.settings.levels;
+		var levelDefinitions = platformer.game.settings.levels;
 		var row =   {
 						height: 0,
 						width:  0,
@@ -262,7 +262,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				
 				//format level appropriately
 				if(typeof level === 'string'){
-					level = platformer.settings.levels[level];
+					level = platformer.game.settings.levels[level];
 				} else {
 					level = mergeLevels(level);
 				}
@@ -315,7 +315,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					index          = 0;
 					
 					//TODO: a bit of a hack to copy an object instead of overwrite values
-					tileDefinition  = JSON.parse(JSON.stringify(platformer.settings.entities[entityKind]));
+					tileDefinition  = JSON.parse(JSON.stringify(platformer.game.settings.entities[entityKind]));
 
 					importAnimation = {};
 					importCollision = [];
@@ -511,9 +511,9 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							}
 							widthOffset  = properties.width  = (entity.width  || tileWidth)  * this.unitsPerPixel;
 							heightOffset = properties.height = (entity.height || tileHeight) * this.unitsPerPixel;
-							if (entityType && platformer.settings.entities[entityType] && platformer.settings.entities[entityType].properties) {
-								properties.width  = platformer.settings.entities[entityType].properties.width  || properties.width;
-								properties.height = platformer.settings.entities[entityType].properties.height || properties.height;
+							if (entityType && platformer.game.settings.entities[entityType] && platformer.game.settings.entities[entityType].properties) {
+								properties.width  = platformer.game.settings.entities[entityType].properties.width  || properties.width;
+								properties.height = platformer.game.settings.entities[entityType].properties.height || properties.height;
 							}
 
 							properties.x = entity.x * this.unitsPerPixel;
@@ -548,14 +548,14 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							//Setting the z value. All values are getting added to the layerZ value.
 							if (properties.z) {
 								properties.z += this.layerZ;
-							} else if (entityType && platformer.settings.entities[entityType] && platformer.settings.entities[entityType].properties && platformer.settings.entities[entityType].properties.z) {
-								properties.z = this.layerZ + platformer.settings.entities[entityType].properties.z;
+							} else if (entityType && platformer.game.settings.entities[entityType] && platformer.game.settings.entities[entityType].properties && platformer.game.settings.entities[entityType].properties.z) {
+								properties.z = this.layerZ + platformer.game.settings.entities[entityType].properties.z;
 							} else {
 								properties.z = this.layerZ;
 							}
 							
 							properties.parent = this.owner;
-							entity = this.owner.addEntity(new platformer.classes.entity(platformer.settings.entities[entityType], {properties:properties}));
+							entity = this.owner.addEntity(new platformer.classes.entity(platformer.game.settings.entities[entityType], {properties:properties}));
 							if(entity){
 								if(entity.camera){
 									this.followEntity = {entity: entity, mode: entity.camera}; //used by camera

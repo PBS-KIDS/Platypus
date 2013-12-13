@@ -52,7 +52,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 				this.useXHR = false;
 			}
 			
-			this.assets = definition.assets || platformer.settings.assets;
+			this.assets = definition.assets || platformer.game.settings.assets;
 			
 			this.progressBar = definition.progressBar || false;
 			
@@ -82,9 +82,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	},
 		    	loader     = new createjs.LoadQueue(this.useXHR),
 		    	loadAssets = [],
-		    	optimizeImages = platformer.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
-		    	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages):1,
-//		    	scale = platformer.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
+		    	optimizeImages = platformer.game.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
+		    	scale = platformer.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages):1,
+//		    	scale = platformer.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
 		    	scaleImage = function(img, columns, rows){
 		    		var r          = rows    || 1,
 		    		c              = columns || 1,
@@ -134,7 +134,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    			checkPush(this.assets[i], loadAssets);
 		    		} else {
 		    			for(var j in this.assets[i].src){
-		    				if(platformer.settings.aspects[j] && this.assets[i].src[j]){
+		    				if(platformer.game.settings.aspects[j] && this.assets[i].src[j]){
 		    					if(typeof this.assets[i].src[j] === 'string'){
 		    						this.assets[i].src  = this.assets[i].src[j];
 		    						checkPush(this.assets[i], loadAssets);

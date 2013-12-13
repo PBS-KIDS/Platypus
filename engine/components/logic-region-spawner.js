@@ -79,7 +79,7 @@ This component spawns new entities within a given area at set intervals.
 				}
 			}
 			
-			this.entityClass = platformer.settings.entities[definition.spawn];
+			this.entityClass = platformer.game.settings.entities[definition.spawn];
 			
 			this.interval = this.owner.interval || definition.interval || 1000;
 			this.time = 0;
