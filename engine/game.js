@@ -32,6 +32,8 @@ platformer.classes.game = (function(){
 		var innerRootElement = document.createElement('div'),
 		outerRootElement = null;
 
+		platformer.game = this; //Make this instance the only Game instance.
+		
 		this.currentScene = undefined;
 		this.loaded    = null;
 		this.settings = definition;
@@ -119,6 +121,13 @@ platformer.classes.game = (function(){
 		if(onFinishedLoading){
 			onFinishedLoading(this);
 		}
+
+		createjs.Ticker.timingMode = 'raf';
+		createjs.Ticker.setFPS(definition.global.fps || 60);
+		this.tickWrapper = function(e){
+			self.tick(e);
+		};
+		createjs.Ticker.addEventListener("tick", this.tickWrapper);
 	};
 	var proto = game.prototype;
 	
@@ -204,14 +213,15 @@ platformer.classes.game = (function(){
 	};
 	
 	proto.addEventListener = function(element, event, callback){
-		this.bindings[event] = {element: element, callback: bindEvent(event, callback)};
+		this.bindings[event] = {element: element, event: event, callback: bindEvent(event, callback)};
 		element.addEventListener(event, this.bindings[event].callback, true);
 	};
 	
 	proto.destroy = function ()
 	{
+		createjs.Ticker.removeEventListener("tick", this.tickWrapper);
 		for (var binding in this.bindings){
-			element.removeEventListener(this.bindings[binding].element, this.bindings[binding].callback, true);
+			this.bindings[binding].element.removeEventListener(this.bindings[binding].event, this.bindings[binding].callback);
 		}
 		this.bindings.length = 0;
 	};
