@@ -27,7 +27,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
       "type": "tiled-loader",
       
       "level": "level-4",
-      // Required. Specifies the JSON level to load. This may also be an array of strings to load level sections in sequence (horizontally). Be aware that the Tiled maps must use the same tilesets and have the same height for this to function correctly.
+      // Required. Specifies the JSON level to load.
       
       "unitsPerPixel": 10,
       // Optional. Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit.
@@ -57,155 +57,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 [link1]: http://www.mapeditor.org/
 */
 (function(){
-	var mergeData = function(levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis){
-		var x = 0;
-		var y = 0;
-		var combined = levelData.slice();
-		
-		if (mergeAxis == 'horizontal')
-		{
-			for (y = nonMergeAxisLength - 1; y >= 0; y--) 
-			{
-				for ( x = y * segmentMergeAxisLength, z = 0; x < (y + 1) * segmentMergeAxisLength; x++, z++)
-				{
-					combined.splice(((y + 1) * levelMergeAxisLength) + z, 0, segmentData[x]);
-				}
-			}
-			return combined;
-		} else if (mergeAxis == 'vertical') {
-			return levelData.concat(segmentData);
-		}
-	},
-	mergeObjects  = function(obj1s, obj2s, mergeAxisLength, mergeAxis){
-		var i 	 = 0;
-		var list = obj1s.slice();
-		var obj  = null;
-		
-		for (; i < obj2s.length; i++){
-			obj = {};
-			for (j in obj2s[i]){
-				obj[j] = obj2s[i][j];
-			}
-			if (mergeAxis == 'horizontal') {
-				obj.x += mergeAxisLength;
-			} else if (mergeAxis == 'vertical') {
-				obj.y += mergeAxisLength;
-			}
-			list.push(obj);
-		}
-		return list;
-	},
-	mergeSegment  = function(level, segment, mergeAxis){
-		var i = 0;
-		var j = 0;
-
-		if (!level.tilewidth && !level.tileheight) {
-			//set level tile size data if it's not already set.
-			level.tilewidth  = segment.tilewidth;
-			level.tileheight = segment.tileheight;
-		} else if (level.tilewidth != segment.tilewidth || level.tileheight != segment.tileheight) {
-			console.warn('Tiled-Loader: Your map has segments with different tile sizes. All tile sizes must match. Segment: ' + segment);
-		}
-		
-		if (mergeAxis == 'horizontal') {
-			if (level.height == 0)
-			{
-				level.height = segment.height;
-			} else if (level.height != segment.height) {
-				console.warn('Tiled-Loader: You are trying to merge segments with different heights. All segments need to have the same height. Level: ' + level + ' Segment: ' + segment);
-			}
-		} else if (mergeAxis == 'vertical') {
-			if (level.width == 0)
-			{
-				level.width = segment.width;
-			} else if (level.width != segment.width) {
-				console.warn('Tiled-Loader: You are trying to merge segments with different widths. All segments need to have the same width. Level: ' + level + ' Segment: ' + segment);
-			}
-		}
-		
-		for (; i < segment.layers.length; i++){
-			if (!level.layers[i]){
-				//if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
-				level.layers[i] = {};
-				for (j in segment.layers[i]){
-					level.layers[i][j] = segment.layers[i][j];
-				}
-			} else {
-				if (level.layers[i].type == segment.layers[i].type)
-				{
-					//if the level does have a layer, we're appending the new data to it.
-					if(level.layers[i].data && segment.layers[i].data) {
-						if (mergeAxis == 'horizontal') {
-							level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
-							level.layers[i].width += segment.width;
-						} else if (mergeAxis == 'vertical') {
-							level.layers[i].data = mergeData(level.layers[i].data, level.height, segment.layers[i].data, segment.height, level.width, mergeAxis);
-							level.layers[i].height += segment.height;
-						}
-					} else if (level.layers[i].objects && segment.layers[i].objects) {
-						if (mergeAxis == 'horizontal') {
-							level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.width * level.tilewidth, mergeAxis);
-						} else if (mergeAxis == 'vertical') {
-							level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.height * level.tileheight, mergeAxis);
-						}
-					}
-				} else {
-					console.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
-				}
-				
-			}
-		}
-		
-		if (mergeAxis == 'horizontal') {
-			level.width += segment.width;	
-		} else if (mergeAxis == 'vertical') {
-			level.height += segment.height;	
-		}
-		
-		//Go through all the STUFF in segment and copy it to the level if it's not already there.
-		for(i in segment){
-			if(!level[i]){
-				level[i] = segment[i];
-			}
-		}
-	},
-	mergeLevels = function(levelSegments){
-		var i  = 0;
-		var j  = 0;
-		var levelDefinitions = platformer.game.settings.levels;
-		var row =   {
-						height: 0,
-						width:  0,
-						layers: []
-					};
-		var level = {
-						height: 0,
-						width:  0,
-						layers: []
-					};
-		var segmentsWide = levelSegments[i].length;
-		
-		for (; i < levelSegments.length; i++)
-		{
-			if (segmentsWide != levelSegments[i].length) {
-				console.warn('Tiled-Loader: Your map is not square. Maps must have an equal number of segments in every row.');
-			}
-			row = 	{
-						height: 0,
-						width:  0,
-						layers: []
-					};
-			for (j = 0; j < levelSegments[i].length; j++)
-			{
-				//Merge horizontally
-				mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
-			}
-			//Then merge vertically
-			mergeSegment(level, row, 'vertical');
-		}
-		return level;
-	},
-	transformCheck = function(v){
+	var transformCheck = function(v){
 		var a = !!(0x20000000 & v),
 		b     = !!(0x40000000 & v),
 		c     = !!(0x80000000 & v);
@@ -230,7 +82,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 			this.followEntity = false;
 			
 			this.manuallyLoad  = definition.manuallyLoad || false;
-			this.dataFromScene = this.owner.level || definition.level || null;
+			this.level = this.owner.level || definition.level || null;
 
 			this.unitsPerPixel = this.owner.unitsPerPixel || definition.unitsPerPixel || 1;
 			this.images        = this.owner.images        || definition.images        || false;
@@ -244,27 +96,18 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 		events: {
 			"scene-loaded": function(persistentData){
 				if (!this.manuallyLoad) {
-					this['load-level']({level: this.dataFromScene, persistentData: persistentData});
+					this['load-level']({level: this.level || persistentData.level, persistentData: persistentData});
 				}
 			},
 			
 			"load-level": function(levelData){
-				var level = levelData.level;
-				var persistentData = levelData.persistentData;
-				
-				var skill = 0, 
+				var level = levelData.level,
 				actionLayer = 0,
 				layer = false;
 
-				if(persistentData){ //TODO: enable local storage method in a better way than this
-					skill = persistentData.skill || +(window.localStorage.getItem('skill') || 0);
-				}
-				
 				//format level appropriately
 				if(typeof level === 'string'){
 					level = platformer.game.settings.levels[level];
-				} else {
-					level = mergeLevels(level);
 				}
 				
 				for(; actionLayer < level.layers.length; actionLayer++){
