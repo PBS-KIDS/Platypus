@@ -296,7 +296,11 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    } else {
 		    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
 	    }
-
+	    
+	    if(paths["allow-origin"]){
+	        htaccess += '\n\nHeader set Access-Control-Allow-Origin "' + paths["allow-origin"] + '"';
+	    }
+	    
 	    setText('.htaccess', htaccess);
 	    try {fileSystem.DeleteFile(buildPath + '.htaccess');} catch(e) {}
 	    fileSystem.MoveFile('.htaccess', buildPath + '.htaccess');
