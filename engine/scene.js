@@ -13,6 +13,12 @@ This class is instantiated by [[Game]] and contains one or more entities as laye
   - @param definition (object) - Base definition for the scene, including one or more layers with both properties, filters, and components as shown below under "JSON definition".
   - @param rootElement (DOM element) - DOM element where scene displays layers.
   - @return scene - returns the new scene composed of the provided layers.
+- **getEntitiesByType** - This method will return all game entities that match the provided type.
+  - @param type (string) - Required. The entity type to find.
+  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
+- **getEntityById** - This method will return the first entity it finds with a matching id.
+  - @param id (string) - Required. The entity id to find.
+  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
 - **trigger** - This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
   - @param messageId (string) - This is the message to process.
   - @param value (variant) - This is a message object or other value to pass along to component functions.
@@ -99,7 +105,8 @@ platformer.classes.scene = (function(){
 	var proto = scene.prototype;
 	
 	proto.trigger = function(eventId, event){
-		var time = 0;
+		var i = 0,
+		time  = 0;
 		
 		if(this.storedMessages){
 			this.storedMessages.push({
@@ -114,8 +121,8 @@ platformer.classes.scene = (function(){
 				this.trigger('time-elapsed', this.timeElapsed);
 				this.time = time;
 			}
-			for(var layer in this.layers){
-				this.layers[layer].trigger(eventId, event);
+			for(; i < this.layers.length; i++){
+				this.layers[i].trigger(eventId, event);
 			}
 			if(eventId === 'tick'){
 				time = new Date().getTime();
@@ -127,6 +134,43 @@ platformer.classes.scene = (function(){
 		}
 	};
 	
+	proto.getEntityById = function(id){
+		var i = 0,
+		selection = null;
+		
+		for(; i < this.layers.length; i++){
+			if(this.layers[i].id === id){
+				return this.layers[i];
+			}
+			if(this.layers[i].getEntityById){
+				selection = this.layers[i].getEntityById(id);
+				if(selection){
+					return selection;
+				};
+			}
+		}
+		return undefined;
+	};
+
+	proto.getEntitiesByType = function(type){
+		var i     = 0,
+		selection = null,
+		entities  = [];
+		
+		for(; i < this.layers.length; i++){
+			if(this.layers[i].type === type){
+				entities.push(this.layers[i]);
+			}
+			if(this.layers[i].getEntitiesByType(type)){
+				selection = this.layers[i].getEntitiesByType(type);
+				if(selection){
+					entities = entities.concat(selection);
+				};
+			}
+		}
+		return entities;
+	};
+
 	proto.destroy = function(){
 		for(var layer in this.layers){
 			this.layers[layer].destroy();
