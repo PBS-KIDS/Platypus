@@ -249,6 +249,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 						if(platformer.assets[tilesets[x].name]){ // Prefer to have name in tiled match image id in game
 							images.push(platformer.assets[tilesets[x].name]);
 						} else {
+							console.warn('Component tiled-loader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
 							images.push(tilesets[x].image);
 						}
 					}

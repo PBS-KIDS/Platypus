@@ -29,7 +29,7 @@ This component will cause the entity to jump with a certain amount of accelerati
       
       "accelerationX": 0.2,
       "accelerationY": -0.07,
-      // Acceleration of the jump. Defaults to -4 for y, 0 for x.
+      // Acceleration of the jump. Defaults to -1 for y, 0 for x.
       
       "time": 500
       // Optional: Time in milliseconds that the jump can continue being powered by the message input; defaults to 0 which causes instantaneous jumping behavior (and thus should have a substantially larger acceleration than applying jump acceleration over time). Defaults to 0.
@@ -48,7 +48,7 @@ This component will cause the entity to jump with a certain amount of accelerati
 			this.aX = this.owner.accelerationX || definition.accelerationX || 0;
 			this.aY = this.owner.accelerationY || definition.accelerationY;
 			if(typeof this.aY !== 'number'){
-				this.aY = -4;
+				this.aY = -1;
 			}
 			if(typeof this.owner.dx !== 'number'){
 				this.owner.dx = 0;
