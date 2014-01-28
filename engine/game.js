@@ -19,6 +19,12 @@ This class is used to create the `platformer.game` object. The `game` object han
   - @param event (DOM events) - The event to listen for.
   - @param callback (function) - The function to call when the event occurs.
 - **destroy** - Destroys the object so that it's ready to garbage collect.
+- **getEntitiesByType** - This method will return all game entities that match the provided type. For console debugging, you can also reference this function directly.
+  - @param type (string) - Required. The entity type to find.
+  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
+- **getEntityById** - This method will return the first entity it finds with a matching id. For console debugging, you can also reference this function directly.
+  - @param id (string) - Required. The entity id to find.
+  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
 
 ## Helper Function
 - **bindEvent** - Returns a function which takes in an event and calls the callback function passing it the eventId and the event.
@@ -134,6 +140,17 @@ platformer.classes.game = (function(){
 			self.tick(e);
 		};
 		createjs.Ticker.addEventListener("tick", this.tickWrapper);
+		
+		//Add entity-finder for debugging
+		if(window){
+			window.getEntityById = function(id){
+				return self.getEntityById(id);
+			};
+
+			window.getEntitiesByType = function(type){
+				return self.getEntitiesByType(type);
+			};
+		}
 	};
 	var proto = game.prototype;
 	
@@ -221,6 +238,22 @@ platformer.classes.game = (function(){
 	proto.addEventListener = function(element, event, callback){
 		this.bindings[event] = {element: element, event: event, callback: bindEvent(event, callback)};
 		element.addEventListener(event, this.bindings[event].callback, true);
+	};
+
+	proto.getEntityById = function(id){
+		if(this.currentScene){
+			return this.currentScene.getEntityById(id);
+		} else {
+			return undefined;
+		}
+	};
+
+	proto.getEntitiesByType = function(type){
+		if(this.currentScene){
+			return this.currentScene.getEntitiesByType(type);
+		} else {
+			return [];
+		}
 	};
 	
 	proto.destroy = function ()

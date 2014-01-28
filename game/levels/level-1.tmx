@@ -1,46 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="10" tilewidth="24" tileheight="24">
- <tileset firstgid="1" name="tiles" tilewidth="24" tileheight="24">
-  <image source="../images/tiles.png" width="96" height="72"/>
- </tileset>
- <tileset firstgid="13" name="objects" tilewidth="24" tileheight="24">
-  <image source="../images/objects.png" width="96" height="24"/>
-  <tile id="0">
+<map version="1.0" orientation="orthogonal" width="30" height="10" tilewidth="72" tileheight="72">
+ <tileset firstgid="1" name="game-sprites" tilewidth="72" tileheight="72">
+  <image source="../images/game-sprites.png" width="288" height="216"/>
+  <tile id="11">
    <properties>
     <property name="entity" value="hero"/>
    </properties>
   </tile>
-  <tile id="1">
-   <properties>
-    <property name="entity" value="timer"/>
-   </properties>
-  </tile>
-  <tile id="2">
-   <properties>
-    <property name="entity" value="timer"/>
-   </properties>
-  </tile>
  </tileset>
  <layer name="background" width="30" height="10">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgHMWjeIhiViBmGwB7OYGYaxD4f6RhAFjZAvuwBAAA
+  <data encoding="base64" compression="zlib">
+   eJxjZGBgYBzFo5gCzI2G6WkvKxCzDYC9nEDMRWd7RzEDAwCURQGX
   </data>
  </layer>
  <layer name="action" width="30" height="10">
-  <properties>
-   <property name="entity" value="tile-layer"/>
-  </properties>
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA2NkYGBgZKAfYETDo/YOTnuZgJgZiFlobC8he4h1x0CHM/MAYfYRhgGwN33ksAQAAA==
+  <data encoding="base64" compression="zlib">
+   eJxjYmBoYKAxYAJiZjTMQWtLIXY0sANpZDxqL2EAja8GJiLTBlCdA1D9ARhmAeojxl5YusBlD6nu4CDSXmoDkL0skDDASOe0xEA7D6DH93DHAMpyDGE=
   </data>
  </layer>
  <objectgroup name="entities" width="30" height="10">
-  <object type="level-portal" x="624" y="120" width="48" height="48">
+  <object gid="12" x="144" y="504"/>
+  <object type="level-portal" x="1872" y="360" width="144" height="144">
    <properties>
     <property name="destination" value="menu"/>
    </properties>
   </object>
-  <object type="hero" gid="13" x="72" y="144"/>
-  <object gid="15" x="0" y="24"/>
  </objectgroup>
 </map>

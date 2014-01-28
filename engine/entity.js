@@ -71,7 +71,8 @@ The Entity object acts as a container for components, facilitates communication 
     }
 */
 platformer.classes.entity = (function(){
-	var entity = function (definition, instanceDefinition){
+	var entityIds = {},
+	entity = function (definition, instanceDefinition){
 		var self             = this,
 		index                = undefined,
 		componentDefinition  = undefined,
@@ -85,7 +86,16 @@ platformer.classes.entity = (function(){
 		self.messages    = [];
 		self.loopCheck   = [];
 		self.unbindLater = [];
-		self.type = def.id;
+		self.type = def.id || 'none';
+		
+		self.id = instanceDefinition.id;
+		if(!self.id){
+			if(!entityIds[self.type]){
+				entityIds[self.type] = 0;
+			}
+			self.id = self.type + '-' + entityIds[self.type];
+			entityIds[self.type] += 1;
+		}
 
 		this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
 		this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.

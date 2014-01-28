@@ -31,6 +31,12 @@ This component allows the entity to contain child entities. It will add several 
 - **addEntity** -  This method will add the provided entity to this component's list of entities.
   - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.
   - @return entity ([[Entity]] object) - Returns the entity that was just added.
+- **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.
+  - @param type (string) - Required. The entity type to find.
+  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
+- **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).
+  - @param id (string) - Required. The entity id to find.
+  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
 - **removeEntity** - This method will remove the provided entity from the list of child entities.
   - @param message ([[Entity]] object) - Required. The entity to remove.
   - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
@@ -169,6 +175,43 @@ This component allows the entity to contain child entities. It will add several 
 		},
 		
 		publicMethods: {
+			getEntityById: function(id){
+				var i = 0,
+				selection = null;
+				
+				for(; i < this.entities.length; i++){
+					if(this.entities[i].id === id){
+						return this.entities[i];
+					}
+					if(this.entities[i].getEntityById){
+						selection = this.entities[i].getEntityById(id);
+						if(selection){
+							return selection;
+						};
+					}
+				}
+				return undefined;
+			},
+
+			getEntitiesByType: function(type){
+				var i     = 0,
+				selection = null,
+				entities  = [];
+				
+				for(; i < this.entities.length; i++){
+					if(this.entities[i].type === type){
+						entities.push(this.entities[i]);
+					}
+					if(this.entities[i].getEntitiesByType){
+						selection = this.entities[i].getEntitiesByType(type);
+						if(selection){
+							entities = entities.concat(selection);
+						};
+					}
+				}
+				return entities;
+			},
+
 			addEntity: function(entity){
 				return this['add-entity'](entity);
 			},
