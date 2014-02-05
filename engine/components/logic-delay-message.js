@@ -52,25 +52,37 @@ This component allows certain messages to trigger new messages at a later time. 
 */
 (function(){
 	var createMessage = function(event){
+		var includeMessage = function(event, message){
+			if(message && !event.message){
+				return {
+					event: event.event,
+					message: message,
+					delay: event.delay,
+					repeat: event.repeat
+				};
+			} else {
+				return event;
+			}
+		};
 		if(event.singleInstance){
-			return function(){
+			return function(message){
 				var i = 0,
 				add = true;
 				
 				for (; i < this.queue.length; i++){
-					if(this.queue[i] === event){
+					if(this.queue[i].event === event.event){
 						add = false;
 					}
 				}
 				
 				if(add){
-					this.queue.push(event);
+					this.queue.push(includeMessage(event, message));
 					this.queueTimes.push(event.delay);
 				}
 			};
 		} else {
-			return function(){
-				this.queue.push(event);
+			return function(message){
+				this.queue.push(includeMessage(event, message));
 				this.queueTimes.push(event.delay);
 			};
 		}
