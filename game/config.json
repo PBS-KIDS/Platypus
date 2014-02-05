@@ -44,10 +44,8 @@
 			// Images. Sprite sheets are evenly split into rows and columns. Could add support for sprite sheet definition files later.
 		    {"id": "buttons",    	 "src": "images/buttons.png"},
 			{"id": "mookie",         "src": "images/mookie.png",       "data": {"rows": 4, "columns": 4}},
-            {"id": "sprites",        "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
-            {"id": "tiles",          "src": "images/tiles.png",        "data": {"rows": 3, "columns": 4}},
-            {"id": "title-screen",   "src": "images/title-screen.png"},
-            {"id": "objects",        "src": "images/objects.png",      "data": {"rows": 1, "columns": 4}}
+            {"id": "game-sprites",   "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
+            {"id": "title-screen",   "src": "images/title-screen.png"}
 		],
         "includes": [
             {"id": "CreateJS",      "src": "http://code.createjs.com/createjs-2013.09.25.min.js"},
@@ -97,19 +95,13 @@
             {"id": "logic-directional-movement", "src": "../engine/components/logic-directional-movement.js"},
             {"id": "logic-gravity",              "src": "../engine/components/logic-gravity.js"},
             {"id": "logic-jump",                 "src": "../engine/components/logic-jump.js"},
-            {"id": "counter",           	     "src": "../engine/components/counter.js"},
-            {"id": "logic-timer",                "src": "../engine/components/logic-timer.js"},
             {"id": "logic-portal",	             "src": "../engine/components/logic-portal.js"},
 			{"id": "collision-basic",            "src": "../engine/components/collision-basic.js"},
 			{"id": "collision-tiles",            "src": "../engine/components/collision-tiles.js"},
             {"id": "logic-fps-counter",          "src": "../engine/components/logic-fps-counter.js"},
 			
-			// These are components that were designed specifically for this game. If you want to design your own components, copy the template in game/components/ec-template.js to get started!
-            {"id": "render-gui",              "src": "components/render-gui.js"},
-            {"id": "render-counter",          "src": "components/render-counter.js"},
-            {"id": "render-clock",            "src": "components/render-clock.js"},
-            {"id": "logic-hero",              "src": "components/logic-hero.js"},
-            {"id": "logic-gui",               "src": "components/logic-gui.js"}
+			// This component was designed specifically for this game. If you want to design your own components, copy the template in game/components/ec-template.js to get started!
+            {"id": "logic-hero",                 "src": "components/logic-hero.js"}
 		],
 		"entities": [ // JSON files describing entities
 		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
@@ -128,13 +120,10 @@
             {"id": "button-right",    "src": "entities/button-right.json"},
             {"id": "button-mute",     "src": "entities/button-mute.json"},
 			{"id": "hero",            "src": "entities/hero.json"},
-            {"id": "block",           "src": "entities/block.json"},
             {"id": "progress-bar",    "src": "entities/progress-bar.json"},
             {"id": "level-portal",	  "src": "entities/level-portal.json"},
             {"id": "title-screen",    "src": "entities/title-screen.json"},
-            {"id": "gui",    		  "src": "entities/gui.json"},
-            {"id": "fps-counter",	  "src": "entities/fps-counter.json"},
-            {"id": "ball",	  		  "src": "entities/ball.json"}
+            {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
 		],
 		"scenes": [ // JSON files describing scenes
             {"id": "load",        "src": "scenes/load.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.

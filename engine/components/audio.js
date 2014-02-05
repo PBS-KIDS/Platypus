@@ -124,7 +124,17 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			}
 		} else {
 			sound      = soundDefinition.sound;
-			attributes = soundDefinition;
+			attributes = {
+				interrupt: soundDefinition.interrupt,
+				delay:     soundDefinition.delay,
+				offset:    soundDefinition.offset,
+				loop:      soundDefinition.loop,
+				volume:    soundDefinition.volume,
+				pan:       soundDefinition.pan,
+				length:    soundDefinition.length,
+				next:      soundDefinition.next,
+				events:    soundDefinition.events
+			};
 		}
 		if(assets[sound].data){
 			for(var item in assets[sound].data){

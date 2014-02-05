@@ -69,7 +69,9 @@ A component that handles updating rendering for components that are rendering vi
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
 (function(){
-
+	var uagent = navigator.userAgent.toLowerCase(),
+	android4 = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false; // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
+	
 	return platformer.createComponentClass({
 
 		id: "handler-render-createjs",
@@ -215,6 +217,16 @@ A component that handles updating rendering for components that are rendering vi
 						time += this.timeElapsed.time;
 
 						this.stage.update(resp);
+						
+						// This is a fix for the Android 4.1 and 4.2 native browser where it duplicates the canvas. Also set "overflow: hidden" on the canvas's parent to bypass this rendering issue. - DDD
+						if(android4 && this.stage.autoClear){
+							this.canvas.style.opacity = 0.99;
+
+							setTimeout(function() {
+							  this.canvas.style.opacity = 1;
+							}, 0);
+						}
+						
 						this.timeElapsed.name = 'Render';
 						this.timeElapsed.time = new Date().getTime() - time;
 						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);

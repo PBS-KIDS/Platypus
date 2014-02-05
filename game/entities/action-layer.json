@@ -5,18 +5,9 @@
         {"type": "handler-ai"},
         {"type": "handler-logic"},
         {"type": "handler-collision"},
-        {
-           "type": "camera",
-           "width": 3200
-        },
+        {"type": "camera", "width": 960},
         {"type": "handler-render-createjs"},
-        {"type": "entity-container"
-        },{
-            "type": "tiled-loader",
-            "unitsPerPixel": 10,
-           //"images": ["tiles","objects"], //optional: will use source images from Tiled JSON if not specified here.
-           "images": ["sprites"], //optional: will use source images from Tiled JSON if not specified here.
-            "imagesScale": 3.3333333333       //size of image pixels in world coordinates
-        }
+        {"type": "entity-container"},
+        {"type": "tiled-loader"}
     ]
 }
