@@ -87,7 +87,14 @@ This component allows the entity to contain child entities. It will add several 
 			var self = this;
 	
 			this.entities = [];
-			this.definedEntities = definition.entities; //saving for load message
+			
+			 //saving list of entities for load message
+			this.definedEntities = null;
+			if(definition.entities && this.owner.entities){ //combine component list and entity list into one if they both exist.
+				this.definedEntities = definition.entities.concat(this.owner.entities);
+			} else {
+				this.definedEntities = definition.entities || this.owner.entities || null;
+			}
 			
 			this.owner.entities     = self.entities;
 			
