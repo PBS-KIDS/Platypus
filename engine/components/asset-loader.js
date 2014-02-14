@@ -144,7 +144,8 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    						this.assets[i].src     = this.assets[i].src[j].src;
 		    						checkPush({
 		    							id:  this.assets[i].assetId || this.assets[i].id,
-		    							src: this.assets[i].src
+		    							src: this.assets[i].src,
+		    							data: this.assets[i].data
 		    						}, loadAssets);
 		    					}
 		    					break;
@@ -161,7 +162,8 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    						this.assets[i].src     = this.assets[i].src['default'].src;
 		    						checkPush({
 		    							id:  this.assets[i].assetId || this.assets[i].id,
-		    							src: this.assets[i].src
+		    							src: this.assets[i].src,
+		    							data: this.assets[i].data
 		    						}, loadAssets);
 		    					}
 		    				} else {
