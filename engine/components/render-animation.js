@@ -135,8 +135,11 @@ This component is attached to entities that will appear in the game world. It re
       "flip": false,
       //Optional - Whether this object can be flipped over Y. To flip it over Y set the orientation value in the logical state to be great than 180.
       
-      "hidden": false
+      "hidden": false,
       //Optional - Whether this object is visible or not. To change the hidden value dynamically add a 'hidden' property to the logical state object and set it to true or false.
+      
+      "cache": false
+      //Optional - Whether this animation should be cached into an entity with a `render-tiles` component (like "render-layer"). The `render-tiles` component must have its "entityCache" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -355,6 +358,11 @@ This component is attached to entities that will appear in the game world. It re
 
 			//Check state against entity's prior state to update animation if necessary on instantiation.
 			this['logical-state'](this.state);
+			
+			if(definition.cache){
+				this.updateSprite();
+				this.owner.cacheRender = this.container;
+			}
 		},
 		
 		events: {
@@ -371,7 +379,64 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			"handle-render": (function(){
+			"handle-render": function(resp){
+				if(!this.stage){
+					if(!this.pinTo) { //In case this component was added after handler-render is initiated
+						this['handle-render-load'](resp);
+						if(!this.stage){
+							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
+							this.owner.removeComponent(this);
+							return;
+						}
+					} else {
+						return;
+					}
+				}
+				
+				this.updateSprite();
+			},
+			
+			"logical-state": function(state){
+				this.stateChange = true;
+				if(state['hidden'] !== undefined) {
+					this.container.hidden = state['hidden'];
+				}
+			},
+			
+			"hide-animation": function(){
+				this.container.hidden = true;
+			},
+
+			"show-animation": function(){
+				this.container.hidden = false;
+			},
+			
+			"pin-me": function(pinId){
+				if(this.pins && this.pins[pinId]){
+					this.owner.trigger("attach-pin", this.pins[pinId]);
+				}
+			},
+			
+			"attach-pin": function(pinInfo){
+				if(pinInfo.pinId === this.pinTo){
+					this.stage = pinInfo.container;
+					this.stage.addChild(this.container);
+					this.addInputs();				
+					this.pinnedTo = pinInfo;
+				}
+			},
+			
+			"remove-pin": function(pinInfo){
+				if(pinInfo.pinId === this.pinTo){
+					this.stage.removeChild(this.container);
+					this.stage = null;
+					this.pinnedTo = null;
+				}
+			}
+		},
+		
+		methods: {
+			updateSprite: (function(){
 				var sort = function(a, b) {
 					return a.z - b.z;
 				};
@@ -380,25 +445,14 @@ This component is attached to entities that will appear in the game world. It re
 					var testCase = false, i = 0,
 					angle = null;
 					
-					if(!this.stage){
-						if(!this.pinTo) { //In case this component was added after handler-render is initiated
-							this['handle-render-load'](resp);
-							if(!this.stage){
-								console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
-								this.owner.removeComponent(this);
-								return;
-							}
-						} else {
-							return;
-						}
-					}
-					
 					if(this.pinnedTo){
 						if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.animation.currentFrame]){
 							this.container.x = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].x;
 							this.container.y = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].y;
 							if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z){
-								this.stage.reorder = true;
+								if(this.stage){
+									this.stage.reorder = true;
+								}
 								this.container.z = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z;
 							}
 							this.container.visible = true;
@@ -406,7 +460,9 @@ This component is attached to entities that will appear in the game world. It re
 							this.container.x = this.pinnedTo.defaultPin.x;
 							this.container.y = this.pinnedTo.defaultPin.y;
 							if(this.container.z !== this.pinnedTo.defaultPin.z){
-								this.stage.reorder = true;
+								if(this.stage){
+									this.stage.reorder = true;
+								}
 								this.container.z = this.pinnedTo.defaultPin.z;
 							}
 							this.container.visible = true;
@@ -417,7 +473,9 @@ This component is attached to entities that will appear in the game world. It re
 						this.container.x = this.owner.x;
 						this.container.y = this.owner.y;
 						if(this.container.z !== (this.owner.z + this.offsetZ)){
-							this.stage.reorder = true;
+							if(this.stage){
+								this.stage.reorder = true;
+							}
 							this.container.z = (this.owner.z + this.offsetZ);
 						}
 	
@@ -502,46 +560,6 @@ This component is attached to entities that will appear in the game world. It re
 				};
 			})(),
 			
-			"logical-state": function(state){
-				this.stateChange = true;
-				if(state['hidden'] !== undefined) {
-					this.container.hidden = state['hidden'];
-				}
-			},
-			
-			"hide-animation": function(){
-				this.container.hidden = true;
-			},
-
-			"show-animation": function(){
-				this.container.hidden = false;
-			},
-			
-			"pin-me": function(pinId){
-				if(this.pins && this.pins[pinId]){
-					this.owner.trigger("attach-pin", this.pins[pinId]);
-				}
-			},
-			
-			"attach-pin": function(pinInfo){
-				if(pinInfo.pinId === this.pinTo){
-					this.stage = pinInfo.container;
-					this.stage.addChild(this.container);
-					this.addInputs();				
-					this.pinnedTo = pinInfo;
-				}
-			},
-			
-			"remove-pin": function(pinInfo){
-				if(pinInfo.pinId === this.pinTo){
-					this.stage.removeChild(this.container);
-					this.stage = null;
-					this.pinnedTo = null;
-				}
-			}
-		},
-		
-		methods: {
 			addInputs: function(){
 				var self = this, over = false;
 				

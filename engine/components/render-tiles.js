@@ -16,24 +16,36 @@ This component handles rendering tile map backgrounds. When rendering the backgr
   - @param camera (object) - Required. Provides information about the camera.
 - **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
   - @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
+- **peer-entity-added** - If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
+  - @param entity ([[Entity]]) - This is the peer entity to be checked for a renderCache.
 
 ## JSON Definition
     {
-      "type": "render-animation",
+      "type": "render-tiles",
+      
       "spritesheet": 
       //Required - The spritesheet for all the tile images.
+      
       "imageMap" : [],
       //Required - This is a two dimensional array of the spritesheet indexes that describe the map that you're rendering.
+	  
 	  "scaleX" : 1,
 	  //Optional - The x-scale the tilemap is being displayed at. Defaults to 1.
+	  
 	  "scaleY"  : 1,
 	  //Optional - The y-scale the tilemap is being displayed at. Defaults to 1.
+	  
 	  "tileWidth"  : 32,
 	  //Optional - The the width in pixels of a tile. Defaults to 10.
+	  
 	  "tileHeight"  : 32,
 	  //Optional - The the height in pixels of a tile. Defaults to 10.
-	  "buffer"  : 32
+	  
+	  "buffer"  : 32,
 	  //Optional - The amount of space in pixels around the edge of the camera that we include in the buffered image. Is multiplied by the scaleX to get the actual buffersize. Defaults to the tileWidth.
+	  
+	  "entityCache": false
+	  //Optional - Whether to cache entities on this layer if the entity's render component requests caching. Defaults to `false`.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -136,12 +148,14 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 			this.controllerEvents = undefined;
 			this.spriteSheet   = new createjs.SpriteSheet(spriteSheet);
 			this.imageMap      = definition.imageMap   || [];
+			this.doMap         = null; //list of display objects that should overlay tile map.
 			this.tiles         = {};
 			this.tilesToRender = undefined;
 			this.scaleX        = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
 			this.scaleY        = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
 			this.tileWidth     = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
 			this.tileHeight    = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
+			this.entityCache   = definition.entityCache || false;
 			
 			// temp values
 			this.worldWidth    = this.tilesWidth    = this.tileWidth;
@@ -197,7 +211,50 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 		
 				stage.addChild(this.tilesToRender);
 			},
-	
+			
+			"peer-entity-added": function(entity){
+				var x = 0,
+				y     = 0,
+				imgMap = this.imageMap,
+				object = entity.cacheRender,
+				bounds = null,
+				top = 0,
+				bottom = 0,
+				right = 0,
+				left = 0;
+				
+				// Determine whether to merge this image with the background.
+				if(this.entityCache && object){ //TODO: currently only handles a single display object on the cached entity.
+					if(!this.doMap){
+						this.doMap = [];
+					}
+
+					// Determine range:
+					bounds = object.getBounds();
+					top    = Math.max(0, Math.floor((entity.y - object.y) / this.tileHeight));
+					bottom = Math.min(imgMap[0].length, Math.ceil((entity.y - bounds.y + bounds.height) / this.tileHeight));
+					left   = Math.max(0, Math.floor((entity.x - object.x) / this.tileWidth));
+					right  = Math.min(imgMap.length, Math.ceil((entity.x - bounds.x + bounds.width) / this.tileWidth));
+					
+					// Find tiles that should include this display object
+					for(x = left; x < right; x++){
+						if(!this.doMap[x]){
+							this.doMap[x] = [];
+						}
+						for (y = top; y < bottom; y++){
+							if(!this.doMap[x][y]){
+								this.doMap[x][y] = [];
+							}
+							this.doMap[x][y].push(object); //TODO: may want to properly handle z-order here at some point?
+						}
+					}
+					
+					// Prevent subsequent draws
+					entity.removeComponent('render-animation');
+					entity.removeComponent('render-image');
+				}
+			},
+			
 			"add-tiles": function(definition){
 				var x = 0,
 				y     = 0,
@@ -230,6 +287,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 			"camera-update": function(camera){
 				var x  = 0,
 				y      = 0,
+				z      = 0,
 				buffer = this.camera.buffer,
 				cache  = this.cache,
 				context= null,
@@ -244,7 +302,9 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				camT   = this.convertCamera(camera.viewportTop, this.worldHeight, this.tilesHeight, camera.viewportHeight),
 				vpL    = Math.floor(camL / this.tileWidth)  * this.tileWidth,
 				vpT    = Math.floor(camT / this.tileHeight) * this.tileHeight,
-				tile   = null;
+				tile   = null,
+				ents   = [],
+				oList  = null;
 				
 				this.tilesToRender.x = camera.viewportLeft - camL;
 				this.tilesToRender.y = camera.viewportTop  - camT;
@@ -271,13 +331,35 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 						for(x = minX; x <= maxX; x++){
 							for (y = minY; y <= maxY; y++){
 								if((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)){
+									// draw tiles
 									tile = this.tiles[this.imageMap[x][y]];
 									this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
 									this.tilesToRender.addChild(tile);
 									tile.x = (x + 0.5) * this.tileWidth;
 									tile.y = (y + 0.5) * this.tileHeight;
 									this.tilesToRender.updateCache('source-over');
+
+									// check for cached entities
+									if(this.doMap && this.doMap[x] && this.doMap[x][y]){
+										oList = this.doMap[x][y];
+										for(z = 0; z < oList.length; z++){
+											if(!oList[z].drawn){
+												oList[z].drawn = true;
+												ents.push(oList[z]);
+											}
+										}
+									}
 								}
+							}
+						}
+						
+						// Draw cached entities
+						if(ents.length){
+							for(z = 0; z < ents.length; z++){
+								delete ents[z].drawn;
+								this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
+								this.tilesToRender.addChild(ents[z]);
+								this.tilesToRender.updateCache('source-over');
 							}
 						}
 		
@@ -327,10 +409,6 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 							mergedTile = new createjs.Container();
 							mergedTile.addChild(tile);
 							mergedTile.cache(-this.tileWidth/2,-this.tileHeight/2,this.tileWidth,this.tileHeight,1);
-							
-//							document.getElementsByTagName('body')[0].appendChild(mergedTile.cacheCanvas);
-//							mergedTile.cacheCanvas.setAttribute('title', imageName + ': ' + mergedTile._cacheOffsetX + 'x' + mergedTile._cacheOffsetY + ', ' + mergedTile.cacheCanvas.width + 'x' + mergedTile.cacheCanvas.height + ', ' + mergedTile._cacheScale + ', ' + mergedTile.cacheID + ', ' + !!mergedTile.filters);
-							//console.log(imageName);
 						}
 						layer = transformCheck(imageArray[i]);
 						tile.scaleX = layer.x;

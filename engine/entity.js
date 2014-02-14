@@ -131,13 +131,27 @@ platformer.classes.entity = (function(){
 	};
 	
 	proto.removeComponent = function(component){
-	    for (var index in this.components){
-		    if(this.components[index] === component){
-		    	this.components.splice(index, 1);
-		    	component.destroy();
-			    return component;
+		var index = '';
+		
+		if(typeof component === 'string'){
+		    for (index in this.components){
+			    if(this.components[index].type === component){
+			    	component = this.components[index];
+			    	this.components.splice(index, 1);
+			    	component.destroy();
+				    return component;
+			    }
 		    }
-	    }
+		} else {
+		    for (index in this.components){
+			    if(this.components[index] === component){
+			    	this.components.splice(index, 1);
+			    	component.destroy();
+				    return component;
+			    }
+		    }
+		}
+		
 	    return false;
 	};
 	
