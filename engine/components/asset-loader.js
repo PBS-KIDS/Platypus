@@ -171,15 +171,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    		}
 		    	}
 
-		    	// Allow iOS 5- to play HTML5 audio using SoundJS by overriding the isSupported check. (Otherwise there is no audio support for iOS 5-.)
-		    	createjs.HTMLAudioPlugin.isSupported = function () {
-		    		createjs.HTMLAudioPlugin.generateCapabilities();
-		    		var t = createjs.HTMLAudioPlugin.tag;
-		    		if (t == null || createjs.HTMLAudioPlugin.capabilities == null) {
-		    			return false;
-		    		}
-		    		return true;
-		    	};
+		    	// Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
+		    	createjs.HTMLAudioPlugin.enableIOS = true;
+		    	
 //		    	createjs.Sound.initializeDefaultPlugins();
 		    	createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
 
