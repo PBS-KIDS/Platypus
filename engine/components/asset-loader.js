@@ -173,14 +173,10 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    		}
 		    	}
 
-		    	// Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
-		    	createjs.HTMLAudioPlugin.enableIOS = true;
-		    	
-//		    	createjs.Sound.initializeDefaultPlugins();
-		    	createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
-
+		    	if(createjs.Sound){
+			    	loader.installPlugin(createjs.Sound);
+		    	}
 		    	self.message.total = loadAssets.length;
-		    	loader.installPlugin(createjs.Sound);
 		    	loader.loadManifest(loadAssets);
 		    	platformer.assets = [];
 		    },
