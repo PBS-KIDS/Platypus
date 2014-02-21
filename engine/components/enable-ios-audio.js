@@ -94,7 +94,7 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 		    } else {
 		    	audioPath = createjs.Sound.createInstance(audioId).src;
 		    	createjs.Sound.removeSound(audioId);
-		    	createjs.Sound.registerSound(audioPath + '?' + Math.random(), audioId, 1);
+		    	createjs.Sound.registerSound(audioPath, audioId, 1);
 				setupLoader(overlay, createjs.Sound.play(audioId));
 		    }
 		};
