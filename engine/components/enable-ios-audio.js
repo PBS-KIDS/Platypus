@@ -60,12 +60,6 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 					};
 					tag.addEventListener('play', succeeded);
 				}
-				
-				if(!tag.duration){
-					console.log('no tag duration');
-				}
-			} else {
-				console.log('no tag yet');
 			}
 		},
 		interval = setInterval(loading, 500);
