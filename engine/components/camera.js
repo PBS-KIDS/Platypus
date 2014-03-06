@@ -334,8 +334,8 @@ This component controls the game camera deciding where and how it should move. T
 					this.state = 'following';
 					this.followFocused = false;
 					this.following = def.entity;
-					this.lastLeft  = def.entity.x;
-					this.lastTop   = def.entity.y;
+					this.lastLeft  = def.entity.x || 0;
+					this.lastTop   = def.entity.y || 0;
 					this.forwardX  = def.movementX || (this.transitionX / 10);
 					this.forwardY  = def.movementY || 0;
 					this.averageOffsetX = 0;
@@ -357,6 +357,9 @@ This component controls the game camera deciding where and how it should move. T
 					this.state = 'static';
 					this.following = undefined;
 					this.followingFunction = undefined;
+					if(def && (typeof def.top === 'number') && (typeof def.left === 'number')){
+						this.move(def.left, def.top);
+					}
 					break;
 				}
 				
