@@ -3,11 +3,21 @@
 Main.js creates the game object. Main.js is called on the window 'load' event.
 */
 
-// Clean up console logging for MSIE
 (function(window){
-	if(window && !window.console){
-		var console = window.console = {};
-		console.log = console.warn = console.error = function(){};
+	if(window){
+		
+		// Clean up console logging for MSIE: Make sure window has at least console stub.
+		if(!window.console){
+			var console = window.console = {};
+			console.log = console.warn = console.error = function(){};
+		}
+
+		// Make sure Array has isArray.
+		if(window.Array && !window.Array.isArray) {
+			window.Array.isArray = function (arr) {
+			    return (arr instanceof Array);
+			};
+		}
 	}
 })(window);
 

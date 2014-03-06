@@ -83,7 +83,7 @@ platformer.classes.entity = (function(){
 		instanceProperties   = instance.properties || {};
 		
 		self.components  = [];
-		self.messages    = [];
+		self.messages    = {};
 		self.loopCheck   = [];
 		self.unbindLater = [];
 		self.type = def.id || 'none';

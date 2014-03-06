@@ -182,7 +182,11 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 			for (j = 0; j < levelSegments[i].length; j++)
 			{
 				//Merge horizontally
-				mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
+				if(typeof levelSegments[i][j] === 'string'){
+					mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
+				} else {
+					mergeSegment(row, levelSegments[i][j], 'horizontal');
+				}
 			}
 			//Then merge vertically
 			mergeSegment(level, row, 'vertical');
@@ -194,7 +198,11 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		id: 'level-builder',
 		constructor: function(definition){
 			this.levelTemplate = this.owner.levelTemplate || definition.levelTemplate;
-			this.useUniques = this.owner.useUniques || definition.useUniques || true;
+			if((this.owner.useUniques || definition.useUniques) === false){
+				this.useUniques = false;
+			} else {
+				this.useUniques = true;
+			}
 			this.levelPieces = this.owner.levelPieces || definition.levelPieces;
 			this.levelMessage = {level: null, persistentData: null};
 		},
@@ -250,9 +258,10 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 					console.warn('Level Builder: There is no level template.');
 				}
 				
-				this.levelMessage.level = mergeLevels(this.levelMessage.level);
-				
-				this.owner.triggerEvent('load-level', this.levelMessage);
+				if(this.levelMessage.level){
+					this.levelMessage.level = mergeLevels(this.levelMessage.level);
+					this.owner.triggerEvent('load-level', this.levelMessage);
+				}
 			}
 		},
 		
@@ -291,6 +300,12 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 				this.levelMessage.level = null;
 				this.levelMessage.persistentData = null;
 				this.levelMessage = null;
+			}
+		},
+		
+		publicMethods: {
+			mergeLevels: function(levels){
+				return mergeLevels(levels);
 			}
 		}
 	});

@@ -10,93 +10,133 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
     {
       "type": "enable-ios-audio",
       
-      "audioId": "combined"
+      "audioId": "combined",
       // Required. The SoundJS audio id for the audio clip to be enabled for future play-back.
     }
 
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 */
-platformer.components['enable-ios-audio'] = (function(){
+(function(){
 	var iOSAudioEnabled = false,
-//	console = {log:function(txt){document.title += txt;}},
-	component = function(owner, definition){
-		var self = this;
-		this.owner = owner;
-		
-		if(!iOSAudioEnabled){
-			this.touchOverlay = document.createElement('div');
-			this.touchOverlay.style.width    = '100%';
-			this.touchOverlay.style.height   = '100%';
-			this.touchOverlay.style.position = 'absolute';
-			this.touchOverlay.style.zIndex   = '20';
-			this.owner.rootElement.appendChild(this.touchOverlay);
-			enableIOSAudio(this.touchOverlay, definition.audioId, function(){
-				self.removeComponent();
-			});
-		} else {
-			this.removeComponent();
-		}
-	},
-	enableIOSAudio  = function(element, audioId, functionCallback){
-		var callback = false,
-	    click        = false;
-		
-//		document.title = '';
-		iOSAudioEnabled = true;
-		click = function(e){
-			var audio = createjs.Sound.play(audioId),
-			forceStop = function () {
-			    audio.removeEventListener('succeeded', forceStop);
-			    audio.pause();
-//			    console.log('g');
-			},
-			progress  = function () {
-			    audio.removeEventListener('ready', progress);
-//			    console.log('h');
-			    if (callback) callback();
-			};
-//		    console.log('a');
+    fileLoaded = false,
+    userTapped = false,
+    callback   = null,
+	setupLoader = function(element, audio){
+    	var tag = null,
+    	succeeded = null,
+    	loading = function () {
+			var buffered = [],
+			total = 0,
+			percent = 0;
 			
-			if(audio.playState !== 'playFailed'){
-//			    console.log('b(' + audio.playState + ')');
-				audio.stop();
-			} else {
-//			    console.log('c(' + audio.playState + ')');
-				audio.addEventListener('succeeded', forceStop);
-			    audio.addEventListener('ready', progress);
+			if(!tag && audio.tag){
+				// The audio.tag reference seems to disappear once the audio is paused, so we hold on to it for progress checking.
+				tag = audio.tag;
+				if(tag.src !== tag.id){ // This is a workaround for a bug in CreateJS: HTMLAudioPlugin, _handleTagLoad()
+					tag.id = tag.src;
+				}
+			}
+				
+			if(tag){
+				buffered = tag.buffered;
 
-			    try {
-					audio.play();
-//				    console.log('d(' + audio.playState + ')');
-			    } catch (e) {
-//				    console.log('e');
-			    	callback = function () {
-					    console.log('i');
-			    		callback = false;
-			    		audio.play();
-			    	};
-			    }
+				for (var i = 0, len = buffered.length; i < len; i++) {
+				    total += (buffered.end(i) - buffered.start(i));
+				}
+
+				percent = (Math.floor((total * 100) / tag.duration) || 0);
+				element.innerHTML = 'Loading Audio: ' + percent + '%';
+				
+				if(percent >= 100){
+					clearInterval(interval);
+					userTapped = true;
+					if(fileLoaded && callback){
+	        			callback();
+					}
+				} else if(!succeeded){
+			    	succeeded = function () {
+					    tag.removeEventListener('play', succeeded);
+					    audio.pause();
+					};
+					tag.addEventListener('play', succeeded);
+				}
 			}
-			element.removeEventListener('touchstart', click, false);
-			if(functionCallback){
-//			    console.log('f');
-				functionCallback();
-			}
-		};
-		element.addEventListener('touchstart', click, false);
+		},
+		interval = setInterval(loading, 500);
+		
+		element.innerHTML = 'Loading Audio...';
+		element.className = 'loading-audio';
 	},
-	proto = component.prototype;
-	
-	proto.removeComponent = function(){
-		this.owner.removeComponent(this);
+	enableIOSAudio  = function(element, audioId){
+		var click   = null,
+		audioPath   = '',
+	    overlay     = document.createElement('div');
+		
+		overlay.style.width    = '100%';
+		overlay.style.height   = '100%';
+		overlay.style.position = 'absolute';
+		overlay.style.zIndex   = '20';
+		element.appendChild(overlay);
+
+		click = function(e){
+			overlay.removeEventListener('touchstart', click, false);
+			
+			if(fileLoaded){
+    			if(callback){
+        			callback();
+    			}
+		    } else {
+		    	audioPath = createjs.Sound.createInstance(audioId).src;
+		    	createjs.Sound.removeSound(audioId);
+		    	createjs.Sound.registerSound(audioPath, audioId, 1);
+				setupLoader(overlay, createjs.Sound.play(audioId));
+		    }
+		};
+		overlay.addEventListener('touchstart', click, false);
+		
+		return overlay;
 	};
-	
-	proto.destroy = function(){
-		if(this.touchOverlay){
-			this.owner.rootElement.removeChild(this.touchOverlay);
+
+	createjs.HTMLAudioPlugin.enableIOS = true; // Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
+	if(platformer.settings.supports.iOS){ // iOS Safari seems to crash when loading large audio files unless we go this route.
+		createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
+	} else {
+    	createjs.Sound.initializeDefaultPlugins();
+	}
+	createjs.Sound.addEventListener('fileload', function(){
+		fileLoaded = true;
+		if(userTapped && callback){
+   			callback();
 		}
-		this.touchOverlay = undefined;
-	};
-	
-	return component;
+	});
+
+	return platformer.createComponentClass({
+		id: 'enable-ios-audio',
+		constructor: function(definition){
+			var self = this;
+			
+			if(!iOSAudioEnabled){
+				iOSAudioEnabled = true;
+				this.touchOverlay = enableIOSAudio(this.owner.rootElement, definition.audioId);
+				callback = function(){
+					callback = null;
+					self.removeComponent();
+				};
+			} else {
+				this.removeComponent();
+			}
+		},
+		
+		methods: {
+		    removeComponent: function(){
+				this.owner.removeComponent(this);
+			},
+			destroy: function(){
+				if(this.touchOverlay){
+					this.owner.rootElement.removeChild(this.touchOverlay);
+				}
+				delete this.touchOverlay;
+			}
+		}
+	});
 })();

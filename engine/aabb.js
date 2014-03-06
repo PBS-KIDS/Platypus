@@ -161,6 +161,10 @@ platformer.classes.aABB = (function(){
 		return !((aabb.top < this.top) || (aabb.bottom > this.bottom) || (aabb.left < this.left) || (aabb.right > this.right));
 	};
 	
+	proto.containsVector = function(vector){
+		return !((vector.y < this.top) || (vector.y > this.bottom) || (vector.x < this.left) || (vector.x > this.right));
+	};
+	
 	proto.intersects = function(aabb){
 		return !((aabb.bottom < this.top) || (aabb.top > this.bottom) || (aabb.right < this.left) || (aabb.left > this.right));
 	};
