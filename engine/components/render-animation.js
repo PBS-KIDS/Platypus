@@ -248,7 +248,7 @@ This component is attached to entities that will appear in the game world. It re
 			var scaleX = spriteSheet.images[0].scaleX || 1,
 			scaleY     = spriteSheet.images[0].scaleY || 1;
 			if((scaleX !== 1) || (scaleY !== 1)){
-				if(spriteSheet.frames.length){ //frames are an array
+				if(Array.isArray(spriteSheet.frames)){ //frames are an array
 					var arr = [];
 					regX = [];
 					regY = [];
@@ -277,7 +277,7 @@ This component is attached to entities that will appear in the game world. It re
 					};
 				}
 			} else {
-				if(spriteSheet.frames.length){ //frames are an array
+				if(Array.isArray(spriteSheet.frames)){ //frames are an array
 					regX = [];
 					regY = [];
 					for (var i = 0; i < spriteSheet.frames.length; i++){

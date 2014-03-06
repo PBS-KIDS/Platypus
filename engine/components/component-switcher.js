@@ -67,7 +67,7 @@ platformer.components['component-switcher'] = (function(){ //TODO: Change the na
 			}
 
 			if(definition.add){
-				if(!definition.add.length){
+				if(!Array.isArray(definition.add)){
 					owner.addComponent(new platformer.components[definition.add.type](owner, definition.add));
 				} else {
 					for (i = 0; i < definition.add.length; i++){

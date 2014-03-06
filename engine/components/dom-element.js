@@ -61,7 +61,7 @@ This component creates a DOM element associated with the entity. In addition to 
 				entity.trigger(message, e);
 				e.preventDefault();
 			};
-		} else if (message.length){
+		} else if (Array.isArray(message)){
 			return function(e){
 				for (var i = 0; i < message.length; i++){
 					entity.trigger(message[i], e);

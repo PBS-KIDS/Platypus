@@ -110,7 +110,7 @@ This component listens for input messages triggered on the entity and updates th
 		};
 	},
 	createUpHandler = function(state){
-		if(state.length){
+		if(Array.isArray(state)){
 			return function(value){
 				for (var i = 0; i < state.length; i++){
 					state[i].state = false;
@@ -123,7 +123,7 @@ This component listens for input messages triggered on the entity and updates th
 		}
 	},
 	createDownHandler = function(state){
-		if(state.length){
+		if(Array.isArray(state)){
 			return function(value){
 				for (var i = 0; i < state.length; i++){
 					state[i].current = true;
@@ -221,7 +221,7 @@ This component listens for input messages triggered on the entity and updates th
 						actionState = addActionState(this.actions, definition.controlMap[key], trigger);
 					} else {
 						actionState = [];
-						if(definition.controlMap[key].length){
+						if(Array.isArray(definition.controlMap[key])){
 							for (i = 0; i < definition.controlMap[key].length; i++){
 								actionState[i] = addActionState(this.actions, definition.controlMap[key][i], trigger);
 							}

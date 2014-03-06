@@ -195,7 +195,7 @@ platformer.classes.entity = (function(){
 		
 		if(typeof events === 'string') {
 			return this.triggerEvent(events, message, debug);
-		} else if (events.length) {
+		} else if (Array.isArray(events)) {
 			for (; i < events.length; i++){
 				count += this.trigger(events[i], message, debug);
 			}

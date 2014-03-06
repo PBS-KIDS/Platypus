@@ -103,7 +103,7 @@ Multiple collision components may be added to a single entity if distinct messag
 					}
 				}
 			};
-		} else if(event.length){
+		} else if(Array.isArray(event)){
 			return function(value){
 				if(value.myType === collisionType){
 					if(value.hitType === solidOrSoft){

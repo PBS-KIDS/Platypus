@@ -56,7 +56,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 		if(definition.id){
 			if(typeof definition.id === 'string'){
 				this.id = definition.id;
-			} else if (definition.id.length) {
+			} else if (Array.isArray(definition.id)) {
 				this.id = definition.id.join('|');
 			} else {
 				id = '' + Math.random();
@@ -90,7 +90,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 					this.neighbors[desc] = neighbor;
 					return neighbor;
 				}
-			} else if (neighbor.length) {
+			} else if (Array.isArray(neighbor)) {
 				neighbor = this.map.getNode(neighbor.join('|'));
 				if(neighbor){
 					this.neighbors[desc] = neighbor;

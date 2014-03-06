@@ -96,7 +96,7 @@ This component is a general purpose state-machine for an entity, taking in vario
 			if(typeof checks === 'string') {
 				self.trigger(checks);
 				resolved = true;
-			} else if (checks.length) {
+			} else if (Array.isArray(checks)) {
 				for (i = 0; i < checks.length; i++){
 					handleResult(title, state, last, checks[i], changed, self, queue);
 				}

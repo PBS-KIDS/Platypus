@@ -84,7 +84,7 @@ This component uses its definition to load two other components (audio and rende
 			events[' '] = events['default'];
 		}
 		
-		if (sound.length){
+		if (Array.isArray(sound)){
 			for (i in sound){
 				definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
 			}
