@@ -210,21 +210,29 @@ platformer.classes.entity = (function(){
 	
 	// This handles string events only
 	proto.triggerEvent = function(event, value, debug){
-		var i = 0, j = 0;
+		var i = 0, j = 0, debugCount = 0;
 		
+		// Debug logging.
 		if(this.debug || debug || (value && value.debug)){
 			if(this.messages[event] && this.messages[event].length){
 				console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length>1)?'s':'') + '.', value);
 			} else {
 				console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
 			}
-		}
-		for (i = 0; i < this.loopCheck.length; i++){
-			if(this.loopCheck[i] === event){
-				throw "Endless loop detected for '" + event + "'.";
+			
+			for (i = 0; i < this.loopCheck.length; i++){
+				if(this.loopCheck[i] === event){
+					debugCount += 1;
+					if(debugCount > 5){
+						throw "Endless loop detected for '" + event + "'.";
+					} else {
+						console.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
+					}
+				}
 			}
+			i = 0;
 		}
-		i = 0;
+
 		this.loopCheck.push(event);
 		if(this.messages[event]){
 			for (i = 0; i < this.messages[event].length; i++){
