@@ -36,7 +36,10 @@ This component allows certain messages to trigger new messages at a later time. 
           
           "singleInstance": true,
           // This determines whether more "saw-clown" events triggered during the delayed response period should be treated as new messages to be triggered or whether the initial instance prevents additional instances from occurring.
-
+          
+          "repeat": true,
+          // This sets whether the event should continue to trigger every "delay" amount of time until "cancelEvent" is called. Defaults to `false`.
+          
           "cancelEvent": "dropped-popcorn"
           // If set, on receiving this event, the component will not trigger the "laugh" event after all if it's currently planning to.
         },
@@ -129,8 +132,12 @@ This component allows certain messages to trigger new messages at a later time. 
 					
 					if(this.queueTimes[i] <= 0){
 						this.owner.trigger(this.queue[i].event, this.queue[i].message);
-						this.queueTimes.splice(i,1);
-						this.queue.splice(i,1);
+						if(this.queue[i].repeat){
+							this.queueTimes[i] += this.queue[i].delay;
+						} else {
+							this.queueTimes.splice(i,1);
+							this.queue.splice(i,1);
+						}
 					}
 				}
 			}
