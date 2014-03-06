@@ -103,7 +103,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
 			attributes = {};
-		} else if (soundDefinition.length){
+		} else if (Array.isArray(soundDefinition)){
 			if(typeof soundDefinition[0] === 'string'){
 				sound      = soundDefinition[0];
 				attributes = {next: []};
@@ -136,79 +136,85 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				events:    soundDefinition.events
 			};
 		}
-		if(assets[sound].data){
-			for(var item in assets[sound].data){
-				attributes[item] = attributes[item] || assets[sound].data[item];
+		if(assets[sound]){
+			if(assets[sound].data){
+				for(var item in assets[sound].data){
+					attributes[item] = attributes[item] || assets[sound].data[item];
+				}
 			}
-		}
-		if(assets[sound].assetId){
-			sound = assets[sound].assetId;
-		}
-		return function(value){
-			var self = this,
-			audio = undefined,
-			next = false,
-			events = false,
-			offset = defaultSettings.offset,
-			length    = 0;
-			
-			value = value || attributes;
-			if(value && value.stop){
-				if(instance) {
-					if(value.playthrough){
-						instance.remainingLoops = 0;
+			if(assets[sound].assetId){
+				sound = assets[sound].assetId;
+			}
+			return function(value){
+				var self = this,
+				audio = undefined,
+				next = false,
+				events = false,
+				offset = defaultSettings.offset,
+				length    = 0;
+
+				value = value || attributes;
+				if(value && value.stop){
+					if(instance) {
+						if(value.playthrough){
+							instance.remainingLoops = 0;
+						} else {
+							instance.stop();
+							self.removeClip(instance);
+						}
+					}
+				} else {
+					if(value){
+						var interrupt = value.interrupt || attributes.interrupt || defaultSettings.interrupt,
+						delay         = value.delay     || attributes.delay  || defaultSettings.delay,
+						loop          = value.loop      || attributes.loop   || defaultSettings.loop,
+						volume        = (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
+						pan           = value.pan       || attributes.pan    || defaultSettings.pan,
+						length        = value.length    || attributes.length || defaultSettings.length;
+
+						offset        = value.offset    || attributes.offset || defaultSettings.offset;
+						next          = value.next      || attributes.next   || defaultSettings.next;
+						events        = value.events    || attributes.events || defaultSettings.events;
+
+						audio = instance = createjs.Sound.play(sound, interrupt, delay, offset, loop, volume, pan);
+
 					} else {
-						instance.stop();
-						self.removeClip(instance);
+						audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
 					}
-				}
-			} else {
-				if(value){
-					var interrupt = value.interrupt || attributes.interrupt || defaultSettings.interrupt,
-					delay         = value.delay     || attributes.delay  || defaultSettings.delay,
-					loop          = value.loop      || attributes.loop   || defaultSettings.loop,
-					volume        = (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
-					pan           = value.pan       || attributes.pan    || defaultSettings.pan,
-					length        = value.length    || attributes.length || defaultSettings.length;
-					
-					offset        = value.offset    || attributes.offset || defaultSettings.offset;
-					next          = value.next      || attributes.next   || defaultSettings.next;
-					events        = value.events    || attributes.events || defaultSettings.events;
-					
-					audio = instance = createjs.Sound.play(sound, interrupt, delay, offset, loop, volume, pan);
-					
-				} else {
-					audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
-				}
-				
-				if(events){
-					audio.sequenceEvents = [];
-					for(var i = 0; i < events.length; i++){
-						audio.sequenceEvents.push({
-							event: events[i].event,
-							time: +events[i].time + offset,
-							message: events[i].message
-						});
-					}
-					audio.sequenceEvents.sort(sortByTime);
-				}
 
-				audio.addEventListener('complete', function(){
-					self.onComplete(audio, next);
-				});
+					if(events){
+						audio.sequenceEvents = [];
+						for(var i = 0; i < events.length; i++){
+							audio.sequenceEvents.push({
+								event: events[i].event,
+								time: +events[i].time + offset,
+								message: events[i].message
+							});
+						}
+						audio.sequenceEvents.sort(sortByTime);
+					}
 
-				if(audio.playState === 'playFailed'){
-					if(this.owner.debug){
-						console.warn('Unable to play "' + sound + '".', audio);
+					audio.addEventListener('complete', function(){
+						self.onComplete(audio, next);
+					});
+
+					if(audio.playState === 'playFailed'){
+						if(this.owner.debug){
+							console.warn('Unable to play "' + sound + '".', audio);
+						}
+					} else {
+						if(length){ // Length is specified so we need to turn off the sound at some point.
+							this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next});
+						}
+						this.activeAudioClips.push(audio);
 					}
-				} else {
-					if(length){ // Length is specified so we need to turn off the sound at some point.
-						this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next});
-					}
-					this.activeAudioClips.push(audio);
 				}
-			}
-		};
+			};
+		} else {
+			console.warn('Audio clip "' + sound + '" needs to be added to config.js.');
+			return function(){
+			};
+		}
 	},
 	createTest = function(testStates, audio){
 		var states = testStates.replace(/ /g, '').split(',');
