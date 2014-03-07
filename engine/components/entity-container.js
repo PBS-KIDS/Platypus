@@ -160,9 +160,9 @@ This component allows the entity to contain child entities. It will add several 
 				
 				//Listen for message on children
 				for (var x = 0; x < this.entities.length; x++) {
-					if(this.entities[x].listener.events[event]){
-						for (var y = 0; y < this.entities[x].listener.events[event].length; y++) {
-							this.addChildEventListener(this.entities[x], event, this.entities[x].listener.events[event][y].callback, this.entities[x].listener.events[event][y].scope);
+					if(this.entities[x].messages[event]){
+						for (var y = 0; y < this.entities[x].messages[event].length; y++) {
+							this.addChildEventListener(this.entities[x], event, this.entities[x].messages[event][y].callback, this.entities[x].messages[event][y].scope);
 						}
 					}
 				}
@@ -218,7 +218,6 @@ This component allows the entity to contain child entities. It will add several 
 			addEntity: function(entity){
 				entity.parent = this.owner;
 				entity.trigger('adopted');
-				this.addChildEventListeners(entity);
 				
 				for (var x = 0; x < this.entities.length; x++) {
 					if(!entity.triggerEvent('peer-entity-added', this.entities[x])){
@@ -228,6 +227,7 @@ This component allows the entity to contain child entities. It will add several 
 				
 				this.triggerEventOnChildren('peer-entity-added', entity);
 
+				this.addChildEventListeners(entity);
 				this.entities.push(entity);
 				this.owner.trigger('child-entity-added', entity);
 				return entity;
@@ -236,11 +236,11 @@ This component allows the entity to contain child entities. It will add several 
 			removeEntity: function(entity){
 				for (var x = 0; x < this.entities.length; x++){
 				    if(this.entities[x] === entity){
+						this.removeChildEventListeners(entity);
+				    	this.entities.splice(x, 1);
 						this.triggerEventOnChildren('peer-entity-removed', entity);
 				    	entity.parent = null;
-				    	this.entities.splice(x, 1);
 						this.owner.trigger('child-entity-removed', entity);
-						this.removeChildEventListeners(entity);
 				    	entity.destroy();
 					    return entity;
 				    }
@@ -256,11 +256,10 @@ This component allows the entity to contain child entities. It will add several 
 			addChildEventListeners: function(entity){
 				var event = '';
 				
-				for (var x = 0; x < this.childEvents.length; x++) {
-					event = this.childEvents[x];
-					if(entity.listener.events[event]){
-						for (var y = 0; y < entity.listener.events[event].length; y++) {
-							this.addChildEventListener(entity, event, entity.listener.events[event][y].callback, entity.listener.events[event][y].scope);
+				for (event in this.messages) {
+					if(entity.messages[event]){
+						for (var y = 0; y < entity.messages[event].length; y++) {
+							this.addChildEventListener(entity, event, entity.messages[event][y].callback, entity.messages[event][y].scope);
 						}
 					}
 				}

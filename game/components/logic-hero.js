@@ -16,7 +16,7 @@
 		events:{
 			"handle-logic": function(){			
 			},
-
+			
 			"portal-waiting": function (portal) {
 				portal.trigger('activate-portal');
 			}
