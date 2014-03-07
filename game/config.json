@@ -16,6 +16,7 @@
 		{
 			"id": "production",                  // This is the id of the build and is matched to a folder name in the "builds/" folder. Build tools create this folder if needed.
 			"namespace": "PBS.KIDS.platformer",  // Optional namespace for the game - defaults to "PBS.KIDS.platformer"
+			"template": "template.html",         // Optional. HTML file describing the HTML template in which to place the game on compilation. Default is "template.html".
             "index": true,                       // Optional. If false, page is saved as the id + '.html' and resources are saved to a separate subfolder matching the id. Defaults to true, wherein the index and resources are in a single folder.
 			"cssCompression": true,
 			"jsCompression": true,

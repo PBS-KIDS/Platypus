@@ -73,9 +73,11 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
 	    return path;
     },
-    buildGame = function(build, config, html, manifest, timestamp){
+    buildGame = function(build, config, timestamp){
 	    var jsFile = 'combined',
 	    cssFile    = 'combined',
+	    html       = getText(workingDir + (build.template || 'template.html')),
+	    manifest   = getText(workingDir + 'template.manifest'),
 	    game       = eval('(' + config + ')'),
 	    namespace  = build.namespace || 'PBS.KIDS.platformer',
 	    nsArray    = namespace.split('.'),
@@ -372,8 +374,6 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    game       = eval('(' + gameConfig + ')');
    workingDir = game.toolsConfig["source-folder"] || '../game/',
    buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
-   html       = getText(workingDir + 'template.html'),
-   manifest   = getText(workingDir + 'template.manifest'),
    builds     = game.builds,
    buildIndex = 0;
 
@@ -381,7 +381,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     print('Preparing to compile scripts.');
     for (buildIndex in builds){
     	print('..Compiling scripts for build "' + builds[buildIndex].id + '".');
-    	buildGame(builds[buildIndex], gameConfig, html, manifest, timestamp);
+    	buildGame(builds[buildIndex], gameConfig, timestamp);
 	}
     print('Completed script compilation. Hurrah!');
 })();
