@@ -49,13 +49,19 @@ This component causes an entity to teleport when receiving a teleport message.
 					this.teleportNow = true;
 				}
 			},
-			"set-destination": function(posObj){
-				this.teleportDestination.x = posObj.x;
-				this.teleportDestination.y = posObj.y;
-				this.destinationSet = true;
+			"set-destination": function(position){
+				this.setDestination(position);
 			},
 			"hit-telepoint": function(collisionInfo){
-				this['set-destination'](collisionInfo.entity);
+				this.setDestination(collisionInfo.entity);
+			}
+		},
+		
+		methods: {
+			setDestination: function(position){
+				this.teleportDestination.x = position.x;
+				this.teleportDestination.y = position.y;
+				this.destinationSet = true;
 			}
 		}
 	});

@@ -12,18 +12,12 @@ This component will cause the entity to move in a certain direction on colliding
 - **impact-launch** - On receiving this message, the component causes the entity's position to change according to the preset behavior.
   - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
   - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
-- **[Message specified in definition]** - An alternative message can be specified in the JSON definition that will also cause the impact-launch.
-  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
-  - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
 - **hit-solid** - On receiving this message, the component discontinues its impact-launch behavior.
   - @param collisionInfo.y (number) - Either 1,0, or -1. If colliding below, impact-launch behavior ceases.
 
 ## JSON Definition:
     {
       "type": "logic-impact-launch",
-      
-      "message": "do-action",
-      // Optional: If specified, this message will cause the entity to impact-launch on this message in addition to "impact-launch".
       
       "state": "launching",
       // Optional: This sets the state of the entity while it's being launched. Defaults to "stunned".
@@ -42,10 +36,6 @@ This component will cause the entity to move in a certain direction on colliding
 	return platformer.createComponentClass({
 		id: 'logic-impact-launch',
 		constructor: function(definition){
-			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['impact-launch'];
-			}
 			this.stunState = definition.state || "stunned";
 			
 			this.aX = this.owner.accelerationX || definition.accelerationX || -0.2;

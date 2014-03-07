@@ -201,24 +201,14 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		events: {
-			"handle-render-load": function(obj){
-				if(!this.pinTo){
-					this.stage = obj.stage;
-					if(!this.stage){
-						return;
-					}
-					this.stage.addChild(this.container);
-					this.addInputs();				
-				} else {
-					return;
-				}
+			"handle-render-load": function(resp){
+				this.addStage(resp.stage);
 			},
 			
 			"handle-render": function(resp){
 				if(!this.stage){
 					if(!this.pinTo) { //In case this component was added after handler-render is initiated
-						this['handle-render-load'](resp);
-						if(!this.stage){
+						if(!this.addStage(resp.stage)){
 							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
 							this.owner.removeComponent(this);
 							return;
@@ -270,6 +260,17 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		methods: {
+			addStage: function(stage){
+				if(stage && !this.pinTo){
+					this.stage = stage;
+					this.stage.addChild(this.container);
+					this.addInputs();
+					return stage;
+				} else {
+					return null;
+				}
+			},
+			
 			updateSprite: (function(){
 				var sort = function(a, b) {
 					return a.z - b.z;

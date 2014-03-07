@@ -84,8 +84,7 @@ Tween takes a list of tween definitions and plays them as needed.
 		constructor: function(definition){
 			if(definition.events){
 				for(var event in definition.events){
-					this[event] = createTween(definition.events[event]);
-					this.addListener(event);
+					this.addEventListener(event, createTween(definition.events[event]));
 				}
 			}
 		}

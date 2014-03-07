@@ -6,31 +6,25 @@
 	ns.components = {};
 	
 	ns.createComponentClass = function(componentDefinition){
-		var	createWrapper = function(self, name){
-			return function(value, debug){
-				self[name](value, debug);
-			};
-		},
-		component = function(owner, definition){
+		var	component = function(owner, definition){
 			var func = null,
-			alias    = '',
-			name     = '',
-			wrapped  = null;
+			name     = '';
 			
 			this.owner = owner;
-			this.listeners = [];
+			this.listener = {
+				events: [],
+				messages: []
+			};
 			this.publicMethods = {};
 			this.type = componentDefinition.id;
 			
 			if(componentDefinition.events){
 				for(func in componentDefinition.events){
-					wrapped = createWrapper(this, func);
-					this.addListener(func, wrapped);
-					
+					this.addEventListener(func, componentDefinition.events[func]);
 					if(definition.aliases){
 						for (var alias in definition.aliases){
 							if(definition.aliases[alias] === func){
-								this.addListener(alias, wrapped);
+								this.addEventListener(alias, componentDefinition.events[func]);
 							}
 						}
 					}
@@ -60,11 +54,11 @@
 		
 		// Have to copy rather than replace so definition is not corrupted
 		proto.constructor = componentDefinition.constructor;
-		if(componentDefinition.events){
+/*		if(componentDefinition.events){
 			for(func in componentDefinition.events){
 				proto[func] = componentDefinition.events[func];
 			}
-		}
+		}*/
 		if (componentDefinition.methods) for(func in componentDefinition.methods){
 			if(func === 'destroy'){
 				proto['___' + func] = componentDefinition.methods[func];
@@ -86,7 +80,7 @@
 				this.removeMethod(func);
 			}
 
-			this.removeListeners(this.listeners);
+			this.removeEventListeners();
 			if(this.___destroy){
 				this.___destroy();
 			}
@@ -96,21 +90,41 @@
 			this[property] = value;
 		};
 
-		proto.addListeners = function(messageIds){
-			for(var message in messageIds) this.addListener(messageIds[message]);
+		proto.addListeners = function(){
+			throw '"component.addListeners()" is deprecated. Use "component.addEventListener()".';
+		};
+		proto.addListener = function(){
+			throw '"component.addListener()" is deprecated. Use "component.addEventListener()".';
+		};
+		proto.removeListeners = function(){
+			throw '"component.removeListeners()" is deprecated. Use "component.removeEventListeners()".';
+		};
+		proto.removeListener = function(){
+			throw '"component.removeListener()" is deprecated. Use "component.removeEventListener()".';
 		};
 	
-		proto.removeListeners = function(listeners){
+		proto.removeEventListeners = function(listeners){
+			var events = null,
+			messages = null;
+			
 			if(!listeners){
-				listeners = this.listeners;
+				events   = this.listener.events;
+				messages = this.listener.messages;
+				for(var i = 0; i < events.length; i++){
+					this.removeEventListener(events[i], messages[i]);
+				}
+			} else {
+				events   = listeners;
+				for(var i = 0; i < events.length; i++){
+					this.removeEventListener(events[i]);
+				}
 			}
-			for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
 		};
 		
-		proto.addListener = function(messageId, callback){
-			var func = callback || createWrapper(this, messageId);
-			this.owner.bind(messageId, func);
-			this.listeners[messageId] = func;
+		proto.addEventListener = function(event, callback){
+			this.listener.events.push(event);
+			this.listener.messages.push(callback);
+			this.owner.bind(event, callback, this);
 		};
 		
 		proto.addMethod = function(name, func){
@@ -126,8 +140,14 @@
 			}
 		};
 	
-		proto.removeListener = function(boundMessageId, callback){
-			this.owner.unbind(boundMessageId, callback);
+		proto.removeEventListener = function(event, callback){
+			var events = this.listener.events,
+			messages   = this.listener.messages;
+			for(var i = 0; i < events.length; i++){
+				if((events[i] === event) && (!callback || (messages[i] === callback))){
+					this.owner.unbind(event, messages[i]);
+				}
+			}
 		};
 		
 		proto.removeMethod = function(name){

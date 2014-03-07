@@ -41,119 +41,80 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 	  //Optional - The max value, positive or negative, that the timer will count to. At which it stops counting. Default to 3600000 which equals an hour.
     }
 */
-platformer.components['logic-timer'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['handle-logic', 'set-timer', 'start-timer', 'stop-timer']);
-		this.time = this.owner.time || definition.time ||  0;
-		this.prevTime = this.time;
-		this.alarmTime = this.owner.alarmTime || definition.alarmTime || undefined;
-		this.isInterval = this.owner.isInterval || definition.isInterval || false;
-		this.alarmMessage =  this.owner.alarmMessage || definition.alarmMessage || '';
-		this.updateMessage = this.owner.updateMessage || definition.updateMessage || '';
-		this.isOn = this.owner.on || definition.on || true;
-		this.isIncrementing = this.owner.isIncrementing || definition.isIncrementing || true;
-		this.maxTime = this.owner.maxTime || definition.maxTime || 3600000; //Max time is 1hr by default.
-	};
-	var proto = component.prototype;
-	
-	proto['handle-logic'] = function(data){
-		if (this.isOn)
-		{
+(function(){
+	return platformer.createComponentClass({
+		id: 'logic-timer',
+		constructor: function(definition){
+			this.time = this.owner.time || definition.time ||  0;
 			this.prevTime = this.time;
-			this.isIncrementing ? this.time += data.delta : this.time -= data.delta;
-			if (Math.abs(this.time) > this.maxTime)
-			{
-				//If the timer hits the max time we turn it off so we don't overflow anything.
-				if (this.time > 0)
-				{
-					this.time = this.maxTime;
-				} else if (this.time < 0) {
-					this.time = -this.maxTime;
+			this.alarmTime = this.owner.alarmTime || definition.alarmTime || undefined;
+			this.isInterval = this.owner.isInterval || definition.isInterval || false;
+			this.alarmMessage =  this.owner.alarmMessage || definition.alarmMessage || '';
+			this.updateMessage = this.owner.updateMessage || definition.updateMessage || '';
+			this.isOn = this.owner.on || definition.on || true;
+			this.isIncrementing = this.owner.isIncrementing || definition.isIncrementing || true;
+			this.maxTime = this.owner.maxTime || definition.maxTime || 3600000; //Max time is 1hr by default.
+		},
+		events:{
+			"handle-logic": function(data){
+				if (this.isOn){
+					this.prevTime = this.time;
+					this.isIncrementing ? this.time += data.delta : this.time -= data.delta;
+					if (Math.abs(this.time) > this.maxTime)
+					{
+						//If the timer hits the max time we turn it off so we don't overflow anything.
+						if (this.time > 0)
+						{
+							this.time = this.maxTime;
+						} else if (this.time < 0) {
+							this.time = -this.maxTime;
+						}
+						this['stop-timer']();
+					}
+					
+					if (typeof this.alarmTime !== 'undefined')
+					{
+						if (this.isInterval)
+						{
+							if (this.isIncrementing)
+							{
+								if ( Math.floor(this.time / this.alarmTime) > Math.floor(this.prevTime / this.alarmTime))
+								{
+									this.owner.trigger(this.alarmMessage);
+								}
+							} else {
+								if ( Math.floor(this.time / this.alarmTime) < Math.floor(this.prevTime / this.alarmTime))
+								{
+									this.owner.trigger(this.alarmMessage);
+								}
+							}
+						} else {
+							if (this.isIncrementing)
+							{
+								if (this.time > this.alarmTime && this.prevTime < this.alarmTime)
+								{
+									this.owner.trigger(this.alarmMessage);
+								}
+							} else {
+								if (this.time < this.alarmTime && this.prevTime > this.alarmTime)
+								{
+									this.owner.trigger(this.alarmMessage);
+								}
+							}
+			 			}
+					}
 				}
-				this['stop-timer']();
-			}
-			
-			if (typeof this.alarmTime !== 'undefined')
-			{
-				if (this.isInterval)
-				{
-					if (this.isIncrementing)
-					{
-						if ( Math.floor(this.time / this.alarmTime) > Math.floor(this.prevTime / this.alarmTime))
-						{
-							this.owner.trigger(this.alarmMessage);
-						}
-					} else {
-						if ( Math.floor(this.time / this.alarmTime) < Math.floor(this.prevTime / this.alarmTime))
-						{
-							this.owner.trigger(this.alarmMessage);
-						}
-					}
-				} else {
-					if (this.isIncrementing)
-					{
-						if (this.time > this.alarmTime && this.prevTime < this.alarmTime)
-						{
-							this.owner.trigger(this.alarmMessage);
-						}
-					} else {
-						if (this.time < this.alarmTime && this.prevTime > this.alarmTime)
-						{
-							this.owner.trigger(this.alarmMessage);
-						}
-					}
-	 			}
+				this.owner.trigger(this.updateMessage, {time: this.time});
+			},
+			"set-timer": function(data){
+				this.time = data.time;
+			},
+			"start-timer": function(){
+				this.isOn = true;
+			},
+			"stop-timer": function(){
+				this.isOn = false;
 			}
 		}
-		this.owner.trigger(this.updateMessage, {time: this.time});
-	};
-	
-	proto['set-timer'] = function(data){
-		this.time = data.time;
-	};
-	
-	proto['start-timer'] = function(){
-		this.isOn = true;
-	};
-	
-	proto['stop-timer'] = function(){
-		this.isOn = false;
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

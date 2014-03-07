@@ -100,8 +100,7 @@ This component allows the entity to contain child entities. It will add several 
 			
 			if(definition.childEvents){
 				for(var event in definition.childEvents){
-					this[definition.childEvents[event]] = childBroadcast(definition.childEvents[event]);
-					this.addListener(definition.childEvents[event]);
+					this.addEventListener(definition.childEvents[event], childBroadcast(definition.childEvents[event]));
 				}
 			}
 		},
@@ -137,38 +136,11 @@ This component allows the entity to contain child entities. It will add several 
 			},
 			
 			"add-entity": function (entity) {
-				entity.parent = this.owner;
-				entity.trigger('adopted');
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					entity.trigger('peer-entity-added', this.entities[x]);
-				}
-				
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					this.entities[x].trigger('peer-entity-added', entity);
-				}
-				this.entities.push(entity);
-				this.owner.trigger('child-entity-added', entity);
-				return entity;
+				this.addEntity(entity);
 			},
 			
 			"remove-entity": function (entity) {
-				for (var x = 0; x < this.entities.length; x++){
-				    if(this.entities[x] === entity){
-						for (var y = 0; y < this.entities.length; y++){
-							if(x !== y){
-								this.entities[y].trigger('peer-entity-removed', entity);
-							}
-						}
-				    	entity.parent = null;
-				    	this.entities.splice(x, 1);
-						this.owner.trigger('child-entity-removed', entity);
-				    	entity.destroy();
-					    return entity;
-				    }
-			    }
-			    return false;
+				this.removeEntity(entity);
 			}
 		},
 		
@@ -220,11 +192,38 @@ This component allows the entity to contain child entities. It will add several 
 			},
 
 			addEntity: function(entity){
-				return this['add-entity'](entity);
+				entity.parent = this.owner;
+				entity.trigger('adopted');
+				for (var x = 0; x < this.entities.length; x++)
+				{
+					entity.trigger('peer-entity-added', this.entities[x]);
+				}
+				
+				for (var x = 0; x < this.entities.length; x++)
+				{
+					this.entities[x].trigger('peer-entity-added', entity);
+				}
+				this.entities.push(entity);
+				this.owner.trigger('child-entity-added', entity);
+				return entity;
 			},
 			
 			removeEntity: function(entity){
-				return this['remove-entity'](entity);
+				for (var x = 0; x < this.entities.length; x++){
+				    if(this.entities[x] === entity){
+						for (var y = 0; y < this.entities.length; y++){
+							if(x !== y){
+								this.entities[y].trigger('peer-entity-removed', entity);
+							}
+						}
+				    	entity.parent = null;
+				    	this.entities.splice(x, 1);
+						this.owner.trigger('child-entity-removed', entity);
+				    	entity.destroy();
+					    return entity;
+				    }
+			    }
+			    return false;
 			}
 		}
 	});

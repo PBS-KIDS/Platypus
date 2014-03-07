@@ -148,106 +148,19 @@ This component checks for collisions between entities which typically have eithe
 		
 		events:{
 			"child-entity-added": function(entity){
-				this['add-collision-entity'](entity);
+				this.addCollisionEntity(entity);
 			},
 			
 			"add-collision-entity": function(entity){
-				var i = 0,
-				types = entity.collisionTypes,
-				solid = false,
-				soft  = false;
-				
-				if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
-					this.terrain = entity;
-					this.updateLiveList = true;
-				} else {
-					if(types){
-						for(; i < types.length; i++){
-							if(!this.entitiesByType[types[i]]){
-								this.entitiesByType[types[i]] = [];
-								this.entitiesByTypeLive[types[i]] = [];
-							}
-							this.entitiesByType[types[i]][this.entitiesByType[types[i]].length] = entity;
-							if(entity.solidCollisions[types[i]].length && !entity.immobile){
-								solid = true;
-							}
-							if(entity.softCollisions[types[i]].length){
-								soft = true;
-							}
-						}
-						if(solid && !entity.immobile){
-							this.solidEntities[this.solidEntities.length] = entity;
-						}
-						if(soft){
-							this.softEntities[this.softEntities.length] = entity;
-						}
-//						if(entity.jumpThrough){ // Need to do jumpthrough last, since everything else needs to check against it's original position
-							this.allEntities[this.allEntities.length] = entity;
-//						} else {
-//							this.allEntities.splice(0, 0, entity);
-//						}
-						this.updateLiveList = true;
-					}
-				}
+				this.addCollisionEntity(entity);
 			},
 			
 			"child-entity-removed": function(entity){
-				this['remove-collision-entity'](entity);
+				this.removeCollisionEntity(entity);
 			},
 			
 			"remove-collision-entity": function(entity){
-				var x = 0,
-				i     = 0,
-				j	  = 0,
-				types = entity.collisionTypes,
-				solid = false,
-				soft  = false;
-
-				if (types) {
-					for(; i < types.length; i++){
-						for (x in this.entitiesByType[types[i]]) {
-							if(this.entitiesByType[types[i]][x] === entity){
-								this.entitiesByType[types[i]].splice(x, 1);
-								break;
-							}
-						}
-						if(entity.solidCollisions[types[i]].length){
-							solid = true;
-						}
-						if(entity.softCollisions[types[i]].length){
-							soft = true;
-						}
-					}
-					
-					if(solid){
-						for (x in this.solidEntities) {
-							if(this.solidEntities[x] === entity){
-								this.solidEntities.splice(x, 1);
-								break;
-							}
-						}
-					}
-			
-					if(soft){
-						for (x in this.softEntities) {
-							if(this.softEntities[x] === entity){
-								this.softEntities.splice(x, 1);
-								break;
-							}
-						}
-					}
-					
-					for (j = 0; j < this.allEntities.length; j++)
-					{
-						if (this.allEntities[j] === entity)
-						{
-							this.allEntities.splice(j,1);
-							break;
-						}
-					}
-					this.updateLiveList = true;
-				}
-				
+				this.removeCollisionEntity(entity);
 			},
 			
 			"check-collision-group": function(resp){
@@ -303,6 +216,96 @@ This component checks for collisions between entities which typically have eithe
 		},
 		
 		methods: {
+			addCollisionEntity: function(entity){
+				var i = 0,
+				types = entity.collisionTypes,
+				solid = false,
+				soft  = false;
+				
+				if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
+					this.terrain = entity;
+					this.updateLiveList = true;
+				} else {
+					if(types){
+						for(; i < types.length; i++){
+							if(!this.entitiesByType[types[i]]){
+								this.entitiesByType[types[i]] = [];
+								this.entitiesByTypeLive[types[i]] = [];
+							}
+							this.entitiesByType[types[i]][this.entitiesByType[types[i]].length] = entity;
+							if(entity.solidCollisions[types[i]].length && !entity.immobile){
+								solid = true;
+							}
+							if(entity.softCollisions[types[i]].length){
+								soft = true;
+							}
+						}
+						if(solid && !entity.immobile){
+							this.solidEntities[this.solidEntities.length] = entity;
+						}
+						if(soft){
+							this.softEntities[this.softEntities.length] = entity;
+						}
+						this.allEntities[this.allEntities.length] = entity;
+						this.updateLiveList = true;
+					}
+				}
+			},
+
+			removeCollisionEntity: function(entity){
+				var x = 0,
+				i     = 0,
+				j	  = 0,
+				types = entity.collisionTypes,
+				solid = false,
+				soft  = false;
+
+				if (types) {
+					for(; i < types.length; i++){
+						for (x in this.entitiesByType[types[i]]) {
+							if(this.entitiesByType[types[i]][x] === entity){
+								this.entitiesByType[types[i]].splice(x, 1);
+								break;
+							}
+						}
+						if(entity.solidCollisions[types[i]].length){
+							solid = true;
+						}
+						if(entity.softCollisions[types[i]].length){
+							soft = true;
+						}
+					}
+					
+					if(solid){
+						for (x in this.solidEntities) {
+							if(this.solidEntities[x] === entity){
+								this.solidEntities.splice(x, 1);
+								break;
+							}
+						}
+					}
+			
+					if(soft){
+						for (x in this.softEntities) {
+							if(this.softEntities[x] === entity){
+								this.softEntities.splice(x, 1);
+								break;
+							}
+						}
+					}
+					
+					for (j = 0; j < this.allEntities.length; j++)
+					{
+						if (this.allEntities[j] === entity)
+						{
+							this.allEntities.splice(j,1);
+							break;
+						}
+					}
+					this.updateLiveList = true;
+				}
+			},
+			
 			checkCamera: (function(){
 				var groupSortBySize = function(a, b){
 					return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();

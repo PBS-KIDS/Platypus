@@ -40,8 +40,8 @@ Summarize the purpose of this component here.
 		 
 		 Property this.owner - a reference to the component's Entity
 		 Property this.type  - identical to the id provided below
-		 Method addListener(event, callback) - adds an event to listen for
-		 Method removeListener(event, callback) - removes an event
+		 Method addEventListener(event, callback) - adds an event to listen for
+		 Method removeEventListener(event, callback) - removes an event
 		*********************************************************************/
 		
 		id: 'name-of-component', //TODO: Change the name of the component!

@@ -113,10 +113,30 @@ This component groups other entities with this entity for collision checking. Th
 		
 		events:{
 			"child-entity-added": function(entity){
-				this['add-collision-entity'](entity);
+				this.addCollisionEntity(entity);
 			},
 			
 			"add-collision-entity": function(entity){
+				this.addCollisionEntity(entity);
+			},
+			
+			"child-entity-removed": function(entity){
+				this.removeCollisionEntity(entity);
+			},
+			
+			"remove-collision-entity": function(entity){
+				this.removeCollisionEntity(entity);
+			},
+			
+			"relocate-entity": function(resp){
+				this.owner.previousX = this.owner.x;
+				this.owner.previousY = this.owner.y;
+				this.updateAABB();
+			}
+		},
+		
+		methods: {
+			addCollisionEntity: function(entity){
 				var i = 0,
 				types = entity.collisionTypes;
 				
@@ -130,11 +150,7 @@ This component groups other entities with this entity for collision checking. Th
 				}
 			},
 			
-			"child-entity-removed": function(entity){
-				this['remove-collision-entity'](entity);
-			},
-			
-			"remove-collision-entity": function(entity){
+			removeCollisionEntity: function(entity){
 				var x = 0,
 				i     = 0,
 				types = entity.collisionTypes;
@@ -152,17 +168,8 @@ This component groups other entities with this entity for collision checking. Th
 					}
 					this.updateAABB();
 				}
-				
 			},
 			
-			"relocate-entity": function(resp){
-				this.owner.previousX = this.owner.x;
-				this.owner.previousY = this.owner.y;
-				this.updateAABB();
-			}
-		},
-		
-		methods: {
 			getCollisionTypes: function(){
 				var childEntity = null,
 				compiledList = [];

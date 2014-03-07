@@ -240,10 +240,8 @@ This component listens for input messages triggered on the entity and updates th
 							}
 						}
 					}
-					this[key + ':up']   = createUpHandler(actionState);
-					this[key + ':down'] = createDownHandler(actionState);
-					this.addListener(key + ':up');
-					this.addListener(key + ':down');
+					this.addEventListener(key + ':up', createUpHandler(actionState));
+					this.addEventListener(key + ':down', createDownHandler(actionState));
 				}
 			}
 			

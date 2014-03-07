@@ -43,8 +43,7 @@ This component will listen for a particular collision message and, depending on 
 			
 			if(definition.collisions) {
 				for(event in definition.collisions){
-					this[event] = collide(this.owner, definition.state, definition.collisions[event]);
-					this.addListener(event);
+					this.addEventListener(event, collide(this.owner, definition.state, definition.collisions[event]));
 				}
 			}
 		}

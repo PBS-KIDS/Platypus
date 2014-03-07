@@ -88,13 +88,7 @@ Multiple collision components may be added to a single entity if distinct messag
     }
 */
 (function(){
-	var twinBroadcast = function(component, funcA, funcB){
-		return function (value) {
-			funcA.call(component, value);
-			funcB.call(component, value);
-		  };
-	},
-	entityBroadcast = function(event, solidOrSoft, collisionType){
+	var entityBroadcast = function(event, solidOrSoft, collisionType){
 		if(typeof event === 'string'){
 			return function(value){
 				if(value.myType === collisionType){
@@ -347,8 +341,7 @@ Multiple collision components may be added to a single entity if distinct messag
 					this.owner.solidCollisions[this.collisionType].push(i);
 					this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
 					if(definition.solidCollisions[i]){
-						this.addListener('hit-by-' + i);
-						this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType);
+						this.addEventListener('hit-by-' + i, entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType));
 					}
 				}
 			}
@@ -359,14 +352,7 @@ Multiple collision components may be added to a single entity if distinct messag
 				for(var i in definition.softCollisions){
 					this.owner.softCollisions[this.collisionType].push(i);
 					if(definition.softCollisions[i]){
-						if(this['hit-by-' + i]) {
-							//this['hit-by-' + i + '-solid'] = this['hit-by-' + i];
-							//this['hit-by-' + i + '-soft'] = entityBroadcast(definition.softCollisions[i], 'soft');
-							this['hit-by-' + i] = twinBroadcast(this, this['hit-by-' + i], entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
-						} else {
-							this.addListener('hit-by-' + i);
-							this['hit-by-' + i] = entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType);
-						}
+						this.addEventListener('hit-by-' + i, entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
 					}
 				}
 			}

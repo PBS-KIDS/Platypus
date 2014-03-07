@@ -73,8 +73,7 @@ This component changes the (x, y) position of an object according to its current
 				} else {
 					this.pausers = definition.pause;
 				}
-				this.addListener('logical-state');
-				this['logical-state'] = function(state){
+				this.addEventListener('logical-state', function(state){
 					var paused = false;
 					if(definition.pause){
 						for(var i = 0; i < self.pausers.length; i++){
@@ -92,7 +91,7 @@ This component changes the (x, y) position of an object according to its current
 							self.boost = true;
 						}
 					}
-				};
+				});
 			}
 
 			this.state = this.owner.state;

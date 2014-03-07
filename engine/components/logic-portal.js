@@ -30,69 +30,29 @@ A component which changes the scene when activated. When the portal receives an 
       //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.
     }
 */
-platformer.components['logic-portal'] = (function(){ //TODO: Change the name of the component!
-	var component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-
-		this.addListeners(['handle-logic', 'occupied-portal', 'activate-portal']);
-		this.destination = this.owner.destination || definition.destination;
-		this.activated = false;
-		this.used = false; 
-	};
-	var proto = component.prototype;
 	
-	
-	proto['handle-logic'] = function(){
-		if (!this.used && this.activated)
-		{
-			this.owner.trigger("new-scene", {scene: this.destination});
-			this.used = true;
+(function(){
+	return platformer.createComponentClass({
+		id: 'logic-portal',
+ 		constructor: function(definition){
+			this.destination = this.owner.destination || definition.destination;
+			this.activated = false;
+			this.used = false; 
+		},
+		events:{
+			"handle-logic": function(){
+				if (!this.used && this.activated){
+					this.owner.trigger("new-scene", {scene: this.destination});
+					this.used = true;
+				}
+			},
+			"occupied-portal": function(message){
+				var entity = message.entity; 
+				entity.trigger('portal-waiting', this.owner);
+			},
+			"activate-portal": function(){
+				this.activated = true;
+			}
 		}
-	};
-	
-	proto['occupied-portal'] = function(message){
-		var entity = message.entity; 
-		entity.trigger('portal-waiting', this.owner);
-	};
-	
-	proto['activate-portal'] = function()
-	{
-		this.activated = true;
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

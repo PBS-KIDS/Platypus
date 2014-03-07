@@ -13,11 +13,14 @@
                 "components":[{
                     "type": "change-scene",
                     "scene": "menu",
-                    "message": "complete"
+                    "aliases": {
+                        "complete": "new-scene"
+                    }
                 },{
                     "type": "asset-loader",
                     "useXHR": false
-                }]
+                }],
+                "properties": {"debug": true}
             }]
         }
 	]

@@ -11,8 +11,6 @@ This component will cause the entity to jump with a certain amount of accelerati
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
 - **jump** - On receiving this message, the component causes the entity's position to change according to the preset behavior.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not make it jump.
-- **[Message specified in definition]** - An alternative message can be specified in the JSON definition that will also cause the jump.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not make it jump.
 - **hit-solid** - On receiving this message, the component discontinues its jump velocity.
   - @param collisionInfo.x (number) - Either 1,0, or -1. Zeros out the jump velocity if acceleration is in the contrary direction.
   - @param collisionInfo.y (number) - Either 1,0, or -1. Zeros out the jump velocity if acceleration is in the contrary direction.
@@ -23,9 +21,6 @@ This component will cause the entity to jump with a certain amount of accelerati
 ## JSON Definition:
     {
       "type": "logic-jump",
-      
-      "message": "do-action",
-      // Optional: If specified, this message will cause the entity to jump on this message in addition to "jump".
       
       "accelerationX": 0.2,
       "accelerationY": -0.07,
@@ -40,11 +35,6 @@ This component will cause the entity to jump with a certain amount of accelerati
 	return platformer.createComponentClass({
 		id: 'logic-jump',
 		constructor: function(definition){
-			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['jump'];
-			}
-			
 			this.aX = this.owner.accelerationX || definition.accelerationX || 0;
 			this.aY = this.owner.accelerationY || definition.accelerationY;
 			if(typeof this.aY !== 'number'){

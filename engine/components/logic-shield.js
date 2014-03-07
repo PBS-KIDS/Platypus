@@ -9,9 +9,9 @@ This component creates an entity and connects it with the current entity. This i
 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-- **wield-shield, [equivalent message]** - creates and connects the shield entity to this entity.
+- **wield-shield** - creates and connects the shield entity to this entity.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
-- **drop-shield, [equivalent message]** - Removes shield entity from this entity and destroys it.
+- **drop-shield** - Removes shield entity from this entity and destroys it.
 
 ## JSON Definition
     {
@@ -24,14 +24,8 @@ This component creates an entity and connects it with the current entity. This i
       // Optional. The entity state that should be true while shield is in place. Defaults to "shielded".
       
       "offsetX": 45,
-      "offsetY": -20,
+      "offsetY": -20
       // Optional. Location relative to the entity where the shield should be located once created. Defaults to (0, 0).
-      
-      "message": "found-box",
-      // Optional. Alternative message triggered on entity that should trigger "wield-shield" behavior.
-      
-      "stopMessage": "got-wet"
-      // Optional. Alternative message triggered on entity that should trigger "drop-shield" behavior.
     }
 */
 (function(){
@@ -67,15 +61,6 @@ This component creates an entity and connects it with the current entity. This i
 			
 			this.shield = null;
 			this.wieldShield = false;
-			
-			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['wield-shield'];
-			}
-			if(definition.stopMessage){
-				this.addListener(definition.stopMessage);
-				this[definition.stopMessage] = this['drop-shield'];
-			}
 		},
 
 		events: {// These are messages that this component listens for

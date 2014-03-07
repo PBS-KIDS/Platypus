@@ -96,11 +96,20 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 		events: {
 			"scene-loaded": function(persistentData){
 				if (!this.manuallyLoad) {
-					this['load-level']({level: this.level || persistentData.level, persistentData: persistentData});
+					this.loadLevel({
+						level: this.level || persistentData.level,
+						persistentData: persistentData
+					});
 				}
 			},
 			
 			"load-level": function(levelData){
+				this.loadLevel(levelData);
+			}
+		},
+		
+		methods: {
+			loadLevel: function(levelData){
 				var level = levelData.level,
 				actionLayer = 0,
 				layer = false;
@@ -123,10 +132,8 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					camera: this.followEntity
 				});
 				this.owner.removeComponent(this);
-			}
-		},
-		
-		methods: {
+			},
+			
 			setupLayer: function(layer, level, combineRenderLayer){
 				var self       = this,
 				images         = self.images || [],

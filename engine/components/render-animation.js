@@ -226,7 +226,6 @@ This component is attached to entities that will appear in the game world. It re
 			
 			this.checkStates = [];
 			for(var i in map){
-				this.addListener(i);
 				animation = map[i];
 				
 				if(animation[animation.length - 1] === '!'){
@@ -236,7 +235,7 @@ This component is attached to entities that will appear in the game world. It re
 					this.followThroughs[animation] = false;
 				}
 				
-				this[i] = changeState(animation);
+				this.addEventListener(i, changeState(animation));
 				this.checkStates.push(createTest(i, animation));
 			}
 			lastAnimation = animation;
@@ -357,7 +356,7 @@ This component is attached to entities that will appear in the game world. It re
 			}
 
 			//Check state against entity's prior state to update animation if necessary on instantiation.
-			this['logical-state'](this.state);
+			this.stateChange = true;
 			
 			if(definition.cache){
 				this.updateSprite();
@@ -366,24 +365,14 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		events: {
-			"handle-render-load": function(obj){
-				if(!this.pinTo){
-					this.stage = obj.stage;
-					if(!this.stage){
-						return;
-					}
-					this.stage.addChild(this.container);
-					this.addInputs();				
-				} else {
-					return;
-				}
+			"handle-render-load": function(resp){
+				this.addStage(resp.stage);
 			},
 			
 			"handle-render": function(resp){
 				if(!this.stage){
 					if(!this.pinTo) { //In case this component was added after handler-render is initiated
-						this['handle-render-load'](resp);
-						if(!this.stage){
+						if(!this.addStage(resp.stage)){
 							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
 							this.owner.removeComponent(this);
 							return;
@@ -398,9 +387,6 @@ This component is attached to entities that will appear in the game world. It re
 			
 			"logical-state": function(state){
 				this.stateChange = true;
-				if(state['hidden'] !== undefined) {
-					this.container.hidden = state['hidden'];
-				}
 			},
 			
 			"hide-animation": function(){
@@ -436,6 +422,17 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		methods: {
+			addStage: function(stage){
+				if(stage && !this.pinTo){
+					this.stage = stage;
+					this.stage.addChild(this.container);
+					this.addInputs();
+					return stage;
+				} else {
+					return null;
+				}
+			},
+			
 			updateSprite: (function(){
 				var sort = function(a, b) {
 					return a.z - b.z;
@@ -534,6 +531,10 @@ This component is attached to entities that will appear in the game world. It re
 					}
 					
 					if(this.stateChange){
+						if(this.state['hidden'] !== undefined) {
+							this.container.hidden = this.state['hidden'];
+						}
+
 						if(this.checkStates){
 							for(; i < this.checkStates.length; i++){
 								testCase = this.checkStates[i](this.state);

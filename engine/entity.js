@@ -155,9 +155,12 @@ platformer.classes.entity = (function(){
 	    return false;
 	};
 	
-	proto.bind = function(event, func){
+	proto.bind = function(event, callback, scope){
+		if(!callback){
+			callback = aaaa;
+		}
 		if(!this.messages[event]) this.messages[event] = [];
-		this.messages[event].push(func);
+		this.messages[event].push({callback: callback, scope: scope});
 	};
 	
 	proto.unbind = function(event, func){
@@ -182,7 +185,7 @@ platformer.classes.entity = (function(){
 	proto.safelyUnbind = function(event, func){
 		if(!this.messages[event]) this.messages[event] = [];
 		for (var x in this.messages[event]){
-			if(this.messages[event][x] === func){
+			if(this.messages[event][x].callback === func){
 				this.messages[event].splice(x,1);
 				break;
 			}
@@ -236,7 +239,7 @@ platformer.classes.entity = (function(){
 		this.loopCheck.push(event);
 		if(this.messages[event]){
 			for (i = 0; i < this.messages[event].length; i++){
-				this.messages[event][i](value, debug);
+				this.messages[event][i].callback.call(this.messages[event][i].scope || this, value, debug);
 			}
 		}
 		this.loopCheck.length = this.loopCheck.length - 1;
