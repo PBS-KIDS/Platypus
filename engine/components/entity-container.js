@@ -61,23 +61,9 @@ This component allows the entity to contain child entities. It will add several 
 */
 (function(){
 	var childBroadcast = function(event){
-		if(typeof event === 'string'){
-			return function(value, debug){
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					this.entities[x].trigger(event, value, debug);
-				}
-			};
-		} else {
-			return function(value, debug){
-				for (var e in event){
-					for (var x = 0; x < this.entities.length; x++)
-					{
-						this.entities[x].trigger(event[e], value, debug);
-					}
-				}
-			};
-		}
+		return function(value, debug){
+			this.triggerOnChildren(event, value, debug);
+		};
 	};
 	
 	return platformer.createComponentClass({
@@ -98,11 +84,14 @@ This component allows the entity to contain child entities. It will add several 
 			
 			this.owner.entities     = self.entities;
 			
+			this.childEvents = [];
 			if(definition.childEvents){
 				for(var event in definition.childEvents){
-					this.addEventListener(definition.childEvents[event], childBroadcast(definition.childEvents[event]));
+					this.addNewPublicEvent(definition.childEvents[event]);
 				}
 			}
+			this.addNewPrivateEvent('peer-entity-added');
+			this.addNewPrivateEvent('peer-entity-removed');
 		},
 		
 		events:{
@@ -141,12 +130,47 @@ This component allows the entity to contain child entities. It will add several 
 			
 			"remove-entity": function (entity) {
 				this.removeEntity(entity);
+			},
+			
+			"child-entity-updated": function (entity) {
+				this.updateChildEventListeners(entity);
 			}
 		},
 		
 		methods:{
+			addNewPublicEvent: function(event){
+				this.addNewPrivateEvent(event);
+				
+				// Listen for message on owner
+				for(var i = 0; i < this.childEvents.length; i++){
+					if(this.childEvents[i] === event){
+						return false;
+					}
+				}
+				this.childEvents.push(event);
+				this.addEventListener(event, childBroadcast(event));
+			},
+			
+			addNewPrivateEvent: function(event){
+				if(this.messages[event]){
+					return false; // event is already added.
+				}
+
+				this.messages[event] = []; //to signify it's been added even if not used
+				
+				//Listen for message on children
+				for (var x = 0; x < this.entities.length; x++) {
+					if(this.entities[x].listener.events[event]){
+						for (var y = 0; y < this.entities[x].listener.events[event].length; y++) {
+							this.addChildEventListener(this.entities[x], event, this.entities[x].listener.events[event][y].callback, this.entities[x].listener.events[event][y].scope);
+						}
+					}
+				}
+			},
+			
 			destroy: function(){
 				for (var i in this.entities){
+					this.removeChildEventListeners(this.entities[i]);
 					this.entities[i].destroy();
 				}
 				this.entities.length = 0;
@@ -194,15 +218,16 @@ This component allows the entity to contain child entities. It will add several 
 			addEntity: function(entity){
 				entity.parent = this.owner;
 				entity.trigger('adopted');
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					entity.trigger('peer-entity-added', this.entities[x]);
+				this.addChildEventListeners(entity);
+				
+				for (var x = 0; x < this.entities.length; x++) {
+					if(!entity.triggerEvent('peer-entity-added', this.entities[x])){
+						break;
+					}
 				}
 				
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					this.entities[x].trigger('peer-entity-added', entity);
-				}
+				this.triggerEventOnChildren('peer-entity-added', entity);
+
 				this.entities.push(entity);
 				this.owner.trigger('child-entity-added', entity);
 				return entity;
@@ -211,20 +236,84 @@ This component allows the entity to contain child entities. It will add several 
 			removeEntity: function(entity){
 				for (var x = 0; x < this.entities.length; x++){
 				    if(this.entities[x] === entity){
-						for (var y = 0; y < this.entities.length; y++){
-							if(x !== y){
-								this.entities[y].trigger('peer-entity-removed', entity);
-							}
-						}
+						this.triggerEventOnChildren('peer-entity-removed', entity);
 				    	entity.parent = null;
 				    	this.entities.splice(x, 1);
 						this.owner.trigger('child-entity-removed', entity);
+						this.removeChildEventListeners(entity);
 				    	entity.destroy();
 					    return entity;
 				    }
 			    }
 			    return false;
+			},
+			
+			updateChildEventListeners: function(entity){
+				this.removeChildEventListeners(entity);
+				this.addChildEventListeners(entity);
+			},
+			
+			addChildEventListeners: function(entity){
+				var event = '';
+				
+				for (var x = 0; x < this.childEvents.length; x++) {
+					event = this.childEvents[x];
+					if(entity.listener.events[event]){
+						for (var y = 0; y < entity.listener.events[event].length; y++) {
+							this.addChildEventListener(entity, event, entity.listener.events[event][y].callback, entity.listener.events[event][y].scope);
+						}
+					}
+				}
+			},
+			
+			addChildEventListener: function(entity, event, callback, scope){
+				if(!entity.containerListener){
+					entity.containerListener = {
+						events: [],
+						messages: []
+					};
+				}
+				entity.containerListener.events.push(event);
+				entity.containerListener.messages.push(callback);
+				this.bind(event, callback, scope);
+			},
+			
+			removeChildEventListeners: function(entity){
+				var events = null,
+				messages = null;
+				
+				if(entity.containerListener){
+					events = entity.containerListener.events;
+					messages   = entity.containerListener.messages;
+					for(var i = 0; i < events.length; i++){
+						this.removeChildEventListener(entity, events[i], messages[i]);
+					}
+					entity.containerListener = null;
+				}
+			},
+			
+			removeChildEventListener: function(entity, event, callback){
+				var events = entity.containerListener.events,
+				messages   = entity.containerListener.messages;
+				for(var i = 0; i < events.length; i++){
+					if((events[i] === event) && (!callback || (messages[i] === callback))){
+						this.unbind(event, messages[i]);
+					}
+				}
+			},
+
+			triggerEventOnChildren: function(event, message, debug){
+				if(!this.messages[event]){
+					this.addNewPrivateEvent(event);
+				}
+				return this.triggerEvent(event, message, debug);
+			},
+			triggerOnChildren: function(event, message, debug){
+				if(!this.messages[event]){
+					this.addNewPrivateEvent(event);
+				}
+				return this.trigger(event, message, debug);
 			}
 		}
-	});
+	}, platformer.classes.messenger);
 })();

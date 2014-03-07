@@ -70,110 +70,125 @@ The Entity object acts as a container for components, facilitates communication 
       }
     }
 */
-platformer.classes.entity = (function(){
-	var entityIds = {},
-	entity = function (definition, instanceDefinition){
-		var self             = this,
-		index                = undefined,
-		componentDefinition  = undefined,
-		def                  = definition || {},
-		componentDefinitions = def.components || [],
-		defaultProperties    = def.properties || {},
-		instance             = instanceDefinition || {},
-		instanceProperties   = instance.properties || {};
-		
-		// Set properties of messenger on this entity.
-		platformer.classes.messenger.call(this);
-		
-		self.components  = [];
-		self.type = def.id || 'none';
-		
-		self.id = instanceDefinition.id;
-		if(!self.id){
-			if(!entityIds[self.type]){
-				entityIds[self.type] = 0;
-			}
-			self.id = self.type + '-' + entityIds[self.type];
-			entityIds[self.type] += 1;
-		}
-
-		this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
-		this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
-		this.bind('set-property', function(keyValuePairs){
-			self.setProperty(keyValuePairs);
-		});
-		
-		if(!self.state){
-			self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
-		}
-		self.lastState = {}; //This is used to determine if the state of the entity has changed.
-		
-		for (index in componentDefinitions){
-			componentDefinition = componentDefinitions[index];
-			if(platformer.components[componentDefinition.type]){
-				self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
-			} else {
-				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
-			}
-		}
-		
-		this.listener = {
-			events: [],
-			messages: []
-		};
-
-		self.trigger('load');
-	};
-	var proto = entity.prototype = new platformer.classes.messenger();
+platformer.classes.messenger = (function(){
+	var messenger = function (){
+		this.messages    = {};
+		this.loopCheck   = [];
+		this.unbindLater = [];
+	},
+	proto = messenger.prototype;
 	
 	proto.toString = function(){
-		return "[entity " + this.type + "]";
+		return "[messenger Object]";
 	};
 	
-	proto.addComponent = function(component){
-	    this.components.push(component);
-	    return component;
+	proto.bind = function(event, callback, scope){
+		if(!this.messages[event]) this.messages[event] = [];
+		this.messages[event].push({callback: callback, scope: scope});
 	};
 	
-	proto.removeComponent = function(component){
-		var index = '';
+	proto.unbind = function(event, func){
+		var found = false, j = 0;
 		
-		if(typeof component === 'string'){
-		    for (index in this.components){
-			    if(this.components[index].type === component){
-			    	component = this.components[index];
-			    	this.components.splice(index, 1);
-			    	component.destroy();
-				    return component;
-			    }
-		    }
+		if(this.loopCheck.length){
+			for(j = 0; j < this.loopCheck.length; j++){
+				if(this.loopCheck[j] === event){
+					found = true;
+					break;
+				}
+			}
+		}
+			
+		if(found){ //We're currently busy triggering messages like this, so we shouldn't remove message handlers until we're finished.
+			this.unbindLater.push({event: event, func: func});
 		} else {
-		    for (index in this.components){
-			    if(this.components[index] === component){
-			    	this.components.splice(index, 1);
-			    	component.destroy();
-				    return component;
-			    }
-		    }
+			this.safelyUnbind(event, func);
+		}
+	};
+
+	proto.safelyUnbind = function(event, func){
+		if(!this.messages[event]) this.messages[event] = [];
+		for (var x in this.messages[event]){
+			if(this.messages[event][x].callback === func){
+				this.messages[event].splice(x,1);
+				break;
+			}
+		}
+	};
+	
+	// This handles multiple event structures: "", [], and {}
+	proto.trigger = function(events, message, debug){
+		var i = 0, count = 0;
+		
+		if(typeof events === 'string') {
+			return this.triggerEvent(events, message, debug);
+		} else if (Array.isArray(events)) {
+			for (; i < events.length; i++){
+				count += this.trigger(events[i], message, debug);
+			}
+			return count;
+		} else if (events.event) {
+			return this.triggerEvent(events.event, events.message || message, debug);
+		} else {
+			console.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.');
+			return 0;
+		}
+	};
+	
+	// This handles string events only
+	proto.triggerEvent = function(event, value, debug){
+		var i = 0, j = 0, debugCount = 0;
+		
+		// Debug logging.
+		if(this.debug || debug || (value && value.debug)){
+			if(this.messages[event] && this.messages[event].length){
+				console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length>1)?'s':'') + '.', value);
+			} else {
+				console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
+			}
+			
+			for (i = 0; i < this.loopCheck.length; i++){
+				if(this.loopCheck[i] === event){
+					debugCount += 1;
+					if(debugCount > 5){
+						throw "Endless loop detected for '" + event + "'.";
+					} else {
+						console.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
+					}
+				}
+			}
+			i = 0;
+		}
+
+		this.loopCheck.push(event);
+		if(this.messages[event]){
+			for (i = 0; i < this.messages[event].length; i++){
+				this.messages[event][i].callback.call(this.messages[event][i].scope || this, value, debug);
+			}
+		}
+		this.loopCheck.length = this.loopCheck.length - 1;
+		
+		if(!this.loopCheck.length && this.unbindLater.length){
+			for(j = 0; j < this.unbindLater.length; j++){
+				this.safelyUnbind(this.unbindLater[j].event, this.unbindLater[j].func);
+			}
+			this.unbindLater.length = 0;
 		}
 		
-	    return false;
+		return i;
 	};
 	
-	proto.setProperty = function(keyValuePairs){
-		var index = '';
-		
-		for (index in keyValuePairs){ // This takes a list of properties and appends them directly to the object.
-			this[index] = keyValuePairs[index];
+	proto.getMessageIds = function(){
+		var events = [];
+		for (var event in this.messages){
+			events.push(event);
 		}
+		return events;
 	};
 	
-	proto.destroy = function(){
-		for (var x in this.components) {
-			this.components[x].destroy();
-		}
-		this.components.length = 0;
+	proto.copyEventHandlers = function(event){
+		return this.messages[events] || null;
 	};
 	
-	return entity;
+	return messenger;
 })();

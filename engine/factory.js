@@ -5,10 +5,15 @@
 (function (ns){
 	ns.components = {};
 	
-	ns.createComponentClass = function(componentDefinition){
+	ns.createComponentClass = function(componentDefinition, prototype){
 		var	component = function(owner, definition){
 			var func = null,
 			name     = '';
+			
+			// if prototype provided, set up its properties here.
+			if(prototype){
+				prototype.call(this);
+			}
 			
 			this.owner = owner;
 			this.listener = {
@@ -52,13 +57,13 @@
 		func  = null,
 		proto = component.prototype;
 		
+		if(prototype){ //absorb template prototype if it exists.
+			proto = component.prototype = new prototype();
+		}
+		
 		// Have to copy rather than replace so definition is not corrupted
 		proto.constructor = componentDefinition.constructor;
-/*		if(componentDefinition.events){
-			for(func in componentDefinition.events){
-				proto[func] = componentDefinition.events[func];
-			}
-		}*/
+
 		if (componentDefinition.methods) for(func in componentDefinition.methods){
 			if(func === 'destroy'){
 				proto['___' + func] = componentDefinition.methods[func];

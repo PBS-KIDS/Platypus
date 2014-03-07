@@ -19,8 +19,7 @@
                 },{
                     "type": "asset-loader",
                     "useXHR": false
-                }],
-                "properties": {"debug": true}
+                }]
             }]
         }
 	]
