@@ -160,7 +160,7 @@ This component allows an entity to communicate directly with one or more entitie
 			}
 		},
 		
-		method: {
+		methods: {
 			resolveAdoption: function(resp){
 				var grandparent = this.owner.parent;
 				while(grandparent.parent){
