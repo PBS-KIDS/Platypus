@@ -1,6 +1,6 @@
 /**
-# CLASS entity
-The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the Platformer engine.
+# CLASS messenger
+The Messenger object facilitates communication between components and other game objects. Messenger is currently used by [[Entity]] and [[entity-container]].
 
 ## Messages
 
@@ -8,67 +8,28 @@ The Entity object acts as a container for components, facilitates communication 
 - **load** - The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
 
 ## Methods
-- **[constructor]** - Returns a new Entity object based on the definitions provided.
-  - @param definition (object) - Base definition for the entity, includes properties and components as shown below under "JSON definition".
-  - @param instanceDefinition (object) - Specific instance definition including properties that override the base definition properties.
-  - @return entity - returns the new entity made up of the provided components. 
-- **addComponent** - Attaches the provided component to the entity.
-  - @param component (object) - Must be an object that functions as a [[Component]].
-  - @return component - Returns the same object that was submitted.
-- **removeComponent** - Removes the mentioned component from the entity.
-  - @param component (object) - Must be a [[Component]] attached to the entity.
-  - @return component|false - Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
-- **bind** - Used by components to bind handler functions to triggered events on the entity. 
-  - @param event (string) - This is the message for which the component is listening.
+- **[constructor]** - Returns a new Messenger object.
+  - @return messenger - returns a newly instantiated messenger.
+- **bind** - Used by components to bind handler functions to triggered events. 
+  - @param event (string) - This is the message being listened for.
   - @param func (function) - This is the function that will be run when the message is triggered.
-- **toString** - Returns a string describing the entity.
-  - @return string - Returns the entity type as a string of the form "[entity entity-type]".
-- **trigger** - This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run component functions as appropriate.
+- **toString** - Returns a string describing the messenger.
+  - @return string - Returns the type as a string of the form "[messenger object]".
+- **trigger** - This method is used by both internal components and external entities to trigger messages. When triggered, messenger checks through bound handlers to run as appropriate.
   - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
-  - @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param value (variant) - This is a message object or other value to pass along to event handler.
   - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
-  - @return integer - The number of handlers for the triggered message: this is useful for determining whether the entity cares about a given message.
-- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run component functions as appropriate.
+  - @return integer - The number of handlers for the triggered message.
+- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate.
   - @param event (string) - This is the message to process.
-  - @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param value (variant) - This is a message object or other value to pass along to handlers.
   - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
-  - @return integer - The number of handlers for the triggered message: this is useful for determining whether the entity cares about a given message.
-- **unbind** - Used by components to unbind handler functions on the entity, typically called when a component is removed from the entity.
+  - @return integer - The number of handlers for the triggered message.
+- **unbind** - Used to unbind handler functions.
   - @param event (string) - This is the message the component is currently listening to.
   - @param func (function) - This is the function that was attached to the message.
 - **getMessageIds** - This method returns all the messages that this entity is concerned about.
-  - @return Array - An array of strings listing all the messages for which this entity has handlers.
-- **destroy** - This method removes all components from the entity.
-
-## JSON Definition:
-    {
-      "id": "entity-id",
-      // "entity-id" becomes `entity.type` once the entity is created.
-      
-      "components": [
-      // This array lists one or more component definition objects
-      
-        {"type": "example-component"}
-        // The component objects must include a "type" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
-      ],
-      
-      "properties": [
-      // This array lists properties that will be attached directly to this entity.
-      
-        "x": 240
-        // For example, `x` becomes `entity.x` on the new entity.
-      ],
-      
-      "filters": {
-      // Filters are only used by top level entities loaded by the scene and are not used by the entity directly. They determine whether an entity should be loaded on a particular browser according to browser settings.
-      
-        "includes": ["touch"],
-        // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.
-
-        "excludes": ["multitouch"]
-        // Optional. This filter specifies that this entity should not be loaded on browsers/devices that do not support a multitouch interface. More than one setting can be added to the array.
-      }
-    }
+  - @return Array - An array of strings listing all the messages for which this messenger has handlers.
 */
 platformer.classes.messenger = (function(){
 	var messenger = function (){

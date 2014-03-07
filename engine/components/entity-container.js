@@ -2,6 +2,9 @@
 # COMPONENT **entity-container**
 This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
 
+## Dependencies
+- **[[Messenger]] - Entity uses `messenger` in its prototypal chain to enable event handling.
+
 ## Messages
 
 ### Listens for:
@@ -27,19 +30,29 @@ This component allows the entity to contain child entities. It will add several 
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
   - @param message (object) - sends the message object received by the original message.
 
-## Methods:
+## Entity Methods:
 - **addEntity** -  This method will add the provided entity to this component's list of entities.
   - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.
   - @return entity ([[Entity]] object) - Returns the entity that was just added.
+- **removeEntity** - This method will remove the provided entity from the list of child entities.
+  - @param message ([[Entity]] object) - Required. The entity to remove.
+  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
 - **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.
   - @param type (string) - Required. The entity type to find.
   - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
 - **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).
   - @param id (string) - Required. The entity id to find.
   - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
-- **removeEntity** - This method will remove the provided entity from the list of child entities.
-  - @param message ([[Entity]] object) - Required. The entity to remove.
-  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
+- **triggerOnChildren** - This method is used by both internal components and external entities to trigger messages on the child entities.
+  - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
+  - @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
+- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on the child entities.
+  - @param event (string) - This is the message to process.
+  - @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
 
 ## JSON Definition:
     {
@@ -168,6 +181,59 @@ This component allows the entity to contain child entities. It will add several 
 				}
 			},
 			
+			updateChildEventListeners: function(entity){
+				this.removeChildEventListeners(entity);
+				this.addChildEventListeners(entity);
+			},
+			
+			addChildEventListeners: function(entity){
+				var event = '';
+				
+				for (event in this.messages) {
+					if(entity.messages[event]){
+						for (var y = 0; y < entity.messages[event].length; y++) {
+							this.addChildEventListener(entity, event, entity.messages[event][y].callback, entity.messages[event][y].scope);
+						}
+					}
+				}
+			},
+			
+			removeChildEventListeners: function(entity){
+				var events = null,
+				messages = null;
+				
+				if(entity.containerListener){
+					events = entity.containerListener.events;
+					messages   = entity.containerListener.messages;
+					for(var i = 0; i < events.length; i++){
+						this.removeChildEventListener(entity, events[i], messages[i]);
+					}
+					entity.containerListener = null;
+				}
+			},
+			
+			addChildEventListener: function(entity, event, callback, scope){
+				if(!entity.containerListener){
+					entity.containerListener = {
+						events: [],
+						messages: []
+					};
+				}
+				entity.containerListener.events.push(event);
+				entity.containerListener.messages.push(callback);
+				this.bind(event, callback, scope);
+			},
+			
+			removeChildEventListener: function(entity, event, callback){
+				var events = entity.containerListener.events,
+				messages   = entity.containerListener.messages;
+				for(var i = 0; i < events.length; i++){
+					if((events[i] === event) && (!callback || (messages[i] === callback))){
+						this.unbind(event, messages[i]);
+					}
+				}
+			},
+
 			destroy: function(){
 				for (var i in this.entities){
 					this.removeChildEventListeners(this.entities[i]);
@@ -248,59 +314,6 @@ This component allows the entity to contain child entities. It will add several 
 			    return false;
 			},
 			
-			updateChildEventListeners: function(entity){
-				this.removeChildEventListeners(entity);
-				this.addChildEventListeners(entity);
-			},
-			
-			addChildEventListeners: function(entity){
-				var event = '';
-				
-				for (event in this.messages) {
-					if(entity.messages[event]){
-						for (var y = 0; y < entity.messages[event].length; y++) {
-							this.addChildEventListener(entity, event, entity.messages[event][y].callback, entity.messages[event][y].scope);
-						}
-					}
-				}
-			},
-			
-			addChildEventListener: function(entity, event, callback, scope){
-				if(!entity.containerListener){
-					entity.containerListener = {
-						events: [],
-						messages: []
-					};
-				}
-				entity.containerListener.events.push(event);
-				entity.containerListener.messages.push(callback);
-				this.bind(event, callback, scope);
-			},
-			
-			removeChildEventListeners: function(entity){
-				var events = null,
-				messages = null;
-				
-				if(entity.containerListener){
-					events = entity.containerListener.events;
-					messages   = entity.containerListener.messages;
-					for(var i = 0; i < events.length; i++){
-						this.removeChildEventListener(entity, events[i], messages[i]);
-					}
-					entity.containerListener = null;
-				}
-			},
-			
-			removeChildEventListener: function(entity, event, callback){
-				var events = entity.containerListener.events,
-				messages   = entity.containerListener.messages;
-				for(var i = 0; i < events.length; i++){
-					if((events[i] === event) && (!callback || (messages[i] === callback))){
-						this.unbind(event, messages[i]);
-					}
-				}
-			},
-
 			triggerEventOnChildren: function(event, message, debug){
 				if(!this.messages[event]){
 					this.addNewPrivateEvent(event);

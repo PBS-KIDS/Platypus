@@ -2,6 +2,9 @@
 # CLASS entity
 The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the Platformer engine.
 
+## Dependencies
+- **[[Messenger]] - Entity uses `messenger` in its prototypal chain to enable event handling.
+
 ## Messages
 
 ### Local Broadcasts:
@@ -117,11 +120,6 @@ platformer.classes.entity = (function(){
 			}
 		}
 		
-		this.listener = {
-			events: [],
-			messages: []
-		};
-
 		self.trigger('load');
 	};
 	var proto = entity.prototype = new platformer.classes.messenger();
