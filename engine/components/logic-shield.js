@@ -61,6 +61,14 @@ This component creates an entity and connects it with the current entity. This i
 			
 			this.shield = null;
 			this.wieldShield = false;
+			
+			// Notes definition changes from older versions of this component.
+			if(definition.message){
+				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "wield-shield"} instead.');
+			}
+			if(definition.message){
+				console.warn('"' + this.type + '" components no longer accept "stopMessage": "' + definition.stopMessage + '" as a definition parameter. Use "aliases": {"' + definition.stopMessage + '": "drop-shield"} instead.');
+			}
 		},
 
 		events: {// These are messages that this component listens for

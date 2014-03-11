@@ -58,6 +58,11 @@ This component will cause the entity to jump with a certain amount of accelerati
 			this.state = this.owner.state;
 			this.state.jumping    = false;
 			this.state.justJumped = false;
+
+			// Notes definition changes from older versions of this component.
+			if(definition.message){
+				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "jump"} instead.');
+			}
 		},
 		
 		events:{

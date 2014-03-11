@@ -58,6 +58,11 @@ This component will cause the entity to move in a certain direction on colliding
 			this.state = this.owner.state;
 			this.state.impact  = false;
 			this.state[this.stunState] = false;
+
+			// Notes definition changes from older versions of this component.
+			if(definition.message){
+				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "impact-launch"} instead.');
+			}
 		},
 		
 		events:{
