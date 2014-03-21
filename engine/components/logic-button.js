@@ -46,7 +46,7 @@ This component handles the pressed/released state of a button according to input
 		},
 		events:{
 			"mousedown": function(){
-				if(this.toggle){
+				if(!this.toggle){
 					this.stateChange = 'pressed';
 				}
 			},
@@ -56,12 +56,12 @@ This component handles the pressed/released state of a button according to input
 			"mouseup": function(){
 				if(this.toggle){
 					if(this.state.pressed){
-						this.released();
+						this.owner.triggerEvent('released');
 					} else {
-						this.pressed();
+						this.owner.triggerEvent('pressed');
 					}
 				} else {
-					this.released();
+					this.owner.triggerEvent('released');
 				}
 			},
 			"released": function(){
@@ -78,11 +78,6 @@ This component handles the pressed/released state of a button according to input
 					this.state.pressed = false;
 					this.state.released = true;
 				}
-			}
-		},
-		methods:{
-			destroy: function(){
-				this.state = undefined;
 			}
 		}
 	});

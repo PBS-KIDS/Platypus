@@ -96,16 +96,16 @@
 		};
 
 		proto.addListeners = function(){
-			console.warn('"component.addListeners()" is deprecated. Use "component.addEventListener()".');
+			console.warn('Component "' + this.type + '": "component.addListeners()" is deprecated. Use "component.addEventListener()".');
 		};
 		proto.addListener = function(){
-			console.warn('"component.addListener()" is deprecated. Use "component.addEventListener()".');
+			console.warn('Component "' + this.type + '": "component.addListener()" is deprecated. Use "component.addEventListener()".');
 		};
 		proto.removeListeners = function(){
-			console.warn('"component.removeListeners()" is deprecated. Use "component.removeEventListeners()".');
+			console.warn('Component "' + this.type + '": "component.removeListeners()" is deprecated. Use "component.removeEventListeners()".');
 		};
 		proto.removeListener = function(){
-			console.warn('"component.removeListener()" is deprecated. Use "component.removeEventListener()".');
+			console.warn('Component "' + this.type + '": "component.removeListener()" is deprecated. Use "component.removeEventListener()".');
 		};
 	
 		proto.removeEventListeners = function(listeners){
