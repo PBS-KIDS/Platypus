@@ -208,7 +208,9 @@ This component is attached to entities that will appear in the game world. It re
 		
 		events: {
 			"handle-render-load": function(resp){
-				this.addStage(resp.stage);
+				if(resp && resp.stage){
+					this.addStage(resp.stage);
+				}
 			},
 			
 			"handle-render": function(resp){

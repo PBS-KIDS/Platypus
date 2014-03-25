@@ -146,15 +146,13 @@ This component creates a DOM element associated with the entity. In addition to 
 							}
 						}
 			
-						if(this.owner.entities){
+						if(this.owner.triggerEventOnChildren){
 							var message = this.handleRenderLoadMessage = {};
 							for (var item in resp){
 								message[item] = resp[item];
 							}
 							message.element = this.element;
-							for (var entity in this.owner.entities){
-								this.owner.entities[entity].trigger('handle-render-load', message);
-							}
+							this.owner.triggerEventOnChildren('handle-render-load', message);
 						}
 					}
 				};
