@@ -55,8 +55,9 @@
 				    preArr.push(arr[i - 1]);
 			    }
 		    }
+		    return arr.join('/');
 	    }
-	    return arr.join('/');
+	    return path;
     },
     isJSON     = function(path){
 	    var check = path.substring(path.length - 4).toLowerCase();
