@@ -55,6 +55,7 @@ A component that handles updating rendering for components that are rendering vi
       	"movement": false // Whether to capture mouse movement even when there is no mouse-down.
       },
       "autoClear": false, //By default this is set to false. If true the canvas will be cleared each tick.
+      "canvasId": "bob"   //Sets the id of the canvas. The canvas defaults to having no id.
       
       "buffer" : 12,		//The buffer area around the camera in which entities are rendered. This value changes the buffer in all directions. Defaults to the camera width / 12.
       "bufferWidth" : 12, 	//The buffer area around the camera in which entities are rendered. This value changes the buffer in width only and overrides the buffer value. Defaults to the camera width / 12.
@@ -82,6 +83,7 @@ A component that handles updating rendering for components that are rendering vi
 			this.entities = [];
 			
 			this.canvas = this.owner.canvas = document.createElement('canvas');
+			this.canvas.id = definition.canvasId;
 			this.owner.canvasParent = null;
 			if(this.owner.element){
 				this.owner.canvasParent = this.owner.element;

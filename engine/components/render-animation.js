@@ -44,6 +44,12 @@ This component is attached to entities that will appear in the game world. It re
   - @param x (number) - The x-location of the mouse in stage coordinates.
   - @param y (number) - The y-location of the mouse in stage coordinates.
   - @param entity ([[Entity]]) - The entity clicked on.  
+- **pressmove** - This component captures this event from CreateJS and triggers it on the entity.
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **pin-me** - If this component should be pinned to another animation, it will trigger this event in an attempt to initiate the pinning.
   - @param pinId (string) - Required. A string identifying the id of a pin location that this render-animation wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other animations on the entity to attach to.
@@ -96,8 +102,8 @@ This component is attached to entities that will appear in the game world. It re
       
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
-      	"hover": false;
-      	"click": false; 
+      	"hover": false,
+      	"click": false
       },
       
       "pins": [{
@@ -597,6 +603,16 @@ This component is attached to entities that will appear in the game world. It re
 								y: event.stageY,
 								entity: self.owner
 							});
+						});
+						
+					});
+					this.anim.addEventListener('pressmove', function(event) {
+						self.owner.trigger('pressmove', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
 						});
 					});
 					this.anim.addEventListener('mouseout', function(){over = false;});

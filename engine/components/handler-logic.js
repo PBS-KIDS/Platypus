@@ -98,7 +98,7 @@ A component that handles updating logic components. Each tick it calls all the e
 				
 				for (var x = 0; x < messageIds.length; x++)
 				{
-					if (messageIds[x] == 'handle-logic'){
+					if (messageIds[x] == 'handle-logic' || messageIds[x] == 'handle-post-collision-logic'){
 						this.entities.push(entity);
 						this.updateNeeded = this.camera.active;
 						break;
