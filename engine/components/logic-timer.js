@@ -29,10 +29,10 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 	  //Optional - The time when the alarm will trigger the alarm message. Defaults to undefined, which never triggers the alarm.
 	  "isInterval" : false,
 	  //Optional - Whether or not the alarm fires at intervals of the alarmTime. Defaults to false.
-	  "alarmMessage" : 'ding',
-	  //Optional - The message sent when the alarm goes off. Defaults to ''.
-	  "updateMessage" : '',
-	  //Optional - The message sent when the timer updates. Defaults to ''.
+	  "alarmMessage" : "ding",
+	  //Optional - The message sent when the alarm goes off. Defaults to an empty string.
+	  "updateMessage" : "",
+	  //Optional - The message sent when the timer updates. Defaults to an empty string.
 	  "on" : true,
 	  //Optional - Whether the alarm starts on. Defaults to true.
 	  "isIncrementing" : true,
