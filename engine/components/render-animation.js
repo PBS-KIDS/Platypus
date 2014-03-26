@@ -98,7 +98,17 @@ This component is attached to entities that will appear in the game world. It re
 			"walking": {"frames": [0, 1, 2], "speed": 4},
 			"swing": {"frames": [3, 4, 5], "speed": 4}
 		  }
-      }
+      },
+      
+      "mask": {
+      // Optional. A mask definition that determines where the image should clip.
+          
+          "relative": true,
+          // Whether the mask should be relative to the entity or absolutely positioned in the world. Default is `true`.
+          
+          "shape": "rect(10,20,40,40)"
+          // Defines the shape of the mask using the CreateJS graphics API. Defaults to a rectangle using the entity's dimensions.
+      },
       
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
@@ -297,14 +307,25 @@ This component is attached to entities that will appear in the game world. It re
 
 			spriteSheet = new createjs.SpriteSheet(spriteSheet);
 			this.anim = new createjs.Sprite(spriteSheet, 0);
-
-			if(definition.pins){
+			
+			if(definition.pins || (definition.mask && definition.mask.relative)){
 				this.container = new createjs.Container();
 				this.container.addChild(this.anim);
 				this.anim.z = 0;
-				this.addPins(definition.pins, regX, regY);
+				if(definition.pins){
+					this.addPins(definition.pins, regX, regY);
+				}
 			} else {
 				this.container = this.anim;
+			}
+
+			//handle mask
+			if(definition.mask){
+				if(definition.mask.shape){
+					this.setMask(definition.mask.shape);
+				} else {
+					this.setMask('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+				}
 			}
 
 			this.pinTo = definition.pinTo || false;
@@ -434,6 +455,7 @@ This component is attached to entities that will appear in the game world. It re
 				if(stage && !this.pinTo){
 					this.stage = stage;
 					this.stage.addChild(this.container);
+//					if(this.container.mask) this.stage.addChild(this.container.mask);
 					this.addInputs();
 					return stage;
 				} else {
@@ -537,6 +559,7 @@ This component is attached to entities that will appear in the game world. It re
 							}
 						}
 					}
+					
 					
 					if(this.stateChange){
 						if(this.state['hidden'] !== undefined) {
@@ -728,6 +751,36 @@ This component is attached to entities that will appear in the game world. It re
 					this.pinsToRemove.length = 0;
 				}
 			},
+			
+			setMask: (function(){
+				var process = function(gfx, value){
+					var paren = value.indexOf('('),
+					func      = value.substring(0, paren),
+					values    = value.substring(paren + 1, value.indexOf(')'));
+					
+					if(values.length){
+						gfx[func].apply(gfx, values.split(','));
+					} else {
+						gfx[func]();
+					}
+				};
+				
+				return function(shape){
+					var i = 0,
+					arr = shape.split('.'),
+					mask = new createjs.Shape(),
+					gfx = mask.graphics;
+					
+					mask.x = 0;
+					mask.y = 0;
+					
+					for (; i < arr.length; i++){
+						process(gfx, arr[i]);
+					}
+
+					this.container.mask = mask;
+				};
+			})(),
 			
 			destroy: function(){
 				if (this.stage){
