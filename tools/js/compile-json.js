@@ -90,37 +90,90 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === 'json');
    },
-   compConfig = getJSON('tools-config.json'),
-   workingDir = compConfig["source-folder"] || '../game/',
-   subDir     = '',
-   gameConfig = getText(workingDir + 'config.json'),
-   game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
-   source     = game.source,
-   section    = undefined,
-   sectionId  = '',
-   asset      = undefined,
-   assetId    = 0,
-   retainId   = '',
-   srcId      = '';
-    
-    print('Composing full config.json from ' + workingDir + 'config.json.');
-    
-    for(sectionId in source){
-    	print('..Handling "' + sectionId + '" section.');
-    	section = source[sectionId];
-    	source[sectionId] = {};
-    	
+   isJS       = function(path){
+	   var check = path.substring(path.length - 3).toLowerCase();
+	   return (check === '.js');
+   },
+   dependencyList = [],
+   checkDependencies = function(asset){
+	   var i   = 0,
+	   j       = 0,
+	   text    = '',
+	   matches = null,
+	   found   = false,
+	   subDir  = '',
+	   file    = '';
+	   
+	   if(typeof asset === 'string'){ //JS File
+		   subDir = getSubDir(asset);
+		   text = getText(asset);
+		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/,]*\]/g);
+		   if(matches && matches.length){
+			   try {
+				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/,]*\]/g)[0]);
+			   } catch(e) {
+				   alert("Error in '" + asset + "': Dependency list is malformed.");
+				   return;
+			   }
+			   for(i = 0; i < arr.length; i++){
+				   found = false;
+				   for(j = 0; j < dependencyList.length; j++){
+					   if(arr[i] === dependency[i]){
+						   found = true;
+						   break;
+					   }
+				   }
+				   if(!found){
+					   file = fixUpPath(subDir + arr[i]);
+					   dependencyList.push(file);
+					   checkDependencies(file);
+				   }
+			   }
+		   }
+	   } else if (asset){ //should be a JSON object
+		   
+	   }
+   },
+   handleList = function(section, sectionId, workingDir){
+	    var subDir     = '',
+	    asset      = undefined,
+	    assetId    = 0,
+	    retainId   = '',
+	    srcId      = '';
+
 	    for (assetId in section){
 	    	asset = section[assetId];
 		    try {
-			    if(asset.src){
-			    	if((typeof asset.src) == 'string'){
+		    	if(typeof asset === 'string'){
+		    		if(asset.substring(0,4).toLowerCase() !== 'http'){
+			    		if(isJSON(asset)){
+			    			print('....Filling in data for "' + asset + '"');
+			    			retainId = asset;
+						    subDir = workingDir + getSubDir(asset);
+						    asset  = getJSON(workingDir + asset);
+		    				checkDependencies(asset);
+						    if(asset.tilesets){
+		 				    	for (var ts in asset.tilesets){
+								    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
+							    }
+		 				    }
+		 				    asset.id = asset.id || retainId;
+			    		} else {
+		    			    asset = {src: fixUpPath(workingDir + asset), id: asset};
+			    			if(isJS(asset.src)){
+			    				checkDependencies(asset.src);
+			    			}
+			    		}
+		    		}
+		    	} else if(asset.src){
+			    	if(typeof asset.src === 'string'){
 			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
 				    		if(isJSON(asset.src)){
 				    			print('....Filling in data for "' + asset.id + '" from "' + asset.src + '"');
 				    			retainId = asset.id;
 							    subDir = workingDir + getSubDir(asset.src);
 							    asset  = getJSON(workingDir + asset.src);
+			    				checkDependencies(asset);
 							    if(asset.tilesets){
 			 				    	for (var ts in asset.tilesets){
 									    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
@@ -129,6 +182,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			 				    asset.id = asset.id || retainId;
 				    		} else {
 			    			    asset.src = fixUpPath(workingDir + asset.src);
+				    			if(isJS(asset.src)){
+				    				checkDependencies(asset.src);
+				    			}
 				    		}
 			    		}
 			    	} else {
@@ -150,7 +206,22 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    alert('Error in processing "' + sectionId + ' ' + assetId + '": ' + e.description);
 		    }
 	    }
+   },
+   compConfig = getJSON('tools-config.json'),
+   workingDir = compConfig["source-folder"] || '../game/',
+   gameConfig = getText(workingDir + 'config.json'),
+   game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
+   source     = game.source,
+   sectionId  = '';
+    
+    print('Composing full config.json from ' + workingDir + 'config.json.');
+    
+    for(sectionId in source){
+    	print('..Handling "' + sectionId + '" section.');
+    	handleList(source[sectionId], sectionId, workingDir);
     }
+	print('..Handling Dependencies.');
+	handleList(dependencyList, "includes", workingDir);
    
     game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
 

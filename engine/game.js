@@ -32,6 +32,10 @@ This class is used to create the `platformer.game` object. The `game` object han
   - @param callback (function) - The function to call.
 */
 
+/*
+ * Requires: ["messenger.js"]
+ */
+
 platformer.classes.game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
 	var game      = function (definition, onFinishedLoading){
