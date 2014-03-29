@@ -80,7 +80,7 @@ This component creates an entity and connects it with the current entity. This i
 					if(!this.shield){
 						this.shieldPosition.x = this.owner.x;
 						this.shieldPosition.y = this.owner.y;
-						this.shield = this.owner.parent.addEntity(new platformer.classes.entity(this.entityClass, this.shieldProperties));
+						this.shield = this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.shieldProperties));
 					}
 					
 					this.shield.x = this.owner.x;

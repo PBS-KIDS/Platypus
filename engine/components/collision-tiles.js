@@ -57,7 +57,7 @@ This component causes the tile-map to collide with other entities. It must be pa
 					storedTileIndex += 1;
 					shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
 				} else {
-					storedTiles.push(new platformer.classes.collisionShape(null, {
+					storedTiles.push(new platformer.CollisionShape(null, {
 						x:      x * this.tileWidth  + this.tileHalfWidth,
 						y:      y * this.tileHeight + this.tileHalfHeight,
 						type:   'rectangle',

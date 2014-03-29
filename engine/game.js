@@ -32,11 +32,7 @@ This class is used to create the `platformer.game` object. The `game` object han
   - @param callback (function) - The function to call.
 */
 
-/*
- * Requires: ["messenger.js"]
- */
-
-platformer.classes.game = (function(){
+platformer.Game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
 	var game      = function (definition, onFinishedLoading){
 		var innerRootElement = document.createElement('div'),
@@ -216,7 +212,7 @@ platformer.classes.game = (function(){
 		}
 		
 		this.loaded = sceneId;
-		this.loadedScene = new platformer.classes.scene(scene, this.rootElement);
+		this.loadedScene = new platformer.Scene(scene, this.rootElement);
 
 		console.log('Scene loaded: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
 		this.loadedScene.trigger('scene-loaded', persistantData);

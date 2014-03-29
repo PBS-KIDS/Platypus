@@ -1,5 +1,5 @@
 
-platformer.classes.collisionData = (function(){
+platformer.CollisionData = (function(){
 	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector){
 		this.occurred = occurred || false;
 		this.direction = direction || null;
@@ -35,10 +35,10 @@ platformer.classes.collisionData = (function(){
 	return collisionData;
 })();
 
-platformer.classes.collisionDataContainer = (function(){
+platformer.CollisionDataContainer = (function(){
 	var collisionDataContainer = function(){
-		this.xData = [new platformer.classes.collisionData(), new platformer.classes.collisionData()];
-		this.yData = [new platformer.classes.collisionData(), new platformer.classes.collisionData()];
+		this.xData = [new platformer.CollisionData(), new platformer.CollisionData()];
+		this.yData = [new platformer.CollisionData(), new platformer.CollisionData()];
 		this.xCount = 0;
 		this.yCount = 0;
 		this.xDeltaMovement = Infinity;
@@ -92,7 +92,7 @@ platformer.classes.collisionDataContainer = (function(){
 		{
 			for (var j = this.xData.length; j < goalLength; j++)
 			{
-				this.xData[j] = new platformer.classes.collisionData();
+				this.xData[j] = new platformer.CollisionData();
 			}
 		}
 	};
@@ -103,7 +103,7 @@ platformer.classes.collisionDataContainer = (function(){
 		{
 			for (var j = this.yData.length; j < goalLength; j++)
 			{
-				this.yData[j] = new platformer.classes.collisionData();
+				this.yData[j] = new platformer.CollisionData();
 			}
 		}
 	};

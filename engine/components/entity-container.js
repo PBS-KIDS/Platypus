@@ -72,6 +72,11 @@ This component allows the entity to contain child entities. It will add several 
       }
     }
 */
+
+/*
+ * Requires: ["../messenger.js"]
+ */
+
 (function(){
 	var childBroadcast = function(event){
 		return function(value, debug){
@@ -132,7 +137,7 @@ This component allows the entity to contain child entities. It will add several 
 							}
 						}
 		
-						this.addEntity(new platformer.classes.entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition));
+						this.addEntity(new platformer.Entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition));
 					}
 				}
 			},
@@ -327,5 +332,5 @@ This component allows the entity to contain child entities. It will add several 
 				return this.trigger(event, message, debug);
 			}
 		}
-	}, platformer.classes.messenger);
+	}, platformer.Messenger);
 })();

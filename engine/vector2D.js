@@ -60,7 +60,7 @@ This class defines a two-dimensional vector object and a variety of methods for 
   - @return vector2D - A copy of this vector.
 */
 
-platformer.classes.vector2D = (function(){
+platformer.Vector2D = (function(){
 	var vector2D = function(x, y){
 		this.x = x || 0;
 		this.y = y || 0;
@@ -117,14 +117,14 @@ platformer.classes.vector2D = (function(){
 	proto.getUnit = function(){
 		var mag = this.magnitude();
 		if (mag == 0) {
-			return new platformer.classes.vector2D(0, 0);
+			return new platformer.Vector2D(0, 0);
 		} else {
-			return new platformer.classes.vector2D(this.x / mag, this.y / mag);
+			return new platformer.Vector2D(this.x / mag, this.y / mag);
 		}
 	};
 	
 	proto.getInverse = function(){
-		return new platformer.classes.vector2D(-this.x, -this.y);
+		return new platformer.Vector2D(-this.x, -this.y);
 	};
 	
 	proto.normalize = function(){

@@ -111,7 +111,7 @@ This component spawns new entities within a given area at set intervals.
 						this.spawnPosition.y = this.owner.y - (this.owner.regY || 0) + (Math.random() * this.owner.height);
 					}
 
-					this.owner.parent.addEntity(new platformer.classes.entity(this.entityClass, this.spawnProperties));
+					this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.spawnProperties));
 				}
 			}
 		}

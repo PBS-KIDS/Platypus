@@ -49,19 +49,19 @@
             {"id": "title-screen",   "src": "images/title-screen.png"}
 		],
         "includes": [
-            {"id": "CreateJS",      "src": "http://code.createjs.com/createjs-2013.12.12.min.js"},
-            {"id": "Browser",       "src": "../engine/browser.js"},
-            {"id": "Main",          "src": "../engine/main.js"},
-            {"id": "ButtonCSS",     "src": "css/button.css"},
-            {"id": "MainCSS",       "src": "css/main.css"},
-            {"id": "GameCSS",       "src": "css/game.css"},
-            {"id": "GUI CSS",       "src": "css/gui.css"},
-            {"id": "FullScreenCSS", "src": "css/fullscreen.css"}
+            "http://code.createjs.com/createjs-2013.12.12.min.js",
+            "../engine/browser.js",
+            "../engine/main.js",
+            "css/button.css",
+            "css/main.css",
+            "css/game.css",
+            "css/gui.css",
+            "css/fullscreen.css"
         ],
 		"classes": [
 			{"id": "Game",			  			"src": "../engine/game.js"},
             {"id": "ComponentFactory",			"src": "../engine/factory.js"},
-            {"id": "Messenger",                 "src": "../engine/messenger.js"},
+//            {"id": "Messenger",                 "src": "../engine/messenger.js"},
             {"id": "Entity",                    "src": "../engine/entity.js"},
 			{"id": "Scene",           			"src": "../engine/scene.js"},
 			{"id": "Collision-Shape", 			"src": "../engine/collision-shape.js"},

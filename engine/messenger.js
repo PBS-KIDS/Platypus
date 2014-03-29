@@ -31,7 +31,7 @@ The Messenger object facilitates communication between components and other game
 - **getMessageIds** - This method returns all the messages that this entity is concerned about.
   - @return Array - An array of strings listing all the messages for which this messenger has handlers.
 */
-platformer.classes.messenger = (function(){
+platformer.Messenger = (function(){
 	var messenger = function (){
 		this.messages    = {};
 		this.loopCheck   = [];

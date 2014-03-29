@@ -94,7 +94,6 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   var check = path.substring(path.length - 3).toLowerCase();
 	   return (check === '.js');
    },
-   dependencyList = [],
    checkDependencies = function(asset){
 	   var i   = 0,
 	   j       = 0,
@@ -117,14 +116,15 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			   }
 			   for(i = 0; i < arr.length; i++){
 				   found = false;
+				   file = fixUpPath(subDir + arr[i]);
 				   for(j = 0; j < dependencyList.length; j++){
-					   if(arr[i] === dependency[i]){
+					   alert(file);
+					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
 						   found = true;
 						   break;
 					   }
 				   }
 				   if(!found){
-					   file = fixUpPath(subDir + arr[i]);
 					   dependencyList.push(file);
 					   checkDependencies(file);
 				   }
@@ -141,7 +141,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    retainId   = '',
 	    srcId      = '';
 
-	    for (assetId in section){
+	    for (; assetId < section.length; assetId++){
 	    	asset = section[assetId];
 		    try {
 		    	if(typeof asset === 'string'){
@@ -164,6 +164,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    				checkDependencies(asset.src);
 			    			}
 			    		}
+		    		} else {
+		    			asset = {src: asset, id: asset};
 		    		}
 		    	} else if(asset.src){
 			    	if(typeof asset.src === 'string'){
@@ -212,13 +214,16 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    gameConfig = getText(workingDir + 'config.json'),
    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
    source     = game.source,
+   dependencyList = source['includes'],
    sectionId  = '';
     
     print('Composing full config.json from ' + workingDir + 'config.json.');
     
     for(sectionId in source){
-    	print('..Handling "' + sectionId + '" section.');
-    	handleList(source[sectionId], sectionId, workingDir);
+    	if(sectionId !== 'includes'){
+        	print('..Handling "' + sectionId + '" section.');
+        	handleList(source[sectionId], sectionId, workingDir);
+    	}
     }
 	print('..Handling Dependencies.');
 	handleList(dependencyList, "includes", workingDir);
