@@ -310,9 +310,9 @@ This component allows the entity to contain child entities. It will add several 
 						this.removeChildEventListeners(entity);
 				    	this.entities.splice(x, 1);
 						this.triggerEventOnChildren('peer-entity-removed', entity);
-				    	entity.parent = null;
 						this.owner.trigger('child-entity-removed', entity);
 				    	entity.destroy();
+				    	entity.parent = null;
 					    return entity;
 				    }
 			    }
