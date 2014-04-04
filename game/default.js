@@ -63,36 +63,92 @@
 	    var check = path.substring(path.length - 4).toLowerCase();
 	    return (check === 'json');
     },
-    workingDir = '',
-    subDir     = '',
-    gameConfig = getText(workingDir + 'config.json'),
-    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
-    source     = game.source,
-    section    = undefined,
-    sectionId  = '',
-    asset      = undefined,
-    assetId    = 0,
-    retainId   = '',
-    srcId      = '';
-    
-    print('Composing full config.json from /game/config.json.');
-    
-    for(sectionId in source){
-    	print('..Handling "' + sectionId + '" section.');
-    	section = source[sectionId];
-    	source[sectionId] = {};
+    isJS       = function(path){
+ 	   var check = path.substring(path.length - 3).toLowerCase();
+ 	   return (check === '.js');
+    },
+    checkDependencies = function(asset){
+ 	   var i   = 0,
+ 	   j       = 0,
+ 	   text    = '',
+ 	   matches = null,
+ 	   found   = false,
+ 	   subDir  = '',
+ 	   file    = '';
+ 	   
+ 	   if(typeof asset === 'string'){ //JS File
+ 		   subDir = getSubDir(asset);
+ 		   text = getText(asset);
+ 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/,]*\]/g);
+ 		   if(matches && matches.length){
+ 			   try {
+ 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/,]*\]/g)[0]);
+ 			   } catch(e) {
+ 				   alert("Error in '" + asset + "': Dependency list is malformed.");
+ 				   return;
+ 			   }
+ 			   for(i = 0; i < arr.length; i++){
+ 				   found = false;
+ 				   file = fixUpPath(subDir + arr[i]);
+ 				   for(j = 0; j < dependencyList.length; j++){
+ 					   alert(file);
+ 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
+ 						   found = true;
+ 						   break;
+ 					   }
+ 				   }
+ 				   if(!found){
+ 					   dependencyList.push(file);
+ 					   checkDependencies(file);
+ 				   }
+ 			   }
+ 		   }
+ 	   } else if (asset){ //should be a JSON object
+ 		   
+ 	   }
+    },
+    handleList = function(section, sectionId, workingDir){
+	    var subDir     = '',
+	    asset      = undefined,
+	    assetId    = 0,
+	    retainId   = '',
+	    srcId      = '';
     	
-	    for (assetId in section){
+	    for (; assetId < section.length; assetId++){
 	    	asset = section[assetId];
 		    try {
-			    if(asset.src){
-			    	if((typeof asset.src) == 'string'){
+		    	if(typeof asset === 'string'){
+		    		if(asset.substring(0,4).toLowerCase() !== 'http'){
+			    		if(isJSON(asset)){
+			    			print('....Filling in data for "' + asset + '"');
+			    			retainId = asset;
+						    subDir = workingDir + getSubDir(asset);
+						    asset  = getJSON(workingDir + asset);
+		    				checkDependencies(asset);
+						    if(asset.tilesets){
+		 				    	for (var ts in asset.tilesets){
+								    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
+							    }
+		 				    }
+		 				    asset.id = asset.id || retainId;
+			    		} else {
+		    			    asset = {src: fixUpPath(workingDir + asset), id: asset};
+			    			if(isJS(asset.src)){
+			    				checkDependencies(asset.src);
+			    			}
+			    		}
+		    		} else {
+		    			asset = {src: asset, id: asset};
+		    		}
+		    	} else if(asset.src){
+			    	if(typeof asset.src === 'string'){
 			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
 				    		if(isJSON(asset.src)){
 				    			print('....Filling in data for "' + asset.id + '" from "' + asset.src + '"');
 				    			retainId = asset.id;
 							    subDir = workingDir + getSubDir(asset.src);
 							    asset  = getJSON(workingDir + asset.src);
+			    				checkDependencies(asset);
 							    if(asset.tilesets){
 			 				    	for (var ts in asset.tilesets){
 									    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
@@ -101,6 +157,9 @@
 			 				    asset.id = asset.id || retainId;
 				    		} else {
 			    			    asset.src = fixUpPath(workingDir + asset.src);
+				    			if(isJS(asset.src)){
+				    				checkDependencies(asset.src);
+				    			}
 				    		}
 			    		}
 			    	} else {
@@ -122,7 +181,24 @@
 			    alert('Error in processing "' + sectionId + ' ' + assetId + '": ' + e.description);
 		    }
 	    }
+    },
+    workingDir = '',
+    gameConfig = getText(workingDir + 'config.json'),
+    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
+    source     = game.source,
+    dependencyList = source['includes'],
+    sectionId  = '';
+    
+    print('Composing full config.json from /game/config.json.');
+    
+    for(sectionId in source){
+    	if(sectionId !== 'includes'){
+        	print('..Handling "' + sectionId + '" section.');
+        	handleList(source[sectionId], sectionId, workingDir);
+    	}
     }
+	print('..Handling Dependencies.');
+	handleList(dependencyList, "includes", workingDir);
    
     //insert entities and scenes into compiled config file
     window.config = game;
