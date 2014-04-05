@@ -31,6 +31,8 @@ This component causes the tile-map to collide with other entities. It must be pa
       "tileHeight": 240,
       // Optional. The height of tiles in world coordinates. Defaults to 10.
     }
+    
+Requires: ["../collision-shape.js"]
 */
 (function(){
 	var storedTiles = [],
@@ -57,7 +59,7 @@ This component causes the tile-map to collide with other entities. It must be pa
 					storedTileIndex += 1;
 					shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
 				} else {
-					storedTiles.push(new platformer.classes.collisionShape(null, {
+					storedTiles.push(new platformer.CollisionShape(null, {
 						x:      x * this.tileWidth  + this.tileHalfWidth,
 						y:      y * this.tileHeight + this.tileHalfHeight,
 						type:   'rectangle',

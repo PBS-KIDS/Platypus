@@ -167,13 +167,11 @@ This component uses its definition to load two other components (audio and rende
 				animationDefinition.animationMap[getEventName(this.message, i)] = definition.animationMap[i];
 			}
 			animationDefinition.animationMap['default'] = definition.animationMap['default'];
-			console.log(animationDefinition);
 			this.owner.addComponent(new platformer.components['render-animation'](this.owner, animationDefinition));
 
 			for (i in definition.voiceoverMap){
 				audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
 			}
-			console.log(audioDefinition);
 			this.owner.addComponent(new platformer.components['audio'](this.owner, audioDefinition));
 		},
 

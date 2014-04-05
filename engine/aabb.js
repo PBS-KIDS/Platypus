@@ -37,7 +37,7 @@ This class defines an axis-aligned bounding box (AABB) which is used during the 
   - @return aabb (object) - Returns the new AABB object.
 */
 
-platformer.classes.aABB = (function(){
+platformer.AABB = (function(){
 	var aABB = function(x, y, width, height){
 		this.empty = true;
 		this.setAll(x, y, width, height);

@@ -40,6 +40,8 @@ This component checks for collisions between entities which typically have eithe
       "type": "handler-collision"
       // This component has no customizable properties.
     }
+    
+Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collision-data-container.js"]
 */
 (function(){
 	//set here to make them reusable objects
@@ -61,7 +63,7 @@ This component checks for collisions between entities which typically have eithe
 		pair.y = 0;
 		pair.relative = false;
 	},
-	entityCollisionDataContainer = new platformer.classes.collisionDataContainer(),
+	entityCollisionDataContainer = new platformer.CollisionDataContainer(),
 	AABBCollision = function (boxX, boxY){
 		if(boxX.left   >=  boxY.right)  return false;
 		if(boxX.right  <=  boxY.left)   return false;
@@ -131,14 +133,14 @@ This component checks for collisions between entities which typically have eithe
 			this.nonColliders = [];
 			
 			this.terrain = undefined;
-			this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
-			this.prevAABB = new platformer.classes.aABB(this.owner.x, this.owner.y);
+			this.aabb     = new platformer.AABB(this.owner.x, this.owner.y);
+			this.prevAABB = new platformer.AABB(this.owner.x, this.owner.y);
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
 			
 			this.updateLiveList = true;
-			this.cameraLogicAABB = new platformer.classes.aABB(0, 0);
-			this.cameraCollisionAABB = new platformer.classes.aABB(0, 0);
+			this.cameraLogicAABB = new platformer.AABB(0, 0);
+			this.cameraCollisionAABB = new platformer.AABB(0, 0);
 			
 			this.timeElapsed = {
 				name: 'Col',
@@ -600,7 +602,7 @@ This component checks for collisions between entities which typically have eithe
 			},
 			
 			processCollisionStep: (function(){
-				var sweepAABB = new platformer.classes.aABB(),
+				var sweepAABB = new platformer.AABB(),
 				includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
 					var otherAABB = otherEntity.getAABB(otherCollisionType);
 					if (otherEntity === thisEntity){
@@ -692,7 +694,7 @@ This component checks for collisions between entities which typically have eithe
 			})(),
 			
 			resolveCollisionPosition: (function(){
-				var collisionData = new platformer.classes.collisionData();
+				var collisionData = new platformer.CollisionData();
 				
 				return function(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY){
 
@@ -745,7 +747,7 @@ This component checks for collisions between entities which typically have eithe
 			})(),
 			
 			findMinAxisMovement: (function(){
-				var shapeCollisionData = new platformer.classes.collisionData();
+				var shapeCollisionData = new platformer.CollisionData();
 				
 				return function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
 					//Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
@@ -794,7 +796,7 @@ This component checks for collisions between entities which typically have eithe
 					collisionData.vector = vector.copy();
 				},
 				findAxisCollisionPosition = (function(){
-					var v = new platformer.classes.vector2D(),
+					var v = new platformer.Vector2D(),
 					returnInfo = {
 						position: 0,
 						contactVector: v

@@ -42,15 +42,15 @@ This component works with `collision-basic` to cause entities to bounce away on 
 			this.owner.mass = this.owner.mass || definition.mass || 1;
 			this.elasticity = definition.elasticity || .8;
 			
-			this.v = new platformer.classes.vector2D(0,0);
-			this.incidentVector = new platformer.classes.vector2D(0,0); 
+			this.v = new platformer.Vector2D(0,0);
+			this.incidentVector = new platformer.Vector2D(0,0); 
 			
 			this.staticCollisionOccurred = false;
 			this.nonStaticCollisionOccurred = false;
 			
 			this.hitThisTick = [];
 			this.otherVelocityData = null;
-			this.otherV = new platformer.classes.vector2D(0,0);
+			this.otherV = new platformer.Vector2D(0,0);
 			this.otherVelocityData = [];
 			
 		},

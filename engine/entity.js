@@ -73,7 +73,12 @@ The Entity object acts as a container for components, facilitates communication 
       }
     }
 */
-platformer.classes.entity = (function(){
+
+/*
+ * Requires: ["messenger.js"]
+ */
+
+platformer.Entity = (function(){
 	var entityIds = {},
 	entity = function (definition, instanceDefinition){
 		var self             = this,
@@ -86,7 +91,7 @@ platformer.classes.entity = (function(){
 		instanceProperties   = instance.properties || {};
 		
 		// Set properties of messenger on this entity.
-		platformer.classes.messenger.call(this);
+		platformer.Messenger.call(this);
 		
 		self.components  = [];
 		self.type = def.id || 'none';
@@ -122,7 +127,7 @@ platformer.classes.entity = (function(){
 		
 		self.trigger('load');
 	};
-	var proto = entity.prototype = new platformer.classes.messenger();
+	var proto = entity.prototype = new platformer.Messenger();
 	
 	proto.toString = function(){
 		return "[entity " + this.type + "]";

@@ -38,8 +38,11 @@ This class is instantiated by [[Game]] and contains one or more entities as laye
         }
       ]
     }
+    
+    
+Requires: ["entity.js"]
 */
-platformer.classes.scene = (function(){
+platformer.Scene = (function(){
 	var scene = function(definition, rootElement){
 		var layers = definition.layers,
 		supportedLayer = true,
@@ -83,7 +86,7 @@ platformer.classes.scene = (function(){
 				}
 			}
 			if (supportedLayer){
-				this.layers.push(new platformer.classes.entity(layerDefinition, {
+				this.layers.push(new platformer.Entity(layerDefinition, {
 					properties: properties
 				}));
 			}

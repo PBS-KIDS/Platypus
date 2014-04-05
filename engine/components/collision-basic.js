@@ -86,6 +86,8 @@ Multiple collision components may be added to a single entity if distinct messag
         // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
       }
     }
+    
+Requires: ["../collision-shape.js", "../aabb.js"]
 */
 (function(){
 	var entityBroadcast = function(event, solidOrSoft, collisionType){
@@ -145,7 +147,7 @@ Multiple collision components may be added to a single entity if distinct messag
 			entity.collisionFunctions = {};
 			entity.getAABB = function(collisionType){
 				if(!collisionType){
-					var aabb = entity.aabb = entity.aabb || new platformer.classes.aABB();
+					var aabb = entity.aabb = entity.aabb || new platformer.AABB();
 					aabb.reset();
 					for(var i in entity.collisionFunctions){
 						aabb.include(entity.collisionFunctions[i].getAABB());
@@ -279,8 +281,8 @@ Multiple collision components may be added to a single entity if distinct messag
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
 			
-			this.aabb     = new platformer.classes.aABB();
-			this.prevAABB = new platformer.classes.aABB();
+			this.aabb     = new platformer.AABB();
+			this.prevAABB = new platformer.AABB();
 			
 			this.owner.bullet = this.owner.bullet || definition.bullet;
 
@@ -320,8 +322,8 @@ Multiple collision components may be added to a single entity if distinct messag
 			this.prevShapes = [];
 			this.entities = undefined;
 			for (x in shapes){
-				this.shapes.push(new platformer.classes.collisionShape(this.owner, shapes[x], this.collisionType));
-				this.prevShapes.push(new platformer.classes.collisionShape(this.owner, shapes[x], this.collisionType));
+				this.shapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
+				this.prevShapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
 				this.prevAABB.include(this.prevShapes[x].getAABB());
 				this.aabb.include(this.shapes[x].getAABB());
 			}

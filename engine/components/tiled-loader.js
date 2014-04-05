@@ -248,7 +248,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 						combineRenderLayer.trigger('add-tiles', renderTiles);
 						return combineRenderLayer; 
 					} else {
-						return self.owner.addEntity(new platformer.classes.entity(tileDefinition, {properties:{}})); 
+						return self.owner.addEntity(new platformer.Entity(tileDefinition, {properties:{}})); 
 					}
 				};
 
@@ -418,7 +418,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							}
 							
 							properties.parent = this.owner;
-							entity = this.owner.addEntity(new platformer.classes.entity(platformer.game.settings.entities[entityType], {properties:properties}));
+							entity = this.owner.addEntity(new platformer.Entity(platformer.game.settings.entities[entityType], {properties:properties}));
 							if(entity){
 								if(entity.camera){
 									this.followEntity = {entity: entity, mode: entity.camera}; //used by camera

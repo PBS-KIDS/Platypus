@@ -19,6 +19,8 @@ This component groups other entities with this entity for collision checking. Th
       "type": "collision-group"
       // This component has no customizable properties.
     }
+    
+Requires: ["../aabb.js"]
 */
 (function(){
 	//set here to make them reusable objects
@@ -53,8 +55,8 @@ This component groups other entities with this entity for collision checking. Th
 			this.solidEntities = [];
 			
 			this.terrain = undefined;
-			this.aabb     = new platformer.classes.aABB(this.owner.x, this.owner.y);
-			this.prevAABB = new platformer.classes.aABB(this.owner.x, this.owner.y);
+			this.aabb     = new platformer.AABB(this.owner.x, this.owner.y);
+			this.prevAABB = new platformer.AABB(this.owner.x, this.owner.y);
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
 			
@@ -210,7 +212,7 @@ This component groups other entities with this entity for collision checking. Th
 				if(!collisionType){
 					return this.aabb;
 				} else {
-					var aabb = new platformer.classes.aABB();
+					var aabb = new platformer.AABB();
 					for (var x = 0; x < this.solidEntities.length; x++){
 						childEntity = this.solidEntities[x];
 						if((childEntity !== this.owner) && childEntity.collisionGroup){
@@ -229,7 +231,7 @@ This component groups other entities with this entity for collision checking. Th
 				if(!collisionType){
 					return this.prevAABB;
 				} else {
-					var aabb = new platformer.classes.aABB();
+					var aabb = new platformer.AABB();
 					for (var x = 0; x < this.solidEntities.length; x++){
 						childEntity = this.solidEntities[x];
 						if((childEntity !== this.owner) && childEntity.collisionGroup){

@@ -49,62 +49,13 @@
             {"id": "title-screen",   "src": "images/title-screen.png"}
 		],
         "includes": [
-            {"id": "CreateJS",      "src": "http://code.createjs.com/createjs-2013.12.12.min.js"},
-            {"id": "Browser",       "src": "../engine/browser.js"},
-            {"id": "Main",          "src": "../engine/main.js"},
-            {"id": "ButtonCSS",     "src": "css/button.css"},
-            {"id": "MainCSS",       "src": "css/main.css"},
-            {"id": "GameCSS",       "src": "css/game.css"},
-            {"id": "GUI CSS",       "src": "css/gui.css"},
-            {"id": "FullScreenCSS", "src": "css/fullscreen.css"}
+            "../engine/main.js",
+            "css/button.css",
+            "css/main.css",
+            "css/game.css",
+            "css/gui.css",
+            "css/fullscreen.css"
         ],
-		"classes": [
-			{"id": "Game",			  			"src": "../engine/game.js"},
-            {"id": "ComponentFactory",			"src": "../engine/factory.js"},
-            {"id": "Messenger",                 "src": "../engine/messenger.js"},
-            {"id": "Entity",                    "src": "../engine/entity.js"},
-			{"id": "Scene",           			"src": "../engine/scene.js"},
-			{"id": "Collision-Shape", 			"src": "../engine/collision-shape.js"},
-			{"id": "Collision-Data-Container", 	"src": "../engine/collision-data-container.js"},
-			{"id": "AABB", 			  			"src": "../engine/aabb.js"},
-            {"id": "Vector2D",                  "src": "../engine/vector2D.js"}
-		],
-		"components": [ // JavaScript files defining component modules
-			// This is a list of all the Platypus re-usable components that this game uses. For a full list of available components, check out https://github.com/PBS-KIDS/Platypus/wiki/Components-Reference
-            {"id": "asset-loader",               "src": "../engine/components/asset-loader.js"},
-            {"id": "enable-ios-audio",           "src": "../engine/components/enable-ios-audio.js"},
-            {"id": "handler-collision",          "src": "../engine/components/handler-collision.js"},
-			{"id": "handler-controller",         "src": "../engine/components/handler-controller.js"},
-			{"id": "tiled-loader",               "src": "../engine/components/tiled-loader.js"},
-            {"id": "handler-render-createjs",    "src": "../engine/components/handler-render-createjs.js"},
-            {"id": "handler-render-dom",         "src": "../engine/components/handler-render-dom.js"},
-            {"id": "handler-ai",                 "src": "../engine/components/handler-ai.js"},
-			{"id": "handler-logic",              "src": "../engine/components/handler-logic.js"},
-			{"id": "camera",                     "src": "../engine/components/camera.js"},
-			{"id": "collision-group",            "src": "../engine/components/collision-group.js"},
-            {"id": "audio",                      "src": "../engine/components/audio.js"},
-            {"id": "broadcast-events",           "src": "../engine/components/broadcast-events.js"},
-            {"id": "change-scene",               "src": "../engine/components/change-scene.js"},
-            {"id": "dom-element",                "src": "../engine/components/dom-element.js"},
-            {"id": "entity-container",           "src": "../engine/components/entity-container.js"},
-            {"id": "entity-controller",          "src": "../engine/components/entity-controller.js"},
-            {"id": "fullscreen",                 "src": "../engine/components/fullscreen.js"},
-            {"id": "render-debug",               "src": "../engine/components/render-debug.js"},
-			{"id": "render-tiles",               "src": "../engine/components/render-tiles.js"},
-            {"id": "render-animation",           "src": "../engine/components/render-animation.js"},
-            {"id": "render-image",               "src": "../engine/components/render-image.js"},
-            {"id": "logic-button",               "src": "../engine/components/logic-button.js"},
-            {"id": "logic-directional-movement", "src": "../engine/components/logic-directional-movement.js"},
-            {"id": "logic-gravity",              "src": "../engine/components/logic-gravity.js"},
-            {"id": "logic-jump",                 "src": "../engine/components/logic-jump.js"},
-            {"id": "logic-portal",	             "src": "../engine/components/logic-portal.js"},
-			{"id": "collision-basic",            "src": "../engine/components/collision-basic.js"},
-			{"id": "collision-tiles",            "src": "../engine/components/collision-tiles.js"},
-            {"id": "logic-fps-counter",          "src": "../engine/components/logic-fps-counter.js"},
-			
-			// This component was designed specifically for this game. If you want to design your own components, copy the template in game/components/ec-template.js to get started!
-            {"id": "logic-hero",                 "src": "components/logic-hero.js"}
-		],
 		"entities": [ // JSON files describing entities
 		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
 			{"id": "desktop-interface-layer",    "src": "entities/desktop-interface-layer.json"},

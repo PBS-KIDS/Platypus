@@ -49,7 +49,7 @@ This class defines a collision shape, which defines the 'space' an entity occupi
 - **destroy** - Destroys the shape so that it can be memory collected safely.
 */
 
-platformer.classes.collisionShape = (function(){
+platformer.CollisionShape = (function(){
 	var collisionShape = function(owner, definition, collisionType){
 		var regX = definition.regX,
 		regY     = definition.regY;
@@ -126,7 +126,7 @@ platformer.classes.collisionShape = (function(){
 			} 
 		}
 		
-		this.aABB     = new platformer.classes.aABB(this.x, this.y, width, height);
+		this.aABB     = new platformer.AABB(this.x, this.y, width, height);
 	};
 	var proto = collisionShape.prototype;
 	
