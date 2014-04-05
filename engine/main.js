@@ -1,6 +1,9 @@
 /**
 # Main.js
 Main.js creates the game object. Main.js is called on the window 'load' event.
+
+ Requires: ["browser.js", "game.js", "http://code.createjs.com/createjs-2013.12.12.min.js", "factory.js"]
+
 */
 
 (function(window){

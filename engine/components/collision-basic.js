@@ -86,6 +86,8 @@ Multiple collision components may be added to a single entity if distinct messag
         // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
       }
     }
+    
+Requires: ["../collision-shape.js", "../aabb.js"]
 */
 (function(){
 	var entityBroadcast = function(event, solidOrSoft, collisionType){

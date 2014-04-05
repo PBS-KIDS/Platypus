@@ -38,6 +38,9 @@ This class is instantiated by [[Game]] and contains one or more entities as laye
         }
       ]
     }
+    
+    
+Requires: ["entity.js"]
 */
 platformer.Scene = (function(){
 	var scene = function(definition, rootElement){

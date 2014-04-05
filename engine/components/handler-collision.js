@@ -40,6 +40,8 @@ This component checks for collisions between entities which typically have eithe
       "type": "handler-collision"
       // This component has no customizable properties.
     }
+    
+Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collision-data-container.js"]
 */
 (function(){
 	//set here to make them reusable objects

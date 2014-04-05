@@ -30,7 +30,12 @@ This class is used to create the `platformer.game` object. The `game` object han
 - **bindEvent** - Returns a function which takes in an event and calls the callback function passing it the eventId and the event.
   - @param eventId (string) - The id of the event we're binding to.
   - @param callback (function) - The function to call.
+
+
+
+Requires: ["scene.js"]
 */
+
 
 platformer.Game = (function(){
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};

@@ -12,6 +12,86 @@
 (function(){
     var alert  = function(val){console.error(val);},
     print      = function(txt){console.log(txt);},
+    engineComponent = (function(){
+    	// This is a list of all the components in the engine. This list must be updated as new components are added. Also update "tools/js/compile-json.js".
+    	var components = ["asset-loader"
+    	                  , "audio"
+    	                  , "broadcast-events"
+    	                  , "camera"
+    	                  , "camera-follow-me"
+    	                  , "change-scene"
+    	                  , "collision-basic"
+    	                  , "collision-filter"
+    	                  , "collision-group"
+    	                  , "collision-tiles"
+    	                  , "component-switcher"
+    	                  , "counter"
+    	                  , "dom-element"
+    	                  , "enable-ios-audio"
+    	                  , "entity-container"
+    	                  , "entity-controller"
+    	                  , "entity-linker"
+    	                  , "format-message"
+    	                  , "fullscreen"
+    	                  , "handler-ai"
+    	                  , "handler-collision"
+    	                  , "handler-controller"
+    	                  , "handler-logic"
+    	                  , "handler-render-createjs"
+    	                  , "handler-render-dom"
+    	                  , "level-builder"
+    	                  , "logic-angular-movement"
+    	                  , "logic-attached-entity"
+    	                  , "logic-button"
+    	                  , "logic-carrier"
+    	                  , "logic-delay-message"
+    	                  , "logic-destroy-me"
+    	                  , "logic-directional-movement"
+    	                  , "logic-drag-and-droppable"
+    	                  , "logic-fps-counter"
+    	                  , "logic-gravity"
+    	                  , "logic-impact-launch"
+    	                  , "logic-jump"
+    	                  , "logic-pacing-platform"
+    	                  , "logic-portable"
+    	                  , "logic-portal"
+    	                  , "logic-pushable"
+    	                  , "logic-rebounder"
+    	                  , "logic-region-spawner"
+    	                  , "logic-rotational-movement"
+    	                  , "logic-shield"
+    	                  , "logic-spawner"
+    	                  , "logic-state-machine"
+    	                  , "logic-switch"
+    	                  , "logic-teleportee"
+    	                  , "logic-teleporter"
+    	                  , "logic-timer"
+    	                  , "logic-wind-up-racer"
+    	                  , "node-map"
+    	                  , "node-resident"
+    	                  , "random-events"
+    	                  , "render-animation"
+    	                  , "render-debug"
+    	                  , "render-destroy-me"
+    	                  , "render-image"
+    	                  , "render-tiles"
+    	                  , "tiled-loader"
+    	                  , "tween"
+    	                  , "voice-over"
+    	                  , "xhr"
+    	                  , "ai-chaser"
+    	                  , "ai-pacer"];
+    	return function(id){
+    		var i = 0;
+    		
+    		for (; i < components.length; i++){
+    			if(components[i] === id){
+        			return true;    			
+    			}
+    		}
+    		return false;
+        };
+    })(),
     getText    = function(path){
 		var xhr = new XMLHttpRequest();
 		
@@ -67,6 +147,49 @@
  	   var check = path.substring(path.length - 3).toLowerCase();
  	   return (check === '.js');
     },
+    checkComponents = function(components){
+  	   var i   = 0,
+ 	   j       = 0,
+ 	   found   = false,
+ 	   file    = '';
+
+  	   for(i = 0; i < components.length; i++){
+		   file = components[i].type;
+		   if(file){
+			   found = false;
+			   for(j = 0; j < componentList.length; j++){
+				   if((file === componentList[j]) || (file === componentList[j].id)){
+					   found = true;
+					   break;
+				   }
+			   }
+			   if(!found){
+				   if(engineComponent(file)){
+					   file = {
+					       id: file,
+					       src: '../engine/components/' + file + '.js'
+					   };
+ 					   componentList.push(file);
+ 					   checkDependencies(file);
+				   } else {
+					   file = {
+					       id: file,
+					       src: 'components/' + file + '.js'
+					   };
+ 					   componentList.push(file);
+ 					   checkDependencies(file);
+				   }
+			   }
+		   }
+		   if(components[i].entities){ // check these entities for components
+			   for(j = 0; j < components[i].entities.length; j++){
+				   if(components[i].entities[j].components){
+					   checkComponents(components[i].entities[j].components);
+				   }
+			   }
+		   }
+	   }
+    },
     checkDependencies = function(asset){
  	   var i   = 0,
  	   j       = 0,
@@ -74,37 +197,51 @@
  	   matches = null,
  	   found   = false,
  	   subDir  = '',
- 	   file    = '';
+ 	   file    = '',
+ 	   arr     = null;
  	   
  	   if(typeof asset === 'string'){ //JS File
- 		   subDir = getSubDir(asset);
- 		   text = getText(asset);
- 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/,]*\]/g);
- 		   if(matches && matches.length){
- 			   try {
- 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/,]*\]/g)[0]);
- 			   } catch(e) {
- 				   alert("Error in '" + asset + "': Dependency list is malformed.");
- 				   return;
- 			   }
- 			   for(i = 0; i < arr.length; i++){
- 				   found = false;
- 				   file = fixUpPath(subDir + arr[i]);
- 				   for(j = 0; j < dependencyList.length; j++){
- 					   alert(file);
- 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
- 						   found = true;
- 						   break;
- 					   }
- 				   }
- 				   if(!found){
- 					   dependencyList.push(file);
- 					   checkDependencies(file);
+ 		   if(asset.substring(0,4).toLowerCase() !== 'http'){
+ 	 		   subDir = getSubDir(asset);
+ 	 		   text = getText(asset);
+ 	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
+ 	 		   if(matches && matches.length){
+ 	 			   try {
+ 	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
+ 	 			   } catch(e) {
+ 	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
+ 	 				   return;
+ 	 			   }
+ 	 			   for(i = 0; i < arr.length; i++){
+ 	 				   found = false;
+ 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
+ 	 					   file = arr[i];
+ 	 				   } else {
+ 	 	 				   file = fixUpPath(subDir + arr[i]);
+ 	 				   }
+ 	 				   for(j = 0; j < dependencyList.length; j++){
+ 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
+ 	 						   found = true;
+ 	 						   break;
+ 	 					   }
+ 	 				   }
+ 	 				   if(!found){
+ 	 					   dependencyList.push(file);
+ 	 					   checkDependencies(file);
+ 	 				   }
+ 	 			   }
+ 	 		   }
+ 		   }
+ 	   } else if (asset){ //should be a JSON object
+ 		   if(asset.components){
+ 			   checkComponents(asset.components);
+ 		   } else if(asset.layers){
+ 			   for (var i = 0; i < asset.layers.length; i++){
+ 				   if(asset.layers[i].components){
+ 		 			   checkComponents(asset.layers[i].components);
  				   }
  			   }
  		   }
- 	   } else if (asset){ //should be a JSON object
- 		   
  	   }
     },
     handleList = function(section, sectionId, workingDir){
@@ -186,18 +323,21 @@
     gameConfig = getText(workingDir + 'config.json'),
     game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
     source     = game.source,
-    dependencyList = source['includes'],
+    dependencyList = source['includes']  = source['includes'] || ['../engine/main.js'],
+    componentList = source['components'] = source['components'] || [],
     sectionId  = '';
     
     print('Composing full config.json from /game/config.json.');
     
     for(sectionId in source){
-    	if(sectionId !== 'includes'){
+    	if((sectionId !== 'includes') && (sectionId !== 'components')){
         	print('..Handling "' + sectionId + '" section.');
         	handleList(source[sectionId], sectionId, workingDir);
     	}
     }
-	print('..Handling Dependencies.');
+	print('..Handling Components.'); // need to process after entities
+	handleList(componentList, "components", workingDir);
+	print('..Handling Dependencies.'); // needs to process after components
 	handleList(dependencyList, "includes", workingDir);
    
     //insert entities and scenes into compiled config file

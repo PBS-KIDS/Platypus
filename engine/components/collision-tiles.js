@@ -31,6 +31,8 @@ This component causes the tile-map to collide with other entities. It must be pa
       "tileHeight": 240,
       // Optional. The height of tiles in world coordinates. Defaults to 10.
     }
+    
+Requires: ["../collision-shape.js"]
 */
 (function(){
 	var storedTiles = [],

@@ -19,6 +19,8 @@ This component groups other entities with this entity for collision checking. Th
       "type": "collision-group"
       // This component has no customizable properties.
     }
+    
+Requires: ["../aabb.js"]
 */
 (function(){
 	//set here to make them reusable objects
