@@ -206,17 +206,17 @@
  	   
  	   if(typeof asset === 'string'){ //JS File
  		   if(asset.substring(0,4).toLowerCase() !== 'http'){
- 	 		   if(isJS(asset)){ // Is this a JavaScript path name?
- 	 	 		   subDir = getSubDir(asset);
- 	 	 		   text = getText(asset);
- 	 	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
- 	 	 		   if(matches && matches.length){
- 	 	 			   try {
- 	 	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
- 	 	 			   } catch(e) {
- 	 	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
- 	 	 				   return;
- 	 	 			   }
+ 	 		   subDir = getSubDir(asset);
+ 	 		   text = getText(asset);
+ 	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
+ 	 		   if(matches && matches.length){
+ 	 			   try {
+ 	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
+ 	 			   } catch(e) {
+ 	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
+ 	 				   return;
+ 	 			   }
+ 	 	 		   if(isJS(arr[i])){ // Is this a JavaScript path name?
  	 	 			   for(i = 0; i < arr.length; i++){
  	 	 				   found = false;
  	 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
@@ -235,9 +235,9 @@
  	 	 					   checkDependencies(file);
  	 	 				   }
  	 	 			   }
+ 	 	 		   } else { // assume it's a component id since it's not a JavaScript path name.
+ 	 	 			   checkComponent(arr[i]);
  	 	 		   }
- 	 		   } else { // assume it's a component id since it's not a JavaScript path name.
- 	 			   checkComponent(asset);
  	 		   }
  		   }
  	   } else if (asset){ //should be a JSON object

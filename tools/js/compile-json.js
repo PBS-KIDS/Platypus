@@ -222,63 +222,63 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	   }
     },
     checkDependencies = function(asset){
- 	   var i   = 0,
- 	   j       = 0,
- 	   text    = '',
- 	   matches = null,
- 	   found   = false,
- 	   subDir  = '',
- 	   file    = '',
- 	   arr     = null;
- 	   
- 	   if(typeof asset === 'string'){ //JS File
- 		   if(asset.substring(0,4).toLowerCase() !== 'http'){
- 	 		   if(isJS(asset)){ // Is this a JavaScript path name?
- 	 	 		   subDir = getSubDir(asset);
- 	 	 		   text = getText(asset);
- 	 	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
- 	 	 		   if(matches && matches.length){
- 	 	 			   try {
- 	 	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
- 	 	 			   } catch(e) {
- 	 	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
- 	 	 				   return;
- 	 	 			   }
- 	 	 			   for(i = 0; i < arr.length; i++){
- 	 	 				   found = false;
- 	 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
- 	 	 					   file = arr[i];
- 	 	 				   } else {
- 	 	 	 				   file = fixUpPath(subDir + arr[i]);
- 	 	 				   }
- 	 	 				   for(j = 0; j < dependencyList.length; j++){
- 	 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
- 	 	 						   found = true;
- 	 	 						   break;
- 	 	 					   }
- 	 	 				   }
- 	 	 				   if(!found){
- 	 	 					   dependencyList.push(file);
- 	 	 					   checkDependencies(file);
- 	 	 				   }
- 	 	 			   }
- 	 	 		   }
- 	 		   } else { // assume it's a component id since it's not a JavaScript path name.
- 	 			   checkComponent(asset);
- 	 		   }
- 		   }
- 	   } else if (asset){ //should be a JSON object
- 		   if(asset.components){
- 			   checkComponents(asset.components);
- 		   } else if(asset.layers){
- 			   for (var i = 0; i < asset.layers.length; i++){
- 				   if(asset.layers[i].components){
- 		 			   checkComponents(asset.layers[i].components);
- 				   }
- 			   }
- 		   }
- 	   }
-    },
+  	   var i   = 0,
+  	   j       = 0,
+  	   text    = '',
+  	   matches = null,
+  	   found   = false,
+  	   subDir  = '',
+  	   file    = '',
+  	   arr     = null;
+  	   
+  	   if(typeof asset === 'string'){ //JS File
+  		   if(asset.substring(0,4).toLowerCase() !== 'http'){
+  	 		   subDir = getSubDir(asset);
+  	 		   text = getText(asset);
+  	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
+  	 		   if(matches && matches.length){
+  	 			   try {
+  	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
+  	 			   } catch(e) {
+  	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
+  	 				   return;
+  	 			   }
+  	 	 		   if(isJS(arr[i])){ // Is this a JavaScript path name?
+  	 	 			   for(i = 0; i < arr.length; i++){
+  	 	 				   found = false;
+  	 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
+  	 	 					   file = arr[i];
+  	 	 				   } else {
+  	 	 	 				   file = fixUpPath(subDir + arr[i]);
+  	 	 				   }
+  	 	 				   for(j = 0; j < dependencyList.length; j++){
+  	 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
+  	 	 						   found = true;
+  	 	 						   break;
+  	 	 					   }
+  	 	 				   }
+  	 	 				   if(!found){
+  	 	 					   dependencyList.push(file);
+  	 	 					   checkDependencies(file);
+  	 	 				   }
+  	 	 			   }
+  	 	 		   } else { // assume it's a component id since it's not a JavaScript path name.
+  	 	 			   checkComponent(arr[i]);
+  	 	 		   }
+  	 		   }
+  		   }
+  	   } else if (asset){ //should be a JSON object
+  		   if(asset.components){
+  			   checkComponents(asset.components);
+  		   } else if(asset.layers){
+  			   for (var i = 0; i < asset.layers.length; i++){
+  				   if(asset.layers[i].components){
+  		 			   checkComponents(asset.layers[i].components);
+  				   }
+  			   }
+  		   }
+  	   }
+     },
    handleList = function(section, sectionId, workingDir){
 	    var subDir     = '',
 	    asset      = undefined,
