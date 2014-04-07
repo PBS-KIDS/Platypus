@@ -147,42 +147,44 @@
  	   var check = path.substring(path.length - 3).toLowerCase();
  	   return (check === '.js');
     },
-    checkComponents = function(components){
-  	   var i   = 0,
- 	   j       = 0,
+    checkComponent = function(component){
+   	   var j   = 0,
  	   found   = false,
- 	   file    = '';
-
-  	   for(i = 0; i < components.length; i++){
-		   file = components[i].type;
-		   if(file){
-			   found = false;
-			   for(j = 0; j < componentList.length; j++){
-				   if((file === componentList[j]) || (file === componentList[j].id)){
-					   found = true;
-					   break;
-				   }
-			   }
-			   if(!found){
-				   if(engineComponent(file)){
-					   file = {
-					       id: file,
-					       src: '../engine/components/' + file + '.js'
-					   };
- 					   componentList.push(file);
- 					   checkDependencies(file);
-				   } else {
-					   file = {
-					       id: file,
-					       src: 'components/' + file + '.js'
-					   };
- 					   componentList.push(file);
- 					   checkDependencies(file);
-				   }
+ 	   file    = null;
+    	
+	   if(component){
+		   for(j = 0; j < componentList.length; j++){
+			   if((component === componentList[j]) || (component === componentList[j].id)){
+				   found = true;
+				   break;
 			   }
 		   }
+		   if(!found){
+			   if(engineComponent(component)){
+				   file = {
+				       id: component,
+				       src: '../engine/components/' + component + '.js'
+				   };
+				   componentList.push(file);
+				   checkDependencies(file);
+			   } else {
+				   file = {
+				       id: component,
+				       src: 'components/' + component + '.js'
+				   };
+				   componentList.push(file);
+				   checkDependencies(file);
+			   }
+		   }
+	   }
+    },
+    checkComponents = function(components){
+  	   for(var i = 0; i < components.length; i++){
+  		   
+		   checkComponent(components[i].type);
+		   
 		   if(components[i].entities){ // check these entities for components
-			   for(j = 0; j < components[i].entities.length; j++){
+			   for(var j = 0; j < components[i].entities.length; j++){
 				   if(components[i].entities[j].components){
 					   checkComponents(components[i].entities[j].components);
 				   }
@@ -202,34 +204,38 @@
  	   
  	   if(typeof asset === 'string'){ //JS File
  		   if(asset.substring(0,4).toLowerCase() !== 'http'){
- 	 		   subDir = getSubDir(asset);
- 	 		   text = getText(asset);
- 	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
- 	 		   if(matches && matches.length){
- 	 			   try {
- 	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
- 	 			   } catch(e) {
- 	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
- 	 				   return;
- 	 			   }
- 	 			   for(i = 0; i < arr.length; i++){
- 	 				   found = false;
- 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
- 	 					   file = arr[i];
- 	 				   } else {
- 	 	 				   file = fixUpPath(subDir + arr[i]);
- 	 				   }
- 	 				   for(j = 0; j < dependencyList.length; j++){
- 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
- 	 						   found = true;
- 	 						   break;
- 	 					   }
- 	 				   }
- 	 				   if(!found){
- 	 					   dependencyList.push(file);
- 	 					   checkDependencies(file);
- 	 				   }
- 	 			   }
+ 	 		   if(isJS(asset)){ // Is this a JavaScript path name?
+ 	 	 		   subDir = getSubDir(asset);
+ 	 	 		   text = getText(asset);
+ 	 	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
+ 	 	 		   if(matches && matches.length){
+ 	 	 			   try {
+ 	 	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
+ 	 	 			   } catch(e) {
+ 	 	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
+ 	 	 				   return;
+ 	 	 			   }
+ 	 	 			   for(i = 0; i < arr.length; i++){
+ 	 	 				   found = false;
+ 	 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
+ 	 	 					   file = arr[i];
+ 	 	 				   } else {
+ 	 	 	 				   file = fixUpPath(subDir + arr[i]);
+ 	 	 				   }
+ 	 	 				   for(j = 0; j < dependencyList.length; j++){
+ 	 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
+ 	 	 						   found = true;
+ 	 	 						   break;
+ 	 	 					   }
+ 	 	 				   }
+ 	 	 				   if(!found){
+ 	 	 					   dependencyList.push(file);
+ 	 	 					   checkDependencies(file);
+ 	 	 				   }
+ 	 	 			   }
+ 	 	 		   }
+ 	 		   } else { // assume it's a component id since it's not a JavaScript path name.
+ 	 			   checkComponent(asset);
  	 		   }
  		   }
  	   } else if (asset){ //should be a JSON object
