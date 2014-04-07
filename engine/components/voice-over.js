@@ -66,6 +66,8 @@ This component uses its definition to load two other components (audio and rende
       
       //This component also accepts all parameters accepted by either [[render-animation]] or [[audio]] and passes them along when it creates those components.
     }
+    
+Requires: ["audio", "render-animation"]
 */
 (function(){
 	var getEventName = function(msg, VO){
