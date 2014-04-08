@@ -83,7 +83,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
    },
    isFont    = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();
-	   return (check === '.ttf') || (check === '.otf');
+	   return (check === '.ttf') || (check === '.otf') || (check === 'woff');
    },
    game       = getJSON('config.json'), // need to have run compile-json.js prior to this if assets have changed.
    workingDir = game.toolsConfig["source-folder"] || '../game/',

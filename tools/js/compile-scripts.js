@@ -317,7 +317,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    },
    isFont    = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();
-	   return (check === '.ttf') || (check === '.otf');
+	   return (check === '.ttf') || (check === '.otf') || (check === 'woff');
    },
    isCSS     = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();
