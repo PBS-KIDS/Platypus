@@ -19,6 +19,10 @@ A component that handles the rendering of DOM elements. It creates a div element
 - **handle-render** - Sent to entities to have them prepare to be rendered.
   - @param object - An object containing a delta variable that is the time that's passed since the last tick.
 
+## Methods
+- **getElementById** - Used to grab a DOM element that's a child of this layer. This is useful if another scene has not yet been unloaded and elements with matching ids are still in the DOM.
+  - @param id (string) - An id that references the element to be returned.
+
 ## JSON Definition
     {
       "type": "handler-render-dom",
@@ -78,12 +82,28 @@ A component that handles the rendering of DOM elements. It creates a div element
 				}
 			}
 		},
-		methods:{
+		
+		methods: {
 			destroy: function(){
 				this.owner.rootElement.removeChild(this.element);
 				this.owner.element = null;
 				this.element = undefined;
 				this.entities.length = 0;
+			}
+		},
+		
+		publicMethods: {
+			getElementById: function(id){
+				var i = 0,
+				all   = this.element.getElementsByTagName('*');
+
+				for (; i < all.length; i++) {
+				    if(all[i].getAttribute('id') === id){
+				    	return all[i];
+				    }
+				}
+				
+				return document.getElementById(id);
 			}
 		}
 	});
