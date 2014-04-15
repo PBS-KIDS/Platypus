@@ -384,7 +384,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 	
 		methods:{
 			convertCamera: function(distance, worldDistance, tileDistance, viewportDistance){
-				if((worldDistance / this.scaleX) == tileDistance){
+				if(((worldDistance / this.scaleX) === tileDistance) || ((worldDistance / this.scaleX) === viewportDistance)){
 					return distance;
 				} else {
 					return distance * (tileDistance - viewportDistance) / ((worldDistance / this.scaleX) - viewportDistance);

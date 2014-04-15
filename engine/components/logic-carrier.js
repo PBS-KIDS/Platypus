@@ -26,6 +26,8 @@ This component allows this entity carry other entities with which it collides. E
       "type": "logic-carrier"
       // This component has no customizable properties.
     }
+    
+Requires: ["collision-group"]
 */
 (function(){
 	return platformer.createComponentClass({

@@ -142,7 +142,6 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				tileHeight     = level.tileheight,
 				widthOffset    = 0,
 				heightOffset   = 0,
-				tileTypes      = (tilesets[tilesets.length - 1].imagewidth / tileWidth) * (tilesets[tilesets.length - 1].imageheight / tileHeight) + tilesets[tilesets.length - 1].firstgid,
 				x              = 0,
 				y              = 0,
 				obj            = 0,
@@ -153,17 +152,48 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				properties     = null,
 				layerCollides  = true,
 				numberProperty = false,
-				createLayer = function(entityKind){
-					var width      = layer.width,
-					height         = layer.height,
-					tileDefinition = null,
-					importAnimation= null,
-					importCollision= null,
-					importRender   = null,
-					renderTiles    = false,
-					tileset        = null,
-					jumpthroughs   = null,
-					index          = 0;
+				convertImageLayer = function(imageLayer){
+					var tileLayer = {
+						data:   [1],
+						image:  '',
+						height: 1,
+						name:   imageLayer.name,
+						type:   'tilelayer',
+						width:  1,
+						tileheight: tileHeight,
+						tilewidth: tileWidth,
+						x:      imageLayer.x,
+						y:      imageLayer.y,
+						properties: imageLayer.properties || {}
+					};
+					
+					if(platformer.assets[imageLayer.name]){ // Prefer to have name in tiled match image id in game
+						tileLayer.image      = platformer.assets[imageLayer.name];
+						tileLayer.tileheight = tileLayer.image.height;
+						tileLayer.tilewidth  = tileLayer.image.width;
+					} else {
+						console.warn('Component tiled-loader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
+						tileLayer.image = imageLayer.image;
+					}
+					
+					return tileLayer;
+				},
+				createLayer = function(entityKind, layer){
+					var width       = layer.width,
+					height          = layer.height,
+					tHeight         = layer.tileheight || tileHeight,
+					tWidth          = layer.tilewidth  || tileWidth,
+					tileTypes       = 0,
+					tileDefinition  = null,
+					importAnimation = null,
+					importCollision = null,
+					importRender    = null,
+					renderTiles     = false,
+					tileset         = null,
+					jumpthroughs    = null,
+					index           = 0,
+					x               = 0,
+					y               = 0;
 					
 					//TODO: a bit of a hack to copy an object instead of overwrite values
 					tileDefinition  = JSON.parse(JSON.stringify(platformer.game.settings.entities[entityKind]));
@@ -174,10 +204,10 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					
 					if(entityKind === 'collision-layer'){
 						jumpthroughs = [];
-						for (var x = 0; x < tilesets.length; x++){
+						for (x = 0; x < tilesets.length; x++){
 							tileset = tilesets[x];
 							if(tileset.tileproperties){
-								for (var y in tileset.tileproperties){
+								for (y in tileset.tileproperties){
 									if(tileset.tileproperties[y].jumpThrough){
 										jumpthroughs.push(tileset.firstgid + +y - 1);
 									}
@@ -187,18 +217,22 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					}
 
 					tileDefinition.properties            = tileDefinition.properties || {};
-					tileDefinition.properties.width      = tileWidth  * width  * self.unitsPerPixel;
-					tileDefinition.properties.height     = tileHeight * height * self.unitsPerPixel;
+					tileDefinition.properties.width      = tWidth  * width  * self.unitsPerPixel;
+					tileDefinition.properties.height     = tHeight * height * self.unitsPerPixel;
 					tileDefinition.properties.columns    = width;
 					tileDefinition.properties.rows       = height;
-					tileDefinition.properties.tileWidth  = tileWidth  * self.unitsPerPixel;
-					tileDefinition.properties.tileHeight = tileHeight * self.unitsPerPixel;
+					tileDefinition.properties.tileWidth  = tWidth  * self.unitsPerPixel;
+					tileDefinition.properties.tileHeight = tHeight * self.unitsPerPixel;
 					tileDefinition.properties.scaleX     = self.imagesScale;
 					tileDefinition.properties.scaleY     = self.imagesScale;
 					tileDefinition.properties.layerZ     = self.layerZ;
 					tileDefinition.properties.z    		 = self.layerZ;
 					
-					
+					if(layer.image){
+						tileTypes = (layer.image.width / tWidth) * (layer.image.height / tHeight);
+					} else {
+						tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
+					}
 					for (x = 0; x < tileTypes; x++){
 						importAnimation['tile' + x] = x;
 					}
@@ -225,10 +259,10 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 						}
 						if(tileDefinition.components[x].spriteSheet == 'import'){
 							tileDefinition.components[x].spriteSheet = {
-								images: images,
+								images: (layer.image?[layer.image]:images),
 								frames: {
-									width:  tileWidth * self.unitsPerPixel / self.imagesScale,
-									height: tileHeight * self.unitsPerPixel / self.imagesScale//,
+									width:  tWidth * self.unitsPerPixel / self.imagesScale,
+									height: tHeight * self.unitsPerPixel / self.imagesScale//,
 //									regX: (tileWidth * self.unitsPerPixel / self.imagesScale) / 2,
 			//						regY: (tileHeight * self.unitsPerPixel / self.imagesScale) / 2
 								},
@@ -244,11 +278,13 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					}
 					self.layerZ += self.layerZStep;
 					
-					if((entityKind === 'render-layer') && combineRenderLayer){
+					if((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth)){
 						combineRenderLayer.trigger('add-tiles', renderTiles);
 						return combineRenderLayer; 
 					} else {
-						return self.owner.addEntity(new platformer.Entity(tileDefinition, {properties:{}})); 
+						return self.owner.addEntity(new platformer.Entity(tileDefinition, {properties:{
+							
+						}})); 
 					}
 				};
 
@@ -295,13 +331,16 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					}
 					
 					if(entity === 'tile-layer'){
-						createLayer('collision-layer');
-						return createLayer('render-layer', combineRenderLayer);
+						createLayer('collision-layer', layer);
+						return createLayer('render-layer', layer);
 					} else if (entity === 'collision-layer') {
-						createLayer(entity, combineRenderLayer);
+						createLayer(entity, layer);
 					} else {
-						return createLayer(entity, combineRenderLayer);
+						return createLayer(entity, layer);
 					}
+				} else if(layer.type == 'imagelayer'){
+					// set up temp tile layer to pass in image layer as if it's tiled.
+					return createLayer('render-layer', convertImageLayer(layer));
 				} else if(layer.type == 'objectgroup'){
 					for (obj = 0; obj < layer.objects.length; obj++){
 						entity = layer.objects[obj];

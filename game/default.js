@@ -21,6 +21,7 @@
     	                  , "camera-follow-me"
     	                  , "change-scene"
     	                  , "collision-basic"
+    	                  , "collision-box2d"
     	                  , "collision-filter"
     	                  , "collision-group"
     	                  , "collision-tiles"
@@ -34,6 +35,7 @@
     	                  , "format-message"
     	                  , "fullscreen"
     	                  , "handler-ai"
+    	                  , "handler-box2d"
     	                  , "handler-collision"
     	                  , "handler-controller"
     	                  , "handler-logic"
@@ -147,42 +149,44 @@
  	   var check = path.substring(path.length - 3).toLowerCase();
  	   return (check === '.js');
     },
-    checkComponents = function(components){
-  	   var i   = 0,
- 	   j       = 0,
+    checkComponent = function(component){
+   	   var j   = 0,
  	   found   = false,
- 	   file    = '';
-
-  	   for(i = 0; i < components.length; i++){
-		   file = components[i].type;
-		   if(file){
-			   found = false;
-			   for(j = 0; j < componentList.length; j++){
-				   if((file === componentList[j]) || (file === componentList[j].id)){
-					   found = true;
-					   break;
-				   }
-			   }
-			   if(!found){
-				   if(engineComponent(file)){
-					   file = {
-					       id: file,
-					       src: '../engine/components/' + file + '.js'
-					   };
- 					   componentList.push(file);
- 					   checkDependencies(file);
-				   } else {
-					   file = {
-					       id: file,
-					       src: 'components/' + file + '.js'
-					   };
- 					   componentList.push(file);
- 					   checkDependencies(file);
-				   }
+ 	   file    = null;
+    	
+	   if(component){
+		   for(j = 0; j < componentList.length; j++){
+			   if((component === componentList[j]) || (component === componentList[j].id)){
+				   found = true;
+				   break;
 			   }
 		   }
+		   if(!found){
+			   if(engineComponent(component)){
+				   file = {
+				       id: component,
+				       src: '../engine/components/' + component + '.js'
+				   };
+				   componentList.push(file);
+				   checkDependencies(file);
+			   } else {
+				   file = {
+				       id: component,
+				       src: 'components/' + component + '.js'
+				   };
+				   componentList.push(file);
+				   checkDependencies(file);
+			   }
+		   }
+	   }
+    },
+    checkComponents = function(components){
+  	   for(var i = 0; i < components.length; i++){
+  		   
+		   checkComponent(components[i].type);
+		   
 		   if(components[i].entities){ // check these entities for components
-			   for(j = 0; j < components[i].entities.length; j++){
+			   for(var j = 0; j < components[i].entities.length; j++){
 				   if(components[i].entities[j].components){
 					   checkComponents(components[i].entities[j].components);
 				   }
@@ -212,24 +216,28 @@
  	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
  	 				   return;
  	 			   }
- 	 			   for(i = 0; i < arr.length; i++){
- 	 				   found = false;
- 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
- 	 					   file = arr[i];
- 	 				   } else {
- 	 	 				   file = fixUpPath(subDir + arr[i]);
- 	 				   }
- 	 				   for(j = 0; j < dependencyList.length; j++){
- 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
- 	 						   found = true;
- 	 						   break;
- 	 					   }
- 	 				   }
- 	 				   if(!found){
- 	 					   dependencyList.push(file);
- 	 					   checkDependencies(file);
- 	 				   }
- 	 			   }
+ 	 	 		   if(isJS(arr[i])){ // Is this a JavaScript path name?
+ 	 	 			   for(i = 0; i < arr.length; i++){
+ 	 	 				   found = false;
+ 	 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
+ 	 	 					   file = arr[i];
+ 	 	 				   } else {
+ 	 	 	 				   file = fixUpPath(subDir + arr[i]);
+ 	 	 				   }
+ 	 	 				   for(j = 0; j < dependencyList.length; j++){
+ 	 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
+ 	 	 						   found = true;
+ 	 	 						   break;
+ 	 	 					   }
+ 	 	 				   }
+ 	 	 				   if(!found){
+ 	 	 					   dependencyList.push(file);
+ 	 	 					   checkDependencies(file);
+ 	 	 				   }
+ 	 	 			   }
+ 	 	 		   } else { // assume it's a component id since it's not a JavaScript path name.
+ 	 	 			   checkComponent(arr[i]);
+ 	 	 		   }
  	 		   }
  		   }
  	   } else if (asset){ //should be a JSON object
@@ -476,7 +484,7 @@
    },
    isFont    = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();
-	   return (check === '.ttf') || (check === '.otf');
+	   return (check === '.ttf') || (check === '.otf') || (check === 'woff');
    },
     isCSS     = function(path){
 	    var check = path.substring(path.length - 4).toLowerCase();
