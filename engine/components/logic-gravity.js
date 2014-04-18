@@ -28,7 +28,7 @@ A component that causes the object to move according to a specified gravity.
 
 ## JSON Definition
     {
-      "type": "logic-pushable",
+      "type": "logic-gravity",
       "velocityX" : 0,
       //Optional - The starting x velocity of the entity. Defaults to 0.
 	  "velocityY" : 0,
@@ -41,7 +41,7 @@ A component that causes the object to move according to a specified gravity.
 	  //Optional - The max velocity attributed to the entity by gravity in both x and y. This is superseded by the specific maxVelocityX and maxVelocityY values. Defaults to 3.
 	  "xGravity" : 0,
 	  //Optional - The gravitational acceleration in units/millisecond that the entity moves in x. Defaults to 0.
-	  "yGravity" : .01,
+	  "yGravity" : 0.01,
 	  //Optional - The gravitational acceleration in units/millisecond that the entity moves in y. Defaults to .01.
 	  "gravity" : 0
 	  //Optional - The gravitational acceleration in units/millisecond that the entity moves in y. This is superseded by the specific yGravity. Defaults to .01.

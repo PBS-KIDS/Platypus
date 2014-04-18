@@ -30,99 +30,55 @@ This component handles the pressed/released state of a button according to input
       // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
     }
 */
-platformer.components['logic-button'] = (function(){
-	var component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		
-		// Create state object to send with messages here so it's not recreated each time.
-		this.state = this.owner.state;
-		this.state.released = true;
-		this.state.pressed  = false;
-		this.stateChange = '';
-
-		if(definition.state === 'pressed'){
-			this.pressed();
-		}
-
-		if(definition.toggle){
-			this.toggle = true;
-			this.addListener('mouseup');
-		} else {
-			this.addListeners(['mousedown','mouseup']);
-		}
-		
-		this.addListeners(['handle-logic', 'pressed', 'released']);
-	};
-	var proto = component.prototype;
-	
-	proto['mousedown'] = proto['pressed'] = function(){
-		this.stateChange = 'pressed';
-	};
-	
-	proto['mouseup'] = function(){
-		if(this.toggle){
-			if(this.state.pressed){
-				this.released();
-			} else {
-				this.pressed();
-			}
-		} else {
-			this.released();
-		}
-	};
-	
-	proto['released'] = function(){
-		this.stateChange = 'released';
-	};
-	
-	proto['handle-logic'] = function(resp){
-		if(this.state.released && (this.stateChange === 'pressed')){
-			this.stateChange = '';
-			this.state.pressed = true;
-			this.state.released = false;
-		}
-		if(this.state.pressed && (this.stateChange === 'released')){
-			this.stateChange = '';
-			this.state.pressed = false;
+(function(){
+	return platformer.createComponentClass({
+		id: 'logic-button',
+		constructor: function(definition){
+			this.state = this.owner.state;
 			this.state.released = true;
+			this.state.pressed  = false;
+			this.stateChange = '';
+			this.toggle = !!definition.toggle;
+
+			if(definition.state === 'pressed'){
+				this.stateChange = 'pressed';
+			}
+		},
+		events:{
+			"mousedown": function(){
+				if(!this.toggle){
+					this.stateChange = 'pressed';
+				}
+			},
+			"pressed": function(){
+				this.stateChange = 'pressed';
+			},
+			"mouseup": function(){
+				if(this.toggle){
+					if(this.state.pressed){
+						this.owner.triggerEvent('released');
+					} else {
+						this.owner.triggerEvent('pressed');
+					}
+				} else {
+					this.owner.triggerEvent('released');
+				}
+			},
+			"released": function(){
+				this.stateChange = 'released';
+			},
+			"handle-logic": function(resp){
+				if(this.state.released && (this.stateChange === 'pressed')){
+					this.stateChange = '';
+					this.state.pressed = true;
+					this.state.released = false;
+				}
+				if(this.state.pressed && (this.stateChange === 'released')){
+					this.stateChange = '';
+					this.state.pressed = false;
+					this.state.released = true;
+				}
+			}
 		}
-	};
-
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.state = undefined;
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

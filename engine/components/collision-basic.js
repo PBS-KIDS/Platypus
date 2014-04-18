@@ -86,15 +86,11 @@ Multiple collision components may be added to a single entity if distinct messag
         // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
       }
     }
+    
+Requires: ["../collision-shape.js", "../aabb.js"]
 */
 (function(){
-	var twinBroadcast = function(component, funcA, funcB){
-		return function (value) {
-			funcA.call(component, value);
-			funcB.call(component, value);
-		  };
-	},
-	entityBroadcast = function(event, solidOrSoft, collisionType){
+	var entityBroadcast = function(event, solidOrSoft, collisionType){
 		if(typeof event === 'string'){
 			return function(value){
 				if(value.myType === collisionType){
@@ -151,7 +147,7 @@ Multiple collision components may be added to a single entity if distinct messag
 			entity.collisionFunctions = {};
 			entity.getAABB = function(collisionType){
 				if(!collisionType){
-					var aabb = entity.aabb = entity.aabb || new platformer.classes.aABB();
+					var aabb = entity.aabb = entity.aabb || new platformer.AABB();
 					aabb.reset();
 					for(var i in entity.collisionFunctions){
 						aabb.include(entity.collisionFunctions[i].getAABB());
@@ -285,8 +281,8 @@ Multiple collision components may be added to a single entity if distinct messag
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
 			
-			this.aabb     = new platformer.classes.aABB();
-			this.prevAABB = new platformer.classes.aABB();
+			this.aabb     = new platformer.AABB();
+			this.prevAABB = new platformer.AABB();
 			
 			this.owner.bullet = this.owner.bullet || definition.bullet;
 
@@ -326,8 +322,8 @@ Multiple collision components may be added to a single entity if distinct messag
 			this.prevShapes = [];
 			this.entities = undefined;
 			for (x in shapes){
-				this.shapes.push(new platformer.classes.collisionShape(this.owner, shapes[x], this.collisionType));
-				this.prevShapes.push(new platformer.classes.collisionShape(this.owner, shapes[x], this.collisionType));
+				this.shapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
+				this.prevShapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
 				this.prevAABB.include(this.prevShapes[x].getAABB());
 				this.aabb.include(this.shapes[x].getAABB());
 			}
@@ -347,8 +343,7 @@ Multiple collision components may be added to a single entity if distinct messag
 					this.owner.solidCollisions[this.collisionType].push(i);
 					this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
 					if(definition.solidCollisions[i]){
-						this.addListener('hit-by-' + i);
-						this['hit-by-' + i] = entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType);
+						this.addEventListener('hit-by-' + i, entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType));
 					}
 				}
 			}
@@ -359,14 +354,7 @@ Multiple collision components may be added to a single entity if distinct messag
 				for(var i in definition.softCollisions){
 					this.owner.softCollisions[this.collisionType].push(i);
 					if(definition.softCollisions[i]){
-						if(this['hit-by-' + i]) {
-							//this['hit-by-' + i + '-solid'] = this['hit-by-' + i];
-							//this['hit-by-' + i + '-soft'] = entityBroadcast(definition.softCollisions[i], 'soft');
-							this['hit-by-' + i] = twinBroadcast(this, this['hit-by-' + i], entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
-						} else {
-							this.addListener('hit-by-' + i);
-							this['hit-by-' + i] = entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType);
-						}
+						this.addEventListener('hit-by-' + i, entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
 					}
 				}
 			}

@@ -109,44 +109,75 @@ This component is attached to entities that will appear in the game world. It se
 				shapes   = null,
 				aabb     = null;
 				
-				this.stage = resp.stage;
-				
-				if(this.owner.getAABB){
-					for(j = 0; j < this.owner.collisionTypes.length; j++){
-						aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
-						width  = this.initialWidth  = aabb.width;
-						height = this.initialHeight = aabb.height;
-						shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
-						
-						this.shapes.push(createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--));
-						this.stage.addChild(this.shapes[this.shapes.length - 1]);
-						
-						for(i = 0; i < shapes.length; i++){
-							this.shapes.push(createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--));
+				if(resp && resp.stage){
+					this.stage = resp.stage;
+					
+					if(this.owner.getAABB){
+						for(j = 0; j < this.owner.collisionTypes.length; j++){
+							aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
+							width  = this.initialWidth  = aabb.width;
+							height = this.initialHeight = aabb.height;
+							shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
+							
+							this.shapes.push(createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--));
 							this.stage.addChild(this.shapes[this.shapes.length - 1]);
+							
+							for(i = 0; i < shapes.length; i++){
+								this.shapes.push(createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--));
+								this.stage.addChild(this.shapes[this.shapes.length - 1]);
+							}
 						}
+					} else {
+						this.shapes.push(createShape('rectangle', 'render', width, height, width/2, height/2, z--));
+						this.stage.addChild(this.shapes[0]);
 					}
-				} else {
-					this.shapes.push(createShape('rectangle', 'render', width, height, width/2, height/2, z--));
-					this.stage.addChild(this.shapes[0]);
-				}
-				
-				// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-				if(this.click && createjs.Touch.isSupported()){
-					createjs.Touch.enable(this.stage);
-				}
-		
-				this.shapes[0].onPress     = function(event) {
+					
+					// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+					if(this.click && createjs.Touch.isSupported()){
+						createjs.Touch.enable(this.stage);
+					}
+			
+					this.shapes[0].onPress     = function(event) {
+						if(this.click){
+							self.owner.trigger('mousedown', {
+								event: event.nativeEvent,
+								over: over,
+								x: event.stageX,
+								y: event.stageY,
+								entity: self.owner
+							});
+							event.onMouseUp = function(event){
+								self.owner.trigger('mouseup', {
+									event: event.nativeEvent,
+									over: over,
+									x: event.stageX,
+									y: event.stageY,
+									entity: self.owner
+								});
+							};
+							event.onMouseMove = function(event){
+								self.owner.trigger('mousemove', {
+									event: event.nativeEvent,
+									over: over,
+									x: event.stageX,
+									y: event.stageY,
+									entity: self.owner
+								});
+							};
+						}
+						if(event.nativeEvent.button == 2){
+							console.log('This Entity:', self.owner);
+						}
+					};
 					if(this.click){
-						self.owner.trigger('mousedown', {
-							event: event.nativeEvent,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-						event.onMouseUp = function(event){
-							self.owner.trigger('mouseup', {
+						this.shapes[0].onMouseOut  = function(){over = false;};
+						this.shapes[0].onMouseOver = function(){over = true;};
+					}
+					if(this.hover){
+						this.stage.enableMouseOver();
+						this.shapes[0].onMouseOut  = function(event){
+							over = false;
+							self.owner.trigger('mouseout', {
 								event: event.nativeEvent,
 								over: over,
 								x: event.stageX,
@@ -154,8 +185,9 @@ This component is attached to entities that will appear in the game world. It se
 								entity: self.owner
 							});
 						};
-						event.onMouseMove = function(event){
-							self.owner.trigger('mousemove', {
+						this.shapes[0].onMouseOver = function(event){
+							over = true;
+							self.owner.trigger('mouseover', {
 								event: event.nativeEvent,
 								over: over,
 								x: event.stageX,
@@ -164,40 +196,10 @@ This component is attached to entities that will appear in the game world. It se
 							});
 						};
 					}
-					if(event.nativeEvent.button == 2){
-						console.log('This Entity:', self.owner);
+			
+					if(!platformer.game.settings.debug){
+						this.owner.removeComponent(this);
 					}
-				};
-				if(this.click){
-					this.shapes[0].onMouseOut  = function(){over = false;};
-					this.shapes[0].onMouseOver = function(){over = true;};
-				}
-				if(this.hover){
-					this.stage.enableMouseOver();
-					this.shapes[0].onMouseOut  = function(event){
-						over = false;
-						self.owner.trigger('mouseout', {
-							event: event.nativeEvent,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-					};
-					this.shapes[0].onMouseOver = function(event){
-						over = true;
-						self.owner.trigger('mouseover', {
-							event: event.nativeEvent,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-					};
-				}
-		
-				if(!platformer.game.settings.debug){
-					this.owner.removeComponent(this);
 				}
 			},
 			

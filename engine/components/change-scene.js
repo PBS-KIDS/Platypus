@@ -39,13 +39,12 @@ This component allows the entity to initiate a change from the current scene to 
 			this.scene = this.owner.scene || definition.scene;
 			this.transition = this.owner.transition || definition.transition || 'instant';
 			this.persistentData = definition.persistentData || {};
-			
-			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['new-scene'];
-			}
-			
 			this.preload = definition.preload || false;
+			
+			// Notes definition changes from older versions of this component.
+			if(definition.message){
+				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "new-scene"} instead.');
+			}
 		},
 
 		events: {

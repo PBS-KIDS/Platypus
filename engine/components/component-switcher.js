@@ -43,7 +43,7 @@ This component listens for messages and, according to its preset settings, will 
       }
     }
 */
-platformer.components['component-switcher'] = (function(){ //TODO: Change the name of the component!
+(function(){
 	var addRemoveComponents = function(definition, owner){
 		return function(){
 			var i = 0, j = 0;
@@ -78,53 +78,16 @@ platformer.components['component-switcher'] = (function(){ //TODO: Change the na
 			
 			owner.parent.trigger('child-entity-updated', owner);
 		};
-	},
-	component = function(owner, definition){
-		this.type  = 'component-switcher';
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-
-		if(definition.componentMap){
-			for(var i in definition.componentMap){
-				this.addListener(i);
-				this[i] = addRemoveComponents(definition.componentMap[i], this.owner);
+	};
+	
+	return platformer.createComponentClass({
+		id: 'component-switcher',
+		constructor: function(definition){
+			if(definition.componentMap){
+				for(var event in definition.componentMap){
+					this.addEventListener(event, addRemoveComponents(definition.componentMap[event], this.owner));
+				}
 			}
 		}
-
-	};
-	var proto = component.prototype;
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

@@ -3,7 +3,7 @@
 A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages.
 
 ## Dependencies
-- **Needs a 'tick' or 'logic' call** - This component doesn't need a specific component, but it does require a 'tick' or 'logic' call to function. It's usually used as a component of an action-layer.
+- **Needs a 'tick' call** - This component doesn't need a specific component, but it does require a 'tick' call to function. It's usually used as a component of an "action-layer".
 
 ## Messages
 
@@ -24,6 +24,10 @@ A component that handles updating logic components. Each tick it calls all the e
 ### Child Broadcasts:
 - **handle-logic** - Sent to entities to run their logic.
   - @param object - An object containing a delta variable that is the time that's passed since the last tick.
+- **handle-post-collision-logic** - Sent to entities to run logic that may depend upon collision responses.
+  - @param object - An object containing a delta variable that is the time that's passed since the last tick.
+- **logical-state** - Sent to entities when their logical state has been changed.
+  - @param object - An object a list of key/value pairs representing the owner's state (this value equals owner.state).
 
 ## JSON Definition
     {
@@ -94,7 +98,7 @@ A component that handles updating logic components. Each tick it calls all the e
 				
 				for (var x = 0; x < messageIds.length; x++)
 				{
-					if (messageIds[x] == 'handle-logic'){
+					if (messageIds[x] == 'handle-logic' || messageIds[x] == 'handle-post-collision-logic'){
 						this.entities.push(entity);
 						this.updateNeeded = this.camera.active;
 						break;
@@ -187,18 +191,7 @@ A component that handles updating logic components. Each tick it calls all the e
 						for (var j = this.activeEntities.length - 1; j > -1; j--) {
 							child = this.activeEntities[j];
 							if(child.triggerEvent('handle-logic', this.message)){
-								if(updateState(child)){
-									child.trigger('logical-state', child.state);
-								}
 								child.checkCollision = true;
-							} else {
-								for (var k = this.entities.length - 1; k > -1; k--) {
-								    if(this.entities[k] === this.activeEntities[j]){
-								    	this.entities.splice(k, 1);
-								    	this.updateNeeded = this.camera.active;
-								    	break;
-								    }
-								}
 							}
 						}
 						
@@ -207,12 +200,34 @@ A component that handles updating logic components. Each tick it calls all the e
 						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 						time += this.timeElapsed.time;
 						
-						this.owner.trigger('check-collision-group', this.message); // If a collision group is attached, make sure collision is processed on each logic tick.
+						if(this.owner.triggerEvent('check-collision-group', this.message)){ // If a collision group is attached, make sure collision is processed on each logic tick.
+							this.timeElapsed.name = 'Collision';
+							this.timeElapsed.time = new Date().getTime() - time;
+							platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+							time += this.timeElapsed.time;
 
-						this.timeElapsed.name = 'Collision';
-						this.timeElapsed.time = new Date().getTime() - time;
-						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-						time += this.timeElapsed.time;
+							for (var j = this.activeEntities.length - 1; j > -1; j--) {
+								child = this.activeEntities[j];
+								child.triggerEvent('handle-post-collision-logic', this.message);
+								if(updateState(child)){
+									child.triggerEvent('logical-state', child.state);
+								}
+							}
+
+							this.timeElapsed.name = 'Collision Logic';
+							this.timeElapsed.time = new Date().getTime() - time;
+							platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+							time += this.timeElapsed.time;
+						} else {
+							for (var j = this.activeEntities.length - 1; j > -1; j--) {
+								child = this.activeEntities[j];
+								if(updateState(child)){
+									child.triggerEvent('logical-state', child.state);
+								}
+							}
+						}
+						
+						
 					}
 				}
 				

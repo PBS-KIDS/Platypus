@@ -135,22 +135,18 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				if(this.destinationNode){
 					this.state.moving = true;
 					
-					//console.log('--- destination --- ' + this.destinationNode.id + ' ---');
 					if(this.node){
-						//console.log('Leaving ' + this.node.id);
-						this['leave-node']();
+						this.owner.triggerEvent('leave-node');
 					}
 					if(!this.speed || !this.lastNode){
-						//console.log('On Node ' + this.destinationNode.id);
-						this['on-node'](this.destinationNode);
+						this.owner.triggerEvent('on-node', this.destinationNode);
 						this.destinationNode = null;
 					} else {
 						this.progress += resp.delta * this.speed;
 						ratio = this.progress / this.distance;
 						
 						if(ratio > 1){
-							//console.log('On Node ' + this.destinationNode.id + ' ratio: ' + this.progress + ' / ' + this.distance);
-							this['on-node'](this.destinationNode);
+							this.owner.triggerEvent('on-node', this.destinationNode);
 							this.destinationNode = null;
 						} else {
 							//console.log('Onward ' + this.lastNode.id + ' to ' + this.destinationNode.id);
@@ -164,7 +160,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 						node = this.followEntity.node || this.followEntity;
 						console.log('Following (' + (node && node.isNode && (node !== this.node)) + ')', node);
 						if(node && node.isNode && (node !== this.node)){
-							this.state.moving = this['goto-node'](node);
+							this.state.moving = this.attemptGotoNode(node);
 						} else {
 						    this.followEntity = null;
 						}
@@ -189,8 +185,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				
 				//add listeners for directions
 				for (i in node.neighbors){
-					this.addListener(i);
-					this[i] = createGateway(node.neighbors[i], node.map, i);
+					this.addEventListener(i, createGateway(node.neighbors[i], node.map, i));
 					
 					//trigger "next-to" events
 					entities = node.map.getNode(node.neighbors[i]).contains;
@@ -219,7 +214,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 					this.node.remove(this.owner);
 					this.owner.triggerEvent('left-node', this.node);
 					for (var i in this.node.neighbors){
-						this.removeListener(i, this.listeners[i]);
+						this.removeEventListener(i);
 						delete this[i];
 					}
 				}
@@ -227,6 +222,34 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				this.node = null;
 			},
 			"goto-node": function(node){
+				this.attemptGotoNode(node);
+			},
+			"follow": function(entityOrNode){
+				this.followEntity = entityOrNode;
+			}
+		},
+		
+		methods:{
+			isPassable: function(node){
+				return node && (this.node !== node) && (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== 'undefined')) && (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
+			},
+			traverseNode: function(node, goal){
+				var i = '',
+				nodes = [];
+				
+				if(node === goal){
+					return false;
+				}
+				
+				if(this.isPassable(node) && !node.checked){
+					for (i in node.neighbors){
+						nodes.push(node.neighbors[i]);
+					}
+					node.checked = true;
+				}
+				return nodes;
+			},
+			attemptGotoNode: function(node){
 				var i = '',
 				j     = 0,
 				k     = 0,
@@ -281,43 +304,6 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				}
 				
 				return false;
-			},
-			"follow": function(entityOrNode){
-				this.followEntity = entityOrNode;
-			}
-		},
-		
-		methods:{
-			isPassable: function(node){
-				/*if(log){
-					if(!node){
-						console.log('No node.'); 
-					} else if(this.node === node) {
-						console.log(node.id + ': Same as current node.');
-					} else if((this.friendlyNodes && (typeof this.friendlyNodes[node.type] === 'undefined'))){
-						console.log(node.id + ': Not a friendly node type (' + node.type + ').');
-					} else if ((node.contains.length && !isFriendly(node.contains, this.friendlyEntities))){
-						console.log(node.id + ': Blocked by Entity', node.contains);
-					}
-					return node && (this.node !== node) && (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== 'undefined')) && (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
-				}*/
-				return node && (this.node !== node) && (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== 'undefined')) && (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
-			},
-			traverseNode: function(node, goal){
-				var i = '',
-				nodes = [];
-				
-				if(node === goal){
-					return false;
-				}
-				
-				if(this.isPassable(node) && !node.checked){
-					for (i in node.neighbors){
-						nodes.push(node.neighbors[i]);
-					}
-					node.checked = true;
-				}
-				return nodes;
 			},
 			gotoNode: function(node, gateway){
 				if(this.isPassable(node)){

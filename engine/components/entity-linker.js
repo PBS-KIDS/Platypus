@@ -53,7 +53,7 @@ This component allows an entity to communicate directly with one or more entitie
       }
     }
 */
-platformer.components['entity-linker'] = (function(){
+(function(){
 	var broadcast = function(event){
 		if(typeof event === 'string'){
 			return function(value, debug){
@@ -73,134 +73,110 @@ platformer.components['entity-linker'] = (function(){
 				}
 			};
 		}
-	},
-	component = function(owner, definition){
-		this.owner = owner;
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		this.addListeners(['adopted', 'link-entity', 'unlink-entity']);
-		if(definition.events){
-			for(var event in definition.events){
-				this[event] = broadcast(definition.events[event]);
-				this.addListener(event);
-			}
-		}
+	};
 
-		this.linkId = definition.linkId || this.owner.linkId || 'linked';
-		
-		if(!this.owner.linkId){
-			this.owner.linkId = this.linkId;
-		}
-		
-		this['to-' + this.linkId + '-entities'] = broadcast('from-' + this.linkId + '-entities');
-		this.addListener('to-' + this.linkId + '-entities');
-		this['from-' + this.linkId + '-entities'] = function(resp){
-			this.owner.trigger(resp.message, resp.value, resp.debug);
-		};
-		this.addListener('from-' + this.linkId + '-entities');
-		
-		this.links = [];
-		
-		if(this.owner.linkEntities){
-			for (var entity in this.owner.linkEntities){
-				this.links.push(this.owner.linkEntities[entity]);
+	return platformer.createComponentClass({
+		id: 'entity-linker',
+		constructor: function(definition){
+			var self = this;
+
+			if(definition.events){
+				for(var event in definition.events){
+					this.addEventListener(event, broadcast(definition.events[event]));
+				}
 			}
-		}
-		
-		this.message = {
-			message: '',
-			value: null
-		};
-		this.linkMessage = {
-			entity: this.owner,
-			linkId: this.linkId,
-			reciprocate: false
-		};
-		
-		// In case linker is added after adoption
-		if(this.owner.parent){
-			this['adopted']();
-		}
-	};
-	var proto = component.prototype;
 	
-	proto['adopted'] = function(resp){
-		var grandparent = this.owner.parent;
-		while(grandparent.parent){
-			grandparent = grandparent.parent;
-		}
-		this.linkMessage.reciprocate = true; 
-		grandparent.trigger('link-entity', this.linkMessage, true);
-	};
-	
-	proto['link-entity'] = function(resp){
-		var i   = 0,
-		already = false;
-		
-		if((resp.linkId === this.linkId) && (resp.entity !== this.owner)){
-			// Make sure this link is not already in place
-			for (; i < this.links.length; i++){
-				if(this.links[i] === resp.entity){
-					already = true;
-					break;
+			this.linkId = definition.linkId || this.owner.linkId || 'linked';
+			
+			if(!this.owner.linkId){
+				this.owner.linkId = this.linkId;
+			}
+			
+			this.addEventListener('to-' + this.linkId + '-entities', broadcast('from-' + this.linkId + '-entities'));
+			this.addEventListener('from-' + this.linkId + '-entities', function(resp){
+				self.owner.trigger(resp.message, resp.value, resp.debug);
+			});
+			
+			this.links = [];
+			
+			if(this.owner.linkEntities){
+				for (var entity in this.owner.linkEntities){
+					this.links.push(this.owner.linkEntities[entity]);
 				}
 			}
 			
-			if(!already){
-				this.links.push(resp.entity);
-				if(resp.reciprocate){
-					this.linkMessage.reciprocate = false;
-					resp.entity.trigger('link-entity', this.linkMessage);
+			this.message = {
+				message: '',
+				value: null
+			};
+			this.linkMessage = {
+				entity: this.owner,
+				linkId: this.linkId,
+				reciprocate: false
+			};
+			
+			// In case linker is added after adoption
+			if(this.owner.parent){
+				this.resolveAdoption();
+			}
+		},
+		
+		events: {
+			"adopted": function(resp){
+				this.resolveAdoption(resp);
+			},
+			
+			"link-entity": function(resp){
+				var i   = 0,
+				already = false;
+				
+				if((resp.linkId === this.linkId) && (resp.entity !== this.owner)){
+					// Make sure this link is not already in place
+					for (; i < this.links.length; i++){
+						if(this.links[i] === resp.entity){
+							already = true;
+							break;
+						}
+					}
+					
+					if(!already){
+						this.links.push(resp.entity);
+						if(resp.reciprocate){
+							this.linkMessage.reciprocate = false;
+							resp.entity.trigger('link-entity', this.linkMessage);
+						}
+					}
+				}
+			},
+			
+			"unlink-entity": function(resp){
+				var i = 0;
+				for(; i < this.links.length; i++){
+					if(resp.entity === this.links[i]){
+						this.links.splice(i, 1);
+						break;
+					}
 				}
 			}
-		}
-	};
-	
-	proto['unlink-entity'] = function(resp){
-		var i = 0;
-		for(; i < this.links.length; i++){
-			if(resp.entity === this.links[i]){
-				this.links.splice(i, 1);
-				break;
+		},
+		
+		methods: {
+			resolveAdoption: function(resp){
+				var grandparent = this.owner.parent;
+				while(grandparent.parent){
+					grandparent = grandparent.parent;
+				}
+				this.linkMessage.reciprocate = true; 
+				grandparent.trigger('link-entity', this.linkMessage, true);
+			},
+			
+			destroy: function(){
+				var i = 0;
+				for (; i < this.links.length; i++){
+					this.links[i].trigger('unlink-entity', this.linkMessage);
+				}
+				this.links.length = 0;
 			}
 		}
-	};
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		var i = 0;
-		for (; i < this.links.length; i++){
-			this.links[i].trigger('unlink-entity', this.linkMessage);
-		}
-		this.links.length = 0;
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

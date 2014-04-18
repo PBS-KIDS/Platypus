@@ -44,6 +44,12 @@ This component is attached to entities that will appear in the game world. It re
   - @param x (number) - The x-location of the mouse in stage coordinates.
   - @param y (number) - The y-location of the mouse in stage coordinates.
   - @param entity ([[Entity]]) - The entity clicked on.  
+- **pressmove** - This component captures this event from CreateJS and triggers it on the entity.
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on.  
 - **pin-me** - If this component should be pinned to another animation, it will trigger this event in an attempt to initiate the pinning.
   - @param pinId (string) - Required. A string identifying the id of a pin location that this render-animation wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other animations on the entity to attach to.
@@ -96,8 +102,8 @@ This component is attached to entities that will appear in the game world. It re
       
       "acceptInput": {
       	//Optional - What types of input the object should take. This component defaults to not accept any input.
-      	"hover": false;
-      	"click": false; 
+      	"hover": false,
+      	"click": false
       },
       
       "pins": [{
@@ -226,7 +232,6 @@ This component is attached to entities that will appear in the game world. It re
 			
 			this.checkStates = [];
 			for(var i in map){
-				this.addListener(i);
 				animation = map[i];
 				
 				if(animation[animation.length - 1] === '!'){
@@ -236,7 +241,7 @@ This component is attached to entities that will appear in the game world. It re
 					this.followThroughs[animation] = false;
 				}
 				
-				this[i] = changeState(animation);
+				this.addEventListener(i, changeState(animation));
 				this.checkStates.push(createTest(i, animation));
 			}
 			lastAnimation = animation;
@@ -357,7 +362,7 @@ This component is attached to entities that will appear in the game world. It re
 			}
 
 			//Check state against entity's prior state to update animation if necessary on instantiation.
-			this['logical-state'](this.state);
+			this.stateChange = true;
 			
 			if(definition.cache){
 				this.updateSprite();
@@ -366,24 +371,16 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		events: {
-			"handle-render-load": function(obj){
-				if(!this.pinTo){
-					this.stage = obj.stage;
-					if(!this.stage){
-						return;
-					}
-					this.stage.addChild(this.container);
-					this.addInputs();				
-				} else {
-					return;
+			"handle-render-load": function(resp){
+				if(resp && resp.stage){
+					this.addStage(resp.stage);
 				}
 			},
 			
 			"handle-render": function(resp){
 				if(!this.stage){
 					if(!this.pinTo) { //In case this component was added after handler-render is initiated
-						this['handle-render-load'](resp);
-						if(!this.stage){
+						if(!this.addStage(resp.stage)){
 							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
 							this.owner.removeComponent(this);
 							return;
@@ -398,9 +395,6 @@ This component is attached to entities that will appear in the game world. It re
 			
 			"logical-state": function(state){
 				this.stateChange = true;
-				if(state['hidden'] !== undefined) {
-					this.container.hidden = state['hidden'];
-				}
 			},
 			
 			"hide-animation": function(){
@@ -436,6 +430,17 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		methods: {
+			addStage: function(stage){
+				if(stage && !this.pinTo){
+					this.stage = stage;
+					this.stage.addChild(this.container);
+					this.addInputs();
+					return stage;
+				} else {
+					return null;
+				}
+			},
+			
 			updateSprite: (function(){
 				var sort = function(a, b) {
 					return a.z - b.z;
@@ -534,6 +539,10 @@ This component is attached to entities that will appear in the game world. It re
 					}
 					
 					if(this.stateChange){
+						if(this.state['hidden'] !== undefined) {
+							this.container.hidden = this.state['hidden'];
+						}
+
 						if(this.checkStates){
 							for(; i < this.checkStates.length; i++){
 								testCase = this.checkStates[i](this.state);
@@ -596,6 +605,16 @@ This component is attached to entities that will appear in the game world. It re
 								y: event.stageY,
 								entity: self.owner
 							});
+						});
+						
+					});
+					this.anim.addEventListener('pressmove', function(event) {
+						self.owner.trigger('pressmove', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
 						});
 					});
 					this.anim.addEventListener('mouseout', function(){over = false;});

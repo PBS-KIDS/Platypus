@@ -132,7 +132,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 			
 			if(definition.map){
 				for(; i < definition.map.length; i++){
-					this["add-node"](definition.map[i]);
+					this.map.push(new Node(definition.map[i], this));
 				}
 			}
 		},

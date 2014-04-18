@@ -40,8 +40,12 @@ Summarize the purpose of this component here.
 		 
 		 Property this.owner - a reference to the component's Entity
 		 Property this.type  - identical to the id provided below
-		 Method addListener(event, callback) - adds an event to listen for
-		 Method removeListener(event, callback) - removes an event
+		 Method this.addEventListener(event, callback) - adds an event to
+		     listen for
+		 Method this.removeEventListener(event, callback) - removes an event
+		 Method this.addMethod(name, function) - adds a method function to
+		     the entity that is accessible from outside the entity.
+		 Method this.removeMethod(name) - removes a method from the entity.
 		*********************************************************************/
 		
 		id: 'name-of-component', //TODO: Change the name of the component!
@@ -57,21 +61,20 @@ Summarize the purpose of this component here.
 
 		events: {// These are messages that this component listens for
 			/*********************************************************************
-			 TODO: Add messages and their accompanying methods to handle the
-			       the events that this component is listening for.
+			 TODO: Add events and their accompanying event handlers that this
+			       component is listening for.
 				
 				   e.g.
 				   "load": function(resp){
-				       // Run loading code here
+				       // Handle "load" event here
 				   }
 			*********************************************************************/
 		},
 		
-		methods: {// These are methods that are called by this component.
+		methods: {// These are internal methods that are invoked by this component.
 			/*********************************************************************
-		     TODO: Additional methods that are *not* events may be added using the
-		           same format as above. No method names should match the event
-		           names listed above.
+		     TODO: Methods used internally by this component may be added using
+		           the format below.
 		           
 				   e.g.
 				   destroy: function(){
@@ -87,15 +90,15 @@ Summarize the purpose of this component here.
 		           not just the local component level. Only one method of a given
 		           name can be used on the entity, so be aware other components
 		           may attempt to add an identically named method to the entity.
-		           No method names should match the event or method names listed
+		           No public method names should match the method names listed
 		           above, since they can also be called at the component level.
 		           
 				   e.g.
-				   "whatIsMyFavoriteColor": function(){
+				   whatIsMyFavoriteColor: function(){
 				       return '#ffff00';
 				   }
 				   
-				   This function is callable on the entity as
+				   This method can then be invoked on the entity as
 				   entity.whatIsMyFavoriteColor().
 		    *********************************************************************/
 			

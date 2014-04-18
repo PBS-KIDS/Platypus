@@ -183,33 +183,37 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 			"handle-render-load": function(resp){
 				var x = 0,
 				y     = 0,
-				stage = this.stage = resp.stage,
+				stage = null,
 				index = '',
 				imgMapDefinition = this.imageMap,
 				newImgMap = [];
-				
-				this.tilesToRender = initializeCanvasConservation(new createjs.Container());
-				this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
-				
-				for(x = 0; x < imgMapDefinition.length; x++){
-					newImgMap[x] = [];
-					for (y = 0; y < imgMapDefinition[x].length; y++){
-						newImgMap[x][y] = index = imgMapDefinition[x][y];
-						if(!this.tiles[index]){
-							this.tiles[index] = this.createTile(index);
+
+				if(resp && resp.stage){
+					stage = this.stage = resp.stage;
+					
+					this.tilesToRender = initializeCanvasConservation(new createjs.Container());
+					this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
+					
+					for(x = 0; x < imgMapDefinition.length; x++){
+						newImgMap[x] = [];
+						for (y = 0; y < imgMapDefinition[x].length; y++){
+							newImgMap[x][y] = index = imgMapDefinition[x][y];
+							if(!this.tiles[index]){
+								this.tiles[index] = this.createTile(index);
+							}
 						}
 					}
+					this.imageMap = newImgMap;
+					
+					this.tilesWidth  = x * this.tileWidth;
+					this.tilesHeight = y * this.tileHeight;
+					
+					this.tilesToRender.scaleX = this.scaleX;
+					this.tilesToRender.scaleY = this.scaleY;
+					this.tilesToRender.z = this.owner.z;
+			
+					stage.addChild(this.tilesToRender);
 				}
-				this.imageMap = newImgMap;
-				
-				this.tilesWidth  = x * this.tileWidth;
-				this.tilesHeight = y * this.tileHeight;
-				
-				this.tilesToRender.scaleX = this.scaleX;
-				this.tilesToRender.scaleY = this.scaleY;
-				this.tilesToRender.z = this.owner.z;
-		
-				stage.addChild(this.tilesToRender);
 			},
 			
 			"peer-entity-added": function(entity){
@@ -380,7 +384,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 	
 		methods:{
 			convertCamera: function(distance, worldDistance, tileDistance, viewportDistance){
-				if((worldDistance / this.scaleX) == tileDistance){
+				if(((worldDistance / this.scaleX) === tileDistance) || ((worldDistance / this.scaleX) === viewportDistance)){
 					return distance;
 				} else {
 					return distance * (tileDistance - viewportDistance) / ((worldDistance / this.scaleX) - viewportDistance);

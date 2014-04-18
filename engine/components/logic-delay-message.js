@@ -112,12 +112,10 @@ This component allows certain messages to trigger new messages at a later time. 
 			
 			if(definition.events){
 				for(var event in definition.events){
-					this[event] = createMessage(definition.events[event]);
-					this.addListener(event);
+					this.addEventListener(event, createMessage(definition.events[event]));
 					
 					if(definition.events[event].cancelEvent) {
-						this[definition.events[event].cancelEvent] = createCancellation(definition.events[event]);
-						this.addListener(definition.events[event].cancelEvent);
+						this.addEventListener(definition.events[event].cancelEvent, createCancellation(definition.events[event]));
 					}
 				}
 			}

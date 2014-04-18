@@ -209,7 +209,7 @@ This component controls the game camera deciding where and how it should move. T
 		events: {
 			"load": function(){
 				this.element = this.owner.canvas || this.owner.element || this.owner.rootElement;
-				this.resize();
+				resize(this);
 			},
 			"child-entity-added": function(entity){
 				var messageIds = entity.getMessageIds(); 
@@ -306,6 +306,12 @@ This component controls the game camera deciding where and how it should move. T
 				resize(this);
 			},
 			"follow": function (def){
+				this.follow(def);
+			}
+		},
+		
+		methods: {
+			follow: function (def){
 				if (def.time){ //save current follow
 					if(!this.lastFollow.begin){
 						this.lastFollow.entity = this.following;
@@ -367,10 +373,8 @@ This component controls the game camera deciding where and how it should move. T
 					def.begin = 0;
 				}
 
-			}
-		},
-		
-		methods: {
+			},
+			
 			move: function (newLeft, newTop){
 				var moved = this.moveLeft(newLeft);
 				moved = this.moveTop(newTop) || moved;

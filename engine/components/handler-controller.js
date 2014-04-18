@@ -10,7 +10,7 @@ This component handles capturing and relaying input information to the entities 
 ### Listens for:
 - **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-controller' message id it's added to the list of entities. Once an entity is added to the handler-controller 'controller-load' is called on the entity. If an entity has a control map that includes non-keyboard inputs, we add listeners for those and update functions to alert the entity when they happen. 
   - @param entity (Object) - The entity that is being considered for addition to the handler.
-- **tick, check-inputs** - Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+- **tick** - Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
   - @param resp (object) - An object containing delta which is the time passed since the last tick. 
 - **keydown** - Sends a message to the handled entities 'key:' + the key id + ":down". 
   - @param event (DOM event) - The DOM event that triggered the keydown event. 
@@ -34,7 +34,7 @@ This component handles capturing and relaying input information to the entities 
     }
 */
 
-platformer.components['handler-controller'] = (function(){
+(function(){
 	var relayUpDown = function(event, self){
 		return function(value){
 			if (value.released){
@@ -46,16 +46,15 @@ platformer.components['handler-controller'] = (function(){
 				self.entities[x].trigger(event, value);
 			}
 		}; 
-	};
-	var relay = function(event, self){
+	},
+	relay = function(event, self){
 		return function(value){
 			for (var x = 0; x < self.entities.length; x++) {
 				self.entities[x].trigger(event, value);
 			}
 		}; 
-	};
-	
-	var keyMap = { //Note: if this list is changed, be sure to update https://git.pbs.org/html5-platformer-engine/pages/Handler-Controller-Key-List
+	},
+	keyMap = { //Note: if this list is changed, be sure to update https://git.pbs.org/html5-platformer-engine/pages/Handler-Controller-Key-List
 		kc0:   'unknown',         
 		kc8:   'backspace',
 		kc9:   'tab',
@@ -155,117 +154,84 @@ platformer.components['handler-controller'] = (function(){
 		kc221: 'close-bracket',
 		kc222: 'quote'
 	};
-	var component = function(owner, definition){
-		this.owner = owner;
-		this.entities = [];
-		
-		// Messages that this component listens for
-		this.listeners = [];
-		
-		this.addListeners(['tick', 'child-entity-added', 'child-entity-updated', 'check-inputs', 'keydown', 'keyup']);
-		
-		this.timeElapsed = {
+
+	return platformer.createComponentClass({
+		id: 'handler-controller',
+		constructor: function(definition){
+			this.entities = [];
+			this.timeElapsed = {
 				name: 'Controller',
 				time: 0
 			};
-	};
-	var proto = component.prototype; 
-
-	proto['keydown'] = function(event){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
-		}
-	}; 
-	
-	proto['keyup'] = function(event){
-		for (var x = 0; x < this.entities.length; x++)
-		{
-			this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
-		}
-	};
-	
-	proto['tick'] = proto['check-inputs'] = function(resp){
-		var time    = new Date().getTime();
-
-		for (var x = this.entities.length - 1; x > -1; x--)
-		{
-			if(!this.entities[x].trigger('handle-controller', resp)) {
-				this.entities.splice(x, 1);
-			}
-		}
+		},
+		events: {
+			"keydown": function(event){
+				for (var x = 0; x < this.entities.length; x++){
+					this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
+				}
+			},
+			"keyup": function(event){
+				for (var x = 0; x < this.entities.length; x++){
+					this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
+				}
+			},
+			"tick": function(resp){
+				var time    = new Date().getTime();
 		
-		this.timeElapsed.time = new Date().getTime() - time;
-		platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-	};
-
-	proto['child-entity-added'] = proto['child-entity-updated'] = function(entity){
-		var messageIds = entity.getMessageIds(),
-		alreadyHere = false; 
-		
-		for (var x = 0; x < messageIds.length; x++){
-			if (messageIds[x] == 'handle-controller'){
-				for (var j = 0; j < this.entities.length; j++){
-					if(this.entities[j] == entity){
-						alreadyHere = true;
-						break;
+				for (var x = this.entities.length - 1; x > -1; x--){
+					if(!this.entities[x].trigger('handle-controller', resp)) {
+						this.entities.splice(x, 1);
 					}
 				}
 				
-				if(!alreadyHere){
-					// Check for custom input messages that should be relayed from scene.
-					if(entity.controlMap){
-						for(var y in entity.controlMap){
-							if((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)){
-								if(!this[y]){
-									this.addListeners([y, y + ':up', y + ':down']);
-									this[y]           = relayUpDown(y,     this);
-									this[y + ':up']   = relay(y + ':up',   this);
-									this[y + ':down'] = relay(y + ':down', this);
-								}
+				this.timeElapsed.time = new Date().getTime() - time;
+				platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+			},
+			"child-entity-added": function(entity){
+				this.updateEntity(entity);
+			},
+			"child-entity-updated": function(entity){
+				this.updateEntity(entity);
+			}
+		},
+		methods: {
+			updateEntity: function(entity){
+				var messageIds = entity.getMessageIds(),
+				alreadyHere = false; 
+				
+				for (var x = 0; x < messageIds.length; x++){
+					if (messageIds[x] == 'handle-controller'){
+						for (var j = 0; j < this.entities.length; j++){
+							if(this.entities[j] == entity){
+								alreadyHere = true;
+								break;
 							}
 						}
+						
+						if(!alreadyHere){
+							// Check for custom input messages that should be relayed from scene.
+							if(entity.controlMap){
+								for(var y in entity.controlMap){
+									if((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)){
+										if(!this[y]){
+											this.addEventListener(y,           relayUpDown(y,     this));
+											this.addEventListener(y + ':up',   relay(y + ':up',   this));
+											this.addEventListener(y + ':down', relay(y + ':down', this));
+										}
+									}
+								}
+							}
+							
+							this.entities.push(entity);
+							entity.trigger('controller-load');
+						}
+						break;
 					}
-					
-					this.entities.push(entity);
-					entity.trigger('controller-load');
 				}
-				break;
+			},
+			destroy: function(){
+				this.entities.length = 0;
 			}
 		}
-	};
-
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-		this.entities.length = 0;
-		this.owner = undefined;
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-	
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

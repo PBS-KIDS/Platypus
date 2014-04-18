@@ -62,7 +62,7 @@ This component listens for specified local entity messages and re-broadcasts the
       }
     }
 */
-platformer.components['broadcast-events'] = (function(){
+(function(){
 	var gameBroadcast = function(event){
 		if(typeof event === 'string'){
 			return function(value, debug){
@@ -75,9 +75,8 @@ platformer.components['broadcast-events'] = (function(){
 				}
 			};
 		}
-	};
-	
-	var parentBroadcast = function(event){
+	},
+	parentBroadcast = function(event){
 		if(typeof event === 'string'){
 			return function(value, debug){
 				if(this.owner.parent)
@@ -93,9 +92,8 @@ platformer.components['broadcast-events'] = (function(){
 				}
 			};
 		}
-	};
-	
-	var entityBroadcast = function(event){
+	},
+	entityBroadcast = function(event){
 		if(typeof event === 'string'){
 			return function(value, debug){
 				this.owner.trigger(event, value, debug);
@@ -109,64 +107,29 @@ platformer.components['broadcast-events'] = (function(){
 		}
 	};
 	
-	var component = function(owner, definition){
-		this.owner = owner;
-
-		// Messages that this component listens for and then broadcasts to all layers.
-		this.listeners = [];
-		if(definition.events){
-			for(var event in definition.events){
-				this[event] = gameBroadcast(definition.events[event]);
-				this.addListener(event);
-			}
-		}
+	return platformer.createComponentClass({
+		id: 'broadcast-events',
 		
-		if(definition.parentEvents){
-			for(var event in definition.parentEvents){
-				this[event] = parentBroadcast(definition.parentEvents[event]);
-				this.addListener(event);
+		constructor: function(definition){
+			// Messages that this component listens for and then broadcasts to all layers.
+			if(definition.events){
+				for(var event in definition.events){
+					this.addEventListener(event, gameBroadcast(definition.events[event]));
+				}
+			}
+			
+			if(definition.parentEvents){
+				for(var event in definition.parentEvents){
+					this.addEventListener(event, parentBroadcast(definition.parentEvents[event]));
+				}
+			}
+			
+			// Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
+			if(definition.renameEvents){
+				for(var event in definition.renameEvents){
+					this.addEventListener(event, entityBroadcast(definition.renameEvents[event]));
+				}
 			}
 		}
-		
-		// Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
-		if(definition.renameEvents){
-			for(var event in definition.renameEvents){
-				this[event] = entityBroadcast(definition.renameEvents[event]);
-				this.addListener(event);
-			}
-		}
-	};
-	var proto = component.prototype;
-	
-	// This function should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-	proto.destroy = function(){
-		this.removeListeners(this.listeners);
-	};
-	
-	/*********************************************************************************************************
-	 * The stuff below here will stay the same for all components. It's BORING!
-	 *********************************************************************************************************/
-
-	proto.addListeners = function(messageIds){
-		for(var message in messageIds) this.addListener(messageIds[message]);
-	};
-
-	proto.removeListeners = function(listeners){
-		for(var messageId in listeners) this.removeListener(messageId, listeners[messageId]);
-	};
-	
-	proto.addListener = function(messageId, callback){
-		var self = this,
-		func = callback || function(value, debug){
-			self[messageId](value, debug);
-		};
-		this.owner.bind(messageId, func);
-		this.listeners[messageId] = func;
-	};
-
-	proto.removeListener = function(boundMessageId, callback){
-		this.owner.unbind(boundMessageId, callback);
-	};
-	
-	return component;
+	});
 })();

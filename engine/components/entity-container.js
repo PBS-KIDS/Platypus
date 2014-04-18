@@ -2,6 +2,9 @@
 # COMPONENT **entity-container**
 This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
 
+## Dependencies
+- **[[Messenger]] - Entity uses `messenger` in its prototypal chain to enable event handling.
+
 ## Messages
 
 ### Listens for:
@@ -27,19 +30,29 @@ This component allows the entity to contain child entities. It will add several 
 - **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
   - @param message (object) - sends the message object received by the original message.
 
-## Methods:
+## Entity Methods:
 - **addEntity** -  This method will add the provided entity to this component's list of entities.
   - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.
   - @return entity ([[Entity]] object) - Returns the entity that was just added.
+- **removeEntity** - This method will remove the provided entity from the list of child entities.
+  - @param message ([[Entity]] object) - Required. The entity to remove.
+  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
 - **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.
   - @param type (string) - Required. The entity type to find.
   - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
 - **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).
   - @param id (string) - Required. The entity id to find.
   - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
-- **removeEntity** - This method will remove the provided entity from the list of child entities.
-  - @param message ([[Entity]] object) - Required. The entity to remove.
-  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.
+- **triggerOnChildren** - This method is used by both internal components and external entities to trigger messages on the child entities.
+  - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
+  - @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
+- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on the child entities.
+  - @param event (string) - This is the message to process.
+  - @param value (variant) - This is a message object or other value to pass along to component functions.
+  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
 
 ## JSON Definition:
     {
@@ -59,25 +72,16 @@ This component allows the entity to contain child entities. It will add several 
       }
     }
 */
+
+/*
+ * Requires: ["../messenger.js"]
+ */
+
 (function(){
 	var childBroadcast = function(event){
-		if(typeof event === 'string'){
-			return function(value, debug){
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					this.entities[x].trigger(event, value, debug);
-				}
-			};
-		} else {
-			return function(value, debug){
-				for (var e in event){
-					for (var x = 0; x < this.entities.length; x++)
-					{
-						this.entities[x].trigger(event[e], value, debug);
-					}
-				}
-			};
-		}
+		return function(value, debug){
+			this.triggerOnChildren(event, value, debug);
+		};
 	};
 	
 	return platformer.createComponentClass({
@@ -98,12 +102,14 @@ This component allows the entity to contain child entities. It will add several 
 			
 			this.owner.entities     = self.entities;
 			
+			this.childEvents = [];
 			if(definition.childEvents){
 				for(var event in definition.childEvents){
-					this[definition.childEvents[event]] = childBroadcast(definition.childEvents[event]);
-					this.addListener(definition.childEvents[event]);
+					this.addNewPublicEvent(definition.childEvents[event]);
 				}
 			}
+			this.addNewPrivateEvent('peer-entity-added');
+			this.addNewPrivateEvent('peer-entity-removed');
 		},
 		
 		events:{
@@ -131,50 +137,111 @@ This component allows the entity to contain child entities. It will add several 
 							}
 						}
 		
-						this.addEntity(new platformer.classes.entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition));
+						this.addEntity(new platformer.Entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition));
 					}
 				}
 			},
 			
 			"add-entity": function (entity) {
-				entity.parent = this.owner;
-				entity.trigger('adopted');
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					entity.trigger('peer-entity-added', this.entities[x]);
-				}
-				
-				for (var x = 0; x < this.entities.length; x++)
-				{
-					this.entities[x].trigger('peer-entity-added', entity);
-				}
-				this.entities.push(entity);
-				this.owner.trigger('child-entity-added', entity);
-				return entity;
+				this.addEntity(entity);
 			},
 			
 			"remove-entity": function (entity) {
-				for (var x = 0; x < this.entities.length; x++){
-				    if(this.entities[x] === entity){
-						for (var y = 0; y < this.entities.length; y++){
-							if(x !== y){
-								this.entities[y].trigger('peer-entity-removed', entity);
-							}
-						}
-				    	entity.parent = null;
-				    	this.entities.splice(x, 1);
-						this.owner.trigger('child-entity-removed', entity);
-				    	entity.destroy();
-					    return entity;
-				    }
-			    }
-			    return false;
+				this.removeEntity(entity);
+			},
+			
+			"child-entity-updated": function (entity) {
+				this.updateChildEventListeners(entity);
 			}
 		},
 		
 		methods:{
+			addNewPublicEvent: function(event){
+				this.addNewPrivateEvent(event);
+				
+				// Listen for message on owner
+				for(var i = 0; i < this.childEvents.length; i++){
+					if(this.childEvents[i] === event){
+						return false;
+					}
+				}
+				this.childEvents.push(event);
+				this.addEventListener(event, childBroadcast(event));
+			},
+			
+			addNewPrivateEvent: function(event){
+				if(this.messages[event]){
+					return false; // event is already added.
+				}
+
+				this.messages[event] = []; //to signify it's been added even if not used
+				
+				//Listen for message on children
+				for (var x = 0; x < this.entities.length; x++) {
+					if(this.entities[x].messages[event]){
+						for (var y = 0; y < this.entities[x].messages[event].length; y++) {
+							this.addChildEventListener(this.entities[x], event, this.entities[x].messages[event][y].callback, this.entities[x].messages[event][y].scope);
+						}
+					}
+				}
+			},
+			
+			updateChildEventListeners: function(entity){
+				this.removeChildEventListeners(entity);
+				this.addChildEventListeners(entity);
+			},
+			
+			addChildEventListeners: function(entity){
+				var event = '';
+				
+				for (event in this.messages) {
+					if(entity.messages[event]){
+						for (var y = 0; y < entity.messages[event].length; y++) {
+							this.addChildEventListener(entity, event, entity.messages[event][y].callback, entity.messages[event][y].scope);
+						}
+					}
+				}
+			},
+			
+			removeChildEventListeners: function(entity){
+				var events = null,
+				messages = null;
+				
+				if(entity.containerListener){
+					events = entity.containerListener.events;
+					messages   = entity.containerListener.messages;
+					for(var i = 0; i < events.length; i++){
+						this.removeChildEventListener(entity, events[i], messages[i]);
+					}
+					entity.containerListener = null;
+				}
+			},
+			
+			addChildEventListener: function(entity, event, callback, scope){
+				if(!entity.containerListener){
+					entity.containerListener = {
+						events: [],
+						messages: []
+					};
+				}
+				entity.containerListener.events.push(event);
+				entity.containerListener.messages.push(callback);
+				this.bind(event, callback, scope);
+			},
+			
+			removeChildEventListener: function(entity, event, callback){
+				var events = entity.containerListener.events,
+				messages   = entity.containerListener.messages;
+				for(var i = 0; i < events.length; i++){
+					if((events[i] === event) && (!callback || (messages[i] === callback))){
+						this.unbind(event, messages[i]);
+					}
+				}
+			},
+
 			destroy: function(){
 				for (var i in this.entities){
+					this.removeChildEventListeners(this.entities[i]);
 					this.entities[i].destroy();
 				}
 				this.entities.length = 0;
@@ -220,12 +287,50 @@ This component allows the entity to contain child entities. It will add several 
 			},
 
 			addEntity: function(entity){
-				return this['add-entity'](entity);
+				entity.parent = this.owner;
+				entity.trigger('adopted');
+				
+				for (var x = 0; x < this.entities.length; x++) {
+					if(!entity.triggerEvent('peer-entity-added', this.entities[x])){
+						break;
+					}
+				}
+				
+				this.triggerEventOnChildren('peer-entity-added', entity);
+
+				this.addChildEventListeners(entity);
+				this.entities.push(entity);
+				this.owner.trigger('child-entity-added', entity);
+				return entity;
 			},
 			
 			removeEntity: function(entity){
-				return this['remove-entity'](entity);
+				for (var x = 0; x < this.entities.length; x++){
+				    if(this.entities[x] === entity){
+						this.removeChildEventListeners(entity);
+				    	this.entities.splice(x, 1);
+						this.triggerEventOnChildren('peer-entity-removed', entity);
+						this.owner.trigger('child-entity-removed', entity);
+				    	entity.destroy();
+				    	entity.parent = null;
+					    return entity;
+				    }
+			    }
+			    return false;
+			},
+			
+			triggerEventOnChildren: function(event, message, debug){
+				if(!this.messages[event]){
+					this.addNewPrivateEvent(event);
+				}
+				return this.triggerEvent(event, message, debug);
+			},
+			triggerOnChildren: function(event, message, debug){
+				if(!this.messages[event]){
+					this.addNewPrivateEvent(event);
+				}
+				return this.trigger(event, message, debug);
 			}
 		}
-	});
+	}, platformer.Messenger);
 })();

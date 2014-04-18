@@ -253,8 +253,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			if(definition.audioMap){
 				this.checkStates = [];
 				for (var key in definition.audioMap){
-					this.addListener(key);
-					this[key] = playSound(definition.audioMap[key]);
+					this.addEventListener(key, playSound(definition.audioMap[key]));
 					this.checkStates.push(createTest(key, definition.audioMap[key]));
 				}
 			}
@@ -321,11 +320,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 		},
 	 	    
 	 		"audio-stop": function(){
-	 			for (var i in this.activeAudioClips){
-	 				this.activeAudioClips[i].stop();
-	 			}
-	 			this.activeAudioClips.length = 0;
-	 			this.timedAudioClips.length = 0;
+	 			this.stopAudio();
 	 		},
 	 	    
 	 		"audio-mute": function(){
@@ -338,6 +333,14 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		},
 		
 		methods: {
+			stopAudio: function(){
+	 			for (var i in this.activeAudioClips){
+	 				this.activeAudioClips[i].stop();
+	 			}
+	 			this.activeAudioClips.length = 0;
+	 			this.timedAudioClips.length = 0;
+			},
+			
 			checkTimeEvents: function(audioClip, finished){
 				var currentTime = 0;
 				
@@ -385,7 +388,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			},
 			
 			destroy: function(){
-				this['audio-stop']();
+				this.stopAudio();
 			}
 		}
 	});

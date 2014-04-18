@@ -43,6 +43,12 @@ This component is attached to entities that will appear in the game world. It re
   - @param x (number) - The x-location of the mouse in stage coordinates.
   - @param y (number) - The y-location of the mouse in stage coordinates.
   - @param entity ([[Entity]]) - The entity clicked on.  
+- **pressmove** - This component captures this event from CreateJS and triggers it on the entity.
+  - @param event (event object) - The event from Javascript.
+  - @param over (boolean) - Whether the mouse is over the object or not.
+  - @param x (number) - The x-location of the mouse in stage coordinates.
+  - @param y (number) - The y-location of the mouse in stage coordinates.
+  - @param entity ([[Entity]]) - The entity clicked on. 
 - **pin-me** - If this component should be pinned to another image, it will trigger this event in an attempt to initiate the pinning.
   - @param pinId (string) - Required. A string identifying the id of a pin location that this render-image wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other images on the entity to attach to.
@@ -201,24 +207,16 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		events: {
-			"handle-render-load": function(obj){
-				if(!this.pinTo){
-					this.stage = obj.stage;
-					if(!this.stage){
-						return;
-					}
-					this.stage.addChild(this.container);
-					this.addInputs();				
-				} else {
-					return;
+			"handle-render-load": function(resp){
+				if(resp && resp.stage){
+					this.addStage(resp.stage);
 				}
 			},
 			
 			"handle-render": function(resp){
 				if(!this.stage){
 					if(!this.pinTo) { //In case this component was added after handler-render is initiated
-						this['handle-render-load'](resp);
-						if(!this.stage){
+						if(!this.addStage(resp.stage)){
 							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
 							this.owner.removeComponent(this);
 							return;
@@ -270,6 +268,17 @@ This component is attached to entities that will appear in the game world. It re
 		},
 		
 		methods: {
+			addStage: function(stage){
+				if(stage && !this.pinTo){
+					this.stage = stage;
+					this.stage.addChild(this.container);
+					this.addInputs();
+					return stage;
+				} else {
+					return null;
+				}
+			},
+			
 			updateSprite: (function(){
 				var sort = function(a, b) {
 					return a.z - b.z;
@@ -404,6 +413,16 @@ This component is attached to entities that will appear in the game world. It re
 								y: event.stageY,
 								entity: self.owner
 							});
+						});
+						
+					});
+					this.image.addEventListener('pressmove', function(event) {
+						self.owner.trigger('pressmove', {
+							event: event.nativeEvent,
+							over: over,
+							x: event.stageX,
+							y: event.stageY,
+							entity: self.owner
 						});
 					});
 					this.image.addEventListener('mouseout', function(){over = false;});

@@ -10,7 +10,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its charging counter if necessary.
   - @param message.delta - To determine how much to charge, the component checks the length of the tick.
-- **wind-up, [equivalent message]** - creates and connects the shield entity to this entity.
+- **wind-up** - creates and connects the shield entity to this entity.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
 - **stop-racing** - stops the entity movement.
 - **hit-solid** - On receiving this message, the entity stops racing.
@@ -34,11 +34,8 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
       "raceTime": 4000,
       // Optional. Time in milliseconds that entity will race before coming to a stop. Defaults to 5000.
       
-      "speed": 1,
+      "speed": 1
       // Optional. Velocity at which the entity should travel while racing. Defaults to 0.3.
-      
-      "message": "do-action"
-      // Optional: If specified, this message will cause the entity to wind up on this message in addition to "wind-up".
     }
 */
 (function(){
@@ -65,8 +62,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 			this.state.blocked = false;
 			
 			if(definition.message){
-				this.addListener(definition.message);
-				this[definition.message] = this['wind-up'];
+				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "wind-up"} instead.');
 			}
 		},
 

@@ -152,16 +152,14 @@ This component is a general purpose state-machine for an entity, taking in vario
 			
 			if(definition.inputs){
 				for (i in definition.inputs){
-					this.addListener(i);
-					this[i] = changeState(definition.inputs[i], this.state);
+					this.addEventListener(i, changeState(definition.inputs[i], this.state));
 				}
 			}
 
 			this.sustainedState = {};
 			if(definition["sustained-inputs"]){
 				for (i in definition["sustained-inputs"]){
-					this.addListener(i);
-					this[i] = changeSustainedState(definition["sustained-inputs"][i], this.sustainedState);
+					this.addEventListener(i, changeSustainedState(definition["sustained-inputs"][i], this.sustainedState));
 					this.sustainedState[definition["sustained-inputs"][i]] = false;
 				}
 			}
