@@ -816,6 +816,8 @@ This component is attached to entities that will appear in the game world. It re
 					ha.x = 0;
 					ha.y = 0;
 					
+					process(gfx, 'beginFill("#000")'); // Force the fill.
+					
 					for (; i < arr.length; i++){
 						process(gfx, arr[i]);
 					}
