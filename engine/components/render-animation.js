@@ -229,14 +229,6 @@ This component is attached to entities that will appear in the game world. It re
 				this.hover = definition.acceptInput.hover || false;
 				this.click = definition.acceptInput.click || false;
 				this.touch = definition.acceptInput.touch || false;
-				
-				if(definition.acceptInput.hitArea){
-					if(typeof definition.acceptInput.hitArea === 'string'){
-						this.setHitArea(definition.acceptInput.hitArea);
-					} else {
-						this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
-					}
-				}
 			} else {
 				this.hover = false;
 				this.click = false;
@@ -331,6 +323,15 @@ This component is attached to entities that will appear in the game world. It re
 				this.container = this.anim;
 			}
 
+			//handle hitArea
+			if(definition.acceptInput && definition.acceptInput.hitArea){
+				if(typeof definition.acceptInput.hitArea === 'string'){
+					this.setHitArea(definition.acceptInput.hitArea);
+				} else {
+					this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+				}
+			}
+			
 			//handle mask
 			if(definition.mask){
 				if(definition.mask.shape){
