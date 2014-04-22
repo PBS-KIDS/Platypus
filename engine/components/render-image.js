@@ -73,11 +73,24 @@ This component is attached to entities that will appear in the game world. It re
 		"x": 100   
       },
       
+      "mask": {
+      // Optional. A mask definition that determines where the image should clip.
+          
+          "relative": true,
+          // Whether the mask should be relative to the entity or absolutely positioned in the world. Default is `true`.
+          
+          "shape": "rect(10,20,40,40)"
+          // Defines the shape of the mask using the CreateJS graphics API. Defaults to a rectangle using the entity's dimensions.
+      },
+
       "acceptInput": {
-      	//Optional - What types of input the object should take.
+      //Optional - What types of input the object should take. This component defaults to not accept any input.
       
-      	"hover": false,
-      	"click": false 
+          "hover": false,
+          "click": false,
+          
+	      "hitArea": "rect(10,20,40,40)"
+	      // Optional. A hitArea definition that determines where the image should be clickable. Defines the shape of the hitArea using the CreateJS graphics API. Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
       },
        
       "pins": [{
@@ -146,6 +159,14 @@ This component is attached to entities that will appear in the game world. It re
 				this.hover = definition.acceptInput.hover || false;
 				this.click = definition.acceptInput.click || false;
 				this.touch = definition.acceptInput.touch || false;
+				
+				if(definition.acceptInput.hitArea){
+					if(typeof definition.acceptInput.hitArea === 'string'){
+						this.setHitArea(definition.acceptInput.hitArea);
+					} else {
+						this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+					}
+				}
 			} else {
 				this.hover = false;
 				this.click = false;
@@ -157,13 +178,22 @@ This component is attached to entities that will appear in the game world. It re
 			var scaleX = platformer.assets[image].scaleX || 1,
 			scaleY     = platformer.assets[image].scaleY || 1;
 
-			if(definition.pins){
+			if(definition.pins || (definition.mask && definition.mask.relative)){
 				this.container = new createjs.Container();
 				this.container.addChild(this.image);
 				this.image.z = 0;
 				this.addPins(definition.pins, definition.regX || 0, definition.regY || 0);
 			} else {
 				this.container = this.image;
+			}
+
+			//handle mask
+			if(definition.mask){
+				if(definition.mask.shape){
+					this.setMask(definition.mask.shape);
+				} else {
+					this.setMask('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+				}
 			}
 
 			this.pinTo = definition.pinTo || false;
@@ -486,6 +516,66 @@ This component is attached to entities that will appear in the game world. It re
 					this.pinsToRemove.length = 0;
 				}
 			},
+			
+			setMask: (function(){
+				var process = function(gfx, value){
+					var paren = value.indexOf('('),
+					func      = value.substring(0, paren),
+					values    = value.substring(paren + 1, value.indexOf(')'));
+					
+					if(values.length){
+						gfx[func].apply(gfx, values.split(','));
+					} else {
+						gfx[func]();
+					}
+				};
+				
+				return function(shape){
+					var i = 0,
+					arr = shape.split('.'),
+					mask = new createjs.Shape(),
+					gfx = mask.graphics;
+					
+					mask.x = 0;
+					mask.y = 0;
+					
+					for (; i < arr.length; i++){
+						process(gfx, arr[i]);
+					}
+
+					this.container.mask = mask;
+				};
+			})(),
+			
+			setHitArea: (function(){
+				var process = function(gfx, value){
+					var paren = value.indexOf('('),
+					func      = value.substring(0, paren),
+					values    = value.substring(paren + 1, value.indexOf(')'));
+					
+					if(values.length){
+						gfx[func].apply(gfx, values.split(','));
+					} else {
+						gfx[func]();
+					}
+				};
+				
+				return function(shape){
+					var i = 0,
+					arr = shape.split('.'),
+					ha  = new createjs.Shape(),
+					gfx = ha.graphics;
+					
+					ha.x = 0;
+					ha.y = 0;
+					
+					for (; i < arr.length; i++){
+						process(gfx, arr[i]);
+					}
+
+					this.container.hitArea = ha;
+				};
+			})(),
 			
 			destroy: function(){
 				if (this.stage){

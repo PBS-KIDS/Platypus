@@ -109,11 +109,15 @@ This component is attached to entities that will appear in the game world. It re
           "shape": "rect(10,20,40,40)"
           // Defines the shape of the mask using the CreateJS graphics API. Defaults to a rectangle using the entity's dimensions.
       },
-      
+
       "acceptInput": {
-      	//Optional - What types of input the object should take. This component defaults to not accept any input.
-      	"hover": false,
-      	"click": false
+      //Optional - What types of input the object should take. This component defaults to not accept any input.
+      
+          "hover": false,
+          "click": false,
+          
+	      "hitArea": "rect(10,20,40,40)"
+	      // Optional. A hitArea definition that determines where the image should be clickable. Defines the shape of the hitArea using the CreateJS graphics API. Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
       },
       
       "pins": [{
@@ -225,6 +229,14 @@ This component is attached to entities that will appear in the game world. It re
 				this.hover = definition.acceptInput.hover || false;
 				this.click = definition.acceptInput.click || false;
 				this.touch = definition.acceptInput.touch || false;
+				
+				if(definition.acceptInput.hitArea){
+					if(typeof definition.acceptInput.hitArea === 'string'){
+						this.setHitArea(definition.acceptInput.hitArea);
+					} else {
+						this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+					}
+				}
 			} else {
 				this.hover = false;
 				this.click = false;
@@ -779,6 +791,36 @@ This component is attached to entities that will appear in the game world. It re
 					}
 
 					this.container.mask = mask;
+				};
+			})(),
+			
+			setHitArea: (function(){
+				var process = function(gfx, value){
+					var paren = value.indexOf('('),
+					func      = value.substring(0, paren),
+					values    = value.substring(paren + 1, value.indexOf(')'));
+					
+					if(values.length){
+						gfx[func].apply(gfx, values.split(','));
+					} else {
+						gfx[func]();
+					}
+				};
+				
+				return function(shape){
+					var i = 0,
+					arr = shape.split('.'),
+					ha  = new createjs.Shape(),
+					gfx = ha.graphics;
+					
+					ha.x = 0;
+					ha.y = 0;
+					
+					for (; i < arr.length; i++){
+						process(gfx, arr[i]);
+					}
+
+					this.container.hitArea = ha;
 				};
 			})(),
 			
