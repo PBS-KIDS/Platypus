@@ -559,23 +559,31 @@ This component is attached to entities that will appear in the game world. It re
 					} else {
 						gfx[func]();
 					}
-				};
+				},
+				savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
 				
 				return function(shape){
 					var i = 0,
-					arr = shape.split('.'),
-					ha  = new createjs.Shape(),
-					gfx = ha.graphics;
+					arr = null,
+					ha  = savedHitAreas[shape],
+					gfx = null;
 					
-					ha.x = 0;
-					ha.y = 0;
-					
-					process(gfx, 'beginFill("#000")'); // Force the fill.
-					
-					for (; i < arr.length; i++){
-						process(gfx, arr[i]);
+					if(!ha){
+						arr  = shape.split('.');
+						ha   = new createjs.Shape();
+						gfx  = ha.graphics;
+						ha.x = 0;
+						ha.y = 0;
+						
+						process(gfx, 'beginFill("#000")'); // Force the fill.
+						
+						for (; i < arr.length; i++){
+							process(gfx, arr[i]);
+						}
+						
+						savedHitAreas[shape] = ha;
 					}
-
+					
 					this.container.hitArea = ha;
 				};
 			})(),
