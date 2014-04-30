@@ -190,8 +190,8 @@ This component is attached to entities that will appear in the game world. It re
 			
 			//handle mask
 			if(definition.mask){
-				if(definition.mask.shape){
-					this.setMask(definition.mask.shape);
+				if(typeof definition.mask === 'string'){
+					this.setMask(definition.mask);
 				} else {
 					this.setMask('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
 				}
@@ -328,6 +328,7 @@ This component is attached to entities that will appear in the game world. It re
 								}
 								this.container.z = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z;
 							}
+							this.container.rotation = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].angle || 0;
 							this.container.visible = true;
 						} else if (this.pinnedTo.defaultPin) {
 							this.container.x = this.pinnedTo.defaultPin.x;
@@ -338,6 +339,7 @@ This component is attached to entities that will appear in the game world. It re
 								}
 								this.container.z = this.pinnedTo.defaultPin.z;
 							}
+							this.container.rotation = this.pinnedTo.defaultPin.angle || 0;
 							this.container.visible = true;
 						} else {
 							this.container.visible = false;
@@ -499,7 +501,8 @@ This component is attached to entities that will appear in the game world. It re
 						defaultPin: {
 							x: pins[i].x - regX,
 							y: pins[i].y - regY,
-							z: pins[i].z || 0.00000001 //force z to prevent flickering z-order issues.
+							z: pins[i].z || 0.00000001, //force z to prevent flickering z-order issues.
+							angle: (pins[i].angle || 0)
 						}
 					};
 					this.owner.trigger('attach-pin', pin);
