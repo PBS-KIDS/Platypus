@@ -585,6 +585,10 @@ This component is attached to entities that will appear in the game world. It re
 					this.stage = null;
 					this.pinnedTo = null;
 				}
+			},
+			
+			"dispatch-event": function(event){
+				this.sprite.dispatchEvent(event);
 			}
 		},
 		
@@ -737,14 +741,14 @@ This component is attached to entities that will appear in the game world. It re
 				
 				// The following appends necessary information to displayed objects to allow them to receive touches and clicks
 				if(this.click || this.touch){
-					if(this.touch && createjs.Touch.isSupported()){
+					if(this.touch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
 						createjs.Touch.enable(this.stage);
 					}
 
 					this.sprite.addEventListener('mousedown', function(event) {
 						self.owner.trigger('mousedown', {
-							//debug: true,
 							event: event.nativeEvent,
+							cjsEvent: event,
 							over: over,
 							x: event.stageX,
 							y: event.stageY,
@@ -752,8 +756,8 @@ This component is attached to entities that will appear in the game world. It re
 						});
 						event.addEventListener('mouseup', function(event){
 							self.owner.trigger('mouseup', {
-								//debug: true,
 								event: event.nativeEvent,
+								cjsEvent: event,
 								over: over,
 								x: event.stageX,
 								y: event.stageY,
@@ -763,6 +767,7 @@ This component is attached to entities that will appear in the game world. It re
 						event.addEventListener('mousemove', function(event){
 							self.owner.trigger('mousemove', {
 								event: event.nativeEvent,
+								cjsEvent: event,
 								over: over,
 								x: event.stageX,
 								y: event.stageY,
@@ -774,6 +779,7 @@ This component is attached to entities that will appear in the game world. It re
 					this.sprite.addEventListener('pressmove', function(event) {
 						self.owner.trigger('pressmove', {
 							event: event.nativeEvent,
+							cjsEvent: event,
 							over: over,
 							x: event.stageX,
 							y: event.stageY,
@@ -789,6 +795,7 @@ This component is attached to entities that will appear in the game world. It re
 						over = false;
 						self.owner.trigger('mouseout', {
 							event: event.nativeEvent,
+							cjsEvent: event,
 							over: over,
 							x: event.stageX,
 							y: event.stageY,
@@ -799,6 +806,7 @@ This component is attached to entities that will appear in the game world. It re
 						over = true;
 						self.owner.trigger('mouseover', {
 							event: event.nativeEvent,
+							cjsEvent: event,
 							over: over,
 							x: event.stageX,
 							y: event.stageY,
