@@ -1,6 +1,6 @@
 /**
 # COMPONENT **render-animation**
-This component has been deprecated and is retained here for backwards compatibility. Use a "render-sprite" component instead.
+This component has been deprecated and is retained here for backwards compatibility. Use a [[render-sprite]] component instead.
 
 Requires: ["render-sprite"]
 */
