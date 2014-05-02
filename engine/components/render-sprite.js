@@ -200,7 +200,29 @@ This component is attached to entities that will appear in the game world. It re
 				return animation;
 			};
 		}
-	};
+	},
+	processGraphics = (function(){
+		var process = function(gfx, value){
+			var paren = value.indexOf('('),
+			func      = value.substring(0, paren),
+			values    = value.substring(paren + 1, value.indexOf(')'));
+			
+			if(values.length){
+				gfx[func].apply(gfx, values.split(','));
+			} else {
+				gfx[func]();
+			}
+		};
+		
+		return function(gfx, value){
+			var i = 0,
+			arr   = value.split('.');
+			
+			for (; i < arr.length; i++){
+				process(gfx, arr[i]);
+			}
+		};
+	})();
 	
 	return platformer.createComponentClass({
 		
@@ -279,7 +301,7 @@ This component is attached to entities that will appear in the game world. It re
 					    def.regX          || entity.regX         || 0,
 					    def.regY          || entity.regY         || 0
 					]];
-					console.warn('"' + entity.type + '" render component: The original render-image "source" parameter will soon be deprecated in favor of placing source information as individual parameters on the render component.');
+					console.warn('"' + entity.type + '" render component: The original render-image "source" parameter will soon be deprecated in favor of placing source information as individual parameters directly on the render component.');
 				} else {
 					// assume this is a single frame image and define accordingly.
 					image = ss.images[0];
@@ -873,70 +895,59 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			setMask: (function(){
-				var process = function(gfx, value){
-					var paren = value.indexOf('('),
-					func      = value.substring(0, paren),
-					values    = value.substring(paren + 1, value.indexOf(')'));
-					
-					if(values.length){
-						gfx[func].apply(gfx, values.split(','));
-					} else {
-						gfx[func]();
-					}
-				};
+			setMask: function(shape){
+				var mask = new createjs.Shape(),
+				gfx      = mask.graphics;
 				
-				return function(shape){
-					var i = 0,
-					arr = shape.split('.'),
-					mask = new createjs.Shape(),
-					gfx = mask.graphics;
-					
-					mask.x = 0;
-					mask.y = 0;
-					
-					for (; i < arr.length; i++){
-						process(gfx, arr[i]);
+				mask.x   = 0;
+				mask.y   = 0;
+				
+				if(typeof shape === 'string'){
+					processGraphics(gfx, shape);
+				} else {
+					if(shape.radius){
+						gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+					} else {
+						gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
 					}
+				}
 
-					return mask;
-				};
-			})(),
+				return mask;
+			},
 			
 			setHitArea: (function(){
-				var process = function(gfx, value){
-					var paren = value.indexOf('('),
-					func      = value.substring(0, paren),
-					values    = value.substring(paren + 1, value.indexOf(')'));
-					
-					if(values.length){
-						gfx[func].apply(gfx, values.split(','));
-					} else {
-						gfx[func]();
-					}
-				},
-				savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
+				var savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
 				
 				return function(shape){
-					var i = 0,
-					arr = null,
-					ha  = savedHitAreas[shape],
-					gfx = null;
+					var ha = null,
+					gfx    = null,
+					sav    = '';
 					
+					if(typeof shape === 'string'){
+						sav = shape;
+					} else {
+						sav = JSON.stringify(shape);
+					}
+					
+					ha = savedHitAreas[sav];
+
 					if(!ha){
-						arr  = shape.split('.');
 						ha   = new createjs.Shape();
 						gfx  = ha.graphics;
 						ha.x = 0;
 						ha.y = 0;
-						
-						process(gfx, 'beginFill("#000")'); // Force the fill.
-						
-						for (; i < arr.length; i++){
-							process(gfx, arr[i]);
+
+						gfx.beginFill("#000"); // Force the fill.
+
+						if(typeof shape === 'string'){
+							processGraphics(gfx, shape);
+						} else if(shape.radius){
+							gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+						} else {
+							gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
 						}
 						
-						savedHitAreas[shape] = ha;
+						savedHitAreas[sav] = ha;
 					}
 					
 					return ha;
