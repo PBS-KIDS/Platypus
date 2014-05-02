@@ -12,8 +12,11 @@ Requires: ["render-sprite"]
 
 	if(!platformer.components['render-image']){
 		//step back and let "render-sprite" load first
-		setTimeout(function(){
-			platformer.components['render-image'] = platformer.components['render-sprite'];
-		}, 1);
+		var interval = setInterval(function(){
+			if(platformer.components['render-sprite']){
+				platformer.components['render-image'] = platformer.components['render-sprite'];
+				clearInterval(interval);
+			}
+		}, 100);
 	}
 })();

@@ -89,6 +89,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    	                  , "random-events"
    	                  , "render-debug"
    	                  , "render-destroy-me"
+	                  , "render-animation" //deprecated - points to "render-sprite"
+	                  , "render-image"     //deprecated - points to "render-sprite"
    	                  , "render-sprite"
    	                  , "render-tiles"
    	                  , "tiled-loader"

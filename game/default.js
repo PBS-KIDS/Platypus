@@ -74,6 +74,8 @@
     	                  , "random-events"
     	                  , "render-debug"
     	                  , "render-destroy-me"
+    	                  , "render-animation" //deprecated - points to "render-sprite"
+    	                  , "render-image"     //deprecated - points to "render-sprite"
     	                  , "render-sprite"
     	                  , "render-tiles"
     	                  , "tiled-loader"
