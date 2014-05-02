@@ -1,11 +1,11 @@
 /**
 # COMPONENT **logic-drag-and-droppable**
 A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
-NOTE: handler-render-createjs and the render-animation or render-image used by this entity need to have their 'touch' or 'click' inputs set to true.
+NOTE: handler-render-createjs and the render-sprite used by this entity need to have their 'touch' or 'click' inputs set to true.
 
 ## Dependencies
 - [[handler-logic]] - Listens for the handle-logic and handle-post-collision-logic calls.
-- [[render-animation or render-image]] - Listens for 'mouseup', 'mousedown', and 'pressmove' calls.
+- [[render-sprite]] - Listens for 'mouseup', 'mousedown', and 'pressmove' calls.
 
 ## Messages
 

@@ -3,7 +3,7 @@
 This component will destroy the entity once an animation has finished. This is useful for explosions or similar animations where the entity is no longer needed once the animation completes.
 
 ## Dependencies:
-- [[render-animation]] (component on entity) - This component listens for the "animation-complete" event triggered by render-animation.
+- [[render-sprite]] (component on entity) - This component listens for the "animation-complete" event triggered by render-sprite.
 
 ### Listens for:
 - **animation-complete** - On receiving this message, the component match the animation id with its animation id setting and destroy the entity if they match.

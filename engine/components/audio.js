@@ -1,6 +1,6 @@
 /**
 # COMPONENT **audio**
-This component plays audio. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like render-animation).
+This component plays audio. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like render-sprite).
 
 ## Dependencies:
 - [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.

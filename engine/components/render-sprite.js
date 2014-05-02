@@ -1,5 +1,5 @@
 /**
-# COMPONENT **render-animation**
+# COMPONENT **render-sprite**
 This component is attached to entities that will appear in the game world. It renders an animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
 
 ## Dependencies:
@@ -15,10 +15,10 @@ This component is attached to entities that will appear in the game world. It re
 - **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
   - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the animation is rendered.
 - **pin-me** - If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
-  - @param pinId (string) - Required. A string identifying the id of a pin location that the render-animation wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that the render-sprite wants to be pinned to.
 - **attach-pin** - On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
   - @param pinId (string) - Pin Id of the received pin location.
-  - @param container ([createjs.Container][link3]) - Container that render-animation should be added to.
+  - @param container ([createjs.Container][link3]) - Container that render-sprite should be added to.
 - **remove-pin** - On receiving this message, the component checks whether it is pinned, and if so, removes itself from the container.
   - @param pinId (string) - Pin Id of the pin location to remove itself from.
 - **hide-animation** - Makes the animation invisible.
@@ -51,16 +51,16 @@ This component is attached to entities that will appear in the game world. It re
   - @param y (number) - The y-location of the mouse in stage coordinates.
   - @param entity ([[Entity]]) - The entity clicked on.  
 - **pin-me** - If this component should be pinned to another animation, it will trigger this event in an attempt to initiate the pinning.
-  - @param pinId (string) - Required. A string identifying the id of a pin location that this render-animation wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that this render-sprite wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other animations on the entity to attach to.
   - @param pinId (string) - Pin Id of an available pin location.
-  - @param container ([createjs.Container][link3]) - Container that the render-animation should be added to.
-- **remove-pin** - When preparing to remove itself from an entity, render-animation broadcasts this to all attached animations.
+  - @param container ([createjs.Container][link3]) - Container that the render-sprite should be added to.
+- **remove-pin** - When preparing to remove itself from an entity, render-sprite broadcasts this to all attached animations.
   - @param pinId (string) - Pin Id of the pin location to be removed.
 
 ## JSON Definition
     {
-      "type": "render-animation",
+      "type": "render-sprite",
 
       "animationMap":{
       //Optional. If the animation sequence will change, this is required. This defines a mapping from either triggered messages or one or more states for which to choose a new animation to play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation).
@@ -176,7 +176,7 @@ This component is attached to entities that will appear in the game world. It re
 					this.currentAnimation = state;
 					this.lastState = -1;
 					this.animationFinished = false;
-					this.anim.gotoAndPlay(state);
+					this.sprite.gotoAndPlay(state);
 				} else {
 					this.waitingAnimation = state;
 					this.waitingState = -1;
@@ -204,205 +204,308 @@ This component is attached to entities that will appear in the game world. It re
 	
 	return platformer.createComponentClass({
 		
-		id: 'render-animation',
+		id: 'render-sprite',
 		
-		constructor: function(definition){
-			var spriteSheet = {
-				framerate: definition.spriteSheet.framerate,
-				images: definition.spriteSheet.images.slice(),
-				frames: definition.spriteSheet.frames,
-				animations: definition.spriteSheet.animations
+		constructor: (function(){
+			var defaultAnimations = {"default": 0},
+			createSpriteSheet = function(def, entity){
+				var i  = 0,
+				arr    = null,
+				image  = null,
+				scaleX = 1,
+				scaleY = 1,
+				scaled = false,
+				srcSS  = def.spritesheet || def.spriteSheet, // To prevent silly bugs.
+				ss     = {
+					framerate:     0,
+					images:     null,
+					frames:     null,
+					animations: null
+				};
+				
+				// Set framerate.
+				if(srcSS && !isNaN(srcSS.framerate)){
+					ss.framerate = srcSS.framerate;
+				} else if(!isNaN(def.framerate)){
+					ss.framerate = def.framerate;
+				} else if(!isNaN(entity.framerate)) {
+					ss.framerate = entity.framerate;
+				}
+				
+				// Set source image(s)
+				if(srcSS && Array.isArray(srcSS.images)){
+					ss.images = srcSS.images.slice();
+				} else if(srcSS && srcSS.image){
+					ss.images = [srcSS.image];
+				} else if(def.images){
+					ss.images = def.images.slice();
+				} else if(def.image){
+					ss.images = [def.image];
+				} else if(entity.images){
+					ss.images = entity.images.slice();
+				} else if(entity.image){
+					ss.images = [entity.image];
+				} else {
+					console.warn('"' + entity.type + '" render component: No source image defined.');
+				}
+				
+				// Convert image names into Image resources
+				for (; i < ss.images.length; i++){
+					if(typeof ss.images[i] === 'string'){
+						ss.images[i] = platformer.assets[ss.images[i]];
+
+						// Check here whether to scale coordinates in the frame setup section.
+						if(!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))){
+							scaled = true;
+						}
+					}
+				}
+
+				// Set frames.
+				if(srcSS && srcSS.frames){
+					ss.frames = srcSS.frames;
+				} else if(def.frames){
+					ss.frames = def.frames;
+				} else if(entity.frames) {
+					ss.frames = entity.frames;
+				} else if(def.source){
+					//TODO: Remove this option at some point once "render-image" notation is no longer in common use. - DDD 5/1/2014
+					ss.frames = [[
+					    def.source.x      || def.x      || 0,
+					    def.source.y      || def.y      || 0,
+					    def.source.width  || def.width  || ss.images[0].width  || entity.width,
+					    def.source.height || def.height || ss.images[0].height || entity.height,
+					    0,
+					    def.regX          || entity.regX         || 0,
+					    def.regY          || entity.regY         || 0
+					]];
+					console.warn('"' + entity.type + '" render component: The original render-image "source" parameter will soon be deprecated in favor of placing source information as individual parameters on the render component.');
+				} else {
+					// assume this is a single frame image and define accordingly.
+					image = ss.images[0];
+					if(image){
+						ss.frames = [[
+						    def.x      || 0,
+						    def.y      || 0,
+						    def.width  || ss.images[0].width  || entity.width,
+						    def.height || ss.images[0].height || entity.height,
+						    0,
+						    def.regX   || entity.regX         || 0,
+						    def.regY   || entity.regY         || 0
+						]];
+					}
+				}
+				
+				// Process frames if the image size has been scaled from the original definition image. (This is sent as data on the image itself, usually due to dynamically reducing the size of source images for smaller devices.)
+				if(scaled){
+					if(Array.isArray(ss.frames)){ //frames are an array
+						arr = ss.frames;
+						ss.frames = [];
+						for (; i < arr.length; i++){
+							scaleX = ss.images[arr[i][4]].scaleX || 1;
+							scaleY = ss.images[arr[i][4]].scaleY || 1;
+							
+							ss.frames.push([
+							    arr[i][0] * scaleX,
+							    arr[i][1] * scaleY,
+							    arr[i][2] * scaleX,
+							    arr[i][3] * scaleY,
+							    arr[i][4],
+							    arr[i][5] * scaleX,
+							    arr[i][6] * scaleY
+							]);
+						}
+					} else {
+						scaleX = ss.images[0].scaleX || 1;
+						scaleY = ss.images[0].scaleY || 1;
+						ss.frames = {
+							width: ss.frames.width * scaleX,	
+							height: ss.frames.height * scaleY,	
+							regX: ss.frames.regX * scaleX,	
+							regY: ss.frames.regY * scaleY
+						};
+					}
+				}
+				
+				// Set animations.
+				if(srcSS && srcSS.animations){
+					ss.animations = srcSS.animations;
+				} else if(def.animations){
+					ss.animations = def.animations;
+				} else if(entity.animations) {
+					ss.animations = entity.animations;
+				} else {
+					// assume this is a single frame image and define accordingly.
+					ss.animations = defaultAnimations;
+				}
+
+				return ss;
 			},
-			self = this,
-			x = 0,
-			animation = '',
-			lastAnimation = '',
-			map = definition.animationMap,
-			regX = 0,
-			regY = 0;
-			
-			this.rotate = definition.rotate || false;
-			this.mirror = definition.mirror || false;
-			this.flip   = definition.flip   || false;
-			
-			if(definition.acceptInput){
-				this.hover = definition.acceptInput.hover || false;
-				this.click = definition.acceptInput.click || false;
-				this.touch = definition.acceptInput.touch || false;
-			} else {
-				this.hover = false;
-				this.click = false;
-				this.touch = false;
-			}
-			
-			this.followThroughs = {};
-			
-			if(!map){ // create animation map if none exists
-				map = {};
-				for (x in spriteSheet.animations){
-					map[x] = x;
-				}
-			}
-			
-			this.checkStates = [];
-			for(var i in map){
-				animation = map[i];
+			createAnimationMap = function(def, ss){
+				var map = null,
+				anim    = '';
 				
-				if(animation[animation.length - 1] === '!'){
-					animation = animation.substring(0, animation.length - 1);
-					this.followThroughs[animation] = true;
-				} else {
-					this.followThroughs[animation] = false;
+				if(def.animationMap){
+					return def.animationMap;
+				} else if (Array.isArray(ss.frames) && (ss.frames.length === 1)) {
+					// This is a single frame animation, so no mapping is necessary
+					return null;
+				} else { // create 1-to-1 animation map since none was defined
+					map = {};
+					for (anim in ss.animations){
+						map[anim] = anim;
+					}
+					return map;
 				}
+			},
+			setupEventsAndStates = function(component, map){
+				var anim  = '',
+				animation = '';
 				
-				this.addEventListener(i, changeState(animation));
-				this.checkStates.push(createTest(i, animation));
-			}
-			lastAnimation = animation;
-			
-			this.stage = undefined;
-			for (x = 0; x < spriteSheet.images.length; x++){
-				spriteSheet.images[x] = platformer.assets[spriteSheet.images[x]];
-			}
-			var scaleX = spriteSheet.images[0].scaleX || 1,
-			scaleY     = spriteSheet.images[0].scaleY || 1;
-			if((scaleX !== 1) || (scaleY !== 1)){
-				if(Array.isArray(spriteSheet.frames)){ //frames are an array
-					var arr = [];
-					regX = [];
-					regY = [];
-					for (var i = 0; i < spriteSheet.frames.length; i++){
-						arr.push([
-						  spriteSheet.frames[i][0] * scaleX,
-						  spriteSheet.frames[i][1] * scaleY,
-						  spriteSheet.frames[i][2] * scaleX,
-						  spriteSheet.frames[i][3] * scaleY,
-						  spriteSheet.frames[i][4],
-						  spriteSheet.frames[i][5] * scaleX,
-						  spriteSheet.frames[i][6] * scaleY
-						]);
-						regX.push(spriteSheet.frames[i][5]);
-						regY.push(spriteSheet.frames[i][6]);
-					}
-					spriteSheet.frames = arr;
-				} else {
-					regX = spriteSheet.frames.regX;
-					regY = spriteSheet.frames.regY;
-					spriteSheet.frames = {
-						width: spriteSheet.frames.width * scaleX,	
-						height: spriteSheet.frames.height * scaleY,	
-						regX: spriteSheet.frames.regX * scaleX,	
-						regY: spriteSheet.frames.regY * scaleY
-					};
-				}
-			} else {
-				if(Array.isArray(spriteSheet.frames)){ //frames are an array
-					regX = [];
-					regY = [];
-					for (var i = 0; i < spriteSheet.frames.length; i++){
-						regX.push(spriteSheet.frames[i][5]);
-						regY.push(spriteSheet.frames[i][6]);
-					}
-				} else {
-					regX = spriteSheet.frames.regX;
-					regY = spriteSheet.frames.regY;
-				}
-			}
+				component.followThroughs = {};
+				component.checkStates = [];
 
-			spriteSheet = new createjs.SpriteSheet(spriteSheet);
-			this.anim = new createjs.Sprite(spriteSheet, 0);
-			
-			if(definition.pins || (definition.mask && definition.mask.relative)){
-				this.container = new createjs.Container();
-				this.container.addChild(this.anim);
-				this.anim.z = 0;
-				if(definition.pins){
-					this.addPins(definition.pins, regX, regY);
-				}
-			} else {
-				this.container = this.anim;
-			}
-
-			//handle hitArea
-			if(definition.acceptInput && definition.acceptInput.hitArea){
-				if(typeof definition.acceptInput.hitArea === 'string'){
-					this.setHitArea(definition.acceptInput.hitArea);
-				} else {
-					this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
-				}
-			}
-			
-			//handle mask
-			if(definition.mask){
-				if(definition.mask.shape){
-					this.setMask(definition.mask.shape);
-				} else {
-					this.setMask('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
-				}
-			}
-
-			this.pinTo = definition.pinTo || false;
-			if(this.pinTo){
-				this.owner.trigger('pin-me', this.pinTo);
-			}
-			
-			this.anim.onAnimationEnd = function(animationInstance, lastAnimation){
-				self.owner.trigger('animation-ended', lastAnimation);
-				if(self.waitingAnimation){
-					self.currentAnimation = self.waitingAnimation;
-					self.waitingAnimation = false;
-					self.lastState = self.waitingState;
+				for(anim in map){
+					animation = map[anim];
 					
-					self.animationFinished = false;
-					self.anim.gotoAndPlay(self.currentAnimation);
-				} else {
-					self.animationFinished = true;
+					//TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
+					if(animation[animation.length - 1] === '!'){
+						animation = animation.substring(0, animation.length - 1);
+						component.followThroughs[animation] = true;
+					} else {
+						component.followThroughs[animation] = false;
+					}
+					
+					if(component.eventBased){
+						component.addEventListener(anim, changeState(animation));
+					}
+					if(component.stateBased){
+						component.checkStates.push(createTest(anim, animation));
+					}
 				}
 			};
-			this.anim.hidden = definition.hidden   || false;
-			this.currentAnimation = map['default'] || lastAnimation;
-			this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
-
-			this.worldScaleX = definition.scaleX;
-			this.worldScaleY = definition.scaleY;
-			this.imageScaleX = scaleX;
-			this.imageScaleY = scaleY;
-			this.lastOwnerScaleX = this.owner.scaleX;
-			this.lastOwnerScaleY = this.owner.scaleY;
 			
-			//This applies scaling to the correct objects if container and animation are separate, and applies them both to the animation if the container is also the animation. - DDD
-			this.container.scaleX = (this.worldScaleX || 1) * (this.owner.scaleX || 1);
-			this.container.scaleY = (this.worldScaleY || 1) * (this.owner.scaleY || 1);
-			this.anim.scaleX /= this.imageScaleX;
-			this.anim.scaleY /= this.imageScaleY;
-			this.scaleX = this.container.scaleX;
-			this.scaleY = this.container.scaleY;
+			return function(definition){
+				var self    = this, 
+				spriteSheet = createSpriteSheet(definition, this.owner),
+				map         = createAnimationMap(definition, spriteSheet);
+				
+				this.sprite     = null;
+				
+				this.stage      = null;
+				this.rotate     = definition.rotate || false;
+				this.mirror     = definition.mirror || false;
+				this.flip       = definition.flip   || false;
+				this.stateBased = map && (definition.stateBased !== false);
+				this.eventBased = map && (definition.eventBased !== false);
+				this.hover      = false;
+				this.click      = false;
+				this.touch      = false;
 
-			this.skewX = this.owner.skewX || definition.skewX;
-			this.skewY = this.owner.skewY || definition.skewY;
-			
-			this.offsetZ = definition.offsetZ || 0;
+				this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
+				
+				this.initialScaleX   = definition.scaleX || 1;
+				this.initialScaleY   = definition.scaleY || 1;
+				this.imageScaleX     = spriteSheet.images[0].scaleX || 1;
+				this.imageScaleY     = spriteSheet.images[0].scaleY || 1;
+				this.lastOwnerScaleX = this.owner.scaleX = this.owner.scaleX || 1;
+				this.lastOwnerScaleY = this.owner.scaleY = this.owner.scaleY || 1;
+				
+				if(definition.acceptInput){
+					this.hover = definition.acceptInput.hover || false;
+					this.click = definition.acceptInput.click || false;
+					this.touch = definition.acceptInput.touch || false;
+				}
+				
+				if(this.eventBased || this.stateBased){
+					setupEventsAndStates(this, map);
+					this.currentAnimation = map['default'] || '';
+				}
+				
+				/*
+				 * CreateJS Sprite created here:
+				 */
+				this.sprite = new createjs.Sprite(new createjs.SpriteSheet(spriteSheet), this.currentAnimation || 0);
+				this.sprite.onAnimationEnd = function(animationInstance, lastAnimation){
+					self.owner.trigger('animation-ended', lastAnimation);
+					if(self.waitingAnimation){
+						self.currentAnimation = self.waitingAnimation;
+						self.waitingAnimation = false;
+						self.lastState = self.waitingState;
+						
+						self.animationFinished = false;
+						self.sprite.gotoAndPlay(self.currentAnimation);
+					} else {
+						self.animationFinished = true;
+					}
+				};
+				
+				// add pins to sprite and setup this.container if needed.
+				if(definition.pins){
+					this.container = new createjs.Container();
+					this.container.addChild(this.sprite);
+					this.sprite.z = 0;
 
-			this.state = this.owner.state;
-			this.stateChange = false;
-			this.lastState = -1;
+					this.addPins(definition.pins, spriteSheet.frames);
+				} else {
+					this.container = this.sprite;
+				}
+	
+				
+				/* These next few need this.container set up */
+				
+				//handle hitArea
+				if(definition.acceptInput && definition.acceptInput.hitArea){
+					if(typeof definition.acceptInput.hitArea === 'string'){
+						this.container.hitArea = this.setHitArea(definition.acceptInput.hitArea);
+					} else {
+						this.container.hitArea = this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+					}
+				}
+				
+				//handle mask
+				if(definition.mask){
+					this.container.mask = this.setMask(definition.mask);
+				}
+	
+				// pin to another render-sprite
+				this.pinTo = definition.pinTo || false;
+				if(this.pinTo){
+					this.owner.triggerEvent('pin-me', this.pinTo);
+				}
+				
+				//This applies scaling to the correct objects if container and animation are separate, and applies them both to the animation if the container is also the animation. - DDD
+				this.container.scaleX = this.initialScaleX * this.owner.scaleX;
+				this.container.scaleY = this.initialScaleY * this.owner.scaleY;
+				this.sprite.scaleX /= this.imageScaleX;
+				this.sprite.scaleY /= this.imageScaleY;
+				this.scaleX = this.container.scaleX;
+				this.scaleY = this.container.scaleY;
+	
+				this.skewX = this.owner.skewX || definition.skewX;
+				this.skewY = this.owner.skewY || definition.skewY;
+				
+				this.offsetZ = definition.offsetZ || 0;
 
-			this.waitingAnimation = false;
-			this.waitingState = 0;
-			this.playWaiting = false;
-			this.animationFinished = false;
-			if(this.currentAnimation){
-				this.anim.gotoAndPlay(this.currentAnimation);
-			}
-
-			//Check state against entity's prior state to update animation if necessary on instantiation.
-			this.stateChange = true;
-			
-			if(definition.cache){
-				this.updateSprite();
-				this.owner.cacheRender = this.container;
-			}
-		},
+				this.container.hidden = definition.hidden || false;
+				this.state = this.owner.state;
+				this.stateChange = false;
+				this.lastState = -1;
+	
+				this.waitingAnimation = false;
+				this.waitingState = 0;
+				this.playWaiting = false;
+				this.animationFinished = false;
+	
+				//Check state against entity's prior state to update animation if necessary on instantiation.
+				this.stateChange = true;
+				
+				if(definition.cache){
+					this.updateSprite();
+					this.owner.cacheRender = this.container;
+				}
+			};
+		})(),
 		
 		events: {
 			"handle-render-load": function(resp){
@@ -431,11 +534,11 @@ This component is attached to entities that will appear in the game world. It re
 				this.stateChange = true;
 			},
 			
-			"hide-animation": function(){
+			"hide-sprite": function(){
 				this.container.hidden = true;
 			},
 
-			"show-animation": function(){
+			"show-sprite": function(){
 				this.container.hidden = false;
 			},
 			
@@ -486,16 +589,16 @@ This component is attached to entities that will appear in the game world. It re
 					angle = null;
 					
 					if(this.pinnedTo){
-						if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.animation.currentFrame]){
-							this.container.x = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].x;
-							this.container.y = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].y;
-							if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z){
+						if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]){
+							this.container.x = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].x;
+							this.container.y = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].y;
+							if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z){
 								if(this.stage){
 									this.stage.reorder = true;
 								}
-								this.container.z = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].z;
+								this.container.z = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z;
 							}
-							this.container.rotation = this.pinnedTo.frames[this.pinnedTo.animation.currentFrame].angle || 0;
+							this.container.rotation = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].angle || 0;
 							this.container.visible = true;
 						} else if (this.pinnedTo.defaultPin) {
 							this.container.x = this.pinnedTo.defaultPin.x;
@@ -539,10 +642,10 @@ This component is attached to entities that will appear in the game world. It re
 					}
 					
 					if (this.owner.scaleX != this.lastOwnerScaleX || this.owner.scaleY != this.lastOwnerScaleY) {
-						this.container.scaleX = (this.worldScaleX || 1) * (this.owner.scaleX || 1);
-						this.container.scaleY = (this.worldScaleY || 1) * (this.owner.scaleY || 1);
-						this.anim.scaleX /= this.imageScaleX;
-						this.anim.scaleY /= this.imageScaleY;
+						this.container.scaleX = this.initialScaleX * this.owner.scaleX;
+						this.container.scaleY = this.initialScaleY * this.owner.scaleY;
+						this.sprite.scaleX /= this.imageScaleX;
+						this.sprite.scaleY /= this.imageScaleY;
 						this.scaleX = this.container.scaleX;
 						this.scaleY = this.container.scaleY;
 						
@@ -576,7 +679,7 @@ This component is attached to entities that will appear in the game world. It re
 					}
 					
 					
-					if(this.stateChange){
+					if(this.stateBased && this.stateChange){
 						if(this.state['hidden'] !== undefined) {
 							this.container.hidden = this.state['hidden'];
 						}
@@ -590,7 +693,7 @@ This component is attached to entities that will appear in the game world. It re
 											this.currentAnimation = testCase;
 											this.lastState = +i;
 											this.animationFinished = false;
-											this.anim.gotoAndPlay(testCase);
+											this.sprite.gotoAndPlay(testCase);
 										} else {
 											this.waitingAnimation = testCase;
 											this.waitingState = +i;
@@ -616,7 +719,7 @@ This component is attached to entities that will appear in the game world. It re
 						createjs.Touch.enable(this.stage);
 					}
 
-					this.anim.addEventListener('mousedown', function(event) {
+					this.sprite.addEventListener('mousedown', function(event) {
 						self.owner.trigger('mousedown', {
 							//debug: true,
 							event: event.nativeEvent,
@@ -646,7 +749,7 @@ This component is attached to entities that will appear in the game world. It re
 						});
 						
 					});
-					this.anim.addEventListener('pressmove', function(event) {
+					this.sprite.addEventListener('pressmove', function(event) {
 						self.owner.trigger('pressmove', {
 							event: event.nativeEvent,
 							over: over,
@@ -655,12 +758,12 @@ This component is attached to entities that will appear in the game world. It re
 							entity: self.owner
 						});
 					});
-					this.anim.addEventListener('mouseout', function(){over = false;});
-					this.anim.addEventListener('mouseover', function(){over = true;});
+					this.sprite.addEventListener('mouseout', function(){over = false;});
+					this.sprite.addEventListener('mouseover', function(){over = true;});
 				}
 				if(this.hover){
 					this.stage.enableMouseOver();
-					this.anim.addEventListener('mouseout', function(event){
+					this.sprite.addEventListener('mouseout', function(event){
 						over = false;
 						self.owner.trigger('mouseout', {
 							event: event.nativeEvent,
@@ -670,7 +773,7 @@ This component is attached to entities that will appear in the game world. It re
 							entity: self.owner
 						});
 					});
-					this.anim.addEventListener('mouseover', function(event){
+					this.sprite.addEventListener('mouseover', function(event){
 						over = true;
 						self.owner.trigger('mouseover', {
 							event: event.nativeEvent,
@@ -683,14 +786,13 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			addPins: function(pins, regXs, regYs){
-				var i = 0, j = 0, pin = null, regX = 0, regY = 0,
-				isRegArray = !((typeof regXs === 'number') && (typeof regYs === 'number'));
-				
-				if(!isRegArray){
-					regX = regXs;
-					regY = regYs;
-				}
+			addPins: function(pins, frames){
+				var i = 0,
+				j     = 0,
+				pin   = null,
+				regX  = frames.regX || 0,
+				regY  = frames.regY || 0,
+				isArray = Array.isArray(frames);
 				
 				this.pinsToRemove = this.pinsToRemove || [];
 				
@@ -699,14 +801,14 @@ This component is attached to entities that will appear in the game world. It re
 				for (; i < pins.length; i++){
 					this.pinsToRemove.push(pins[i].pinId);
 
-					if(isRegArray){
-						regX = regXs[i];
-						regY = regYs[i];
+					if(isArray){
+						regX = frames[i][5] || 0;
+						regY = frames[i][6] || 0;
 					}
 					
 					this.pins[pins[i].pinId] = pin = {
 						pinId: pins[i].pinId,
-						animation: this.anim,
+						sprite: this.sprite,
 						container: this.container
 					};
 					if((typeof pins[i].x === 'number') && (typeof pins[i].y === 'number')){
@@ -797,7 +899,7 @@ This component is attached to entities that will appear in the game world. It re
 						process(gfx, arr[i]);
 					}
 
-					this.container.mask = mask;
+					return mask;
 				};
 			})(),
 			
@@ -837,7 +939,7 @@ This component is attached to entities that will appear in the game world. It re
 						savedHitAreas[shape] = ha;
 					}
 					
-					this.container.hitArea = ha;
+					return ha;
 				};
 			})(),
 			
@@ -848,7 +950,7 @@ This component is attached to entities that will appear in the game world. It re
 				}
 				this.removePins();
 				this.followThroughs = null;
-				this.anim = undefined;
+				this.sprite = undefined;
 				this.container = undefined;
 			}
 		}

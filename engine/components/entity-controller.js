@@ -49,7 +49,7 @@ This component listens for input messages triggered on the entity and updates th
         // custom input messages can be fired on this entity from other entities, allowing for on-screen input buttons to run through the same controller channel as other inputs.
         
         "mouse:left-button"
-        // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `render-animation` component).
+        // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `render-sprite` component).
       },
 	  
 	  "joystick":{
