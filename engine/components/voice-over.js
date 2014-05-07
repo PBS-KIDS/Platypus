@@ -1,15 +1,15 @@
 /**
 # COMPONENT **voice-over**
-This component uses its definition to load two other components (audio and render-animation) who work in an interconnected way to render animations corresponding to one or more audio tracks.
+This component uses its definition to load two other components (audio and render-sprite) who work in an interconnected way to render animations corresponding to one or more audio tracks.
 
 ## Dependencies
-- [[render-animation]] - This component creates a `render-animation` component to handle facial movements corresponding to an audio track.
+- [[render-sprite]] - This component creates a `render-sprite` component to handle facial movements corresponding to an audio track.
 - [[audio]] - This component creates an `audio` component to handle playing a voice-over track and trigger events to update the facial rendering.
 
 ## Messages
 
 ### Listens for:
-- **load** - On receiving this message, this component removes itself from the entity. (It creates the [[render-animation]] and [[audio]] components in its constructor.)
+- **load** - On receiving this message, this component removes itself from the entity. (It creates the [[render-sprite]] and [[audio]] components in its constructor.)
 
 ## JSON Definition
     {
@@ -19,7 +19,7 @@ This component uses its definition to load two other components (audio and rende
       // Optional. Specifies how long a described voice-over frame should last. Default is 100 milliseconds.
       
       "messagePrefix": "i-say",
-      // Optional. Specifies the prefix that messages between the render and audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the render-animation uses to show the proper frame. Defaults to "voice-over".
+      // Optional. Specifies the prefix that messages between the render and audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the render-sprite uses to show the proper frame. Defaults to "voice-over".
       
       "animationMap": {
         "default": "mouth-closed"
@@ -64,10 +64,10 @@ This component uses its definition to load two other components (audio and rende
 		  }
       }
       
-      //This component also accepts all parameters accepted by either [[render-animation]] or [[audio]] and passes them along when it creates those components.
+      //This component also accepts all parameters accepted by either [[render-sprite]] or [[audio]] and passes them along when it creates those components.
     }
     
-Requires: ["audio", "render-animation"]
+Requires: ["audio", "render-sprite"]
 */
 (function(){
 	var getEventName = function(msg, VO){
@@ -169,7 +169,7 @@ Requires: ["audio", "render-animation"]
 				animationDefinition.animationMap[getEventName(this.message, i)] = definition.animationMap[i];
 			}
 			animationDefinition.animationMap['default'] = definition.animationMap['default'];
-			this.owner.addComponent(new platformer.components['render-animation'](this.owner, animationDefinition));
+			this.owner.addComponent(new platformer.components['render-sprite'](this.owner, animationDefinition));
 
 			for (i in definition.voiceoverMap){
 				audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);

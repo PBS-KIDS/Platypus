@@ -50,6 +50,8 @@ platformer.Scene = (function(){
 		properties = false,
 		messages = null;
 		
+		this.id = definition.id;
+		
 		this.storedMessages = [];
 		
 		this.rootElement = rootElement;

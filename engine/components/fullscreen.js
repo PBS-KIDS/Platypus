@@ -5,7 +5,7 @@ This component listens for "toggle-fullscreen" messages to toggle the game's con
 Note: This component connects to the browser's fullscreen API if available. It also sets a "full-screen" class on the game container that should be styled in CSS for proper behavior.
 
 ## Dependencies:
-- [[Render-Animation]] (component on entity) - This component listens for the "animation-complete" event triggered by render-animation.
+- [[Render-Animation]] (component on entity) - This component listens for the "animation-complete" event triggered by render-sprite.
 
 ## Messages:
 

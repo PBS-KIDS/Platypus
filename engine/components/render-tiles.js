@@ -254,8 +254,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 					}
 					
 					// Prevent subsequent draws
-					entity.removeComponent('render-animation');
-					entity.removeComponent('render-image');
+					entity.removeComponent('render-sprite');
 				}
 			},
 			
