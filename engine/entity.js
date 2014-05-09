@@ -96,7 +96,7 @@ platformer.Entity = (function(){
 		self.components  = [];
 		self.type = def.id || 'none';
 		
-		self.id = instanceDefinition.id;
+		self.id = instanceDefinition.id || instanceProperties.id;
 		if(!self.id){
 			if(!entityIds[self.type]){
 				entityIds[self.type] = 0;
