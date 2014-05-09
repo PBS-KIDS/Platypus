@@ -206,6 +206,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						if(length){ // Length is specified so we need to turn off the sound at some point.
 							this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next});
 						}
+						audio.soundId = sound;
 						this.activeAudioClips.push(audio);
 					}
 				}
@@ -282,7 +283,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 							this.timedAudioClips.push(audioClip);
 						}
 					}
-//						this.timedAudioClips = newArray;
 				}
 
 				i = 0;
@@ -319,8 +319,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			createjs.Sound.setMute(!createjs.Sound.getMute());
 	 		},
 	 	    
-	 		"audio-stop": function(){
-	 			this.stopAudio();
+	 		"audio-stop": function(audioId){
+	 			this.stopAudio(audioId);
 	 		},
 	 	    
 	 		"audio-mute": function(){
@@ -333,12 +333,28 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		},
 		
 		methods: {
-			stopAudio: function(){
-	 			for (var i in this.activeAudioClips){
-	 				this.activeAudioClips[i].stop();
+			stopAudio: function(audioId){
+				var i = 0;
+				
+	 			if(audioId){
+		 			for (i = this.activeAudioClips.length - 1; i >= 0; i--){
+		 				if(this.activeAudioClips[i].soundId === audioId){
+			 				this.activeAudioClips[i].stop();
+			 				this.activeAudioClips.splice(i, 1);
+		 				}
+		 			}
+		 			for (i = this.timedAudioClips.length - 1; i >= 0; i--){
+		 				if(this.timedAudioClips[i].audio.soundId === audioId){
+			 				this.timedAudioClips.splice(i, 1);
+		 				}
+		 			}
+	 			} else {
+		 			for (; i < this.activeAudioClips.length; i++){
+		 				this.activeAudioClips[i].stop();
+		 			}
+		 			this.activeAudioClips.length = 0;
+		 			this.timedAudioClips.length = 0;
 	 			}
-	 			this.activeAudioClips.length = 0;
-	 			this.timedAudioClips.length = 0;
 			},
 			
 			checkTimeEvents: function(audioClip, finished){
@@ -379,7 +395,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			},
 			
 			removeClip: function(audioClip){
-				for (var i in this.activeAudioClips){
+				for (var i = 0; i < this.activeAudioClips.length; i++){
 					if (this.activeAudioClips[i] === audioClip){
 						this.activeAudioClips.splice(i,1);
 						break;
