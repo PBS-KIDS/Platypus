@@ -185,7 +185,8 @@ This component is attached to entities that will appear in the game world. It re
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
 */
 (function(){
-	var changeState = function(state){
+	var dpr = window.devicePixelRatio || 1,
+	changeState = function(state){
 		return function(value){
 			//9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
 			//				We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
