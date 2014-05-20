@@ -83,7 +83,7 @@ A component that handles updating rendering for components that are rendering vi
 			this.entities = [];
 			
 			this.canvas = this.owner.canvas = document.createElement('canvas');
-			this.canvas.id = definition.canvasId;
+			this.canvas.id = definition.canvasId || '';
 			this.owner.canvasParent = null;
 			if(this.owner.element){
 				this.owner.canvasParent = this.owner.element;
@@ -266,6 +266,8 @@ A component that handles updating rendering for components that are rendering vi
 		},
 		methods:{
 			setupInput: (function(){
+				var dpr = window.devicePixelRatio || 1;
+				
 				return function(enableTouch, triggerOnAllMovement, cameraMovementMovesMouse){
 					var self = this,
 					originalEvent   = null,
@@ -273,8 +275,8 @@ A component that handles updating rendering for components that are rendering vi
 					y        = 0,
 					setXY   = function(event){
 						originalEvent = event;
-						x  = event.stageX / self.stage.scaleX + self.camera.x;
-						y  = event.stageY / self.stage.scaleY + self.camera.y;
+						x  = (event.stageX / dpr) / self.stage.scaleX + self.camera.x;
+						y  = (event.stageY / dpr) / self.stage.scaleY + self.camera.y;
 					},
 					mousedown = function(event) {
 						setXY(event);
@@ -322,7 +324,7 @@ A component that handles updating rendering for components that are rendering vi
 						}
 					};
 					
-					if(enableTouch && createjs.Touch.isSupported()){
+					if(enableTouch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
 						createjs.Touch.enable(this.stage);
 					}
 
