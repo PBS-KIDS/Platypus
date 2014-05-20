@@ -456,6 +456,15 @@ This component is attached to entities that will appear in the game world. It re
 					this.hover = definition.acceptInput.hover || false;
 					this.click = definition.acceptInput.click || false;
 					this.touch = definition.acceptInput.touch || false;
+					
+					this.camera = {
+						x: 0,
+						y: 0
+					};
+					this.addEventListener('camera-update', function(camera){
+						self.camera.x = camera.viewportLeft;
+						self.camera.y = camera.viewportTop;
+					});
 				}
 				
 				if(this.eventBased || this.stateBased){
