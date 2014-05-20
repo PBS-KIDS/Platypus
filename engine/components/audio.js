@@ -217,10 +217,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			};
 		}
 	},
-	createTest = function(testStates, audio){
+	createTest = function(testStates, audio, play){
 		var states = testStates.replace(/ /g, '').split(',');
 		if(testStates === 'default'){
 			return function(state){
+				play();
 				return testStates;
 			};
 		} else {
@@ -230,6 +231,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						return false;
 					}
 				}
+				play();
 				return testStates;
 			};
 		}
@@ -239,6 +241,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		id: 'audio',
 			
 		constructor: function(definition){
+			var playClip = null;
+			
 			this.timedAudioClips = [];
 			this.activeAudioClips = [];		
 	
@@ -254,8 +258,9 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			if(definition.audioMap){
 				this.checkStates = [];
 				for (var key in definition.audioMap){
-					this.addEventListener(key, playSound(definition.audioMap[key]));
-					this.checkStates.push(createTest(key, definition.audioMap[key]));
+					playClip = playSound(definition.audioMap[key]);
+					this.addEventListener(key, playClip);
+					this.checkStates.push(createTest(key, definition.audioMap[key], playClip));
 				}
 			}
 		},
@@ -290,14 +295,13 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					if(this.checkStates){
 						if(this.currentState){
 							stop.playthrough = this.forcePlaythrough;
-							this[this.currentState](stop);
+							this.stopAudio(); //TODO: Currently this stops all the audio on the entity. Should it only stop a currently playing state-change-triggered audio track?
 						}
 						this.currentState = false;
 						for(; i < this.checkStates.length; i++){
 							audioClip = this.checkStates[i](this.state);
 							if(audioClip){
 								this.currentState = audioClip;
-								this[this.currentState]();
 								break;
 							}
 						}
