@@ -71,7 +71,8 @@ A component that handles updating rendering for components that are rendering vi
 */
 (function(){
 	var uagent = navigator.userAgent.toLowerCase(),
-	android4 = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false; // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
+	android4   = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false, // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
+	dpr        = window.devicePixelRatio || 1;
 	
 	return platformer.createComponentClass({
 
@@ -200,12 +201,6 @@ A component that handles updating rendering for components that are rendering vi
 									child.paused = true;
 								}
 							}
-							
-							if(!child.scaleX || !child.scaleY || (this.children && !this.children.length)){
-								console.log ('uh oh', child);
-//								this.cacheCanvas || this.children.length;
-			//					return !!(this.visible && this.alpha > 0 && this.scaleX != 0 && this.scaleY != 0 && hasContent);
-							}
 						}
 
 						if (this.stage.reorder) {
@@ -236,8 +231,6 @@ A component that handles updating rendering for components that are rendering vi
 				};
 			})(),
 			"camera-update": function(cameraInfo){
-				var dpr = (window.devicePixelRatio || 1);
-				
 				this.camera.x = cameraInfo.viewportLeft;
 				this.camera.y = cameraInfo.viewportTop;
 				this.camera.width = cameraInfo.viewportWidth;
@@ -266,8 +259,6 @@ A component that handles updating rendering for components that are rendering vi
 		},
 		methods:{
 			setupInput: (function(){
-				var dpr = window.devicePixelRatio || 1;
-				
 				return function(enableTouch, triggerOnAllMovement, cameraMovementMovesMouse){
 					var self = this,
 					originalEvent   = null,
