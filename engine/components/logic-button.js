@@ -53,6 +53,17 @@ This component handles the pressed/released state of a button according to input
 			"pressed": function(){
 				this.stateChange = 'pressed';
 			},
+			"pressup": function(){
+				if(this.toggle){
+					if(this.state.pressed){
+						this.owner.triggerEvent('released');
+					} else {
+						this.owner.triggerEvent('pressed');
+					}
+				} else {
+					this.owner.triggerEvent('released');
+				}
+			},
 			"mouseup": function(){
 				if(this.toggle){
 					if(this.state.pressed){
