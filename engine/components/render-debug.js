@@ -180,8 +180,8 @@ This component is attached to entities that will appear in the game world. It se
 						self.owner.trigger(eventName, {
 							event: event.nativeEvent,
 							cjsEvent: event,
-							x: (event.stageX / dpr) / self.stage.scaleX + self.camera.x,
-							y: (event.stageY / dpr) / self.stage.scaleY + self.camera.y,
+							x: (event.stageX * dpr) / self.stage.scaleX + self.camera.x,
+							y: (event.stageY * dpr) / self.stage.scaleY + self.camera.y,
 							entity: self.owner
 						});
 						
