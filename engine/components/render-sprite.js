@@ -290,7 +290,7 @@ This component is attached to entities that will appear in the game world. It re
 				}
 				
 				// Convert image names into Image resources
-				for (; i < ss.images.length; i++){
+				for (i = 0; i < ss.images.length; i++){
 					if(typeof ss.images[i] === 'string'){
 						ss.images[i] = platformer.assets[ss.images[i]];
 
@@ -341,7 +341,7 @@ This component is attached to entities that will appear in the game world. It re
 					if(Array.isArray(ss.frames)){ //frames are an array
 						arr = ss.frames;
 						ss.frames = [];
-						for (; i < arr.length; i++){
+						for (i = 0; i < arr.length; i++){
 							scaleX = ss.images[arr[i][4]].scaleX || 1;
 							scaleY = ss.images[arr[i][4]].scaleY || 1;
 							
