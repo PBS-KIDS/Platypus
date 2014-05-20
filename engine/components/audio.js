@@ -221,7 +221,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		var states = testStates.replace(/ /g, '').split(',');
 		if(testStates === 'default'){
 			return function(state){
-				play();
+				play.call(this);
 				return testStates;
 			};
 		} else {
@@ -231,7 +231,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						return false;
 					}
 				}
-				play();
+				play.call(this);
 				return testStates;
 			};
 		}
@@ -299,7 +299,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						}
 						this.currentState = false;
 						for(; i < this.checkStates.length; i++){
-							audioClip = this.checkStates[i](this.state);
+							audioClip = this.checkStates[i].call(this, this.state);
 							if(audioClip){
 								this.currentState = audioClip;
 								break;
