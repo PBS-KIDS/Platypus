@@ -476,7 +476,7 @@ This component is attached to entities that will appear in the game world. It re
 				 * CreateJS Sprite created here:
 				 */
 				this.sprite = new createjs.Sprite(new createjs.SpriteSheet(spriteSheet), this.currentAnimation || 0);
-				this.sprite.onAnimationEnd = function(animationInstance, lastAnimation){
+				this.sprite.addEventListener('animationend', function(animationInstance, type, lastAnimation, next){
 					self.owner.trigger('animation-ended', lastAnimation);
 					if(self.waitingAnimation){
 						self.currentAnimation = self.waitingAnimation;
@@ -488,7 +488,7 @@ This component is attached to entities that will appear in the game world. It re
 					} else {
 						self.animationFinished = true;
 					}
-				};
+				});
 				
 				// add pins to sprite and setup this.container if needed.
 				if(definition.pins){
