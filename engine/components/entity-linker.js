@@ -55,24 +55,13 @@ This component allows an entity to communicate directly with one or more entitie
 */
 (function(){
 	var broadcast = function(event){
-		if(typeof event === 'string'){
-			return function(value, debug){
-				var i = 0;
-				
-				for(; i < this.links.length; i++){
-					this.links[i].trigger(event, value, debug);
-				}
-			};
-		} else {
-			return function(value, debug){
-				var i = 0;
-				for (var e in event){
-					for(i = 0; i < this.links.length; i++){
-						this.links[i].trigger(event[e], value, debug);
-					}
-				}
-			};
-		}
+		return function(value, debug){
+			var i = 0;
+			
+			for(; i < this.links.length; i++){
+				this.links[i].trigger(event, value, debug);
+			}
+		};
 	};
 
 	return platformer.createComponentClass({
