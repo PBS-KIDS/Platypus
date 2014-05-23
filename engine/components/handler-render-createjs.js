@@ -137,7 +137,7 @@ A component that handles updating rendering for components that are rendering vi
 				last  = null;
 				
 				// Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
-				for(; i < this.owner.components; i++){
+				for(; i < this.owner.components.length; i++){
 					if((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')){
 						last = this.owner.components[i];
 					}
