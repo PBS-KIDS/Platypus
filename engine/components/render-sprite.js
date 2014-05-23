@@ -854,8 +854,8 @@ This component is attached to entities that will appear in the game world. It re
 					this.pinsToRemove.push(pins[i].pinId);
 
 					if(isArray){
-						regX = frames[i][5] || 0;
-						regY = frames[i][6] || 0;
+						regX = (frames[0][5] || 0) / this.imageScaleX;
+						regY = (frames[0][6] || 0) / this.imageScaleY;
 					}
 					
 					this.pins[pins[i].pinId] = pin = {
@@ -876,6 +876,10 @@ This component is attached to entities that will appear in the game world. It re
 						pin.frames = [];
 						for (j = 0; j < pins[i].frames.length; j++){
 							if(pins[i].frames[j]){
+								if(isArray){
+									regX = (frames[j][5] || 0) / this.imageScaleX;
+									regY = (frames[j][6] || 0) / this.imageScaleY;
+								}
 								if((typeof pins[i].frames[j].x === 'number') && (typeof pins[i].frames[j].y === 'number')){
 									pin.frames.push({
 										x: (pins[i].frames[j].x - regX),
