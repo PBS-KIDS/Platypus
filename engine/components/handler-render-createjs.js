@@ -81,8 +81,6 @@ A component that handles updating rendering for components that are rendering vi
 		constructor: function(definition){
 			var self = this;
 			
-			this.entities = [];
-			
 			this.canvas = this.owner.canvas = document.createElement('canvas');
 			this.canvas.id = definition.canvasId || '';
 			this.owner.canvasParent = null;
@@ -128,24 +126,47 @@ A component that handles updating rendering for components that are rendering vi
 				delta: 0,
 				stage:  this.stage
 			};
+			
+			this.handleChildren = true;
+			this.extraContent = false;
 		},
 		
 		events:{
-			"child-entity-added": function(entity){
-				var self = this,
-				messageIds = entity.getMessageIds(); 
+			"load": function(){
+				var i = 0,
+				last  = null;
 				
-				for (var x = 0; x < messageIds.length; x++)
-				{
-					if ((messageIds[x] == 'handle-render') || (messageIds[x] == 'handle-render-load')){
-						this.entities.push(entity);
-						entity.trigger('handle-render-load', {
-							stage: self.stage,
-							parentElement: self.owner.rootElement
-						});
-						break;
+				// Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
+				for(; i < this.owner.components; i++){
+					if((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')){
+						last = this.owner.components[i];
 					}
 				}
+				
+				if(last !== this){
+					this.handleChildren = false;
+				} else {
+					this.addEventListener("handle-render-addition", function(addition){
+						var i = '';
+						
+						if(!this.extraContent){
+							this.extraContent = {};
+						}
+
+						for(i in addition){
+							this.extraContent[i] = addition[i];
+						}
+					});
+				}
+			},
+			
+			"child-entity-added": function(entity){
+				var self = this;
+				
+				entity.triggerEvent('handle-render-load', {
+					stage: self.stage,
+					parentElement: self.owner.rootElement
+				});
 			},
 			"pause-render": function(resp){
 				if(resp && resp.time){
@@ -163,9 +184,10 @@ A component that handles updating rendering for components that are rendering vi
 				};
 				
 				return function(resp){
-					var child = undefined,
-					time      = new Date().getTime(),
-					message   = this.renderMessage;
+					var i   = '',
+					child   = undefined,
+					time    = new Date().getTime(),
+					message = this.renderMessage;
 					
 					message.delta = resp.delta;
 
@@ -176,11 +198,25 @@ A component that handles updating rendering for components that are rendering vi
 						}
 					}
 
-					for (var x = this.entities.length - 1; x > -1; x--){
-						if(!this.entities[x].trigger('handle-render', message)) {
-							this.entities.splice(x, 1);
+					if(this.handleChildren){
+						if(this.extraContent){
+							for(i in this.extraContent){
+								message[i] = this.extraContent[i];
+							}
 						}
+						if(this.owner.triggerEventOnChildren){
+							this.owner.triggerEventOnChildren('handle-render', message);
+						}
+						if(this.extraContent){
+							for(i in this.extraContent){
+								delete this.extraContent[i];
+								delete message[i];
+							}
+						}
+					} else {
+						this.owner.triggerEvent('handle-render-addition', message);
 					}
+					
 					if(this.stage){
 						for (var x = this.stage.children.length - 1; x > -1; x--){
 							child = this.stage.children[x];
@@ -340,7 +376,6 @@ A component that handles updating rendering for components that are rendering vi
 				this.owner.canvasParent = null;
 				this.owner.element = null;
 				this.canvas = undefined;
-				this.entities.length = 0;
 			}
 		}
 	});
