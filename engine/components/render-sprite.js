@@ -185,7 +185,8 @@ This component is attached to entities that will appear in the game world. It re
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
 */
 (function(){
-	var changeState = function(state){
+	var dpr = window.devicePixelRatio || 1,
+	changeState = function(state){
 		return function(value){
 			//9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
 			//				We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
@@ -290,7 +291,7 @@ This component is attached to entities that will appear in the game world. It re
 				}
 				
 				// Convert image names into Image resources
-				for (; i < ss.images.length; i++){
+				for (i = 0; i < ss.images.length; i++){
 					if(typeof ss.images[i] === 'string'){
 						ss.images[i] = platformer.assets[ss.images[i]];
 
@@ -341,7 +342,7 @@ This component is attached to entities that will appear in the game world. It re
 					if(Array.isArray(ss.frames)){ //frames are an array
 						arr = ss.frames;
 						ss.frames = [];
-						for (; i < arr.length; i++){
+						for (i = 0; i < arr.length; i++){
 							scaleX = ss.images[arr[i][4]].scaleX || 1;
 							scaleY = ss.images[arr[i][4]].scaleY || 1;
 							
@@ -455,6 +456,15 @@ This component is attached to entities that will appear in the game world. It re
 					this.hover = definition.acceptInput.hover || false;
 					this.click = definition.acceptInput.click || false;
 					this.touch = definition.acceptInput.touch || false;
+					
+					this.camera = {
+						x: 0,
+						y: 0
+					};
+					this.addEventListener('camera-update', function(camera){
+						self.camera.x = camera.viewportLeft;
+						self.camera.y = camera.viewportTop;
+					});
 				}
 				
 				if(this.eventBased || this.stateBased){
@@ -466,7 +476,7 @@ This component is attached to entities that will appear in the game world. It re
 				 * CreateJS Sprite created here:
 				 */
 				this.sprite = new createjs.Sprite(new createjs.SpriteSheet(spriteSheet), this.currentAnimation || 0);
-				this.sprite.onAnimationEnd = function(animationInstance, lastAnimation){
+				this.sprite.addEventListener('animationend', function(animationInstance, type, lastAnimation, next){
 					self.owner.trigger('animation-ended', lastAnimation);
 					if(self.waitingAnimation){
 						self.currentAnimation = self.waitingAnimation;
@@ -478,7 +488,7 @@ This component is attached to entities that will appear in the game world. It re
 					} else {
 						self.animationFinished = true;
 					}
-				};
+				});
 				
 				// add pins to sprite and setup this.container if needed.
 				if(definition.pins){
@@ -754,85 +764,79 @@ This component is attached to entities that will appear in the game world. It re
 				};
 			})(),
 			
-			addInputs: function(){
-				var self = this, over = false;
+			addInputs: (function(){
+				var createHandler = function(self, eventName){
+					return function(event) {
+						self.owner.trigger(eventName, {
+							event: event.nativeEvent,
+							cjsEvent: event,
+							x: (event.stageX * dpr) / self.stage.scaleX + self.camera.x,
+							y: (event.stageY * dpr) / self.stage.scaleY + self.camera.y,
+							entity: self.owner
+						});
+					};
+				};
 				
-				// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-				if(this.click || this.touch){
-					if(this.touch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
-						createjs.Touch.enable(this.stage);
+				return function(){
+					var self = this,
+					mousedown = null,
+					mouseover = null,
+					mouseout  = null,
+					rollover  = null,
+					rollout   = null,
+					pressmove = null,
+					pressup   = null,
+					click     = null,
+					dblclick  = null;
+					
+					// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+					if(this.click || this.touch){
+						if(this.touch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
+							createjs.Touch.enable(this.stage);
+						}
+						
+						mousedown = createHandler(this, 'mousedown');
+						pressmove = createHandler(this, 'pressmove');
+						pressup   = createHandler(this, 'pressup'  );
+						click     = createHandler(this, 'click'    );
+						dblclick  = createHandler(this, 'dblclick' );
+						
+						this.sprite.addEventListener('mousedown', mousedown);
+						this.sprite.addEventListener('pressmove', pressmove);
+						this.sprite.addEventListener('pressup',   pressup  );
+						this.sprite.addEventListener('click',     click    );
+						this.sprite.addEventListener('dblclick',  dblclick );
+					}
+					if(this.hover){
+						this.stage.enableMouseOver();
+						mouseover = createHandler(this, 'mouseover');
+						mouseout  = createHandler(this, 'mouseout' );
+						rollover  = createHandler(this, 'rollover' );
+						rollout   = createHandler(this, 'rollout'  );
+
+						this.sprite.addEventListener('mouseover', mouseover);
+						this.sprite.addEventListener('mouseout',  mouseout );
+						this.container.addEventListener('rollover',  rollover );
+						this.container.addEventListener('rollout',   rollout  );
 					}
 
-					this.sprite.addEventListener('mousedown', function(event) {
-						self.owner.trigger('mousedown', {
-							event: event.nativeEvent,
-							cjsEvent: event,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-						event.addEventListener('mouseup', function(event){
-							self.owner.trigger('mouseup', {
-								event: event.nativeEvent,
-								cjsEvent: event,
-								over: over,
-								x: event.stageX,
-								y: event.stageY,
-								entity: self.owner
-							});
-						});
-						event.addEventListener('mousemove', function(event){
-							self.owner.trigger('mousemove', {
-								event: event.nativeEvent,
-								cjsEvent: event,
-								over: over,
-								x: event.stageX,
-								y: event.stageY,
-								entity: self.owner
-							});
-						});
-						
-					});
-					this.sprite.addEventListener('pressmove', function(event) {
-						self.owner.trigger('pressmove', {
-							event: event.nativeEvent,
-							cjsEvent: event,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-					});
-					this.sprite.addEventListener('mouseout', function(){over = false;});
-					this.sprite.addEventListener('mouseover', function(){over = true;});
-				}
-				if(this.hover){
-					this.stage.enableMouseOver();
-					this.sprite.addEventListener('mouseout', function(event){
-						over = false;
-						self.owner.trigger('mouseout', {
-							event: event.nativeEvent,
-							cjsEvent: event,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-					});
-					this.sprite.addEventListener('mouseover', function(event){
-						over = true;
-						self.owner.trigger('mouseover', {
-							event: event.nativeEvent,
-							cjsEvent: event,
-							over: over,
-							x: event.stageX,
-							y: event.stageY,
-							entity: self.owner
-						});
-					});
-				}
-			},
+					this.removeInputListeners = function(){
+						if(this.click || this.touch){
+							this.sprite.removeEventListener('mousedown', mousedown);
+							this.sprite.removeEventListener('pressmove', pressmove);
+							this.sprite.removeEventListener('pressup',   pressup  );
+							this.sprite.removeEventListener('click',     click    );
+							this.sprite.removeEventListener('dblclick',  dblclick );
+						}
+						if(this.hover){
+							this.sprite.removeEventListener('mouseover', mouseover);
+							this.sprite.removeEventListener('mouseout',  mouseout );
+							this.container.removeEventListener('rollover',  rollover );
+							this.container.removeEventListener('rollout',   rollout  );
+						}
+					};
+				};
+			})(),
 			
 			addPins: function(pins, frames){
 				var i = 0,
@@ -850,8 +854,8 @@ This component is attached to entities that will appear in the game world. It re
 					this.pinsToRemove.push(pins[i].pinId);
 
 					if(isArray){
-						regX = frames[i][5] || 0;
-						regY = frames[i][6] || 0;
+						regX = (frames[0][5] || 0) / this.imageScaleX;
+						regY = (frames[0][6] || 0) / this.imageScaleY;
 					}
 					
 					this.pins[pins[i].pinId] = pin = {
@@ -872,6 +876,10 @@ This component is attached to entities that will appear in the game world. It re
 						pin.frames = [];
 						for (j = 0; j < pins[i].frames.length; j++){
 							if(pins[i].frames[j]){
+								if(isArray){
+									regX = (frames[j][5] || 0) / this.imageScaleX;
+									regY = (frames[j][6] || 0) / this.imageScaleY;
+								}
 								if((typeof pins[i].frames[j].x === 'number') && (typeof pins[i].frames[j].y === 'number')){
 									pin.frames.push({
 										x: (pins[i].frames[j].x - regX),
@@ -981,6 +989,9 @@ This component is attached to entities that will appear in the game world. It re
 			})(),
 			
 			destroy: function(){
+				if(this.removeInputListeners){
+					this.removeInputListeners();
+				}
 				if (this.stage){
 					this.stage.removeChild(this.container);
 					this.stage = undefined;

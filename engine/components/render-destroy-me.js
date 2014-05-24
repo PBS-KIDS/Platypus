@@ -25,24 +25,26 @@ This component will destroy the entity once an animation has finished. This is u
 		id: 'render-destroy-me',
 
 		constructor: function(definition){
-			this.animationId = definition.animationId || '';
+			this.animationIds = null;
 			
-			this.animationIds;
 			if (definition.animationId) {
 				this.animationIds = [definition.animationId];
 			} else if (definition.animationIds) {
 				this.animationIds = definition.animationIds;
-			} else {
-				this.animationIds = [];
 			}
 		},
 
 		events: {// These are messages that this component listens for
 			"animation-ended": function(id){
-				for (var x = 0; x < this.animationIds.length; x++) {
-					if (this.animationIds[x] == id) {
-						this.owner.parent.removeEntity(this.owner);
+				if(this.animationIds){
+					for (var x = 0; x < this.animationIds.length; x++) {
+						if (this.animationIds[x] == id) {
+							this.owner.parent.removeEntity(this.owner);
+							break;
+						}
 					}
+				} else {
+					this.owner.parent.removeEntity(this.owner);
 				}
 			}
 		}

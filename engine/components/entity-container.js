@@ -205,13 +205,15 @@ This component allows the entity to contain child entities. It will add several 
 			
 			removeChildEventListeners: function(entity){
 				var events = null,
-				messages = null;
+				messages   = null,
+				scopes     = null;
 				
 				if(entity.containerListener){
-					events = entity.containerListener.events;
-					messages   = entity.containerListener.messages;
+					events   = entity.containerListener.events;
+					messages = entity.containerListener.messages;
+					scopes   = entity.containerListener.scopes;
 					for(var i = 0; i < events.length; i++){
-						this.removeChildEventListener(entity, events[i], messages[i]);
+						this.removeChildEventListener(entity, events[i], messages[i], scopes[i]);
 					}
 					entity.containerListener = null;
 				}
@@ -221,20 +223,23 @@ This component allows the entity to contain child entities. It will add several 
 				if(!entity.containerListener){
 					entity.containerListener = {
 						events: [],
-						messages: []
+						messages: [],
+						scopes: []
 					};
 				}
 				entity.containerListener.events.push(event);
 				entity.containerListener.messages.push(callback);
+				entity.containerListener.scopes.push(scope);
 				this.bind(event, callback, scope);
 			},
 			
-			removeChildEventListener: function(entity, event, callback){
+			removeChildEventListener: function(entity, event, callback, scope){
 				var events = entity.containerListener.events,
-				messages   = entity.containerListener.messages;
+				messages   = entity.containerListener.messages,
+				scopes     = entity.containerListener.scopes;
 				for(var i = 0; i < events.length; i++){
-					if((events[i] === event) && (!callback || (messages[i] === callback))){
-						this.unbind(event, messages[i]);
+					if((events[i] === event) && (!callback || (messages[i] === callback)) && (!scope || (scopes[i] === scope))){
+						this.unbind(event, messages[i], scopes[i]);
 					}
 				}
 			},

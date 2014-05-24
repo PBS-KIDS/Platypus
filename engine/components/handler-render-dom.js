@@ -36,11 +36,12 @@ A component that handles the rendering of DOM elements. It creates a div element
 */
 
 (function(){
+	
 	return platformer.createComponentClass({
+	
 		id: 'handler-render-dom',
+		
 		constructor: function(definition){
-			this.entities = [];
-			
 			this.element = this.owner.element = document.createElement('div');
 			this.owner.rootElement.appendChild(this.element);
 			this.owner.element = this.element;
@@ -58,27 +59,70 @@ A component that handles the rendering of DOM elements. It creates a div element
 					}
 				}
 			}
+
+			this.handleChildren = true;
+			this.extraContent = false;
 		},
 		events: {
-			"child-entity-added": function(entity){
-				var self = this,
-				messageIds = entity.getMessageIds(); 
+			"load": function(){
+				var i = 0,
+				last  = null;
 				
-				for (var x = 0; x < messageIds.length; x++){
-					if ((messageIds[x] == 'handle-render') || (messageIds[x] == 'handle-render-load')){
-						this.entities.push(entity);
-						entity.trigger('handle-render-load', {
-							element: self.element
-						});
-						break;
+				// Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
+				for(; i < this.owner.components.length; i++){
+					if((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')){
+						last = this.owner.components[i];
 					}
 				}
+				
+				if(last !== this){
+					this.handleChildren = false;
+				} else {
+					this.addEventListener("handle-render-addition", function(addition){
+						var i = '';
+						
+						if(!this.extraContent){
+							this.extraContent = {};
+						}
+
+						for(i in addition){
+							this.extraContent[i] = addition[i];
+						}
+					});
+				}
+			},
+			
+			"child-entity-added": function(entity){
+				var self = this; 
+				
+				entity.trigger('handle-render-load', {
+					element: self.element
+				});
 			},
 			"tick": function(resp){
-				for (var x = this.entities.length - 1; x > -1; x--){
-					if(!this.entities[x].trigger('handle-render', resp)){
-						this.entities.splice(x, 1);
+				var i   = '',
+				message = {};
+				
+				if(this.handleChildren){
+					for(i in resp){
+						message[i] = resp[i];
 					}
+					if(this.extraContent){
+						for(i in this.extraContent){
+							message[i] = this.extraContent[i];
+						}
+					}
+					if(this.owner.triggerEventOnChildren){
+						this.owner.triggerEventOnChildren('handle-render', message);
+					}
+					if(this.extraContent){
+						for(i in this.extraContent){
+							delete this.extraContent[i];
+							delete message[i];
+						}
+					}
+				} else {
+					this.owner.triggerEvent('handle-render-addition', message);
 				}
 			}
 		},
@@ -88,7 +132,6 @@ A component that handles the rendering of DOM elements. It creates a div element
 				this.owner.rootElement.removeChild(this.element);
 				this.owner.element = null;
 				this.element = undefined;
-				this.entities.length = 0;
 			}
 		},
 		

@@ -395,16 +395,21 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				imageArray = imageName.split(' '),
 				mergedTile = null,
 				tile  = new createjs.Sprite(this.spriteSheet, 0),
-				layer = transformCheck(imageArray[0]);
+				layer = null;
 				
 				tile.x = 0;
 				tile.y = 0;
 				tile.regX = this.tileWidth / 2;
 				tile.regY = this.tileHeight / 2;
-				tile.scaleX = layer.x;
-				tile.scaleY = layer.y;
-				tile.rotation = layer.r;
-				tile.gotoAndStop('tile' + layer.t);
+				if(imageArray[0] !== 'tile-1'){
+					layer = transformCheck(imageArray[0]);
+					tile.scaleX = layer.x;
+					tile.scaleY = layer.y;
+					tile.rotation = layer.r;
+					tile.gotoAndStop('tile' + layer.t);
+				} else {
+					tile.gotoAndStop('tile-1');
+				}
 				
 				for (; i < imageArray.length; i++){
 					if(imageArray[i] !== 'tile-1'){

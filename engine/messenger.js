@@ -13,6 +13,7 @@ The Messenger object facilitates communication between components and other game
 - **bind** - Used by components to bind handler functions to triggered events. 
   - @param event (string) - This is the message being listened for.
   - @param func (function) - This is the function that will be run when the message is triggered.
+  - @param scope (function) - This is the scope with which the function should be run.
 - **toString** - Returns a string describing the messenger.
   - @return string - Returns the type as a string of the form "[messenger object]".
 - **trigger** - This method is used by both internal components and external entities to trigger messages. When triggered, messenger checks through bound handlers to run as appropriate.
@@ -27,7 +28,8 @@ The Messenger object facilitates communication between components and other game
   - @return integer - The number of handlers for the triggered message.
 - **unbind** - Used to unbind handler functions.
   - @param event (string) - This is the message the component is currently listening to.
-  - @param func (function) - This is the function that was attached to the message.
+  - @param callback (function) - This is the function that was attached to the message.
+  - @param scope (function) - This is the scope of the function that was attached to the message.
 - **getMessageIds** - This method returns all the messages that this entity is concerned about.
   - @return Array - An array of strings listing all the messages for which this messenger has handlers.
 */
@@ -48,7 +50,7 @@ platformer.Messenger = (function(){
 		this.messages[event].push({callback: callback, scope: scope});
 	};
 	
-	proto.unbind = function(event, func){
+	proto.unbind = function(event, callback, scope){
 		var found = false, j = 0;
 		
 		if(this.loopCheck.length){
@@ -61,16 +63,16 @@ platformer.Messenger = (function(){
 		}
 			
 		if(found){ //We're currently busy triggering messages like this, so we shouldn't remove message handlers until we're finished.
-			this.unbindLater.push({event: event, func: func});
+			this.unbindLater.push({event: event, callback: callback, scope: scope});
 		} else {
-			this.safelyUnbind(event, func);
+			this.safelyUnbind(event, callback, scope);
 		}
 	};
 
-	proto.safelyUnbind = function(event, func){
+	proto.safelyUnbind = function(event, callback, scope){
 		if(!this.messages[event]) this.messages[event] = [];
 		for (var x in this.messages[event]){
-			if(this.messages[event][x].callback === func){
+			if((this.messages[event][x].callback === callback) && (this.messages[event][x].scope === scope)){
 				this.messages[event].splice(x,1);
 				break;
 			}
@@ -131,7 +133,7 @@ platformer.Messenger = (function(){
 		
 		if(!this.loopCheck.length && this.unbindLater.length){
 			for(j = 0; j < this.unbindLater.length; j++){
-				this.safelyUnbind(this.unbindLater[j].event, this.unbindLater[j].func);
+				this.safelyUnbind(this.unbindLater[j].event, this.unbindLater[j].callback, this.unbindLater[j].scope);
 			}
 			this.unbindLater.length = 0;
 		}
