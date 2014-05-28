@@ -123,11 +123,9 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 		constructor: function(definition){
 			this.entitiesByType = {};
 			this.entitiesByTypeLive = {};
-			this.solidEntities = [];
-			this.solidEntitiesLive = [];
-			this.softEntities = [];
-			this.softEntitiesLive = [];
 			this.allEntities = [];
+			this.solidEntitiesLive = [];
+			this.softEntitiesLive = [];
 			this.allEntitiesLive = [];
 			this.groupsLive = [];
 			this.nonColliders = [];
@@ -220,9 +218,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 		methods: {
 			addCollisionEntity: function(entity){
 				var i = 0,
-				types = entity.collisionTypes,
-				solid = false,
-				soft  = false;
+				types = entity.collisionTypes;
 				
 				if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
 					this.terrain = entity;
@@ -235,21 +231,11 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 								this.entitiesByTypeLive[types[i]] = [];
 							}
 							this.entitiesByType[types[i]][this.entitiesByType[types[i]].length] = entity;
-							if(entity.solidCollisions[types[i]].length && !entity.immobile){
-								solid = true;
-							}
-							if(entity.softCollisions[types[i]].length){
-								soft = true;
-							}
 						}
-						if(solid && !entity.immobile){
-							this.solidEntities[this.solidEntities.length] = entity;
+						if(!entity.immobile){
+							this.allEntities[this.allEntities.length] = entity;
+							this.updateLiveList = true;
 						}
-						if(soft){
-							this.softEntities[this.softEntities.length] = entity;
-						}
-						this.allEntities[this.allEntities.length] = entity;
-						this.updateLiveList = true;
 					}
 				}
 			},
@@ -258,9 +244,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 				var x = 0,
 				i     = 0,
 				j	  = 0,
-				types = entity.collisionTypes,
-				solid = false,
-				soft  = false;
+				types = entity.collisionTypes;
 
 				if (types) {
 					for(; i < types.length; i++){
@@ -270,41 +254,17 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 								break;
 							}
 						}
-						if(entity.solidCollisions[types[i]].length){
-							solid = true;
-						}
-						if(entity.softCollisions[types[i]].length){
-							soft = true;
-						}
 					}
 					
-					if(solid){
-						for (x in this.solidEntities) {
-							if(this.solidEntities[x] === entity){
-								this.solidEntities.splice(x, 1);
+					if(!entity.immobile){
+						for (j = 0; j < this.allEntities.length; j++) {
+							if (this.allEntities[j] === entity) {
+								this.allEntities.splice(j,1);
 								break;
 							}
 						}
+						this.updateLiveList = true;
 					}
-			
-					if(soft){
-						for (x in this.softEntities) {
-							if(this.softEntities[x] === entity){
-								this.softEntities.splice(x, 1);
-								break;
-							}
-						}
-					}
-					
-					for (j = 0; j < this.allEntities.length; j++)
-					{
-						if (this.allEntities[j] === entity)
-						{
-							this.allEntities.splice(j,1);
-							break;
-						}
-					}
-					this.updateLiveList = true;
 				}
 			},
 			
@@ -367,12 +327,10 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 	
 									types = entity.collisionTypes;
 									if(entity !== this.owner){
-										if(!entity.immobile){
-											for (j = 0; j < types.length; j++) {
-												if(entity.solidCollisions[types[j]].length){
-													solids[solids.length] = entity;
-													break;
-												}
+										for (j = 0; j < types.length; j++) {
+											if(entity.solidCollisions[types[j]].length){
+												solids[solids.length] = entity;
+												break;
 											}
 										}
 									}
@@ -1017,8 +975,10 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 			},
 			
 			destroy: function(){
-				this.solidEntities.length = 0;
-				this.softEntities.length = 0;
+				this.allEntities.length = 0;
+				this.allEntitiesLive.length = 0;
+				this.softEntitiesLive.length = 0;
+				this.solidEntitiesLive.length = 0;
 				for (var i in this.entitiesByType){
 					this.entitiesByType[i].length = 0;
 				}
