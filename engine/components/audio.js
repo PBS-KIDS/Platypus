@@ -77,7 +77,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
 (function(){
-	var defaultSettings = {
+	var preventOverlaps = [],
+	defaultSettings = {
 		interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
 		delay:     0,
 		offset:    0,
@@ -91,6 +92,17 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	stop = {
 		stop: true,
 		playthrough: true
+	},
+	audioInProgress = function(){
+		if(!preventOverlaps.length){
+			return false;
+		}
+		for (var i in preventOverlaps){
+			if(preventOverlaps[i].priorityTrack){
+				return preventOverlaps[i].priorityTrack;
+			}
+		}
+		return false;
 	},
 	sortByTime = function(a,b){
 		return a.time - b.time;
@@ -151,7 +163,15 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				next = false,
 				events = false,
 				offset = defaultSettings.offset,
-				length    = 0;
+				length    = 0,
+				willOverlap = audioInProgress();
+				
+				if(willOverlap){
+					if(this.preventOverlaps === 'append'){
+						willOverlap.next.push(soundDefinition);
+					}
+					return ;
+				}
 
 				value = value || attributes;
 				if(value && value.stop){
@@ -169,9 +189,9 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						delay         = value.delay     || attributes.delay  || defaultSettings.delay,
 						loop          = value.loop      || attributes.loop   || defaultSettings.loop,
 						volume        = (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
-						pan           = value.pan       || attributes.pan    || defaultSettings.pan,
+						pan           = value.pan       || attributes.pan    || defaultSettings.pan;
+						
 						length        = value.length    || attributes.length || defaultSettings.length;
-
 						offset        = value.offset    || attributes.offset || defaultSettings.offset;
 						next          = value.next      || attributes.next   || defaultSettings.next;
 						events        = value.events    || attributes.events || defaultSettings.events;
@@ -180,6 +200,13 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 
 					} else {
 						audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
+					}
+					
+					if(this.preventOverlaps){
+						this.priorityTrack = {
+							audio: audio,
+							next: next || []
+						};
 					}
 
 					if(events){
@@ -202,9 +229,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						if(this.owner.debug){
 							console.warn('Unable to play "' + sound + '".', audio);
 						}
+						this.onComplete(audio, next);
 					} else {
 						if(length){ // Length is specified so we need to turn off the sound at some point.
-							this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next});
+							this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next, offset: offset});
 						}
 						audio.soundId = sound;
 						this.activeAudioClips.push(audio);
@@ -263,17 +291,18 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					this.checkStates.push(createTest(key, definition.audioMap[key], playClip));
 				}
 			}
+			
+			if(definition.preventOverlaps) {
+				this.preventOverlaps = definition.preventOverlaps;
+				preventOverlaps.push(this);
+			}
 		},
 
 		events: {// These are messages that this component listens for
 		    "handle-render": function(resp){
 				var i     = 0,
-				audioClip = undefined;
+				audioClip = undefined,
 				newArray  = undefined;
-				
-				for(i = 0; i < this.activeAudioClips.length; i++){
-					this.checkTimeEvents(this.activeAudioClips[i]);
-				}
 				
 				if(this.timedAudioClips.length){
 					newArray = this.timedAudioClips;
@@ -281,6 +310,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					for (i in newArray){
 						audioClip = newArray[i];
 						audioClip.progress += resp.delta;
+						//console.log(this.owner.type + ' audio: ' + audioClip.progress + ', ' + audioClip.audio.gainNode.context.currentTime);
 						if(audioClip.progress >= audioClip.length){
 							audioClip.audio.stop();
 							this.onComplete(audioClip.audio, audioClip.next);
@@ -288,6 +318,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 							this.timedAudioClips.push(audioClip);
 						}
 					}
+//						this.timedAudioClips = newArray;
+				}
+
+				for(i = 0; i < this.activeAudioClips.length; i++){
+					this.checkTimeEvents(this.activeAudioClips[i]);
 				}
 
 				i = 0;
@@ -359,13 +394,25 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		 			this.activeAudioClips.length = 0;
 		 			this.timedAudioClips.length = 0;
 	 			}
+	 			this.priorityTrack = null;
 			},
 			
 			checkTimeEvents: function(audioClip, finished){
 				var currentTime = 0;
 				
-				if(audioClip.sequenceEvents){
+				if(audioClip.sequenceEvents && audioClip.sequenceEvents.length){
 					currentTime = audioClip.getPosition();
+
+					// If we're using timed audio clips, use this to get the position, since iOS doesn't guarantee that .getPosition is actually for the clip in question. - DDD
+					if(this.timedAudioClips.length){
+						for (var i in this.timedAudioClips){
+							if(audioClip === this.timedAudioClips[i].audio){
+								currentTime = this.timedAudioClips[i].offset + this.timedAudioClips[i].progress;
+								break;
+							}
+						}
+					}
+
 					while(audioClip.sequenceEvents.length && (finished || (audioClip.sequenceEvents[0].time <= currentTime))){
 						this.owner.trigger(audioClip.sequenceEvents[0].event, audioClip.sequenceEvents[0].message);
 						audioClip.sequenceEvents.splice(0,1);
@@ -380,6 +427,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				this.checkTimeEvents(audioClip, true);
 				
 				this.owner.triggerEvent('clip-complete');
+				
+				if(this.priorityTrack && (audioClip === this.priorityTrack.audio)){
+					next = this.priorityTrack.next;
+					this.priorityTrack = null;
+				}
 				
 				if(next && next.length){
 					if(typeof next === 'string'){
@@ -409,6 +461,14 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			
 			destroy: function(){
 				this.stopAudio();
+				if(this.preventOverlaps){
+					for(var i in preventOverlaps){
+						if(preventOverlaps[i] === this){
+							preventOverlaps.splice(i, 1);
+							break;
+						}
+					}
+				}
 			}
 		}
 	});
