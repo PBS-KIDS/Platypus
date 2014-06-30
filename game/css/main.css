@@ -31,12 +31,12 @@ body {
     cursor: pointer;
     font-family: arial;
     background: rgba(0,0,0,0.2);
-    border-bottom-left-radius: 1em;
-    border-bottom-right-radius: 1em;
-    width: 10em;
-    font-size: 1em;
+    border-bottom-left-radius: 0.2em;
+    border-bottom-right-radius: 0.2em;
+    width: 2em;
+    font-size: 0.2em;
     color: #fff;
-    line-height: 1.9em;
+    line-height: 0.38em;
     text-align: center;
     margin: auto;
     position: relative;

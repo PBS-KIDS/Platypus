@@ -8,10 +8,10 @@
             "className": "fps-counter",
             "style": {
                 "position": "absolute",
-                "left": "0.5em",
-                "top": "0.5em",
+                "left": "0.1em",
+                "top": "0.1em",
                 "color": "white",
-                "fontSize": "2em",
+                "fontSize": "0.4em",
                 "fontWeight": "bold",
                 "fontFamily": "Arial",
                 "pointerEvents": "none",
