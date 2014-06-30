@@ -7,8 +7,8 @@
 position: absolute;
 right: 0;
 top: 0;
-width: 16em;
-height: 10em;
+width: 3.2em;
+height: 2em;
 background: url('../images/gem-bar.png') no-repeat;
 background-size: 100%;
 }
@@ -18,12 +18,12 @@ background-size: 100%;
 position: absolute;
 right: 0;
 top: 0;
-width: 2em;
+width: 0.4em;
 text-align: center;
-font-size: 5em;
+font-size: 1em;
 color: white;
 font-family: arial;
 font-weight: bold;
-line-height: 1.6em;
-height: 1.6em;
+line-height: 0.32em;
+height: 0.32em;
 }

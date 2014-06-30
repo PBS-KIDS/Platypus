@@ -116,7 +116,7 @@ platformer.Game = (function(){
 				    element.style.height = newH + 'px';
 				}
 				if(definition.global.resizeFont){
-					outerRootElement.style.fontSize = Math.round(newW / 100) + 'px';
+					outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
 				}
 				element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
 				element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
@@ -127,7 +127,7 @@ platformer.Game = (function(){
 			callback('resize');
 		} else if(definition.global.resizeFont) {
 			callback = function(eventId, event){
-				outerRootElement.style.fontSize = parseInt(self.rootElement.offsetWidth / 100) + 'px';
+				outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
 				self.currentScene.trigger(eventId, event);
 			};
 			callback('resize');
