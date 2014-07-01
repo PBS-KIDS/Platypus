@@ -137,7 +137,7 @@ This component allows the entity to contain child entities. It will add several 
 							}
 						}
 		
-						this.addEntity(new platformer.Entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition));
+						this.owner.triggerEvent('entity-created', this.addEntity(new platformer.Entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition)));
 					}
 				}
 			},

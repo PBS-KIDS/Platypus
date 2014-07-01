@@ -462,6 +462,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 								if(entity.camera){
 									this.followEntity = {entity: entity, mode: entity.camera}; //used by camera
 								}
+								this.owner.triggerEvent('entity-created', entity);
 							}
 						}
 					}
