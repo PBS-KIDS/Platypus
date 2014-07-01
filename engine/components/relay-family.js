@@ -57,7 +57,7 @@ This component allows an entity to communicate directly with one or more entitie
 	},
 	broadcast = function(event){
 		return function(value, debug){
-			trigger(this.links, event, value, debug);
+			trigger(this.owner.familyLinks, event, value, debug);
 		};
 	};
 
@@ -71,20 +71,26 @@ This component allows an entity to communicate directly with one or more entitie
 				}
 			}
 	
-			this.links = [this.owner];
+			this.owner.familyLinks = [this.owner];
 		},
 		
 		events: {
-			"family-links": function(links){
-				this.links = links;
-				trigger(this.links, 'family-member-added', this.owner);
-				this.links.push(this.owner);
+			"link-family": function(links){
+				var i   = 0,
+				oldList = this.owner.familyLinks,
+				newList = links.concat(oldList);
+
+				for(; i < newList.length; i++){
+					newList[i].familyLinks = newList;
+				}
+				trigger(links,   'family-members-added', oldList);
+				trigger(oldList, 'family-members-added', links);
 			},
 			
 			"entity-created": function(entity){
-				if(!entity.triggerEvent('family-links', this.links)){
+				if(!entity.triggerEvent('link-family', this.owner.familyLinks)){
 					entity.addComponent(new platformer.components['relay-family'](entity, {}));
-					entity.triggerEvent('family-links', this.links);
+					entity.triggerEvent('link-family', this.owner.familyLinks);
 				}
 			}
 		},
@@ -92,13 +98,13 @@ This component allows an entity to communicate directly with one or more entitie
 		methods: {
 			destroy: function(){
 				var i = 0;
-				for(; i < this.links.length; i++){
-					if(this.owner === this.links[i]){
-						this.links.splice(i, 1);
+				for(; i < this.owner.familyLinks.length; i++){
+					if(this.owner === this.owner.familyLinks[i]){
+						this.owner.familyLinks.splice(i, 1);
 						break;
 					}
 				}
-				trigger(this.links, 'family-member-removed', this.owner);
+				trigger(this.owner.familyLinks, 'family-member-removed', this.owner);
 			}
 		}
 	});
