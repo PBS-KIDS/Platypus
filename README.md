@@ -1,8 +1,3 @@
-Platypus
-========
-
-2D tile based game framework in HTML5
-
 Kindle HD and Kindle HDX Resize Fix
 ===================================
 
