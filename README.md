@@ -14,6 +14,6 @@ To solve this issue, this branch causes the game engine to make the font-size th
 The Integration
 ---------------
 Using the latest version of the engine resolves this issue altogether, but for games based on an engine version in which this is not already incorporated, the following steps are required to implement the fix:
-1. Merge this branch into your game (or simply replace the game's engine/game.js with this branch's engine/game.js)
-2. For CSS styles of any DOM element within the #root `div` that use `em` as a unit of measurement, that `em` value must be replaced with its value divided by 5. This is due to, for example, the old version's `1em = 6px` the new one now is `1em = 30px`, so to have the element once again at 6px, it will now be `0.2em`.
-3. Likewise, for any JavaScript code changing a DOM element's properties using `em` as a unit of measurement, the values will need to be divided by 5.
+  1. Merge this branch into your game (or simply replace the game's engine/game.js with this branch's engine/game.js)
+  2. For CSS styles of any DOM element within the #root `div` that use `em` as a unit of measurement, that `em` value must be replaced with its value divided by 5. This is due to, for example, the old version's `1em = 6px` the new one now is `1em = 30px`, so to have the element once again at 6px, it will now be `0.2em`.
+  3. Likewise, for any JavaScript code changing a DOM element's properties using `em` as a unit of measurement, the values will need to be divided by 5.
