@@ -274,12 +274,9 @@ This component is attached to entities that will appear in the game world. It re
 					//check cache and bail if it's available
 					if(ssCache[def.image]){
 						return ssCache[def.image];
-					} else {
+					} else if(platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet){
 						ssCache[def.image] = cache;
-
-						if(platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet){
-							srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
-						}
+						srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
 					}
 				}
 				
