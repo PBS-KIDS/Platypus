@@ -348,6 +348,13 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 					    	}
 			    		}
 			    	}
+
+			    	// Pull in json-based CreateJS spritesheets
+			    	if(asset.data && asset.data.spritesheet && (typeof asset.data.spritesheet === 'string') && isJSON(asset.data.spritesheet)){
+		    			print('.....Filling in spritesheet data for "' + asset.id + '"');
+					    asset.data.spritesheet = getJSON(workingDir + asset.data.spritesheet);
+					    asset.data.spritesheet.images = [asset.id];
+		    		}
 			    }
 			    game.source[sectionId][assetId] = asset;
 		    } catch(e) {

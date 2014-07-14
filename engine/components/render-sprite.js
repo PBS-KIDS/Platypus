@@ -186,6 +186,7 @@ This component is attached to entities that will appear in the game world. It re
 */
 (function(){
 	var dpr = window.devicePixelRatio || 1,
+	ssCache = {},
 	changeState = function(state){
 		return function(value){
 			//9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -262,7 +263,25 @@ This component is attached to entities that will appear in the game world. It re
 					images:     null,
 					frames:     null,
 					animations: null
+				},
+				cache  = {
+					definition: ss,
+					spritesheet: null
 				};
+				
+				// Find SS definition in image data if it has not otherwise been provided.
+				if(!srcSS && (typeof def.image === 'string')){
+					//check cache and bail if it's available
+					if(ssCache[def.image]){
+						return ssCache[def.image];
+					} else {
+						ssCache[def.image] = cache;
+
+						if(platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet){
+							srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
+						}
+					}
+				}
 				
 				// Set framerate.
 				if(srcSS && !isNaN(srcSS.framerate)){
@@ -380,7 +399,9 @@ This component is attached to entities that will appear in the game world. It re
 					ss.animations = defaultAnimations;
 				}
 
-				return ss;
+				cache.spritesheet = new createjs.SpriteSheet(cache.definition);
+				
+				return cache;
 			},
 			createAnimationMap = function(def, ss){
 				var map = null,
@@ -427,9 +448,9 @@ This component is attached to entities that will appear in the game world. It re
 			};
 			
 			return function(definition){
-				var self    = this, 
-				spriteSheet = createSpriteSheet(definition, this.owner),
-				map         = createAnimationMap(definition, spriteSheet);
+				var self = this, 
+				ss       = createSpriteSheet(definition, this.owner),
+				map      = createAnimationMap(definition, ss.definition);
 				
 				this.sprite     = null;
 				
@@ -447,8 +468,8 @@ This component is attached to entities that will appear in the game world. It re
 				
 				this.initialScaleX   = definition.scaleX || 1;
 				this.initialScaleY   = definition.scaleY || 1;
-				this.imageScaleX     = spriteSheet.images[0].scaleX || 1;
-				this.imageScaleY     = spriteSheet.images[0].scaleY || 1;
+				this.imageScaleX     = ss.definition.images[0].scaleX || 1;
+				this.imageScaleY     = ss.definition.images[0].scaleY || 1;
 				this.lastOwnerScaleX = this.owner.scaleX = this.owner.scaleX || 1;
 				this.lastOwnerScaleY = this.owner.scaleY = this.owner.scaleY || 1;
 				
@@ -475,7 +496,7 @@ This component is attached to entities that will appear in the game world. It re
 				/*
 				 * CreateJS Sprite created here:
 				 */
-				this.sprite = new createjs.Sprite(new createjs.SpriteSheet(spriteSheet), this.currentAnimation || 0);
+				this.sprite = new createjs.Sprite(ss.spritesheet, this.currentAnimation || 0);
 				this.sprite.addEventListener('animationend', function(animationInstance, type, lastAnimation, next){
 					self.owner.trigger('animation-ended', lastAnimation);
 					if(self.waitingAnimation){
@@ -496,7 +517,7 @@ This component is attached to entities that will appear in the game world. It re
 					this.container.addChild(this.sprite);
 					this.sprite.z = 0;
 
-					this.addPins(definition.pins, spriteSheet.frames);
+					this.addPins(definition.pins, ss.definition.frames);
 				} else {
 					this.container = this.sprite;
 				}
