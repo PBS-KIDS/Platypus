@@ -132,71 +132,8 @@ This component is attached to entities that will appear in the game world. It se
 						this.stage.addChild(this.shapes[0]);
 					}
 					
-					// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-					if(this.click && createjs.Touch.isSupported()){
-						createjs.Touch.enable(this.stage);
-					}
-			
-					this.shapes[0].onPress     = function(event) {
-						if(this.click){
-							self.owner.trigger('mousedown', {
-								event: event.nativeEvent,
-								over: over,
-								x: event.stageX,
-								y: event.stageY,
-								entity: self.owner
-							});
-							event.onMouseUp = function(event){
-								self.owner.trigger('mouseup', {
-									event: event.nativeEvent,
-									over: over,
-									x: event.stageX,
-									y: event.stageY,
-									entity: self.owner
-								});
-							};
-							event.onMouseMove = function(event){
-								self.owner.trigger('mousemove', {
-									event: event.nativeEvent,
-									over: over,
-									x: event.stageX,
-									y: event.stageY,
-									entity: self.owner
-								});
-							};
-						}
-						if(event.nativeEvent.button == 2){
-							console.log('This Entity:', self.owner);
-						}
-					};
-					if(this.click){
-						this.shapes[0].onMouseOut  = function(){over = false;};
-						this.shapes[0].onMouseOver = function(){over = true;};
-					}
-					if(this.hover){
-						this.stage.enableMouseOver();
-						this.shapes[0].onMouseOut  = function(event){
-							over = false;
-							self.owner.trigger('mouseout', {
-								event: event.nativeEvent,
-								over: over,
-								x: event.stageX,
-								y: event.stageY,
-								entity: self.owner
-							});
-						};
-						this.shapes[0].onMouseOver = function(event){
-							over = true;
-							self.owner.trigger('mouseover', {
-								event: event.nativeEvent,
-								over: over,
-								x: event.stageX,
-								y: event.stageY,
-								entity: self.owner
-							});
-						};
-					}
-			
+					this.addInputs();
+
 					if(!platformer.game.settings.debug){
 						this.owner.removeComponent(this);
 					}
@@ -236,6 +173,86 @@ This component is attached to entities that will appear in the game world. It se
 		},
 		
 		methods:{
+			addInputs: (function(){
+				var lastEntityLog = null,
+				createHandler = function(self, eventName){
+					return function(event) {
+						self.owner.trigger(eventName, {
+							event: event.nativeEvent,
+							cjsEvent: event,
+							x: (event.stageX * dpr) / self.stage.scaleX + self.camera.x,
+							y: (event.stageY * dpr) / self.stage.scaleY + self.camera.y,
+							entity: self.owner
+						});
+						
+						if((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)){
+							lastEntityLog = self.owner;
+							console.log('This Entity:', lastEntityLog);
+						}
+					};
+				};
+				
+				return function(){
+					var self = this,
+					mousedown = null,
+					mouseover = null,
+					mouseout  = null,
+					rollover  = null,
+					rollout   = null,
+					pressmove = null,
+					pressup   = null,
+					click     = null,
+					dblclick  = null;
+					
+					// The following appends necessary information to displayed objects to allow them to receive touches and clicks
+					if(this.click || this.touch){
+						if(this.touch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
+							createjs.Touch.enable(this.stage);
+						}
+						
+						mousedown = createHandler(this, 'mousedown');
+						pressmove = createHandler(this, 'pressmove');
+						pressup   = createHandler(this, 'pressup'  );
+						click     = createHandler(this, 'click'    );
+						dblclick  = createHandler(this, 'dblclick' );
+						
+						this.sprite.addEventListener('mousedown', mousedown);
+						this.sprite.addEventListener('pressmove', pressmove);
+						this.sprite.addEventListener('pressup',   pressup  );
+						this.sprite.addEventListener('click',     click    );
+						this.sprite.addEventListener('dblclick',  dblclick );
+					}
+					if(this.hover){
+						this.stage.enableMouseOver();
+						mouseover = createHandler(this, 'mouseover');
+						mouseout  = createHandler(this, 'mouseout' );
+						rollover  = createHandler(this, 'rollover' );
+						rollout   = createHandler(this, 'rollout'  );
+
+						this.sprite.addEventListener('mouseover', mouseover);
+						this.sprite.addEventListener('mouseout',  mouseout );
+						this.container.addEventListener('rollover',  rollover );
+						this.container.addEventListener('rollout',   rollout  );
+					}
+
+					this.removeInputListeners = function(){
+						if(this.click || this.touch){
+							this.sprite.removeEventListener('mousedown', mousedown);
+							this.sprite.removeEventListener('pressmove', pressmove);
+							this.sprite.removeEventListener('pressup',   pressup  );
+							this.sprite.removeEventListener('click',     click    );
+							this.sprite.removeEventListener('dblclick',  dblclick );
+						}
+						if(this.hover){
+							this.sprite.removeEventListener('mouseover', mouseover);
+							this.sprite.removeEventListener('mouseout',  mouseout );
+							this.container.removeEventListener('rollover',  rollover );
+							this.container.removeEventListener('rollout',   rollout  );
+						}
+					};
+				};
+			})(),
+			
 			destroy: function(){
 				var i = 0;
 				

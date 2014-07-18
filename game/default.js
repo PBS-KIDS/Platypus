@@ -72,6 +72,11 @@
     	                  , "node-map"
     	                  , "node-resident"
     	                  , "random-events"
+    	                  , "relay-family"
+    	                  , "relay-game"
+    	                  , "relay-linker"
+    	                  , "relay-parent"
+    	                  , "relay-self"
     	                  , "render-debug"
     	                  , "render-destroy-me"
     	                  , "render-animation" //deprecated - points to "render-sprite"
@@ -321,6 +326,13 @@
 					    	}
 			    		}
 			    	}
+		    		
+			    	// Pull in json-based CreateJS spritesheets
+			    	if(asset.data && asset.data.spritesheet && (typeof asset.data.spritesheet === 'string') && isJSON(asset.data.spritesheet)){
+		    			print('.....Filling in spritesheet data for "' + asset.id + '"');
+					    asset.data.spritesheet = getJSON(workingDir + asset.data.spritesheet);
+					    asset.data.spritesheet.images = [asset.id];
+		    		}
 			    }
 			    game.source[sectionId][assetId] = asset;
 		    } catch(e) {

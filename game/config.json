@@ -38,13 +38,13 @@
 	"source": { 
 		"assets": [ // Assets such as images and audio
 		
-			// Audio. Using different assets for browser compatability, as well as audio sprite for older iOS Safari compatability
+			// Audio - Using different assets for browser compatability, as well as audio sprite for older iOS Safari compatability
             {"id": "walk",           "src": {"ogg": "audio/walk.ogg",     	  "mp3": "audio/walk.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "audio/combined.m4a", "data": {"offset": 3200,  "length": 330, "channels": 1}}}},
             {"id": "jump",           "src": {"ogg": "audio/jump.ogg",     	  "mp3": "audio/jump.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "audio/combined.m4a", "data": {"offset": 1500,  "length": 250, "channels": 1}}}},
 
-			// Images. Sprite sheets are evenly split into rows and columns. Could add support for sprite sheet definition files later.
+			// Images
 		    {"id": "buttons",    	 "src": "images/buttons.png"},
-			{"id": "mookie",         "src": "images/mookie.png",       "data": {"rows": 4, "columns": 4}},
+			{"id": "mookie",         "src": "images/mookie.png",       "data": {"spritesheet": "images/mookie.json", "rows": 4, "columns": 4}},
             {"id": "game-sprites",   "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
             {"id": "title-screen",   "src": "images/title-screen.png"}
 		],
@@ -57,31 +57,31 @@
             "css/fullscreen.css"
         ],
 		"entities": [ // JSON files describing entities
-		    {"id": "action-layer",    "src": "entities/action-layer.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-			{"id": "desktop-interface-layer",    "src": "entities/desktop-interface-layer.json"},
-            {"id": "multitouch-interface-layer", "src": "entities/multitouch-interface-layer.json"},
-            {"id": "touch-interface-layer",      "src": "entities/touch-interface-layer.json"},
-            {"id": "tile-layer",      "src": "entities/tile-layer.json"},
-			{"id": "render-layer",    "src": "entities/render-layer.json"},
-			{"id": "collision-layer", "src": "entities/collision-layer.json"},
-            {"id": "button-fullscreen", "src": "entities/button-fullscreen.json"},
-            {"id": "button-jump",     "src": "entities/button-jump.json"},
-            {"id": "button-jump-left",  "src": "entities/button-jump-left.json"},
-            {"id": "button-jump-right", "src": "entities/button-jump-right.json"},
-            {"id": "button-left",     "src": "entities/button-left.json"},
-            {"id": "button-play-game","src": "entities/button-play-game.json"},
-            {"id": "button-right",    "src": "entities/button-right.json"},
-            {"id": "button-mute",     "src": "entities/button-mute.json"},
-			{"id": "hero",            "src": "entities/hero.json"},
-            {"id": "progress-bar",    "src": "entities/progress-bar.json"},
-            {"id": "level-portal",	  "src": "entities/level-portal.json"},
-            {"id": "title-screen",    "src": "entities/title-screen.json"},
-            {"id": "fps-counter",	  "src": "entities/fps-counter.json"}
+		    "entities/action-layer.json",
+			"entities/desktop-interface-layer.json",
+            "entities/multitouch-interface-layer.json",
+            "entities/touch-interface-layer.json",
+            "entities/tile-layer.json",
+			"entities/render-layer.json",
+			"entities/collision-layer.json",
+            "entities/button-fullscreen.json",
+            "entities/button-jump.json",
+            "entities/button-jump-left.json",
+            "entities/button-jump-right.json",
+            "entities/button-left.json",
+            "entities/button-play-game.json",
+            "entities/button-right.json",
+            "entities/button-mute.json",
+			"entities/hero.json",
+            "entities/progress-bar.json",
+            "entities/level-portal.json",
+            "entities/title-screen.json",
+            "entities/fps-counter.json"
 		],
 		"scenes": [ // JSON files describing scenes
-            {"id": "load",        "src": "scenes/load.json"}, // If "src" key is included, this will be replaced by the JSON structure in the linked file.
-            {"id": "menu",        "src": "scenes/menu.json"},
-			{"id": "scene-level-1", "src": "scenes/scene-level-1.json"}
+            "scenes/load.json",
+            "scenes/menu.json",
+			"scenes/scene-level-1.json"
 		],
 		"levels": [ // JSON files describing levels
             {"id": "level-1", "src": "levels/level-1.json"} // If "src" key is included, this will be replaced by the JSON structure in the linked file.

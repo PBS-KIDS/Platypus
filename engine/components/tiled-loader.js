@@ -233,7 +233,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					} else {
 						tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
 					}
-					for (x = 0; x < tileTypes; x++){
+					for (x = -1; x < tileTypes; x++){
 						importAnimation['tile' + x] = x;
 					}
 					for (x = 0; x < width; x++){
@@ -462,6 +462,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 								if(entity.camera){
 									this.followEntity = {entity: entity, mode: entity.camera}; //used by camera
 								}
+								this.owner.triggerEvent('entity-created', entity);
 							}
 						}
 					}

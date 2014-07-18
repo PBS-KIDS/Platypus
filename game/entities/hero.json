@@ -42,22 +42,8 @@
                 "falling": "jumping",
                 "moving":  "walking",
                 "default": "standing"
-            }, 
-			"spriteSheet": {
-			    "framerate": 15,
-				"images": ["mookie"],
-				"frames": {
-					"width":  65,
-					"height": 83,
-					"regY":   82,
-					"regX":   33
-				},
-				"animations": {
-					"standing":[2],
-					"walking": {"frames": [3, 0, 1, 2]},
-					"jumping": {"frames": [0]}
-				}
-			}
+            },
+            "image": "mookie"
 		},{
 		    "type": "audio",
 		    "audioMap": {

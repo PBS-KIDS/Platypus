@@ -105,7 +105,14 @@ A component that handles updating logic components. Each tick it calls all the e
 					}
 				}
 			},
-
+			"child-entity-removed": function(entity){
+				for (var j = this.entities.length - 1; j > -1; j--) {
+					if(this.entities[j] === entity){
+						this.entities.splice(j, 1);
+						break;
+					}
+				}
+			},
 			"pause-logic": function(resp){
 				if(resp && resp.time){
 					this.paused = resp.time;

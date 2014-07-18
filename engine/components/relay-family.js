@@ -1,9 +1,6 @@
 /**
 # COMPONENT **entity-linker**
-This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to the linked entities as new triggered events.
-
-## Dependencies
-- [[entity-linker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
+This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to entities in the same family as new triggered events. This component is placed on a single entity and all entities created by this entity become part of its "family".
 
 ## Messages
 
@@ -37,10 +34,7 @@ This component allows an entity to communicate directly with one or more entitie
 
 ## JSON Definition
     {
-      "type": "entity-linker"
-      
-      "linkId": "hero",
-      // A string setting an id that should match across all connected entities. This serves as a sort of radio channel that multiple entities can be listening on.
+      "type": "relay-family",
       
       "events":{
       // This is a list of messages that this component should be listening for locally to broadcast to its linked entities.
@@ -54,117 +48,63 @@ This component allows an entity to communicate directly with one or more entitie
     }
 */
 (function(){
-	var broadcast = function(event){
+	var trigger = function(entities, event, value, debug){
+		var i = 0;
+		
+		for(; i < entities.length; i++){
+			entities[i].trigger(event, value, debug);
+		}
+	},
+	broadcast = function(event){
 		return function(value, debug){
-			var i = 0;
-			
-			for(; i < this.links.length; i++){
-				this.links[i].trigger(event, value, debug);
-			}
+			trigger(this.owner.familyLinks, event, value, debug);
 		};
 	};
 
 	return platformer.createComponentClass({
-		id: 'entity-linker',
+		id: 'relay-family',
+		
 		constructor: function(definition){
-			var self = this;
-
 			if(definition.events){
 				for(var event in definition.events){
 					this.addEventListener(event, broadcast(definition.events[event]));
 				}
 			}
 	
-			this.linkId = definition.linkId || this.owner.linkId || 'linked';
-			
-			if(!this.owner.linkId){
-				this.owner.linkId = this.linkId;
-			}
-			
-			this.addEventListener('to-' + this.linkId + '-entities', broadcast('from-' + this.linkId + '-entities'));
-			this.addEventListener('from-' + this.linkId + '-entities', function(resp){
-				self.owner.trigger(resp.message, resp.value, resp.debug);
-			});
-			
-			this.links = [];
-			
-			if(this.owner.linkEntities){
-				for (var entity in this.owner.linkEntities){
-					this.links.push(this.owner.linkEntities[entity]);
-				}
-			}
-			
-			this.message = {
-				message: '',
-				value: null
-			};
-			this.linkMessage = {
-				entity: this.owner,
-				linkId: this.linkId,
-				reciprocate: false
-			};
-			
-			// In case linker is added after adoption
-			if(this.owner.parent){
-				this.resolveAdoption();
-			}
+			this.owner.familyLinks = [this.owner];
 		},
 		
 		events: {
-			"adopted": function(resp){
-				this.resolveAdoption(resp);
-			},
-			
-			"link-entity": function(resp){
+			"link-family": function(links){
 				var i   = 0,
-				already = false;
-				
-				if((resp.linkId === this.linkId) && (resp.entity !== this.owner)){
-					// Make sure this link is not already in place
-					for (; i < this.links.length; i++){
-						if(this.links[i] === resp.entity){
-							already = true;
-							break;
-						}
-					}
-					
-					if(!already){
-						this.links.push(resp.entity);
-						if(resp.reciprocate){
-							this.linkMessage.reciprocate = false;
-							resp.entity.trigger('link-entity', this.linkMessage);
-						}
-					}
+				oldList = this.owner.familyLinks,
+				newList = links.concat(oldList);
+
+				for(; i < newList.length; i++){
+					newList[i].familyLinks = newList;
 				}
+				trigger(links,   'family-members-added', oldList);
+				trigger(oldList, 'family-members-added', links);
 			},
 			
-			"unlink-entity": function(resp){
-				var i = 0;
-				for(; i < this.links.length; i++){
-					if(resp.entity === this.links[i]){
-						this.links.splice(i, 1);
-						break;
-					}
+			"entity-created": function(entity){
+				if(!entity.triggerEvent('link-family', this.owner.familyLinks)){
+					entity.addComponent(new platformer.components['relay-family'](entity, {}));
+					entity.triggerEvent('link-family', this.owner.familyLinks);
 				}
 			}
 		},
 		
 		methods: {
-			resolveAdoption: function(resp){
-				var grandparent = this.owner.parent;
-				while(grandparent.parent){
-					grandparent = grandparent.parent;
-				}
-				this.linkMessage.reciprocate = true; 
-				grandparent.trigger('link-entity', this.linkMessage, true);
-			},
-			
 			destroy: function(){
 				var i = 0;
-				for (; i < this.links.length; i++){
-					this.links[i].trigger('unlink-entity', this.linkMessage);
+				for(; i < this.owner.familyLinks.length; i++){
+					if(this.owner === this.owner.familyLinks[i]){
+						this.owner.familyLinks.splice(i, 1);
+						break;
+					}
 				}
-				this.links.length = 0;
+				trigger(this.owner.familyLinks, 'family-member-removed', this.owner);
 			}
 		}
 	});

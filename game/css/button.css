@@ -20,7 +20,7 @@
 	color: white;
 	font-family: arial;
 	font-weight: bold;
-	font-size: 3.5em;
+	font-size: 0.7em;
 	
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -35,8 +35,8 @@
 
 /* The following styles determine in-game buttons, all of which use game-button as their base style */
 .game-button {
-	width: 15em;
-	height: 15em;
+	width: 3em;
+	height: 3em;
 	z-index: 10;
 	position: absolute;
 }
@@ -44,8 +44,8 @@
 .jump-button {
 	background: url('../images/buttons.png') 20% 0 no-repeat;
 	background-size: 600%;
-	bottom: 1em;
-	right: 1em;
+	bottom: 0.2em;
+	right: 0.2em;
 }
 .jump-button:active {
 	background: url('../images/buttons.png') 20% 33.333% no-repeat;
@@ -54,8 +54,8 @@
 .jump-center-button {
 	background: url('../images/buttons.png') 20% 0 no-repeat;
 	background-size: 600%;
-	bottom: 1em;
-	right: 17em;
+	bottom: 0.2em;
+	right: 3.4em;
 	z-index: 11;
 }
 .jump-center-button:active {
@@ -65,8 +65,8 @@
 .jump-left-button {
 	background: url('../images/buttons.png') 80% 0 no-repeat;
 	background-size: 600%;
-	bottom: 1em;
-	right: 33em;
+	bottom: 0.2em;
+	right: 6.6em;
 }
 .jump-left-button:active {
 	background: url('../images/buttons.png') 80% 33.333% no-repeat;
@@ -75,8 +75,8 @@
 .jump-right-button {
 	background: url('../images/buttons.png') 100% 0 no-repeat;
 	background-size: 600%;
-	bottom: 1em;
-	right: 1em;
+	bottom: 0.2em;
+	right: 0.2em;
 }
 .jump-right-button:active {
 	background: url('../images/buttons.png') 100% 33.333% no-repeat;
@@ -86,8 +86,8 @@
 .go-left-button {
 	background: url('../images/buttons.png') 0 0 no-repeat;
 	background-size: 600%;
-	bottom: 1em;
-	left: 1em;
+	bottom: 0.2em;
+	left: 0.2em;
 }
 .go-left-button:active {
 	background: url('../images/buttons.png') 0 33.333% no-repeat;
@@ -96,8 +96,8 @@
 .go-right-button {
 	background: url('../images/buttons.png') 40% 0 no-repeat;
 	background-size: 600%;
-	bottom: 1em;
-	left: 17em;
+	bottom: 0.2em;
+	left: 3.4em;
 }
 .go-right-button:active {
 	background: url('../images/buttons.png') 40% 33.333% no-repeat;
@@ -108,10 +108,10 @@
 .mute-button.released {
 	background: url('../images/buttons.png') 60% 0 no-repeat;
 	background-size: 600%;
-	top: 1em;
-	left: 9em;
-	width: 7em;
-	height: 7em;
+	top: 0.2em;
+	left: 1.8em;
+	width: 1.4em;
+	height: 1.4em;
 	z-index: 10;
 	position: absolute;
 	cursor: pointer;
@@ -119,10 +119,10 @@
 .mute-button.pressed {
 	background: url('../images/buttons.png') 60% 33.333% no-repeat;
 	background-size: 600%;
-	top: 1em;
-	left: 9em;
-	width: 7em;
-	height: 7em;
+	top: 0.2em;
+	left: 1.8em;
+	width: 1.4em;
+	height: 1.4em;
 	z-index: 10;
 	position: absolute;
 	cursor: pointer;

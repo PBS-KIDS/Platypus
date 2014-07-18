@@ -153,7 +153,7 @@
 			messages   = this.listener.messages;
 			for(var i = 0; i < events.length; i++){
 				if((events[i] === event) && (!callback || (messages[i] === callback))){
-					this.owner.unbind(event, messages[i]);
+					this.owner.unbind(event, messages[i], this);
 				}
 			}
 		};

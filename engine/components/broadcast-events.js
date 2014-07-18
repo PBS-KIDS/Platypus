@@ -64,47 +64,21 @@ This component listens for specified local entity messages and re-broadcasts the
 */
 (function(){
 	var gameBroadcast = function(event){
-		if(typeof event === 'string'){
-			return function(value, debug){
-				platformer.game.currentScene.trigger(event, value, debug);
-			};
-		} else {
-			return function(value, debug){
-				for (var e in event){
-					platformer.game.currentScene.trigger(event[e], value, debug);
-				}
-			};
-		}
+		return function(value, debug){
+			platformer.game.currentScene.trigger(event, value, debug);
+		};
 	},
 	parentBroadcast = function(event){
-		if(typeof event === 'string'){
-			return function(value, debug){
-				if(this.owner.parent)
-				{
-					this.owner.parent.trigger(event, value, debug);
-				}
-				
-			};
-		} else {
-			return function(value, debug){
-				for (var e in event){
-					this.owner.parent.trigger(event[e], value, debug);
-				}
-			};
-		}
+		return function(value, debug){
+			if(this.owner.parent) {
+				this.owner.parent.trigger(event, value, debug);
+			}
+		};
 	},
 	entityBroadcast = function(event){
-		if(typeof event === 'string'){
-			return function(value, debug){
-				this.owner.trigger(event, value, debug);
-			};
-		} else {
-			return function(value, debug){
-				for (var e in event){
-					this.owner.trigger(event[e], value, debug);
-				}
-			};
-		}
+		return function(value, debug){
+			this.owner.trigger(event, value, debug);
+		};
 	};
 	
 	return platformer.createComponentClass({

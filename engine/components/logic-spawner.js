@@ -115,7 +115,7 @@ This component creates an entity and propels it away. This is useful for casting
 						}
 					}
 					
-					this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.propertiesContainer));
+					this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.propertiesContainer)));
 				}
 				
 				if(state[this.stateName] !== this.firing){

@@ -1,9 +1,9 @@
 /**
-# COMPONENT **entity-linker**
+# COMPONENT **relay-linker**
 This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to the linked entities as new triggered events.
 
 ## Dependencies
-- [[entity-linker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
+- [[relay-linker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
 
 ## Messages
 
@@ -37,7 +37,7 @@ This component allows an entity to communicate directly with one or more entitie
 
 ## JSON Definition
     {
-      "type": "entity-linker"
+      "type": "relay-linker",
       
       "linkId": "hero",
       // A string setting an id that should match across all connected entities. This serves as a sort of radio channel that multiple entities can be listening on.
@@ -65,7 +65,7 @@ This component allows an entity to communicate directly with one or more entitie
 	};
 
 	return platformer.createComponentClass({
-		id: 'entity-linker',
+		id: 'relay-linker',
 		constructor: function(definition){
 			var self = this;
 
