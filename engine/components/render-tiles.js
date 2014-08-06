@@ -303,8 +303,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				minY   = 0,
 				camL   = this.convertCamera(camera.viewportLeft, this.worldWidth, this.tilesWidth, camera.viewportWidth),
 				camT   = this.convertCamera(camera.viewportTop, this.worldHeight, this.tilesHeight, camera.viewportHeight),
-				vpL    = Math.floor(camL / this.tileWidth)  * this.tileWidth,
-				vpT    = Math.floor(camT / this.tileHeight) * this.tileHeight,
+				vpL    = Math.floor(camera.scaleX * camL / this.tileWidth)  * this.tileWidth / camera.scaleX,
+				vpT    = Math.floor(camera.scaleY * camT / this.tileHeight) * this.tileHeight / camera.scaleY,
 				tile   = null,
 				ents   = [],
 				oList  = null;
