@@ -286,7 +286,7 @@ This component controls the game camera deciding where and how it should move. T
 					break;
 				}
 				
-				if(broadcastUpdate || this.windowResized){
+				if(broadcastUpdate || this.staticMove){
 					this.stationary = false;
 					
 					this.message.viewportLeft   = this.world.viewportLeft;
@@ -297,7 +297,7 @@ This component controls the game camera deciding where and how it should move. T
 					this.message.scaleY         = this.windowPerWorldUnitHeight;
 					this.message.orientation    = this.world.viewportOrientation;
 
-					this.windowResized = false;
+					this.staticMove = false;
 					this.owner.trigger('camera-update', this.message);
 
 					if(broadcastUpdate){
@@ -390,6 +390,7 @@ This component controls the game camera deciding where and how it should move. T
 					this.followingFunction = undefined;
 					if(def && (typeof def.top === 'number') && (typeof def.left === 'number')){
 						this.move(def.left, def.top, def.orientation || 0);
+						this.staticMove = true;
 					}
 					break;
 				}
