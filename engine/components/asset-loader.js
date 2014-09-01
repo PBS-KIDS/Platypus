@@ -98,9 +98,8 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    		element.scaleY = imgHeight / img.height;
 		    		ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, imgWidth, imgHeight);
 		    		return element;
-		    	};
-		    	
-		    	loader.addEventListener('fileload', function (event) {
+		    	},
+		    	fileloadfunc = function (event) {
 		    		var item = event.item,
 		    		data     = item.data,
 		    		result   = item.tag;
@@ -123,6 +122,15 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    			self.message.complete = true;
 		    		}
 	    			self.owner.trigger('fileload', self.message);
+		    	};
+		    	
+		    	loader.addEventListener('fileload', fileloadfunc);
+		    	
+		    	loader.addEventListener('error', function(event){
+		    	    if(event.item && !event.error) { //Handles this PreloadJS bug: https://github.com/CreateJS/PreloadJS/issues/46
+		    	        event.item.tag.src = event.item.src;
+		    	        fileloadfunc(event);
+		    	    }
 		    	});
 		    	
 		    	loader.addEventListener('complete', function (event) {
