@@ -9,6 +9,10 @@ The Entity object acts as a container for components, facilitates communication 
 
 ### Local Broadcasts:
 - **load** - The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
+- **component-added** - The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
+  - @param component (object) - The added component. Use `component.type` to retrieve the type of component.
+- **component-removed** - The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
+  - @param component (object) - The removed component. Use `component.type` to retrieve the type of component.
 
 ## Methods
 - **[constructor]** - Returns a new Entity object based on the definitions provided.
@@ -125,7 +129,7 @@ platformer.Entity = (function(){
 			}
 		}
 		
-		self.trigger('load');
+		self.triggerEvent('load');
 	};
 	var proto = entity.prototype = new platformer.Messenger();
 	
@@ -135,6 +139,7 @@ platformer.Entity = (function(){
 	
 	proto.addComponent = function(component){
 	    this.components.push(component);
+	    this.triggerEvent('component-added', component);
 	    return component;
 	};
 	
@@ -146,6 +151,7 @@ platformer.Entity = (function(){
 			    if(this.components[index].type === component){
 			    	component = this.components[index];
 			    	this.components.splice(index, 1);
+				    this.triggerEvent('component-removed', this.components[index]);
 			    	component.destroy();
 				    return component;
 			    }
@@ -154,6 +160,7 @@ platformer.Entity = (function(){
 		    for (index in this.components){
 			    if(this.components[index] === component){
 			    	this.components.splice(index, 1);
+				    this.triggerEvent('component-removed', this.components[index]);
 			    	component.destroy();
 				    return component;
 			    }
