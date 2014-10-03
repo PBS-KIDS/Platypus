@@ -34,8 +34,11 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
       "progressBar": "progress-bar",
       // Optional. A DOM element id for a DIV that should be updated as assets are loaded.
       
-      "useXHR": true
+      "useXHR": true,
       // Whether to use XHR for asset downloading. The default is `true`.
+      
+      "crossOrigin": true
+      // Whether images are loaded from a CORS-enabled domain. The default is `false`.
     }
 
 [link1]: http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html
@@ -53,6 +56,8 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 			}
 			
 			this.assets = definition.assets || platformer.game.settings.assets;
+			
+			this.crossOrigin = definition.crossOrigin || "";
 			
 			this.progressBar = definition.progressBar || false;
 			
@@ -80,7 +85,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    			list.push(asset);
 		    		}
 		    	},
-		    	loader     = new createjs.LoadQueue(this.useXHR),
+		    	loader     = new createjs.LoadQueue(this.useXHR, "", this.crossOrigin),
 		    	loadAssets = [],
 		    	optimizeImages = platformer.game.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
 		    	scale = platformer.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages):1,
@@ -134,7 +139,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	});
 		    	
 		    	loader.addEventListener('complete', function (event) {
-	    			self.owner.trigger('complete');
+		    		setTimeout(function(){ // Allow current process to finish before firing completion.
+		    			self.owner.triggerEvent('complete');
+		    		}, 10);
 		    	});
 		    	
 		    	for(var i in this.assets){
