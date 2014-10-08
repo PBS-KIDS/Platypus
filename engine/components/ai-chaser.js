@@ -13,6 +13,9 @@ This component acts as a simple AI that will chase another entity.
 - **handle-ai** - This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
 - **set-target** - On receiving this message, the component will change its target and begin chasing the new entity.
   - @param message ([[Entity]]) - Sets this entity's target to the provided entity.
+- **set-target-offset** - On receiving this message, the component will target by the offered offset.
+  - @param message.x (number) - Sets this entity's target x offset in world coordinates.
+  - @param message.y (number) - Sets this entity's target y offset in world coordinates.
 - **start-chasing** - On receiving this message, the component will begin chasing the entity.
 - **stop-chasing** - On receiving this message, the component will cease chasing the entity.
 
@@ -38,6 +41,7 @@ This component acts as a simple AI that will chase another entity.
 			this.piOverTwo = Math.PI / 2;
 			this.prevAngle = 0;
 			this.chasing = true;
+			this.offset = {x: 0, y: 0};
 		},
 
 		events: {// These are messages that this component listens for
@@ -47,8 +51,8 @@ This component acts as a simple AI that will chase another entity.
 					//figure out angle
 					this.owner.trigger('move');
 					var angle = 0;
-					var dX = this.target.x - this.owner.x;
-					var dY = this.target.y - this.owner.y;
+					var dX = this.target.x + this.offset.x - this.owner.x;
+					var dY = this.target.y + this.offset.y - this.owner.y;
 					if (dX == 0)
 					{
 						if (dY > 0) {
@@ -73,6 +77,10 @@ This component acts as a simple AI that will chase another entity.
 			},
 			"set-target": function(entity){
 				this.target = entity;
+			},
+			"set-target-offset": function(offset){
+				this.offset.x = offset.x;
+				this.offset.y = offset.y;
 			},
 			"start-chasing": function(){
 				this.chasing = true;

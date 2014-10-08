@@ -226,7 +226,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					tileDefinition.properties.scaleX     = self.imagesScale;
 					tileDefinition.properties.scaleY     = self.imagesScale;
 					tileDefinition.properties.layerZ     = self.layerZ;
-					tileDefinition.properties.z    		 = self.layerZ;
+					tileDefinition.properties.z    		 = tileDefinition.properties.z || self.layerZ;
 					
 					if(layer.image){
 						tileTypes = (layer.image.width / tWidth) * (layer.image.height / tHeight);

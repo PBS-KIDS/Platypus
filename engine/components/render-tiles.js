@@ -177,6 +177,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 			
 			this.doubleBuffer = [null, null];
 			this.currentBuffer = 0;
+			
+			this.reorderedStage = false;
 		},
 
 		events: {// These are messages that this component listens for
@@ -190,6 +192,11 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 
 				if(resp && resp.stage){
 					stage = this.stage = resp.stage;
+					
+					if(stage && !this.reorderedStage){
+						stage.reorder = true;
+						this.reorderedStage = true;
+					}
 					
 					this.tilesToRender = initializeCanvasConservation(new createjs.Container());
 					this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed

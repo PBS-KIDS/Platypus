@@ -2,6 +2,8 @@
 # COMPONENT **camera**
 This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
 
+If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension. 
+
 ## Dependencies:
 - **rootElement** property (on entity) - This component requires a DOM element which it uses as the "window" determining the camera's aspect ratio and size.
 
@@ -31,6 +33,12 @@ This component controls the game camera deciding where and how it should move. T
   - @param message ([[Entity]]} - Expects an entity as the message object to determine whether to trigger `camera-update` on it.
 - **child-entity-removed** - If children are removed from the entity, they are also removed from this component.
   - @param message ([[Entity]]} - Expects an entity as the message object to determine the entity to remove from its list.
+- **shake** - On receiving this message, the camera will shake around its target location.
+  - @param message.xMagnitude (number) - Optional. How much to move along the x axis.
+  - @param message.yMagnitude (number) - Optional. How much to move along the y axis.
+  - @param message.xFrequency (number) - Optional. How quickly to shake along the x axis.
+  - @param message.yFrequency (number) - Optional. How quickly to shake along the y axis.
+  - @param message.time (number) - Optional. How long the camera should shake.
 
 ### Child Broadcasts:
 - **camera-loaded** - On receiving a "world-loaded" message, the camera broadcast the world size to all children in the world.
@@ -70,6 +78,12 @@ This component controls the game camera deciding where and how it should move. T
       "height": 100,
       // Optional number specifying height of viewport in world coordinates
       
+      "worldWidth": 800,
+      // Optional number specifying width of the world in units. Defaults to 0.
+      
+      "worldHeight": 100,
+      // Optional number specifying height of the world in units. Defaults to 0.
+      
       "stretch": true,
       // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
       
@@ -108,7 +122,7 @@ This component controls the game camera deciding where and how it should move. T
 		self.windowPerWorldUnitWidth  = self.window.viewportWidth / self.world.viewportWidth;
 		self.windowPerWorldUnitHeight = self.window.viewportHeight/ self.world.viewportHeight;
 		
-		self.windowResized = true;
+		self.viewportUpdate = true;
 	};
 
 	return platformer.createComponentClass({
@@ -164,8 +178,8 @@ This component controls the game camera deciding where and how it should move. T
 			//Whether the map has finished loading.
 			this.worldIsLoaded = false;
 			// The dimensions of the entire world
-			this.worldWidth  = definition.worldWidth  || definition.width       || 0;
-			this.worldHeight = definition.worldHeight || definition.height      || 0;
+			this.worldWidth  = definition.worldWidth  || 0;
+			this.worldHeight = definition.worldHeight || 0;
 			
 			this.following = undefined;
 			this.state = 'static';//'roaming';
@@ -201,10 +215,22 @@ This component controls the game camera deciding where and how it should move. T
 				begin: 0
 			};
 			
+			this.shakeOffsetX = 0;
+			this.shakeOffsetY = 0;
+			
+			this.xMagnitude = 0;
+			this.yMagnitude = 0;
+			this.xWaveLength = 0;
+			this.yWaveLength = 0;
+			this.xShakeTime = 0;
+			this.yShakeTime = 0;
+			this.shakeTime = 0;
+			this.shakeIncrementor = 0;
+			
 			this.direction = true;
 			this.stationary = false;
 			
-			this.newChild = false;
+			this.viewportUpdate = false;
 		},
 		events: {
 			"load": function(){
@@ -218,7 +244,7 @@ This component controls the game camera deciding where and how it should move. T
 				{
 					if (messageIds[x] == 'camera-update') {
 						this.entities.push(entity);
-						this.newChild = true;
+						this.viewportUpdate = true;
 						
 						if(this.worldIsLoaded){
 							entity.trigger('camera-loaded', {
@@ -252,45 +278,63 @@ This component controls the game camera deciding where and how it should move. T
 					this.entities[x].trigger('camera-loaded', values);
 				}
 			},
-			"tick": function(resp){
-				var broadcastUpdate = this.newChild;
-				
-				this.newChild = false;
-				
+			"tick": function(resp){		
 				switch (this.state)
 				{
 				case 'following':
-					broadcastUpdate = this.followingFunction(this.following, resp.delta);
+					if (this.followingFunction(this.following, resp.delta)) {
+						this.viewportUpdate = true;
+					}
 					break;
 				case 'static':
 				default:
 					break;
 				}
 				
-				if(broadcastUpdate || this.windowResized){
+				if(this.viewportUpdate){
+					this.viewportUpdate = false;
 					this.stationary = false;
 					
-					this.message.viewportLeft   = this.world.viewportLeft;
-					this.message.viewportTop    = this.world.viewportTop;
+					if (this.shakeIncrementor < this.shakeTime ) {
+						this.viewportUpdate = true;
+						this.shakeIncrementor += resp.delta;
+						this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
+						
+						if (this.shakeIncrementor < this.xShakeTime) {
+							this.shakeOffsetX = Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude;
+						} else {
+							this.shakeOffsetX = 0;
+						}
+						
+						if (this.shakeIncrementor < this.yShakeTime) {
+							this.shakeOffsetY = Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude;
+						} else {
+							this.shakeOffsetY = 0;
+						}
+					}
+					
+					this.message.viewportLeft   = this.world.viewportLeft + this.shakeOffsetX;
+					this.message.viewportTop    = this.world.viewportTop + this.shakeOffsetY;
 					this.message.viewportWidth  = this.world.viewportWidth;
 					this.message.viewportHeight = this.world.viewportHeight;
 					this.message.scaleX         = this.windowPerWorldUnitWidth;
 					this.message.scaleY         = this.windowPerWorldUnitHeight;
-
-					this.windowResized = false;
+					
 					this.owner.trigger('camera-update', this.message);
 
-					if(broadcastUpdate){
-						for (var x = this.entities.length - 1; x > -1; x--)
-						{
-							if(!this.entities[x].trigger('camera-update', this.message)){
-								this.entities.splice(x, 1);
-							}
+					
+					for (var x = this.entities.length - 1; x > -1; x--)
+					{
+						if(!this.entities[x].trigger('camera-update', this.message)){
+							this.entities.splice(x, 1);
 						}
 					}
+					
 				} else if (!this.stationary){
+					
 					this.owner.trigger('camera-stationary', this.message);
 					this.stationary = true;
+					
 				}
 				
 				if(this.lastFollow.begin){
@@ -302,11 +346,51 @@ This component controls the game camera deciding where and how it should move. T
 			"resize": function(){
 				resize(this);
 			},
+			"relocate": function(loc){
+				if (this.move(loc.x, loc.y)) {
+					this.viewportUpdate = true;
+				}
+				
+			},
 			"orientationchange": function(){
 				resize(this);
 			},
 			"follow": function (def){
 				this.follow(def);
+			},
+			"shake": function(shakeDef) {
+				var xMag = shakeDef.xMagnitude || 0,
+					yMag = shakeDef.yMagnitude || 0,
+					xFreq = shakeDef.xFrequency || 0, //Cycles per second
+					yFreq = shakeDef.yFrequency || 0, //Cycles per second
+					time = shakeDef.time || 0;
+				
+				this.viewportUpdate = true;
+				
+				this.shakeOffsetX = 0;
+				this.shakeOffsetY = 0;
+				this.shakeIncrementor = 0;
+				
+				this.xMagnitude = xMag;
+				this.yMagnitude = yMag;
+				
+				if (xFreq == 0) {
+					this.xWaveLength = 1;
+					this.xShakeTime = 0;
+				} else {
+					this.xWaveLength = (1000 / xFreq);
+					this.xShakeTime = Math.ceil(time / this.xWaveLength) * this.xWaveLength;
+				}
+				
+				if (yFreq == 0) {
+					this.yWaveLength = 1;
+					this.yShakeTime = 0;
+				} else {
+					this.yWaveLength = (1000 / yFreq);
+					this.yShakeTime = Math.ceil(time / this.yWaveLength) * this.yWaveLength;
+				}
+				
+				this.shakeTime = Math.max(this.xShakeTime, this.yShakeTime);
 			}
 		},
 		
@@ -343,7 +427,7 @@ This component controls the game camera deciding where and how it should move. T
 					this.lastLeft  = def.entity.x || 0;
 					this.lastTop   = def.entity.y || 0;
 					this.forwardX  = def.movementX || (this.transitionX / 10);
-					this.forwardY  = def.movementY || 0;
+					this.forwardY  = def.movementY || (this.transitionY / 10);
 					this.averageOffsetX = 0;
 					this.averageOffsetY = 0;
 					this.offsetX = def.offsetX || 0;
@@ -365,6 +449,7 @@ This component controls the game camera deciding where and how it should move. T
 					this.followingFunction = undefined;
 					if(def && (typeof def.top === 'number') && (typeof def.left === 'number')){
 						this.move(def.left, def.top);
+						this.viewportUpdate = true;
 					}
 					break;
 				}
@@ -383,11 +468,11 @@ This component controls the game camera deciding where and how it should move. T
 			
 			moveLeft: function (newLeft){
 				if(Math.abs(this.world.viewportLeft - newLeft) > this.threshold){
-					if (this.worldWidth < this.world.viewportWidth){
+					if (this.worldWidth && this.worldWidth != 0 && this.worldWidth < this.world.viewportWidth){
 						this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
-					} else if (this.worldWidth && (newLeft + this.world.viewportWidth > this.worldWidth)) {
+					} else if (this.worldWidth && this.worldWidth != 0 && (newLeft + this.world.viewportWidth > this.worldWidth)) {
 						this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
-					} else if (this.worldWidth && (newLeft < 0)) {
+					} else if (this.worldWidth && this.worldWidth != 0 && (newLeft < 0)) {
 						this.world.viewportLeft = 0; 
 					} else {
 						this.world.viewportLeft = newLeft;
@@ -399,11 +484,11 @@ This component controls the game camera deciding where and how it should move. T
 			
 			moveTop: function (newTop) {
 				if(Math.abs(this.world.viewportTop - newTop) > this.threshold){
-					if (this.worldHeight < this.world.viewportHeight){
+					if (this.worldHeight && this.worldHeight != 0 && this.worldHeight < this.world.viewportHeight){
 						this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
-					} else if (this.worldHeight && (newTop + this.world.viewportHeight > this.worldHeight)) {
+					} else if (this.worldHeight && this.worldHeight != 0 && (newTop + this.world.viewportHeight > this.worldHeight)) {
 						this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
-					} else if (this.worldHeight && (newTop < 0)) {
+					} else if (this.worldHeight && this.worldHeight != 0 && (newTop < 0)) {
 						this.world.viewportTop = 0; 
 					} else {
 						this.world.viewportTop = newTop;

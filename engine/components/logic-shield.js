@@ -48,6 +48,7 @@ This component creates an entity and connects it with the current entity. This i
 			this.shieldPosition = {
 				x:0,
 				y:0,
+				z:0,
 				dx: 0,
 				dy: 0,
 				linkId: this.owner.linkId
@@ -55,9 +56,11 @@ This component creates an entity and connects it with the current entity. This i
 			this.shieldProperties = {
 				properties: this.shieldPosition
 			};
+			this.onShield = null;
 			
 			this.offsetX = definition.offsetX || 0;
 			this.offsetY = definition.offsetY || 0;
+			this.offsetZ = definition.offsetZ || 0;
 			
 			this.shield = null;
 			this.wieldShield = false;
@@ -80,8 +83,13 @@ This component creates an entity and connects it with the current entity. This i
 					if(!this.shield){
 						this.shieldPosition.x = this.owner.x;
 						this.shieldPosition.y = this.owner.y;
+						this.shieldPosition.z = this.owner.z;
 						this.shield = this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.shieldProperties));
 						this.owner.triggerEvent('entity-created', this.shield);
+						if(this.onShield){
+							this.onShield(this.shield);
+							this.onShield = null;
+						}
 					}
 					
 					this.shield.x = this.owner.x;
@@ -103,6 +111,9 @@ This component creates an entity and connects it with the current entity. This i
 						this.shield.orientation = -Math.PI / 2;
 					}
 					this.shield.y += offset;
+
+					this.shield.z = this.owner.z;
+					this.shield.z += this.offsetZ;
 				} else if(this.shield){
 					this.owner.parent.removeEntity(this.shield);
 					this.shield = null;
@@ -114,6 +125,9 @@ This component creates an entity and connects it with the current entity. This i
 			},
 			"wield-shield": function(value){
 				this.wieldShield = !value || (value.pressed !== false);
+				if(value.onShield){
+					this.onShield = value.onShield;
+				}
 			},
 			"drop-shield": function(){
 				this.wieldShield = false;

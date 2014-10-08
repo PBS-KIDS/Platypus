@@ -172,6 +172,9 @@ This component creates a DOM element associated with the entity. In addition to 
 				this.parentElement.appendChild(this.element);
 			},
 			
+			"handle-logic": function(resp){
+			},
+			
 			"handle-render": function(resp){
 				var i     = 0,
 				className = this.className;

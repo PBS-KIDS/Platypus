@@ -316,7 +316,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 		},
 	 	    
 	 		"audio-mute-toggle": function(){
-	 			createjs.Sound.setMute(!createjs.Sound.getMute());
+	 			var mute = !createjs.Sound.getMute();
+	 			
+	 			this.owner.state.muted = mute;
+	 			createjs.Sound.setMute(mute);
 	 		},
 	 	    
 	 		"audio-stop": function(){
@@ -325,10 +328,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 	    
 	 		"audio-mute": function(){
 	 			createjs.Sound.setMute(true);
+	 			this.owner.state.muted = true;
 	 		},
 	 	    
 	 		"audio-unmute": function(){
 	 			createjs.Sound.setMute(false);
+	 			this.owner.state.muted = false;
 	 		}
 		},
 		
