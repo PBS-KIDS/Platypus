@@ -13,21 +13,22 @@ All of this information is added to platformer.settings.supports and used throug
 			touch:       !!('ontouchstart' in window),
 
 			// specific browsers as determined above
-			iPod:      (uagent.search('ipod')    > -1),
-			iPhone:    (uagent.search('iphone')  > -1),
-			iPad:      (uagent.search('ipad')    > -1),
-			safari:    (uagent.search('safari')  > -1),
-			ie:        (uagent.search('msie')    > -1) || (uagent.search('trident') > -1),
-		    firefox:   (uagent.search('firefox') > -1),
-			android:   (uagent.search('android') > -1),
-			chrome:    (uagent.search('chrome')  > -1),
-			silk:      (uagent.search('silk')    > -1),
-			iPhone4:   false, //determined below
-			iPad2:     false, //determined below
-			iOS:       false, //determined below
-			mobile:    false, //determined below
-			desktop:   false, //determined below
-			multitouch:false, //determined below
+			iPod:        (uagent.search('ipod')    > -1),
+			iPhone:      (uagent.search('iphone')  > -1),
+			iPad:        (uagent.search('ipad')    > -1),
+			safari:      (uagent.search('safari')  > -1),
+			ie:          (uagent.search('msie')    > -1) || (uagent.search('trident') > -1),
+		    firefox:     (uagent.search('firefox') > -1),
+			android:     (uagent.search('android') > -1),
+			chrome:      (uagent.search('chrome')  > -1),
+			silk:        (uagent.search('silk')    > -1),
+			iPhone4:     false, //determined below
+			iPad2:       false, //determined below
+			iOS:         false, //determined below
+			mobile:      false, //determined below
+			desktop:     false, //determined below
+			multitouch:  false, //determined below
+			audioAPI:    false, //determined below
 			
 			// audio support as determined below
 			ogg:         true,
@@ -47,6 +48,7 @@ All of this information is added to platformer.settings.supports and used throug
 	supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
 	supports.mobile  = supports.iOS  || supports.android || supports.silk;
 	supports.desktop = !supports.mobile;
+	supports.audioAPI = !supports.iOS || (!supports.iPad2 && !supports.iPhone4);
 	
 	//Determine multitouch:
 	if(supports.touch){
@@ -98,6 +100,29 @@ All of this information is added to platformer.settings.supports and used throug
 		}
 	}
 
+	// Handle audio loading on distinct browsers.
+	if(window.createjs && createjs.Sound){
+
+		// Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
+		if(createjs.HTMLAudioPlugin){
+			createjs.HTMLAudioPlugin.enableIOS = true;
+		}
+		
+		if(!supports.audioAPI){ // older versions of iOS Safari seem to crash when loading large audio files unless we go this route.
+			createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
+			//hijacking asset list:
+			delete platformer.settings.aspects.m4a;
+			platformer.settings.aspects.m4aCombined = true;
+		} else if(supports.ie){ // HTML5 audio in IE is not performing well, so we use Flash if it's available.
+			createjs.FlashPlugin.swfPath = "./";
+			createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.HTMLAudioPlugin]);
+		} else {
+	    	createjs.Sound.initializeDefaultPlugins();
+		}
+		
+		supports.audioAPI = (createjs.Sound.activePlugin.toString() === "[WebAudioPlugin]");
+	}
+	
 	platformer.settings.supports = supports;
 
 })();

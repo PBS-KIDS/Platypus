@@ -272,6 +272,32 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				return testStates;
 			};
 		}
+	},
+
+	// The "separate" functions are for recording position apart from what the browser is reporting, due to inaccuracies. Used for older iOS versions.
+	selfIncrementPosition = function(audioClip){
+		audioClip.progress = audioClip.audio.getPosition() - audioClip.offset;
+	},
+	separateIncrementPosition = function(audioClip, addition){
+		audioClip.progress += addition;
+	},
+	selfGetPosition = function(audioClip){
+		return audioClip.getPosition();
+	},
+	separateGetPosition = function(audioClip, timedAudioClips){
+		var i       = 0,
+		currentTime = audioClip.getPosition();
+		// If we're using timed audio clips, use this to get the position, since iOS doesn't guarantee that .getPosition is actually for the clip in question.
+		if(timedAudioClips.length){
+			for (; i < timedAudioClips.length; i++){
+				if(audioClip === timedAudioClips[i].audio){
+					currentTime = timedAudioClips[i].offset + timedAudioClips[i].progress;
+					break;
+				}
+			}
+		}
+		
+		return currentTime;
 	};
 	
 	return platformer.createComponentClass({
@@ -319,7 +345,13 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			
 			this.globallyPaused = false;
 			
-			this.useAudioPosition = platformer.settings.supports.ie;
+			if(!platformer.settings.supports.iOS || platformer.settings.supports.audioAPI){
+				this.getPosition       = selfGetPosition;
+				this.incrementPosition = selfIncrementPosition;
+			} else {
+				this.getPosition       = separateGetPosition;
+				this.incrementPosition = separateIncrementPosition;
+			}
 		},
 
 		events: {// These are messages that this component listens for
@@ -350,12 +382,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					this.timedAudioClips = [];
 					for (i in newArray){
 						audioClip = newArray[i];
-						if(this.useAudioPosition){
-							audioClip.progress = audioClip.audio.getPosition() - audioClip.offset;
-						} else {
-							audioClip.progress += resp.delta;
-						}
-//						console.log(Math.floor(audioClip.offset + audioClip.progress) + ' vs ' + audioClip.audio.getPosition(), audioClip.audio);
+						this.incrementPosition(audioClip, resp.delta);
+
 						if(audioClip.progress >= audioClip.length){
 							audioClip.audio.stop();
 							this.onComplete(audioClip.audio, audioClip.next);
@@ -479,17 +507,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				var currentTime = 0;
 				
 				if(audioClip.sequenceEvents && audioClip.sequenceEvents.length){
-					currentTime = audioClip.getPosition();
-
-					// If we're using timed audio clips, use this to get the position, since iOS doesn't guarantee that .getPosition is actually for the clip in question. - DDD
-					if(this.timedAudioClips.length && !this.useAudioPosition){
-						for (var i in this.timedAudioClips){
-							if(audioClip === this.timedAudioClips[i].audio){
-								currentTime = this.timedAudioClips[i].offset + this.timedAudioClips[i].progress;
-								break;
-							}
-						}
-					}
+					currentTime = this.getPosition(audioClip, this.timedAudioClips);
 
 					while(audioClip.sequenceEvents.length && (finished || (audioClip.sequenceEvents[0].time <= currentTime))){
 						this.owner.trigger(audioClip.sequenceEvents[0].event, audioClip.sequenceEvents[0].message);

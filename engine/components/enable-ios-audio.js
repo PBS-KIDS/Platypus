@@ -104,21 +104,6 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 		return overlay;
 	};
 
-	createjs.HTMLAudioPlugin.enableIOS = true; // Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
-	if(platformer.settings.supports.iPhone4 || platformer.settings.supports.iPad2){ // iOS Safari seems to crash when loading large audio files unless we go this route.
-		createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
-		//hijacking asset list:
-		delete platformer.settings.aspects.m4a;
-		platformer.settings.aspects.m4aCombined = true;
-		if(platformer.game){
-			platformer.game.settings.aspects = platformer.settings.aspects;
-		}
-	} else if(platformer.settings.supports.ie){ // HTML5 audio in IE is not performing well, so we use Flash if it's available.
-		createjs.FlashPlugin.swfPath = "./";
-		createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.HTMLAudioPlugin]);
-	} else {
-    	createjs.Sound.initializeDefaultPlugins();
-	}
 	createjs.Sound.addEventListener('fileload', function(){
 		fileLoaded = true;
 		if(userTapped && callback){
