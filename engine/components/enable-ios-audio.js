@@ -75,7 +75,7 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 		overlay.style.width    = '100%';
 		overlay.style.height   = '100%';
 		overlay.style.position = 'absolute';
-		overlay.style.zIndex   = '20';
+		overlay.style.zIndex   = '100';
 		element.appendChild(overlay);
 
 		click = function(e){
@@ -87,9 +87,16 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
     			}
 		    } else {
 		    	audioPath = createjs.Sound.createInstance(audioId).src;
-		    	createjs.Sound.removeSound(audioId);
-		    	createjs.Sound.registerSound(audioPath, audioId, 1);
-				setupLoader(overlay, createjs.Sound.play(audioId));
+		    	if(audioPath){
+			    	createjs.Sound.removeSound(audioId);
+			    	createjs.Sound.registerSound(audioPath, audioId, 1);
+					setupLoader(overlay, createjs.Sound.play(audioId));
+		    	} else {
+		    		console.warn('Component "enable-ios-audio": Invalid audio path.');
+		    		if(callback){
+	        			callback();
+	    			}
+		    	}
 		    }
 		};
 		overlay.addEventListener('touchstart', click, false);
@@ -98,8 +105,17 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 	};
 
 	createjs.HTMLAudioPlugin.enableIOS = true; // Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
-	if(platformer.settings.supports.iOS){ // iOS Safari seems to crash when loading large audio files unless we go this route.
+	if(platformer.settings.supports.iPhone4 || platformer.settings.supports.iPad2){ // iOS Safari seems to crash when loading large audio files unless we go this route.
 		createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
+		//hijacking asset list:
+		delete platformer.settings.aspects.m4a;
+		platformer.settings.aspects.m4aCombined = true;
+		if(platformer.game){
+			platformer.game.settings.aspects = platformer.settings.aspects;
+		}
+	} else if(platformer.settings.supports.ie){ // HTML5 audio in IE is not performing well, so we use Flash if it's available.
+		createjs.FlashPlugin.swfPath = "./";
+		createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.HTMLAudioPlugin]);
 	} else {
     	createjs.Sound.initializeDefaultPlugins();
 	}
@@ -120,6 +136,7 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 				this.touchOverlay = enableIOSAudio(this.owner.rootElement, definition.audioId);
 				callback = function(){
 					callback = null;
+					self.owner.triggerEvent('ios-audio-ready');
 					self.removeComponent();
 				};
 			} else {
