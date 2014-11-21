@@ -96,8 +96,14 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
       "transitionY": 400,
       // Optional. Sets how quickly the camera should pan to a new position in the vertical direction. Default is 600.
       
-      "threshold": 3
+      "transitionAngle": 400,
+      // Optional. Sets how quickly the camera should rotate to a new orientation. Default is 600.
+      
+      "threshold": 3,
       // Optional. Sets how many units the followed entity can move before the camera will re-center. Default is 1.
+      
+      "rotate": false
+      // Optional. Whether, when following an entity, the camera should rotate to match the entity's orientation. Default is `false`.
     }
 */
 (function(){
@@ -133,13 +139,19 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 			// on resize should the view be stretched or should the world's initial aspect ratio be maintained?
 			this.stretch = definition.stretch || false;
 			
+			this.rotate = definition.rotate || false;
+			
 			this.transitionX = definition.transitionX || definition.transition;
 			this.transitionY = definition.transitionY || definition.transition;
+			this.transitionAngle = definition.transitionAngle || definition.transition;
 			if(isNaN(this.transitionX)){
 				this.transitionX = 400;
 			}
 			if(isNaN(this.transitionY)){
 				this.transitionY = 600;
+			}
+			if(isNaN(this.transitionAngle)){
+				this.transitionAngle = 400;
 			}
 
 			this.threshold = definition.threshold || 1;
@@ -158,7 +170,8 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 				viewportWidth:       definition.width       || 0,
 				viewportHeight:      definition.height      || 0,
 				viewportLeft:        definition.left        || 0,
-				viewportTop:         definition.top         || 0
+				viewportTop:         definition.top         || 0,
+				viewportOrientation: definition.orientation || 0
 			};
 			
 			this.message = { //defined here so it can be reused
@@ -167,7 +180,8 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 				viewportLeft:   0,
 				viewportTop:    0,
 				scaleX: 0,
-				scaleY: 0
+				scaleY: 0,
+				orientation: 0
 			};
 	
 			// on resize should the game snap to certain sizes or should it be fluid?
@@ -178,8 +192,8 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 			//Whether the map has finished loading.
 			this.worldIsLoaded = false;
 			// The dimensions of the entire world
-			this.worldWidth  = definition.worldWidth  || 0;
-			this.worldHeight = definition.worldHeight || 0;
+			this.worldWidth  = definition.worldWidth  || definition.width       || 0;
+			this.worldHeight = definition.worldHeight || definition.height      || 0;
 			
 			this.following = undefined;
 			this.state = 'static';//'roaming';
@@ -196,15 +210,20 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 			//Forward Follow
 			this.lastLeft = this.world.viewportLeft;
 			this.lastTop = this.world.viewportTop;
+			this.lastOrientation = this.world.viewportOrientation;
 			this.forwardX = 0;
 			this.forwardY = 0;
+			this.forwardAngle = 0;
 			this.averageOffsetX = 0;
 			this.averageOffsetY = 0;
+			this.averageOffsetAngle = 0;
 			this.offsetX = 0;
 			this.offsetY = 0;
+			this.offsetAngle = 0;
 			this.forwardFollower = {
 				x: this.lastLeft,
-				y: this.lastTop
+				y: this.lastTop,
+				orientation: this.lastOrientation
 			};
 			
 			this.lastFollow = {
@@ -319,7 +338,7 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					this.message.viewportHeight = this.world.viewportHeight;
 					this.message.scaleX         = this.windowPerWorldUnitWidth;
 					this.message.scaleY         = this.windowPerWorldUnitHeight;
-					
+					this.message.orientation    = this.world.viewportOrientation;
 					this.owner.trigger('camera-update', this.message);
 
 					
@@ -419,6 +438,7 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					this.followingFunction = this.lockedFollow;
 					this.offsetX = def.offsetX || 0;
 					this.offsetY = def.offsetY || 0;
+					this.offsetAngle = def.offsetAngle || 0;
 					break;
 				case 'forward':
 					this.state = 'following';
@@ -426,12 +446,15 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					this.following = def.entity;
 					this.lastLeft  = def.entity.x || 0;
 					this.lastTop   = def.entity.y || 0;
+					this.lastorientation = def.entity.orientation || 0;
 					this.forwardX  = def.movementX || (this.transitionX / 10);
 					this.forwardY  = def.movementY || (this.transitionY / 10);
 					this.averageOffsetX = 0;
 					this.averageOffsetY = 0;
+					this.averageOffsetAngle = 0;
 					this.offsetX = def.offsetX || 0;
 					this.offsetY = def.offsetY || 0;
+					this.offsetAngle = def.offsetAngle || 0;
 					this.followingFunction = this.forwardFollow;
 					break;
 				case 'bounding':
@@ -439,6 +462,7 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					this.following = def.entity;
 					this.offsetX = def.offsetX || 0;
 					this.offsetY = def.offsetY || 0;
+					this.offsetAngle = def.offsetAngle || 0;
 					this.setBoundingArea(def.top, def.left, def.width, def.height);
 					this.followingFunction = this.boundingFollow;
 					break;
@@ -448,7 +472,7 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					this.following = undefined;
 					this.followingFunction = undefined;
 					if(def && (typeof def.top === 'number') && (typeof def.left === 'number')){
-						this.move(def.left, def.top);
+						this.move(def.left, def.top, def.orientation || 0);
 						this.viewportUpdate = true;
 					}
 					break;
@@ -460,9 +484,12 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 
 			},
 			
-			move: function (newLeft, newTop){
+			move: function (newLeft, newTop, newOrientation){
 				var moved = this.moveLeft(newLeft);
 				moved = this.moveTop(newTop) || moved;
+				if(this.rotate){
+					moved = this.reorient(newOrientation || 0) || moved;
+				}
 				return moved;
 			},
 			
@@ -499,28 +526,50 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 				return false;
 			},
 			
-			lockedFollow: function (entity, time, slowdown){
-				var newLeft = entity.x - (this.world.viewportWidth / 2),
-				newTop      = entity.y - (this.world.viewportHeight / 2),
-				ratioX      = (this.transitionX?Math.min(time / this.transitionX, 1):1),
-				iratioX     = 1 - ratioX,
-				ratioY      = (this.transitionY?Math.min(time / this.transitionY, 1):1),
-				iratioY     = 1 - ratioY;
-
-				return this.move(ratioX * newLeft + iratioX * this.world.viewportLeft, ratioY * newTop + iratioY * this.world.viewportTop);
+			reorient: function (newOrientation) {
+				if(Math.abs(this.world.viewportOrientation - newOrientation) > 0.0001){
+					this.world.viewportOrientation = newOrientation;
+					return true;
+				}
+				return false;
 			},
+			
+			lockedFollow: (function(){
+				var min = Math.min;
+				getTransitionalPoint = function(a, b, ratio){
+					// Find point between two points according to ratio.
+					return ratio * b + (1 - ratio) * a;
+				},
+				getRatio = function(transition, time){
+					// Look at the target transition time (in milliseconds) and set up ratio accordingly.
+					if(transition){
+						return min(time / transition, 1);
+					} else {
+						return 1;
+					}
+				};
+				
+				return function (entity, time, slowdown){
+					var x = getTransitionalPoint(this.world.viewportLeft,        entity.x - (this.world.viewportWidth / 2),  getRatio(this.transitionX,     time)),
+					y     = getTransitionalPoint(this.world.viewportTop,         entity.y - (this.world.viewportHeight / 2), getRatio(this.transitionY,     time));
+
+					if(this.rotate){ // Only run the orientation calculations if we need them.
+						return this.move(x, y, getTransitionalPoint(this.world.viewportOrientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
+					} else {
+						return this.move(x, y, 0);
+					}
+				};
+			})(),
 			
 			forwardFollow: function (entity, time){
 				var ff = this.forwardFollower,
 				standardizeTimeDistance = 15 / time, //This allows the camera to pan appropriately on slower devices or longer ticks
 				moved  = false,
 				x = entity.x + this.offsetX,
-				y = entity.y + this.offsetY;
+				y = entity.y + this.offsetY,
+				a = (entity.orientation || 0) + this.offsetAngle;
 				
 				if(this.followFocused && (this.lastLeft === x) && (this.lastTop === y)){
-//					ff.x = this.world.viewportLeft + (this.world.viewportWidth  / 2); 
-//					ff.y = this.world.viewportTop  + (this.world.viewportHeight / 2); 
-
 					return this.lockedFollow(ff, time);
 				} else {
 					// span over last 10 ticks to prevent jerkiness
@@ -536,11 +585,21 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 						this.averageOffsetY = 0;
 					}
 					
+					if(this.rotate){
+						this.averageOffsetAngle *= 0.9;
+						this.averageOffsetAngle += 0.1 * (a - this.lastOrientation) * standardizeTimeDistance;
+						if (Math.abs(this.averageOffsetAngle) > (this.world.viewportOrientation / (this.forwardAngle * 2))){
+							this.averageOffsetAngle = 0;
+						}
+					}
+
 					ff.x = this.averageOffsetX * this.forwardX + x;
 					ff.y = this.averageOffsetY * this.forwardY + y;
+					ff.orientation = this.averageOffsetAngle * this.forwardAngle + a;
 					
 					this.lastLeft = x;
 					this.lastTop  = y;
+					this.lastOrientation = a;
 					
 					moved = this.lockedFollow(ff, time);
 
