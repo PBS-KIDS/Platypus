@@ -77,7 +77,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
 (function(){
-	var preventOverlaps = [],
+	var channels = {},
+	globalPause = false,
 	defaultSettings = {
 		interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
 		delay:     0,
@@ -93,13 +94,15 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		stop: true,
 		playthrough: true
 	},
-	audioInProgress = function(){
-		if(!preventOverlaps.length){
+	audioInProgress = function(channel){
+		var list = channels[channel];
+			
+		if(!list || !list.length){
 			return false;
 		}
-		for (var i in preventOverlaps){
-			if(preventOverlaps[i].priorityTrack){
-				return preventOverlaps[i].priorityTrack;
+		for (var i in list){
+			if(list[i].priorityTrack){
+				return list[i].priorityTrack;
 			}
 		}
 		return false;
@@ -164,13 +167,17 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				events = false,
 				offset = defaultSettings.offset,
 				length    = 0,
-				willOverlap = audioInProgress();
+				willOverlap = audioInProgress(this.channel);
 				
-				if(willOverlap){
-					if(this.preventOverlaps === 'append'){
+				if((this.preventOverlaps !== 'ignore') && willOverlap){
+					if(this.priority >= willOverlap.priority){
+						willOverlap.component.stopAudio();
+					} else if(this.preventOverlaps === 'append'){
 						willOverlap.next.push(soundDefinition);
+						return ;
+					} else {
+						return ;
 					}
-					return ;
 				}
 
 				value = value || attributes;
@@ -202,9 +209,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 						audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
 					}
 					
-					if(this.preventOverlaps){
+					if(this.preventOverlaps && (this.preventOverlaps !== 'ignore')){
 						this.priorityTrack = {
 							audio: audio,
+							component: this,
+							priority: this.priority,
 							next: next || []
 						};
 					}
@@ -294,8 +303,23 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			
 			if(definition.preventOverlaps) {
 				this.preventOverlaps = definition.preventOverlaps;
-				preventOverlaps.push(this);
+				if(this.preventOverlaps !== 'ignore'){
+					this.channel = definition.channel || 'default';
+					if(!channels[this.channel]){
+						channels[this.channel] = [];
+					}
+					channels[this.channel].push(this);
+				}
 			}
+			
+			this.priority = definition.priority || 0;
+			this.priorityTrack = null;
+			
+			this.owner.state.muted = createjs.Sound.getMute();
+			
+			this.globallyPaused = false;
+			
+			this.useAudioPosition = platformer.settings.supports.ie;
 		},
 
 		events: {// These are messages that this component listens for
@@ -304,13 +328,34 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				audioClip = undefined,
 				newArray  = undefined;
 				
+				if(this.globallyPaused){
+					if(!globalPause){
+						this.globallyPaused = false;
+						for(i = 0; i < this.activeAudioClips.length; i++){
+							this.activeAudioClips[i].resume();
+						}
+					} else {
+						return;
+					}
+				} else if(globalPause){
+					this.globallyPaused = true;
+					for(i = 0; i < this.activeAudioClips.length; i++){
+						this.activeAudioClips[i].pause();
+					}
+					return;
+				}
+				
 				if(this.timedAudioClips.length){
 					newArray = this.timedAudioClips;
 					this.timedAudioClips = [];
 					for (i in newArray){
 						audioClip = newArray[i];
-						audioClip.progress += resp.delta;
-						//console.log(this.owner.type + ' audio: ' + audioClip.progress + ', ' + audioClip.audio.gainNode.context.currentTime);
+						if(this.useAudioPosition){
+							audioClip.progress = audioClip.audio.getPosition() - audioClip.offset;
+						} else {
+							audioClip.progress += resp.delta;
+						}
+//						console.log(Math.floor(audioClip.offset + audioClip.progress) + ' vs ' + audioClip.audio.getPosition(), audioClip.audio);
 						if(audioClip.progress >= audioClip.length){
 							audioClip.audio.stop();
 							this.onComplete(audioClip.audio, audioClip.next);
@@ -318,7 +363,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 							this.timedAudioClips.push(audioClip);
 						}
 					}
-//						this.timedAudioClips = newArray;
 				}
 
 				for(i = 0; i < this.activeAudioClips.length; i++){
@@ -355,7 +399,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 		},
 	 	    
 	 		"audio-mute-toggle": function(){
-	 			createjs.Sound.setMute(!createjs.Sound.getMute());
+	 			var mute = !createjs.Sound.getMute();
+	 			
+	 			this.owner.state.muted = mute;
+	 			createjs.Sound.setMute(mute);
 	 		},
 	 	    
 	 		"audio-stop": function(audioId){
@@ -364,10 +411,41 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 	    
 	 		"audio-mute": function(){
 	 			createjs.Sound.setMute(true);
+	 			this.owner.state.muted = true;
 	 		},
 	 	    
 	 		"audio-unmute": function(){
 	 			createjs.Sound.setMute(false);
+	 			this.owner.state.muted = false;
+	 		},
+
+	 		"audio-pause": function(extent){
+	 			if(!createjs.Sound.getMute()){
+	 				this.pauseMutedAudio = true;
+		 			createjs.Sound.setMute(true);
+	 			}
+	 			if(extent && extent.global && !globalPause){
+	 				globalPause = true;
+	 			}
+	 		},
+	 	    
+	 		"audio-unpause": function(extent){
+	 			if(this.pauseMutedAudio){
+	 				this.pauseMutedAudio = false;
+		 			createjs.Sound.setMute(false);
+	 			}
+	 			if(extent && extent.global && globalPause){
+	 				globalPause = false;
+	 			}
+	 		},
+	 		
+	 		"set-volume-global": function(volume){
+	 			createjs.Sound.setVolume(volume);
+	 		},
+	 		"set-volume-component-wide": function(volume){
+	 			for (var x = 0; x < this.activeAudioClips.length; x++) {
+	 				this.activeAudioClips[x].setVolume(volume);
+	 			}
 	 		}
 		},
 		
@@ -404,7 +482,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					currentTime = audioClip.getPosition();
 
 					// If we're using timed audio clips, use this to get the position, since iOS doesn't guarantee that .getPosition is actually for the clip in question. - DDD
-					if(this.timedAudioClips.length){
+					if(this.timedAudioClips.length && !this.useAudioPosition){
 						for (var i in this.timedAudioClips){
 							if(audioClip === this.timedAudioClips[i].audio){
 								currentTime = this.timedAudioClips[i].offset + this.timedAudioClips[i].progress;
@@ -462,9 +540,9 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			destroy: function(){
 				this.stopAudio();
 				if(this.preventOverlaps){
-					for(var i in preventOverlaps){
-						if(preventOverlaps[i] === this){
-							preventOverlaps.splice(i, 1);
+					for(var i in channels[this.channel]){
+						if(channels[this.channel][i] === this){
+							channels[this.channel].splice(i, 1);
 							break;
 						}
 					}
