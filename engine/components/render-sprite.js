@@ -309,11 +309,19 @@ This component is attached to entities that will appear in the game world. It re
 				// Convert image names into Image resources
 				for (i = 0; i < ss.images.length; i++){
 					if(typeof ss.images[i] === 'string'){
-						ss.images[i] = platformer.assets[ss.images[i]];
-
-						// Check here whether to scale coordinates in the frame setup section.
-						if(!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))){
-							scaled = true;
+						if(platformer.assets[ss.images[i]]){
+							ss.images[i] = platformer.assets[ss.images[i]];
+							
+							// Check here whether to scale coordinates in the frame setup section.
+							if(!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))){
+								scaled = true;
+							}
+						} else {
+							if(platformer.settings.supports.iOS){
+								console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
+							} else {
+								console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset.');
+							}
 						}
 					}
 				}

@@ -125,7 +125,7 @@ This component creates an entity and connects it with the current entity. This i
 			},
 			"wield-shield": function(value){
 				this.wieldShield = !value || (value.pressed !== false);
-				if(value.onShield){
+				if(value && value.onShield){
 					this.onShield = value.onShield;
 				}
 			},

@@ -12,8 +12,6 @@ This component changes the (x, y) position of an object according to its current
   - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
 - **set-angle** - On receiving this message, the entity adjusts its movement orientation.
   - @param angle (number) - Number in radians to set the orientation of the entity.
-- **set-max-velocity** - On receiving this message, the entity changes its max velocity.
-  - @param speed (number) - Maximum speed.
 - **stop** - Stops motion until a `move` message is received.
 - **move** - Begins motion until a `stop` message is received.
 

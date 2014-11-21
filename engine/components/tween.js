@@ -51,7 +51,7 @@ Tween takes a list of tween definitions and plays them as needed.
 			
 			if(Array.isArray(values)){
 				tweens = values;
-			} else {
+			} else if(!Array.isArray(tweens)){
 				return;
 			}
 			

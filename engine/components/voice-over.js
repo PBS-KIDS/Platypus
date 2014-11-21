@@ -146,6 +146,9 @@ Requires: ["audio", "render-sprite"]
 			var i               = '',
 			audioDefinition     = {
 				audioMap: {},
+	            preventOverlaps: definition.preventOverlaps,
+	            channel: definition.channel,
+	            priority: definition.priority,
 				aliases:  definition.aliases
 			},
 			animationDefinition = {
