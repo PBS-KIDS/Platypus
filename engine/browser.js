@@ -17,11 +17,13 @@ All of this information is added to platformer.settings.supports and used throug
 			iPhone:    (uagent.search('iphone')  > -1),
 			iPad:      (uagent.search('ipad')    > -1),
 			safari:    (uagent.search('safari')  > -1),
-			ie:        (uagent.search('msie')    > -1),
+			ie:        (uagent.search('msie')    > -1) || (uagent.search('trident') > -1),
 		    firefox:   (uagent.search('firefox') > -1),
 			android:   (uagent.search('android') > -1),
 			chrome:    (uagent.search('chrome')  > -1),
 			silk:      (uagent.search('silk')    > -1),
+			iPhone4:   false, //determined below
+			iPad2:     false, //determined below
 			iOS:       false, //determined below
 			mobile:    false, //determined below
 			desktop:   false, //determined below
@@ -40,6 +42,8 @@ All of this information is added to platformer.settings.supports and used throug
 	    foundAspect = false,
 	    listAspects = '';
 	
+	supports.iPhone4 = supports.iPhone && (window.screen.height == (960 / 2));
+	supports.iPad2   = supports.iPad && (!window.devicePixelRatio || (window.devicePixelRatio === 1));
 	supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
 	supports.mobile  = supports.iOS  || supports.android || supports.silk;
 	supports.desktop = !supports.mobile;
