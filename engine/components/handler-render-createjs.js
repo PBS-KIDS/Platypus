@@ -381,6 +381,17 @@ A component that handles updating rendering for components that are rendering vi
 				this.owner.element = null;
 				this.canvas = undefined;
 			}
+		},
+		
+		publicMethods: {
+			getWorldPointFromScreen: function(sp){
+				//document.title = ((sp.y * dpr) / this.stage.scaleY + this.camera.y) + ', ' + ((sp.y / dpr) * this.stage.scaleY + this.camera.y) + ', ' + ((sp.y * dpr) * this.stage.scaleY + this.camera.y) + ', ';
+				
+				return {
+					x: (sp.x * dpr) / this.stage.scaleX + this.camera.x,
+					y: (sp.y * dpr) / this.stage.scaleY + this.camera.y
+				};
+			}
 		}
 	});
 })();
