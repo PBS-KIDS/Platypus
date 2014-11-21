@@ -13,9 +13,6 @@ This component acts as a simple AI that will chase another entity.
 - **handle-ai** - This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
 - **set-target** - On receiving this message, the component will change its target and begin chasing the new entity.
   - @param message ([[Entity]]) - Sets this entity's target to the provided entity.
-- **set-target-offset** - On receiving this message, the component will target by the offered offset.
-  - @param message.x (number) - Sets this entity's target x offset in world coordinates.
-  - @param message.y (number) - Sets this entity's target y offset in world coordinates.
 - **start-chasing** - On receiving this message, the component will begin chasing the entity.
 - **stop-chasing** - On receiving this message, the component will cease chasing the entity.
 
@@ -77,6 +74,8 @@ This component acts as a simple AI that will chase another entity.
 			},
 			"set-target": function(entity){
 				this.target = entity;
+				this.offset.x = 0;
+				this.offset.y = 0;
 			},
 			"set-target-offset": function(offset){
 				this.offset.x = offset.x;
