@@ -35,8 +35,7 @@ All of this information is added to platformer.settings.supports and used throug
 			m4a:         true,
 			mp3:         true
 		},
-	    aspects = platformer.settings.aspects,
-	    supportsAspects = {},
+	    aspects = platformer.settings.manifest,
 	    i = 0,
 	    j = 0,
 	    k = 0,
@@ -78,22 +77,18 @@ All of this information is added to platformer.settings.supports and used throug
 	}
 	delete canvas;
 
-		//replace settings aspects build array with actual support of aspects
-		platformer.settings.aspects = supportsAspects;
-	platformer.settings.aspects = {};
+	//replace settings aspects build array with actual support of aspects
+	platformer.settings.manifest = {};
 	for (i in aspects){
 		foundAspect = false;
 		listAspects = '';
 		for (j in aspects[i]){
 			listAspects += ' ' + j;
-			for (k in aspects[i][j]){
-				if (uagent.search(aspects[i][j][k]) > -1){
-					platformer.settings.aspects[j] = true;
-					foundAspect = true;
-					break;
-				}
+			if (uagent.search(j) > -1){
+				platformer.settings.manifest[aspects[i][j]] = true;
+				foundAspect = true;
+				break;
 			}
-			if(foundAspect) break;
 		}
 		if(!foundAspect){
 			console.warn('This browser doesn\'t support any of the following: ' + listAspects);
@@ -110,9 +105,8 @@ All of this information is added to platformer.settings.supports and used throug
 		
 		if(!supports.audioAPI){ // older versions of iOS Safari seem to crash when loading large audio files unless we go this route.
 			createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
-			//hijacking asset list:
-			delete platformer.settings.aspects.m4a;
-			platformer.settings.aspects.m4aCombined = true;
+			//hijacking asset list: //TODO: add time to end of clips here.
+			
 		} else if(supports.ie){ // HTML5 audio in IE is not performing well, so we use Flash if it's available.
 			createjs.FlashPlugin.swfPath = "./";
 			createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.HTMLAudioPlugin]);

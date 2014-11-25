@@ -149,7 +149,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    			checkPush(this.assets[i], loadAssets);
 		    		} else {
 		    			for(var j in this.assets[i].src){
-		    				if(platformer.game.settings.aspects[j] && this.assets[i].src[j]){
+		    				if(platformer.game.settings.manifest[j] && this.assets[i].src[j]){
 		    					if(typeof this.assets[i].src[j] === 'string'){
 		    						this.assets[i].src  = this.assets[i].src[j];
 		    						checkPush(this.assets[i], loadAssets);
