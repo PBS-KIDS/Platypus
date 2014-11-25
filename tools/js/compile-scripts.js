@@ -26,7 +26,8 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
  */
 
 (function(){
-   var alert  = function(val){print(val);},
+   var manifests  = null,
+   alert  = function(val){print(val);},
    getText    = function(path){
 	    var file = undefined,
 	    text     = '';
@@ -73,6 +74,26 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
 	    return path;
     },
+    addAllTypes = function(id, src, aspects, path, result, remSF){
+		var i    = 0,
+		newSrc   = src.split('.'),
+		ext      = newSrc[newSrc.length - 1],
+		initial  = false,
+		newAsset = false;
+
+		if(manifests[ext]){
+			for(i = 0; i < manifests[ext].length; i++){
+				newSrc[newSrc.length - 1] = manifests[ext][i];
+				newAsset = handleAsset(id, newSrc.join('.'), aspects[manifests[ext][i]], path, result, remSF);
+				if(ext === manifests[ext][i]){
+					initial = newAsset;
+				}
+			}
+			return initial || newAsset;
+		} else {
+			return handleAsset(id, src, aspects['default'], path, result, remSF);
+		}
+	},
     buildGame = function(build, config, timestamp){
 	    var jsFile = 'combined',
 	    cssFile    = 'combined',
@@ -125,6 +146,15 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		    	}
 		    }
 		    game.manifest = supports;
+
+		    manifests = {};
+	 		for (var i in game.manifest){
+	 			var listAspects = [];
+	 			for (j in game.manifest[i]){
+	 				checkPush(listAspects, game.manifest[i][j]);
+	 				manifests[game.manifest[i][j]] = listAspects;
+	 			}
+	 		}
 	    }
 	    
 	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
@@ -151,15 +181,11 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    try {
 				    if(asset.src){
 				    	if((typeof asset.src) == 'string'){
-				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result, remSF);
-				    	} else {
-				    		for(srcId in asset.src){
-						    	if((typeof asset.src[srcId]) == 'string'){
-					    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result, remSF);
-						    	} else {
-					    			asset.src[srcId].src = handleAsset(asset.id, asset.src[srcId].src, aspects[srcId], path, result, remSF);
-						    	}
-				    		}
+			    			if(manifests){
+			    				asset.src = addAllTypes(asset.id, asset.src, aspects, path, result, remSF);
+			    			} else {
+					    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result, remSF);
+			    			}
 				    	}
 				    }
 				    srcId = '';

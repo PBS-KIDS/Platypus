@@ -39,8 +39,8 @@
 		"assets": [ // Assets such as images and audio
 		
 			// Audio - Using different assets for browser compatability, as well as audio sprite for older iOS Safari compatability
-            {"id": "walk",           "src": {"ogg": "audio/walk.ogg",     	  "mp3": "audio/walk.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "audio/combined.m4a", "data": {"offset": 3200,  "length": 330, "channels": 1}}}},
-            {"id": "jump",           "src": {"ogg": "audio/jump.ogg",     	  "mp3": "audio/jump.mp3",     	   "m4aCombined": {"assetId": "combined", "src": "audio/combined.m4a", "data": {"offset": 1500,  "length": 250, "channels": 1}}}},
+            {"id": "walk",           "src": "audio/walk.mp3"},
+            {"id": "jump",           "src": "audio/jump.mp3"},
 
 			// Images
 		    {"id": "buttons",    	 "src": "images/buttons.png"},

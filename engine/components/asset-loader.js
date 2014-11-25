@@ -71,7 +71,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 
 		events: {// These are messages that this component listens for
 		    "load": function(){
-		    	var self = this,
+		    	var i = '',
+		    	j     = 0,
+		    	self = this,
 		    	checkPush = function(asset, list){
 		    		var i = 0,
 		    		found = false;
@@ -127,6 +129,20 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    			self.message.complete = true;
 		    		}
 	    			self.owner.trigger('fileload', self.message);
+		    	},
+		    	forceTypeForManifest = function(asset){
+		    		var ext  = '',
+		    		newSrc   = null,
+		    		manifest = platformer.game.settings.manifest;
+	    			if(manifest){
+		    			newSrc = asset.src.split('.');
+		    			ext    = newSrc[newSrc.length - 1];
+	    				if(manifest[ext] && (manifest[ext] !== ext)){
+		    				newSrc[newSrc.length - 1] = manifest[ext];
+		    				asset.src = newSrc.join('.');
+	    				}
+	    			}
+	    			return asset;
 		    	};
 		    	
 		    	loader.addEventListener('fileload', fileloadfunc);
@@ -144,47 +160,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    		}, 10);
 		    	});
 		    	
-		    	for(var i in this.assets){
+		    	for(i in this.assets){
 		    		if(typeof this.assets[i].src === 'string'){
-		    			checkPush(this.assets[i], loadAssets);
-		    		} else {
-		    			for(var j in this.assets[i].src){
-		    				if(platformer.game.settings.manifest[j] && this.assets[i].src[j]){
-		    					if(typeof this.assets[i].src[j] === 'string'){
-		    						this.assets[i].src  = this.assets[i].src[j];
-		    						checkPush(this.assets[i], loadAssets);
-		    					} else {
-		    						this.assets[i].data    = this.assets[i].src[j].data || this.assets[i].data;
-		    						this.assets[i].assetId = this.assets[i].src[j].assetId;
-		    						this.assets[i].src     = this.assets[i].src[j].src;
-		    						checkPush({
-		    							id:  this.assets[i].assetId || this.assets[i].id,
-		    							src: this.assets[i].src,
-		    							data: this.assets[i].data
-		    						}, loadAssets);
-		    					}
-		    					break;
-		    				}
-		    			}
-		    			if(typeof this.assets[i].src !== 'string'){
-		    				if(this.assets[i].src['default']){
-		    					if(typeof this.assets[i].src['default'] === 'string'){
-		    						this.assets[i].src  = this.assets[i].src['default'];
-		    						checkPush(this.assets[i], loadAssets);
-		    					} else {
-		    						this.assets[i].data    = this.assets[i].src['default'].data || this.assets[i].data;
-		    						this.assets[i].assetId = this.assets[i].src['default'].assetId;
-		    						this.assets[i].src     = this.assets[i].src['default'].src;
-		    						checkPush({
-		    							id:  this.assets[i].assetId || this.assets[i].id,
-		    							src: this.assets[i].src,
-		    							data: this.assets[i].data
-		    						}, loadAssets);
-		    					}
-		    				} else {
-		    					console.warn('Asset has no valid source for this browser.', this.assets[i]);
-		    				}
-		    			}
+		    			checkPush(forceTypeForManifest(this.assets[i]), loadAssets);
 		    		}
 		    	}
 

@@ -85,13 +85,16 @@ All of this information is added to platformer.settings.supports and used throug
 		for (j in aspects[i]){
 			listAspects += ' ' + j;
 			if (uagent.search(j) > -1){
-				platformer.settings.manifest[aspects[i][j]] = true;
-				foundAspect = true;
+				foundAspect = aspects[i][j];
 				break;
 			}
 		}
 		if(!foundAspect){
 			console.warn('This browser doesn\'t support any of the following: ' + listAspects);
+		} else {
+			for (j in aspects[i]){
+				platformer.settings.manifest[aspects[i][j]] = foundAspect;
+			}
 		}
 	}
 

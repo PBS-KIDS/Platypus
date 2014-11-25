@@ -85,6 +85,20 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === '.ttf') || (check === '.otf') || (check === 'woff');
    },
+	addAllTypes = function(assets, asset){
+		var i  = 0,
+		newSrc = asset.src.split('.'),
+		ext    = newSrc[newSrc.length - 1];
+
+		if(manifest[ext]){
+			for(i = 0; i < manifest[ext].length; i++){
+				newSrc[newSrc.length - 1] = manifest[ext][i];
+				checkPush(assets, newSrc.join('.'));
+			}
+		} else {
+			checkPush(assets, asset.src);
+		}
+	},
    game       = getJSON('config.json'), // need to have run compile-json.js prior to this if assets have changed.
    workingDir = game.toolsConfig["source-folder"] || '../game/',
    buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
@@ -100,9 +114,22 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
    sectionId  = '',
    asset      = undefined,
    assetId    = 0,
-   srcId      = '';
+   srcId      = '',
+   aspects    = game.manifest,
+   manifest   = null;
    
-    print('Compiling list of assets.');
+	if(aspects){
+		manifest = {};
+		for (var i in aspects){
+			var listAspects = [];
+			for (j in aspects[i]){
+				checkPush(listAspects, aspects[i][j]);
+				manifest[aspects[i][j]] = listAspects;
+			}
+		}
+	}
+
+	print('Compiling list of assets.');
     for(sectionId in source){
     	section = source[sectionId];
 	    for (assetId in section){
@@ -111,19 +138,11 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 			    if(asset.src){
 			    	if((typeof asset.src) == 'string'){
 			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
-			    			checkPush(assets, asset.src);
-			    		}
-			    	} else {
-			    		for(srcId in asset.src){
-					    	if((typeof asset.src[srcId]) == 'string'){
-					    		if(asset.src[srcId].substring(0,4).toLowerCase() !== 'http'){
-					    			checkPush(assets, asset.src[srcId]);
-					    		}
-					    	} else {
-					    		if(asset.src[srcId].src.substring(0,4).toLowerCase() !== 'http'){
-					    			checkPush(assets, asset.src[srcId].src);
-					    		}
-					    	}
+			    			if(manifest){
+				    			addAllTypes(assets, asset);
+			    			} else {
+			    				checkPush(assets, asset.src);
+			    			}
 			    		}
 			    	}
 			    }
