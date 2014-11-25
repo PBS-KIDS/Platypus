@@ -2,7 +2,7 @@
 # Main.js
 Main.js creates the game object. Main.js is called on the window 'load' event.
 
- Requires: ["http://code.createjs.com/createjs-2013.12.12.min.js", "browser.js", "game.js", "flashplugin-NEXT.min.js", "factory.js"]
+ Requires: ["../../EaselJS/lib/easeljs-NEXT.min.js", "../../PreloadJS/lib/preloadjs-NEXT.min.js", "../../SoundJS/lib/soundjs-NEXT.min.js", "../../TweenJS/lib/tweenjs-NEXT.min.js", "browser.js", "game.js", "flashplugin-NEXT.min.js", "factory.js"]
 
 */
 

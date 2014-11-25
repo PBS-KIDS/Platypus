@@ -411,8 +411,7 @@
 	    },
 	    source     = game.source,
 	    path       = '',
-	    aspects    = {"default": []},
-	    supports   = game['client-supports'] || false,
+	    supports   = game['manifest'] || false,
 	    section    = undefined,
 	    sectionId  = '',
 	    asset      = undefined,
@@ -422,14 +421,10 @@
 	    j          = 0;
 
 	    delete game.builds;
-	    delete game['client-supports'];
+	    delete game['manifest'];
 
 	    if(supports){ // Prepare multiple manifest files
-		    print('...Creating arrays to store cache.manifest file versions.');
-		    game.aspects = supports;
-	    	for (i in supports) for (j in supports[i]){
-		    	aspects[j] = ['\n# ' + j + ':\n'];
-	    	}
+		    game.manifest = supports;
 	    }
 	    
 	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
@@ -446,13 +441,13 @@
 			    try {
 				    if(asset.src){
 				    	if((typeof asset.src) == 'string'){
-				    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result);
+				    		asset.src = handleAsset(asset.id, asset.src, path, result);
 				    	} else {
 				    		for(srcId in asset.src){
 						    	if((typeof asset.src[srcId]) == 'string'){
-					    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], aspects[srcId], path, result);
+					    			asset.src[srcId] = handleAsset(asset.id, asset.src[srcId], path, result);
 						    	} else {
-					    			asset.src[srcId].src = handleAsset(asset.id, asset.src[srcId].src, aspects[srcId], path, result);
+					    			asset.src[srcId].src = handleAsset(asset.id, asset.src[srcId].src, path, result);
 						    	}
 				    		}
 				    	}
@@ -507,19 +502,19 @@
 	    var check = path.substring(path.length - 3).toLowerCase();
 	    return (check === '.js');
     },
-    handleAsset = function(id, src, assets, absolutePath, result){
+    handleAsset = function(id, src, absolutePath, result){
 	   
 		if(isImage(src) || isAudio(src) || isFont(src)){
-			return checkPush(assets, src);
+			return src;
 		} else if(isCSS(src)) {
 			domElement = document.createElement('link');
 			domElement.setAttribute('rel', 'stylesheet');
 			domElement.setAttribute('type', 'text/css');
-			domElement.setAttribute('href', checkPush(assets, src));
+			domElement.setAttribute('href', src);
 			document.getElementsByTagName('head')[0].appendChild(domElement);
 	 	    return src;
 		} else if(isJS(src)) {
-			loadJS.push(checkPush(assets, src));
+			loadJS.push(src);
 	 	    return src;
 		}
     },

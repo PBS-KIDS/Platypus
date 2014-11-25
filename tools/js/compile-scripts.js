@@ -96,7 +96,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    indexPath  = '',
 	    maniPath   = 'cache.manifest',
 	    aspects    = {"default": []},
-	    supports   = game['client-supports'] || false,
+	    supports   = game['manifest'] || false,
+	    supId      = '',
+	    uaId       = '',
 	    section    = undefined,
 	    sectionId  = '',
 	    asset      = undefined,
@@ -106,18 +108,23 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    j          = 0,
 	    htaccess   = '',
 	    divider    = '',
-	    remSF      = (build.index === false)?build.id + '/':false;
+	    remSF      = ((build.index === false)?build.id + '/':false),
+	    tempMan    = '';
 
 	    delete game.builds;
-	    delete game['client-supports'];
+	    delete game['manifest'];
 	    delete game.toolsConfig;
 
 	    if(supports){ // Prepare multiple manifest files
 		    print('...Creating arrays to store cache.manifest file versions.');
-		    game.aspects = supports;
-	    	for (i in supports) for (j in supports[i]){
-		    	aspects[j] = ['\n# ' + j + ':\n'];
-	    	}
+		    for(supId in supports){
+		    	for(uaId in supports[supId]){
+	    			if(!aspects[supports[supId][uaId]]){
+		    			aspects[supports[supId][uaId]] = ['\n# ' + supId.toUpperCase() + ' - ' + supports[supId][uaId] + ':\n'];
+		    		}
+		    	}
+		    }
+		    game.manifest = supports;
 	    }
 	    
 	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
@@ -239,41 +246,28 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    	manifest = manifest.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + jsFile + timestamp + '.js\n' + path + 's\/' + cssFile + timestamp + '.css\n');
 
 		    if(supports){ // Prepare multiple manifest files
-		    	var aspectVariations = [], tempArray = [], rewriteConds = {};
+		    	var rewriteConds = [];
 		    	
 		    	htaccess += '\nRewriteEngine on\n';
 		    	
-		    	for(var i in supports[0]){
-		    		aspectVariations.push(i);
-		    		rewriteConds[i] = supports[0][i];
-		    	}
-		    	
-		    	for (var i = 1; i < supports.length; i++){
-		    		options = supports[i];
-	    			tempArray = [];
-		    		for (j in options){
-		    			for (k in aspectVariations){
-		    				tempArray.push(aspectVariations[k] + '-' + j);
-		    			}
-			    		rewriteConds[j] = options[j];
+		    	for (i in aspects){
+		    		if(i !== 'default'){
+			    		tempMan = manifest.replace('CACHE:', 'CACHE:\n' + aspects[i].join('\n'));
+				    	htaccess += '\nRewriteCond %{HTTP_USER_AGENT} "';
+				    	rewriteConds.length = 0;
+					    for(supId in supports){
+					    	for(uaId in supports[supId]){
+				    			if(supports[supId][uaId] === i){
+				    				rewriteConds.push(uaId);
+					    		}
+					    	}
+					    }
+			    		htaccess += rewriteConds.join('|');
+				    	htaccess += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + i + '.manifest [L]\n';
+					    setText(i + '.manifest', tempMan);
+					    try {fileSystem.DeleteFile(buildPath + i + '.manifest');} catch(e) {}
+					    fileSystem.MoveFile(i + '.manifest', buildPath + i + '.manifest');
 		    		}
-		    		aspectVariations = tempArray;
-		    	}
-		    	
-		    	for (i in aspectVariations){
-			    	var tempMan = manifest;
-			    	var arr2 = aspectVariations[i].split('-');
-			    	divider = '';
-			    	htaccess += '\nRewriteCond %{HTTP_USER_AGENT} "';
-			    	for (j in arr2){
-			    		tempMan = tempMan.replace('CACHE:', 'CACHE:\n' + aspects[arr2[j]].join('\n'));
-			    		htaccess += divider + rewriteConds[arr2[j]].join('|');
-			    		divider = '|';
-			    	}
-			    	htaccess += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + aspectVariations[i] + '.manifest [L]\n';
-				    setText(aspectVariations[i] + '.manifest', tempMan);
-				    try {fileSystem.DeleteFile(buildPath + aspectVariations[i] + '.manifest');} catch(e) {}
-				    fileSystem.MoveFile(aspectVariations[i] + '.manifest', buildPath + aspectVariations[i] + '.manifest');
 		    	}
 		    } else {
 			    setText('cache.manifest', manifest);

@@ -88,11 +88,19 @@
 
 		]
 	},
-	"client-supports": [ // "client-supports" is an array of different file sources used where a different file type or size may be required depending on properties of the client.
-		{                //    Each contained object lists mutually exclusive properties, so that a single aspect is comprised of an item from each object list. This example includes a single object in the list, but additional objects can be appended for different aspects
-		    "ogg": ["firefox", "opera", "chrome"],         // Array lists user agent checks that should load this resource type
-		    "m4aCombined": ["android", "silk", "ipod", "ipad", "iphone"],  // Order determines first valid version, so Safari on iPad will use "m4aCombined" rather than "mp3" below
-		    "mp3": ["msie", "safari", "trident"]
+	"manifest": { // This determines which file types should be stored for a given client if App Cache is used.
+		"audio": { // Keys are user agent checks that should load the provided resource type
+		    "firefox": "ogg",
+		    "opera":   "ogg",
+		    "chrome":  "ogg",
+		    "android": "m4a",
+		    "silk":    "m4a",
+		    "ipod":    "m4a",
+		    "ipad":    "m4a",
+		    "iphone":  "m4a",  // Order determines first valid version, so Safari on iPad will use "m4a" rather than "mp3" below
+		    "msie":    "mp3",
+		    "safari":  "mp3",
+		    "trident": "mp3"
 		}
-	]
+	}
 }
