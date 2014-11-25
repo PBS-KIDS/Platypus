@@ -47,7 +47,7 @@
 		},{
 		    "type": "audio",
 		    "audioMap": {
-		        "ground, moving": {"sound": "walk", "loop": 5000},
+		        "ground,moving": {"sound": "walk", "loop": 5000},
 		        "just-jumped": "jump"
 		    }
 //		},{

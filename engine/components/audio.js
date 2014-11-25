@@ -86,7 +86,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		loop:      0,
 		volume:    1,
 		pan:       0,
-		length:    0,
+		startTime: null,
+		duration:  null,
 		next:      false,
 		events:    false
 	},
@@ -113,8 +114,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	playSound = function(soundDefinition){
 		var sound = '',
 		attributes = undefined,
-		instance = null,
-		assets = platformer.game.settings.assets;
+		instance = null;
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
 			attributes = {};
@@ -146,113 +146,90 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				loop:      soundDefinition.loop,
 				volume:    soundDefinition.volume,
 				pan:       soundDefinition.pan,
-				length:    soundDefinition.length,
+				startTime: soundDefinition.startTime,
+				duration:  soundDefinition.duration,
 				next:      soundDefinition.next,
 				events:    soundDefinition.events
 			};
 		}
-		if(assets[sound]){
-			if(assets[sound].data){
-				for(var item in assets[sound].data){
-					attributes[item] = attributes[item] || assets[sound].data[item];
-				}
-			}
-			if(assets[sound].assetId){
-				sound = assets[sound].assetId;
-			}
-			return function(value){
-				var self = this,
-				audio = undefined,
-				next = false,
-				events = false,
-				offset = defaultSettings.offset,
-				length    = 0,
-				willOverlap = audioInProgress(this.channel);
-				
-				if((this.preventOverlaps !== 'ignore') && willOverlap){
-					if(this.priority >= willOverlap.priority){
-						willOverlap.component.stopAudio();
-					} else if(this.preventOverlaps === 'append'){
-						willOverlap.next.push(soundDefinition);
-						return ;
-					} else {
-						return ;
-					}
-				}
 
-				value = value || attributes;
-				if(value && value.stop){
-					if(instance) {
-						if(value.playthrough){
-							instance.remainingLoops = 0;
-						} else {
-							instance.stop();
-							self.removeClip(instance);
-						}
-					}
+		return function(value){
+			var self = this,
+			audio = undefined,
+			next = false,
+			events = false,
+			willOverlap = audioInProgress(this.channel);
+			
+			if((this.preventOverlaps !== 'ignore') && willOverlap){
+				if(this.priority >= willOverlap.priority){
+					willOverlap.component.stopAudio();
+				} else if(this.preventOverlaps === 'append'){
+					willOverlap.next.push(soundDefinition);
+					return ;
 				} else {
-					if(value){
-						var interrupt = value.interrupt || attributes.interrupt || defaultSettings.interrupt,
-						delay         = value.delay     || attributes.delay  || defaultSettings.delay,
-						loop          = value.loop      || attributes.loop   || defaultSettings.loop,
-						volume        = (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
-						pan           = value.pan       || attributes.pan    || defaultSettings.pan;
-						
-						length        = value.length    || attributes.length || defaultSettings.length;
-						offset        = value.offset    || attributes.offset || defaultSettings.offset;
-						next          = value.next      || attributes.next   || defaultSettings.next;
-						events        = value.events    || attributes.events || defaultSettings.events;
+					return ;
+				}
+			}
 
-						audio = instance = createjs.Sound.play(sound, interrupt, delay, offset, loop, volume, pan);
+			value = value || attributes;
+			if(value && value.stop){
+				this.stopAudio(sound, value.playthrough);
+			} else {
+				if(value){
+					next          = value.next      || attributes.next   || defaultSettings.next;
+					events        = value.events    || attributes.events || defaultSettings.events;
 
-					} else {
-						audio = instance = createjs.Sound.play(sound, defaultSettings.interrupt, defaultSettings.delay, defaultSettings.offset, defaultSettings.loop, defaultSettings.volume, defaultSettings.pan);
-					}
-					
-					if(this.preventOverlaps && (this.preventOverlaps !== 'ignore')){
-						this.priorityTrack = {
-							audio: audio,
-							component: this,
-							priority: this.priority,
-							next: next || []
-						};
-					}
-
-					if(events){
-						audio.sequenceEvents = [];
-						for(var i = 0; i < events.length; i++){
-							audio.sequenceEvents.push({
-								event: events[i].event,
-								time: +events[i].time + offset,
-								message: events[i].message
-							});
-						}
-						audio.sequenceEvents.sort(sortByTime);
-					}
-
-					audio.addEventListener('complete', function(){
-						self.onComplete(audio, next);
+					audio = createjs.Sound.play(sound, {
+						interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
+						delay:      value.delay     || attributes.delay  || defaultSettings.delay,
+						loop:       value.loop      || attributes.loop   || defaultSettings.loop,
+						volume:     (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
+						pan:        value.pan       || attributes.pan    || defaultSettings.pan,
+						startTime:  value.startTime || attributes.startTime || defaultSettings.startTime,
+						duration:   value.duration  || attributes.duration || defaultSettings.duration,
+						offset:     value.offset    || attributes.offset || defaultSettings.offset
 					});
 
-					if(audio.playState === 'playFailed'){
-						if(this.owner.debug){
-							console.warn('Unable to play "' + sound + '".', audio);
-						}
-						this.onComplete(audio, next);
-					} else {
-						if(length){ // Length is specified so we need to turn off the sound at some point.
-							this.timedAudioClips.push({length: length, progress: 0, audio: audio, next: next, offset: offset});
-						}
-						audio.soundId = sound;
-						this.activeAudioClips.push(audio);
-					}
+				} else {
+					audio = createjs.Sound.play(sound, defaultSettings);
 				}
-			};
-		} else {
-			console.warn('Audio clip "' + sound + '" needs to be added to config.js.');
-			return function(){
-			};
-		}
+				
+				if(this.preventOverlaps && (this.preventOverlaps !== 'ignore')){
+					this.priorityTrack = {
+						audio: audio,
+						component: this,
+						priority: this.priority,
+						next: next || []
+					};
+				}
+
+				if(events){
+					audio.sequenceEvents = [];
+					for(var i = 0; i < events.length; i++){
+						audio.sequenceEvents.push({
+							event: events[i].event,
+							time: events[i].time || 0,
+							message: events[i].message
+						});
+					}
+					audio.sequenceEvents.sort(sortByTime);
+				}
+
+				audio.addEventListener('complete', function(){
+					self.onComplete(audio, next);
+				});
+
+				if(audio.playState === 'playFailed'){
+					if(this.owner.debug){
+						console.warn('Unable to play "' + sound + '".', audio);
+					}
+					this.onComplete(audio, next);
+				} else {
+					audio.soundId = sound;
+					this.activeAudioClips.push(audio);
+				}
+			}
+		};
 	},
 	createTest = function(testStates, audio, play){
 		var states = testStates.replace(/ /g, '').split(',');
@@ -272,32 +249,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				return testStates;
 			};
 		}
-	},
-
-	// The "separate" functions are for recording position apart from what the browser is reporting, due to inaccuracies. Used for older iOS versions.
-	selfIncrementPosition = function(audioClip){
-		audioClip.progress = audioClip.audio.getPosition() - audioClip.offset;
-	},
-	separateIncrementPosition = function(audioClip, addition){
-		audioClip.progress += addition;
-	},
-	selfGetPosition = function(audioClip){
-		return audioClip.getPosition();
-	},
-	separateGetPosition = function(audioClip, timedAudioClips){
-		var i       = 0,
-		currentTime = audioClip.getPosition();
-		// If we're using timed audio clips, use this to get the position, since iOS doesn't guarantee that .getPosition is actually for the clip in question.
-		if(timedAudioClips.length){
-			for (; i < timedAudioClips.length; i++){
-				if(audioClip === timedAudioClips[i].audio){
-					currentTime = timedAudioClips[i].offset + timedAudioClips[i].progress;
-					break;
-				}
-			}
-		}
-		
-		return currentTime;
 	};
 	
 	return platformer.createComponentClass({
@@ -306,7 +257,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		constructor: function(definition){
 			var playClip = null;
 			
-			this.timedAudioClips = [];
 			this.activeAudioClips = [];		
 	
 			this.state = {};
@@ -344,21 +294,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			this.owner.state.muted = createjs.Sound.getMute();
 			
 			this.globallyPaused = false;
-			
-			if(!platformer.settings.supports.iOS || platformer.settings.supports.audioAPI){
-				this.getPosition       = selfGetPosition;
-				this.incrementPosition = selfIncrementPosition;
-			} else {
-				this.getPosition       = separateGetPosition;
-				this.incrementPosition = separateIncrementPosition;
-			}
 		},
 
 		events: {// These are messages that this component listens for
 		    "handle-render": function(resp){
 				var i     = 0,
-				audioClip = undefined,
-				newArray  = undefined;
+				audioClip = undefined;
 				
 				if(this.globallyPaused){
 					if(!globalPause){
@@ -377,22 +318,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					return;
 				}
 				
-				if(this.timedAudioClips.length){
-					newArray = this.timedAudioClips;
-					this.timedAudioClips = [];
-					for (i in newArray){
-						audioClip = newArray[i];
-						this.incrementPosition(audioClip, resp.delta);
-
-						if(audioClip.progress >= audioClip.length){
-							audioClip.audio.stop();
-							this.onComplete(audioClip.audio, audioClip.next);
-						} else {
-							this.timedAudioClips.push(audioClip);
-						}
-					}
-				}
-
 				for(i = 0; i < this.activeAudioClips.length; i++){
 					this.checkTimeEvents(this.activeAudioClips[i]);
 				}
@@ -478,40 +403,45 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		},
 		
 		methods: {
-			stopAudio: function(audioId){
+			stopAudio: function(audioId, playthrough){
 				var i = 0;
 				
 	 			if(audioId){
 		 			for (i = this.activeAudioClips.length - 1; i >= 0; i--){
 		 				if(this.activeAudioClips[i].soundId === audioId){
-			 				this.activeAudioClips[i].stop();
-			 				this.activeAudioClips.splice(i, 1);
-		 				}
-		 			}
-		 			for (i = this.timedAudioClips.length - 1; i >= 0; i--){
-		 				if(this.timedAudioClips[i].audio.soundId === audioId){
-			 				this.timedAudioClips.splice(i, 1);
+		 					if(playthrough){
+		 						this.activeAudioClips[i].remainingLoops = 0;
+		 					} else {
+				 				this.activeAudioClips[i].stop();
+				 				this.activeAudioClips.splice(i, 1);
+		 					}
 		 				}
 		 			}
 	 			} else {
-		 			for (; i < this.activeAudioClips.length; i++){
-		 				this.activeAudioClips[i].stop();
+		 			if(playthrough){
+			 			for (; i < this.activeAudioClips.length; i++){
+	 						this.activeAudioClips[i].remainingLoops = 0;
+			 			}
+		 			} else {
+			 			for (; i < this.activeAudioClips.length; i++){
+			 				this.activeAudioClips[i].stop();
+			 			}
+			 			this.activeAudioClips.length = 0;
 		 			}
-		 			this.activeAudioClips.length = 0;
-		 			this.timedAudioClips.length = 0;
 	 			}
 	 			this.priorityTrack = null;
 			},
 			
 			checkTimeEvents: function(audioClip, finished){
-				var currentTime = 0;
+				var events  = audioClip.sequenceEvents,
+				currentTime = 0;
 				
-				if(audioClip.sequenceEvents && audioClip.sequenceEvents.length){
-					currentTime = this.getPosition(audioClip, this.timedAudioClips);
+				if(events && events.length){
+					currentTime = audioClip.getPosition();
 
-					while(audioClip.sequenceEvents.length && (finished || (audioClip.sequenceEvents[0].time <= currentTime))){
-						this.owner.trigger(audioClip.sequenceEvents[0].event, audioClip.sequenceEvents[0].message);
-						audioClip.sequenceEvents.splice(0,1);
+					while(events.length && (finished || (events[0].time <= currentTime))){
+						this.owner.trigger(events[0].event, events[0].message);
+						events.splice(0,1);
 					}
 				}
 			},
