@@ -113,8 +113,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	},
 	playSound = function(soundDefinition){
 		var sound = '',
-		attributes = undefined,
-		instance = null;
+		attributes = undefined;
 		if(typeof soundDefinition === 'string'){
 			sound      = soundDefinition;
 			attributes = {};
@@ -322,15 +321,13 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					this.checkTimeEvents(this.activeAudioClips[i]);
 				}
 
-				i = 0;
 				if(this.stateChange){
 					if(this.checkStates){
 						if(this.currentState){
-							stop.playthrough = this.forcePlaythrough;
-							this.stopAudio(); //TODO: Currently this stops all the audio on the entity. Should it only stop a currently playing state-change-triggered audio track?
+							this.stopAudio(this.currentState.soundId, this.forcePlaythrough);
 						}
 						this.currentState = false;
-						for(; i < this.checkStates.length; i++){
+						for(i = 0; i < this.checkStates.length; i++){
 							audioClip = this.checkStates[i].call(this, this.state);
 							if(audioClip){
 								this.currentState = audioClip;
@@ -404,32 +401,56 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		
 		methods: {
 			stopAudio: function(audioId, playthrough){
-				var i = 0;
+				var i = 0,
+				clips = this.activeAudioClips,
+				self  = this;
 				
 	 			if(audioId){
-		 			for (i = this.activeAudioClips.length - 1; i >= 0; i--){
-		 				if(this.activeAudioClips[i].soundId === audioId){
+		 			for (i = clips.length - 1; i >= 0; i--){
+		 				if(clips[i].soundId === audioId){
 		 					if(playthrough){
-		 						this.activeAudioClips[i].remainingLoops = 0;
+		 						clips[i].addEventListener('loop', function(instance){
+		 							self.stopAudioInstance(instance.currentTarget);
+		 						});
 		 					} else {
-				 				this.activeAudioClips[i].stop();
-				 				this.activeAudioClips.splice(i, 1);
+				 				clips[i].stop();
+				 				clips.splice(i, 1);
+			 					if(this.priorityTrack && (clips[i] === this.priorityTrack.audio)){
+			 						this.priorityTrack = null;
+			 					}
 		 					}
 		 				}
 		 			}
 	 			} else {
 		 			if(playthrough){
-			 			for (; i < this.activeAudioClips.length; i++){
-	 						this.activeAudioClips[i].remainingLoops = 0;
+			 			for (; i < clips.length; i++){
+	 						clips[i].addEventListener('loop', function(instance){
+	 							self.stopAudioInstance(instance.currentTarget);
+	 						});
 			 			}
 		 			} else {
 			 			for (; i < this.activeAudioClips.length; i++){
-			 				this.activeAudioClips[i].stop();
+			 				clips[i].stop();
 			 			}
-			 			this.activeAudioClips.length = 0;
+			 			clips.length = 0;
+ 						this.priorityTrack = null;
 		 			}
 	 			}
-	 			this.priorityTrack = null;
+			},
+			
+			stopAudioInstance: function(instance){
+				var i = 0,
+				clips = this.activeAudioClips;
+				
+	 			for (i = clips.length - 1; i >= 0; i--){
+	 				if(clips[i] === instance){
+		 				clips[i].stop();
+		 				clips.splice(i, 1);
+	 					if(this.priorityTrack && (clips[i] === this.priorityTrack.audio)){
+	 						this.priorityTrack = null;
+	 					}
+	 				}
+	 			}
 			},
 			
 			checkTimeEvents: function(audioClip, finished){
