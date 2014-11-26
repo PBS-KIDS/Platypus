@@ -78,7 +78,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 */
 (function(){
 	var channels = {},
-	globalPause = false,
 	defaultSettings = {
 		interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
 		delay:     0,
@@ -86,8 +85,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		loop:      0,
 		volume:    1,
 		pan:       0,
-		startTime: null,
-		duration:  null,
+		mute:      false,
+		paused:    false,		
 		next:      false,
 		events:    false
 	},
@@ -147,6 +146,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 				pan:       soundDefinition.pan,
 				startTime: soundDefinition.startTime,
 				duration:  soundDefinition.duration,
+				mute:      soundDefinition.mute,
+				paused:    soundDefinition.paused,
 				next:      soundDefinition.next,
 				events:    soundDefinition.events
 			};
@@ -171,27 +172,30 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			}
 
 			value = value || attributes;
-			if(value && value.stop){
+			if(value.stop){
 				this.stopAudio(sound, value.playthrough);
 			} else {
-				if(value){
-					next          = value.next      || attributes.next   || defaultSettings.next;
-					events        = value.events    || attributes.events || defaultSettings.events;
+				audio = createjs.Sound.createInstance(sound, value.startTime || attributes.startTime || null, value.duration || attributes.duration || null);
+				
+				// Adding object on to SoundInstance for delayed playback and storing properties apart from instance due to channel overrides.
+				audio.options = {
+					interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
+					delay:      value.delay     || attributes.delay  || defaultSettings.delay,
+					loop:       value.loop      || attributes.loop   || defaultSettings.loop,
+					offset:     value.offset    || attributes.offset || defaultSettings.offset,
+					volume:     (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
+					pan:        value.pan       || attributes.pan    || defaultSettings.pan,
+					mute:       value.mute      || attributes.mute   || defaultSettings.mute,
+					paused:     value.paused    || attributes.paused || defaultSettings.paused
+				};
+				
+				next          = value.next      || attributes.next   || defaultSettings.next;
+				events        = value.events    || attributes.events || defaultSettings.events;
 
-					audio = createjs.Sound.play(sound, {
-						interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
-						delay:      value.delay     || attributes.delay  || defaultSettings.delay,
-						loop:       value.loop      || attributes.loop   || defaultSettings.loop,
-						volume:     (typeof value.volume !== 'undefined')? value.volume: ((typeof attributes.volume !== 'undefined')? attributes.volume: defaultSettings.volume),
-						pan:        value.pan       || attributes.pan    || defaultSettings.pan,
-						startTime:  value.startTime || attributes.startTime || defaultSettings.startTime,
-						duration:   value.duration  || attributes.duration || defaultSettings.duration,
-						offset:     value.offset    || attributes.offset || defaultSettings.offset
-					});
-
-				} else {
-					audio = createjs.Sound.play(sound, defaultSettings);
+				if(!this.mixer.paused && !this.channelSettings.paused && !audio.options.paused){
+					audio.play(audio.options);
 				}
+				this.setChannelSettings(audio);
 				
 				if(this.preventOverlaps && (this.preventOverlaps !== 'ignore')){
 					this.priorityTrack = {
@@ -256,6 +260,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		constructor: function(definition){
 			var playClip = null;
 			
+			this.channel = definition.channel || 'default';
+
 			this.activeAudioClips = [];		
 	
 			this.state = {};
@@ -279,7 +285,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			if(definition.preventOverlaps) {
 				this.preventOverlaps = definition.preventOverlaps;
 				if(this.preventOverlaps !== 'ignore'){
-					this.channel = definition.channel || 'default';
 					if(!channels[this.channel]){
 						channels[this.channel] = [];
 					}
@@ -290,36 +295,61 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 			this.priority = definition.priority || 0;
 			this.priorityTrack = null;
 			
-			this.owner.state.muted = createjs.Sound.getMute();
-			
-			this.globallyPaused = false;
+			if(!platformer.game.audioMixer){
+				platformer.game.audioMixer = {
+					channels: {},
+					paused: false,
+					getChannel: function(id){
+						if(!this.channels[id]){
+							this.channels[id] = {
+								volume: 1,
+								mute: false,
+								paused: false,
+								pan: 0,
+								update: 0
+							};
+						}
+
+						return this.channels[id];
+					}
+				};
+			}
+			this.mixer           = platformer.game.audioMixer;
+			this.channelSettings = this.mixer.getChannel(this.channel);
+			this.channelUpdate   = this.channelSettings.update;
+			this.paused          = this.mixer.paused;
 		},
 
 		events: {// These are messages that this component listens for
 		    "handle-render": function(resp){
-				var i     = 0,
+				var self  = this,
+				i         = 0,
 				audioClip = undefined;
 				
-				if(this.globallyPaused){
-					if(!globalPause){
-						this.globallyPaused = false;
-						for(i = 0; i < this.activeAudioClips.length; i++){
-							this.activeAudioClips[i].resume();
-						}
-					} else {
-						return;
-					}
-				} else if(globalPause){
-					this.globallyPaused = true;
-					for(i = 0; i < this.activeAudioClips.length; i++){
-						this.activeAudioClips[i].pause();
-					}
+				if(this.paused !== this.mixer.paused){
+					this.paused = this.mixer.paused;
+		 			this.getAllClips(function(clip){
+						self.setChannelSettings(clip);
+		 			});
+		 			// Avoid potential channel check below since we've already handled this for the global pause.
+					this.channelUpdate = this.channelSettings.update;
+				}
+				if(this.paused){
 					return;
 				}
 				
-				for(i = 0; i < this.activeAudioClips.length; i++){
-					this.checkTimeEvents(this.activeAudioClips[i]);
+				if(this.channelUpdate !== this.channelSettings.update){
+					//Channel settings have changed.
+					this.channelUpdate = this.channelSettings.update;
+					
+		 			this.getAllClips(function(clip){
+						self.setChannelSettings(clip);
+		 			});
 				}
+				
+	 			this.getAllClips(function(clip){
+					self.checkTimeEvents(clip);
+	 			});
 
 				if(this.stateChange){
 					if(this.checkStates){
@@ -348,58 +378,132 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 	 	    
-	 		"audio-mute-toggle": function(){
-	 			var mute = !createjs.Sound.getMute();
+	 		"toggle-mute": function(audioId){
+	 			var self = this;
 	 			
-	 			this.owner.state.muted = mute;
-	 			createjs.Sound.setMute(mute);
+	 			this.handleClip(audioId, function(clip){
+	 				clip.options.mute = !clip.options.mute;
+	 				self.setChannelSettings(clip);
+	 			});
 	 		},
 	 	    
 	 		"audio-stop": function(audioId){
 	 			this.stopAudio(audioId);
 	 		},
 	 	    
-	 		"audio-mute": function(){
-	 			createjs.Sound.setMute(true);
-	 			this.owner.state.muted = true;
+	 		"mute-audio": function(audioId){
+	 			var self = this;
+	 			
+	 			this.handleClip(audioId, function(clip){
+	 				clip.options.mute = true;
+	 				self.setChannelSettings(clip);
+	 			});
 	 		},
 	 	    
-	 		"audio-unmute": function(){
-	 			createjs.Sound.setMute(false);
-	 			this.owner.state.muted = false;
-	 		},
-
-	 		"audio-pause": function(extent){
-	 			if(!createjs.Sound.getMute()){
-	 				this.pauseMutedAudio = true;
-		 			createjs.Sound.setMute(true);
-	 			}
-	 			if(extent && extent.global && !globalPause){
-	 				globalPause = true;
-	 			}
+	 		"unmute-audio": function(audioId){
+	 			var self = this;
+	 			
+	 			this.handleClip(audioId, function(clip){
+	 				clip.options.mute = false;
+	 				self.setChannelSettings(clip);
+	 			});
 	 		},
 	 	    
-	 		"audio-unpause": function(extent){
-	 			if(this.pauseMutedAudio){
-	 				this.pauseMutedAudio = false;
-		 			createjs.Sound.setMute(false);
-	 			}
-	 			if(extent && extent.global && globalPause){
-	 				globalPause = false;
-	 			}
+	 		"pause-audio": function(audioId){
+	 			var self = this;
+	 			
+	 			this.handleClip(audioId, function(clip){
+	 				clip.options.paused = true;
+	 				self.setChannelSettings(clip);
+	 			});
+	 		},
+	 	    
+	 		"unpause-audio": function(audioId){
+	 			var self = this;
+	 			
+	 			this.handleClip(audioId, function(clip){
+	 				clip.options.paused = false;
+	 				self.setChannelSettings(clip);
+	 			});
 	 		},
 	 		
-	 		"set-volume-global": function(volume){
-	 			createjs.Sound.setVolume(volume);
+	 		"set-volume": function(volume){
+	 			var self = this,
+	 			vol      = 0,
+	 			handler  = function(clip){
+	 				clip.options.volume = vol;
+	 				self.setChannelSettings(clip);
+	 			};
+	 			
+	 			if(typeof volume === 'number'){
+	 				vol = volume;
+		 			this.getAllClips(handler);
+	 			} else if(volume.volume){
+	 				vol = volume.volume;
+	 				this.handleClip(volume.soundId, handler);
+	 			}	 			
 	 		},
-	 		"set-volume-component-wide": function(volume){
-	 			for (var x = 0; x < this.activeAudioClips.length; x++) {
-	 				this.activeAudioClips[x].setVolume(volume);
-	 			}
-	 		}
+
+	 		"audio-mute-toggle": function(){console.warn(this.owner.type + " - audio component: The 'audio-mute-toggle' event has been deprecated. Use 'toggle-mute' instead.");},
+	 		"audio-mute":        function(){console.warn(this.owner.type + " - audio component: The 'audio-mute' event has been deprecated. Use 'mute-audio' instead.");},
+	 		"audio-unmute":      function(){console.warn(this.owner.type + " - audio component: The 'audio-unmute' event has been deprecated. Use 'unmute-audio' instead.");},
+	 		"audio-pause":       function(){console.warn(this.owner.type + " - audio component: The 'audio-pause' event has been deprecated. Use 'pause-audio' instead.");},
+	 		"audio-unpause":     function(){console.warn(this.owner.type + " - audio component: The 'audio-unpause' event has been deprecated. Use 'unpause-audio' instead.");}
 		},
 		
 		methods: {
+			handleClip: function(audioId, handler){
+				if (audioId) {
+					this.getClipById(audioId, handler);
+				} else {
+		 			this.getAllClips(handler);
+				}
+			},
+			
+			getClipById: function(id, onGet){
+				var i = 0,
+				clips = this.activeAudioClips;
+				
+				for (; i < clips.length; i++){
+					if(clips[i].soundId === id){
+						if (onGet) onGet(clips[i]);
+						return clips[i];
+					}
+				}
+				
+				if(onGet) onGet(null);
+
+				return null;
+			},
+			
+			getAllClips: function(onGet){
+				var i = 0,
+				clips = this.activeAudioClips;
+				
+				if (onGet) for (; i < clips.length; i++) onGet(clips[i]);
+
+				return clips;
+			},
+			
+			setChannelSettings: function(clip){
+				var channel = this.channelSettings,
+				pause       = (this.mixer.paused || channel.paused || clip.options.paused);
+				
+				clip.setMute(clip.options.mute || channel.mute);
+				clip.setPan((clip.options.pan + channel.pan) / 2);
+				clip.setVolume(clip.options.volume * channel.volume);
+				if(clip.paused !== pause){
+					if(pause){
+						clip.pause();
+					} else {
+						// if it cannot resume, it never started playing.
+						if(!clip.resume()){
+							clip.play(clip.options);
+						}
+					}
+				}
+			},
+			
 			stopAudio: function(audioId, playthrough){
 				var i = 0,
 				clips = this.activeAudioClips,
