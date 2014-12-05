@@ -1,0 +1,88 @@
+/*
+ * This CSS file defines button styles for the initial play button and the in-game control buttons.
+ *
+ * The game engine can optionally scale the pixel value of "em", so ems are used in order to scale buttons to match the game's size. 
+ */
+
+/* This is the main menu play button */
+.audio-clip {
+position: relative;
+width: 15em;
+height: 1.4em;
+text-align: left;
+background: #660000;
+padding: 0.2em 0.2em 0.2em 0.8em;
+margin: 0.6em;
+line-height: 1.4em;
+color: white;
+font-family: arial;
+font-size: 0.4em;
+border-radius: 1em;
+box-shadow: 0 0 1em #000000;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+-o-user-select: none;
+user-select: none;
+}
+
+.audio-clip.audio-playing {
+background: #006600;
+}
+
+.audio-clip.audio-paused {
+background: #fa0;
+}
+
+.audio-clip > div {
+	display: inline-block;
+	font-size: 0.6em;
+	padding: 0 0 0 1em;
+	color: #ffffcc;
+}
+
+.audio-clip > .play, .audio-clip > .unpause {
+float: right;
+cursor: pointer;
+border-radius: 1em;
+background: #080;
+box-shadow: 0 0 0.5em #000;
+text-align: center;
+padding: 0;
+width: 2em;
+height: 2em;
+margin: 0.1em;
+line-height: 2em;
+}
+
+.audio-clip > .stop {
+float: right;
+cursor: pointer;
+border-radius: 1em;
+background: #800;
+box-shadow: 0 0 0.5em #000;
+text-align: center;
+padding: 0;
+width: 2em;
+height: 2em;
+margin: 0.1em;
+line-height: 2em;
+}
+
+.audio-clip > .pause {
+float: right;
+cursor: pointer;
+border-radius: 1em;
+background: #fa0;
+box-shadow: 0 0 0.5em #000;
+text-align: center;
+padding: 0;
+width: 2em;
+height: 2em;
+margin: 0.1em;
+line-height: 2em;
+}
+
+.audio-clip.audio-playing > .play, .audio-clip.audio-playing > .unpause, .audio-clip.audio-stopped > .stop, .audio-clip.audio-stopped > .unpause, .audio-clip.audio-stopped > .pause, .audio-clip.audio-paused > .play, .audio-clip.audio-paused > .pause {
+	display: none;
+}

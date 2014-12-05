@@ -31,6 +31,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	// This is a list of all the components in the engine. This list must be updated as new components are added. Also update "game/default.js".
     	var components = ["asset-loader"
    	                  , "audio"
+	                  , "audio-mixer"
    	                  , "broadcast-events"
    	                  , "camera"
    	                  , "camera-follow-me"

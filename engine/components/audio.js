@@ -194,6 +194,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 
 				if(!this.mixer.paused && !this.channelSettings.paused && !audio.options.paused){
 					audio.play(audio.options);
+				} else {
+					audio.options.unplayed = true;
 				}
 				this.setChannelSettings(audio);
 				
@@ -387,8 +389,14 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			});
 	 		},
 	 	    
-	 		"audio-stop": function(audioId){
-	 			this.stopAudio(audioId);
+	 		"stop-audio": function(audioId){
+	 			if(!audioId){
+		 			this.stopAudio();
+	 			} else if(typeof audioId === 'string'){
+		 			this.stopAudio(audioId);
+	 			} else {
+		 			this.stopAudio(audioId.audioId || false, audioId.playthrough || false);
+	 			}
 	 		},
 	 	    
 	 		"mute-audio": function(audioId){
@@ -444,6 +452,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}	 			
 	 		},
 
+	 		"audio-stop":        function(){console.warn(this.owner.type + " - audio component: The 'audio-stop' event has been deprecated. Use 'stop-audio' instead.");},
 	 		"audio-mute-toggle": function(){console.warn(this.owner.type + " - audio component: The 'audio-mute-toggle' event has been deprecated. Use 'toggle-mute' instead.");},
 	 		"audio-mute":        function(){console.warn(this.owner.type + " - audio component: The 'audio-mute' event has been deprecated. Use 'mute-audio' instead.");},
 	 		"audio-unmute":      function(){console.warn(this.owner.type + " - audio component: The 'audio-unmute' event has been deprecated. Use 'unmute-audio' instead.");},
@@ -453,7 +462,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		
 		methods: {
 			handleClip: function(audioId, handler){
-				if (audioId) {
+				if (typeof audioId === 'string') {
 					this.getClipById(audioId, handler);
 				} else {
 		 			this.getAllClips(handler);
@@ -496,11 +505,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 					if(pause){
 						clip.pause();
 					} else {
-						// if it cannot resume, it never started playing.
-						if(!clip.resume()){
-							clip.play(clip.options);
-						}
+						clip.resume();
 					}
+				} else if(!pause && clip.options.unplayed){
+					delete clip.options.unplayed;
+					clip.play(clip.options);
 				}
 			},
 			

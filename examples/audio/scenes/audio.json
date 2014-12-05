@@ -1,0 +1,607 @@
+{
+    "id": "audio",
+	"layers":[{
+        "id": "layer",
+        "components": [
+            {"type": "handler-logic"},
+            {"type": "handler-render-dom"},
+            {"type": "entity-container", 
+                "entities": [{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud1",
+                        "updateClassName": true,
+                        "innerHTML": "<div>Event-based</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud1",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": "stop-audio",
+                        "ontouchend": "stop-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud1",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "play",
+                        "ontouchend": "play"
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud1",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud1",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "play": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-audio": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "audioMap": {
+                            "play": "short"
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud2",
+                        "updateClassName": true,
+                        "innerHTML": "<div>Event-based, loops</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud2",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": "stop-audio",
+                        "ontouchend": "stop-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud2",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "play", "message": {"loop": 5000}},
+                        "ontouchend": {"event": "play", "message": {"loop": 5000}},
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud2",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud2",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "play": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-audio": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "audioMap": {
+                            "play": "long"
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud3",
+                        "updateClassName": true,
+                        "innerHTML": "<div>Event-based, loops, plays through</div>",
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud3",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": {"event": "stop-audio", "message": {"playthrough": true}},
+                        "ontouchend": {"event": "stop-audio", "message": {"playthrough": true}}
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud3",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "play", "message": {"loop": 5000}},
+                        "ontouchend": {"event": "play", "message": {"loop": 5000}}
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud3",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud3",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "play": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-audio": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "audioMap": {
+                            "play": "long"
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud4",
+                        "updateClassName": true,
+                        "innerHTML": "<div>Event-based, half-volume</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud4",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": "stop-audio",
+                        "ontouchend": "stop-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud4",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "play", "message": {"loop": 5000, "volume": 0.5}},
+                        "ontouchend": {"event": "play", "message": {"loop": 5000, "volume": 0.5}}
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud4",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud4",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "play": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-audio": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "audioMap": {
+                            "play": "long"
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud5",
+                        "updateClassName": true,
+                        "innerHTML": "<div>Event-based, panned right</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud5",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": "stop-audio",
+                        "ontouchend": "stop-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud5",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "play", "message": {"loop": 5000, "pan": 1}},
+                        "ontouchend": {"event": "play", "message": {"loop": 5000, "pan": 1}}
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud5",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud5",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "play": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-audio": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "audioMap": {
+                            "play": "long"
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud6",
+                        "updateClassName": true,
+                        "innerHTML": "<div>Event-based, alternate channel</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud6",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": "stop-audio",
+                        "ontouchend": "stop-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud6",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "play", "message": {"loop": 5000}},
+                        "ontouchend": {"event": "play", "message": {"loop": 5000}}
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud6",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud6",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "play": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-audio": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "channel": "alternate",
+                        "audioMap": {
+                            "play": "long"
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-clip",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "aud7",
+                        "updateClassName": true,
+                        "innerHTML": "<div>State-based</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "stop",
+                        "parent": "aud7",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": "stop-state",
+                        "ontouchend": "stop-state"
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "aud7",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "start-state",
+                        "ontouchend": "start-state"
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "aud7",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": "unpause-audio",
+                        "ontouchend": "unpause-audio"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "aud7",
+                        "innerHTML": "II",
+                        "onmouseup": "pause-audio",
+                        "ontouchend": "pause-audio"
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            },
+                            "start-state": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false,
+                                "jumping": true
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            },
+                            "stop-state": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true,
+                                "jumping": false
+                            },
+                            "clip-complete": {
+                                "audio-paused": false,
+                                "audio-playing": false,
+                                "audio-stopped": true
+                            }
+                        }
+                    },{
+                        "type": "audio",
+                        "audioMap": {
+                            "jumping,audio-playing": {"sound": "long", "loop": 5000}
+                        }
+                    }],
+                    "properties":{}
+                },{
+                    "id": "audio-mixer",
+                    "components":[{
+                        "type": "dom-element",
+                        "className": "audio-clip",
+                        "id": "mix",
+                        "updateClassName": true,
+                        "innerHTML": "Audio Mixer<div>default channel</div>"
+                    },{
+                        "type": "dom-element",
+                        "className": "pause",
+                        "parent": "mix",
+                        "innerHTML": "&#9724;",
+                        "onmouseup": {"event": "pause-audio", "message": "default"},
+                        "ontouchend": {"event": "pause-audio", "message": "default"}
+                    },{
+                        "type": "dom-element",
+                        "className": "play",
+                        "parent": "mix",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "unpause-audio", "message": "default"},
+                        "ontouchend": {"event": "unpause-audio", "message": "default"}
+                    },{
+                        "type": "dom-element",
+                        "className": "unpause",
+                        "parent": "mix",
+                        "innerHTML": "&#9658;",
+                        "onmouseup": {"event": "unpause-audio", "message": "default"},
+                        "ontouchend": {"event": "unpause-audio", "message": "default"}
+                    },{
+                        "type": "logic-state-machine",
+                        "inputs": {
+                            "load": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "unpause-audio": {
+                                "audio-paused": false,
+                                "audio-playing": true,
+                                "audio-stopped": false
+                            },
+                            "pause-audio": {
+                                "audio-paused": true,
+                                "audio-playing": false,
+                                "audio-stopped": false
+                            }
+                        }
+                    },{
+                        "type": "audio-mixer"
+                    }],
+                    "properties":{}
+                }]
+            }
+        ]
+    }]
+}

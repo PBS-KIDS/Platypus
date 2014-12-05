@@ -167,7 +167,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 	 	    
-	 		"unpause-audio": function(extent){
+	 		"unpause-audio": function(channelId){
 	 			var channel = null;
 	 			
 	 			if(channelId){

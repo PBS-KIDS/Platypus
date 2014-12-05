@@ -1,0 +1,13 @@
+/*
+ * 
+ */
+{
+	"id": "title-screen",
+	"components":[
+		{
+		    "type": "dom-element",
+		    "element": "div",
+		    "className": "title-screen"
+        }
+	]
+}

@@ -172,7 +172,7 @@
 			   if(engineComponent(component)){
 				   file = {
 				       id: component,
-				       src: '../engine/components/' + component + '.js'
+				       src: engineLocation + 'components/' + component + '.js'
 				   };
 				   componentList.push(file);
 				   checkDependencies(file);
@@ -347,7 +347,16 @@
     source     = game.source,
     dependencyList = source['includes']  = source['includes'] || ['../engine/main.js'],
     componentList = source['components'] = source['components'] || [],
-    sectionId  = '';
+    sectionId  = '',
+    engineLocation = '../engine/';
+    
+    // Update engine location if necessary
+    for(var i = 0; i < dependencyList.length; i++){
+    	if(dependencyList[i].indexOf('engine/main.js') > -1){
+    		engineLocation = dependencyList[i].replace('main.js', '');
+    		break;
+    	}
+    }
     
     print('Composing full config.json from /game/config.json.');
     
