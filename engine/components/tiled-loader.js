@@ -153,8 +153,11 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				layerCollides  = true,
 				numberProperty = false,
 				convertImageLayer = function(imageLayer){
-					var tileLayer = {
-						data:   [1],
+					var i     = 0,
+					dataCells = 0,
+					props     = imageLayer.properties || {},
+					tileLayer = {
+						data:   [],
 						image:  '',
 						height: 1,
 						name:   imageLayer.name,
@@ -164,8 +167,23 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 						tilewidth: tileWidth,
 						x:      imageLayer.x,
 						y:      imageLayer.y,
-						properties: imageLayer.properties || {}
+						properties: props
 					};
+					
+					if(props.repeat){
+						tileLayer.width  = +props.repeat;
+						tileLayer.height = +props.repeat;
+					}
+					if(props['repeat-x']){
+						tileLayer.width  = +props['repeat-x'];
+					}
+					if(props['repeat-y']){
+						tileLayer.height = +props['repeat-y'];
+					}
+					dataCells = tileLayer.width * tileLayer.height;
+					for (i = 0; i < dataCells; i++){
+						tileLayer.data.push(1);
+					}
 					
 					if(platformer.assets[imageLayer.name]){ // Prefer to have name in tiled match image id in game
 						tileLayer.image      = platformer.assets[imageLayer.name];
