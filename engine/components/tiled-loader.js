@@ -1,3 +1,6 @@
+/*--------------------------------------------------
+ *   tiled-loader - ../engine/components/tiled-loader.js
+ */
 /**
 # COMPONENT **tiled-loader**
 This component is attached to a top-level entity (loaded by the [[Scene]]) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor] [link1] and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
@@ -152,6 +155,9 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				properties     = null,
 				layerCollides  = true,
 				numberProperty = false,
+				polyPoints		= null,
+				fallbackWidth   = 0,
+				fallbackHeight  = 0,
 				convertImageLayer = function(imageLayer){
 					var i     = 0,
 					dataCells = 0,
@@ -429,40 +435,137 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 									properties[x] = property;
 								}
 							}
-							widthOffset  = properties.width  = (entity.width  || tileWidth)  * this.unitsPerPixel;
-							heightOffset = properties.height = (entity.height || tileHeight) * this.unitsPerPixel;
-							if (entityType && platformer.game.settings.entities[entityType] && platformer.game.settings.entities[entityType].properties) {
-								properties.width  = platformer.game.settings.entities[entityType].properties.width  || properties.width;
-								properties.height = platformer.game.settings.entities[entityType].properties.height || properties.height;
-							}
+							
+							if (entity.polygon || entity.polyline) {
+								//Figuring out the width of the polygon and shifting the origin so it's in the top-left.
+								smallestX = Infinity;
+								largestX = -Infinity;
+								smallestY = Infinity;
+								largestY = -Infinity;
+								
+								polyPoints = null;
+								if (entity.polygon) {
+									polyPoints = entity.polygon;
+								} else if (entity.polyline) {
+									polyPoints = entity.polyline;
+								}
+								
+								for (x = 0; x < polyPoints.length; x++) {
+									if (polyPoints[x].x > largestX) {
+										largestX = polyPoints[x].x;
+									}
+									if (polyPoints[x].x < smallestX) {
+										smallestX = polyPoints[x].x;
+									}
+									if (polyPoints[x].y > largestY) {
+										largestY = polyPoints[x].y;
+									}
+									if (polyPoints[x].y < smallestY) {
+										smallestY = polyPoints[x].y;
+									}
+								}
+								properties.width  = largestX - smallestX;
+								properties.height = largestY - smallestY;
+								properties.x      = entity.x + smallestX;
+								properties.y      = entity.y + smallestY;
+								
+								widthOffset  = 0;
+								heightOffset = 0;
+								properties.width  = properties.width  * this.unitsPerPixel;
+								properties.height = properties.height * this.unitsPerPixel;
+								
+								properties.x = properties.x * this.unitsPerPixel;
+								properties.y = properties.y * this.unitsPerPixel;
+								
+								if (entity.polygon) {
+									properties.shape = {};
+									properties.shape.type = 'polygon';
+									properties.shape.points = [];
+									for (var p = 0; p < polyPoints.length; p++) {
+										properties.shape.points.push({"x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel), "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel)});  
+									}
+								} else if (entity.polyline) {
+									properties.shape = {};
+									properties.shape.type = 'polyline';
+									properties.shape.points = [];
+									for (var p = 0; p < polyPoints.length; p++) {
+										properties.shape.points.push({"x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel), "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel)});  
+									}
+								}
+							} else {
+								fallbackWidth   = tileWidth  * this.unitsPerPixel;
+								fallbackHeight  = tileHeight * this.unitsPerPixel;
+								widthOffset  = 0;
+								heightOffset = 0;
+								properties.width  = (entity.width  || 0) * this.unitsPerPixel;
+								properties.height = (entity.height || 0) * this.unitsPerPixel;
 
-							properties.x = entity.x * this.unitsPerPixel;
-							if(this.entityPositionX === 'left'){
-								properties.regX = 0;
-							} else if(this.entityPositionX === 'center'){
-								properties.regX = properties.width / 2;
-								properties.x += widthOffset / 2;
-							} else if(this.entityPositionX === 'right'){
-								properties.regX = properties.width;
-								properties.x += widthOffset;
-							}
+								if (entityType && platformer.game.settings.entities[entityType] && platformer.game.settings.entities[entityType].properties) {
+									if (!properties.width) {
+										properties.width  = platformer.game.settings.entities[entityType].properties.width  || 0;
+										widthOffset = fallbackWidth;
+									}
+									if (!properties.height) {
+										properties.height = platformer.game.settings.entities[entityType].properties.height || 0;
+										heightOffset = fallbackHeight;
+									}
+								}
 
-							properties.y = entity.y * this.unitsPerPixel;
-							if(typeof entity.gid === 'undefined'){
-								properties.y += properties.height;
-							}
-							if(this.entityPositionY === 'bottom'){
-								properties.regY = properties.height;
-							} else if(this.entityPositionY === 'center'){
-								properties.regY = properties.height / 2;
-								properties.y -= heightOffset / 2;
-							} else if(this.entityPositionY === 'top'){
-								properties.regY = 0;
-								properties.y -= heightOffset;
-							}
+								if (!properties.width) {
+									properties.width  = fallbackWidth;
+								}
+								if (!properties.height) {
+									properties.height = fallbackHeight;
+								}
+								widthOffset  = widthOffset  || properties.width;
+								heightOffset = heightOffset || properties.height;
 
-							properties.scaleX = this.imagesScale;//this.unitsPerPixel;
-							properties.scaleY = this.imagesScale;//this.unitsPerPixel;
+								properties.x = entity.x * this.unitsPerPixel;
+								properties.y = entity.y * this.unitsPerPixel;
+								
+								if(this.entityPositionX === 'left'){
+									properties.regX = 0;
+								} else if(this.entityPositionX === 'center'){
+									properties.regX = properties.width / 2;
+									properties.x += widthOffset / 2;
+								} else if(this.entityPositionX === 'right'){
+									properties.regX = properties.width;
+									properties.x += widthOffset;
+								}
+
+								if(typeof entity.gid === 'undefined'){
+									properties.y += properties.height;
+								}
+								if(this.entityPositionY === 'bottom'){
+									properties.regY = properties.height;
+								} else if(this.entityPositionY === 'center'){
+									properties.regY = properties.height / 2;
+									properties.y -= heightOffset / 2;
+								} else if(this.entityPositionY === 'top'){
+									properties.regY = 0;
+									properties.y -= heightOffset;
+								}
+
+								if (entity.ellipse) {
+									properties.shape = {};
+									properties.shape.type = 'ellipse';
+									properties.shape.width = properties.width * this.unitsPerPixel;
+									properties.shape.height = properties.height * this.unitsPerPixel;
+								} else if (entity.width && entity.height) {
+									properties.shape = {};
+									properties.shape.type = 'rectangle';
+									properties.shape.width = properties.width * this.unitsPerPixel;
+									properties.shape.height = properties.height * this.unitsPerPixel;
+								}
+							}
+							
+							if (platformer.game.settings.entities[entityType].properties) {
+								properties.scaleX = this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleX || 1);//this.unitsPerPixel;
+								properties.scaleY = this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleY || 1);//this.unitsPerPixel;
+							} else {
+								properties.scaleX = this.imagesScale;
+								properties.scaleY = this.imagesScale;
+							}
 							properties.layerZ = this.layerZ;
 							
 							//Setting the z value. All values are getting added to the layerZ value.

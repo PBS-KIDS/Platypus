@@ -133,11 +133,19 @@ A component that causes the object to move according to a specified gravity.
 					this.owner.dx += this.vX * delta;
 					this.owner.dy += this.vY * delta;
 					
-					if(this.vX && this.maxVelocityX && (this.owner.dx > this.maxVelocityX)){
-						this.owner.dx = this.maxVelocityX;
+					if(this.vX && this.maxVelocityX) {
+						if((this.vX > 0) && (this.owner.dx > this.maxVelocityX)){
+							this.owner.dx = this.maxVelocityX;
+						} else if((this.vX < 0) && (this.owner.dx < -this.maxVelocityX)){
+							this.owner.dx = -this.maxVelocityX;
+						}
 					}
-					if(this.vY && this.maxVelocityY && (this.owner.dy > this.maxVelocityY)){
-						this.owner.dy = this.maxVelocityY;
+					if(this.vY && this.maxVelocityY){
+						if((this.vY > 0) && (this.owner.dy > this.maxVelocityY)){
+							this.owner.dy = this.maxVelocityY;
+						} else if((this.vY < 0) && (this.owner.dy < -this.maxVelocityY)){
+							this.owner.dy = -this.maxVelocityY;
+						}
 					}
 				}
 				

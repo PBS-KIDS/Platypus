@@ -109,7 +109,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	fileloadfunc = function (event) {
 		    		var item = event.item,
 		    		data     = item.data,
-		    		result   = item.tag;
+		    		result   = event.result;
 		    		
 		    		if(event.item.type == "image"){
 		    			if(optimizeImages && (scale !== 1)){

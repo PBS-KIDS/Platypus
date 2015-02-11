@@ -130,11 +130,14 @@ This component allows certain messages to trigger new messages at a later time. 
 					
 					if(this.queueTimes[i] <= 0){
 						this.owner.trigger(this.queue[i].event, this.queue[i].message);
-						if(this.queue[i].repeat){
-							this.queueTimes[i] += this.queue[i].delay;
-						} else {
-							this.queueTimes.splice(i,1);
-							this.queue.splice(i,1);
+						
+						if(this.queue[i]){ // Have to check this in case the delayed event matches the cancellation event which would cause this queued message to already be removed.
+							if(this.queue[i].repeat){
+								this.queueTimes[i] += this.queue[i].delay;
+							} else {
+								this.queueTimes.splice(i,1);
+								this.queue.splice(i,1);
+							}
 						}
 					}
 				}

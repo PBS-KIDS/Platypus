@@ -384,8 +384,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			var self = this;
 	 			
 	 			this.handleClip(audioId, function(clip){
-	 				clip.options.mute = !clip.options.mute;
-	 				self.setChannelSettings(clip);
+	 				if(clip){
+		 				clip.options.mute = !clip.options.mute;
+		 				self.setChannelSettings(clip);
+	 				}
 	 			});
 	 		},
 	 	    
@@ -403,8 +405,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			var self = this;
 	 			
 	 			this.handleClip(audioId, function(clip){
-	 				clip.options.mute = true;
-	 				self.setChannelSettings(clip);
+	 				if(clip){
+		 				clip.options.mute = true;
+		 				self.setChannelSettings(clip);
+	 				}
 	 			});
 	 		},
 	 	    
@@ -412,8 +416,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			var self = this;
 	 			
 	 			this.handleClip(audioId, function(clip){
-	 				clip.options.mute = false;
-	 				self.setChannelSettings(clip);
+	 				if(clip){
+		 				clip.options.mute = false;
+		 				self.setChannelSettings(clip);
+	 				}
 	 			});
 	 		},
 	 	    
@@ -421,8 +427,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			var self = this;
 	 			
 	 			this.handleClip(audioId, function(clip){
-	 				clip.options.paused = true;
-	 				self.setChannelSettings(clip);
+	 				if(clip){
+		 				clip.options.paused = true;
+		 				self.setChannelSettings(clip);
+	 				}
 	 			});
 	 		},
 	 	    
@@ -430,8 +438,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			var self = this;
 	 			
 	 			this.handleClip(audioId, function(clip){
-	 				clip.options.paused = false;
-	 				self.setChannelSettings(clip);
+	 				if(clip){
+		 				clip.options.paused = false;
+		 				self.setChannelSettings(clip);
+	 				}
 	 			});
 	 		},
 	 		

@@ -29,34 +29,16 @@ A component that handles updating ai components. Each tick it calls all the enti
 	return platformer.createComponentClass({
 		id: 'handler-ai',
 		constructor: function(definition){
-			this.entities = [];
 		},
 		events:{
-			"child-entity-added": function(entity){
-				var messageIds = entity.getMessageIds();
-				
-				for (var x = 0; x < messageIds.length; x++)
-				{
-					if (messageIds[x] == 'handle-ai')
-					{
-						this.entities.push(entity);
-						break;
-					}
-				}
-			},
-			"tick": function(obj){
-				for (var x = this.entities.length - 1; x > -1; x--)
-				{
-					if(!this.entities[x].trigger('handle-ai', obj))
-					{
-						this.entities.splice(x, 1);
-					}
+			"tick": function(message){
+				if(this.owner.triggerEventOnChildren){
+					this.owner.triggerEventOnChildren('handle-ai', message);
 				}
 			}
 		},
 		methods: {
 			destroy: function(){
-				this.entities.length = 0;
 			}
 		}
 	});

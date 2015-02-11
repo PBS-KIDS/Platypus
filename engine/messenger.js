@@ -91,7 +91,7 @@ platformer.Messenger = (function(){
 			}
 			return count;
 		} else if (events.event) {
-			return this.triggerEvent(events.event, events.message || message, debug);
+			return this.triggerEvent(events.event, events.message || message, events.debug || debug);
 		} else {
 			console.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.', events);
 			return 0;

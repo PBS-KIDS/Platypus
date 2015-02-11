@@ -35,20 +35,60 @@ A component which changes the scene when activated. When the portal receives an 
 	return platformer.createComponentClass({
 		id: 'logic-portal',
  		constructor: function(definition){
+ 			var entrants = definition.entrants || definition.entrant;
+ 			
 			this.destination = this.owner.destination || definition.destination;
-			this.activated = false;
-			this.used = false; 
+			this.used = false;
+			this.ready = false;
+			this.wasReady = false;
+			if(entrants){
+				this.entrants = {};
+				if(Array.isArray(entrants)){
+					for (var i = 0; i < entrants.length; i++){
+						this.entrants[entrants[i]] = false;
+					}
+				} else {
+					this.entrants[entrants] = false;
+				}
+			}
 		},
 		events:{
 			"handle-logic": function(){
 				if (!this.used && this.activated){
-					this.owner.trigger("new-scene", {scene: this.destination});
+					this.owner.trigger("port-" + this.destination);
 					this.used = true;
+				} else if(this.ready && !this.wasReady) {
+					this.owner.triggerEvent('portal-waiting');
+					this.wasReady = true;
+				} else if(this.wasReady && !this.ready) {
+					this.owner.triggerEvent('portal-not-waiting');
+					this.wasReady = false;
 				}
+				
+				this.owner.state.occupied = false;
+				this.owner.state.ready = true;
+				
+				//Reset portal for next collision run.
+				for (var i in this.entrants){
+					if(this.entrants[i]){
+						this.owner.state.occupied = true;
+						this.entrants[i] = false;
+					} else {
+						this.owner.state.ready = false;
+					}
+				}
+				this.ready = false;
 			},
-			"occupied-portal": function(message){
-				var entity = message.entity; 
-				entity.trigger('portal-waiting', this.owner);
+			"occupied-portal": function(collision){
+				this.entrants[collision.entity.type] = true;
+				
+				for (var i in this.entrants){
+					if(!this.entrants[i]){
+						return ;
+					}
+				}
+				
+				this.ready = true;
 			},
 			"activate-portal": function(){
 				this.activated = true;

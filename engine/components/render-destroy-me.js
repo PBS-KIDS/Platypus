@@ -35,7 +35,9 @@ This component will destroy the entity once an animation has finished. This is u
 		},
 
 		events: {// These are messages that this component listens for
-			"animation-ended": function(id){
+			"animation-ended": function(animation){
+				var id = animation.name;
+				
 				if(this.animationIds){
 					for (var x = 0; x < this.animationIds.length; x++) {
 						if (this.animationIds[x] == id) {

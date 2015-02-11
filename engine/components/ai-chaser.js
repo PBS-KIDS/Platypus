@@ -34,7 +34,7 @@ This component acts as a simple AI that will chase another entity.
 		id: 'ai-chaser', 
 		
 		constructor: function(definition){
-			this.target = null;
+			this.target = this.owner.target || null;
 			this.piOverTwo = Math.PI / 2;
 			this.prevAngle = 0;
 			this.chasing = true;

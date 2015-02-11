@@ -456,6 +456,42 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				for(var k = 0; k < this.prevShapes.length; k++) {
 					this.prevShapes[k].setXWithEntityX(x);
 				}
+			},
+			
+			destroy: function(){
+				this.owner.parent.trigger('remove-collision-entity', this.owner);
+
+				this.owner.collides = false;
+
+				delete this.aabb;
+				delete this.prevAABB;
+				
+				for(var i = 0; i < this.owner.collisionTypes.length; i++){
+					if(this.owner.collisionTypes[i] === this.collisionType){
+						this.owner.collisionTypes.splice(i,1);
+						break;
+					}
+				}
+				if(this.owner.solidCollisions[this.collisionType]){
+					this.owner.solidCollisions[this.collisionType].length = 0;
+					delete this.owner.solidCollisions[this.collisionType];
+				}
+				for(var i in this.owner.solidCollisions){
+					this.owner.collides = true;
+				}
+				if(this.owner.softCollisions[this.collisionType]){
+					this.owner.softCollisions[this.collisionType].length = 0;
+					delete this.owner.softCollisions[this.collisionType];
+				}
+				delete this.owner.collisionFunctions[this.collisionType];
+				
+				this.shapes.length = 0;
+				this.prevShapes.length = 0;
+				delete this.entities;
+
+				if(this.owner.collisionTypes.length){
+					this.owner.parent.trigger('add-collision-entity', this.owner);
+				}
 			}
 		}
 	});

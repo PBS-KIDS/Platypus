@@ -50,7 +50,8 @@ This component creates an entity and propels it away. This is useful for casting
 				y:0,
 				z:0,
 				dx: 0,
-				dy: 0
+				dy: 0,
+				spawner: this.owner
 			};
 			
 			var prop;
@@ -113,9 +114,14 @@ This component creates an entity and propels it away. This is useful for casting
 						} else {
 							delete this.spawneeProperties.dx;
 						}
-					}
+					} else {
+						delete this.spawneeProperties.dx;
+						delete this.spawneeProperties.dy;
+					} 
 					
-					this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.propertiesContainer)));
+					if(this.parent){
+						this.owner.triggerEvent('entity-created', this.parent.addEntity(new platformer.Entity(this.entityClass, this.propertiesContainer)));
+					}
 				}
 				
 				if(state[this.stateName] !== this.firing){
@@ -126,6 +132,8 @@ This component creates an entity and propels it away. This is useful for casting
 			},
 			"spawn": function(value){
 				this.firing = !value || (value.pressed !== false);
+				
+				this.parent = this.owner.parent; //proofing against this entity being destroyed prior to spawned entity. For example, when a destroyed entity spawns a drop.
 			}
 		}
 	});

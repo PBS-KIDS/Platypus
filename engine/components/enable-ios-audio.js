@@ -29,12 +29,13 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 			total = 0,
 			percent = 0;
 			
-			if(!tag && audio.tag){
+			if(!tag && audio._playbackResource){
 				// The audio.tag reference seems to disappear once the audio is paused, so we hold on to it for progress checking.
-				tag = audio.tag;
+				tag = audio._playbackResource;
 				if(tag.src !== tag.id){ // This is a workaround for a bug in CreateJS: HTMLAudioPlugin, _handleTagLoad()
 					tag.id = tag.src;
 				}
+				document.title = tag.id + ' ' + platformer.settings.supports.audioAPI;
 			}
 				
 			if(tag){
@@ -90,7 +91,13 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 		    	if(audioPath){
 			    	createjs.Sound.removeSound(audioId);
 			    	createjs.Sound.registerSound(audioPath, audioId, 1);
-					setupLoader(overlay, createjs.Sound.play(audioId));
+			    	if(platformer.settings.supports.audioAPI){
+			    		if(callback){
+		        			callback();
+		    			}
+			    	} else {
+						setupLoader(overlay, createjs.Sound.play(audioId));
+			    	}
 		    	} else {
 		    		console.warn('Component "enable-ios-audio": Invalid audio path.');
 		    		if(callback){
@@ -115,6 +122,8 @@ This component enables JavaScript-triggered audio play-back on iOS devices by ov
 		id: 'enable-ios-audio',
 		constructor: function(definition){
 			var self = this;
+			
+			iOSAudioEnabled = iOSAudioEnabled || !platformer.settings.supports.iOS || platformer.settings.supports.audioAPI;
 			
 			if(!iOSAudioEnabled){
 				iOSAudioEnabled = true;

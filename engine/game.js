@@ -96,6 +96,7 @@ platformer.Game = (function(){
 
 		// If aspect ratio of game area should be maintained on resizing, create new callback to handle it
 		if(definition.global.aspectRatio){
+			
 			callback = function(eventId, event){
 				var element = innerRootElement;
 				var ratio   = definition.global.aspectRatio;
@@ -170,12 +171,20 @@ platformer.Game = (function(){
 	
 	proto.loadScene = function(sceneId, transition, persistantData, preloading){
 		var self = this;
+
+		if(this.leavingScene){
+			this.leavingScene.destroy();
+		}
+		
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
 		
 		if(preloading){
 			this.loadNextScene(sceneId);
 			return;
+		} else if(this.loadedScene){
+			this.loadedScene.destroy();
+			this.loadedScene = null;
 		}
 		
 		switch(transition){
@@ -197,6 +206,37 @@ platformer.Game = (function(){
 				self.rootElement.removeChild(element);
 				element = undefined;
 			});
+			break;
+		case 'crossfade':
+			var root = null,
+			element  = null,
+			callSet  = false,
+			loaded   = this.loaded; // This variable is a sanity check to cause an abort if another scene load is started during the crossfade.
+			
+			if(!this.loaded) {
+				self.loadNextScene(sceneId, persistantData);
+				loaded = this.loaded;
+			}
+			root = this.loadedScene.layers;
+			for(var i = 0; i < root.length; i++){
+				if(root[i].element){
+					element = root[i].element.style;
+					element.opacity = '0';
+					if(!callSet){
+						callSet = true;                // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
+						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(function(t){
+							if(loaded === self.loaded){
+								self.completeSceneTransition(persistantData);
+							}
+						});
+					} else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
+						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000);
+					}
+				}
+			}
+			if(!callSet){ // nothing to crossfade so we just finish loading the scene.
+				self.completeSceneTransition(persistantData);
+			}
 			break;
 		case 'instant':
 		default:
@@ -226,18 +266,20 @@ platformer.Game = (function(){
 	proto.completeSceneTransition = function(persistantData){
 		var sceneId = this.loaded;
 		
-		this.currentScene = this.loadedScene;
-		this.loadedScene  = null;
-		
-		this.loaded = false;
-		this.inTransition = false;
-		if(this.leavingScene){
-			this.leavingScene.destroy();
-			this.leavingScene = false;
-		}
+		if(this.loadedScene){
+			this.currentScene = this.loadedScene;
+			this.loadedScene  = null;
+			
+			this.loaded = false;
+			this.inTransition = false;
+			if(this.leavingScene){
+				this.leavingScene.destroy();
+				this.leavingScene = false;
+			}
 
-		console.log('Scene live: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
-		this.currentScene.trigger('scene-live', persistantData);
+			console.log('Scene live: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
+			this.currentScene.trigger('scene-live', persistantData);
+		}
 	};
 	
 	proto.addEventListener = function(element, event, callback){

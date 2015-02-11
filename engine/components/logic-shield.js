@@ -60,7 +60,7 @@ This component creates an entity and connects it with the current entity. This i
 			
 			this.offsetX = definition.offsetX || 0;
 			this.offsetY = definition.offsetY || 0;
-			this.offsetZ = definition.offsetZ || 0;
+			this.offsetZ = definition.offsetZ || 0.01;
 			
 			this.shield = null;
 			this.wieldShield = false;
@@ -141,6 +141,7 @@ This component creates an entity and connects it with the current entity. This i
 					this.owner.parent.removeEntity(this.shield);
 					this.shield = null;
 				}
+				this.wieldShield = false;
 			}			
 		}
 	});

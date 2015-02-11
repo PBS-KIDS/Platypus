@@ -167,8 +167,8 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 			
 			//The dimensions of the camera in the game world
 			this.world = {
-				viewportWidth:       definition.width       || 0,
-				viewportHeight:      definition.height      || 0,
+				viewportWidth:       this.owner.width  || definition.width       || 0,
+				viewportHeight:      this.owner.height || definition.height      || 0,
 				viewportLeft:        definition.left        || 0,
 				viewportTop:         definition.top         || 0,
 				viewportOrientation: definition.orientation || 0
@@ -378,11 +378,12 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 				this.follow(def);
 			},
 			"shake": function(shakeDef) {
-				var xMag = shakeDef.xMagnitude || 0,
-					yMag = shakeDef.yMagnitude || 0,
-					xFreq = shakeDef.xFrequency || 0, //Cycles per second
-					yFreq = shakeDef.yFrequency || 0, //Cycles per second
-					time = shakeDef.time || 0;
+				var def = shakeDef || {},
+					xMag    = def.xMagnitude || 0,
+					yMag    = def.yMagnitude || 0,
+					xFreq   = def.xFrequency || 0, //Cycles per second
+					yFreq   = def.yFrequency || 0, //Cycles per second
+					time    = def.time || 0;
 				
 				this.viewportUpdate = true;
 				

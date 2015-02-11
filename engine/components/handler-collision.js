@@ -148,7 +148,9 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 		
 		events:{
 			"child-entity-added": function(entity){
-				this.addCollisionEntity(entity);
+				if(!entity.collideOff){
+					this.addCollisionEntity(entity);
+				}
 			},
 			
 			"add-collision-entity": function(entity){
@@ -303,7 +305,8 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 						
 						aabbLogic.setAll(x, y, width, height);
 						
-						if(this.updateLiveList || !aabbCollision.contains(aabbLogic)){ //if the camera has not moved beyond the original buffer, we do not continue these calculations
+						// Removing this line since it allows logic to run without collision turned on. Not certain why, but can turn this back on and trace down the issue if optimization is necessary. - DDD 12/31/2014
+						//if(this.updateLiveList || !aabbCollision.contains(aabbLogic)){ //if the camera has not moved beyond the original buffer, we do not continue these calculations
 							this.updateLiveList = false;
 	
 							all = this.allEntitiesLive;
@@ -364,7 +367,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 									}
 								}
 							}
-						}
+						//}
 					}
 				};
 			})(),
@@ -594,7 +597,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 					var terrain = this.getWorldTerrain(),
 					solidCollisions = entityOrGroup.getSolidCollisions();
 					
-					if(!entityOrGroup.jumpThrough || (entityDeltaY >= 0)){ //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
+//					if(!entityOrGroup.jumpThrough || (entityDeltaY >= 0)){ //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
 	
 						for(var i = 0; i < collisionTypes.length; i++){
 							//Sweep the full movement of each collision type
@@ -645,7 +648,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector2D.js", "../collisio
 							finalMovementInfo = this.resolveCollisionPosition(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY);
 						}
 	
-					}
+//					}
 					
 					return finalMovementInfo;
 				};

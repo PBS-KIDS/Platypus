@@ -180,8 +180,7 @@ platformer.Vector2D = (function(){
 	proto.scalarProjection = function(vectorOrAngle) {
 		var angle = 0;
 		var vector = null;
-		if (typeof vectorOrAngle == "number")
-		{
+		if (typeof vectorOrAngle == "number") {
 			angle = vectorOrAngle;
 		} else {
 			vector = vectorOrAngle;

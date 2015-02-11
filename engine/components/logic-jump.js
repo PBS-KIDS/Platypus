@@ -24,34 +24,39 @@ This component will cause the entity to jump with a certain amount of accelerati
     {
       "type": "logic-jump",
       
-      "accelerationX": 0.2,
-      "accelerationY": -0.07,
-      // Acceleration of the jump. Defaults to -1 for y, 0 for x.
+      "velocityX": 0.2,
+      "velocityY": -0.7,
+      // Initial velocity of the jump. Defaults to -1 for y, 0 for x.
       
-      "time": 500
-      // Optional: Time in milliseconds that the jump can continue being powered by the message input; defaults to 0 which causes instantaneous jumping behavior (and thus should have a substantially larger acceleration than applying jump acceleration over time). Defaults to 0.
+      "velocityCapRatio": 0.5
+      // determines maximum velocity when jump button is released to allow for variable jump heights. Setting this to 1 removes variable height jumping. Defaults to 0.5, making the cap half of jump velocity.
     }
 
+Requires: ["../vector2D.js"]
 */
 (function(){
 	return platformer.createComponentClass({
 		id: 'logic-jump',
 		constructor: function(definition){
-			this.aX = this.owner.accelerationX || definition.accelerationX || 0;
-			this.aY = this.owner.accelerationY || definition.accelerationY;
-			if(typeof this.aY !== 'number'){
-				this.aY = -1;
+			var x = this.owner.velocityX || definition.velocityX || 0,
+			y     = this.owner.velocityY || definition.velocityY || definition.velocity,
+			cap   = definition.velocityCapRatio || 0.5;
+
+			if(typeof y !== 'number'){
+				y = -1;
 			}
+			
+			this.velocity = new platformer.Vector2D(x, y);
+			this.cap      = this.velocity.copy().scale(cap);
+			this.capMagnitude = this.cap.magnitude();
+			this.cap.normalize();
+			
 			if(typeof this.owner.dx !== 'number'){
 				this.owner.dx = 0;
 			}
 			if(typeof this.owner.dy !== 'number'){
 				this.owner.dy = 0;
 			}
-			
-			this.time = definition.time || 0;
-			
-			this.jumpLength = 0;
 			
 			this.jumping = false;
 			this.justJumped = false;
@@ -69,7 +74,8 @@ This component will cause the entity to jump with a certain amount of accelerati
 		
 		events:{
 			"handle-logic": function(resp){
-				var delta   = resp.delta;
+				var v = null,
+				s     = 0;
 				
 				if(this.state.justJumped !== this.justJumped){
 					this.state.justJumped = this.justJumped;
@@ -77,31 +83,26 @@ This component will cause the entity to jump with a certain amount of accelerati
 
 				if(this.justJumped){
 					this.justJumped = false;
-					this.jumpLength = this.time;
 					this.owner.triggerEvent("just-jumped");
+					this.owner.dx = this.velocity.x;
+					this.owner.dy = this.velocity.y;
 				}
 				
 				if(this.state.jumping !== this.jumping){
 					this.state.jumping = this.jumping;
-				}
-
-				if(this.jumping){
-					if(this.time){
-						this.owner.dx += this.aX * delta;
-						this.owner.dy += this.aY * delta;
-						
-						this.jumpLength -= delta;
-						if(this.jumpLength < 0){
-							this.jumping = false;
+					
+					// This handles variable height jumping by adjusting the jump velocity to the pre-determined cap velocity for jump-button release.
+					if(!this.jumping){
+						v = new platformer.Vector2D(this.owner.dx, this.owner.dy);
+						s = v.scalarProjection(this.velocity);
+					    if(s > this.capMagnitude){
+							v.subtractVector(this.cap.copy().scale(s - this.capMagnitude));
+							this.owner.dx = v.x;
+							this.owner.dy = v.y;
 						}
-					} else {
-						this.owner.dx = this.aX;
-						this.owner.dy = this.aY;
-
-						this.jumping = false;
 					}
 				}
-				
+
 				this.grounded = false;
 			},
 			
@@ -115,7 +116,11 @@ This component will cause the entity to jump with a certain amount of accelerati
 				}
 
 				if(!this.jumping && jumping && this.grounded){
-					this.justJumped = true;
+					if(state){
+						this.justJumped = (state.triggered !== false);
+					} else {
+						this.justJumped = true;
+					}
 					this.jumping = true;
 				} else if (this.jumping && !jumping) {
 					this.jumping = false;
@@ -143,13 +148,13 @@ This component will cause the entity to jump with a certain amount of accelerati
 				if(!this.justJumped){
 					if(collisionInfo.y){
 						this.owner.dy = 0;
-						if(((collisionInfo.y > 0) && (this.aY < 0)) || ((collisionInfo.y < 0) && (this.aY > 0))){
+						if(((collisionInfo.y > 0) && (this.velocity.y < 0)) || ((collisionInfo.y < 0) && (this.velocity.y > 0))){
 							this.jumping = false;
 							this.grounded = true;
 						}
 					} else if(collisionInfo.x){
 						this.owner.dx = 0;
-						if(((collisionInfo.x < 0) && (this.aX > 0)) || ((collisionInfo.x > 0) && (this.aX < 0))){
+						if(((collisionInfo.x < 0) && (this.velocity.x > 0)) || ((collisionInfo.x > 0) && (this.velocity.x < 0))){
 							this.jumping = false;
 							this.grounded = true;
 						}

@@ -28,9 +28,16 @@ This component will listen for a particular collision message and, depending on 
     }
 */
 (function(){
-	var collide = function(entity, state, event){
+	var collidePos = function(entity, state, event){
 		return function(collInfo){
 			if (entity.state[state]) {
+				entity.trigger(event, collInfo);
+			}
+		};
+	},
+	collideNeg = function(entity, state, event){
+		return function(collInfo){
+			if (!entity.state[state]) {
 				entity.trigger(event, collInfo);
 			}
 		};
@@ -39,11 +46,19 @@ This component will listen for a particular collision message and, depending on 
 	return platformer.createComponentClass({
 		id: 'collision-filter',
 		constructor: function(definition){
-			var event = null;
+			var event = null,
+			state = definition.state;
 			
 			if(definition.collisions) {
-				for(event in definition.collisions){
-					this.addEventListener(event, collide(this.owner, definition.state, definition.collisions[event]));
+				if(state[0] === '!'){
+					state = state.substring(1);
+					for(event in definition.collisions){
+						this.addEventListener(event, collideNeg(this.owner, state, definition.collisions[event]));
+					}
+				} else {
+					for(event in definition.collisions){
+						this.addEventListener(event, collidePos(this.owner, state, definition.collisions[event]));
+					}
 				}
 			}
 		}
