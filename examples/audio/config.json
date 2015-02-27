@@ -33,7 +33,6 @@
             "css/main.css"
         ],
 		"entities": [ // JSON files describing entities
-            "entities/progress-bar.json",
             "entities/title-screen.json"
 		],
 		"scenes": [ // JSON files describing scenes

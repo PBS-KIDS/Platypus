@@ -75,7 +75,6 @@
             "entities/button-right.json",
             "entities/button-mute.json",
 			"entities/hero.json",
-            "entities/progress-bar.json",
             "entities/level-portal.json",
             "entities/title-screen.json",
             "entities/fps-counter.json"

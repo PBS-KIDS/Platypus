@@ -8,8 +8,33 @@
                 {"type": "handler-render-dom"},
                 {"type": "entity-container", 
                     "entities": [
-                        {"type": "title-screen"},
-                        {"type": "progress-bar"}
+                        {
+                            "type": "title-screen"
+                        },{
+                            "id": "progress-bar",
+                            "components":[
+                                {
+                                    "type": "dom-element",
+                                    "className": "progress-bar",
+                                    "innerHTML": "Loading..."
+                                },{
+                                    "type": "entity-container", 
+                                    "entities": [{
+                                        "id": "container",
+                                        "components":[{
+                                            "type": "change-scene",
+                                            "scene": "menu",
+                                            "aliases": {
+                                                "complete": "new-scene"
+                                            }
+                                        },{
+                                            "type": "asset-loader",
+                                            "useXHR": false
+                                        }]
+                                    }]
+                                }
+                            ]
+                        }
                     ],
                     "childEvents": ["link-entity"]
                 }
