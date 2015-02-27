@@ -17,6 +17,7 @@
     	var components = ["asset-loader"
     	                  , "audio"
     	                  , "audio-mixer"
+    	                  , "audio-mobile"
     	                  , "broadcast-events"
     	                  , "camera"
     	                  , "camera-follow-me"

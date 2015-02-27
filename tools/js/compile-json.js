@@ -32,6 +32,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	var components = ["asset-loader"
    	                  , "audio"
 	                  , "audio-mixer"
+	                  , "audio-mobile"
    	                  , "broadcast-events"
    	                  , "camera"
    	                  , "camera-follow-me"

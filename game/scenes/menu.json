@@ -14,10 +14,6 @@
 					]
 				}
 			]
-        },{
-            "id": "enable-ios-audio-layer",
-            "filter": {"includes": ["iOS"]},
-            "components": [{"type": "enable-ios-audio", "audioId": "combined"}]
 		}
 	]
 }

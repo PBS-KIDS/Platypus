@@ -8,7 +8,8 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 ## Messages
 
 ### Listens for:
-- **load** - On receiving this event, the asset loader begins downloading the list of assets.
+- **load** - On receiving this event, the asset loader begins downloading the list of assets if the "automatic" property is not set to `false`.
+- **load-assets** - On receiving this event, the asset loader begins downloading the list of assets.
 - **fileload** - This message used to update a progress bar if one has been defined by JSON.
   - @param fraction (Number) - Value of (progress / total) is used to set the width of the progress bar element.
 
@@ -32,10 +33,13 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
       ]
       
       "progressBar": "progress-bar",
-      // Optional. A DOM element id for a DIV that should be updated as assets are loaded.
+      // Optional. A DOM element id for an element that should be updated as assets are loaded.
       
       "useXHR": true,
       // Whether to use XHR for asset downloading. The default is `true`.
+      
+      "automatic": false,
+      // Whether to automatically load assets when this component loads. The default is `true`.
       
       "crossOrigin": true
       // Whether images are loaded from a CORS-enabled domain. The default is `false`.
@@ -49,17 +53,15 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		id: 'asset-loader',
 		
 		constructor: function(definition){
-			this.useXHR = true;
-			
-			if(definition.useXHR === false){
-				this.useXHR = false;
-			}
+			this.useXHR = (definition.useXHR !== false);
 			
 			this.assets = definition.assets || platformer.game.settings.assets;
 			
 			this.crossOrigin = definition.crossOrigin || "";
 			
 			this.progressBar = definition.progressBar || false;
+			
+			this.automatic = (definition.automatic !== false);
 			
 			this.message = {
 				complete: false,
@@ -71,6 +73,12 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 
 		events: {// These are messages that this component listens for
 		    "load": function(){
+		    	if(this.automatic){
+		    		this.owner.triggerEvent('load-assets');
+		    	}
+		    },
+		    
+		    "load-assets": function(){
 		    	var i = '',
 		    	j     = 0,
 		    	self = this,

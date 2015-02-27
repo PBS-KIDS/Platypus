@@ -48,13 +48,43 @@
     background-size: 100% 100%;
 }
 
-/* This is the "Loading..." text in the opening scene */
-.progress-bar {
-font-size: 0.6em;
-top: 50%;
-position: absolute;
-text-align: center;
-width: 100%;
-margin-top: -0.3em;
-text-shadow: 0 0.02em 0.02em #000;
-}
+/* This is the loading bar in the opening scene */
+    .mobile-start {
+      display: none;
+	  position: absolute;
+	  top: 11em;
+	  left: 50%;
+	  width: 3em;
+	  text-align: center;
+	  margin-left: -1.5em;
+	  background: rgba(255,255,255,0.4);
+	  cursor: pointer;
+    }
+    
+    .mobile-start.mobile {
+      display: block;
+    }
+    
+    #progress-bar-container {
+      position: absolute;
+      text-align: center;
+      width: 4.6em;
+      top: 11em;
+      height: 0.75em;
+      left: 50%;
+      margin-left: -2.3em;
+      background: #000;
+    }
+    
+    #progress-bar-container.mobile {
+      display: none;
+    }
+    
+    #progress-bar {
+      left: 0;
+      top: 0;
+      position: absolute;
+      height: 100%;
+      width: 0;
+      background: #fff;
+    }

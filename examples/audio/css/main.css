@@ -41,3 +41,44 @@ body {
     margin: auto;
     position: relative;
 }
+
+/* This is the loading bar in the opening scene */
+    .mobile-start {
+      display: none;
+      position: absolute;
+      top: 11em;
+      left: 50%;
+      width: 3em;
+      text-align: center;
+      margin-left: -1.5em;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+    }
+    
+    .mobile-start.mobile {
+      display: block;
+    }
+    
+    #progress-bar-container {
+      position: absolute;
+      text-align: center;
+      width: 4.6em;
+      top: 11em;
+      height: 0.75em;
+      left: 50%;
+      margin-left: -2.3em;
+      background: #000;
+    }
+    
+    #progress-bar-container.mobile {
+      display: none;
+    }
+    
+    #progress-bar {
+      left: 0;
+      top: 0;
+      position: absolute;
+      height: 100%;
+      width: 0;
+      background: #fff;
+    }

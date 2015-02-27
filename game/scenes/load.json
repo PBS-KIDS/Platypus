@@ -7,35 +7,38 @@
                 {"type": "handler-logic"},
                 {"type": "handler-render-dom"},
                 {"type": "entity-container", 
-                    "entities": [
-                        {
-                            "type": "title-screen"
+                    "entities": [{
+                        "type": "title-screen"
+                    },{
+                        "id": "progress-bar",
+                        "components":[{
+                            "type": "audio-mobile",
+                            "audioId": "audio-sprite"
                         },{
+                            "type": "asset-loader",
+                            "progressBar": "progress-bar",
+                            "automatic": false
+                        },{
+                            "type": "dom-element",
+                            "id": "mobile-start",
+                            "innerHTML": "Play",
+                            "className": "mobile-start",
+                            "updateClassName": true,
+                            "ontouchstart": "activate-audio"
+                        },{
+                            "type": "dom-element",
+                            "id": "progress-bar-container",
+                            "updateClassName": true
+                        },{
+                            "type": "dom-element",
                             "id": "progress-bar",
-                            "components":[
-                                {
-                                    "type": "dom-element",
-                                    "className": "progress-bar",
-                                    "innerHTML": "Loading..."
-                                },{
-                                    "type": "entity-container", 
-                                    "entities": [{
-                                        "id": "container",
-                                        "components":[{
-                                            "type": "change-scene",
-                                            "scene": "menu",
-                                            "aliases": {
-                                                "complete": "new-scene"
-                                            }
-                                        },{
-                                            "type": "asset-loader",
-                                            "useXHR": false
-                                        }]
-                                    }]
-                                }
-                            ]
-                        }
-                    ],
+                            "parent": "progress-bar-container"
+                        },{
+                            "type": "change-scene",
+                            "scene": "menu",
+                            "aliases": {"complete": "new-scene"}
+                        }]
+                    }],
                     "childEvents": ["link-entity"]
                 }
             ]

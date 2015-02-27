@@ -39,7 +39,7 @@
 		"assets": [ // Assets such as images and audio
 		
 			// Audio
-            {"id": "combined", "src": "audio/combined.m4a", "data": { "audioSprite": [
+            {"id": "audio-sprite", "src": "audio/combined.m4a", "data": { "audioSprite": [
                 {"id": "walk", "startTime": 3200,  "duration": 330},
                 {"id": "jump", "startTime": 1600,  "duration": 250}
             ]}},

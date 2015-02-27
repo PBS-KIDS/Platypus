@@ -22,7 +22,7 @@
 	"source": { 
 		"assets": [ // Assets such as images and audio
 			// Audio
-            {"id": "combined", "src": "audio/combined.m4a", "data": { "audioSprite": [
+            {"id": "audio-sprite", "src": "audio/combined.m4a", "data": { "audioSprite": [
                 {"id": "long",  "startTime": 0,    "duration": 4520.249433106576},
                 {"id": "short", "startTime": 6000, "duration": 1254.9433106575965}
             ]}}
