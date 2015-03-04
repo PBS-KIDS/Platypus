@@ -393,6 +393,12 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    
     game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
 
+    if(compConfig.plugins){
+    	for(var k = 0; k < compConfig.plugins.length; k++){
+	    	include(compConfig.plugins[k]);
+	    }
+    }
+    
     //insert entities and scenes into compiled config file
     setJSON('config.json', game);
     print('Completed full config.json.');

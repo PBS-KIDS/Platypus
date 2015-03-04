@@ -3,5 +3,6 @@
  */
 {
   "source-folder": "../game/",
-  "destination-folder": "../builds/"
+  "destination-folder": "../builds/",
+  "plugins": []
 }
