@@ -1,7 +1,8 @@
 /*
  * Load Dependencies
  */
-var include = function(path){
+var config = null,
+include = function(path){
 	var file = undefined,
 	line     = '',
 	text     = '';
@@ -383,6 +384,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     for(sectionId in source){
     	if((sectionId !== 'includes') && (sectionId !== 'components')){
         	print('..Handling "' + sectionId + '" section.');
+        	if(typeof source[sectionId] === 'string'){
+        		source[sectionId] = getJSON(workingDir + source[sectionId]);
+        	}
+        	
         	handleList(source[sectionId], sectionId, workingDir);
     	}
     }
@@ -394,6 +399,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
 
     if(compConfig.plugins){
+    	config = game;
     	for(var k = 0; k < compConfig.plugins.length; k++){
 	    	include(compConfig.plugins[k]);
 	    }
