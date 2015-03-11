@@ -417,7 +417,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	}
     game.version  = ((new Date().getTime()) + '').substring(0, 9);
     
-    var plugins = game.global.plugins || [];
+    var plugins = game.global.plugins || ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"];
     
 	config = game;
 	for(var k = 0; k < plugins.length; k++){
