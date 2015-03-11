@@ -1,27 +1,4 @@
 /*
- * Load Dependencies
- */
-var include = function(path){
-	var file = undefined,
-	line     = '',
-	text     = '';
-	if (typeof ActiveXObject != 'undefined'){
-		file = new ActiveXObject("Scripting.FileSystemObject").OpenTextFile(path);
-		text = file.ReadAll();
-		file.Close();
-	} else {
-    	file = new java.io.BufferedReader(new java.io.FileReader(path));
-    	while ((line = file.readLine()) != null) {
-		  text += new String(line) + '\n';
-		}
-    	file.close();
-	}
-	eval(text);
-};
-include('js/file-io.js');  // Including support for either ActiveX or Rhino file and shell support.
-include('js/json2.js');    // Including json2.js to support JSON if it doesn't exist.
-
-/*
  * Compile JavaScript files into a single file and move server-side files to builds folder
  */
 
@@ -44,7 +21,6 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    }
 	    return text;
     },
-    getJSON    = function(path){return eval('(' + getText(path) + ')');}, //Using "eval" to allow comments in JSON definition files
     setText    = function(path, text){
 	    var file = fileSystem.CreateTextFile(path, true);
 	    file.Write(text);
@@ -94,12 +70,11 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			return handleAsset(id, src, aspects['default'], path, result, remSF);
 		}
 	},
-    buildGame = function(build, config, timestamp){
+    buildGame = function(build, game, timestamp){
 	    var jsFile = 'combined',
 	    cssFile    = 'combined',
 	    html       = getText(workingDir + (build.template || 'template.html')),
 	    manifest   = getText(workingDir + 'template.manifest'),
-	    game       = eval('(' + config + ')'),
 	    namespace  = build.namespace || 'PBS.KIDS.platformer',
 	    nsArray    = namespace.split('.'),
 	    nsName     = '',
@@ -148,7 +123,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		    game.manifest = supports;
 
 		    manifests = {};
-	 		for (var i in game.manifest){
+	 		for (i in game.manifest){
 	 			var listAspects = [];
 	 			for (j in game.manifest[i]){
 	 				checkPush(listAspects, game.manifest[i][j]);
@@ -192,13 +167,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    } catch(e) {
 				    alert('Error in processing ' + (srcId || 'default') + ' asset: "' + sectionId + ' ' + assetId + '": ' + e.description);
 			    }
-		    	if(sectionId === 'assets'){
-		    		if((typeof asset.data) === 'string'){
-		    			asset.data = getJSON(workingDir + asset.data);
-		    		}
-//			    	game[sectionId].push(asset);
-//		    	} else {
-		    	}
+
 	    		game[sectionId][asset.id] = asset;
 		    }
 	    }
@@ -390,8 +359,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		}
    },
    timestamp  = ((new Date().getTime()) + '').substring(0, 9),
-   gameConfig = getText('config.json');
-   game       = eval('(' + gameConfig + ')');
+   game       = config;
    workingDir = game.toolsConfig["source-folder"] || '../game/',
    buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
    builds     = game.builds,
@@ -401,7 +369,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     print('Preparing to compile scripts.');
     for (buildIndex in builds){
     	print('..Compiling scripts for build "' + builds[buildIndex].id + '".');
-    	buildGame(builds[buildIndex], gameConfig, timestamp);
+    	buildGame(builds[buildIndex], game, timestamp);
 	}
     print('Completed script compilation. Hurrah!');
 })();

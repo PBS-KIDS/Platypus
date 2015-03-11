@@ -1,38 +1,9 @@
 /*
- * Load Dependencies
- */
-var include = function(path){
-	var file = undefined,
-	line     = '',
-	text     = '';
-	if (typeof ActiveXObject != 'undefined'){
-		file = new ActiveXObject("Scripting.FileSystemObject").OpenTextFile(path);
-		text = file.ReadAll();
-		file.Close();
-	} else {
-    	file = new java.io.BufferedReader(new java.io.FileReader(path));
-    	while ((line = file.readLine()) != null) {
-		  text += new String(line) + '\n';
-		}
-    	file.close();
-	}
-	eval(text);
-};
-include('js/file-io.js');  // Including support for either ActiveX or Rhino file and shell support.
-
-/*
  * Compress and move assets to builds folder
  */
 
 (function(){
    var alert  = function(val){print(val);},
-   getText    = function(path){
-	   var file = fileSystem.OpenTextFile(path),
-	   text     = file.ReadAll();
-	   file.Close();
-	   return text;
-   },
-   getJSON    = function(path){return eval('(' + getText(path) + ')');}, //Using "eval" to allow comments in JSON definition files
    checkPush  = function(list, item){
 	   var itIsThere = false;
 	   for (var index in list){
@@ -99,7 +70,7 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
 			checkPush(assets, asset.src);
 		}
 	},
-   game       = getJSON('config.json'), // need to have run compile-json.js prior to this if assets have changed.
+   game       = config,
    workingDir = game.toolsConfig["source-folder"] || '../game/',
    buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
    builds     = game.builds,
@@ -114,7 +85,6 @@ include('js/file-io.js');  // Including support for either ActiveX or Rhino file
    sectionId  = '',
    asset      = undefined,
    assetId    = 0,
-   srcId      = '',
    aspects    = game.manifest,
    manifest   = null;
    

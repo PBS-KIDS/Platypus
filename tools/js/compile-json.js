@@ -357,6 +357,12 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 			    		}
 			    	}
 
+			    	// Pull in json-based asset data stored separately
+			    	if(asset.data && (typeof asset.data === 'string') && isJSON(asset.data)){
+		    			print('.....Filling in data for "' + asset.id + '"');
+					    asset.data = getJSON(workingDir + asset.data);
+		    		}
+
 			    	// Pull in json-based CreateJS spritesheets
 			    	if(asset.data && asset.data.spritesheet && (typeof asset.data.spritesheet === 'string') && isJSON(asset.data.spritesheet)){
 		    			print('.....Filling in spritesheet data for "' + asset.id + '"');
