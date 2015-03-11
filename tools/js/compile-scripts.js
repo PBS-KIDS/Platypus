@@ -27,16 +27,6 @@
 	    file.Close();
 	    return text;
     },
-    checkPush  = function(list, item){
-	    var itIsThere = false;
-	    if(list){
-		    for (var index in list){
-			    if(list[index] === item) itIsThere = true;
-		    }
-		    if(!itIsThere) list.push(item);
-	    }
-	    return item;
-    },
     hypPath    = function(path){
 	    return path.replace(workingDir, '').replace(/\.\.\//g, '').replace(/\//g, '-').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
     },
@@ -50,7 +40,7 @@
 	    }
 	    return path;
     },
-    addAllTypes = function(id, src, aspects, path, result, remSF){
+    addAllTypes = function(id, src, path, result, remSF){
 		var i    = 0,
 		newSrc   = src.split('.'),
 		ext      = newSrc[newSrc.length - 1],
@@ -60,22 +50,18 @@
 		if(manifests[ext]){
 			for(i = 0; i < manifests[ext].length; i++){
 				newSrc[newSrc.length - 1] = manifests[ext][i];
-				newAsset = handleAsset(id, newSrc.join('.'), aspects[manifests[ext][i]], path, result, remSF);
+				newAsset = handleAsset(id, newSrc.join('.'), path, result, remSF);
 				if(ext === manifests[ext][i]){
 					initial = newAsset;
 				}
 			}
 			return initial || newAsset;
 		} else {
-			return handleAsset(id, src, aspects['default'], path, result, remSF);
+			return handleAsset(id, src, path, result, remSF);
 		}
 	},
-    buildGame = function(build, game, timestamp){
-	    var jsFile = 'combined',
-	    cssFile    = 'combined',
-	    html       = getText(workingDir + (build.template || 'template.html')),
-	    manifest   = getText(workingDir + 'template.manifest'),
-	    namespace  = build.namespace || 'PBS.KIDS.platformer',
+    buildGame = function(build, game){
+	    var namespace = build.namespace || 'platypus',
 	    nsArray    = namespace.split('.'),
 	    nsName     = '',
 	    scripts    = '',
@@ -90,11 +76,6 @@
 	    path       = '',
 	    buildPath  = '',
 	    indexPath  = '',
-	    maniPath   = 'cache.manifest',
-	    aspects    = {"default": []},
-	    supports   = game['manifest'] || false,
-	    supId      = '',
-	    uaId       = '',
 	    section    = undefined,
 	    sectionId  = '',
 	    asset      = undefined,
@@ -102,36 +83,13 @@
 	    srcId      = '',
 	    i          = 0,
 	    j          = 0,
-	    htaccess   = '',
 	    divider    = '',
 	    remSF      = ((build.index === false)?build.id + '/':false),
-	    tempMan    = '';
+	    version    = game.version;
 
 	    delete game.builds;
-	    delete game['manifest'];
 	    delete game.toolsConfig;
 
-	    if(supports){ // Prepare multiple manifest files
-		    print('...Creating arrays to store cache.manifest file versions.');
-		    for(supId in supports){
-		    	for(uaId in supports[supId]){
-	    			if(!aspects[supports[supId][uaId]]){
-		    			aspects[supports[supId][uaId]] = ['\n# ' + supId.toUpperCase() + ' - ' + supports[supId][uaId] + ':\n'];
-		    		}
-		    	}
-		    }
-		    game.manifest = supports;
-
-		    manifests = {};
-	 		for (i in game.manifest){
-	 			var listAspects = [];
-	 			for (j in game.manifest[i]){
-	 				checkPush(listAspects, game.manifest[i][j]);
-	 				manifests[game.manifest[i][j]] = listAspects;
-	 			}
-	 		}
-	    }
-	    
 	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
 	    for(sectionId in source){
 		    print('....Handling "' + sectionId + '" section.');
@@ -157,9 +115,9 @@
 				    if(asset.src){
 				    	if((typeof asset.src) == 'string'){
 			    			if(manifests){
-			    				asset.src = addAllTypes(asset.id, asset.src, aspects, path, result, remSF);
+			    				asset.src = addAllTypes(asset.id, asset.src, path, result, remSF);
 			    			} else {
-					    		asset.src = handleAsset(asset.id, asset.src, aspects["default"], path, result, remSF);
+					    		asset.src = handleAsset(asset.id, asset.src, path, result, remSF);
 			    			}
 				    	}
 				    }
@@ -187,9 +145,6 @@
 	    scripts += '  ' + namespace + ' = platformer;\n\n';
 	    result.scripts = '(function(){\n  var platformer = {};\n\n' + scripts + 'platformer.settings = ' + JSON.stringify(game) + ';\n' + result.scripts + '})();';
 	 
-	    manifest = manifest.replace('CACHE:', 'CACHE:\n' + aspects["default"].join('\n'));
-	    manifest = manifest.replace('# Version', '# Version ' + timestamp);
-	    
 	    if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
 	    buildPath = indexPath = buildDir + build.id + '/';
 	    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
@@ -203,96 +158,55 @@
 	    if (!fileSystem.FolderExists(buildPath + 's/')) fileSystem.CreateFolder(buildPath + 's/');
 
 	    // handle server files
-	    try{
-	        fileSystem.DeleteFile(buildPath + '*.*');
-	    } catch(e) {}
+//	    try{
+	//        fileSystem.DeleteFile(buildPath + '*.*');
+	  //  } catch(e) {}
 	    if (fileSystem.FolderExists(workingDir + 'server/')){ // if there are files that should be copied to root as-is in a /server/ folder, do so.
-			fileSystem.CopyFile(workingDir + 'server/*.*', indexPath);
+			fileSystem.CopyFile(workingDir + 'server/*.*', indexPath, true);
 	    }
 
 		// create JS file
 	    setText('combined.js', result.scripts);   
 	    if(build.jsCompression){
 	    	shell.Run("java -jar yui/yui.jar combined.js -o combined.js",   7, true);
-	    	jsFile = 'compressed';
 	    }
-	    try {fileSystem.DeleteFile(buildPath + 'j/' + jsFile + '*.js');} catch(e) {}
-	    fileSystem.MoveFile("combined.js", buildPath + 'j/' + jsFile + timestamp + '.js');
+	    try {fileSystem.DeleteFile(buildPath + 'j/game-' + '*.js');} catch(e) {}
+	    fileSystem.MoveFile("combined.js", buildPath + 'j/game-' + version + '.js');
 
 	    // create CSS file
 	    setText('combined.css', result.styles);   
 	    if(build.cssCompression){
 	    	shell.Run("java -jar yui/yui.jar combined.css -o combined.css", 7, true);
-	    	cssFile = 'compressed';
 	    }
-	    try {fileSystem.DeleteFile(buildPath + 's/' + cssFile + '*.css');} catch(e) {}
-	    fileSystem.MoveFile("combined.css", buildPath + 's/' + cssFile + timestamp + '.css');
+	    try {fileSystem.DeleteFile(buildPath + 's/game-' + '*.css');} catch(e) {}
+	    fileSystem.MoveFile("combined.css", buildPath + 's/game-' + version + '.css');
 
-	    // setup manifest from template
-		path = paths["default"] || '';
-	    if(build.manifest){
-		    print('...Handling multiple app cache manifests.');
-
-		    if(build.index === false){
-		    	maniPath = build.id + '/cache.manifest';
-		    }
-		    htaccess = 'AddType text\/cache-manifest .manifest\n';
-	    	html     = html.replace('<html>', '<html manifest="' + maniPath + '">');
-	    	manifest = manifest.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + jsFile + timestamp + '.js\n' + path + 's\/' + cssFile + timestamp + '.css\n');
-
-		    if(supports){ // Prepare multiple manifest files
-		    	var rewriteConds = [];
-		    	
-		    	htaccess += '\nRewriteEngine on\n';
-		    	
-		    	for (i in aspects){
-		    		if(i !== 'default'){
-			    		tempMan = manifest.replace('CACHE:', 'CACHE:\n' + aspects[i].join('\n'));
-				    	htaccess += '\nRewriteCond %{HTTP_USER_AGENT} "';
-				    	rewriteConds.length = 0;
-					    for(supId in supports){
-					    	for(uaId in supports[supId]){
-				    			if(supports[supId][uaId] === i){
-				    				rewriteConds.push(uaId);
-					    		}
-					    	}
-					    }
-			    		htaccess += rewriteConds.join('|');
-				    	htaccess += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + i + '.manifest [L]\n';
-					    setText(i + '.manifest', tempMan);
-					    try {fileSystem.DeleteFile(buildPath + i + '.manifest');} catch(e) {}
-					    fileSystem.MoveFile(i + '.manifest', buildPath + i + '.manifest');
-		    		}
-		    	}
-		    } else {
-			    setText('cache.manifest', manifest);
-			    try {fileSystem.DeleteFile(buildPath + 'cache.manifest');} catch(e) {}
-			    fileSystem.MoveFile("cache.manifest", buildPath + 'cache.manifest');
-		    }
-	    }
+	    path = paths["default"] || '';
 	    
 		if(build.index === false){
     		path += build.id + '/';
     	}
+		
 	    // setup index from template
-	    html = html.replace(/default\.js/,   path + 'j/' + jsFile  + timestamp + '.js');
-	    html = html.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/' + cssFile + timestamp + '.css" type="text/css" />' + '\n' + ' </head>');
-    	html = html.replace('</head>', result.extStyles + '</head>');
-    	html = html.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
-	    setText('index.html', html);
+		build.htmlTemplate = build.htmlTemplate.replace(/default\.js/,   path + 'j/game-' + version + '.js');
+		build.htmlTemplate = build.htmlTemplate.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/game-' + version + '.css" type="text/css" />' + '\n' + ' </head>');
+		build.htmlTemplate = build.htmlTemplate.replace('</head>', result.extStyles + '</head>');
+		build.htmlTemplate = build.htmlTemplate.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
+	    setText('index.html', build.htmlTemplate);
 	    
 	    if(build.index === false){
 	    	try {fileSystem.DeleteFile(indexPath + build.id + '.html');} catch(e) {}
 		    fileSystem.MoveFile("index.html", indexPath + build.id + '.html');
 	    } else {
+	    	try {fileSystem.DeleteFile(buildDir + build.id + '/index.html');} catch(e) {}
 		    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
 	    }
 	    
 	    if(paths["allow-origin"]){
-	        htaccess += '\n\nHeader set Access-Control-Allow-Origin "' + paths["allow-origin"] + '"';
+	    	build.htaccessTemplate += '\n\nHeader set Access-Control-Allow-Origin "' + paths["allow-origin"] + '"';
 	    }
 	    
-	    setText('.htaccess', htaccess);
+	    setText('.htaccess', build.htaccessTemplate);
 	    try {fileSystem.DeleteFile(buildPath + '.htaccess');} catch(e) {}
 	    fileSystem.MoveFile('.htaccess', buildPath + '.htaccess');
    },
@@ -323,19 +237,18 @@
 	   }
 	   return cssText;
    },
-   handleAsset = function(id, src, assets, absolutePath, result, removeSubFolder){
+   handleAsset = function(id, src, absolutePath, result, removeSubFolder){
 	    var path = '';
-	   
+		   
 		if(src.substring(0,4).toLowerCase() !== 'http'){
 			if(isImage(src) || isAudio(src) || isFont(src)){
 				path = absolutePath + putInFolder(hypPath(src));
 				if(removeSubFolder){
 					assetConversions[src] = path.replace(removeSubFolder, '');
-					checkPush(assets, assetConversions[src]);
 					return path;
 				} else {
 					assetConversions[src] = path;
-					return checkPush(assets, path);
+					return path;
 				}
 			} else if(isCSS(src)) {
 				result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
@@ -348,17 +261,16 @@
 			}
 		} else {
 			if(isImage(src) || isAudio(src) || isFont(src)){
-				return checkPush(assets, src);
+				return src;
 			} else if(isCSS(src)) {
-				result.extStyles += '  <link rel="stylesheet" href="' + checkPush(assets, src) + '" type="text\/css" \/>\n';
+				result.extStyles += '  <link rel="stylesheet" href="' + src + '" type="text\/css" \/>\n';
 		 	    return src;
 			} else if(isJS(src)) {
-				result.extScripts += '  <script type="text\/javascript" src="' + checkPush(assets, src) + '"><\/script>\n';
+				result.extScripts += '  <script type="text\/javascript" src="' + src + '"><\/script>\n';
 		 	    return src;
 			}
 		}
    },
-   timestamp  = ((new Date().getTime()) + '').substring(0, 9),
    game       = config;
    workingDir = game.toolsConfig["source-folder"] || '../game/',
    buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
@@ -369,7 +281,7 @@
     print('Preparing to compile scripts.');
     for (buildIndex in builds){
     	print('..Compiling scripts for build "' + builds[buildIndex].id + '".');
-    	buildGame(builds[buildIndex], game, timestamp);
+    	buildGame(builds[buildIndex], game);
 	}
     print('Completed script compilation. Hurrah!');
 })();

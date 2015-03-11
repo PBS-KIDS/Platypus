@@ -11,12 +11,12 @@
         "aspectRatio": 1.333,                    // Optional. Whether the rootElement should be automatically resized to maintain aspect ratio. Leave this off if the rootElement is to be strictly styled using CSS.
 		"nativeAssetResolution": 960,            // Optional. Screen width in pixels that the source images were originally designed for.
 		"resizeFont": true,                      // Optional. Whether to adjust the body element's fontSize to proportionally match current window size. Useful for cascading the value of em's across all game DOM elements.
-        "plugins": ["js/pngquant-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"] // Optional. Plugins to handle various aspects of compilation.
+        "plugins": ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"] // Optional. Plugins to handle various aspects of compilation.
 	},
 	"builds": [                                  // Builds and their respective settings
 		{
 			"id": "production",                  // This is the id of the build and is matched to a folder name in the "builds/" folder. Build tools create this folder if needed.
-			"namespace": "PBS.KIDS.platformer",  // Optional namespace for the game - defaults to "PBS.KIDS.platformer"
+			"namespace": "PBS.KIDS.platformer",  // Optional namespace for the game - defaults to "platypus"
 			"template": "template.html",         // Optional. HTML file describing the HTML template in which to place the game on compilation. Default is "template.html".
             "index": true,                       // Optional. If false, page is saved as the id + '.html' and resources are saved to a separate subfolder matching the id. Defaults to true, wherein the index and resources are in a single folder.
 			"cssCompression": true,

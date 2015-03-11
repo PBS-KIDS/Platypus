@@ -28,14 +28,13 @@
 		    fileName = hypPath(asset.src);
 
 	    	if(!fileSystem.FileExists(workingDir + 'images/compressed/q' + comp + '-' + fileName)){
-		    	print('....Compressing "' + asset.src + '".');
              	if(shell.isBash){
              		shell.Run("pngquant/pngquant --ext -q" + comp + ".png " + comp + " " + asset.src, 7, true);
              	} else {
              		shell.Run("pngquant\\pngquant.exe -ext -q" + comp + ".png " + comp + " " + asset.src, 7, true);
              	}
                 fileSystem.MoveFile(asset.src.substring(0, asset.src.length - 4) + '-q' + comp + '.png', workingDir + 'images/compressed/q' + comp + '-' + fileName);
-    	    	print('....Compressed to "q' + comp + '-' + fileName + '".');
+    	    	print('.Compressed "' + asset.src + '" to "q' + comp + '-' + fileName + '".');
             }
 	    	
 	    	if(!asset.sourceFiles){

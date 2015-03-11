@@ -383,7 +383,10 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    source     = game.source,
    dependencyList = source['includes']  = source['includes'] || ['../engine/main.js'],
    componentList = source['components'] = source['components'] || [],
-   sectionId  = '';
+   sectionId  = '',
+   builds     = game.builds,
+   buildIndex = 0,
+   build      = null;
     
     print('Composing full config.json from ' + workingDir + 'config.json.');
     
@@ -404,11 +407,25 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    
     game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
 
+    for (buildIndex in builds){
+    	build = builds[buildIndex];
+
+    	print('..Copying templates for build "' + build.id + '".');
+    	build.htmlTemplate     = getText(workingDir + (build.htmlTemplate     || 'template.html'));
+    	build.htaccessTemplate = getText(workingDir + (build.htaccessTemplate || '.htaccess'));
+    	build.manifestTemplate = getText(workingDir + (build.manifestTemplate || 'template.manifest'));
+	}
+    game.version  = ((new Date().getTime()) + '').substring(0, 9);
+    
     var plugins = game.global.plugins || [];
     
 	config = game;
 	for(var k = 0; k < plugins.length; k++){
+    	print(' ');
+    	print('--- BEGIN PLUGIN "' + plugins[k] + '" ---');
     	include(plugins[k]);
+    	print('--- END PLUGIN "' + plugins[k] + '" ---');
+    	print(' ');
     }
     
     //insert entities and scenes into compiled config file for reference
