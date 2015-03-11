@@ -3,6 +3,5 @@
  */
 {
   "source-folder": "../game/",
-  "destination-folder": "../builds/",
-  "plugins": ["js/compile-assets.js", "js/compile-scripts.js"]
+  "destination-folder": "../builds/"
 }
