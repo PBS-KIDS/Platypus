@@ -70,9 +70,9 @@
    		
 	    for (assetId in section){
 	    	asset = section[assetId];
-		    print('.....Adding "' + asset.id + '" to manifest.');
 		    try {
-			    if(asset.src && (typeof asset.src == 'string')){
+			    if(asset.src && (typeof asset.src == 'string') && (asset.cache !== false)){
+				    print('...Adding "' + asset.id + '" to manifest.');
 	    			if(manifests){
 	    				addAllTypes(asset.src, aspects, path, remSF);
 	    			} else {
