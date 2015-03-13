@@ -157,7 +157,7 @@
     delete config.languages;
     
     if(!langConfig.syntax){
-    	langConfig.syntax = ['<<', '>>'];
+    	langConfig.syntax = ['{{', '}}'];
     }
     
     try {

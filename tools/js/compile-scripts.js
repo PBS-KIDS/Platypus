@@ -51,7 +51,7 @@
     	    extStyles: '',
     	    extScripts: ''
 	    },
-	    game       = JSON.parse(JSON.stringify(config)),
+	    game       = JSON.parse(JSON.stringify(config)), // Make a copy of the game
 	    source     = game.source,
 	    paths      = build.paths || {},
 	    path       = '',
@@ -66,7 +66,7 @@
 	    j          = 0,
 	    divider    = '',
 	    remSF      = ((build.index === false)?build.id + '/':false),
-	    version    = config.version; // Make a copy of the game
+	    version    = 'v' + config.version.replace(/\./g, '-');
 	    
 	    delete game.builds;
 	    delete game.toolsConfig;
@@ -132,10 +132,10 @@
 	    }
 	    
 		// store JS file
-	    setText(buildPath + 'j/game-' + version + '.js', result.scripts, build.files);
+	    setText(buildPath + 'j/' + version + '.js', result.scripts, build.files);
 
 	    // store CSS file
-	    setText(buildPath + 's/game-' + version + '.css', result.styles, build.files);
+	    setText(buildPath + 's/' + version + '.css', result.styles, build.files);
 
 	    path = paths["default"] || '';
 	    
@@ -144,8 +144,8 @@
     	}
 		
 	    // setup index from template
-		build.htmlTemplate = build.htmlTemplate.replace(/default\.js/,   path + 'j/game-' + version + '.js');
-		build.htmlTemplate = build.htmlTemplate.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/game-' + version + '.css" type="text/css" />' + '\n' + ' </head>');
+		build.htmlTemplate = build.htmlTemplate.replace(/default\.js/,   path + 'j/' + version + '.js');
+		build.htmlTemplate = build.htmlTemplate.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/' + version + '.css" type="text/css" />' + '\n' + ' </head>');
 		build.htmlTemplate = build.htmlTemplate.replace('</head>', result.extStyles + '</head>');
 		build.htmlTemplate = build.htmlTemplate.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
 	    

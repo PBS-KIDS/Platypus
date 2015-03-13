@@ -62,7 +62,7 @@
 	    i          = 0,
 	    remSF      = ((build.index === false)?build.id + '/':false),
 	    tempMan    = '',
-	    version    = game.version;
+	    version    = 'v' + game.version.replace(/\./g, '-');
 
 		path = paths["assets"] || paths["default"] || '';
    		if(build.index === false){
@@ -86,7 +86,7 @@
 	    }
 
 	    build.manifestTemplate = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + aspects["default"].join('\n'));
-	    build.manifestTemplate = build.manifestTemplate.replace('# Version', '# Version ' + version);
+	    build.manifestTemplate = build.manifestTemplate.replace('CACHE MANIFEST', 'CACHE MANIFEST\n# Version ' + game.version);
 	    
 	    if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
 	    buildPath = buildDir + build.id + '/';
@@ -110,7 +110,7 @@
 	    }
 	    build.htaccessTemplate += 'AddType text\/cache-manifest .manifest\n';
 	    build.htmlTemplate = build.htmlTemplate.replace('<html>', '<html manifest="' + maniPath + '">');
-	    build.manifestTemplate = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + path + 'j\/game-' + version + '.js\n' + path + 's\/game-' + version + '.css\n');
+	    build.manifestTemplate = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + version + '.js\n' + path + 's\/' + version + '.css\n');
 
 	    try{
 	        fileSystem.DeleteFile(buildPath + '*.manifest');

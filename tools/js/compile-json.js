@@ -376,8 +376,46 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 		    }
 	    }
    },
+    incrementGameVersion = function(buildDir){
+	    var v = null,
+	    arr   = null;
+	    
+	    try {
+		    v = getJSON(buildDir + 'version.json');
+	    } catch(e) {
+		    v = {};
+	    }
+	    
+	    if(!v.version){
+	    	v.version = "0.0.1";
+	    } else {
+		    arr = v.version.split('.');
+	    	arr[0] = parseInt(arr[0] || 0);
+	    	arr[1] = parseInt(arr[1] || 0);
+	    	arr[2] = parseInt(arr[2] || 0);
+	    	
+	    	arr[2] += 1;
+	    	if(arr[2] === 10){
+	    		arr[2] = 0;
+		    	arr[1] += 1;
+		    	if(arr[1] === 10){
+		    		arr[1] = 0;
+			    	arr[0] += 1;
+		    	}
+	    	}
+	    	v.version = arr.join('.');
+	    }
+	    
+	    v.timestamp = new Date().toString();
+	    v.increment = v.increment || 0;
+	    v.increment += 1;
+	    
+	    setJSON(buildDir + 'version.json', v);
+	    return v;
+    },
    compConfig = getJSON('tools-config.json'),
    workingDir = compConfig["source-folder"] || '../game/',
+   buildDir   = compConfig["destination-folder"] || '../builds/',
    gameConfig = getText(workingDir + 'config.json'),
    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
    source     = game.source,
@@ -386,9 +424,15 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    sectionId  = '',
    builds     = game.builds,
    buildIndex = 0,
-   build      = null;
+   build      = null,
+   version    = incrementGameVersion(buildDir);
     
-    print('Composing full config.json from ' + workingDir + 'config.json.');
+    game.version    = version.version;
+    game.timestamp  = version.timestamp;
+    game.buildIndex = version.increment;
+
+    print('--- BUILD VERSION ' + version.version + ' ---');
+    print('Composing game from ' + workingDir + 'config.json.');
     
     for(sectionId in source){
     	if((sectionId !== 'includes') && (sectionId !== 'components')){
@@ -415,7 +459,6 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	build.htaccessTemplate = getText(workingDir + (build.htaccessTemplate || '.htaccess'));
     	build.manifestTemplate = getText(workingDir + (build.manifestTemplate || 'template.manifest'));
 	}
-    game.version  = ((new Date().getTime()) + '').substring(0, 9);
     
     var plugins = game.global.plugins || ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"];
     
