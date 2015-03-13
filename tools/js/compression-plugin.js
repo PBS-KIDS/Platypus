@@ -43,15 +43,11 @@
 			    	    setText('combine.js', file.content);   
 		    	    	shell.Run("java -jar yui/yui.jar combine.js -o compress.js",   7, true);
 			    	    file.content = getText("compress.js");
-			    	    try {fileSystem.DeleteFile('combine.js');} catch(e) {}
-			    	    try {fileSystem.DeleteFile('compress.js');} catch(e) {}
 		    		} else if (isCSS(file.name) && css){
 				    	print('..Compressing "' + file.name + '".');
 			    	    setText('combine.css', file.content);
 		    	    	shell.Run("java -jar yui/yui.jar combine.css -o compress.css", 7, true);
 			    	    file.content = getText("compress.css");
-			    	    try {fileSystem.DeleteFile('combine.css');} catch(e) {}
-			    	    try {fileSystem.DeleteFile('compress.css');} catch(e) {}
 		    		}
 		    	}
 		    }
@@ -75,5 +71,12 @@
     for (buildIndex in builds){
     	compressGame(builds[buildIndex]);
 	}
+
+    // Clean up
+    try {fileSystem.DeleteFile('combine.js');} catch(e) {}
+    try {fileSystem.DeleteFile('compress.js');} catch(e) {}
+    try {fileSystem.DeleteFile('combine.css');} catch(e) {}
+    try {fileSystem.DeleteFile('compress.css');} catch(e) {}
+    
     print('Completed script compression.');
 })();

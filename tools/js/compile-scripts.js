@@ -195,10 +195,9 @@
 		   
 		if(src.substring(0,4).toLowerCase() !== 'http'){
 			if(isImage(src) || isAudio(src) || isFont(src)){
-				if(!asset.sourceFiles){
-					asset.sourceFiles = {};
+				if(asset.sourceFiles){
+					delete asset.sourceFiles; //so this doesn't get compiled into the game
 				}
-				asset.sourceFiles['default'] = asset.src;
 				
 				path = absolutePath + putInFolder(hypPath(src));
 				if(removeSubFolder){
