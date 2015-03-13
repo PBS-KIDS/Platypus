@@ -5,10 +5,11 @@
 (function(){
     var manifests  = null,
     alert  = function(val){print(val);},
-    setText    = function(path, text){
-	    var file = fileSystem.CreateTextFile(path, true);
-	    file.Write(text);
-	    file.Close();
+    setText    = function(path, text, list){
+	    list.push({
+	    	name: path,
+	    	content: text
+	    });
 	    return text;
     },
     checkPush  = function(list, item){
@@ -115,6 +116,7 @@
 	        fileSystem.DeleteFile(buildPath + '*.manifest');
 	    } catch(e) {}
 
+	    build.files = build.files || [];
 	    if(game.manifest){ // Prepare multiple manifest files
 	    	var rewriteConds = [];
 	    	
@@ -135,13 +137,11 @@
 				    build.htaccessTemplate += rewriteConds.join('|');
 				    build.htaccessTemplate += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + i + '.manifest [L]\n';
 		        	print('....Creating "' + i + '.manifest".');
-				    setText(i + '.manifest', tempMan);
-				    fileSystem.MoveFile(i + '.manifest', buildPath + i + '.manifest');
+				    setText(buildPath + i + '.manifest', tempMan, build.files);
 	    		}
 	    	}
 	    } else {
-		    setText('cache.manifest', build.manifestTemplate);
-		    fileSystem.MoveFile("cache.manifest", buildPath + 'cache.manifest');
+		    setText(buildPath + 'cache.manifest', build.manifestTemplate, build.files);
 	    }
    },
    isImage    = function(path){

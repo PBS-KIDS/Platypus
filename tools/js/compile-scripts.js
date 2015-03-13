@@ -3,8 +3,7 @@
  */
 
 (function(){
-   var manifests  = null,
-   alert  = function(val){print(val);},
+   var alert  = function(val){print(val);},
    getText    = function(path){
 	    var file = undefined,
 	    text     = '';
@@ -21,10 +20,11 @@
 	    }
 	    return text;
     },
-    setText    = function(path, text){
-	    var file = fileSystem.CreateTextFile(path, true);
-	    file.Write(text);
-	    file.Close();
+    setText    = function(path, text, list){
+	    list.push({
+	    	name: path,
+	    	content: text
+	    });
 	    return text;
     },
     hypPath    = function(path){
@@ -40,27 +40,7 @@
 	    }
 	    return path;
     },
-    addAllTypes = function(id, src, path, result, remSF){
-		var i    = 0,
-		newSrc   = src.split('.'),
-		ext      = newSrc[newSrc.length - 1],
-		initial  = false,
-		newAsset = false;
-
-		if(manifests[ext]){
-			for(i = 0; i < manifests[ext].length; i++){
-				newSrc[newSrc.length - 1] = manifests[ext][i];
-				newAsset = handleAsset(id, newSrc.join('.'), path, result, remSF);
-				if(ext === manifests[ext][i]){
-					initial = newAsset;
-				}
-			}
-			return initial || newAsset;
-		} else {
-			return handleAsset(id, src, path, result, remSF);
-		}
-	},
-    buildGame = function(build, game){
+    buildGame = function(build, config){
 	    var namespace = build.namespace || 'platypus',
 	    nsArray    = namespace.split('.'),
 	    nsName     = '',
@@ -71,6 +51,7 @@
     	    extStyles: '',
     	    extScripts: ''
 	    },
+	    game       = JSON.parse(JSON.stringify(config)),
 	    source     = game.source,
 	    paths      = build.paths || {},
 	    path       = '',
@@ -85,14 +66,15 @@
 	    j          = 0,
 	    divider    = '',
 	    remSF      = ((build.index === false)?build.id + '/':false),
-	    version    = game.version;
-
+	    version    = config.version; // Make a copy of the game
+	    
 	    delete game.builds;
 	    delete game.toolsConfig;
+	    delete game.source;
 
 	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
 	    for(sectionId in source){
-		    print('....Handling "' + sectionId + '" section.');
+		    print('...Handling "' + sectionId + '" section.');
 	    	section = source[sectionId];
 	    	if((sectionId === 'components') || (sectionId === 'classes')){
 	    		result.scripts += 'platformer.' + sectionId + ' = {};\n';
@@ -110,15 +92,11 @@
 	    	}
 		    for (assetId in section){
 		    	asset = section[assetId];
-			    print('.....Adding "' + asset.id + '".');
+			    print('....Adding "' + asset.id + '".');
 			    try {
 				    if(asset.src){
 				    	if((typeof asset.src) == 'string'){
-			    			if(manifests){
-			    				asset.src = addAllTypes(asset.id, asset.src, path, result, remSF);
-			    			} else {
-					    		asset.src = handleAsset(asset.id, asset.src, path, result, remSF);
-			    			}
+				    		asset.src = handleAsset(asset, path, result, remSF);
 				    	}
 				    }
 				    srcId = '';
@@ -129,7 +107,6 @@
 	    		game[sectionId][asset.id] = asset;
 		    }
 	    }
-	    delete game.source;
 	    
 	    game.debug = build.debug || false;
 
@@ -145,41 +122,20 @@
 	    scripts += '  ' + namespace + ' = platformer;\n\n';
 	    result.scripts = '(function(){\n  var platformer = {};\n\n' + scripts + 'platformer.settings = ' + JSON.stringify(game) + ';\n' + result.scripts + '})();';
 	 
-	    if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
 	    buildPath = indexPath = buildDir + build.id + '/';
-	    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
-
 	    if(build.index === false){
 	        buildPath += build.id + '/';
-		    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
 	    }
 
-	    if (!fileSystem.FolderExists(buildPath + 'j/')) fileSystem.CreateFolder(buildPath + 'j/');
-	    if (!fileSystem.FolderExists(buildPath + 's/')) fileSystem.CreateFolder(buildPath + 's/');
-
-	    // handle server files
-//	    try{
-	//        fileSystem.DeleteFile(buildPath + '*.*');
-	  //  } catch(e) {}
-	    if (fileSystem.FolderExists(workingDir + 'server/')){ // if there are files that should be copied to root as-is in a /server/ folder, do so.
-			fileSystem.CopyFile(workingDir + 'server/*.*', indexPath, true);
+	    if(!build.files){
+	    	build.files = [];
 	    }
+	    
+		// store JS file
+	    setText(buildPath + 'j/game-' + version + '.js', result.scripts, build.files);
 
-		// create JS file
-	    setText('combined.js', result.scripts);   
-	    if(build.jsCompression){
-	    	shell.Run("java -jar yui/yui.jar combined.js -o combined.js",   7, true);
-	    }
-	    try {fileSystem.DeleteFile(buildPath + 'j/game-' + '*.js');} catch(e) {}
-	    fileSystem.MoveFile("combined.js", buildPath + 'j/game-' + version + '.js');
-
-	    // create CSS file
-	    setText('combined.css', result.styles);   
-	    if(build.cssCompression){
-	    	shell.Run("java -jar yui/yui.jar combined.css -o combined.css", 7, true);
-	    }
-	    try {fileSystem.DeleteFile(buildPath + 's/game-' + '*.css');} catch(e) {}
-	    fileSystem.MoveFile("combined.css", buildPath + 's/game-' + version + '.css');
+	    // store CSS file
+	    setText(buildPath + 's/game-' + version + '.css', result.styles, build.files);
 
 	    path = paths["default"] || '';
 	    
@@ -192,23 +148,18 @@
 		build.htmlTemplate = build.htmlTemplate.replace('</head>', ' <link rel="stylesheet" href="' + path + 's/game-' + version + '.css" type="text/css" />' + '\n' + ' </head>');
 		build.htmlTemplate = build.htmlTemplate.replace('</head>', result.extStyles + '</head>');
 		build.htmlTemplate = build.htmlTemplate.replace('<!-- scripts -->', '<!-- scripts -->\n' + result.extScripts);
-	    setText('index.html', build.htmlTemplate);
 	    
 	    if(build.index === false){
-	    	try {fileSystem.DeleteFile(indexPath + build.id + '.html');} catch(e) {}
-		    fileSystem.MoveFile("index.html", indexPath + build.id + '.html');
+		    setText(indexPath + build.id + '.html', build.htmlTemplate, build.files);
 	    } else {
-	    	try {fileSystem.DeleteFile(buildDir + build.id + '/index.html');} catch(e) {}
-		    fileSystem.MoveFile("index.html", buildDir + build.id + '/index.html');
+		    setText(buildDir + build.id + '/index.html', build.htmlTemplate, build.files);
 	    }
 	    
 	    if(paths["allow-origin"]){
 	    	build.htaccessTemplate += '\n\nHeader set Access-Control-Allow-Origin "' + paths["allow-origin"] + '"';
 	    }
 	    
-	    setText('.htaccess', build.htaccessTemplate);
-	    try {fileSystem.DeleteFile(buildPath + '.htaccess');} catch(e) {}
-	    fileSystem.MoveFile('.htaccess', buildPath + '.htaccess');
+	    setText(buildPath + '.htaccess', build.htaccessTemplate, build.files);
    },
    isImage    = function(path){
 	   var check = path.substring(path.length - 4).toLowerCase();
@@ -237,11 +188,18 @@
 	   }
 	   return cssText;
    },
-   handleAsset = function(id, src, absolutePath, result, removeSubFolder){
-	    var path = '';
+   handleAsset = function(asset, absolutePath, result, removeSubFolder){
+	    var id = asset.id,
+	    src    = asset.src,
+	    path   = '';
 		   
 		if(src.substring(0,4).toLowerCase() !== 'http'){
 			if(isImage(src) || isAudio(src) || isFont(src)){
+				if(!asset.sourceFiles){
+					asset.sourceFiles = {};
+				}
+				asset.sourceFiles['default'] = asset.src;
+				
 				path = absolutePath + putInFolder(hypPath(src));
 				if(removeSubFolder){
 					assetConversions[src] = path.replace(removeSubFolder, '');
@@ -271,17 +229,16 @@
 			}
 		}
    },
-   game       = config;
-   workingDir = game.toolsConfig["source-folder"] || '../game/',
-   buildDir   = game.toolsConfig["destination-folder"] || '../builds/',
-   builds     = game.builds,
+   workingDir = config.toolsConfig["source-folder"] || '../game/',
+   buildDir   = config.toolsConfig["destination-folder"] || '../builds/',
+   builds     = config.builds,
    buildIndex = 0;
 
     //Create builds
     print('Preparing to compile scripts.');
     for (buildIndex in builds){
     	print('..Compiling scripts for build "' + builds[buildIndex].id + '".');
-    	buildGame(builds[buildIndex], game);
+    	buildGame(builds[buildIndex], config);
 	}
     print('Completed script compilation. Hurrah!');
 })();

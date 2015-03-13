@@ -38,8 +38,12 @@
 		    	source = asset.src;
 		    	
 		    	// sourceFiles is an alternate location for a named file, useful for build-specific files.
-		    	if(asset.sourceFiles && asset.sourceFiles[buildId]){
-		    		source = asset.sourceFiles[buildId];
+		    	if(asset.sourceFiles){
+		    		if(asset.sourceFiles[buildId]){
+		    			source = asset.sourceFiles[buildId];
+		    		} else if (asset.sourceFiles['default']){
+		    			source = asset.sourceFiles['default'];
+		    		}
 		    	}
 
 		    	print('....Copying "' + source + '" to "' + destination + fileName + '".');
@@ -64,7 +68,8 @@
 		j      = '',
 		newSrc = asset.src.split('.'),
 		ext    = newSrc[newSrc.length - 1],
-		newAsset = null;
+		newAsset = null,
+		arr    = null;
 
 		if(manifest[ext]){
 			for(i = 0; i < manifest[ext].length; i++){
@@ -75,6 +80,14 @@
 
 				newSrc[newSrc.length - 1] = manifest[ext][i];
 				newAsset.src = newSrc.join('.');
+				if(asset.sourceFiles){
+					newAsset.sourceFiles = {};
+					for(j in asset.sourceFiles){
+						arr = asset.sourceFiles[j].split('.');
+						arr[arr.length - 1] = manifest[ext][i];
+						asset.sourceFiles[j] = arr.join('.');
+					}
+				}
 				checkPushSrc(assets, newAsset);
 			}
 		} else {

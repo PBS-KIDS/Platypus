@@ -11,7 +11,7 @@
         "aspectRatio": 1.333,                    // Optional. Whether the rootElement should be automatically resized to maintain aspect ratio. Leave this off if the rootElement is to be strictly styled using CSS.
 		"nativeAssetResolution": 960,            // Optional. Screen width in pixels that the source images were originally designed for.
 		"resizeFont": true,                      // Optional. Whether to adjust the body element's fontSize to proportionally match current window size. Useful for cascading the value of em's across all game DOM elements.
-        "plugins": ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"] // Optional. Plugins to handle various aspects of compilation.
+        "plugins": ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-scripts.js", "js/compile-assets.js", "js/compression-plugin.js", "js/write-files.js"] // Optional. Plugins to handle various aspects of compilation.
 	},
 	"builds": [                                  // Builds and their respective settings
 		{
@@ -39,6 +39,7 @@
 	"source": { 
 		"assets": [ // Assets such as images and audio
 		
+            {"id": "buttons",        "src": "images/buttons.png"},
 			// Audio
             {"id": "audio-sprite", "src": "audio/combined.m4a", "data": { "audioSprite": [
                 {"id": "walk", "startTime": 3200,  "duration": 330},
@@ -46,7 +47,6 @@
             ]}},
 
 			// Images
-		    {"id": "buttons",    	 "src": "images/buttons.png"},
 			{"id": "mookie",         "src": "images/mookie.png",       "data": {"spritesheet": "images/mookie.json", "rows": 4, "columns": 4}},
             {"id": "game-sprites",   "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
             {"id": "title-screen",   "src": "images/title-screen.png", "compression": 64}

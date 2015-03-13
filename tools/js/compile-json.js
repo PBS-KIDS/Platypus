@@ -428,6 +428,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	print(' ');
     }
     
+    delete game.builds;
+    delete game.toolsConfig;
+    delete game.source;
     //insert entities and scenes into compiled config file for reference
     setJSON('compiled-config.json', game);
     print('Completed full config.json.');
