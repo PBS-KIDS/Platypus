@@ -60,6 +60,7 @@
 	    asset      = undefined,
 	    assetId    = 0,
 	    i          = 0,
+	    j          = 0,
 	    remSF      = ((build.index === false)?build.id + '/':false),
 	    tempMan    = '',
 	    version    = 'v' + game.version.replace(/\./g, '-');
@@ -112,20 +113,22 @@
 	    build.htmlTemplate = build.htmlTemplate.replace('<html>', '<html manifest="' + maniPath + '">');
 	    build.manifestTemplate = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + path + 'j\/' + version + '.js\n' + path + 's\/' + version + '.css\n');
 
-	    try{
-	        fileSystem.DeleteFile(buildPath + '*.manifest');
-	    } catch(e) {}
-
 	    build.files = build.files || [];
 	    if(game.manifest){ // Prepare multiple manifest files
-	    	var rewriteConds = [];
+	    	var rewriteConds = [],
+	    	languages = build.languages || game.languages || null,
+	    	str = '';
 	    	
-	    	build.htaccessTemplate += '\nRewriteEngine on\n';
+	    	if(build.htaccessTemplate.indexOf('RewriteEngine on') < 0){
+		    	build.htaccessTemplate += '\nRewriteEngine on\n';
+	    	}
 	    	
 	    	for (i in aspects){
 	    		if(i !== 'default'){
-		    		tempMan = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + aspects[i].join('\n'));
-		    		build.htaccessTemplate += '\nRewriteCond %{HTTP_USER_AGENT} "';
+	    			str = '';
+	    			
+	    			tempMan = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + aspects[i].join('\n'));
+		    		str += '\nRewriteCond %{HTTP_USER_AGENT} "';
 			    	rewriteConds.length = 0;
 				    for(supId in game.manifest){
 				    	for(uaId in game.manifest[supId]){
@@ -134,10 +137,23 @@
 				    		}
 				    	}
 				    }
-				    build.htaccessTemplate += rewriteConds.join('|');
-				    build.htaccessTemplate += '" [NC]\nRewriteRule ^cache\\.manifest$ ' + i + '.manifest [L]\n';
-		        	print('....Creating "' + i + '.manifest".');
-				    setText(buildPath + i + '.manifest', tempMan, build.files);
+				    str += rewriteConds.join('|');
+				    str += '" [NC]\n';
+				    
+				    if(languages && (!build.languageBuilds)){
+				    	// handle language redirection if needed
+				    	for(j in languages){
+				    		build.htaccessTemplate += str + 'RewriteCond %{HTTP:Accept-Language} (' + languages[j] + ') [NC]\n';
+						    build.htaccessTemplate += 'RewriteRule ^cache\\.manifest$ ' + languages[j] + '-' + version + '-' + i + '.manifest [L]\n';
+
+						    print('....Creating "' + version + '-' + i + '.manifest".');
+						    setText(buildPath + version + '-' + i + '.manifest', tempMan, build.files);
+				    	}
+				    } else {
+					    build.htaccessTemplate += str + 'RewriteRule ^cache\\.manifest$ ' + version + '-' + i + '.manifest [L]\n';
+			        	print('....Creating "' + version + '-' + i + '.manifest".');
+					    setText(buildPath + version + '-' + i + '.manifest', tempMan, build.files);
+				    }
 	    		}
 	    	}
 	    } else {

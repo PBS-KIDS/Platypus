@@ -413,19 +413,19 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    setJSON(buildDir + 'version.json', v);
 	    return v;
     },
-   compConfig = getJSON('tools-config.json'),
-   workingDir = compConfig["source-folder"] || '../game/',
-   buildDir   = compConfig["destination-folder"] || '../builds/',
-   gameConfig = getText(workingDir + 'config.json'),
-   game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
-   source     = game.source,
-   dependencyList = source['includes']  = source['includes'] || ['../engine/main.js'],
-   componentList = source['components'] = source['components'] || [],
-   sectionId  = '',
-   builds     = game.builds,
-   buildIndex = 0,
-   build      = null,
-   version    = incrementGameVersion(buildDir);
+    compConfig = getJSON('tools-config.json'),
+    workingDir = compConfig["source-folder"] || '../game/',
+    buildDir   = compConfig["destination-folder"] || '../builds/',
+    gameConfig = getText(workingDir + 'config.json'),
+    game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
+    source     = game.source,
+    dependencyList = source['includes']  = source['includes'] || ['../engine/main.js'],
+    componentList = source['components'] = source['components'] || [],
+    sectionId  = '',
+    builds     = game.builds,
+    buildIndex = 0,
+    build      = null,
+    version    = incrementGameVersion(buildDir);
     
     game.version    = version.version;
     game.timestamp  = version.timestamp;
