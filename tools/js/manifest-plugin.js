@@ -116,8 +116,12 @@
 	    build.files = build.files || [];
 	    if(game.manifest){ // Prepare multiple manifest files
 	    	var rewriteConds = [],
-	    	languages = build.languages || game.languages || null,
+	    	languages = build.languages || null,
 	    	str = '';
+	    	
+	    	if(!languages && game.languages && game.languages.reference){
+	    		languages = game.languages.reference[0].slice(1);
+	    	}
 	    	
 	    	if(build.htaccessTemplate.indexOf('RewriteEngine on') < 0){
 		    	build.htaccessTemplate += '\nRewriteEngine on\n';
@@ -145,15 +149,12 @@
 				    	for(j in languages){
 				    		build.htaccessTemplate += str + 'RewriteCond %{HTTP:Accept-Language} (' + languages[j] + ') [NC]\n';
 						    build.htaccessTemplate += 'RewriteRule ^cache\\.manifest$ ' + languages[j] + '-' + version + '-' + i + '.manifest [L]\n';
-
-						    print('....Creating "' + version + '-' + i + '.manifest".');
-						    setText(buildPath + version + '-' + i + '.manifest', tempMan, build.files);
 				    	}
 				    } else {
 					    build.htaccessTemplate += str + 'RewriteRule ^cache\\.manifest$ ' + version + '-' + i + '.manifest [L]\n';
-			        	print('....Creating "' + version + '-' + i + '.manifest".');
-					    setText(buildPath + version + '-' + i + '.manifest', tempMan, build.files);
 				    }
+				    print('....Creating "' + version + '-' + i + '.manifest".');
+				    setText(buildPath + version + '-' + i + '.manifest', tempMan, build.files);
 	    		}
 	    	}
 	    } else {

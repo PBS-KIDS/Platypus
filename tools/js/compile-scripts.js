@@ -71,6 +71,7 @@
 	    delete game.builds;
 	    delete game.toolsConfig;
 	    delete game.source;
+	    delete game.languages;
 
 	    //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
 	    for(sectionId in source){

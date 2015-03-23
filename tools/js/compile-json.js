@@ -117,8 +117,37 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    		}
    		return false;
        };
-   })(),
-   getText    = function(path){
+    })(),
+    csvToArray = function( strData, strDelimiter ){
+	    // ref: http://stackoverflow.com/a/1293163/2343
+	    // This will parse a delimited string into an array of
+	    // arrays. The default delimiter is the comma, but this
+	    // can be overridden in the second argument.
+
+        strDelimiter = (strDelimiter || ",");
+        var objPattern = new RegExp((
+                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
+                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
+                "([^\"\\" + strDelimiter + "\\r\\n]*))"
+            ), "gi");
+        var arrData = [[]];
+        var arrMatches = null;
+        while (arrMatches = objPattern.exec( strData )){
+            var strMatchedDelimiter = arrMatches[ 1 ];
+            if (strMatchedDelimiter.length && strMatchedDelimiter !== strDelimiter){
+                arrData.push( [] );
+            }
+            var strMatchedValue;
+            if (arrMatches[ 2 ]){
+                strMatchedValue = arrMatches[ 2 ].replace(new RegExp( "\"\"", "g" ), "\"");
+            } else {
+                strMatchedValue = arrMatches[ 3 ];
+            }
+            arrData[ arrData.length - 1 ].push( strMatchedValue );
+        }
+        return( arrData );
+    },
+    getText    = function(path){
 	   var file = undefined,
 	   text     = '';
 	   try {
@@ -459,6 +488,18 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	build.htaccessTemplate = getText(workingDir + (build.htaccessTemplate || '.htaccess'));
     	build.manifestTemplate = getText(workingDir + (build.manifestTemplate || 'template.manifest'));
 	}
+    
+    if(game.languages){
+        print('..Loading language reference.');
+        
+        try {
+        	game.languages.reference = getText(workingDir + game.languages.reference);
+        	game.languages.reference = csvToArray(game.languages.reference);
+            game.languages.reference;
+        } catch(e) {
+        	print('Error loading language reference: ' + e.description);
+        }
+    }
     
     var plugins = game.global.plugins || ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"];
     

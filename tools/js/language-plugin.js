@@ -3,52 +3,7 @@
  */
 
 (function(){
-    var csvToArray = function( strData, strDelimiter ){
-	    // ref: http://stackoverflow.com/a/1293163/2343
-	    // This will parse a delimited string into an array of
-	    // arrays. The default delimiter is the comma, but this
-	    // can be overridden in the second argument.
-
-        strDelimiter = (strDelimiter || ",");
-        var objPattern = new RegExp((
-                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-                "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-                "([^\"\\" + strDelimiter + "\\r\\n]*))"
-            ), "gi");
-        var arrData = [[]];
-        var arrMatches = null;
-        while (arrMatches = objPattern.exec( strData )){
-            var strMatchedDelimiter = arrMatches[ 1 ];
-            if (strMatchedDelimiter.length && strMatchedDelimiter !== strDelimiter){
-                arrData.push( [] );
-            }
-            var strMatchedValue;
-            if (arrMatches[ 2 ]){
-                strMatchedValue = arrMatches[ 2 ].replace(new RegExp( "\"\"", "g" ), "\"");
-            } else {
-                strMatchedValue = arrMatches[ 3 ];
-            }
-            arrData[ arrData.length - 1 ].push( strMatchedValue );
-        }
-        return( arrData );
-    },
-    getText = function(path){
-	    var file = undefined,
-	    text     = '';
-	    try {
-		    file = fileSystem.OpenTextFile(path);
-		    try {
-			    text = file.ReadAll();
-		    } catch(e){
-			    alert('Error reading from "' + path + '": ' + e.description);
-		    }
-		    file.Close();
-	    } catch (e) {
-		    alert('Error opening "' + path + '": ' + e.description);
-	    }
-	    return text;
-    },
-    handleLanguageBuilds = function(build, languages, dictionary, config, syntax, builds){
+    var handleLanguageBuilds = function(build, languages, dictionary, config, syntax, builds){
     	var i = 0;
     	
     	for (i = 0; i < languages.length; i++){
@@ -87,7 +42,8 @@
     handleLanguageBranches = function(build, languages, dictionary, config, syntax){
     	var i  = 0,
     	files  = [],
-    	hta    = null;
+    	hta    = null,
+    	hta2   = '';
 
     	print('..Processing source files.');
     	for (i = build.files.length - 1; i >= 0; i--){
@@ -98,7 +54,7 @@
     	    		hta.content += '\nRewriteEngine on\n';
     	    	}
 	    		hta.content += '\nRewriteCond %{REQUEST_FILENAME} !-f';
-	    		hta.content += '\nRewriteRule ^$|^\\/$ index.html [L,NC]\n';
+	    		hta.content += '\nRewriteRule ^$|^\\/$ index.html [NC]\n';
     		}
     	}
     	
@@ -110,16 +66,25 @@
 
     				// .htaccess rules
     				if(hta){
-    					if(i > 0){ //exclude initial language since it's default
-    			    		hta.content += '\nRewriteCond %{HTTP:Accept-Language} (' + languages[i] + ') [NC]';
-    					}
+   			    		hta.content += '\nRewriteCond %{HTTP:Accept-Language} ^' + languages[i] + ' ';
 			    		hta.content += '\nRewriteCond %{REQUEST_FILENAME} !-f';
 			    		hta.content += '\nRewriteRule ^index\\.html$ ' + languages[i] + '-index.html [L,NC]\n';
+
+			    		// more liberal check if primary language isn't handled above.
+			    		if(i > 0){ //exclude initial language since it's default
+    			    		hta2 += '\nRewriteCond %{HTTP:Accept-Language} (' + languages[i] + ') ';
+    					}
+			    		hta2 += '\nRewriteCond %{REQUEST_FILENAME} !-f';
+			    		hta2 += '\nRewriteRule ^index\\.html$ ' + languages[i] + '-index.html [L,NC]\n';
     				}
     			} else {
     				print('..No dictionary found for "' + languages[i] + '" (build "' + build.id + '").');
     			}
     		}
+    	}
+    	
+    	if(hta){
+    		hta.content += hta2;
     	}
 
     	build.languages = build.languages || languages;
@@ -158,24 +123,36 @@
         return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
    	},
    	format = function(s){
-   		return s.replace(/\\/g, '\\\\').replace(/\"/g, '\\"').replace(/\'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/\b/g, '\\b').replace(/\f/g, '\\f');
+   		return s.replace(/\\/g, '\\\\').replace(/\"/g, '\\"').replace(/\'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/\b/g, '').replace(/\f/g, '\\f');
    	},
     translateFile = function(file, dictionary, syntax, js){
     	var key = '';
     	
     	if(js){
         	for (key in dictionary){
+            	updateUK(key, file, syntax);
         		file = file.replace(new RegExp(escRegExp(syntax[0] + key + syntax[1]), 'g'), format(dictionary[key]));
         	}
     	} else {
         	for (key in dictionary){
+            	updateUK(key, file, syntax);
         		file = file.replace(new RegExp(escRegExp(syntax[0] + key + syntax[1]), 'g'), dictionary[key]);
         	}
     	}
     	
     	return file;
     },
-    workingDir = config.toolsConfig["source-folder"] || '../game/',
+    updateUK = function(key, str, syntax){
+    	for (var i = 0; i < unusedKeys.length; i++){
+    		if(unusedKeys[i] === key){
+    			if(str.indexOf(syntax[0] + key + syntax[1]) >= 0){
+    				unusedKeys.splice(i,1);
+    				break;
+    			}
+    		}
+    	}
+    },
+    unusedKeys = [],
     languages = [],
     dictionary = {},
     langConfig = config.languages,
@@ -197,13 +174,7 @@
     	langConfig.syntax = ['{{', '}}'];
     }
     
-    try {
-        source = getText(workingDir + langConfig.reference);
-        source = csvToArray(source);
-    } catch(e) {
-    	print('Error converting csv to array: ' + e.description);
-    	return;
-    }
+    source = langConfig.reference;
     
     print('Preparing language reference.');
     languages = source[0].slice(1); // removing first item since it's the header for variable names
@@ -219,6 +190,11 @@
     	}
     }
     
+    for (var j = 0; j < source.length; j++){
+    	if(source[j][0]){
+        	unusedKeys.push(source[j][0]);
+    	}
+    }
 //    config.dictionary = dictionary;
     
     print('Creating language builds.');
@@ -234,6 +210,9 @@
             print('.Completed language branches for build "' + builds[buildIndex].id + '".');
     	}
 	}
+    if(unusedKeys.length){
+        print('.The following keys are not used: ' + unusedKeys.toString());
+    }
     print('Adding language builds.');
     for (buildIndex = 0; buildIndex < languageBuilds.length; buildIndex++){
         print('.Adding build "' + builds[buildIndex].id + '".');
