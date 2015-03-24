@@ -501,7 +501,7 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
         }
     }
     
-    var plugins = game.global.plugins || ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/compile-assets.js", "js/compile-scripts.js"];
+    var plugins = game.global.plugins || ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/scripts-plugin.js", "js/language-plugin.js", "js/assets-plugin.js", "js/compression-plugin.js", "js/write-plugin.js"];
     
 	config = game;
 	for(var k = 0; k < plugins.length; k++){
@@ -512,10 +512,5 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     	print(' ');
     }
     
-    delete game.builds;
-    delete game.toolsConfig;
-    delete game.source;
-    //insert entities and scenes into compiled config file for reference
-    setJSON('compiled-config.json', game);
     print('Completed full config.json.');
 })();
