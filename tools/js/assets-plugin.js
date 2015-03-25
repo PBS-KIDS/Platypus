@@ -1,5 +1,24 @@
-/*
- * Compress and move assets to builds folder
+/**
+ * ASSETS PLUGIN
+ * 
+ * This plugin copies assets from the source files into the various build locations.
+ * 
+ * It looks for the following settings in the game configuration:
+ * 
+ * config.builds (Array)
+ *     This list sets the locations for the assets to be copied to.
+ * 
+ * config.sources (key/value pairs)
+ *     This lists the files to be copied.
+ *     
+ *     [].sourceFiles (key/value pairs)
+ *         If an asset has this property, each key matches a given build's id, the key's value is a path
+ *         pointing to an alternative asset that should be loaded for the given build.
+ *         
+ * config.manifest (key/value pairs)
+ *     This section lists alternative files to be loaded to support multiple browsers. Check the manifest
+ *     plugin for syntax and other documentation.
+ * 
  */
 
 (function(){

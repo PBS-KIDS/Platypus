@@ -1,5 +1,9 @@
-/*
- * Compile JavaScript files into a single file and move server-side files to builds folder
+/**
+ * WRITE PLUGIN
+ * 
+ * This final plugin handles writing the various scripts, style sheets, and manifest files to the build
+ * locations. It works in tandem with the assets plugin to create complete builds.
+ * 
  */
 
 (function(){

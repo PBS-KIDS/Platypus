@@ -1,5 +1,20 @@
 /**
-  * Compresses images according to config properties
+  * PNGQUANT PLUGIN
+  * 
+  * This plugin uses the pngquant compression utility to compress PNGs. You can set how many colors each
+  * image should have, and this plugin rolls through the list of assets, smashing PNGs into significantly
+  * smaller files.
+  * 
+  * It looks for the following settings in the game configuration:
+  * 
+  * config.builds[].pngCompression (number)
+  *     Whether to compress PNGs for a given build: 0 means no compression will be used. A positive
+  *     integer compresses to that number of colors per image.
+  *     
+  * config.source.assets[].compression (number)
+  *     Use this to set compression for a particular PNG asset: 0 will use the default set above. Any
+  *     other positive integer compresses to that number of colors for this particular image.
+  * 
   */
 
 (function(){

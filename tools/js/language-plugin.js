@@ -1,5 +1,38 @@
-/*
- * Create .manifest files for assets
+/**
+ * LANGUAGE PLUGIN
+ * 
+ * This plugin uses a language table to create unique language builds for localization. It's a template
+ * system that replaces {{language-keys}} in the code with appropriate localized text. It also handles
+ * mod_rewrite's to pull the correct index.html if you choose to have multiple languages in a single
+ * build. Alternatively, you can specify to produce multiple single-language builds.
+ * 
+ * It looks for the following settings in the game configuration:
+ * 
+ * config.languages
+ *     .reference (string or 2D array)
+ *         This can be a path name to a CSV file listing language information or an array with the
+ *         following form. (This is the same layout used by a spreadsheet CSV source.)
+ *         [
+ *             ['language-code', 'en-US', 'en-GB'],
+ *             ['flat-dessert', 'cookie', 'biscuit']
+ *         ]
+ *         The first row lists language codes to support and the first column lists keys. Using this
+ *         format, all instances of {{flat-dessert}} found in the source code will be replaced with
+ *         `cookie` in the `en-US` build and `biscuit` in the `en-GB` build. The first language listed
+ *         is treated as the default language if a client browser language is not supported.
+ *     .syntax (Array)
+ *         This is a two-element array listing the parse characters to enclose language keys. It defaults
+ *         to ['{{', '}}'] where language keys in code take the form of {{language-key}}.
+ *         
+ * config.builds[]
+ *     .languageBuilds (boolean)
+ *         If `true`, individual builds are made for each language. If `false` or not set, the given
+ *         build will include all the languages, and have an .htaccess file included to load the correct
+ *         version according to the client's accept-language header.
+ *     .languages (Array)
+ *         If set, this list of languages is compiled for the given build. If not set, the entire list as
+ *         set by config.languages is used.
+ *         
  */
 
 (function(){

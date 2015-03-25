@@ -1,5 +1,16 @@
-/*
- * Compile JavaScript files into a single file and move server-side files to builds folder
+/**
+ * COMPRESSION PLUGIN
+ * 
+ * This plugin uses the YUI compressor to compress the JavaScript and CSS files.
+ * 
+ * It looks for the following settings in the game configuration:
+ * 
+ * config.builds[].cssCompression (boolean)
+ *     Sets whether the given build's CSS files should be compressed.
+ *
+ * config.builds[].jsCompression (boolean)
+ *     Sets whether the given build's JavaScript files should be compressed.
+ *     
  */
 
 (function(){

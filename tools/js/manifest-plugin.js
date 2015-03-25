@@ -1,5 +1,42 @@
-/*
- * Create .manifest files for assets
+/**
+ * MANIFEST PLUGIN
+ * 
+ * This plugin tallies all the assets and creates an application cache for your game. It also handles editing
+ * an Apache .htaccess file with mod_rewrite rules so that it can cache the correct audio assets for different
+ * browsers.
+ * 
+ * It looks for the following settings in the game configuration:
+ * 
+ * config.builds[]
+ *     .manifest (boolean) - Default is `false`.
+ *         Sets whether a given build should have an application cache manifest.
+ *     .manifestTemplate (string)
+ *         Sets a template for the manifest. If not supplied, this plugin creates one.
+ *     .htaccessTemplate (string)
+ *         Sets a template for the .htaccess file. If not supplied, this plugin creates one.
+ *     .htmlTemplate (string)
+ *         Sets a template for the index.html. Defaults to `game/template.html`.
+ *         
+ * config.manifest
+ *     This key/value list determines which file types should be stored for a given client, using the client's
+ *     user-agent. It looks something like this:
+ *     
+ *     "manifest": {
+ *			"audio": { // Keys are user agent checks that should load the provided resource type
+ *			    "firefox": "ogg",
+ *			    "opera":   "ogg",
+ *			    "chrome":  "ogg",
+ *			    "android": "m4a",
+ *			    "silk":    "m4a",
+ *			    "ipod":    "m4a",
+ *			    "ipad":    "m4a",
+ *			    "iphone":  "m4a",  // Order determines first valid version, so Safari on iPad will use "m4a" rather than "mp3" below
+ *			    "msie":    "mp3",
+ *			    "safari":  "mp3",
+ *			    "trident": "mp3"
+ *			}
+ *		}
+ *     
  */
 
 (function(){

@@ -8,7 +8,6 @@
  *    config.json, but all assets must be listed in config.json to be included in the compiled build. 
  */
 
-//Compile JSON (without file saving) from tools/js/compile-game.js
 (function(){
 	window.loadJS = loadJS = ['../tools/js/compile-game.js'];
     window.loadJSs = function(){

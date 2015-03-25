@@ -1,13 +1,39 @@
-/*
- * Load Dependencies
+/**
+ * Compile Game
+ * 
+ * This script creates a game configuration object (`config` in the code below) from `game/config.json`
+ * and fills in data from all files referenced in config.json.
+ * 
+ * The following plugins are used by default. To change this list, include a "plugins" key in the
+ * global game settings that is an array of plugin file paths. This list order is important, since some
+ * plugins must run prior to other plugins to set up data for following plugins. For example, the
+ * language plugin can create multiple builds, so it must occur before the assets plugins copies assets
+ * to build locations.
+ * 
+ * Default Plugins
+ * 1. pngquant - This plugin uses the pngquant compression utility to compress PNGs. You can set how many colors each image should have, and this plugin rolls through the list of assets, smashing PNGs into significantly smaller files.
+ * 2. manifest - This plugin tallies all the assets and creates an application cache for your game. It even handles editing an Apache .htaccess file with mod_rewrite rules so that it can cache the correct audio assets for different browsers!
+ * 3. scripts - This plugin grabs all the JavaScript and JSON files and puts them into a single file for a faster download. It also does the same with disparate CSS files.
+ * 4. language - This plugin uses a language table to create unique language builds for localization. It's a template system that replaces {{language-keys}} in the code with appropriate localized text. It also handles mod_rewrite's to pull the correct index.html if you choose to have multiple languages in a single build. (Alternatively, you can specify to produce multiple single-language builds.)
+ * 5. assets - This plugin copies assets from the source files into the build locations.
+ * 6. compression - This plugin uses the YUI compressor to compress the JavaScript and CSS files.
+ * 7. write - This final plugin handles writing the various scripts, style sheets, and manifest files to the build locations.
+ * 
+ * The following global variables are useful for custom plugins:
+ * 1. config - This is the game configuration. It can be modified by plugins to update game information.
+ * 2. isJIT - This boolean value is `true` if the compiler is running inside a browser.
+ * 3. fileSystem - Provides several file-handling functions for modifying game resources.
+ * 
  */
+
+// Global variables
 var config = null,
 include = null,
 isJIT = false,
 workingDir = '',
 buildDir   = '';
 
-if (typeof window === 'undefined') {
+if (typeof window === 'undefined') { // Outside the browser, use Rhino or ActiveX for file manipulation.
     include = function(path){
 		var file = undefined,
 		line     = '',
@@ -45,7 +71,7 @@ if (typeof window === 'undefined') {
  	   }
  	   return text;
     };
-} else { // This compilation is occurring within the browser context
+} else { // Inside of the browser, set appropriate flags to prevent file manipulation.
 	isJIT = true;
 	
 	window.platformer = {};

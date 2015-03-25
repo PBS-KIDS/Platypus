@@ -1,5 +1,23 @@
-/*
- * Compile JavaScript files into a single file and move server-side files to builds folder
+/**
+ * SCRIPTS PLUGIN
+ * 
+ * This is the heart of the compiler: This plugin grabs all the JavaScript and JSON files and puts them into
+ * a single file for a faster download. It also does the same with disparate CSS files. If loaded in a
+ * browser, this plugin will load all the scripts as individual script tags, rather than compile them.
+ * 
+ * It looks for the following settings in the game configuration:
+ * 
+ * config.builds - key/value pairs
+ *     This plugin iterates through all listed builds to create custom instances of all compiled scripts.
+ *     
+ *     .namespace (string)
+ *         This sets the namespace for all compiled scripts.
+ * 
+ * config.source - key/value pairs
+ *     This section lists all the sources for the game. This plugin cycles through this list and compiles
+ *     all script files into a single file per build and updates other asset path names to their new build
+ *     locations.
+ *     
  */
 
 (function(){
