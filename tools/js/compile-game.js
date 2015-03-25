@@ -29,9 +29,7 @@
 // Global variables
 var config = null,
 include = null,
-isJIT = false,
-workingDir = '',
-buildDir   = '';
+isJIT = false;
 
 if (typeof window === 'undefined') { // Outside the browser, use Rhino or ActiveX for file manipulation.
     include = function(path){
@@ -515,7 +513,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
     if(isJIT){
         game.version    = 'debug';
     } else {
-    	incrementGameVersion(buildDir);
+    	version = incrementGameVersion(buildDir);
         game.version    = version.version;
         game.timestamp  = version.timestamp;
         game.buildIndex = version.increment;
