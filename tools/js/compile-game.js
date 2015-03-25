@@ -2,33 +2,75 @@
  * Load Dependencies
  */
 var config = null,
-include = function(path){
-	var file = undefined,
-	line     = '',
-	text     = '';
-	if (typeof ActiveXObject != 'undefined'){
-		file = new ActiveXObject("Scripting.FileSystemObject").OpenTextFile(path);
-		text = file.ReadAll();
-		file.Close();
-	} else {
-    	file = new java.io.BufferedReader(new java.io.FileReader(path));
-    	while ((line = file.readLine()) != null) {
-		  text += new String(line) + '\n';
+include = null,
+isJIT = false,
+workingDir = '',
+buildDir   = '';
+
+if (typeof window === 'undefined') {
+    include = function(path){
+		var file = undefined,
+		line     = '',
+		text     = '';
+		if (typeof ActiveXObject != 'undefined'){
+			file = new ActiveXObject("Scripting.FileSystemObject").OpenTextFile(path);
+			text = file.ReadAll();
+			file.Close();
+		} else {
+	    	file = new java.io.BufferedReader(new java.io.FileReader(path));
+	    	while ((line = file.readLine()) != null) {
+			  text += new String(line) + '\n';
+			}
+	    	file.close();
 		}
-    	file.close();
-	}
-	eval(text);
-};
-include('js/file-io.js');  // Including support for either ActiveX or Rhino file and shell support.
-include('js/json2.js');    // Including json2.js to support JSON if it doesn't exist.
+		eval(text);
+	};
+	include('js/file-io.js');  // Including support for either ActiveX or Rhino file and shell support.
+	include('js/json2.js');    // Including json2.js to support JSON if it doesn't exist.
+
+	var alert  = function(val){print(val);},
+    getText    = function(path){
+ 	   var file = undefined,
+ 	   text     = '';
+ 	   try {
+ 		   file = fileSystem.OpenTextFile(path);
+ 		   try {
+ 			   text = file.ReadAll();
+ 		   } catch(e){
+ 			   alert('Error reading from "' + path + '": ' + e.description);
+ 		   }
+ 		   file.Close();
+ 	   } catch (e) {
+ 		   alert('Error opening "' + path + '": ' + e.description);
+ 	   }
+ 	   return text;
+    };
+} else { // This compilation is occurring within the browser context
+	isJIT = true;
+	
+	window.platformer = {};
+	window.include = function(path){loadJS.push(path);};
+	window.print   = function(txt){console.log(txt);};
+	window.alert   = function(txt){console.error(txt);};
+	window.getText = function(path){
+		var xhr = new XMLHttpRequest();
+		
+		xhr.open('GET', path, false);
+		xhr.send();
+		if(xhr.status === 200){
+			return xhr.responseText;
+		} else {
+			   alert('Error opening "' + path + '": ' + xhr.description);
+		}
+    };
+}
 
 /*
  * Compile JSON files into a single configuration file
  */
 
 (function(){
-    var alert  = function(val){print(val);},
-    engineComponent = (function(){
+    var engineComponent = (function(){
     	// This is a list of all the components in the engine. This list must be updated as new components are added. Also update "game/default.js".
     	var components = ["asset-loader"
    	                  , "audio"
@@ -147,31 +189,19 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
         }
         return( arrData );
     },
-    getText    = function(path){
-	   var file = undefined,
-	   text     = '';
-	   try {
-		   file = fileSystem.OpenTextFile(path);
-		   try {
-			   text = file.ReadAll();
-		   } catch(e){
-			   alert('Error reading from "' + path + '": ' + e.description);
-		   }
-		   file.Close();
-	   } catch (e) {
-		   alert('Error opening "' + path + '": ' + e.description);
-	   }
-	   return text;
-   },
-   getJSON    = function(path){
-	   try{
-		   return eval('(' + getText(path) + ')'); //Using "eval" to allow comments in JSON definition files
-	   } catch(e) {
-		   alert('Error in "' + path + '": ' + e.description);
-		   return {};
-	   }
-   },
+    getJSON = function(path){
+	    try{
+		    return eval('(' + getText(path) + ')'); //Using "eval" to allow comments in JSON definition files
+	    } catch(e) {
+		    alert('Error in "' + path + '": ' + e.description);
+		    return {};
+	    }
+    };
    setText    = function(path, text){
+	   if(isJIT){
+		   return text;
+	   }
+	   
 	   var file = fileSystem.CreateTextFile(path, true);
 	   file.Write(text);
 	   file.Close();
@@ -442,9 +472,9 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
 	    setJSON(buildDir + 'version.json', v);
 	    return v;
     },
-    compConfig = getJSON('tools-config.json'),
-    workingDir = compConfig["source-folder"] || '../game/',
-    buildDir   = compConfig["destination-folder"] || '../builds/',
+    compConfig = isJIT?{}:getJSON('tools-config.json'),
+    workingDir = isJIT?'':(compConfig["source-folder"] || '../game/'),
+    buildDir   = isJIT?'':(compConfig["destination-folder"] || '../builds/'),
     gameConfig = getText(workingDir + 'config.json'),
     game       = eval('(' + gameConfig + ')'), //Using "eval" to allow comments in JSON config file
     source     = game.source,
@@ -454,13 +484,18 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
     builds     = game.builds,
     buildIndex = 0,
     build      = null,
-    version    = incrementGameVersion(buildDir);
+    version    = null;
     
-    game.version    = version.version;
-    game.timestamp  = version.timestamp;
-    game.buildIndex = version.increment;
+    if(isJIT){
+        game.version    = 'debug';
+    } else {
+    	incrementGameVersion(buildDir);
+        game.version    = version.version;
+        game.timestamp  = version.timestamp;
+        game.buildIndex = version.increment;
+    }
 
-    print('--- BUILD VERSION ' + version.version + ' ---');
+    print('--- BUILD VERSION ' + game.version + ' ---');
     print('Composing game from ' + workingDir + 'config.json.');
     
     for(sectionId in source){
@@ -480,15 +515,6 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
    
     game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
 
-    for (buildIndex in builds){
-    	build = builds[buildIndex];
-
-    	print('..Copying templates for build "' + build.id + '".');
-    	build.htmlTemplate     = getText(workingDir + (build.htmlTemplate     || 'template.html'));
-    	build.htaccessTemplate = getText(workingDir + (build.htaccessTemplate || '.htaccess'));
-    	build.manifestTemplate = getText(workingDir + (build.manifestTemplate || 'template.manifest'));
-	}
-    
     if(game.languages){
         print('..Loading language reference.');
         
@@ -501,16 +527,44 @@ include('js/json2.js');    // Including json2.js to support JSON if it doesn't e
         }
     }
     
+    if(isJIT){
+        // Create single build for testing.
+    	for (buildIndex in builds){
+        	if(builds[buildIndex].id === 'debug'){
+        		build = builds[buildIndex];
+        		break;
+        	}
+    	}
+        build = build || {id: 'debug', debug: true, index: true};
+        game.builds = [build];
+    } else {
+        for (buildIndex in builds){
+        	build = builds[buildIndex];
+
+        	print('..Copying templates for build "' + build.id + '".');
+        	build.htmlTemplate     = getText(workingDir + (build.htmlTemplate     || 'template.html'));
+        	build.htaccessTemplate = getText(workingDir + (build.htaccessTemplate || '.htaccess'));
+        	build.manifestTemplate = getText(workingDir + (build.manifestTemplate || 'template.manifest'));
+    	}
+    }
+    
     var plugins = game.global.plugins || ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/scripts-plugin.js", "js/language-plugin.js", "js/assets-plugin.js", "js/compression-plugin.js", "js/write-plugin.js"];
     
 	config = game;
-	for(var k = 0; k < plugins.length; k++){
-    	print(' ');
-    	print('--- BEGIN PLUGIN "' + plugins[k] + '" ---');
-    	include(plugins[k]);
-    	print('--- END PLUGIN "' + plugins[k] + '" ---');
-    	print(' ');
-    }
+	
+	if(isJIT){
+		for(var k = 0; k < plugins.length; k++){
+	    	include('../tools/' + plugins[k]);
+	    }
+	} else {
+		for(var k = 0; k < plugins.length; k++){
+	    	print(' ');
+	    	print('--- BEGIN PLUGIN "' + plugins[k] + '" ---');
+	    	include(plugins[k]);
+	    	print('--- END PLUGIN "' + plugins[k] + '" ---');
+	    	print(' ');
+	    }
+	}
     
     print('Completed full config.json.');
 })();

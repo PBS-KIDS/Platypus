@@ -3,6 +3,11 @@
   */
 
 (function(){
+	if(isJIT){
+		print('This plugin does not support in-browser compilation.');
+		return;
+	}
+
    var alert  = function(val){print(val);},
    checkPush  = function(list, item){
 	   var itIsThere = false;

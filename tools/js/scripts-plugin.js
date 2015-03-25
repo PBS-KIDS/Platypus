@@ -3,42 +3,95 @@
  */
 
 (function(){
-   var alert  = function(val){print(val);},
-   getText    = function(path){
-	    var file = undefined,
-	    text     = '';
-	    try {
-		    file = fileSystem.OpenTextFile(path);
-		    try {
-			    text = file.ReadAll();
-		    } catch(e){
-			    alert('Error reading from "' + path + '": ' + e.description);
+	var workingDir = '',
+	buildDir       = '',
+    hypPath        = null,
+	putInFolder    = null,
+	handleAsset    = null;
+	
+	if(isJIT){
+	    hypPath = putInFolder = function(path){return path;};
+	    handleAsset = function(asset){
+	 	    var src = asset.src;
+	    	
+			if(isImage(src) || isAudio(src) || isFont(src)){
+				return src;
+			} else if(isCSS(src)) {
+				domElement = document.createElement('link');
+				domElement.setAttribute('rel', 'stylesheet');
+				domElement.setAttribute('type', 'text/css');
+				domElement.setAttribute('href', src);
+				document.getElementsByTagName('head')[0].appendChild(domElement);
+		 	    return src;
+			} else if(isJS(src)) {
+				loadJS.push(src);
+		 	    return src;
+			}
+	    };
+	} else {
+		workingDir = config.toolsConfig["source-folder"] || '../game/',
+		buildDir   = config.toolsConfig["destination-folder"] || '../builds/',
+	    hypPath    = function(path){
+		    return path.replace(workingDir, '').replace(/\.\.\//g, '').replace(/\//g, '-').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
+	    };
+	    putInFolder = function(path){
+		    if(isImage(path)){
+			    return 'i/' + path;
+		    } else if(isAudio(path)){
+			    return 'a/' + path;
+		    } else if(isFont(path)){
+			    return 'f/' + path;
 		    }
-		    file.Close();
-	    } catch (e) {
-		    alert('Error opening "' + path + '": ' + e.description);
-	    }
-	    return text;
-    },
-    setText    = function(path, text, list){
+		    return path;
+	    };
+	    handleAsset = function(asset, absolutePath, result, removeSubFolder){
+		    var id = asset.id,
+		    src    = asset.src,
+		    path   = '';
+			   
+			if(src.substring(0,4).toLowerCase() !== 'http'){
+				if(isImage(src) || isAudio(src) || isFont(src)){
+					if(asset.sourceFiles){
+						delete asset.sourceFiles; //so this doesn't get compiled into the game
+					}
+					
+					path = absolutePath + putInFolder(hypPath(src));
+					if(removeSubFolder){
+						assetConversions[src] = path.replace(removeSubFolder, '');
+						return path;
+					} else {
+						assetConversions[src] = path;
+						return path;
+					}
+				} else if(isCSS(src)) {
+					result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
+					result.styles  += renameStyleAssets(getText(src)) + '\n';
+			 	    return src;
+				} else if(isJS(src)) {
+					result.scripts += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
+					result.scripts += getText(src) + '\n';
+			 	    return src;
+				}
+			} else {
+				if(isImage(src) || isAudio(src) || isFont(src)){
+					return src;
+				} else if(isCSS(src)) {
+					result.extStyles += '  <link rel="stylesheet" href="' + src + '" type="text\/css" \/>\n';
+			 	    return src;
+				} else if(isJS(src)) {
+					result.extScripts += '  <script type="text\/javascript" src="' + src + '"><\/script>\n';
+			 	    return src;
+				}
+			}
+	   };
+	}
+	
+    var setText = function(path, text, list){
 	    list.push({
 	    	name: path,
 	    	content: text
 	    });
 	    return text;
-    },
-    hypPath    = function(path){
-	    return path.replace(workingDir, '').replace(/\.\.\//g, '').replace(/\//g, '-').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
-    },
-    putInFolder= function(path){
-	    if(isImage(path)){
-		    return 'i/' + path;
-	    } else if(isAudio(path)){
-		    return 'a/' + path;
-	    } else if(isFont(path)){
-		    return 'f/' + path;
-	    }
-	    return path;
     },
     buildGame = function(build, config){
 	    var namespace = build.namespace || 'platypus',
@@ -61,7 +114,6 @@
 	    sectionId  = '',
 	    asset      = undefined,
 	    assetId    = 0,
-	    srcId      = '',
 	    i          = 0,
 	    j          = 0,
 	    divider    = '',
@@ -78,7 +130,11 @@
 		    print('...Handling "' + sectionId + '" section.');
 	    	section = source[sectionId];
 	    	if((sectionId === 'components') || (sectionId === 'classes')){
-	    		result.scripts += 'platformer.' + sectionId + ' = {};\n';
+	    		if(isJIT){
+		    		platformer[sectionId] = {};
+	    		} else {
+		    		result.scripts += 'platformer.' + sectionId + ' = {};\n';
+	    		}
 	    	}
     		game[sectionId] = {};
 	    	if(sectionId === 'assets') {
@@ -100,9 +156,8 @@
 				    		asset.src = handleAsset(asset, path, result, remSF);
 				    	}
 				    }
-				    srcId = '';
 			    } catch(e) {
-				    alert('Error in processing ' + (srcId || 'default') + ' asset: "' + sectionId + ' ' + assetId + '": ' + e.description);
+				    alert('Error in processing asset: "' + sectionId + ' ' + assetId + '": ' + e.description);
 			    }
 
 	    		game[sectionId][asset.id] = asset;
@@ -110,6 +165,11 @@
 	    }
 	    
 	    game.debug = build.debug || false;
+	    
+	    if(isJIT){
+	    	platformer.settings = game;
+	    	return ;
+	    }
 
 	    for(i = 0; i < nsArray.length - 1; i++){
 	    	nsName = '';
@@ -189,48 +249,6 @@
 	   }
 	   return cssText;
    },
-   handleAsset = function(asset, absolutePath, result, removeSubFolder){
-	    var id = asset.id,
-	    src    = asset.src,
-	    path   = '';
-		   
-		if(src.substring(0,4).toLowerCase() !== 'http'){
-			if(isImage(src) || isAudio(src) || isFont(src)){
-				if(asset.sourceFiles){
-					delete asset.sourceFiles; //so this doesn't get compiled into the game
-				}
-				
-				path = absolutePath + putInFolder(hypPath(src));
-				if(removeSubFolder){
-					assetConversions[src] = path.replace(removeSubFolder, '');
-					return path;
-				} else {
-					assetConversions[src] = path;
-					return path;
-				}
-			} else if(isCSS(src)) {
-				result.styles  += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
-				result.styles  += renameStyleAssets(getText(src)) + '\n';
-		 	    return src;
-			} else if(isJS(src)) {
-				result.scripts += '\n\/*--------------------------------------------------\n *   ' + id + ' - ' + src + '\n *\/\n';
-				result.scripts += getText(src) + '\n';
-		 	    return src;
-			}
-		} else {
-			if(isImage(src) || isAudio(src) || isFont(src)){
-				return src;
-			} else if(isCSS(src)) {
-				result.extStyles += '  <link rel="stylesheet" href="' + src + '" type="text\/css" \/>\n';
-		 	    return src;
-			} else if(isJS(src)) {
-				result.extScripts += '  <script type="text\/javascript" src="' + src + '"><\/script>\n';
-		 	    return src;
-			}
-		}
-   },
-   workingDir = config.toolsConfig["source-folder"] || '../game/',
-   buildDir   = config.toolsConfig["destination-folder"] || '../builds/',
    builds     = config.builds,
    buildIndex = 0;
 
@@ -241,4 +259,9 @@
     	buildGame(builds[buildIndex], config);
 	}
     print('Completed script compilation. Hurrah!');
+    
+    if(isJIT){
+        console.warn('!!! This is a test build. Use the compile scripts in the /tools folder to make sure assets are correctly referenced for inclusion and to create builds for deploying.');
+        console.log('\n ------- End Compilation Log / Begin Game Logs ------- \n');
+    }
 })();

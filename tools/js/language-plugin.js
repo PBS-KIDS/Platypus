@@ -3,6 +3,11 @@
  */
 
 (function(){
+	if(isJIT){
+		print('This plugin does not support in-browser compilation.');
+		return;
+	}
+
     var handleLanguageBuilds = function(build, languages, dictionary, config, syntax, builds){
     	var i = 0;
     	

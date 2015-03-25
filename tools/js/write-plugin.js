@@ -3,6 +3,11 @@
  */
 
 (function(){
+	if(isJIT){
+		print('This plugin does not support in-browser compilation.');
+		return;
+	}
+
     var setText = function(path, text){
 	    var file = fileSystem.CreateTextFile(path, true);
 	    file.Write(text);

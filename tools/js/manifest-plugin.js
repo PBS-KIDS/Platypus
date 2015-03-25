@@ -3,6 +3,11 @@
  */
 
 (function(){
+	if(isJIT){
+		print('This plugin does not support in-browser compilation.');
+		return;
+	}
+
     var manifests  = null,
     alert  = function(val){print(val);},
     setText    = function(path, text, list){
