@@ -31,40 +31,40 @@ This component works with `collision-basic` to cause entities to bounce away on 
       "elasticity": 0.4
       // Optional. Bounciness of the entity. Defaults to 0.8.
     }
+
+Requires: ["../vector.js"]
 */
 (function(){
 	return platformer.createComponentClass({
 		id: 'logic-rebounder',
 		
 		constructor: function(definition){
-			this.owner.dx = this.owner.dx || 0;
-			this.owner.dy = this.owner.dy || 0;
+			platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
+
 			this.owner.mass = this.owner.mass || definition.mass || 1;
 			this.elasticity = definition.elasticity || .8;
 			
-			this.v = new platformer.Vector2D(0,0);
-			this.incidentVector = new platformer.Vector2D(0,0); 
+			this.v = new platformer.Vector(0,0,0);
+			this.incidentVector = new platformer.Vector(0,0,0); 
 			
 			this.staticCollisionOccurred = false;
 			this.nonStaticCollisionOccurred = false;
 			
 			this.hitThisTick = [];
-			this.otherVelocityData = null;
-			this.otherV = new platformer.Vector2D(0,0);
+			this.otherV = new platformer.Vector(0,0,0);
 			this.otherVelocityData = [];
-			
 		},
 
 		events: {// These are messages that this component listens for
 			"handle-logic": function (resp) {
 				this.hitThisTick = [];
-				this.otherVelocityData = [];
+				this.otherVelocityData.length = 0;
 			},
 			"hit-static": function (collData) {
 				var magnitude = 0;
 				
-				this.v.set(this.owner.dx, this.owner.dy);
-				this.incidentVector.set(collData.direction.x, collData.direction.y);
+				this.v.set(this.owner.velocity);
+				this.incidentVector.set(collData.direction);
 				
 				magnitude = this.v.scalarProjection(this.incidentVector);
 				if (!isNaN(magnitude))
@@ -73,15 +73,11 @@ This component works with `collision-basic` to cause entities to bounce away on 
 					this.v.subtractVector(this.incidentVector);
 				}
 				
-				this.owner.dx = this.v.x;
-				this.owner.dy = this.v.y;
+				this.owner.velocity.set(this.v);
 			},
 			"hit-non-static": function (collData) {
 				var other = collData.entity;
 				var otherVSet = false;
-				
-				var collisionMagnitude = 0;
-				var relevantMagnitude = 0;
 				
 				var relevantV = 0;
 				var otherRelevantV = 0;
@@ -97,19 +93,19 @@ This component works with `collision-basic` to cause entities to bounce away on 
 				
 				for (var x = 0; x < this.otherVelocityData.length; x++) {
 					if (other === this.otherVelocityData[x].entity) {
-						this.otherV.set(this.otherVelocityData[x].vX, this.otherVelocityData[x].vY);
+						this.otherV.set(this.otherVelocityData[x].velocity);
 						otherVSet = true;
 						break;
 					}
 				}
 				
 				if (!otherVSet) {
-					this.otherV.set(other.dx, other.dy);
+					this.otherV.set(other.velocity);
 					other.triggerEvent('share-velocity', this.owner);
 				}
 				
-				this.v.set(this.owner.dx, this.owner.dy);
-				this.incidentVector.set(collData.direction.x, collData.direction.y);
+				this.v.set(this.owner.velocity);
+				this.incidentVector.set(collData.direction);
 				
 				
 				relevantV = this.v.scalarProjection(this.incidentVector);
@@ -121,25 +117,11 @@ This component works with `collision-basic` to cause entities to bounce away on 
 				
 				this.incidentVector.scale(reboundV - relevantV);
 				
-				/*
-				relevantMag = this.v.scalarProjection(this.incidentVector) * this.owner.mass;
-				relevantMag = (isNaN(relevantMag)) ? 0 : relevantMag;
-				otherRelevantMag = this.otherV.scalarProjection(this.incidentVector) * other.mass;
-				otherRelevantMag = (isNaN(otherRelevantMag)) ? 0 : otherRelevantMag;
-				
-				collisionMagnitude = (relevantMag - otherRelevantMag);
-				
-				collisionMagnitude /= this.owner.mass;
-				
-				this.incidentVector.scale(collisionMagnitude  *(this.elasticity));
-				*/
-				
-				this.owner.dx += this.incidentVector.x;
-				this.owner.dy += this.incidentVector.y;
+				this.owner.velocity.set(this.incidentVector);
 				
 			},
 			"share-velocity": function (other) {
-				this.otherVelocityData.push({entity: other, vX: other.dx, vY: other.dy});
+				this.otherVelocityData.push({entity: other, velocity: new platformer.Vector(other.velocity)});
 			}
 		},
 		

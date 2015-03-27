@@ -25,13 +25,15 @@ This component causes an entity to teleport when receiving a teleport message.
     {
       "type": "logic-teleportee"
     }
+
+Requires: ["../vector.js"]
 */
 (function(){
 	return platformer.createComponentClass({
 		id: 'logic-teleportee',
 		
 		constructor: function(definition){
-			this.teleportDestination = {x: null, y: null};
+			this.teleportDestination = new platformer.Vector();
 			this.teleportNow = false;
 			this.DestinationSet = false;
 		},
@@ -39,7 +41,7 @@ This component causes an entity to teleport when receiving a teleport message.
 		events: {// These are messages that this component listens for
 			"handle-logic": function(){
 				if (this.teleportNow){
-					this.owner.trigger('relocate-entity', this.teleportDestination);
+					this.owner.trigger('relocate-entity', {position: this.teleportDestination});
 					this.teleportNow = false;
 					this.owner.trigger('teleport-complete');
 				}
@@ -59,8 +61,7 @@ This component causes an entity to teleport when receiving a teleport message.
 		
 		methods: {
 			setDestination: function(position){
-				this.teleportDestination.x = position.x;
-				this.teleportDestination.y = position.y;
+				this.teleportDestination.set(position.x, position.y);
 				this.destinationSet = true;
 			}
 		}

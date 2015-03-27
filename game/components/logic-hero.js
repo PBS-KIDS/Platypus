@@ -11,6 +11,8 @@
 			
 			this.teleportDestination = undefined;
 			this.justTeleported = false;
+			
+			//platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
 		},
 		
 		events:{

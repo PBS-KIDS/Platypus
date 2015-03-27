@@ -57,6 +57,9 @@ Requires: ["../aabb.js"]
 			this.terrain = undefined;
 			this.aabb     = new platformer.AABB(this.owner.x, this.owner.y);
 			this.prevAABB = new platformer.AABB(this.owner.x, this.owner.y);
+
+			platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+			platformer.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
 			this.owner.previousX = this.owner.previousX || this.owner.x;
 			this.owner.previousY = this.owner.previousY || this.owner.y;
 			
@@ -100,8 +103,8 @@ Requires: ["../aabb.js"]
 				prepareCollision: function(x, y){
 					return self.prepareCollision(x, y);
 				},
-				relocateEntity: function(x, y, collisionData){
-					return self.relocateEntity(x, y, collisionData);
+				relocateEntity: function(vector, collisionData){
+					return self.relocateEntity(vector, collisionData);
 				},
 				movePreviousX: function(x){
 					return self.movePreviousX(x);
@@ -130,9 +133,8 @@ Requires: ["../aabb.js"]
 				this.removeCollisionEntity(entity);
 			},
 			
-			"relocate-entity": function(resp){
-				this.owner.previousX = this.owner.x;
-				this.owner.previousY = this.owner.y;
+			"relocate-entity": function(){
+				this.owner.previousPosition.set(this.owner.position);
 				this.updateAABB();
 			}
 		},
@@ -319,13 +321,13 @@ Requires: ["../aabb.js"]
 				}
 			},
 			
-			relocateEntity: function(x, y, collisionData){
+			relocateEntity: function(vector, collisionData){
 				var childEntity = null,
 				entity = null,
 				i = 0;
 				
-				this.owner.saveDX -= x - this.owner.previousX;
-				this.owner.saveDY -= y - this.owner.previousY;
+				this.owner.saveDX -= vector.x - this.owner.previousX;
+				this.owner.saveDY -= vector.y - this.owner.previousY;
 
 				for(i = 0; i < collisionData.xCount; i++){
 					if(collisionData.getXEntry(i).thisShape.owner === this.owner){
@@ -346,7 +348,7 @@ Requires: ["../aabb.js"]
 					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					childEntity.relocateEntity(x - entity.saveOX, y - entity.saveOY, collisionData);
+					childEntity.relocateEntity(new platformer.Vector(x - entity.saveOX, y - entity.saveOY), collisionData);
 					entity.x += entity.saveDX;
 					entity.y += entity.saveDY;
 					if(entity !== this.owner){

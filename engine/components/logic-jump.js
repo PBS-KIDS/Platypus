@@ -32,7 +32,7 @@ This component will cause the entity to jump with a certain amount of accelerati
       // determines maximum velocity when jump button is released to allow for variable jump heights. Setting this to 1 removes variable height jumping. Defaults to 0.5, making the cap half of jump velocity.
     }
 
-Requires: ["../vector2D.js"]
+Requires: ["../vector.js"]
 */
 (function(){
 	return platformer.createComponentClass({
@@ -46,17 +46,12 @@ Requires: ["../vector2D.js"]
 				y = -1;
 			}
 			
-			this.velocity = new platformer.Vector2D(x, y);
+			this.velocity = new platformer.Vector(x, y, 0);
 			this.cap      = this.velocity.copy().scale(cap);
 			this.capMagnitude = this.cap.magnitude();
 			this.cap.normalize();
 			
-			if(typeof this.owner.dx !== 'number'){
-				this.owner.dx = 0;
-			}
-			if(typeof this.owner.dy !== 'number'){
-				this.owner.dy = 0;
-			}
+			platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 			
 			this.jumping = false;
 			this.justJumped = false;
@@ -65,11 +60,6 @@ Requires: ["../vector2D.js"]
 			this.state = this.owner.state;
 			this.state.jumping    = false;
 			this.state.justJumped = false;
-
-			// Notes definition changes from older versions of this component.
-			if(definition.message){
-				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "jump"} instead.');
-			}
 		},
 		
 		events:{
@@ -84,8 +74,7 @@ Requires: ["../vector2D.js"]
 				if(this.justJumped){
 					this.justJumped = false;
 					this.owner.triggerEvent("just-jumped");
-					this.owner.dx = this.velocity.x;
-					this.owner.dy = this.velocity.y;
+					this.owner.velocity.set(this.velocity);
 				}
 				
 				if(this.state.jumping !== this.jumping){
@@ -93,12 +82,11 @@ Requires: ["../vector2D.js"]
 					
 					// This handles variable height jumping by adjusting the jump velocity to the pre-determined cap velocity for jump-button release.
 					if(!this.jumping){
-						v = new platformer.Vector2D(this.owner.dx, this.owner.dy);
+						v = new platformer.Vector(this.owner.velocity);
 						s = v.scalarProjection(this.velocity);
 					    if(s > this.capMagnitude){
 							v.subtractVector(this.cap.copy().scale(s - this.capMagnitude));
-							this.owner.dx = v.x;
-							this.owner.dy = v.y;
+							this.owner.velocity.set(v);
 						}
 					}
 				}

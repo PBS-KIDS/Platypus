@@ -95,7 +95,7 @@ platformer.Entity = (function(){
 		instanceProperties   = instance.properties || {};
 		
 		// Set properties of messenger on this entity.
-		platformer.Messenger.call(this);
+		platformer.Messenger.call(self);
 		
 		self.components  = [];
 		self.type = def.id || 'none';
