@@ -57,6 +57,10 @@ This component is attached to entities that will appear in the game world. It re
   - @param container ([createjs.Container][link3]) - Container that the render-sprite should be added to.
 - **remove-pin** - When preparing to remove itself from an entity, render-sprite broadcasts this to all attached sprites.
   - @param pinId (string) - Pin Id of the pin location to be removed.
+- **transform** - (string or Array or [createjs.Matrix2D][link4]) This performs an affine transformation on the sprite that is applied before entity properties are applied.
+  - @param affine (string) - This is one of 7 possible standard affine transformations: "horizontal", "vertical", "diagonal", "diagonal-inverse", "rotate-90", "rotate-180", and "rotate-270". All other strings will perform an identity transform.
+  - @param affine (Array) - This is a 2x2 or 2x3 array that describes the affine transformation.
+  - @param affine (Matrix2D) - This is an object that describes the affine transformation.
 
 ## JSON Definition
     {
@@ -183,8 +187,11 @@ This component is attached to entities that will appear in the game world. It re
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
+[link4]: http://createjs.com/Docs/EaselJS/Matrix2D.html
 */
 (function(){
+	"use strict";
+	
 	var dpr = window.devicePixelRatio || 1,
 	ssCache = {},
 	changeState = function(state){
@@ -455,7 +462,12 @@ This component is attached to entities that will appear in the game world. It re
 			return function(definition){
 				var self = this, 
 				ss       = createSpriteSheet(definition, this.owner),
-				map      = createAnimationMap(definition, ss.definition);
+				map      = createAnimationMap(definition, ss.definition),
+				initialScaleX   = definition.scaleX   || 1,
+				initialScaleY   = definition.scaleY   || 1,
+				initialRotation = (definition.rotation || 0) * 180 / Math.PI,
+				initialSkewX    = definition.skewX    || 0,
+				initialSkewY    = definition.skewY    || 0;
 				
 				this.sprite     = null;
 				
@@ -472,15 +484,11 @@ This component is attached to entities that will appear in the game world. It re
 
 				this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
 				
-				this.initialScaleX   = definition.scaleX || 1;
-				this.initialScaleY   = definition.scaleY || 1;
 				if(definition.facing === 'left'){
-					this.initialScaleX = -this.initialScaleX;
+					initialScaleX = -initialScaleX;
 				}
 				this.imageScaleX     = ss.definition.images[0].scaleX || 1;
 				this.imageScaleY     = ss.definition.images[0].scaleY || 1;
-				this.lastOwnerScaleX = this.owner.scaleX = this.owner.scaleX || 1;
-				this.lastOwnerScaleY = this.owner.scaleY = this.owner.scaleY || 1;
 				
 				if(definition.acceptInput){
 					this.hover = definition.acceptInput.hover || false;
@@ -520,6 +528,14 @@ This component is attached to entities that will appear in the game world. It re
 					}
 				});
 				
+				this.affine = new createjs.Matrix2D(1, 0, 0, 1).appendTransform(0, 0, initialScaleX, initialScaleY, initialRotation, initialSkewX, initialSkewY);
+
+				this.owner.scaleX   = this.owner.scaleX   || this.owner.scale || 1;
+				this.owner.scaleY   = this.owner.scaleY   || this.owner.scale || 1;
+				this.owner.rotation = this.owner.rotation || 0;
+				this.owner.skewX    = this.owner.skewX    || this.owner.skew  || 0;
+				this.owner.skewY    = this.owner.skewY    || this.owner.skew  || 0;
+
 				// add pins to sprite and setup this.container if needed.
 				if(definition.pins){
 					this.container = new createjs.Container();
@@ -527,8 +543,11 @@ This component is attached to entities that will appear in the game world. It re
 					this.sprite.z = 0;
 
 					this.addPins(definition.pins, ss.definition.frames);
+					this.sprite.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1).appendTransform(0, 0, 1 / this.imageScaleX, 1 / this.imageScaleY, 0);
 				} else {
 					this.container = this.sprite;
+					this.container.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
+					this.affine.appendTransform(0, 0, 1 / this.imageScaleX, 1 / this.imageScaleY, 0);
 				}
 	
 				
@@ -554,17 +573,6 @@ This component is attached to entities that will appear in the game world. It re
 					this.owner.triggerEvent('pin-me', this.pinTo);
 				}
 				
-				//This applies scaling to the correct objects if container and animation are separate, and applies them both to the animation if the container is also the animation. - DDD
-				this.container.scaleX = this.initialScaleX * this.owner.scaleX;
-				this.container.scaleY = this.initialScaleY * this.owner.scaleY;
-				this.sprite.scaleX /= this.imageScaleX;
-				this.sprite.scaleY /= this.imageScaleY;
-				this.scaleX = this.container.scaleX;
-				this.scaleY = this.container.scaleY;
-	
-				this.skewX = this.owner.skewX || definition.skewX;
-				this.skewY = this.owner.skewY || definition.skewY;
-				
 				this.offsetZ = definition.offsetZ || 0;
 
 				this.container.hidden = definition.hidden || false;
@@ -589,7 +597,7 @@ This component is attached to entities that will appear in the game world. It re
 		
 		events: {
 			"handle-render-load": function(resp){
-				if(resp && resp.stage){
+				if(!this.stage && resp && resp.stage){
 					this.addStage(resp.stage);
 				}
 			},
@@ -647,6 +655,29 @@ This component is attached to entities that will appear in the game world. It re
 			
 			"dispatch-event": function(event){
 				this.sprite.dispatchEvent(event);
+			},
+			
+			"transform": function(transform){
+				var obj = null;
+				
+				if(Array.isArray(transform)){
+					obj = new createjs.Matrix2D(transform[0][0], transform[0][1], transform[1][0], transform[1][1], transform[0][2] || 0, transform[1][2] || 0);
+				} else if (typeof transform === 'string') {
+					switch(transform){
+					case 'horizontal':       obj = new createjs.Matrix2D(-1,  0,  0,  1); break;
+					case 'vertical':         obj = new createjs.Matrix2D( 1,  0,  0, -1); break;
+					case 'diagonal':         obj = new createjs.Matrix2D( 0,  1,  1,  0); break;
+					case 'diagonal-inverse': obj = new createjs.Matrix2D( 0, -1, -1,  0); break;
+					case 'rotate-90':        obj = new createjs.Matrix2D( 0,  1, -1,  0); break;
+					case 'rotate-180':       obj = new createjs.Matrix2D(-1,  0,  0, -1); break;
+					case 'rotate-270':       obj = new createjs.Matrix2D( 0, -1,  1,  0); break;
+				    default:                 obj = new createjs.Matrix2D( 1,  0,  0,  1); break; // identity matrix
+					}
+				} else {
+					obj = transform;
+				}
+				
+				this.affine.prependMatrix(obj);
 			}
 		},
 		
@@ -669,43 +700,53 @@ This component is attached to entities that will appear in the game world. It re
 				};
 				
 				return function(resp){
-					var testCase = false, i = 0,
-					angle = null;
+					var i    = 0,
+					x        = 0,
+					y        = 0,
+					rotation = 0,
+					testCase = false,
+					mirrored = 1,
+					flipped  = 1,
+					angle    = null,
+					matrix   = this.container.transformMatrix;
 					
 					if(this.pinnedTo){
 						if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]){
-							this.container.x = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].x;
-							this.container.y = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].y;
+							x = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].x;
+							y = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].y;
 							if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z){
 								if(this.stage){
 									this.stage.reorder = true;
 								}
 								this.container.z = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z;
 							}
-							this.container.rotation = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].angle || 0;
+							rotation = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].angle || 0;
 							this.container.visible = true;
 						} else if (this.pinnedTo.defaultPin) {
-							this.container.x = this.pinnedTo.defaultPin.x;
-							this.container.y = this.pinnedTo.defaultPin.y;
+							x = this.pinnedTo.defaultPin.x;
+							y = this.pinnedTo.defaultPin.y;
 							if(this.container.z !== this.pinnedTo.defaultPin.z){
 								if(this.stage){
 									this.stage.reorder = true;
 								}
 								this.container.z = this.pinnedTo.defaultPin.z;
 							}
-							this.container.rotation = this.pinnedTo.defaultPin.angle || 0;
+							rotation = this.pinnedTo.defaultPin.angle || 0;
 							this.container.visible = true;
 						} else {
 							this.container.visible = false;
 						}
 					} else {
-						this.container.x = this.owner.x;
-						this.container.y = this.owner.y;
+						x = this.owner.x;
+						y = this.owner.y;
 						if(this.container.z !== (this.owner.z + this.offsetZ)){
 							if(this.stage){
 								this.stage.reorder = true;
 							}
 							this.container.z = (this.owner.z + this.offsetZ);
+						}
+						if(this.rotate){
+							this.owner.rotation = rotation = this.owner.orientation;
 						}
 	
 						if(this.owner.opacity || (this.owner.opacity === 0)){
@@ -718,50 +759,17 @@ This component is attached to entities that will appear in the game world. It re
 						this.container.sortChildren(sort);
 					}
 					
-					if(this.skewX){
-						this.container.skewX = this.skewX;
-					}
-					if(this.skewY){
-						this.container.skewY = this.skewY;
-					}
-					
-					if (this.scale && (this.owner.scaleX != this.lastOwnerScaleX || this.owner.scaleY != this.lastOwnerScaleY)) {
-						this.container.scaleX = this.initialScaleX * this.owner.scaleX;
-						this.container.scaleY = this.initialScaleY * this.owner.scaleY;
-						this.sprite.scaleX /= this.imageScaleX;
-						this.sprite.scaleY /= this.imageScaleY;
-						this.scaleX = this.container.scaleX;
-						this.scaleY = this.container.scaleY;
-						
-						this.lastOwnerScaleX = this.owner.scaleX;
-						this.lastOwnerScaleY = this.owner.scaleY;
-					}
-			
-					//Special case affecting rotation of the animation
-					if(this.rotate || this.mirror || this.flip){
+					if(this.mirror || this.flip){
 						angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
 						
-						if(this.rotate){
-							this.container.rotation = angle;
+						if(this.mirror && (angle > 90) && (angle < 270)){
+							mirrored = -1;
 						}
 						
-						if(this.mirror){
-							if((angle > 90) && (angle < 270)){
-								this.container.scaleX = -this.scaleX;
-							} else {
-								this.container.scaleX = this.scaleX;
-							}
-						}
-						
-						if(this.flip){
-							if(angle > 180){
-								this.container.scaleY = this.scaleY;
-							} else {
-								this.container.scaleY = -this.scaleY;
-							}
+						if(this.flip && (angle < 180)){
+							flipped = -1;
 						}
 					}
-					
 					
 					if(this.stateBased && this.stateChange){
 						if(this.state['hidden'] !== undefined) {
@@ -791,6 +799,8 @@ This component is attached to entities that will appear in the game world. It re
 						}
 						this.stateChange = false;
 					}
+
+					matrix.copy(this.affine).prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, (rotation * 180) / Math.PI, this.owner.skewX, this.owner.skewY);
 				};
 			})(),
 			

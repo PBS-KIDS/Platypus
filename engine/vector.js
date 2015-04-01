@@ -17,15 +17,9 @@ This class defines a multi-dimensional vector object and a variety of methods fo
   - @param x (number) - The x component.
   - @param y (number) - The y component.
   - @return vector2D - This.
-- **setX** - Sets the x component of the vector.
-  - @param x (number) - The x component.
-  - @return vector2D - This.
-- **setY** - Sets the y component of the vector.
-  - @param y (number) - The y component.
-  - @return vector2D - This.
 - **magnitude** - Returns the magnitude of the vector.
   - @return number - The magnitude of the vector.
-- **direction** - Returns the direction of the vector.
+- **getAngle** - Returns the direction of a vector in a cartesian x/y plane.
   - @return number - The direction of the vector.
 - **getUnit** - Returns a normalized copy of the vector.
   - @return vector2D - A normalized vector in the same direction as this vector.
@@ -33,6 +27,7 @@ This class defines a multi-dimensional vector object and a variety of methods fo
   - @return vector2D - This.
 - **rotate** - Rotates the vector by the given amount.
   - @param angle (number) - The amount to rotate the vector in radians.
+  - @param axis (string or Vector) - The axis about which the rotation should occur. Can be 'x', 'y', 'z', or a Vector describing the axis. Defaults to 'z'.
   - @return vector2D - This.
 - **add** - Adds the given components to this vector.
   - @param x (number) - The x component to add.
@@ -44,9 +39,13 @@ This class defines a multi-dimensional vector object and a variety of methods fo
 - **subtractVector** - Subtracts the given vector from this vector.
   - @param otherVector (vector2D) - The vector to subtract.  
   - @return vector2D - This.
-- **scaleVector** - Scales the vector by the given factor.
+- **multiply** - Scales the vector by the given factor if the multiplicant is a number. Performs a matrix multiplication if the multiplicant is an array.
   - @param factor (number) - The factor to scale by. 
+  - @param factor (matrix) - The matrix to multiply the vector. 
   - @return vector2D - This.
+- **cross** - Finds the cross product of the two vectors.
+  - @param otherVector (vector2D) - The other vector. 
+  - @return number - The cross product.
 - **dot** - Finds the dot product of the two vectors.
   - @param otherVector (vector2D) - The other vector. 
   - @return number - The dot product.
@@ -134,7 +133,7 @@ platformer.Vector = (function(){
 		return Math.sqrt(squares);
 	};
 	
-	proto.getDirection2D = function(){
+	proto.getAngle = function(){
 		var mag = this.magnitude(2);
         var angle = 0;
 
@@ -185,8 +184,8 @@ platformer.Vector = (function(){
 	
 	proto.rotate = function(angle, axis){
 		var a = axis,
-		cos   = cos(angle),
-		sin   = sin(angle),
+		cos   = Math.cos(angle),
+		sin   = Math.sin(angle),
 		icos  = 1 - cos,
 		x     = 0,
 		y     = 0,
@@ -240,6 +239,7 @@ platformer.Vector = (function(){
 	
 	proto.add = function (x, y, z){
 		var addMatrix = x,
+		limit = 0,
 		add = function(coordinate, index, matrix){
 			matrix[index] += addMatrix[index];
 		};
@@ -247,12 +247,15 @@ platformer.Vector = (function(){
 		if(!Array.isArray(addMatrix)){
 			if(addMatrix.matrix){
 				addMatrix = addMatrix.matrix;
+				limit = y || 0;
 			} else {
 		        addMatrix = [x, y, z];
 			}
+	    } else {
+			limit = y || 0;
 	    }
 		
-		this.forEach(add);
+		this.forEach(add, limit);
 		
 		return this;
 	};
