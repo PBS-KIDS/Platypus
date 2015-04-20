@@ -21,7 +21,80 @@ if(typeof print === 'undefined'){
 
 this.fileSystem = (function(){
 	if (typeof ActiveXObject != 'undefined'){
-		return new ActiveXObject("Scripting.FileSystemObject");
+		var fso    = new ActiveXObject("Scripting.FileSystemObject"),
+		strm       = new ActiveXObject("ADODB.Stream"),
+		fileSystem = {
+		    OpenTextFile: function(path){
+		    	strm.Open();
+				strm.LoadFromFile(path);
+		    	return {
+		    		path: path,
+		    		Close: function(){
+		    			strm.Close();
+		    		},
+		    		ReadAll: function(){
+		    			return strm.ReadText();
+		    		},
+		    		Write: function(str){
+		    			var bs = new ActiveXObject("ADODB.Stream");
+		    			
+		    			strm.WriteText(str);
+		    			strm.Position = 3;
+		    			
+		    		    bs.Type = 1;
+		    		    bs.Open();
+		    		    strm.CopyTo(bs);
+		    		    bs.SaveToFile(this.path, 2);
+		    		    bs.Close();
+		    			return str;
+		    		}
+		    	};
+		    },
+		    CreateTextFile: function(path, options){
+		    	strm.Open();
+		    	return {
+		    		path: path,
+		    		Close: function(){
+		    			strm.Close();
+		    		},
+		    		Write: function(str){
+		    			var bs = new ActiveXObject("ADODB.Stream");
+		    			
+		    			strm.WriteText(str);
+		    			strm.Position = 3;
+		    			
+		    		    bs.Type = 1;
+		    		    bs.Open();
+		    		    strm.CopyTo(bs);
+		    		    bs.SaveToFile(this.path, 2);
+		    		    bs.Close();
+		    			return str;
+		    		}
+		    	};
+		    },
+		    FileExists: function(path){
+		    	return fso.FileExists(path);
+		    },
+		    FolderExists: function(path){
+		    	return fso.FolderExists(path);
+		    },
+		    CreateFolder: function(path){
+		    	return fso.CreateFolder(path);
+		    },
+		    MoveFile: function(fromPath, toPath){
+		    	return fso.MoveFile(fromPath, toPath);
+		    },
+		    CopyFile: function(fromPath, toPath){
+		    	return fso.CopyFile(fromPath, toPath);
+		    },
+		    DeleteFile: function(path){
+		    	return fso.DeleteFile(path);
+		    }
+		};
+		strm.CharSet = "utf-8";
+		strm.Type    = 2;
+
+		return fileSystem;
 	} else {
 		var file   = function(path){
 	    	this.path   = path;

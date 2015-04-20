@@ -57,12 +57,12 @@
 		    		if(isJS(file.name) && js){
 				    	print('..Compressing "' + file.name + '".');
 			    	    setText('combine.js', file.content);   
-		    	    	shell.Run("java -jar yui/yui.jar combine.js -o compress.js",   7, true);
+		    	    	shell.Run("java -jar yui/yui.jar combine.js -o compress.js --charset utf-8",   7, true);
 			    	    file.content = getText("compress.js");
 		    		} else if (isCSS(file.name) && css){
 				    	print('..Compressing "' + file.name + '".');
 			    	    setText('combine.css', file.content);
-		    	    	shell.Run("java -jar yui/yui.jar combine.css -o compress.css", 7, true);
+		    	    	shell.Run("java -jar yui/yui.jar combine.css -o compress.css --charset utf-8", 7, true);
 			    	    file.content = getText("compress.css");
 		    		}
 		    	}
