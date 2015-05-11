@@ -1,112 +1,60 @@
 /**
-# COMPONENT **camera**
-This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
-
-If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension. 
-
-## Dependencies:
-- **rootElement** property (on entity) - This component requires a DOM element which it uses as the "window" determining the camera's aspect ratio and size.
-
-## Messages
-
-### Listens for:
-- **tick, camera** - On a `tick` or `camera` step message, the camera updates its location according to its current state.
-  - @param message.delta - If necessary, the current camera update function may require the length of the tick to adjust movement rate.
-- **follow** - On receiving this message, the camera begins following the requested object.
-  - @param message.mode (string) - Required. Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
-  - @param message.entity ([[Entity]]) - The entity that the camera should commence following.
-  - @param message.top (number) - The top of a bounding box following an entity.
-  - @param message.left (number) - The left of a bounding box following an entity.
-  - @param message.width (number) - The width of a bounding box following an entity.
-  - @param message.height (number) - The height of a bounding box following an entity.
-  - @param message.movementX (number) - Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
-  - @param message.movementY (number) - Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
-  - @param message.offsetX (number) - How far to offset the camera from the entity horizontally.
-  - @param message.offsetY (number) - How far to offset the camera from the entity vertically.
-  - @param message.time (number) - How many milliseconds to follow the entity.
-- **resize, orientationchange** - The camera listens for these events passed along from [[Game]] (who receives them from `window`). It adjusts the camera viewport according to the new size and position of the window.
-- **world-loaded** - On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
-  - @param message.width (number) - Optional. The width of the loaded world.
-  - @param message.height (number) - Optional. The height of the loaded world.
-  - @param message.camera ([[Entity]]) - Optional. An entity that the camera should follow in the loaded world.
-- **child-entity-added** - If children entities are listening for a `camera-update` message, they are added to an internal list.
-  - @param message ([[Entity]]} - Expects an entity as the message object to determine whether to trigger `camera-update` on it.
-- **child-entity-removed** - If children are removed from the entity, they are also removed from this component.
-  - @param message ([[Entity]]} - Expects an entity as the message object to determine the entity to remove from its list.
-- **shake** - On receiving this message, the camera will shake around its target location.
-  - @param message.xMagnitude (number) - Optional. How much to move along the x axis.
-  - @param message.yMagnitude (number) - Optional. How much to move along the y axis.
-  - @param message.xFrequency (number) - Optional. How quickly to shake along the x axis.
-  - @param message.yFrequency (number) - Optional. How quickly to shake along the y axis.
-  - @param message.time (number) - Optional. How long the camera should shake.
-
-### Child Broadcasts:
-- **camera-loaded** - On receiving a "world-loaded" message, the camera broadcast the world size to all children in the world.
-  - @param message.width (number) - The width of the loaded world.
-  - @param message.height (number) - The height of the loaded world.
-- **camera-update** - This component fires this message when the position of the camera in the world has changed.
-  - @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
-  - @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
-  - @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
-  - @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
-  - @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
-  - @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
-
-### Local Broadcasts:
-- **camera-stationary** - This event is triggered when the camera stops moving.
-- **camera-update** - This component fires this message when the position of the camera in the world has changed or if the window has been resized.
-  - @param message.viewportTop (number) - The top of the camera viewport in world coordinates.
-  - @param message.viewportLeft (number) - The left of the camera viewport in world coordinates.
-  - @param message.viewportWidth (number) - The width of the camera viewport in world coordinates.
-  - @param message.viewportHeight (number) - The height of the camera viewport in world coordinates.
-  - @param message.scaleX (number) - Number of window pixels that comprise a single world coordinate on the x-axis.
-  - @param message.scaleY (number) - Number of window pixels that comprise a single world coordinate on the y-axis.
-
-## JSON Definition:
-    {
-      "type": "camera",
-      
-      "top": 100,
-      // Optional number specifying top of viewport in world coordinates
-      
-      "left": 100,
-      // Optional number specifying left of viewport in world coordinates
-      
-      "width": 100,
-      // Optional number specifying width of viewport in world coordinates
-      
-      "height": 100,
-      // Optional number specifying height of viewport in world coordinates
-      
-      "worldWidth": 800,
-      // Optional number specifying width of the world in units. Defaults to 0.
-      
-      "worldHeight": 100,
-      // Optional number specifying height of the world in units. Defaults to 0.
-      
-      "stretch": true,
-      // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
-      
-      "scaleWidth": 480,
-      // Optional. Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
-      
-      "transitionX": 400,
-      // Optional. Sets how quickly the camera should pan to a new position in the horizontal direction. Default is 400.
-      
-      "transitionY": 400,
-      // Optional. Sets how quickly the camera should pan to a new position in the vertical direction. Default is 600.
-      
-      "transitionAngle": 400,
-      // Optional. Sets how quickly the camera should rotate to a new orientation. Default is 600.
-      
-      "threshold": 3,
-      // Optional. Sets how many units the followed entity can move before the camera will re-center. Default is 1.
-      
-      "rotate": false
-      // Optional. Whether, when following an entity, the camera should rotate to match the entity's orientation. Default is `false`.
-    }
+ * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
+ * 
+ * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
+ * 
+ * ## Dependencies
+ * **rootElement** property (on entity) - This component requires a DOM element which it uses as the "window" determining the camera's aspect ratio and size.
+ * 
+ * ## JSON Definition
+ *      {
+ *        "type": "camera",
+ * 
+ *        "top": 100,
+ *        // Optional number specifying top of viewport in world coordinates
+ * 
+ *        "left": 100,
+ *        // Optional number specifying left of viewport in world coordinates
+ *       
+ *        "width": 100,
+ *        // Optional number specifying width of viewport in world coordinates
+ *       
+ *        "height": 100,
+ *        // Optional number specifying height of viewport in world coordinates
+ *       
+ *        "worldWidth": 800,
+ *        // Optional number specifying width of the world in units. Defaults to 0.
+ *       
+ *        "worldHeight": 100,
+ *        // Optional number specifying height of the world in units. Defaults to 0.
+ *       
+ *        "stretch": true,
+ *        // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
+ *       
+ *        "scaleWidth": 480,
+ *        // Optional. Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
+ *       
+ *        "transitionX": 400,
+ *        // Optional. Sets how quickly the camera should pan to a new position in the horizontal direction. Default is 400.
+ *       
+ *        "transitionY": 400,
+ *        // Optional. Sets how quickly the camera should pan to a new position in the vertical direction. Default is 600.
+ *       
+ *        "transitionAngle": 400,
+ *        // Optional. Sets how quickly the camera should rotate to a new orientation. Default is 600.
+ *       
+ *        "threshold": 3,
+ *        // Optional. Sets how many units the followed entity can move before the camera will re-center. Default is 1.
+ *       
+ *        "rotate": false
+ *        // Optional. Whether, when following an entity, the camera should rotate to match the entity's orientation. Default is `false`.
+ *      }
+ *  
+ * @class "camera" Component
 */
 (function(){
+	"use strict";
+	
 	var resize = function (self){
 		
 		//The dimensions of the camera in the window
@@ -134,6 +82,24 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 	return platformer.createComponentClass({
 		id: 'camera',
 		constructor: function(definition){
+			var
+			/**
+			 * If the entity (or layer) has a width, this sets the initial viewport width. If not, the component JSON definition's width is used.
+			 * 
+			 * @property width
+			 * @type number
+			 * @default 0
+			 */
+			width  = this.owner.width  || definition.width       || 0,
+			/**
+			 * If the entity (or layer) has a height, this sets the initial viewport height. If not, the component JSON definition's height is used.
+			 * 
+			 * @property height
+			 * @type number
+			 * @default 0
+			 */
+			height = this.owner.height || definition.height      || 0;
+			
 			this.entities = [];
 
 			// on resize should the view be stretched or should the world's initial aspect ratio be maintained?
@@ -167,8 +133,8 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 			
 			//The dimensions of the camera in the game world
 			this.world = {
-				viewportWidth:       this.owner.width  || definition.width       || 0,
-				viewportHeight:      this.owner.height || definition.height      || 0,
+				viewportWidth:       width,
+				viewportHeight:      height,
 				viewportLeft:        definition.left        || 0,
 				viewportTop:         definition.top         || 0,
 				viewportOrientation: definition.orientation || 0
@@ -256,6 +222,13 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 				this.element = this.owner.canvas || this.owner.element || this.owner.rootElement;
 				resize(this);
 			},
+			
+/**
+ * If children entities are listening for a `camera-update` message, they are added to an internal list.
+ * 
+ * @method 'child-entity-added'
+ * @param entity {Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+  **/
 			"child-entity-added": function(entity){
 				var messageIds = entity.getMessageIds(); 
 				
@@ -266,6 +239,14 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 						this.viewportUpdate = true;
 						
 						if(this.worldIsLoaded){
+/**
+ * On receiving a "world-loaded" message, the camera broadcasts the world size to all children in the world.
+ * 
+ * @event 'camera-loaded'
+ * @param message
+ * @param message.width {number} The width of the loaded world.
+ * @param message.height {number} The height of the loaded world.
+ **/
 							entity.trigger('camera-loaded', {
 								width: this.worldWidth,
 								height: this.worldHeight
@@ -276,6 +257,13 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					}
 				}
 			},
+
+/**
+ * If children are removed from the entity, they are also removed from this component.
+ * 
+ * @method 'child-entity-removed'
+ * @param entity {Entity} Expects an entity as the message object to determine the entity to remove from its list.
+ **/
 			"child-entity-removed": function(entity){
 				var x = 0;
 
@@ -286,6 +274,16 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					}
 				}
 			},
+			
+/**
+ * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
+ * 
+ * @method 'world-loaded'
+ * @param message {Object}
+ * @param [message.width] {number} The width of the loaded world.
+ * @param [message.height] {number} The height of the loaded world.
+ * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
+ **/
 			"world-loaded": function(values){
 				this.worldIsLoaded = true;
 				this.worldWidth   = this.owner.worldWidth  = values.width;
@@ -297,6 +295,14 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					this.entities[x].trigger('camera-loaded', values);
 				}
 			},
+			
+/**
+ * On a "tick" step event, the camera updates its location according to its current state.
+ * 
+ * @method 'tick'
+ * @param message {Object}
+ * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
+ **/  
 			"tick": function(resp){		
 				switch (this.state)
 				{
@@ -332,6 +338,20 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 						}
 					}
 					
+					
+/**
+ * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
+ * 
+ * @event 'camera-update'
+ * @param message {Object}
+ * @param message.viewportTop {number} The top of the camera viewport in world coordinates.
+ * @param message.viewportLeft {number} The left of the camera viewport in world coordinates.
+ * @param message.viewportWidth {number} The width of the camera viewport in world coordinates.
+ * @param message.viewportHeight {number} The height of the camera viewport in world coordinates.
+ * @param message.scaleX {number} Number of window pixels that comprise a single world coordinate on the x-axis.
+ * @param message.scaleY {number} Number of window pixels that comprise a single world coordinate on the y-axis.
+ **/
+
 					this.message.viewportLeft   = this.world.viewportLeft + this.shakeOffsetX;
 					this.message.viewportTop    = this.world.viewportTop + this.shakeOffsetY;
 					this.message.viewportWidth  = this.world.viewportWidth;
@@ -351,6 +371,11 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					
 				} else if (!this.stationary){
 					
+/**
+ * This component triggers "camera-stationary" on the entity when the camera stops moving.
+ * 
+ * @event 'camera-stationary'
+ **/
 					this.owner.trigger('camera-stationary', this.message);
 					this.stationary = true;
 					
@@ -362,21 +387,64 @@ If either worldWidth and worldHeight is set to 0 it is assumed the world is infi
 					}
 				}
 			},
+			
+/**
+ * The camera listens for this event passed along from [[Game]] (who receives it from `window`). It adjusts the camera viewport according to the new size and position of the window.
+ * 
+ * @method 'resize'
+ **/
 			"resize": function(){
 				resize(this);
 			},
+			
 			"relocate": function(loc){
 				if (this.move(loc.x, loc.y)) {
 					this.viewportUpdate = true;
 				}
 				
 			},
+
+/**
+ * The camera listens for this event passed along from [[Game]] (who receives it from `window`). It adjusts the camera viewport according to the new size and position of the window.
+ * 
+ * @method 'orientationchange'
+ **/
 			"orientationchange": function(){
 				resize(this);
 			},
+			
+/**
+ * On receiving this message, the camera begins following the requested object.
+ * 
+ * @method 'follow'
+ * @param message {Object}
+ * @param message.mode {String} Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
+ * @param [message.entity] {Entity} The entity that the camera should commence following.
+ * @param [message.top] {number} The top of a bounding box following an entity.
+ * @param [message.left] {number} The left of a bounding box following an entity.
+ * @param [message.width] {number} The width of a bounding box following an entity.
+ * @param [message.height] {number} The height of a bounding box following an entity.
+ * @param [message.movementX] {number} Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
+ * @param [message.movementY] {number} Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
+ * @param [message.offsetX] {number} How far to offset the camera from the entity horizontally.
+ * @param [message.offsetY] {number} How far to offset the camera from the entity vertically.
+ * @param [message.time] {number} How many milliseconds to follow the entity.
+ **/
 			"follow": function (def){
 				this.follow(def);
 			},
+			
+/**
+ * On receiving this message, the camera will shake around its target location.
+ * 
+ * @method 'shake'
+ * @param shake {Object}
+ * @param [shake.xMagnitude] {number} How much to move along the x axis.
+ * @param [shake.yMagnitude] {number} How much to move along the y axis.
+ * @param [shake.xFrequency] {number} How quickly to shake along the x axis.
+ * @param [shake.yFrequency] {number} How quickly to shake along the y axis.
+ * @param [shake.time] {number} How long the camera should shake.
+ **/
 			"shake": function(shakeDef) {
 				var def = shakeDef || {},
 					xMag    = def.xMagnitude || 0,

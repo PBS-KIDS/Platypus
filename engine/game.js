@@ -1,43 +1,18 @@
+/* global platformer */
 /**
-# CLASS game
-This class is used to create the `platformer.game` object. The `game` object handles loading [[Scene]]s and transitions between scenes. It also accepts external events and passes them on to the current scene.
-
-## Methods
-- **constructor** - Creates an object from the game class.
-  - @param definition (object) - Collection of settings from config.json.
-  - @param onFinishedLoading (function) - An optional function to run once the game has begun.
-- **tick** - Called by the CreateJS ticker. This calls tick on the scene.
-  - @param delta (number) - The time passed since the last tick.
-- **loadScene** - Loads a scene. If there's a transition, performs the transition.
-  - @param sceneId (string) - The scene to load.
-  - @param transition (string) - What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
-- **loadNextScene** - Sets the currentScene to the specified scene. Called by loadScene, shouldn't be called on its own.
-  - @param sceneId (string) - The scene to load.
-- **completeSceneTransition** - Ends the transition and destroys the old scene. Called when the scene effect is finished.
-- **addEventListener** - Adding event listeners to the specified element and assigning callback functions.
-  - @param element (DOM element) - The element to add the eventListener to.
-  - @param event (DOM events) - The event to listen for.
-  - @param callback (function) - The function to call when the event occurs.
-- **destroy** - Destroys the object so that it's ready to garbage collect.
-- **getEntitiesByType** - This method will return all game entities that match the provided type. For console debugging, you can also reference this function directly.
-  - @param type (string) - Required. The entity type to find.
-  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.
-- **getEntityById** - This method will return the first entity it finds with a matching id. For console debugging, you can also reference this function directly.
-  - @param id (string) - Required. The entity id to find.
-  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.
-
-## Helper Function
-- **bindEvent** - Returns a function which takes in an event and calls the callback function passing it the eventId and the event.
-  - @param eventId (string) - The id of the event we're binding to.
-  - @param callback (function) - The function to call.
-
-
-
-Requires: ["scene.js"]
-*/
-
+ * This class is used to create the `platformer.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
+ * 
+ * 
+ * @class Game
+ * @constructor
+ * @param {Object} [definition] Collection of settings from config.json.
+ * @param {Function} onFinishedLoading An optional function to run once the game has begun.
+ * @return {Game} Returns the instantiated game. 
+ */
 
 platformer.Game = (function(){
+	"use strict";
+	
 	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
 	var game      = function (definition, onFinishedLoading){
 		var innerRootElement = document.createElement('div'),
@@ -45,7 +20,7 @@ platformer.Game = (function(){
 
 		platformer.game = this; //Make this instance the only Game instance.
 		
-		this.currentScene = undefined;
+		this.currentScene = null;
 		this.loaded    = null;
 		this.settings = definition;
 
@@ -160,6 +135,12 @@ platformer.Game = (function(){
 	};
 	var proto = game.prototype;
 	
+/**
+ * Called by the CreateJS ticker. This calls tick on the scene.
+ * 
+ * @method tick
+ * @param {Object} tickEvent - CreateJS tick message object.
+ **/
 	proto.tick = function(tickEvent){
 		if(this.loadedScene){
 			this.loadedScene.trigger('tick', tickEvent);
@@ -169,7 +150,14 @@ platformer.Game = (function(){
 		}
 	};
 	
-	proto.loadScene = function(sceneId, transition, persistantData, preloading){
+/**
+ * Loads a scene. If there is a transition, performs the transition from the current scene to the new scene.
+ * 
+ * @method loadScene
+ * @param {String} sceneId The scene to load.
+ * @param {String} transition What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
+ **/
+ 	proto.loadScene = function(sceneId, transition, persistantData, preloading){
 		var self = this;
 
 		if(this.leavingScene){
@@ -204,7 +192,7 @@ platformer.Game = (function(){
 				self.completeSceneTransition(persistantData);
 			}).wait(500).to({opacity:0}, 500).call(function(t){
 				self.rootElement.removeChild(element);
-				element = undefined;
+				element = null;
 			});
 			break;
 		case 'crossfade':
@@ -247,7 +235,14 @@ platformer.Game = (function(){
 		}
 	};
 	
-	proto.loadNextScene = function(sceneId, persistantData){
+/**
+ * Sets the currentScene to the specified scene. Called by loadScene: shouldn't be called on its own.
+ * 
+ * @method loadNextScene
+ * @param {String} sceneId The scene to load.
+ * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
+ **/
+ 	proto.loadNextScene = function(sceneId, persistantData){
 		var scene = null;
 		
 		if(typeof sceneId === 'string'){
@@ -263,6 +258,12 @@ platformer.Game = (function(){
 		this.loadedScene.trigger('scene-loaded', persistantData);
 	};
 	
+/**
+ * Ends the transition and destroys the old scene. Called when the scene effect is finished.
+ * 
+ * @method completeSceneTransition
+ * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
+ **/
 	proto.completeSceneTransition = function(persistantData){
 		var sceneId = this.loaded;
 		
@@ -282,19 +283,41 @@ platformer.Game = (function(){
 		}
 	};
 	
+/**
+ * Adding event listeners to the specified element and assigning callback functions.
+ * 
+ * @method addEventListener
+ * @param element {DOMElement} The element to add the eventListener to.
+ * @param event {DOMEvent} The event to listen for.
+ * @param callback {Function} - The function to call when the event occurs.
+ **/
 	proto.addEventListener = function(element, event, callback){
 		this.bindings[event] = {element: element, event: event, callback: bindEvent(event, callback)};
 		element.addEventListener(event, this.bindings[event].callback, true);
 	};
 
+/**
+ * This method will return the first entity it finds with a matching id.
+ * 
+ * @method getEntityById
+ * @param {string} id The entity id to find.
+ * @return {Entity} Returns the entity that matches the specified entity id.
+ **/
 	proto.getEntityById = function(id){
 		if(this.currentScene){
 			return this.currentScene.getEntityById(id);
 		} else {
-			return undefined;
+			return null;
 		}
 	};
 
+/**
+ * This method will return all game entities that match the provided type.
+ * 
+ * @method getEntitiesByType
+ * @param {String} type The entity type to find.
+ * @return entities {Array} Returns the entities that match the specified entity type.
+ **/
 	proto.getEntitiesByType = function(type){
 		if(this.currentScene){
 			return this.currentScene.getEntitiesByType(type);
@@ -303,6 +326,11 @@ platformer.Game = (function(){
 		}
 	};
 	
+/**
+ * This method destroys the game.
+ * 
+ * @method destroy
+ **/
 	proto.destroy = function ()
 	{
 		createjs.Ticker.removeEventListener("tick", this.tickWrapper);
