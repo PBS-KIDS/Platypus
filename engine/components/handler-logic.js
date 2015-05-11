@@ -1,47 +1,8 @@
 /**
-# COMPONENT **handler-logic**
-A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages.
-
-## Dependencies
-- **Needs a 'tick' call** - This component doesn't need a specific component, but it does require a 'tick' call to function. It's usually used as a component of an "action-layer".
-
-## Messages
-
-### Listens for:
-- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities. 
-  - @param entity (Object) - The entity that is being considered for addition to the handler.
-- **tick** - Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  - @param resp (object) - An object containing delta which is the time passed since the last tick. 
-- **pause-logic** - `handle-logic` messages cease to be triggered on each tick
-  - @param resp.time (number) - If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered. 
-- **unpause-logic** - `handle-logic` messages begin firing each tick.
-- **camera-update** - Changes the active logic area when the camera location changes.
-  - @param resp.viewportLeft (number) - The left side of the camera viewport in world units. 
-  - @param resp.viewportTop (number) - The top side of the camera viewport in world units. 
-  - @param resp.viewportWidth (number) - The width of the camera viewport in world units. 
-  - @param resp.viewportHeight (number) - The height of the camera viewport in world units. 
-
-### Child Broadcasts:
-- **handle-logic** - Sent to entities to run their logic.
-  - @param object - An object containing a delta variable that is the time that's passed since the last tick.
-- **handle-post-collision-logic** - Sent to entities to run logic that may depend upon collision responses.
-  - @param object - An object containing a delta variable that is the time that's passed since the last tick.
-- **logical-state** - Sent to entities when their logical state has been changed.
-  - @param object - An object a list of key/value pairs representing the owner's state (this value equals owner.state).
-
-## JSON Definition
-    {
-      "type": "handler-logic",
-      
-      "buffer" : 12,		//The buffer area around the camera in which entity logic is active. This value changes the buffer in all directions. Defaults to the camera width / 10.
-      "bufferWidth" : 12, 	//The buffer area around the camera in which entity logic is active. This value changes the buffer in width only and overrides the buffer value. Defaults to the camera width / 10.
-      "bufferHeight" : 12, 	//The buffer area around the camera in which entity logic is active. This value changes the buffer in height only and overrides the buffer value. Defaults to the camera width / 10.
-      "bufferLeft" : 12,	//The buffer area around the camera in which entity logic is active. This value changes the buffer at the left of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 10.
-      "bufferRight" : 12,	//The buffer area around the camera in which entity logic is active. This value changes the buffer at the right of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 10.
-      "bufferTop" : 12,		//The buffer area around the camera in which entity logic is active. This value changes the buffer at the top of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 10.
-      "bufferBottom" : 12	//The buffer area around the camera in which entity logic is active. This value changes the buffer at the bottom of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 10.
-    }
-*/
+ * A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages. This component is usually used on an "action-layer".
+ * 
+ * @class "handler-logic" Component
+ **/
 
 (function(){
 	var updateState = function(entity){
@@ -60,24 +21,38 @@ A component that handles updating logic components. Each tick it calls all the e
 
 	return platformer.createComponentClass({
 		id: "handler-logic",
-	
+		publicProperties: {
+			/**
+			 * The buffer area around the camera in which entity logic is active. This property is available on the Entity as `entity.buffer`.
+			 * 
+			 * @property buffer
+			 * @type number
+			 * @default camera width / 10
+			 */
+			"buffer": -1,
+
+			/**
+			 * The length in milliseconds of a single logic step. If the framerate drops too low, logic is run for each step of this many milliseconds.
+			 * 
+			 * @property stepLength
+			 * @type number
+			 * @default 30
+			 */
+			"stepLength": 30
+		},
 		constructor: function(definition){
 			this.entities = [];
 			this.activeEntities = this.entities;
 			
 			this.paused = 0;
-			this.stepLength    = definition.stepLength || 30;//15;
 			this.leftoverTime = 0;
-			this.maximumStepsPerTick = 10; //Math.ceil(500 / this.stepLength);
+			this.maximumStepsPerTick = 10;
 			this.camera = {
 				left: 0,
 				top: 0,
 				width: 0,
 				height: 0,
-				bufferLeft: 	definition.bufferLeft 	|| definition.bufferWidth || definition.buffer || -1,
-				bufferRight: 	definition.bufferRight 	|| definition.bufferWidth || definition.buffer || -1,
-				bufferTop: 		definition.bufferTop 	|| definition.bufferHeight || definition.buffer || -1,
-				bufferBottom: 	definition.bufferBottom || definition.bufferHeight || definition.buffer || -1,
+				buffer: 	this.buffer,
 				active: false
 			};
 			this.message = {
@@ -93,6 +68,12 @@ A component that handles updating logic components. Each tick it calls all the e
 		},
 		
 		events:{
+			/**
+			 * Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities.
+			 * 
+			 * @method 'child-entity-added'
+			 * @param entity {Entity} The entity that is being considered for addition to the handler.
+			 */
 			"child-entity-added": function(entity){
 				var messageIds = entity.getMessageIds(); 
 				
@@ -105,6 +86,13 @@ A component that handles updating logic components. Each tick it calls all the e
 					}
 				}
 			},
+
+			/**
+			 * Called when an entity should be removed from the list of logically updated entities.
+			 * 
+			 * @method 'child-entity-removed'
+			 * @param entity {Entity} The entity to be removed from the handler.
+			 */
 			"child-entity-removed": function(entity){
 				for (var j = this.entities.length - 1; j > -1; j--) {
 					if(this.entities[j] === entity){
@@ -113,42 +101,63 @@ A component that handles updating logic components. Each tick it calls all the e
 					}
 				}
 			},
+			
+			/**
+			 * When this event is triggered, `handle-logic` messages cease to be triggered on each tick.
+			 * 
+			 * @method 'pause-logic'
+			 * @param [options] {Object}
+			 * @param [options.time] {number} If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered.
+			 */
 			"pause-logic": function(resp){
 				if(resp && resp.time){
 					this.paused = resp.time;
 				} else {
 					this.paused = -1;
 				}
-//				console.log('paused-logic');
 			},
+			
+			/**
+			 * When this event is triggered, `handle-logic` messages begin firing each tick.
+			 * 
+			 * @method 'unpause-logic'
+			 */
 			"unpause-logic": function(){
 				this.paused = 0;
 			},
-
+			
+			/**
+			 * Changes the active logic area when the camera location changes.
+			 * 
+			 * @method 'camera-update'
+			 * @param camera {Object}
+			 * @param camera.viewportLeft {number} The left side of the camera viewport in world units.
+			 * @param camera.viewportTop {number} The top side of the camera viewport in world units.
+			 * @param camera.viewportWidth {number} The width of the camera viewport in world units.
+			 * @param camera.viewportHeight {number} The height of the camera viewport in world units.
+			 */
 			"camera-update": function(camera){
 				this.camera.left = camera.viewportLeft;
 				this.camera.top = camera.viewportTop;
 				this.camera.width = camera.viewportWidth;
 				this.camera.height = camera.viewportHeight;
 				
-				if(this.camera.bufferLeft == -1) {
-					this.camera.bufferLeft = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
-				if(this.camera.bufferRight == -1) {
-					this.camera.bufferRight = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
-				if(this.camera.bufferTop == -1) {
-					this.camera.bufferTop = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
-				if(this.camera.bufferBottom == -1) {
-					this.camera.bufferBottom = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+				if(this.camera.buffer == -1) {
+					this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
 				}
 				
 				this.camera.active = true;
 				
 				this.updateNeeded = true;
 			},
-
+			
+			/**
+			 * Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+			 * 
+			 * @method 'tick'
+			 * @param tick {Object} Tick information that is passed on to children entities via "handle-logic" events.
+			 * @param tick.delta {number} The time passed since the last tick.
+			 */
 			"tick": function(resp){
 				var cycles = 0,
 				child   = undefined,
@@ -185,7 +194,7 @@ A component that handles updating logic components. Each tick it calls all the e
 						this.activeEntities.length = 0;
 						for (var j = this.entities.length - 1; j > -1; j--) {
 							child = this.entities[j];
-							if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.bufferLeft) && (child.x <= this.camera.left + this.camera.width + this.camera.bufferRight) && (child.y >= this.camera.top - this.camera.bufferTop) && (child.y <= this.camera.top + this.camera.height + this.camera.bufferBottom))){
+							if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))){
 								this.activeEntities.push(child);
 							}
 						}
@@ -195,6 +204,14 @@ A component that handles updating logic components. Each tick it calls all the e
 					cycles = Math.min(cycles, this.maximumStepsPerTick);
 					
 					for(var i = 0; i < cycles; i++){
+						
+						/**
+						 * This event is triggered on children entities to run their logic.
+						 * 
+						 * @event 'handle-logic'
+						 * @param tick {Object}
+						 * @param tick.delta {Number} The time that has passed since the last tick.
+						 */
 						for (var j = this.activeEntities.length - 1; j > -1; j--) {
 							child = this.activeEntities[j];
 							if(child.triggerEvent('handle-logic', this.message)){
@@ -207,12 +224,33 @@ A component that handles updating logic components. Each tick it calls all the e
 						platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 						time += this.timeElapsed.time;
 						
+						/**
+						 * This event is triggered on the entity (layer) to test collisions once logic has been completed.
+						 * 
+						 * @event 'check-collision-group'
+						 * @param tick {Object}
+						 * @param tick.delta {Number} The time that has passed since the last tick.
+						 */
 						if(this.owner.triggerEvent('check-collision-group', this.message)){ // If a collision group is attached, make sure collision is processed on each logic tick.
 							this.timeElapsed.name = 'Collision';
 							this.timeElapsed.time = new Date().getTime() - time;
 							platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 							time += this.timeElapsed.time;
 
+							/**
+							 * This event is triggered on entities to run logic that may depend upon collision responses.
+							 * 
+							 * @event 'handle-post-collision-logic'
+							 * @param tick {Object}
+							 * @param tick.delta {Number} The time that has passed since the last tick.
+							 */
+							 
+							/**
+							 * Triggered on entities when their logical state has been changed.
+							 * 
+							 * @event 'logical-state'
+							 * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
+							 */
 							for (var j = this.activeEntities.length - 1; j > -1; j--) {
 								child = this.activeEntities[j];
 								child.triggerEvent('handle-post-collision-logic', this.message);

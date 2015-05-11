@@ -286,10 +286,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 					height = camera.height,
 					x      = camera.left + width  / 2,
 					y      = camera.top  + height / 2,
-					bufferLeft = camera.bufferLeft,
-					bufferRight = camera.bufferRight,
-					bufferTop = camera.bufferTop,
-					bufferBottom = camera.bufferBottom,
+					buffer = camera.buffer,
 					entities = undefined,
 					entity = undefined,
 					check  = AABBCollision,
@@ -298,8 +295,8 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 					types = null;
 					
 					// store buffered size since the actual width x height is not used below.
-					width += bufferLeft + bufferRight;
-					height += bufferTop + bufferBottom;
+					width  += buffer * 2;
+					height += buffer * 2;
 					
 					if(this.updateLiveList || !aabbLogic.matches(x, y, width, height)){
 						
@@ -353,7 +350,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 							groups.sort(groupSortBySize);
 							
 							// add buffer again to capture stationary entities along the border that may be collided against 
-							aabbCollision.setAll(x, y, width + bufferLeft + bufferRight, height + bufferTop + bufferBottom);
+							aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
 							
 							for (i in this.entitiesByType){
 								entities = this.entitiesByType[i];
