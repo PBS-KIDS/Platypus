@@ -9,6 +9,8 @@
  * @param {Function} onFinishedLoading An optional function to run once the game has begun.
  * @return {Game} Returns the instantiated game. 
  */
+ 
+ // Requires: ["scene.js"]
 
 platformer.Game = (function(){
 	"use strict";

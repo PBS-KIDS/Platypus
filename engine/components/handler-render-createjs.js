@@ -56,14 +56,6 @@ A component that handles updating rendering for components that are rendering vi
       },
       "autoClear": false, //By default this is set to false. If true the canvas will be cleared each tick.
       "canvasId": "bob"   //Sets the id of the canvas. The canvas defaults to having no id.
-      
-      "buffer" : 12,		//The buffer area around the camera in which entities are rendered. This value changes the buffer in all directions. Defaults to the camera width / 12.
-      "bufferWidth" : 12, 	//The buffer area around the camera in which entities are rendered. This value changes the buffer in width only and overrides the buffer value. Defaults to the camera width / 12.
-      "bufferHeight" : 12, 	//The buffer area around the camera in which entities are rendered. This value changes the buffer in height only and overrides the buffer value. Defaults to the camera width / 12.
-      "bufferLeft" : 12,	//The buffer area around the camera in which entities are rendered. This value changes the buffer at the left of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 12.
-      "bufferRight" : 12,	//The buffer area around the camera in which entities are rendered. This value changes the buffer at the right of the camera and overrides buffer and bufferWidth. Defaults to the camera width / 12.
-      "bufferTop" : 12,		//The buffer area around the camera in which entities are rendered. This value changes the buffer at the top of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 12.
-      "bufferBottom" : 12	//The buffer area around the camera in which entities are rendered. This value changes the buffer at the bottom of the camera and overrides buffer and bufferHeight. Defaults to the camera width / 12.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
@@ -110,11 +102,7 @@ A component that handles updating rendering for components that are rendering vi
 				left: 0,
 				top: 0,
 				width: 0,
-				height: 0,
-				bufferLeft: 	definition.bufferLeft 	|| definition.bufferWidth || definition.buffer || -1,
-				bufferRight: 	definition.bufferRight 	|| definition.bufferWidth || definition.buffer || -1,
-				bufferTop: 		definition.bufferTop 	|| definition.bufferHeight || definition.buffer || -1,
-				bufferBottom: 	definition.bufferBottom || definition.bufferHeight || definition.buffer || -1
+				height: 0
 			};
 			
 			this.timeElapsed = {
@@ -223,7 +211,8 @@ A component that handles updating rendering for components that are rendering vi
 							if (child.hidden) {
 								if(child.visible) child.visible = false;
 							} else if(child.name !== 'entity-managed'){
-								if((child.x >= this.camera.x - this.camera.bufferLeft) && (child.x <= this.camera.x + this.camera.width + this.camera.bufferRight) && (child.y >= this.camera.y - this.camera.bufferTop) && (child.y <= this.camera.y + this.camera.height + this.camera.bufferBottom)){
+								var bounds = child.getTransformedBounds();
+								if(!bounds || ((bounds.x + bounds.width >= this.camera.x) && (bounds.x <= this.camera.x + this.camera.width) && (bounds.y + bounds.height >= this.camera.y) && (bounds.y <= this.camera.y + this.camera.height))){
 									if(!child.visible) child.visible = true;
 								} else {
 									if(child.visible) child.visible = false;
@@ -275,18 +264,6 @@ A component that handles updating rendering for components that are rendering vi
 				this.camera.y = cameraInfo.viewportTop;
 				this.camera.width = cameraInfo.viewportWidth;
 				this.camera.height = cameraInfo.viewportHeight;
-				if(this.camera.bufferLeft == -1) {
-					this.camera.bufferLeft = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
-				if(this.camera.bufferRight == -1) {
-					this.camera.bufferRight = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
-				if(this.camera.bufferTop == -1) {
-					this.camera.bufferTop = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
-				if(this.camera.bufferBottom == -1) {
-					this.camera.bufferBottom = this.camera.width / 12; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
-				}
 				
 				this.canvas.width  = this.canvas.offsetWidth * dpr;
 				this.canvas.height = this.canvas.offsetHeight * dpr;

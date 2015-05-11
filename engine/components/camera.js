@@ -3,71 +3,25 @@
  * 
  * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
  * 
- * ## Dependencies
- * **rootElement** property (on entity) - This component requires a DOM element which it uses as the "window" determining the camera's aspect ratio and size.
- * 
- * ## JSON Definition
- *      {
- *        "type": "camera",
- * 
- *        "top": 100,
- *        // Optional number specifying top of viewport in world coordinates
- * 
- *        "left": 100,
- *        // Optional number specifying left of viewport in world coordinates
- *       
- *        "width": 100,
- *        // Optional number specifying width of viewport in world coordinates
- *       
- *        "height": 100,
- *        // Optional number specifying height of viewport in world coordinates
- *       
- *        "worldWidth": 800,
- *        // Optional number specifying width of the world in units. Defaults to 0.
- *       
- *        "worldHeight": 100,
- *        // Optional number specifying height of the world in units. Defaults to 0.
- *       
- *        "stretch": true,
- *        // Optional boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
- *       
- *        "scaleWidth": 480,
- *        // Optional. Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
- *       
- *        "transitionX": 400,
- *        // Optional. Sets how quickly the camera should pan to a new position in the horizontal direction. Default is 400.
- *       
- *        "transitionY": 400,
- *        // Optional. Sets how quickly the camera should pan to a new position in the vertical direction. Default is 600.
- *       
- *        "transitionAngle": 400,
- *        // Optional. Sets how quickly the camera should rotate to a new orientation. Default is 600.
- *       
- *        "threshold": 3,
- *        // Optional. Sets how many units the followed entity can move before the camera will re-center. Default is 1.
- *       
- *        "rotate": false
- *        // Optional. Whether, when following an entity, the camera should rotate to match the entity's orientation. Default is `false`.
- *      }
- *  
  * @class "camera" Component
 */
 (function(){
 	"use strict";
 	
 	var resize = function (self){
+		var element = self.canvas;
 		
 		//The dimensions of the camera in the window
-		self.window.viewportTop = self.element.offsetTop;
-		self.window.viewportLeft = self.element.offsetLeft;
-		self.window.viewportWidth = self.element.offsetWidth || self.worldWidth;
-		self.window.viewportHeight = self.element.offsetHeight || self.worldHeight;
+		self.window.viewportTop = element.offsetTop;
+		self.window.viewportLeft = element.offsetLeft;
+		self.window.viewportWidth = element.offsetWidth || self.worldWidth;
+		self.window.viewportHeight = element.offsetHeight || self.worldHeight;
 
-		if(self.scaleWidth){
-			self.world.viewportWidth = self.window.viewportWidth / Math.ceil(self.window.viewportWidth / self.scaleWidth);
+		if(self.zoomSnap){
+			self.world.viewportWidth = self.window.viewportWidth / Math.ceil(self.window.viewportWidth / self.zoomSnap);
 		}
 		
-		if(!self.stretch || self.scaleWidth){
+		if(!self.stretch || self.zoomSnap){
 			self.world.viewportHeight = self.window.viewportHeight * self.world.viewportWidth / self.window.viewportWidth;
 		}
 		
@@ -81,48 +35,136 @@
 
 	return platformer.createComponentClass({
 		id: 'camera',
-		constructor: function(definition){
-			var
+		properties: {
 			/**
-			 * If the entity (or layer) has a width, this sets the initial viewport width. If not, the component JSON definition's width is used.
+			 * Number specifying top of viewport in world coordinates.
+			 * 
+			 * @property top
+			 * @type number
+			 * @default 0
+			 **/
+			"top": 0,
+			
+			/**
+			 * Number specifying left of viewport in world coordinates.
+			 * 
+			 * @property left
+			 * @type number
+			 * @default 0
+			 **/
+			"left": 0,
+			 
+			/**
+			 * Number specifying width of viewport in world coordinates.
 			 * 
 			 * @property width
 			 * @type number
 			 * @default 0
-			 */
-			width  = this.owner.width  || definition.width       || 0,
+			 **/
+			"width": 0,
+			 
 			/**
-			 * If the entity (or layer) has a height, this sets the initial viewport height. If not, the component JSON definition's height is used.
+			 * Number specifying height of viewport in world coordinates.
 			 * 
 			 * @property height
 			 * @type number
 			 * @default 0
-			 */
-			height = this.owner.height || definition.height      || 0;
+			 **/
+			"height": 0,
 			
+			/**
+			 * Boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
+			 * 
+			 * @property stretch
+			 * @type boolean
+			 * @default: false
+			 */
+			"stretch": false,
+			
+			/**
+			 * Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
+			 * 
+			 * @property zoomSnap
+			 * @type number
+			 * @default 0
+			 **/
+			"zoomSnap": 0,
+			
+			/**
+			 * Sets how quickly the camera should pan to a new position in the horizontal direction.
+			 * 
+			 * @property transitionX
+			 * @type number
+			 * @default 400
+			 **/
+			"transitionX": 400,
+			
+			/**
+			 * Sets how quickly the camera should pan to a new position in the vertical direction.
+			 * 
+			 * @property transitionY
+			 * @type number
+			 * @default 600
+			 **/
+			"transitionY": 600, 
+			 
+			/**
+			 * Sets how quickly the camera should rotate to a new orientation.
+			 * 
+			 * @property transitionAngle
+			 * @type number
+			 * @default: 600
+			 **/
+			"transitionAngle": 600,
+			
+			/**
+			 * Sets how many units the followed entity can move before the camera will re-center. This should be lowered for small-value coordinate systems such as Box2D.
+			 * 
+			 * @property threshold
+			 * @type number
+			 * @default 1
+			 **/
+			"threshold": 1,
+			
+			/**
+			 * Whether, when following an entity, the camera should rotate to match the entity's orientation.
+			 * 
+			 * @property rotate
+			 * @type boolean
+			 * @default false
+			 **/
+			"rotate": false
+		},
+		publicProperties: {
+			/**
+			 * The entity's canvas element is used to determine the window size of the camera.
+			 * 
+			 * @property canvas
+			 * @type DOMElement Canvas
+			 */
+			"canvas": null,
+			
+			/**
+			 * Number specifying width of the world in units. This property is available on the Entity.
+			 * 
+			 * @property worldWidth
+			 * @type number
+			 * @default 0
+			 **/
+			"worldWidth": 0,
+			
+			/**
+			 * Number specifying height of the world in units. This property is available on the Entity.
+			 * 
+			 * @property worldHeight
+			 * @type number
+			 * @default 0
+			 **/
+			"worldHeight": 0
+		},
+		constructor: function(definition){
 			this.entities = [];
 
-			// on resize should the view be stretched or should the world's initial aspect ratio be maintained?
-			this.stretch = definition.stretch || false;
-			
-			this.rotate = definition.rotate || false;
-			
-			this.transitionX = definition.transitionX || definition.transition;
-			this.transitionY = definition.transitionY || definition.transition;
-			this.transitionAngle = definition.transitionAngle || definition.transition;
-			if(isNaN(this.transitionX)){
-				this.transitionX = 400;
-			}
-			if(isNaN(this.transitionY)){
-				this.transitionY = 600;
-			}
-			if(isNaN(this.transitionAngle)){
-				this.transitionAngle = 400;
-			}
-
-			this.threshold = definition.threshold || 1;
-			this.element = null;
-	
 			//The dimensions of the camera in the window
 			this.window = {
 				viewportTop:    0,
@@ -133,14 +175,15 @@
 			
 			//The dimensions of the camera in the game world
 			this.world = {
-				viewportWidth:       width,
-				viewportHeight:      height,
+				viewportWidth:       this.width,
+				viewportHeight:      this.height,
 				viewportLeft:        definition.left        || 0,
 				viewportTop:         definition.top         || 0,
 				viewportOrientation: definition.orientation || 0
 			};
 			
-			this.message = { //defined here so it can be reused
+			//Message object defined here so it's reusable
+			this.message = {
 				viewportWidth:  0,
 				viewportHeight: 0,
 				viewportLeft:   0,
@@ -150,16 +193,8 @@
 				orientation: 0
 			};
 	
-			// on resize should the game snap to certain sizes or should it be fluid?
-			// 0 == fluid scaling
-			// set the windowWidth multiple that triggers zooming in
-			this.scaleWidth = definition.scaleWidth || 0;
-			
 			//Whether the map has finished loading.
 			this.worldIsLoaded = false;
-			// The dimensions of the entire world
-			this.worldWidth  = definition.worldWidth  || definition.width       || 0;
-			this.worldHeight = definition.worldHeight || definition.height      || 0;
 			
 			this.following = undefined;
 			this.state = 'static';//'roaming';
@@ -219,7 +254,6 @@
 		},
 		events: {
 			"load": function(){
-				this.element = this.owner.canvas || this.owner.element || this.owner.rootElement;
 				resize(this);
 			},
 			
@@ -286,8 +320,8 @@
  **/
 			"world-loaded": function(values){
 				this.worldIsLoaded = true;
-				this.worldWidth   = this.owner.worldWidth  = values.width;
-				this.worldHeight  = this.owner.worldHeight = values.height;
+				this.worldWidth    = values.width;
+				this.worldHeight   = values.height;
 				if(values.camera){
 					this.follow(values.camera);
 				}
@@ -604,7 +638,7 @@
 			},
 			
 			lockedFollow: (function(){
-				var min = Math.min;
+				var min = Math.min,
 				getTransitionalPoint = function(a, b, ratio){
 					// Find point between two points according to ratio.
 					return ratio * b + (1 - ratio) * a;

@@ -3,11 +3,26 @@
  * See ec-template.js for an example componentDefinition that can be sent into this component class factory.
  */
 (function (ns){
+	"use strict";
+	
+	var setupProperty = function(property, component, owner){
+		Object.defineProperty(component, property, {
+		    get: function(){
+		        return owner[property];
+		    },
+		    set: function(value){
+		    	owner[property] = value;
+		    },
+		    enumerable: true
+		});
+	};
+		
 	ns.components = {};
 	
 	ns.createComponentClass = function(componentDefinition, prototype){
 		var	component = function(owner, definition){
-			var func = null,
+			var prop = null,
+			func     = null,
 			name     = '';
 			
 			// if prototype provided, set up its properties here.
@@ -22,6 +37,33 @@
 			};
 			this.publicMethods = {};
 			this.type = componentDefinition.id;
+			
+			// Set up properties, prioritizing component settings, entity settings, and finally defaults.
+			if(componentDefinition.properties){
+				for(prop in componentDefinition.properties){
+					if(typeof definition[prop] !== 'undefined'){
+						this[prop] = definition[prop];
+					} else if(typeof this.owner[prop] !== 'undefined') {
+						this[prop] = this.owner[prop];
+					} else {
+						this[prop] = componentDefinition.properties[prop];
+					}
+				}
+			}
+			
+			// These component properties are equivalent with `entity.property`
+			if(componentDefinition.publicProperties){
+				for(prop in componentDefinition.publicProperties){
+					setupProperty(prop, this, owner);
+					if(typeof definition[prop] !== 'undefined'){
+						this[prop] = definition[prop];
+					} else if(typeof this.owner[prop] !== 'undefined') {
+						this[prop] = this.owner[prop];
+					} else {
+						this[prop] = componentDefinition.publicProperties[prop];
+					}
+				}
+			}
 			
 			if(componentDefinition.events){
 				for(func in componentDefinition.events){
