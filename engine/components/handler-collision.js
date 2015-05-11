@@ -1,50 +1,27 @@
 /**
-# COMPONENT **handler-collision**
-This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
+ * This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
+ * 
+ * @class "handler-collision" Component
+ */
+ 
+// Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-data-container.js"]
 
-## Dependencies:
-- [[handler-logic]] (on entity) - At the top-most layer, the logic handler triggers `check-collision-group` causing this component to test collisions on all children entities.
-
-## Messages
-
-### Listens for:
-- **child-entity-added, add-collision-entity** - On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-  - @param message ([[Entity]] object) - The entity to be added.
-- **child-entity-removed, remove-collision-entity** - On receiving this message, the component looks for the entity in its collision group and removes it.
-  - @param message ([[Entity]] object) - The entity to be removed.
-- **check-collision-group** - This message causes the component to go through the entities and check for collisions.
-  - @param message.camera (object) - Optional. Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
-
-### Child Broadcasts
-- **prepare-for-collision** - This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
-- **relocate-entity** - This message is triggered on an entity that has been repositioned due to a solid collision.
-- **hit-by-[collision-types specified in collision entities' definitions]** - When an entity collides with an entity of a listed collision-type, this message is triggered on the entity.
-  - @param message.entity ([[Entity]]) - The entity with which the collision occurred.
-  - @param message.type (string) - The collision type of the other entity.
-  - @param message.shape ([[CollisionShape]]) - This is the shape of the other entity that caused the collision.
-  - @param message.x (number) - Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
-  - @param message.y (number) - Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
-
-## Methods
-- **getWorldEntities** - This method returns an object containing world entities grouped by collision type.
-  - @return entities (object) - a list of key/value pairs where the keys are collision types and the values are arrays of entities of that type.
-- **getWorldTerrain** - This method returns an entity representing the collision map of the world.
-  - @return entity ([[Entity]]) - An entity describing the collision map of the world.
-- **getEntityCollisions** - This method returns a list of collision objects describing soft collisions between an entity and a list of other entities.
-  - @param entity ([[Entity]]) - Required: The entity to test against the world.
-  - @param entities (Array of [[Entity]]) - Optional: The list of entities to check against. By default this is all the entities in the world.
-  - @return collisions (Array of Objects) - This is a list of collision objects describing the soft collisions.
-
-## JSON Definition:
-    {
-      "type": "handler-collision"
-      // This component has no customizable properties.
-    }
-    
-Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-data-container.js"]
-*/
 (function(){
+	"use strict";
+	
 	//set here to make them reusable objects
+	
+	/**
+	 * When an entity collides with an entity of a listed collision-type, this message is triggered on the entity. * is the other entity's collision-type.
+	 * 
+	 * @event 'hit-by-*'
+	 * @param collision {Object}
+	 * @param collision.entity {Entity} The entity with which the collision occurred.
+	 * @param collision.type {String} The collision type of the other entity.
+	 * @param collision.shape {CollisionShape} This is the shape of the other entity that caused the collision.
+	 * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
+	 * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
+	 */
 	var triggerMessage = {
 		entity: null,
 		type:   null,
@@ -147,24 +124,55 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 		},
 		
 		events:{
+			/**
+			 * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
+			 * 
+			 * @method 'child-entity-added'
+			 * @param entity {Entity} The entity to be added.
+			 */
 			"child-entity-added": function(entity){
 				if(!entity.collideOff){
 					this.addCollisionEntity(entity);
 				}
 			},
 			
+			/**
+			 * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
+			 * 
+			 * @method 'add-collision-entity'
+			 * @param entity {Entity} The entity to be added.
+			 */
 			"add-collision-entity": function(entity){
 				this.addCollisionEntity(entity);
 			},
 			
+			/**
+			 * On receiving this message, the component looks for the entity in its collision group and removes it.
+			 * 
+			 * @method 'child-entity-removed'
+			 * @param message ([[Entity]] object) - The entity to be removed.
+			 */
 			"child-entity-removed": function(entity){
 				this.removeCollisionEntity(entity);
 			},
 			
+			/**
+			 * On receiving this message, the component looks for the entity in its collision group and removes it.
+			 * 
+			 * @method 'remove-collision-entity'
+			 * @param message ([[Entity]] object) - The entity to be removed.
+			 */
 			"remove-collision-entity": function(entity){
 				this.removeCollisionEntity(entity);
 			},
 			
+			/**
+			 * This message causes the component to go through the entities and check for collisions.
+			 * 
+			 * @method 'check-collision-group'
+			 * @param options {Object}
+			 * @param [options.camera] {Object} Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
+			 */
 			"check-collision-group": function(resp){
 				var time = new Date().getTime(); //TODO: TML - Why create this in here?
 				
@@ -282,6 +290,7 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 					all    = null,
 					softs  = null,
 					solids = null,
+					groups = null,
 					width  = camera.width,
 					height = camera.height,
 					x      = camera.left + width  / 2,
@@ -374,6 +383,12 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 				
 				this.nonColliders.length = 0;
 				
+				/**
+				 * This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
+				 * 
+				 * @event 'prepare-for-collision'
+				 * @param tick {Object} Object containing information about the current logic step.
+				 */
 				for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
 					entity = this.allEntitiesLive[x];
 					entity.triggerEvent('prepare-for-collision', resp);
@@ -390,6 +405,13 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 					relative: false
 				};
 				
+				/**
+				 * This message is triggered on an entity that has been repositioned due to a solid collision.
+				 * 
+				 * @event 'relocate-entity'
+				 * @param object {Object}
+				 * @param object.position {Vector} The relocated position of the entity.
+				 */
 				for (var x = this.nonColliders.length - 1; x > -1; x--) {
 					entity = this.nonColliders[x];
 					xy.position.set(entity.position);
@@ -903,12 +925,14 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 			
 			checkSoftCollisions: function (resp)	{
 				var x = 0,
-				self  = this;
+				trigger = function(ent){
+					return function(collision){
+						ent.trigger('hit-by-' + collision.type, collision);
+					};
+				}
 
 				for(x = 0; x < this.softEntitiesLive.length; x++){
-					this.checkEntityForSoftCollisions(this.softEntitiesLive[x], this.getWorldEntities(), function(collision){
-						self.softEntitiesLive[x].trigger('hit-by-' + collision.type, collision);
-					});
+					this.checkEntityForSoftCollisions(this.softEntitiesLive[x], this.getWorldEntities(), trigger(this.softEntitiesLive[x]));
 				}
 			},
 			
@@ -986,14 +1010,34 @@ Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-
 		},
 		
 		publicMethods: {
+			/**
+			 * This method returns an object containing world entities grouped by collision type.
+			 * 
+			 * @method getWorldEntities
+			 * @return {Object} A list of key/value pairs where the keys are collision types and the values are arrays of entities of that type.
+			 */
 			getWorldEntities: function(){
 				return this.entitiesByTypeLive;
 			},
 			
+			/**
+			 * This method returns an entity representing the collision map of the world.
+			 * 
+			 * @method getWorldTerrain
+			 * @return {Entity} - An entity describing the collision map of the world. This entity typically includes a `collision-tiles` component.
+			 */
 			getWorldTerrain: function(){
 				return this.terrain;
 			},
 			
+			/**
+			 * This method returns a list of collision objects describing soft collisions between an entity and a list of other entities.
+			 * 
+			 * @method getEntityCollisions
+			 * @param entity {Entity} The entity to test against the world.
+			 * @param [entities] {Array} The list of entities to check against. By default this is all the entities in the world.
+			 * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+			 */
 			getEntityCollisions: function(entity, entities){
 				var collisions = [];
 				

@@ -32,7 +32,7 @@
 			"buffer": -1,
 
 			/**
-			 * The length in milliseconds of a single logic step. If the framerate drops too low, logic is run for each step of this many milliseconds.
+			 * The length in milliseconds of a single logic step. If the framerate drops too low, logic is run for each step of this many milliseconds. This property is available on the Entity as `entity.stepLength`.
 			 * 
 			 * @property stepLength
 			 * @type number
