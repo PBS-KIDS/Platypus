@@ -1,65 +1,18 @@
-/*--------------------------------------------------
- *   tiled-loader - ../engine/components/tiled-loader.js
- */
 /**
-# COMPONENT **tiled-loader**
-This component is attached to a top-level entity (loaded by the [[Scene]]) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor] [link1] and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
-
-## Dependencies:
-- Component [[entity-container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
-- Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
-- Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
-- Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
-
-## Messages
-
-### Listens for:
-- **scene-loaded** - On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
-- **load-level** - If `manuallyLoad` is set in the JSON definition, the component will wait for this message before loading the Tiled map JSON definition.
-  - @param message.level (string or object) - Required. The level to load.
-  - @param message.persistentData (object) - Optional. Information passed from the last scene.
-
-### Local Broadcasts:
-- **world-loaded** - Once finished loading the map, this message is triggered on the entity to notify other components of completion.
-  - @param message.width (number) - The width of the world in world units.
-  - @param message.height (number) - The height of the world in world units.
-  - @param message.camera ([[Entity]]) - If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
-
-## JSON Definition:
-    {
-      "type": "tiled-loader",
-      
-      "level": "level-4",
-      // Required. Specifies the JSON level to load.
-      
-      "unitsPerPixel": 10,
-      // Optional. Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit.
-      
-      "images": ["spritesheet-1", "spritesheet-2"],
-      // Optional. If specified, the referenced images are used as the game spritesheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.
-      
-      "imagesScale": 5,
-      // Optional. If images are set above, this property sets the scale of the art relative to world coordinates. Defaults to the value set in "unitsPerPixel".
-      
-      "zStep": 500,
-      // Optional. Adds step number to each additional Tiled layer to maintain z-order. Defaults to 1000.
-      
-      "separateTiles": true,
-      // Optional. Keeps the tile maps in separate render layers. Default is 'false' to for better optimization.
-      
-      "entityPositionX": "center",
-      // Optional. Can be "left", "right", or "center". Defines where entities registered X position should be when spawned. Default is "center".
-
-      "entityPositionY": "center",
-      // Optional. Can be "top", "bottom", or "center". Defines where entities registered Y position should be when spawned. Default is "bottom".
-      
-      "manuallyLoad": true
-      // Optional. Whether to wait for a "load-level" event before before loading. Defaults to `false`;
-    }
-
-[link1]: http://www.mapeditor.org/
-*/
+ * This component is attached to a top-level entity (loaded by the [Scene](Scene.html)) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
+ * 
+ * ## Dependencies:
+ *  - Component [[entity-container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
+ *  - Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
+ *  - Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
+ *  - Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
+ * 
+ * @class "tiled-loader" Component
+ * @uses Component
+ */
 (function(){
+	"use strict";
+	
 	var transformCheck = function(v){
 		var a = !!(0x20000000 & v),
 		b     = !!(0x40000000 & v),
@@ -74,29 +27,134 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 		} else {
 			return -2;
 		}
+	},
+	transform = {
+		x: 1,
+		y: 1,
+		id: -1
+	},
+	entityTransformCheck = function(v){
+		var resp  = transform,
+//		a = !!(0x20000000 & v),
+		b = !!(0x40000000 & v),
+		c = !!(0x80000000 & v);
+		
+		resp.id = 0x0fffffff & v;
+		resp.x = 1;
+		resp.y = 1;
+
+		if (b && c){
+			resp.x = -1;
+			resp.y = -1;
+		} else if (b){
+			resp.y = -1;
+		} else if (c){
+			resp.x = -1;
+		}
+		return resp;
 	};
 	
 	return platformer.createComponentClass({
 		id: 'tiled-loader',
+
+		properties: {
+			/**
+			 * If specified, the referenced images are used as the game spritesheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.
+			 * 
+			 * @property images
+			 * @type Array
+			 * @default null
+			 */
+			images: null,
+
+			/**
+			 * Adds a number to each additional Tiled layer's z coordinate to maintain z-order. Defaults to 1000.
+			 * 
+			 * @property layerIncrement
+			 * @type number
+			 * @default 1000
+			 */
+			layerIncrement: 1000,
+			
+			/**
+			 * Keeps the tile maps in separate render layers. Default is 'false' to for better optimization.
+			 * 
+			 * @property separateTiles
+			 * @type boolean
+			 * @default false
+			 */
+			separateTiles: false
+		},
+		
+		publicProperties: {
+			/**
+			 * Specifies the JSON level to load. Available on the entity as `entity.level`.
+			 * 
+			 * @property level
+			 * @type String
+			 */
+			level: null,
+			
+			/**
+			 * Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit. Available on the entity as `entity.unitsPerPixel`.
+			 * 
+			 * @property unitsPerPixel
+			 * @type number
+			 * @default 1
+			 */
+			unitsPerPixel: 1,
+			
+			/**
+			 * If images are provided, this property sets the scale of the art relative to world coordinates. Available on the entity as `entity.imagesScale`.
+			 * 
+			 * @property imagesScale
+			 * @type number
+			 * @default 1
+			 */
+			imagesScale: 1,
+			
+			/**
+			 * Can be "left", "right", or "center". Defines where entities registered X position should be when spawned. Available on the entity as `entity.entityPositionX`.
+			 * 
+			 * @property entityPositionX
+			 * @type String
+			 * @default "center"
+			 */
+			entityPositionX: "center",
+			
+			/**
+			 * Can be "top", "bottom", or "center". Defines where entities registered Y position should be when spawned. Available on the entity as `entity.entityPositionY`.
+			 * 
+			 * @property entityPositionY
+			 * @type String
+			 * @default "bottom"
+			 */
+			entityPositionY: "bottom",
+			
+			/**
+			 * Whether to wait for a "load-level" event before before loading. Available on the entity as `entity.manuallyLoad`.
+			 * 
+			 * @property manuallyLoad
+			 * @type boolean
+			 * @default false
+			 */
+			manuallyLoad: false
+		},
 		
 		constructor: function(definition){
 			this.entities     = [];
 			this.layerZ       = 0;
 			this.followEntity = false;
-			
-			this.manuallyLoad  = definition.manuallyLoad || false;
-			this.level = this.owner.level || definition.level || null;
-
-			this.unitsPerPixel = this.owner.unitsPerPixel || definition.unitsPerPixel || 1;
-			this.images        = this.owner.images        || definition.images        || false;
-			this.imagesScale   = this.owner.imagesScale   || definition.imagesScale   || this.unitsPerPixel;
-			this.layerZStep    = this.owner.zStep         || definition.zStep         || 1000;
-			this.separateTiles = this.owner.separateTiles || definition.separateTiles || false;
-			this.entityPositionX = this.owner.entityPositionX || definition.entityPositionX || 'center';
-			this.entityPositionY = this.owner.entityPositionY || definition.entityPositionY || 'bottom';
 		},
 		
 		events: {
+			
+			/**
+			 * On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.
+			 * 
+			 * @method 'scene-loaded'
+			 * @param persistentData {Object} Data passed from the last scene into this one.
+			 */
 			"scene-loaded": function(persistentData){
 				if (!this.manuallyLoad) {
 					this.loadLevel({
@@ -106,6 +164,14 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				}
 			},
 			
+			/**
+			 * If `manuallyLoad` is set, the component will wait for this message before loading the Tiled map JSON definition.
+			 * 
+			 * @method 'load-level'
+			 * @param levelData {Object}
+			 * @param levelData.level {String|Object} The level to load.
+			 * @param [levelData.persistentData] {Object} Information passed from the last scene.
+			 */
 			"load-level": function(levelData){
 				this.loadLevel(levelData);
 			}
@@ -128,10 +194,23 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 						layer = false;
 					}
 				}
-
+				
+				/**
+				 * Once finished loading the map, this message is triggered on the entity to notify other components of completion.
+				 * 
+				 * @event 'world-loaded'
+				 * @param world {Object} World data.
+				 * @param world.width {number} The width of the world in world units.
+				 * @param world.height {number} The height of the world in world units.
+				 * @param world.tile {Object} Properties of the world tiles.
+				 * @param world.tile.width {number} The width in world units of a single tile.
+				 * @param world.tile.height {number} The height in world units of a single tile.
+				 * @param world.camera {Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+				 */
 				this.owner.trigger('world-loaded', {
 					width:  level.width  * level.tilewidth  * this.unitsPerPixel,
 					height: level.height * level.tileheight * this.unitsPerPixel,
+					tile: {width: level.tilewidth, height: level.tileheight},
 					camera: this.followEntity
 				});
 				this.owner.removeComponent(this);
@@ -146,7 +225,6 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				widthOffset    = 0,
 				heightOffset   = 0,
 				x              = 0,
-				y              = 0,
 				obj            = 0,
 				entity         = null,
 				property       = null,
@@ -154,10 +232,10 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 				tileset        = null,
 				properties     = null,
 				layerCollides  = true,
-				numberProperty = false,
-				polyPoints		= null,
-				fallbackWidth   = 0,
-				fallbackHeight  = 0,
+				numberProperty = 0,
+				polyPoints	   = null,
+				fallbackWidth  = 0,
+				fallbackHeight = 0,
 				convertImageLayer = function(imageLayer){
 					var i     = 0,
 					dataCells = 0,
@@ -300,7 +378,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							tileDefinition.components[x].imageMap = importRender;
 						}
 					}
-					self.layerZ += self.layerZStep;
+					self.layerZ += self.layerIncrement;
 					
 					if((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth)){
 						combineRenderLayer.trigger('add-tiles', renderTiles);
@@ -366,10 +444,30 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 					// set up temp tile layer to pass in image layer as if it's tiled.
 					return createLayer('render-layer', convertImageLayer(layer));
 				} else if(layer.type == 'objectgroup'){
+					var entityPositionX = this.entityPositionX,
+					entityPositionY     = this.entityPositionY;
+					
+					if(layer.properties){
+						if(layer.properties.entityPositionX){
+							entityPositionX = layer.properties.entityPositionX;
+						}
+						if(layer.properties.entityPositionY){
+							entityPositionY = layer.properties.entityPositionY;
+						}
+					}
+					
 					for (obj = 0; obj < layer.objects.length; obj++){
 						entity = layer.objects[obj];
+						var gid = entity.gid || -1,
+						transform = null;
+						
+						if(gid !== -1){
+							transform = entityTransformCheck(gid);
+							gid = transform.id;
+						}
+
 						for (x = 0; x < tilesets.length; x++){
-							if(tilesets[x].firstgid > entity.gid){
+							if(tilesets[x].firstgid > gid){
 								break;
 							} else {
 								tileset = tilesets[x];
@@ -382,30 +480,38 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							entityType = entity.type;
 						} else if(entity.name !== ''){
 							entityType = entity.name;
-						} else if(tileset.tileproperties[entity.gid - tileset.firstgid]){
-							if(tileset.tileproperties[entity.gid - tileset.firstgid].entity){
-								entityType = tileset.tileproperties[entity.gid - tileset.firstgid].entity;
-							} else if (tileset.tileproperties[entity.gid - tileset.firstgid].type){
-								entityType = tileset.tileproperties[entity.gid - tileset.firstgid].type;
+						} else if(tileset.tileproperties[gid - tileset.firstgid]){
+							if(tileset.tileproperties[gid - tileset.firstgid].entity){
+								entityType = tileset.tileproperties[gid - tileset.firstgid].entity;
+							} else if (tileset.tileproperties[gid - tileset.firstgid].type){
+								entityType = tileset.tileproperties[gid - tileset.firstgid].type;
 							}
 						}
 						
 						if(entityType !== ''){
 							properties = {};
-							//Copy properties from Tiled
 
-							if(tileset.tileproperties && tileset.tileproperties[entity.gid - tileset.firstgid]){
-								for (x in tileset.tileproperties[entity.gid - tileset.firstgid]){
+							//Copy properties from Tiled
+							if(transform){
+								properties.scaleX   = transform.x;
+								properties.scaleY   = transform.y;
+							} else {
+								properties.scaleX   = 1;
+								properties.scaleY   = 1;
+							}						
+
+							if((gid >= 0) && tileset.tileproperties && tileset.tileproperties[gid - tileset.firstgid]){
+								for (x in tileset.tileproperties[gid - tileset.firstgid]){
 									//This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
-									numberProperty = parseFloat(tileset.tileproperties[entity.gid - tileset.firstgid][x]);
+									numberProperty = parseFloat(tileset.tileproperties[gid - tileset.firstgid][x]);
 									if (numberProperty == 0 || (!!numberProperty)) {
 										properties[x] = numberProperty;
-									} else if(tileset.tileproperties[entity.gid - tileset.firstgid][x] == 'true') {
+									} else if(tileset.tileproperties[gid - tileset.firstgid][x] == 'true') {
 										properties[x] = true;
-									} else if(tileset.tileproperties[entity.gid - tileset.firstgid][x] == 'false') {
+									} else if(tileset.tileproperties[gid - tileset.firstgid][x] == 'false') {
 										properties[x] = false;
 									} else {
-										properties[x] = tileset.tileproperties[entity.gid - tileset.firstgid][x];
+										properties[x] = tileset.tileproperties[gid - tileset.firstgid][x];
 									}
 								}
 							}
@@ -438,10 +544,10 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							
 							if (entity.polygon || entity.polyline) {
 								//Figuring out the width of the polygon and shifting the origin so it's in the top-left.
-								smallestX = Infinity;
-								largestX = -Infinity;
-								smallestY = Infinity;
-								largestY = -Infinity;
+								var smallestX = Infinity;
+								var largestX = -Infinity;
+								var smallestY = Infinity;
+								var largestY = -Infinity;
 								
 								polyPoints = null;
 								if (entity.polygon) {
@@ -523,25 +629,35 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 								properties.x = entity.x * this.unitsPerPixel;
 								properties.y = entity.y * this.unitsPerPixel;
 								
-								if(this.entityPositionX === 'left'){
+								if(entity.rotation){
+									var w = (entity.width  || fallbackWidth) / 2,
+									h     = (entity.height || fallbackHeight) / 2,
+									a     = ((entity.rotation / 180) % 2) * Math.PI,
+									v     = new platformer.Vector(w, -h).rotate(a);
+									properties.rotation = entity.rotation;
+									properties.x = Math.round((properties.x + v.x - w) * 1000) / 1000;
+									properties.y = Math.round((properties.y + v.y + h) * 1000) / 1000;
+								}
+
+								if(entityPositionX === 'left'){
 									properties.regX = 0;
-								} else if(this.entityPositionX === 'center'){
+								} else if(entityPositionX === 'center'){
 									properties.regX = properties.width / 2;
 									properties.x += widthOffset / 2;
-								} else if(this.entityPositionX === 'right'){
+								} else if(entityPositionX === 'right'){
 									properties.regX = properties.width;
 									properties.x += widthOffset;
 								}
 
-								if(typeof entity.gid === 'undefined'){
+								if(gid === -1){
 									properties.y += properties.height;
 								}
-								if(this.entityPositionY === 'bottom'){
+								if(entityPositionY === 'bottom'){
 									properties.regY = properties.height;
-								} else if(this.entityPositionY === 'center'){
+								} else if(entityPositionY === 'center'){
 									properties.regY = properties.height / 2;
 									properties.y -= heightOffset / 2;
-								} else if(this.entityPositionY === 'top'){
+								} else if(entityPositionY === 'top'){
 									properties.regY = 0;
 									properties.y -= heightOffset;
 								}
@@ -560,11 +676,11 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							}
 							
 							if (platformer.game.settings.entities[entityType].properties) {
-								properties.scaleX = this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleX || 1);//this.unitsPerPixel;
-								properties.scaleY = this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleY || 1);//this.unitsPerPixel;
+								properties.scaleX *= this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleX || 1);//this.unitsPerPixel;
+								properties.scaleY *= this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleY || 1);//this.unitsPerPixel;
 							} else {
-								properties.scaleX = this.imagesScale;
-								properties.scaleY = this.imagesScale;
+								properties.scaleX *= this.imagesScale;
+								properties.scaleY *= this.imagesScale;
 							}
 							properties.layerZ = this.layerZ;
 							
@@ -587,7 +703,7 @@ This component is attached to a top-level entity (loaded by the [[Scene]]) and, 
 							}
 						}
 					}
-					this.layerZ += this.layerZStep;
+					this.layerZ += this.layerIncrement;
 					return false;
 				}
 			},
