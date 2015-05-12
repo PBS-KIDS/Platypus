@@ -1,54 +1,24 @@
+/* global platformer */
 /**
-# CLASS collision-shape
-This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle shapes can be created (some code exists for right-triangles and circles, but the precise collision checking needed for these is not in place). Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
-
-## Fields
-- **offset** (number []) - An array of length 2 that holds the x and y offset of the collision shape from the owner entity's location.
-- **x** (number) - The x position of the shape. The x is always located in the center of the object.
-- **y** (number) - The y position of the shape. The y is always located in the center of the object.
-- **prevX** (number) - The previous x position of the shape.
-- **prevY** (number) - The previous y position of the shape.
-- **type** (string) - The type of shape this is. Currently 'rectangle' is the default and only valid type.
-- **subType** (string) - **Not Used** Only used for triangles, specifies which corner the right angle is in. Can be: tl, tr, bl, br.
-- **points** (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
-- **aABB** (object) - The AABB for this shape.
-- **prevAABB** (object) - The previous location of the AABB for this shape.
-
-## Methods
-- **constructor** - Creates an object from the collisionShape class.
-  - @param ownerLocation (number []) - An array [x,y] of the position.
-  - @param type (string) - The type of shape this is. Currently 'rectangle' is the default and only valid type.
-  - @param points (number [][]) - Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
-  - @param offset (number []) - An array of length 2 that holds the x and y offset of the shape from the owner's location.
-- **update** - Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
-  - @param ownerX (number) - The x position of the owner.
-  - @param ownerY (number) - The y position of the owner.
-- **reset** - Resets the location of the shape and AABBs so that the current and previous position are the same. The position you send should be that of the owner, the offset of the shape is added inside the function.
-  - @param ownerX (number) - The x position of the owner.
-  - @param ownerY (number) - The y position of the owner.
-- **getXY** - Returns an array containing the position of the shape.
-  - @return number [] - An array [x,y] of the position.
-- **getX** - Returns the x position of the shape.
-  - @return number - The x position.
-- **getY** - Return the y position of the shape.
-  - @return number - The y position.
-- **getPrevXY** - Returns the previous position of the shape.
-  - @return number [] - An array [x,y] of the previous position.
-- **getPrevX** - Returns the previous x position of the shape.
-  - @return number - The previous x position.
-- **getPrevY** - Returns the previous y position of the shape.
-  - @return number - The previous x position.
-- **getAABB** - Returns the AABB of the shape.
-  - @return AABB object - The AABB of the shape.
-- **getPreviousAABB** - Returns the previous AABB of the shape.
-  - @return AABB object - The previous AABB of the shape.
-- **getXOffset** - Returns the x offset of the shape.
-  - @return number - The x offset.
-- **getYOffset** - Returns the y offset of the shape.
-  - @return number - The y offset.
-- **destroy** - Destroys the shape so that it can be memory collected safely.
-*/
-
+ * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle shapes can be created (some code exists for right-triangles and circles, but the precise collision checking needed for these is not in place). Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
+ * 
+ * @class CollisionShape
+ * @constructor
+ * @param owner {Entity} The entity that uses this shape.
+ * @param definition {Object} This is an object of key/value pairs describing the shape.
+ * @param definition.x {number} The x position of the shape. The x is always located in the center of the object.
+ * @param definition.y {number} The y position of the shape. The y is always located in the center of the object.
+ * @param [definition.type="rectangle"] {String} The type of shape this is. Currently this can be either "rectangle" or "circle".
+ * @param [definition.width] {number} The width of the shape if it's a rectangle.
+ * @param [definition.height] {number} The height of the shape if it's a rectangle.
+ * @param [definition.radius] {number} The radius of the shape if it's a circle.
+ * @param [definition.offsetX] {number} The x offset of the collision shape from the owner entity's location.
+ * @param [definition.offsetY] {number} The y offset of the collision shape from the owner entity's location.
+ * @param [definition.regX] {number} The registration x of the collision shape with the owner entity's location if offsetX is not provided.
+ * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
+ * @param [definition.points] {Array} Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
+ * @param collisionType {String} A string describing the collision type of this shape.
+ */
 platformer.CollisionShape = (function(){
 	var collisionShape = function(owner, definition, collisionType){
 		var regX = definition.regX,
@@ -67,9 +37,12 @@ platformer.CollisionShape = (function(){
 		if(typeof regY !== 'number'){
 			regY = this.height / 2;
 		}
+		
+		platformer.Vector.assign(this, 'offset', 'offsetX', 'offsetY');
 		this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
 		this.offsetY = definition.offsetY || ((this.height / 2) - regY);
 		
+		platformer.Vector.assign(this, 'position', 'x', 'y');
 		if(owner){
 			this.x = owner.x + this.offsetX;
 			this.y = owner.y + this.offsetY;
@@ -85,8 +58,7 @@ platformer.CollisionShape = (function(){
 		
 		var width = 0;
 		var height = 0; 
-		switch (this.type)
-		{
+		switch (this.type) {
 		case 'circle': //need TL and BR points
 			width = height = this.radius * 2;
 			break;
@@ -94,105 +66,122 @@ platformer.CollisionShape = (function(){
 			width = this.width;
 			height = this.height;
 			break;
-		case 'triangle': //Need three points, start with the right angle corner and go clockwise.
-			if (this.points[0][1] == this.points[1][1] && this.points[0][0] == this.points[2][0])
-			{
-				if (this.points[0][0] < this.points[1][0])
-				{
-					//TOP LEFT CORNER IS RIGHT
-					this.subType = 'tl';
-					width = this.points[1][0] - this.points[0][0];
-					height = this.points[2][1] - this.points[0][1];
-				} else {
-					//BOTTOM RIGHT CORNER IS RIGHT
-					this.subType = 'br';
-					width = this.points[0][0] - this.points[1][0];
-					height = this.points[0][1] - this.points[2][1];
-				}
-				
-			} else if (this.points[0][1] == this.points[2][1] && this.points[0][0] == this.points[1][0]) {
-				if (this.points[0][1] < this.points[1][1])
-				{
-					//TOP RIGHT CORNER IS RIGHT
-					this.subType = 'tr';
-					width = this.points[0][0] - this.points[2][0];
-					height = this.points[1][1] - this.points[0][1];
-				} else {
-					//BOTTOM LEFT CORNER IS RIGHT
-					this.subType = 'bl';
-					width = this.points[2][0] - this.points[0][0];
-					height = this.points[0][1] - this.points[1][1];
-				}
-			} 
 		}
+		
+		platformer.Vector.assign(this, 'size', 'width', 'height');
+		this.width  = width;
+		this.height = height;
 		
 		this.aABB     = new platformer.AABB(this.x, this.y, width, height);
 	};
 	var proto = collisionShape.prototype;
 	
+	/*
+## Methods
+- **reset** - Resets the location of the shape and AABBs so that the current and previous position are the same. The position you send should be that of the owner, the offset of the shape is added inside the function.
+  - @param ownerX (number) - The x position of the owner.
+  - @param ownerY (number) - The y position of the owner.
+- **getXOffset** - Returns the x offset of the shape.
+  - @return number - The x offset.
+- **getYOffset** - Returns the y offset of the shape.
+  - @return number - The y offset.
+*/
+
+	/**
+	 * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
+	 * 
+	 * @method update
+	 * @param ownerX {number} The x position of the owner.
+	 * @param ownerY {number} The y position of the owner.
+	 */
 	proto.update = function(ownerX, ownerY){
 		this.x = ownerX + this.offsetX;
 		this.y = ownerY + this.offsetY;
 		this.aABB.move(this.x, this.y);
 	};
 	
+	/**
+	 * Move the shape's x position.
+	 * 
+	 * @method moveX
+	 * @param x {number} The x position to which the shape should be moved.
+	 */
 	proto.moveX = function(x){
 		this.x = x;
 		this.aABB.moveX(this.x);
 	};
 	
+	/**
+	 * Move the shape's y position.
+	 * 
+	 * @method moveY
+	 * @param y {number} The y position to which the shape should be moved.
+	 */
 	proto.moveY = function(y){
 		this.y = y;
 		this.aABB.moveY(this.y);
 	};
 	
-	proto.moveXBy = function(deltaX){
-		this.x += deltaX;
-		this.aABB.moveX(this.x);
-	};
-	
-	proto.moveYBy = function(deltaY){
-		this.y += deltaY;
-		this.aABB.moveY(this.y);
-	};
-	
-	proto.getXY = function () {
-		return [this.x, this.y];
-	};
-	
-	proto.getX = function () {
-		return this.x;
-	};
-	
-	proto.getY = function () {
-		return this.y;
-	};
-	
+	/**
+	 * Returns the axis-aligned bounding box of the shape.
+	 * 
+	 * @method getAABB
+	 * @return {AABB} The AABB of the shape.
+	 */
 	proto.getAABB = function(){
 		return this.aABB;
 	};
-
-	proto.getXOffset = function(){
-		return this.offsetX;
-	};
 	
-	proto.getYOffset = function(){
-		return this.offsetY;
-	};
-	
+	/**
+	 * Set the shape's position as if the entity's x position is in a certain location.
+	 * 
+	 * @method setXWithEntityX
+	 * @param entityX {number} The x position of the entity.
+	 */
 	proto.setXWithEntityX = function(entityX){
 		this.x = entityX + this.offsetX;
 		this.aABB.moveX(this.x);
 	};
 	
+	/**
+	 * Set the shape's position as if the entity's y position is in a certain location.
+	 * 
+	 * @method setYWithEntityY
+	 * @param entityY {number} The y position of the entity.
+	 */
 	proto.setYWithEntityY = function(entityY){
 		this.y = entityY + this.offsetY;
 		this.aABB.moveY(this.y);
 	};
 	
+	/**
+	 * Destroys the shape so that it can be memory collected safely.
+	 * 
+	 * @method destroy
+	 */
 	proto.destroy = function(){
 		this.aABB = undefined;
 		this.points = undefined;
+	};
+	
+	/**
+	 * Transform the shape using a matrix transformation.
+	 * 
+	 * @method multiply
+	 * @param matrix {Array} A matrix used to transform the shape.
+	 */
+	proto.multiply = function(m){
+		this.position.subtractVector(this.owner.position);
+		
+		this.position.multiply(m);
+		this.offset.multiply(m);
+		this.size.multiply(m);
+		
+		this.position.addVector(this.owner.position);
+		this.width  = Math.abs(this.width);
+		this.height = Math.abs(this.height);
+		
+		this.aABB.setAll(this.x, this.y, this.width, this.height);
 	};
 	
 	return collisionShape;
