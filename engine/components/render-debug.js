@@ -50,6 +50,8 @@ This component is attached to entities that will appear in the game world. It se
 */
 
 (function(){
+	"use strict";
+	
 	var types = {
 		"aabb":      "255,128,255",
 		"render":    "128,128,128",
@@ -93,61 +95,28 @@ This component is attached to entities that will appear in the game world. It se
 			
 			this.regX = definition.regX || 0;
 			this.regY = definition.regY || 0;
-			this.stage = undefined;
+			this.stage = null;
 			this.shapes = [];
+			
+			this.isOutdated = true;
 		},
 		
 		events: {// These are messages that this component listens for
 			"handle-render-load": function(resp){
-				var self = this,
-				z        = (this.owner.z || 0) + 10000,
-				i        = 0,
-				j        = 0,
-				width    = this.owner.width  = this.owner.width  || 300,
-				height   = this.owner.height = this.owner.height || 100,
-				over     = false,
-				shapes   = null,
-				aabb     = null;
-				
-				if(resp && resp.stage){
+				if(!platformer.game.settings.debug){
+					this.owner.removeComponent(this);
+				} else if(!this.stage && resp && resp.stage){
 					this.stage = resp.stage;
-					
-					if(this.owner.getAABB){
-						for(j = 0; j < this.owner.collisionTypes.length; j++){
-							aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
-							width  = this.initialWidth  = aabb.width;
-							height = this.initialHeight = aabb.height;
-							shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
-							
-							this.shapes.push(createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--));
-							this.stage.addChild(this.shapes[this.shapes.length - 1]);
-							
-							for(i = 0; i < shapes.length; i++){
-								this.shapes.push(createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--));
-								this.stage.addChild(this.shapes[this.shapes.length - 1]);
-							}
-						}
-					} else {
-						this.shapes.push(createShape('rectangle', 'render', width, height, width/2, height/2, z--));
-						this.stage.addChild(this.shapes[0]);
-					}
-					
-					this.addInputs();
-
-					if(!platformer.game.settings.debug){
-						this.owner.removeComponent(this);
-					}
 				}
 			},
 			
 			"handle-render": function(){
 				var i = 0;
 				
-/*				if(this.owner.getAABB){
-					var aabb   = this.owner.getAABB();
-					this.shapes[0].scaleX = aabb.width / this.initialWidth;
-					this.shapes[0].scaleY = aabb.height / this.initialHeight;
-				}*/
+				if(this.isOutdated){
+					this.updateSprites();
+					this.isOutdated = false;
+				}
 				
 				for(i = 0; i < this.shapes.length; i++){
 					this.shapes[i].x = this.owner.x;
@@ -169,87 +138,72 @@ This component is attached to entities that will appear in the game world. It se
 					this.groupShape.x      = aabb.x;
 					this.groupShape.y      = aabb.y;
 				}
+			},
+			
+			"orientation-updated": function(){
+				this.isOutdated = true;
 			}
+			
 		},
 		
 		methods:{
-			addInputs: (function(){
+			updateSprites: function(){
+				var z    = (this.owner.z || 0) + 10000,
+				i        = 0,
+				j        = 0,
+				width    = this.owner.width  = this.owner.width  || 300,
+				height   = this.owner.height = this.owner.height || 100,
+				shapes   = null,
+				aabb     = null,
+				shape    = null;
+
+				for(i = 0; i < this.shapes.length; i++){
+					this.stage.removeChild(this.shapes[i]);
+				}
+				this.shapes.length = 0;
+
+				if(this.owner.getAABB){
+					for(j = 0; j < this.owner.collisionTypes.length; j++){
+						aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
+						width  = this.initialWidth  = aabb.width;
+						height = this.initialHeight = aabb.height;
+						shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
+						
+						shape  = createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--);
+						this.shapes.push(shape);
+						this.stage.addChild(shape);
+						this.addInput(shape);
+						
+						for(i = 0; i < shapes.length; i++){
+							shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
+							this.shapes.push(shape);
+							this.stage.addChild(shape);
+							this.addInput(shape);
+						}
+					}
+				} else {
+					shape = createShape('rectangle', 'render', width, height, width/2, height/2, z--);
+					this.shapes.push(shape);
+					this.stage.addChild(shape);
+					this.addInput(shape);
+				}
+			},
+			
+			addInput: (function(){
 				var lastEntityLog = null,
 				createHandler = function(self, eventName){
 					return function(event) {
-						self.owner.trigger(eventName, {
-							event: event.nativeEvent,
-							cjsEvent: event,
-							x: (event.stageX * dpr) / self.stage.scaleX + self.camera.x,
-							y: (event.stageY * dpr) / self.stage.scaleY + self.camera.y,
-							entity: self.owner
-						});
-						
 						if((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)){
 							lastEntityLog = self.owner;
 							console.log('This Entity:', lastEntityLog);
 						}
+						
+						return false;
 					};
 				};
 				
-				return function(){
-					var self = this,
-					mousedown = null,
-					mouseover = null,
-					mouseout  = null,
-					rollover  = null,
-					rollout   = null,
-					pressmove = null,
-					pressup   = null,
-					click     = null,
-					dblclick  = null;
-					
-					// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-					if(this.click || this.touch){
-						if(this.touch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
-							createjs.Touch.enable(this.stage);
-						}
-						
-						mousedown = createHandler(this, 'mousedown');
-						pressmove = createHandler(this, 'pressmove');
-						pressup   = createHandler(this, 'pressup'  );
-						click     = createHandler(this, 'click'    );
-						dblclick  = createHandler(this, 'dblclick' );
-						
-						this.sprite.addEventListener('mousedown', mousedown);
-						this.sprite.addEventListener('pressmove', pressmove);
-						this.sprite.addEventListener('pressup',   pressup  );
-						this.sprite.addEventListener('click',     click    );
-						this.sprite.addEventListener('dblclick',  dblclick );
-					}
-					if(this.hover){
-						this.stage.enableMouseOver();
-						mouseover = createHandler(this, 'mouseover');
-						mouseout  = createHandler(this, 'mouseout' );
-						rollover  = createHandler(this, 'rollover' );
-						rollout   = createHandler(this, 'rollout'  );
-
-						this.sprite.addEventListener('mouseover', mouseover);
-						this.sprite.addEventListener('mouseout',  mouseout );
-						this.container.addEventListener('rollover',  rollover );
-						this.container.addEventListener('rollout',   rollout  );
-					}
-
-					this.removeInputListeners = function(){
-						if(this.click || this.touch){
-							this.sprite.removeEventListener('mousedown', mousedown);
-							this.sprite.removeEventListener('pressmove', pressmove);
-							this.sprite.removeEventListener('pressup',   pressup  );
-							this.sprite.removeEventListener('click',     click    );
-							this.sprite.removeEventListener('dblclick',  dblclick );
-						}
-						if(this.hover){
-							this.sprite.removeEventListener('mouseover', mouseover);
-							this.sprite.removeEventListener('mouseout',  mouseout );
-							this.container.removeEventListener('rollover',  rollover );
-							this.container.removeEventListener('rollout',   rollout  );
-						}
-					};
+				return function(sprite){
+					sprite.addEventListener('mousedown', createHandler(this, 'mousedown'));
 				};
 			})(),
 			
