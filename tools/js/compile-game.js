@@ -95,7 +95,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 
 (function(){
     var engineComponent = (function(){
-    	// This is a list of all the components in the engine. This list must be updated as new components are added. Also update "game/default.js".
+    	// This is a list of all the components in the engine. This list must be updated as new components are added.
     	var components = ["asset-loader"
    	                  , "audio"
 	                  , "audio-mixer"
@@ -155,6 +155,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
    	                  , "logic-wind-up-racer"
    	                  , "node-map"
    	                  , "node-resident"
+   	                  , "orientation"
    	                  , "random-events"
 	                  , "relay-family"
 	                  , "relay-game"

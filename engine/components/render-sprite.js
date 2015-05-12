@@ -57,10 +57,6 @@ This component is attached to entities that will appear in the game world. It re
   - @param container ([createjs.Container][link3]) - Container that the render-sprite should be added to.
 - **remove-pin** - When preparing to remove itself from an entity, render-sprite broadcasts this to all attached sprites.
   - @param pinId (string) - Pin Id of the pin location to be removed.
-- **transform** - (string or Array or [createjs.Matrix2D][link4]) This performs an affine transformation on the sprite that is applied before entity properties are applied.
-  - @param affine (string) - This is one of 7 possible standard affine transformations: "horizontal", "vertical", "diagonal", "diagonal-inverse", "rotate-90", "rotate-180", and "rotate-270". All other strings will perform an identity transform.
-  - @param affine (Array) - This is a 2x2 or 2x3 array that describes the affine transformation.
-  - @param affine (Matrix2D) - This is an object that describes the affine transformation.
 
 ## JSON Definition
     {
@@ -187,7 +183,6 @@ This component is attached to entities that will appear in the game world. It re
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
-[link4]: http://createjs.com/Docs/EaselJS/Matrix2D.html
 */
 (function(){
 	"use strict";
@@ -465,7 +460,7 @@ This component is attached to entities that will appear in the game world. It re
 				map      = createAnimationMap(definition, ss.definition),
 				initialScaleX   = definition.scaleX   || 1,
 				initialScaleY   = definition.scaleY   || 1,
-				initialRotation = (definition.rotation || 0) * 180 / Math.PI,
+				initialRotation = definition.rotation || 0,
 				initialSkewX    = definition.skewX    || 0,
 				initialSkewY    = definition.skewY    || 0;
 				
@@ -530,12 +525,12 @@ This component is attached to entities that will appear in the game world. It re
 				
 				this.affine = new createjs.Matrix2D(1, 0, 0, 1).appendTransform(0, 0, initialScaleX, initialScaleY, initialRotation, initialSkewX, initialSkewY);
 
-				this.owner.scaleX   = this.owner.scaleX   || this.owner.scale || 1;
-				this.owner.scaleY   = this.owner.scaleY   || this.owner.scale || 1;
+				this.owner.scaleX   = this.owner.scaleX || this.owner.scale || 1;
+				this.owner.scaleY   = this.owner.scaleY || this.owner.scale || 1;
 				this.owner.rotation = this.owner.rotation || 0;
-				this.owner.skewX    = this.owner.skewX    || this.owner.skew  || 0;
-				this.owner.skewY    = this.owner.skewY    || this.owner.skew  || 0;
-
+				this.owner.skewX    = this.owner.skewX  || this.owner.skew  || 0;
+				this.owner.skewY    = this.owner.skewY  || this.owner.skew  || 0;
+				
 				// add pins to sprite and setup this.container if needed.
 				if(definition.pins){
 					this.container = new createjs.Container();
@@ -576,6 +571,7 @@ This component is attached to entities that will appear in the game world. It re
 				this.offsetZ = definition.offsetZ || 0;
 
 				this.container.hidden = definition.hidden || false;
+				this.ignoreOpacity = definition.ignoreOpacity || false;
 				this.state = this.owner.state;
 				this.stateChange = false;
 				this.lastState = -1;
@@ -657,27 +653,16 @@ This component is attached to entities that will appear in the game world. It re
 				this.sprite.dispatchEvent(event);
 			},
 			
-			"transform": function(transform){
-				var obj = null;
-				
-				if(Array.isArray(transform)){
-					obj = new createjs.Matrix2D(transform[0][0], transform[0][1], transform[1][0], transform[1][1], transform[0][2] || 0, transform[1][2] || 0);
-				} else if (typeof transform === 'string') {
-					switch(transform){
-					case 'horizontal':       obj = new createjs.Matrix2D(-1,  0,  0,  1); break;
-					case 'vertical':         obj = new createjs.Matrix2D( 1,  0,  0, -1); break;
-					case 'diagonal':         obj = new createjs.Matrix2D( 0,  1,  1,  0); break;
-					case 'diagonal-inverse': obj = new createjs.Matrix2D( 0, -1, -1,  0); break;
-					case 'rotate-90':        obj = new createjs.Matrix2D( 0,  1, -1,  0); break;
-					case 'rotate-180':       obj = new createjs.Matrix2D(-1,  0,  0, -1); break;
-					case 'rotate-270':       obj = new createjs.Matrix2D( 0, -1,  1,  0); break;
-				    default:                 obj = new createjs.Matrix2D( 1,  0,  0,  1); break; // identity matrix
-					}
-				} else {
-					obj = transform;
+			"input-on": function(){
+				if(!this.removeInputListeners){
+					this.addInputs();
 				}
-				
-				this.affine.prependMatrix(obj);
+			},
+			
+			"input-off": function(){
+				if(this.removeInputListeners){
+					this.removeInputListeners();
+				}
 			}
 		},
 		
@@ -739,17 +724,17 @@ This component is attached to entities that will appear in the game world. It re
 					} else {
 						x = this.owner.x;
 						y = this.owner.y;
+						if(this.rotate) {
+							rotation = this.owner.rotation;
+						}
 						if(this.container.z !== (this.owner.z + this.offsetZ)){
 							if(this.stage){
 								this.stage.reorder = true;
 							}
 							this.container.z = (this.owner.z + this.offsetZ);
 						}
-						if(this.rotate){
-							this.owner.rotation = rotation = this.owner.orientation;
-						}
 	
-						if(this.owner.opacity || (this.owner.opacity === 0)){
+						if(!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))){
 							this.container.alpha = this.owner.opacity;
 						}
 					}
@@ -799,8 +784,22 @@ This component is attached to entities that will appear in the game world. It re
 						}
 						this.stateChange = false;
 					}
-
-					matrix.copy(this.affine).prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, (rotation * 180) / Math.PI, this.owner.skewX, this.owner.skewY);
+					
+					
+					var m = matrix.copy(this.affine),
+					o = null;
+					
+					if(this.owner.orientationMatrix){ // This is a 3x3 2D matrix describing an affine transformation.
+						o = this.owner.orientationMatrix;
+						m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
+					}
+					
+					m.prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
+					
+					// Handle rotation
+					if(rotation){
+						m.appendTransform(0,0,1,1, rotation);
+					}
 				};
 			})(),
 			
@@ -874,6 +873,7 @@ This component is attached to entities that will appear in the game world. It re
 							this.container.removeEventListener('rollover',  rollover );
 							this.container.removeEventListener('rollout',   rollout  );
 						}
+						this.removeInputListeners = null;
 					};
 				};
 			})(),
