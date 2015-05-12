@@ -1,6 +1,6 @@
 /* global platformer */
 /**
- * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle shapes can be created (some code exists for right-triangles and circles, but the precise collision checking needed for these is not in place). Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
+ * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle and circle shapes can be created. Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
  * 
  * @class CollisionShape
  * @constructor
@@ -16,10 +16,11 @@
  * @param [definition.offsetY] {number} The y offset of the collision shape from the owner entity's location.
  * @param [definition.regX] {number} The registration x of the collision shape with the owner entity's location if offsetX is not provided.
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
- * @param [definition.points] {Array} Points describing the shape. These points should describe the shape so that the center of the AABB will be at (0,0). For rectangles and circles you only need two points, a top-left and bottom-right. For triangles, you need three. The first should be the right angle, and it should proceed clockwise from there.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
 platformer.CollisionShape = (function(){
+	"use strict";
+	
 	var collisionShape = function(owner, definition, collisionType){
 		var regX = definition.regX,
 		regY     = definition.regY;
@@ -53,7 +54,6 @@ platformer.CollisionShape = (function(){
 
 		this.type = definition.type || 'rectangle';
 		this.subType = '';
-		this.points = definition.points; //Points should distributed so that the center of the AABB is at (0,0).
 		this.aABB = undefined;
 		
 		var width = 0;
@@ -161,7 +161,6 @@ platformer.CollisionShape = (function(){
 	 */
 	proto.destroy = function(){
 		this.aABB = undefined;
-		this.points = undefined;
 	};
 	
 	/**

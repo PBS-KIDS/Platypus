@@ -1,6 +1,11 @@
-
+/**
+ * CollisionData holds collision data passed to entities during collisions with other entities. This class is primarily used by the ["handler-collision"]("handler-collision"%20Component.html) Component to trigger messages on child entities as collision occur.
+ * 
+ * @class CollisionData
+ */
 platformer.CollisionData = (function(){
-	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector){
+	"use strict";
+	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck){
 		this.occurred = occurred || false;
 		this.direction = direction || null;
 		this.position = position || null;
@@ -9,6 +14,7 @@ platformer.CollisionData = (function(){
 		this.thisShape = thisShape || null;
 		this.thatShape = thatShape || null;
 		this.vector = vector || null;
+		this.stuck  = stuck || 0;
 	};
 	var proto = collisionData.prototype;
 	
@@ -21,6 +27,7 @@ platformer.CollisionData = (function(){
 		this.thisShape      = dataToCopy.thisShape;
 		this.thatShape      = dataToCopy.thatShape;
 		this.vector         = dataToCopy.vector;
+		this.stuck          = dataToCopy.stuck;
 	};
 	proto.clear = function (){
 		this.occurred 		   = false;
@@ -31,11 +38,14 @@ platformer.CollisionData = (function(){
 		this.thisShape  	   = null;
 		this.thatShape  	   = null;
 		this.vector            = null;
+		this.stuck             = 0;
 	};
 	return collisionData;
 })();
 
 platformer.CollisionDataContainer = (function(){
+	"use strict";
+	
 	var collisionDataContainer = function(){
 		this.xData = [new platformer.CollisionData(), new platformer.CollisionData()];
 		this.yData = [new platformer.CollisionData(), new platformer.CollisionData()];

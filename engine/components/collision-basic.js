@@ -1,96 +1,44 @@
 /**
-# COMPONENT **collision-basic**
-This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
-
-Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance. 
-
-## Dependencies:
-- [[handler-collision]] (on entity's parent) - This component listens for 'prepare-for-collision', 'relocate-entity', and 'hit-by' messages, commonly triggered by [[handler-collision]] on the parent entity.
-
-## Messages
-
-### Listens for:
-- **collide-on** - On receiving this message, the component triggers `add-collision-entity` on the parent.
-- **collide-off** - On receiving this message, the component triggers `remove-collision-entity` on the parent.
-- **prepare-for-collision** - Updates the axis-aligned bounding box for this entity in preparation for collision checks.
-- **relocate-entity** - This message causes the entity's x,y coordinates to update.
-  - @param message.x (number) - Required. The new x coordinate.
-  - @param message.y (number) - Required. The new y coordinate.
-  - @param message.relative (boolean) - Optional. Determines whether the provided x,y coordinates are relative to the entity's current position. Defaults to `false`.
-- **hit-by-[collision-types specified in definition]** - When the entity collides with a listed collision-type, this message is received and re-triggered as a new message according to the component definition.
-
-### Local Broadcasts
-- **[Message specified in definition]** - On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component definition.
-
-### Parent Broadcasts
-- **add-collision-entity** - On receiving 'collide-on', this message is triggered on the parent.
-- **remove-collision-entity** - On receiving 'collide-off', this message is triggered on the parent.
-
-## JSON Definition:
-    {
-      "type": "collision-basic",
-      
-      "collisionType": "boulder",
-      // Optional. Defines how this entity should be recognized by other colliding entities. Defaults to `none`.
-      
-      "immobile": true,
-      // Optional. Defaults to `false`, but should be set to true if entity doesn't move for better optimization.
-      
-      "shapes": [{
-      //Optional. Defines one or more shapes to create the collision area. Defaults to a single shape with the width, height, regX, and regY properties of the entity if not specified.
-      
-        "type": "circle",
-        // Optional. Defaults to "rectangle".
-        
-        "offsetX": 0,
-        "offsetY": -120,
-        // Optional. Specifies the collision shape's position relative to the entity's x,y coordinates. Defaults to 0. Alternatively, can specify regX and regY values, which are determined from the top-right of the collision object.
-      }],
-      
-      //The following five properties are optional and can be specified instead of the more specific `shape` above. 
-      "width": 160,
-      // Optional. Sets the width of the collision area in world coordinates.
-      
-      "height": 240,
-      // Optional. Sets the height of the collision area in world coordinates.
-      
-      "radius": 60,
-      // Optional. Sets the radius of a circle collision area in world coordinates.
-      
-      "regX": 80,
-      // Optional. Determines the x-axis center of the collision shape.
-
-      "regY": 120,
-      // Optional. Determines the y-axis center of the collision shape.
-      
-      "solidCollisions":{
-      // Optional. Determines which collision types this entity should consider solid, meaning this entity should not pass through them.
-
-        "boulder": "",
-        // This specifies that this entity should not pass through other "boulder" collision-type entities.
-        
-        "diamond": "crack-up",
-        // This specifies that this entity should not pass through "diamond" collision-type entities, but if it touches one, it triggers a "crack-up" message on the entity.
-
-        "marble": ["flip", "dance", "crawl"]
-        // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
-      },
-      
-      "softCollisions":{
-      // Optional. Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so.
-
-        "water": "soaked",
-        // This triggers a "soaked" message on the entity when it passes over a "water" collision-type entity.
-
-        "lava": ["burn", "ouch"]
-        // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
-      }
-    }
-    
-Requires: ["../collision-shape.js", "../aabb.js"]
-*/
+ * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
+ * 
+ * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance. 
+ * 
+ * @class "collision-basic" Component
+ * @uses Component
+ */
+// Requires: ["../collision-shape.js", "../aabb.js"]
 (function(){
-	var entityBroadcast = function(event, solidOrSoft, collisionType){
+	"use strict";
+	
+	var handleStuck = function(position, data, owner){
+		var m    = 0,
+		s        = data.stuck;
+		
+		if(s){
+			m = position.magnitude();
+			if(data.thatShape.owner && (Math.abs(s) > 1)){
+				s *= 0.05;
+			}
+			if(!m || (m > Math.abs(s))){
+				if(data.vector.x){
+					position.x = s;
+					position.y = 0;
+				}
+				if(data.vector.y){
+					position.x = 0;
+					position.y = s;
+				}
+				owner.stuckWith = new platformer.Vector(data.thatShape.x, data.thatShape.y);
+			}
+		}
+	},
+	/**
+	 * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
+	 * 
+	 * @event *
+	 * @param collision {Object} A list of key/value pairs describing the collision.
+	 */
+	entityBroadcast = function(event, solidOrSoft, collisionType){
 		if(typeof event === 'string'){
 			return function(value){
 				if(value.myType === collisionType){
@@ -190,8 +138,20 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				}
 			};
 			
-			entity.relocateEntity = function(vector){
-				entity.triggerEvent('relocate-entity', {position: vector});
+			entity.relocateEntity = function(vector, collisionData){
+				var v = null;
+				
+				if(collisionData.xCount){
+					v = new platformer.Vector(0,0,0);
+					handleStuck(v, collisionData.getXEntry(0), entity);
+				}
+
+				if(collisionData.yCount){
+					v = v || new platformer.Vector(0,0,0);
+					handleStuck(v, collisionData.getYEntry(0), entity);
+				}
+				
+				entity.triggerEvent('relocate-entity', {position: vector, unstick: v});
 			};
 			
 			entity.movePreviousX = function(x){
@@ -240,45 +200,141 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 	return platformer.createComponentClass({
 		
 		id: 'collision-basic',
+
+		properties: {
+			/**
+			 * Defines how this entity should be recognized by other colliding entities.
+			 * 
+			 * @property collisionType
+			 * @type String
+			 * @default "none"
+			 */
+			collisionType: "none",
+
+			/**
+			 * Defines the type of colliding shape.
+			 * 
+			 * @property shapeType
+			 * @type String
+			 * @default "rectangle"
+			 */
+			shapeType: "rectangle",
+			
+			/**
+			 * Determines whether the collision area should transform on orientation changes.
+			 * 
+			 * @property ignoreOrientation
+			 * @type boolean
+			 * @default false
+			 */
+			ignoreOrientation: false,
+			
+			/**
+			 * Determines the x-axis center of the collision shape.
+			 * 
+			 * @property regX
+			 * @type number
+			 * @default 0
+			 */
+			regX: 0,
+			
+			/**
+			 * Determines the y-axis center of the collision shape.
+			 * 
+			 * @property regY
+			 * @type number
+			 * @default 0
+			 */
+			regY: 0,
+			
+			/**
+			 * Sets the width of the collision area in world coordinates.
+			 * 
+			 * @property width
+			 * @type number
+			 * @default 0
+			 */
+			width: 0,
+			
+			/**
+			 * Sets the height of the collision area in world coordinates.
+			 * 
+			 * @property height
+			 * @type number
+			 * @default 0
+			 */
+			height: 0,
+			
+			/**
+			 * Sets the radius of a circle collision area in world coordinates.
+			 * 
+			 * @property radius
+			 * @type number
+			 * @default 0
+			 */
+			radius: 0,
+			
+			/**
+			 * This is the margin around the entity's width and height. This is an alternative method for specifying the collision shape in terms of the size of the entity. Can also pass in an object specifying the following parameters if the margins vary per side: top, bottom, left, and right.
+			 * 
+			 * @property margin
+			 * @type number|Object
+			 * @default 0
+			 */
+			margin: 0,
+			
+			/**
+			 * Defines one or more shapes to create the collision area. Defaults to a single shape with the width, height, regX, and regY properties of the entity if not specified. See [CollisionShape](CollisionShape.html) for the full list of properties.
+			 * 
+			 * @property shapes
+			 * @type Array
+			 * @default null
+			 */
+			shapes: null
+		},
+		
+		publicProperties: {
+			/**
+			 * This property should be set to true if entity doesn't move for better optimization. This causes other entities to check against this entity, but this entity performs no checks of its own. Available on the entity as `entity.immobile`.
+			 * 
+			 * @property immobile
+			 * @type boolean
+			 * @default false
+			 */
+			immobile: false,
+
+			/**
+			 * Whether this entity should be tested across its entire movement path. This is necessary for fast-moving entities, but shouldn't be used for others due to the processing overhead. Available on the entity as `entity.bullet`.
+			 * 
+			 * @property bullet
+			 * @type boolean
+			 * @default false
+			 */
+			bullet: false,
+			
+			/**
+			 * Whether the entity is only solid when being collided with from the top.
+			 * 
+			 * @property jumpThrough
+			 * @type boolean
+			 * @default: false
+			 */
+			jumpThrough: false
+		},
 		
 		constructor: function(definition){
 			var x        = 0,
 			shapes       = null,
-			regX         = definition.regX,
-			regY         = definition.regY,
-			width        = definition.width,
-			height       = definition.height,
-			radius       = definition.radius,
-			margin       = definition.margin || 0,
-			marginLeft   = definition.marginLeft   || margin,
-			marginRight  = definition.marginRight  || margin,
-			marginTop    = definition.marginTop    || margin,
-			marginBottom = definition.marginBottom || margin;
+			regX         = this.regX,
+			regY         = this.regY,
+			width        = this.width,
+			height       = this.height,
+			radius       = this.radius,
+			marginLeft   = this.margin.left   || this.margin,
+			marginRight  = this.margin.right  || this.margin,
+			marginTop    = this.margin.top    || this.margin,
+			marginBottom = this.margin.bottom || this.margin;
 			
-			if(isNaN(width)){
-				width = this.owner.width;
-				if(isNaN(regX)){
-					regX = this.owner.regX;
-				}
-			}
-			if(isNaN(height)){
-				height = this.owner.height;
-				if(isNaN(regY)){
-					regY = this.owner.regY;
-				}
-			}
-			if(isNaN(radius)){
-				radius = this.owner.radius;
-				if(isNaN(regX)){
-					regX = this.owner.regX;
-				}
-				if(isNaN(regY)){
-					regY = this.owner.regY;
-				}
-			}
-
-			this.immobile  = this.owner.immobile = this.owner.immobile || definition.immobile || false;
-
 			platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
 			platformer.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
 			this.owner.previousX = this.owner.previousX || this.owner.x;
@@ -287,14 +343,10 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 			this.aabb     = new platformer.AABB();
 			this.prevAABB = new platformer.AABB();
 			
-			this.owner.bullet = this.owner.bullet || definition.bullet;
-
-			if(definition.shapes){
-				shapes = definition.shapes;
-			} else if (definition.shape) {
-				shapes = [definition.shape];
+			if(this.shapes){
+				shapes = this.shapes;
 			} else {
-				if(definition.shapeType === 'circle'){
+				if(this.shapeType === 'circle'){
 					radius = radius || (((width || 0) + (height || 0)) / 4);
 					shapes = [{
 						regX: (isNaN(regX)?radius:regX) - (marginRight - marginLeft) / 2,
@@ -302,7 +354,7 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 						radius: radius,
 						width:  radius * 2,
 						height: radius * 2,
-						type: definition.shapeType
+						type: this.shapeType
 					}];
 				} else {
 					shapes = [{
@@ -311,12 +363,10 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 						points: definition.points,
 						width:  (width  || 0) + marginLeft + marginRight,
 						height: (height || 0) + marginTop  + marginBottom,
-						type: definition.shapeType
+						type: this.shapeType
 					}];
 				}
 			}
-			
-			this.collisionType = definition.collisionType || 'none';
 			
 			this.owner.collisionTypes = this.owner.collisionTypes || [];
 			this.owner.collisionTypes.push(this.collisionType);
@@ -331,14 +381,21 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				this.aabb.include(this.shapes[x].getAABB());
 			}
 			
-			
-			
-			if(definition.jumpThrough){
-				this.owner.jumpThrough = true;
-			}
-			
 			setupCollisionFunctions(this, this.owner);
 			
+			/**
+			 * Determines which collision types this entity should consider solid, meaning this entity should not pass through them. Example:
+			 * 
+			 *     {
+			 *         "boulder": "",                       // This specifies that this entity should not pass through other "boulder" collision-type entities.
+			 *         "diamond": "crack-up",               // This specifies that this entity should not pass through "diamond" collision-type entities, but if it touches one, it triggers a "crack-up" message on the entity.
+			 *         "marble": ["flip", "dance", "crawl"] // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
+			 *     }
+			 * 
+			 * @property solidCollisions
+			 * @type Object
+			 * @default null
+			 */
 			this.owner.solidCollisions = this.owner.solidCollisions || {};
 			this.owner.solidCollisions[this.collisionType] = [];
 			if(definition.solidCollisions){
@@ -351,6 +408,18 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				}
 			}
 	
+			/**
+			 * Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so. Example:
+			 * 
+			 *     {
+			 *         "water": "soaked",       // This triggers a "soaked" message on the entity when it passes over a "water" collision-type entity.
+			 *         "lava": ["burn", "ouch"] // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
+			 *     }
+			 * 
+			 * @property softCollisions
+			 * @type Object
+			 * @default null
+			 */
 			this.owner.softCollisions = this.owner.softCollisions || {};
 			this.owner.softCollisions[this.collisionType] = [];
 			if(definition.softCollisions){
@@ -361,50 +430,73 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 					}
 				}
 			}
+			
+			this.stuck = false;
 		},
 		
 		events:{
+			/**
+			 * On receiving this message, the component triggers `add-collision-entity` on the parent.
+			 * 
+			 * @method 'collide-on'
+			 */
 			"collide-on": function(){
+				/**
+				 * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
+				 * 
+				 * @event 'add-collision-entity'
+				 * @param entity {Entity} The entity this component is attached to.
+				 */
 				this.owner.parent.trigger('add-collision-entity', this.owner);
 			},
 			
+			/**
+			 * On receiving this message, the component triggers `remove-collision-entity` on the parent.
+			 * 
+			 * @method 'collide-off'
+			 */
 			"collide-off": function(){
+				/**
+				 * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
+				 * 
+				 * @event 'remove-collision-entity'
+				 * @param entity {Entity} The entity this component is attached to.
+				 */
 				this.owner.parent.trigger('remove-collision-entity', this.owner);
 			},
 			
-			"handle-logic": function(){
-				if(this.owner.movementAbsorbed){
-					this.owner.movementAbsorbed = false;
-				}
-			},
-			
-			"prepare-for-collision": function(resp){
-				var x = this.owner.x,
-				y     = this.owner.y;
-				
-				// absorb velocities from the last logic tick
-				if(!this.owner.movementAbsorbed && resp){
-					this.owner.movementAbsorbed = true;
-					if(this.owner.dx){
-						x += this.owner.dx * (resp.delta || 0);
-					}
-					if(this.owner.dy){
-						y += this.owner.dy * (resp.delta || 0);
-					}
-				}
-				
-//				this.prepareCollision(x, y);
-				this.owner.x = x;
-				this.owner.y = y;
-			},
-			
+			/**
+			 * This message causes the entity's x,y coordinates to update.
+			 * 
+			 * @method 'relocate-entity'
+			 * @param position.x {number} The new x coordinate.
+			 * @param position.y {number} The new y coordinate.
+			 * @param [position.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
+			 */
 			"relocate-entity": function(resp){
+				var unstick = resp.unstick,
+				um          = 0;
+				
+				if(unstick){
+					um = unstick.magnitude();
+				}
+				
+				this.move = null;
+				
 				if(resp.relative){
 					this.owner.position.set(this.owner.previousPosition).add(resp.position);
 				} else {
 					this.owner.position.set(resp.position);
 				}
 
+				if(this.stuck){
+					if(um > 0){
+						this.owner.position.add(unstick);
+					} else {
+						this.stuck = false;
+					}
+				}
+				
 				this.aabb.reset();
 				for (var x in this.shapes){
 					this.shapes[x].update(this.owner.x, this.owner.y);
@@ -412,6 +504,40 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				}
 
 				this.owner.previousPosition.set(this.owner.position);
+				
+				if(um > 0){ // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
+					if(!this.stuck){
+						this.stuck = true;
+					}
+					this.move = this.owner.stuckWith.copy().add(-this.owner.x, -this.owner.y).normalize();
+				}
+			},
+			
+			/**
+			 * If the entity is stuck to another entity, this component tries to unstick the entity on each logic step.
+			 * 
+			 * @method 'handle-logic'
+			 */
+			"handle-logic": function(){
+				if(this.move){
+					this.owner.position.add(this.move); // By trying to move into it, we should get pushed back out.
+				}
+			},
+			
+			/**
+			 * Collision shapes are updated to reflect the new orientation when this message occurs.
+			 * 
+			 * @method 'orientation-updated'
+			 * @param matrix {Array} A 2D matrix describing the new orientation.
+			 */
+			"orientation-updated": function(matrix){
+				var i = 0;
+				
+				if(!this.ignoreOrientation){
+					for(i = 0; i < this.shapes.length; i++){
+						this.shapes[i].multiply(matrix);
+					}
+				}
 			}
 		},
 		
@@ -433,7 +559,8 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 			},
 			
 			prepareCollision: function(x, y){
-				var tempShapes = this.prevShapes;
+				var i      = 0,
+				tempShapes = this.prevShapes;
 				
 				this.owner.x = x;
 				this.owner.y = y;
@@ -445,9 +572,9 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				this.aabb.reset();
 				
 				// update shapes
-				for (var x = 0; x < this.shapes.length; x++){
-					this.shapes[x].update(this.owner.x, this.owner.y);
-					this.aabb.include(this.shapes[x].getAABB());
+				for (i = 0; i < this.shapes.length; i++){
+					this.shapes[i].update(this.owner.x, this.owner.y);
+					this.aabb.include(this.shapes[i].getAABB());
 				}
 			},
 			
@@ -459,6 +586,9 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 			},
 			
 			destroy: function(){
+				var i = 0,
+				col   = "";
+				
 				this.owner.parent.trigger('remove-collision-entity', this.owner);
 
 				this.owner.collides = false;
@@ -466,7 +596,7 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 				delete this.aabb;
 				delete this.prevAABB;
 				
-				for(var i = 0; i < this.owner.collisionTypes.length; i++){
+				for(i = 0; i < this.owner.collisionTypes.length; i++){
 					if(this.owner.collisionTypes[i] === this.collisionType){
 						this.owner.collisionTypes.splice(i,1);
 						break;
@@ -476,8 +606,9 @@ Requires: ["../collision-shape.js", "../aabb.js"]
 					this.owner.solidCollisions[this.collisionType].length = 0;
 					delete this.owner.solidCollisions[this.collisionType];
 				}
-				for(var i in this.owner.solidCollisions){
+				for(col in this.owner.solidCollisions){
 					this.owner.collides = true;
+					break;
 				}
 				if(this.owner.softCollisions[this.collisionType]){
 					this.owner.softCollisions[this.collisionType].length = 0;
