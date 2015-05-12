@@ -1,44 +1,67 @@
 /**
-# COMPONENT **xhr**
-This component enables XHR communication with a server.
-
-## Messages
-
-### Listens for:
-- **request** - On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
-  - @param message.method (string) - XHR method to use: must be "GET" or "POST".
-  - @param message.path (string) - The path to the server resource.
-  - @param message.responseType (string) - Response type expected: this defaults to "text".
-  - @param message.data (object) - An object of string key/value pairs to be transmitted to the server.
-  - @param message.onload (function) - A function that should be run on receiving a response from the server. This defaults to triggering a "response" message containing the responseText value.
-  
-### Local Broadcasts:
-- **response** - This message is triggered on receiving a response from the server (if "onload" is not set by the original "request" message).
-  - @param message (string) - The message contains the responseText returned by the server.
-
-## JSON Definition
-    {
-      "type": "xhr",
-      
-      "method": "POST",
-      // Optional. Sets the XHR method to use. Default is "GET".
-      
-      "path": "http://server.com/engine",
-      // Optional. Sets the path to connect to the server.
-      
-      "responseType": "text",
-      // Optional. Sets the XHR response type. Defaults to "text"
-    }
-*/
+ * This component provides component-based XHR communication with a server.
+ * 
+ * @class "xhr" Component
+ * @uses Component
+ */
 (function(){
 	return platformer.createComponentClass({
 		id: 'xhr',
+		
+		properties: {
+			/**
+			 * Sets the XHR method to use.
+			 * 
+			 * @property method
+			 * @type String
+			 * @default "GET"
+			 */
+			method: "GET",
+			
+			/**
+			 * Sets the path to connect to the server.
+			 * 
+			 * @property path
+			 * @type String
+			 * @default ""
+			 */
+			path: "",
+			
+			/**
+			 * Sets the XHR response type.
+			 * 
+			 * @property responseType
+			 * @type String
+			 * @default "text"
+			 */
+			responseType: "text",
+			
+			/**
+			 * Whether cookies should be retained on cross-domain calls.
+			 * 
+			 * @property withCredentials
+			 * @type boolean
+			 * @default false
+			 */
+			withCredentials: false
+		},
 		
 		constructor: function(definition){
 			this.setProperties(definition);
 		},
 
 		events: {// These are messages that this component listens for
+			/**
+			 * On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
+			 * 
+			 * @method 'request'
+			 * @param message {Object}
+			 * @param message.method {String} XHR method to use: must be "GET" or "POST".
+			 * @param message.path {String} The path to the server resource.
+			 * @param [message.responseType="text"] {String} Response type expected.
+			 * @param [message.data] {Object} An object of string key/value pairs to be transmitted to the server.
+			 * @param message.onload {Function} A function that should be run on receiving a response from the server. This defaults to triggering a "response" message containing the responseText value.
+			 */
 			"request": function(resp){
 				this.setProperties(resp);
 				
@@ -62,6 +85,7 @@ This component enables XHR communication with a server.
 				this.method       = props.method       || this.method       || "GET";
 				this.path         = props.path         || this.path         || null;
 				this.responseType = props.responseType || this.responseType || "text";
+				this.withCredentials = props.withCredentials || this.withCredentials || false;
 				
 				if((props !== this) && props.data){
 					this.data = '';
@@ -75,6 +99,12 @@ This component enables XHR communication with a server.
 				
 				this.onload = props.onload || this.onload || function(e) {
 				    if (this.status === 200) {
+						/**
+						 * This message is triggered on receiving a response from the server (if "onload" is not set by the original "request" message).
+						 * 
+						 * @event 'response'
+						 * @param message {String} The message contains the responseText returned by the server.
+						 */
 				    	self.owner.trigger('response', this.responseText);
 				    }
 				};
@@ -88,6 +118,7 @@ This component enables XHR communication with a server.
 				}
 				
 				xhr.open(this.method, path, true);
+				xhr.withCredentials = this.withCredentials;
 				xhr.responseType = this.responseType;
 				xhr.onload = this.onload;
 				xhr.send();
@@ -96,6 +127,7 @@ This component enables XHR communication with a server.
 				var xhr = new XMLHttpRequest();
 				
 				xhr.open(this.method, this.path, true);
+				xhr.withCredentials = this.withCredentials;
 				xhr.responseType = this.responseType;
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 				xhr.onload = this.onload;
