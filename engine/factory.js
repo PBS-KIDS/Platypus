@@ -132,6 +132,7 @@
 		 * 
 		 * @method toString
 		 * @return {String}
+		 * @private
 		 */
 		proto.toString = function(){
 			return "[component " + this.type + "]";
@@ -141,6 +142,7 @@
 		 * This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.
 		 * 
 		 * @method destroy
+		 * @private
 		 */
 		proto.destroy = function(){
 			
@@ -161,6 +163,7 @@
 		 * 
 		 * @method removeEventListeners
 		 * @param [listeners] {Array} The list of listeners to remove. If not supplied, all event listeners are removed.
+		 * @private
 		 */
 		proto.removeEventListeners = function(listeners){
 			var events = null,
@@ -186,6 +189,7 @@
 		 * @method addEventListener
 		 * @param event {String} The event that this component should listen for.
 		 * @param callback {Function} The handler for the event.
+		 * @private
 		 */
 		proto.addEventListener = function(event, callback){
 			this.listener.events.push(event);
@@ -199,6 +203,7 @@
 		 * @method addMethod
 		 * @param name {String} The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as `entity.turnYellow()`.
 		 * @param func {Function} The function describing the method.
+		 * @private
 		 */
 		proto.addMethod = function(name, func){
 			var self = this;
@@ -219,6 +224,7 @@
 		 * @method removeEventListener
 		 * @param event {String} The event for which to remove a listener.
 		 * @param callback {Function} The listener to remove. If not supplied, all event listeners for the provided event are removed.
+		 * @private
 		 */
 		proto.removeEventListener = function(event, callback){
 			var events = this.listener.events,
@@ -235,6 +241,7 @@
 		 * 
 		 * @method removeMethod
 		 * @param name {String} The name of the method to be removed.
+		 * @private
 		 */
 		proto.removeMethod = function(name){
 			if(!this.owner[name]){
