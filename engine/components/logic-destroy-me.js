@@ -5,6 +5,8 @@
  * @uses Component
  */
 (function(){
+	"use strict";
+	
 	return platformer.createComponentClass({	
 		id: 'logic-destroy-me',
 		

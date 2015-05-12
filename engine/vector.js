@@ -3,11 +3,14 @@
  * 
  * @class Vector
  * @constructor
+ * @param x {number|Array|Vector} The x coordinate or an array or Vector describing the whole vector.
+ * @param [y] {number} The y coordinate.
+ * @param [z] {number} The z coordinate.
  */
 platformer.Vector = (function(){
 	"use strict";
 	
-	var Vector = function(x, y, z){
+	var Vector = void function(x, y, z){
 		this.matrix = [0,0,0];
 		this.set(x, y, z);
 	};
@@ -503,7 +506,7 @@ platformer.Vector = (function(){
 						}
 					}
 					
-					return 
+					return ;
 				}
 				return obj[prop];
 			} else {
