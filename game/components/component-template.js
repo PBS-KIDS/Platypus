@@ -1,30 +1,9 @@
 /**
-# COMPONENT **name-of-component**
-Summarize the purpose of this component here.
-
-## Dependencies
-- [[Required-Component]] - List other components that this component requires to function properly on an entity.
-
-## Messages
-
-### Listens for:
-- **received-message-label** - List all messages that this component responds to here.
-  - @param message-object-property (type) - under each message label, list message object properties that are optional or required.
-
-### Local Broadcasts:
-- **local-message-label** - List all messages that are triggered by this component on this entity here.
-  - @param message-object-property (type) - under each message label, list message object properties that are optional or required.
-
-### Peer Broadcasts:
-- **peer-message-label** - List all messages that are triggered by this component on other entities here.
-  - @param message-object-property (type) - under each message label, list message object properties that are optional or required.
-
-## JSON Definition
-    {
-      "type": "name-of-component"
-      // List all additional parameters and their possible values here.
-    }
-*/
+ * This component is an example template from which a developer can create their own components. Summarize the purpose of this component here.
+ * 
+ * @class "component-template" Component
+ * @uses Component
+ */
 (function(){
 	/*********************************************************************
 	 TODO: Place helper functions here that are suitable across all
@@ -49,6 +28,29 @@ Summarize the purpose of this component here.
 		*********************************************************************/
 		
 		id: 'name-of-component', //TODO: Change the name of the component!
+		
+		/********************************************************************
+		 Properties are local to the component and are available as
+		 `this.propertyName`. By specifying them here, you're setting their
+		 default value, but this value will automatically be overwritten by
+		 properties passed into the component or properties on the owner of
+		 the same name.
+		 ********************************************************************/ 
+		properties: {
+			"propertyName1": "property-value"
+		},
+		
+		/********************************************************************
+		 Similar to the above, except that these properties are set on both
+		 the component (available as `this.propertyName`) and on the owner
+		 (available as `entity.propertyName`. By specifying them here, you're
+		 setting their default value, but this value will automatically be
+		 overwritten by properties passed into the component or properties
+		 on the owner of the same name.
+		 ********************************************************************/ 
+		publicProperties: {
+			"propertyName2": "property-value"
+		},
 		
 		constructor: function(definition){
 			/*********************************************************************

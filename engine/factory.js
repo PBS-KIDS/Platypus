@@ -7,7 +7,7 @@
  * 
  *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
  *  * `prototype` is an optional prototype that this component extends.
- * See ec-template.js for an example componentDefinition that can be sent into this component class factory.
+ * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
  * 
  * @class Component
  * @static
