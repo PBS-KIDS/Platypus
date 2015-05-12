@@ -1,3 +1,4 @@
+/* global createjs */
 /**
 # Function
 Browser.js is one large function that is used to discover what browser is being used the capabilities of the browser. In addition to browser type, we determine whether it is mobile or desktop, whether it supports multi or single-touch, what type of audio it can play, and whether it supports canvas or not. 
@@ -5,6 +6,8 @@ All of this information is added to platformer.settings.supports and used throug
 * 
 */
 (function(){
+	"use strict";
+	
 	var uagent   = navigator.userAgent.toLowerCase(),
 	    
 	    myAudio  = document.createElement('audio'),
@@ -38,8 +41,7 @@ All of this information is added to platformer.settings.supports and used throug
 		},
 	    aspects = platformer.settings.manifest,
 	    i = 0,
-	    j = 0,
-	    k = 0,
+	    j = '',
 	    foundAspect = false,
 	    listAspects = '';
 	
@@ -76,7 +78,7 @@ All of this information is added to platformer.settings.supports and used throug
 	} catch(e) {
 		supports.canvas = !!(canvas.getContext); // IE
 	}
-	delete canvas;
+	canvas = null;
 
 	//replace settings aspects build array with actual support of aspects
 	platformer.settings.manifest = {};

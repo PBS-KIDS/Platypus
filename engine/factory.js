@@ -1,6 +1,8 @@
-/*
- * This file includes a few helper functions to handle component code that is repeated across multiple components.
- * See ec-template.js for an example componentDefinition that can be sent into this component class factory.
+/**
+ * The factory takes in component definitions and creates component classes that can be used to create components by entities. See ec-template.js for an example componentDefinition that can be sent into this component class factory.
+ * 
+ * @class Component
+ * @static
  */
 (function (ns){
 	"use strict";
@@ -19,15 +21,22 @@
 		
 	ns.components = {};
 	
-	ns.createComponentClass = function(componentDefinition, prototype){
+	/**
+	 * This factory method takes in a component definition and creates a class from it. It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
+	 * 
+	 * @method createComponentClass
+	 * @param componentDefinition {Object} A list of key/value pairs that describe the component's behavior.
+	 * @param [prototype] {Object} A prototype that this component extends.
+	 */
+	ns.createComponentClass = function(componentDefinition, Prototype){
 		var	component = function(owner, definition){
 			var prop = null,
 			func     = null,
 			name     = '';
 			
 			// if prototype provided, set up its properties here.
-			if(prototype){
-				prototype.call(this);
+			if(Prototype){
+				Prototype.call(this);
 			}
 			
 			this.owner = owner;
@@ -99,8 +108,8 @@
 		func  = null,
 		proto = component.prototype;
 		
-		if(prototype){ //absorb template prototype if it exists.
-			proto = component.prototype = new prototype();
+		if(Prototype){ //absorb template prototype if it exists.
+			proto = component.prototype = new Prototype();
 		}
 		
 		// Have to copy rather than replace so definition is not corrupted
@@ -202,7 +211,7 @@
 		
 		proto.removeMethod = function(name){
 			if(!this.owner[name]){
-				console.warn(owner.type + ': Entity does not have a method called "' + name + '".');
+				console.warn(this.owner.type + ': Entity does not have a method called "' + name + '".');
 			} else {
 				delete this.owner[name];
 			}

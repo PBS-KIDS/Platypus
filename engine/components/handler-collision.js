@@ -30,16 +30,6 @@
 		hitType: null,
 		myType: null
 	},
-	xyPair = {
-		x: 0,
-		y: 0,
-		relative: false
-	},
-	clearXYPair = function (pair) {
-		pair.x = 0;
-		pair.y = 0;
-		pair.relative = false;
-	},
 	entityCollisionDataContainer = new platformer.CollisionDataContainer(),
 	AABBCollision = function (boxX, boxY){
 		if(boxX.left   >=  boxY.right)  return false;
@@ -446,7 +436,8 @@
 
 				return function (){
 					var entities = this.groupsLive,
-					fmi = new platformer.Vector();
+					fmi          = new platformer.Vector(),
+					messageData  = null;
 					
 					for (var x = entities.length - 1; x > -1; x--){
 						if(entities[x].collisionGroup.getSize() > 1){
@@ -929,7 +920,7 @@
 					return function(collision){
 						ent.trigger('hit-by-' + collision.type, collision);
 					};
-				}
+				};
 
 				for(x = 0; x < this.softEntitiesLive.length; x++){
 					this.checkEntityForSoftCollisions(this.softEntitiesLive[x], this.getWorldEntities(), trigger(this.softEntitiesLive[x]));

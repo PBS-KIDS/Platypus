@@ -1,3 +1,6 @@
+/* global loadJS */
+/* global fileSystem */
+/* global java */
 /**
  * Compile Game
  * 
@@ -221,7 +224,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 		    alert('Error in "' + path + '": ' + e.description);
 		    return {};
 	    }
-    };
+    },
    setText    = function(path, text){
 	   if(isJIT){
 		   return text;

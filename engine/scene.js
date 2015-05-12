@@ -32,7 +32,7 @@ platformer.Scene = (function(){
 		var layers = definition.layers,
 		supportedLayer = true,
 		layerDefinition = false,
-		properties = false,
+		properties = null,
 		messages = null;
 		
 		this.id = definition.id;

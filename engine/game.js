@@ -156,11 +156,12 @@ platformer.Game = (function(){
  * Loads a scene. If there is a transition, performs the transition from the current scene to the new scene.
  * 
  * @method loadScene
- * @param {String} sceneId The scene to load.
- * @param {String} transition What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
+ * @param sceneId {String} The scene to load.
+ * @param transition {String} What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
  **/
  	proto.loadScene = function(sceneId, transition, persistantData, preloading){
-		var self = this;
+		var self = this,
+		element  = null;
 
 		if(this.leavingScene){
 			this.leavingScene.destroy();
@@ -179,7 +180,7 @@ platformer.Game = (function(){
 		
 		switch(transition){
 		case 'fade-to-black':
-			var element = document.createElement('div');
+			element = document.createElement('div');
 			this.rootElement.appendChild(element);
 			element.style.width = '100%';
 			element.style.height = '100%';
@@ -187,7 +188,7 @@ platformer.Game = (function(){
 			element.style.zIndex = '12';
 			element.style.opacity = '0';
 			element.style.background = '#000';
-			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
+			createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
 				if(!this.loaded) {
 					self.loadNextScene(sceneId, persistantData);
 				}
@@ -199,8 +200,11 @@ platformer.Game = (function(){
 			break;
 		case 'crossfade':
 			var root = null,
-			element  = null,
-			callSet  = false,
+			callSet  = function(t){
+				if(loaded === self.loaded){
+					self.completeSceneTransition(persistantData);
+				}
+			},
 			loaded   = this.loaded; // This variable is a sanity check to cause an abort if another scene load is started during the crossfade.
 			
 			if(!this.loaded) {
@@ -212,19 +216,15 @@ platformer.Game = (function(){
 				if(root[i].element){
 					element = root[i].element.style;
 					element.opacity = '0';
-					if(!callSet){
-						callSet = true;                // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(function(t){
-							if(loaded === self.loaded){
-								self.completeSceneTransition(persistantData);
-							}
-						});
+					if(callSet){                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
+						createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(callSet);
+						callSet = null;
 					} else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000);
+						createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000);
 					}
 				}
 			}
-			if(!callSet){ // nothing to crossfade so we just finish loading the scene.
+			if(callSet){ // nothing to crossfade so we just finish loading the scene.
 				self.completeSceneTransition(persistantData);
 			}
 			break;
