@@ -188,8 +188,8 @@ platformer.Game = (function(){
 			element.style.zIndex = '12';
 			element.style.opacity = '0';
 			element.style.background = '#000';
-			createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				if(!this.loaded) {
+			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
+				if(!self.loaded) {
 					self.loadNextScene(sceneId, persistantData);
 				}
 				self.completeSceneTransition(persistantData);
@@ -217,10 +217,10 @@ platformer.Game = (function(){
 					element = root[i].element.style;
 					element.opacity = '0';
 					if(callSet){                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-						createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(callSet);
+						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(callSet);
 						callSet = null;
 					} else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-						createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000);
+						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000);
 					}
 				}
 			}

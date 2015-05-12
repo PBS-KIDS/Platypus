@@ -10,7 +10,7 @@
 platformer.Vector = (function(){
 	"use strict";
 	
-	var Vector = void function(x, y, z){
+	var Vector = function(x, y, z){
 		this.matrix = [0,0,0];
 		this.set(x, y, z);
 	};
