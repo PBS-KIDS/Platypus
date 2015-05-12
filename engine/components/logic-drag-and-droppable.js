@@ -37,8 +37,6 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 		 
 		 Property this.owner - a reference to the component's Entity
 		 Property this.type  - identical to the id provided below
-		 Method addListener(event, callback) - adds an event to listen for
-		 Method removeListener(event, callback) - removes an event
 		*********************************************************************/
 		
 		id: 'logic-drag-and-droppable',

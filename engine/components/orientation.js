@@ -18,6 +18,7 @@
  *     - **rotation**: absorb 90 degree rotations
  * 
  * @class "orientation" Component
+ * @uses Component
  */
 (function(){
 	"use strict";

@@ -4,6 +4,7 @@
  * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
  * 
  * @class "camera" Component
+ * @uses Component
 */
 (function(){
 	"use strict";

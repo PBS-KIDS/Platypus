@@ -2,6 +2,7 @@
  * This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
  * 
  * @class "handler-collision" Component
+ * @uses Component
  */
  
 // Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-data-container.js"]
