@@ -16,12 +16,16 @@
 				"key:d": 			"go-right",
 				"button-right":     "go-right"
 			}
-        },{ 
+/*        },{ 
             "type": "logic-gravity",
-            "yGravity" : .003
-        },{
+            "yGravity" : .003*/
+/*        },{
             "type": "logic-jump",
-            "accelerationY": -1.2
+            "accelerationY": -1.2*/
+        },{ 
+            "type": "mover",
+            "gravity" : 0.003,
+            "jump": -1.6
         },{
             "type": "logic-hero"
 		},{
@@ -39,9 +43,8 @@
 			"type": "render-sprite",
 			"mirror": "true",
             "animationMap":{
-                "falling": "jumping",
-                "moving":  "walking",
-                "default": "standing"
+                "moving,grounded":  "walking",
+                "default": "jumping"
             },
             "image": "mookie"
 		},{

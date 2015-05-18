@@ -1,3 +1,4 @@
+/* global platformer */
 /**
  * A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages. This component is usually used on an "action-layer".
  * 
@@ -37,9 +38,18 @@
 			 * 
 			 * @property stepLength
 			 * @type number
-			 * @default 30
+			 * @default 5
 			 */
-			"stepLength": 30
+			"stepLength": 5,
+			
+			/**
+			 * The maximum number of steps to take for a given tick, to prevent lag overflow.
+			 * 
+			 * @property maxStepsPerTick
+			 * @type number
+			 * @default 100
+			 */
+			 maxStepsPerTick: 100
 		},
 		constructor: function(definition){
 			this.entities = [];
@@ -47,7 +57,6 @@
 			
 			this.paused = 0;
 			this.leftoverTime = 0;
-			this.maximumStepsPerTick = 10;
 			this.camera = {
 				left: 0,
 				top: 0,
@@ -172,7 +181,11 @@
 		//		this.leftoverTime = 0;
 				
 				// This makes the frames more exact, but varying step numbers between ticks can cause movement to be jerky
-				this.message.delta = Math.min(this.leftoverTime, this.stepLength);
+		//		this.message.delta = Math.min(this.leftoverTime, this.stepLength);
+		//		this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
+		
+				// This makes the frames exact, but varying step numbers between ticks can cause movement to be jerky
+				this.message.delta = this.stepLength;
 				this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
 		
 				if(this.paused > 0){
@@ -202,7 +215,7 @@
 					//}
 					
 					//Prevents game lockdown when processing takes longer than time alotted.
-					cycles = Math.min(cycles, this.maximumStepsPerTick);
+					cycles = Math.min(cycles, this.maxStepsPerTick);
 					
 					for(var i = 0; i < cycles; i++){
 						

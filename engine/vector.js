@@ -116,6 +116,7 @@ platformer.Vector = (function(){
 	    }
 	    
 	    if(m){
+			this.matrix.length = m.length;
 			this.forEach(set, y);
 	    }
 	    

@@ -5,6 +5,8 @@
  * @uses Component
  */
 (function(){
+	"use strict";
+	
 	/*********************************************************************
 	 TODO: Place helper functions here that are suitable across all
 	       component instances and should never be accessible from

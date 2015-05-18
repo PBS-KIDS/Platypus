@@ -156,6 +156,8 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
    	                  , "logic-teleporter"
    	                  , "logic-timer"
    	                  , "logic-wind-up-racer"
+                      , "motion"
+                      , "mover"
    	                  , "node-map"
    	                  , "node-resident"
    	                  , "orientation"
