@@ -1,6 +1,6 @@
 /**
 # COMPONENT **logic-directional-movement**
-This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]] and [[Logic-Gravity]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
+This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
 
 ## Dependencies:
 - [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
@@ -10,8 +10,8 @@ This component changes the (x, y) position of an object according to its current
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
   - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
-- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement orientation.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new orientation. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement heading.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
 - **stop** - Stops motion in all directions until movement messages are again received.
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
 
@@ -34,40 +34,56 @@ This component changes the (x, y) position of an object according to its current
 (function(){
 	var processDirection = function(direction){
 		return function (state){
-			if(state){
-				this[direction] = (state.pressed !== false);
-//				this.stopped = !state.pressed;
-			} else {
-				this[direction] = true;
-//				this.stopped = false;
-			}
+			this[direction] = state && (state.pressed !== false);
 		};
 	},
-	getAngle = function(x, y){
-		var m = Math.sqrt(x * x + y * y),
-		a     = 0;
-
-		if (m != 0){
-			a = Math.acos(x / m);
-			if (y < 0){
-				a = (Math.PI * 2) - a;
+	doNothing = function(){},
+	rotate = {
+		x: function(heading, lastHeading){
+			if(heading !== lastHeading){
+				if(((heading > 180) && (lastHeading <= 180)) || ((heading <= 180) && (lastHeading > 180))){
+					this.owner.triggerEvent('transform', 'vertical');
+				}
+			}
+		},
+		y: function(heading, lastHeading){
+			if(heading !== lastHeading){
+				if(((heading > 90 && heading <= 270) && (lastHeading <= 90 || lastHeading > 270)) || ((heading <= 90 || heading > 270) && (lastHeading > 90 && lastHeading <= 270))){
+					this.owner.triggerEvent('transform', 'horizontal');
+				}
+			}
+		},
+		z: function(heading, lastHeading){
+			if(heading !== lastHeading){
+				this.owner.triggerEvent('replace-transform', 'rotate-' + heading);
 			}
 		}
-		return a;
 	};
 	
 	return platformer.createComponentClass({
 		id: 'logic-directional-movement',
 		
+		properties: {
+			axis: 'y',
+			heading: 0,
+			speed: 0.3
+		},
+		
 		constructor: function(definition){
 			var self = this;
 			
-			this.speed = definition.speed || .3;
+			if(!isNaN(this.speed)){
+				this.speed = [this.speed, 0, 0];
+			}
+			this.initialVector = new platformer.Vector(this.speed);
+			this.reorient = rotate[this.axis];
+			if(!this.reorient){
+				this.reorient = doNothing;
+			}
 			
-			this.boost = false;
 			this.paused = false;
 			
-			if(definition.pause || definition.boost){
+			if(definition.pause){
 				if(typeof definition.pause === 'string'){
 					this.pausers = [definition.pause];
 				} else {
@@ -81,16 +97,6 @@ This component changes the (x, y) position of an object according to its current
 						}
 						this.paused = paused;
 					}
-					
-					if(definition.boost){
-						if(self.boost){
-							if(state[definition.boost] === false){
-								self.boost = false;
-							}
-						} else if(state[definition.boost] === true){
-							self.boost = true;
-						}
-					}
 				});
 			}
 
@@ -101,8 +107,6 @@ This component changes the (x, y) position of an object according to its current
 			this.state.up = false;
 			this.state.down = false;
 
-			this.owner.orientation = 0;
-			
 			this.moving = false;
 			this.left = false;
 			this.right = false;
@@ -113,61 +117,70 @@ This component changes the (x, y) position of an object according to its current
 			this.downLeft = false;
 			this.downRight = false;
 			this.facing = 'right';
+			
+			this.owner.heading = 0;
 		},
 		events:{
+			"load": function(){
+				if(!this.owner.addMover){
+					console.warn('The "logic-directional-movement" component requires a "mover" component to function correctly.');
+					return;
+				}
+				
+				this.direction = this.owner.addMover({
+					vector: this.speed,
+					event: "moving",
+					orient: false
+				}).vector;
+				this.owner.triggerEvent('moving', this.moving);
+			},
+			
 			"handle-logic": function(resp){
-				var vX    = 0,
-				vY        = 0,
-				up        = this.up        || this.upLeft || this.downLeft,
+				var up    = this.up        || this.upLeft || this.downLeft,
 				upLeft    = this.upLeft    || (this.up   && this.left),
 				left      = this.left      || this.upLeft || this.downLeft,
 				downLeft  = this.downLeft  || (this.down && this.left),
 				down      = this.down      || this.downLeft || this.downRight,
 				downRight = this.downRight || (this.down && this.right),
 				right     = this.right     || this.upRight || this.downRight,
-				upRight   = this.upRight   || (this.up   && this.right),
-				orientation = 0;
+				upRight   = this.upRight   || (this.up   && this.right);
 				
 				if (up && down){
 					this.moving = false;
 				} else if (left && right) {
 					this.moving = false;
 				} else if (upLeft) {
-					vX = -this.speed / 1.414;
-					vY = -this.speed / 1.414;
 					this.moving = true;
 					this.facing = 'up-left';
+					this.heading = 225;
 				} else if (upRight) {
-					vY = -this.speed / 1.414;
-					vX =  this.speed / 1.414;
 					this.moving = true;
 					this.facing = 'up-right';
+					this.heading = 315;
 				} else if (downLeft) {
-					vY =  this.speed / 1.414;
-					vX = -this.speed / 1.414;
 					this.moving = true;
 					this.facing = 'down-left';
+					this.heading = 135;
 				} else if (downRight) {
-					vY =  this.speed / 1.414;
-					vX =  this.speed / 1.414;
 					this.moving = true;
 					this.facing = 'down-right';
+					this.heading = 45;
 				} else if(left)	{
-					vX = -this.speed;
 					this.moving = true;
 					this.facing = 'left';
+					this.heading = 180;
 				} else if (right) {
-					vX =  this.speed;
 					this.moving = true;
 					this.facing = 'right';
+					this.heading = 0;
 				} else if (up) {
-					vY = -this.speed;
 					this.moving = true;
 					this.facing = 'up';
+					this.heading = 270;
 				} else if (down) {
-					vY =  this.speed;
 					this.moving = true;
 					this.facing = 'down';
+					this.heading = 90;
 				} else {
 					this.moving = false;
 					
@@ -184,27 +197,18 @@ This component changes the (x, y) position of an object according to its current
 					}
 				}
 				
-				if(this.moving){
-					if(!this.paused){
-						if(this.boost) {
-							vX *= 1.5;
-							vY *= 1.5;
-						}
-
-						this.owner.x += (vX * resp.delta);
-						this.owner.y += (vY * resp.delta);
-					}
-					
-					orientation = getAngle(vX, vY);
-					if(this.owner.orientation !== orientation){
-						this.owner.orientation = orientation;
-					}
+				if(this.owner.heading !== this.heading){
+					this.direction.set(this.initialVector).rotate((this.heading / 180) * Math.PI);
+					this.reorient(this.heading, this.owner.heading);
+					this.owner.heading = this.heading;
 				}
 				
 				//TODO: possibly remove the separation of this.state.direction and this.direction to just use state?
 				if(this.state.moving !== this.moving){
+					this.owner.triggerEvent('moving', this.moving);
 					this.state.moving = this.moving;
 				}
+
 				if(this.state.up !== up){
 					this.state.up = up;
 				}

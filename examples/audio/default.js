@@ -55,7 +55,6 @@
     	                  , "logic-fps-counter"
     	                  , "logic-gravity"
     	                  , "logic-impact-launch"
-    	                  , "logic-jump"
     	                  , "logic-pacing-platform"
     	                  , "logic-portable"
     	                  , "logic-portal"

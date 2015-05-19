@@ -22,7 +22,7 @@ This component listens for messages and, according to its preset settings, will 
           
           "add":[
           // This is a list of components to add when "found-pogostick" is triggered on the entity. If it's adding a single component, "add" can be a reference to the component definition itself rather than an array of one object.
-            {"type": "logic-jump"},
+            {"type": "mover"},
             {"type": "head-gear"}
           ]
           

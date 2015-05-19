@@ -16,12 +16,6 @@
 				"key:d": 			"go-right",
 				"button-right":     "go-right"
 			}
-/*        },{ 
-            "type": "logic-gravity",
-            "yGravity" : .003*/
-/*        },{
-            "type": "logic-jump",
-            "accelerationY": -1.2*/
         },{ 
             "type": "mover",
             "gravity" : 0.003,
@@ -29,6 +23,8 @@
         },{
             "type": "logic-hero"
 		},{
+            "type": "orientation"
+        },{
             "type": "logic-directional-movement",
             "speed": 0.6
         },{
@@ -41,7 +37,6 @@
             }
 		},{
 			"type": "render-sprite",
-			"mirror": "true",
             "animationMap":{
                 "moving,grounded":  "walking",
                 "default": "jumping"

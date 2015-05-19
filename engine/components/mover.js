@@ -93,6 +93,17 @@
 					this.addMover(movs[i]);
 				}
 				
+				// Set up speed property if supplied.
+				if(this.speed){
+					if(!isNaN(this.speed)){
+						this.speed = [this.speed, 0, 0];
+					}
+					this.speed = this.addMover({
+						vector: this.speed,
+						controlState: "moving"
+					}).vector;
+				}
+
 				// Set up gravity property if supplied.
 				if(this.gravity){
 					if(!isNaN(this.gravity)){
@@ -102,7 +113,7 @@
 						vector: this.gravity,
 						orient: false,
 						accelerator: true,
-						controlEvent: "gravitate"
+						event: "gravitate"
 					}).vector;
 				}
 				
@@ -166,21 +177,15 @@
 			    if(v.set(collisionInfo.direction).normalize().multiply(s).dot(this.velocity) > 0){
 					this.velocity.subtractVector(v);
 				}
+			},
+			
+			"add-mover": function(moverDefinition){
+				this.addMover(moverDefinition);
 			}
 
 		},
 		
 		methods: {
-			addMover: function(mover){
-				var m = this.owner.addComponent(new platformer.components["motion"](this.owner, mover));
-
-				return m;
-			},
-
-			removeMover: function(title){
-				this.owner.removeComponent(m);
-			},
-			
 			destroy: function(){
 				var v = "";
 				
@@ -191,6 +196,15 @@
 		},
 		
 		publicMethods: {
+			addMover: function(mover){
+				var m = this.owner.addComponent(new platformer.components["motion"](this.owner, mover));
+
+				return m;
+			},
+			
+			removeMover: function(m){
+				this.owner.removeComponent(m);
+			}
 		}
 	});
 })();

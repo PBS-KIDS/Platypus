@@ -39,8 +39,8 @@
 			};
 		}
 		
-		if(definition.controlEvent){
-			self.addEventListener(definition.controlEvent, function(control){
+		if(definition.event){
+			self.addEventListener(definition.event, function(control){
 				active = (control && (control.pressed !== false));
 			});
 		}
@@ -65,28 +65,11 @@
 				this.active = active && getActiveState();
 				
 				if(ready && enact && this.active && state){
-					testArray2 = testArray1;
-					testArray1 = [];
-					testing = true;
-					testArray1.push(position.y);
-
 					ready = false; // to insure a single instance until things are reset
 					this.move(1);
-					testArray1.push(position.y);
 				} else if(!ready && !(enact && state)){
 					ready = true;
 					this.decay();
-					
-					testing = false;
-					var test = [];
-					for(var i = 0; i < testArray1.length; i++){
-						test.push(testArray1[i] === testArray2[i]);
-					}
-					console.log('Test', {
-						a: testArray1,
-						b: testArray2,
-						c: test
-					});
 				}
 			});
 		} else {
@@ -95,17 +78,9 @@
 				if(this.active){
 					this.move(delta);
 				}
-				
-				if(testing){
-					testArray1.push(position.y);
-				}
 			});
 		}
 	};
-	
-	var testArray1 = [],
-	testArray2 = [],
-	testing = false;
 	
 	return platformer.createComponentClass({
 		
@@ -116,7 +91,7 @@
 			accelerator: false,
 			active: true,
 			maxMagnitude: Infinity,
-			controlEvent: "",
+			event: "",
 			controlState: "",
 			instantEvent: "",
 			instantState: "",
