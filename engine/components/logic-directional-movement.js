@@ -31,7 +31,10 @@ This component changes the (x, y) position of an object according to its current
       // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
     }
 */
+// Requires: ["mover"]
 (function(){
+	"use strict";
+	
 	var processDirection = function(direction){
 		return function (state){
 			this[direction] = state && (state.pressed !== false);
@@ -254,7 +257,8 @@ This component changes the (x, y) position of an object according to its current
 			},
 			
 			"accelerate": function(velocity) {
-				this.speed = velocity;
+				this.initialVector.normalize().multiply(velocity);
+				this.direction.normalize().multiply(velocity);
 			}
 		}
 	});
