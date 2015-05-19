@@ -16,6 +16,12 @@
 		id: 'mover',
 
 		properties: {
+			/** This is a normalized vector describing the direction the ground should face away from the entity.
+			 * 
+			 * @property ground
+			 * @type Array|Vector
+			 * @default Vector(0, 1)
+			 */
 			ground: [0, 1]
 		},
 		
