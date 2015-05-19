@@ -1,3 +1,4 @@
+/* global platformer */
 /**
  * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
  * 
@@ -20,7 +21,7 @@
 		
 		publicProperties: {
 			/**
-			 * A list of key/value pairs describing vectors or vector-like objects describing acceleration and velocity on the entity.
+			 * A list of key/value pairs describing vectors or vector-like objects describing acceleration and velocity on the entity. See the ["motion"]("motion"%20Component.html) component for properties.
 			 * 
 			 * @property movers
 			 * @type Array
@@ -29,24 +30,48 @@
 			movers: [],
 			
 			/**
-			 * The velocity of the entity.
+			 * If specified, the property adds gravity motion to the entity.
 			 * 
-			 * @property velocity
-			 * @type number|Object|Array|Vector
+			 * @property gravity
+			 * @type number|Array|Vector
 			 * @default: 0
-			 */
-			
-			/**
-			 * 
 			 */
 			gravity: 0,
 			
+			/**
+			 * If specified, the property adds jumping motion to the entity.
+			 * 
+			 * @property jump
+			 * @type number|Array|Vector
+			 * @default: 0
+			 */
 			jump: 0,
 			
+			/**
+			 * This property determines how quickly velocity is dampened when the entity is not in a "grounded" state. This should be a value between 0 (no motion) and 1 (no drag).
+			 * 
+			 * @property drag
+			 * @type number
+			 * @default 0.99
+			 */
 			drag: 0.99,
 			
+			/**
+			 * This property determines how quickly velocity is dampened when the entity is in a "grounded" state. This should be a value between 0 (no motion) and 1 (no friction).
+			 * 
+			 * @property friction
+			 * @type number
+			 * @default 0.94
+			 */
 			friction: 0.94,
 			
+			/**
+			 * This property determines the maximum amount of velocity this entity can maintain.
+			 * 
+			 * @property maxMagnitude
+			 * @type number
+			 * @default Infinity
+			 */
 			maxMagnitude: Infinity
 		},
 		
@@ -65,12 +90,24 @@
 		},
 
 		events: {
+			/**
+			 * When a ["motion"]("motion"%20Component.html) component is added, this component adds it to its list of movers.
+			 * 
+			 * @method 'component-added'
+			 * @param component {"motion" Component} The motion to add as a mover on this entity.
+			 */
 			"component-added": function(component){
 				if(component.type === 'motion'){
 					this.movers.push(component);
 				}
 			},
 			
+			/**
+			 * When a ["motion"]("motion"%20Component.html) component is removed, this component removes it from its list of movers.
+			 * 
+			 * @method 'component-removed'
+			 * @param component {"motion" Component} The motion to remove as a mover from this entity.
+			 */
 			"component-removed": function(component){
 				var i = 0;
 				
@@ -84,6 +121,11 @@
 				}
 			},
 			
+			/**
+			 * This component listens for a "load" event before setting up its mover list.
+			 * 
+			 * @method 'load'
+			 */
 			"load": function(){
 				var i = 0,
 				movs  = this.moversCopy;
@@ -133,6 +175,13 @@
 				}
 			},
 			
+			/**
+			 * On each "handle-logic" event, this component moves the entity according to the list of movers on the entity.
+			 * 
+			 * @method 'handle-logic'
+			 * @param tick {Object}
+			 * @param tick.delta {number} The amount of time in milliseconds since the last tick.
+			 */
 			"handle-logic": function(tick){
 				var i = 0,
 				delta    = tick.delta,
@@ -166,6 +215,13 @@
 				this.grounded = false;
 			},
 			
+			/**
+			 * On receiving this message, this component stops velocity in the direction of the collision and sets "grounded" to `true` if colliding with the ground.
+			 * 
+			 * @method 'hit-solid'
+			 * @param collisionInfo {Object}
+			 * @param collisionInfo.direction {Vector} The direction of collision from the entity's position.
+			 */
 			"hit-solid": function(collisionInfo){
 				var s = this.velocity.scalarProjection(collisionInfo.direction),
 				v     = tempVector;
@@ -177,12 +233,7 @@
 			    if(v.set(collisionInfo.direction).normalize().multiply(s).dot(this.velocity) > 0){
 					this.velocity.subtractVector(v);
 				}
-			},
-			
-			"add-mover": function(moverDefinition){
-				this.addMover(moverDefinition);
 			}
-
 		},
 		
 		methods: {
@@ -196,12 +247,25 @@
 		},
 		
 		publicMethods: {
+			/**
+			 * This method adds a mover to the entity in the form of a ["motion"]("motion"%20Component.html) component definition.
+			 * 
+			 * @method addMover
+			 * @param mover {Object} For motion definition properties, see the ["motion"]("motion"%20Component.html) component.
+			 * @return motion {"motion" Component}
+			 */
 			addMover: function(mover){
 				var m = this.owner.addComponent(new platformer.components["motion"](this.owner, mover));
 
 				return m;
 			},
 			
+			/**
+			 * This method removes a mover from the entity.
+			 * 
+			 * @method removeMover
+			 * @param motion {"motion" Component}
+			 */
 			removeMover: function(m){
 				this.owner.removeComponent(m);
 			}
