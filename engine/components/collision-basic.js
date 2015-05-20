@@ -1,3 +1,4 @@
+/* global platformer */
 /**
  * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
  * 
@@ -234,18 +235,18 @@
 			 * 
 			 * @property regX
 			 * @type number
-			 * @default 0
+			 * @default width / 2
 			 */
-			regX: 0,
+			regX: null,
 			
 			/**
 			 * Determines the y-axis center of the collision shape.
 			 * 
 			 * @property regY
 			 * @type number
-			 * @default 0
+			 * @default height / 2
 			 */
-			regY: 0,
+			regY: null,
 			
 			/**
 			 * Sets the width of the collision area in world coordinates.
@@ -334,6 +335,14 @@
 			marginRight  = this.margin.right  || this.margin,
 			marginTop    = this.margin.top    || this.margin,
 			marginBottom = this.margin.bottom || this.margin;
+			
+			if(regX === null){
+				regX = this.regX = width / 2;
+			}
+			
+			if(regY === null){
+				regY = this.regY = height / 2;
+			}
 			
 			platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
 			platformer.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
