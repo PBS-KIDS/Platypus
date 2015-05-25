@@ -334,7 +334,11 @@
                                 data      = [];
                                 for (x = 0; x < newWidth; x++) {
                                     for (y = 0; y < newHeight; y++) {
-                                        data[x + y * newWidth] = layer.data[x + y * width];
+                                        if ((newWidth <= width) && (newHeight <= height)) {
+                                            data[x + y * newWidth] = layer.data[x + y * width];
+                                        } else {
+                                            data[x + y * newWidth] = 0;
+                                        }
                                     }
                                 }
                                 width  = newWidth;
