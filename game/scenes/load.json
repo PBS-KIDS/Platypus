@@ -1,6 +1,6 @@
 {
     "id": "load",
-	"layers":[
+    "layers":[
         {
             "id": "load-layer",
             "components": [
@@ -43,5 +43,5 @@
                 }
             ]
         }
-	]
+    ]
 }

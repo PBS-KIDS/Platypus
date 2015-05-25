@@ -36,9 +36,9 @@ This component is attached to entities that will appear in the game world. It se
     {
       "type": "render-debug",
       "acceptInput": {
-      	//Optional - What types of input the object should take.
-      	"hover": false;
-      	"click": false; 
+          //Optional - What types of input the object should take.
+          "hover": false;
+          "click": false; 
       }, 
       "regX": 0,
       //Optional - The X offset from X position for the displayed shape. If you're using the AABB this is set automatically.
@@ -50,172 +50,172 @@ This component is attached to entities that will appear in the game world. It se
 */
 
 (function () {
-	"use strict";
-	
-	var types = {
-		"aabb":      "255,128,255",
-		"render":    "128,128,128",
-		"collision": "255,0,255",
-		"group":     "0,255,0"
-	},
-	createShape = function (shape, type, width, height, regX, regY, z) {
-		var newShape = null;
-		
-		switch(shape) {
-		case 'rectangle':
-			newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
-			regX += width/2;
-			regY += height/2;
-			break;
-		case 'circle':
-			regX += width/2;
-			regY += width/2;
-			newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").drawCircle(width/2, width/2, width));
-			break;
-		}
-		newShape.regX  = regX;
-		newShape.regY  = regY;
-		newShape.z = z;
-		
-		return newShape;
-	};
-	
-	return platformer.createComponentClass({
-		
-		id: 'render-debug', 
-		
-		constructor: function (definition) {
-			if (definition.acceptInput) {
-				this.hover = definition.acceptInput.hover || false;
-				this.click = definition.acceptInput.click || false;
-			} else {
-				this.hover = false;
-				this.click = false;
-			}
-			
-			this.regX = definition.regX || 0;
-			this.regY = definition.regY || 0;
-			this.stage = null;
-			this.shapes = [];
-			
-			this.isOutdated = true;
-		},
-		
-		events: {// These are messages that this component listens for
-			"handle-render-load": function (resp) {
-				if (!platformer.game.settings.debug) {
-					this.owner.removeComponent(this);
-				} else if (!this.stage && resp && resp.stage) {
-					this.stage = resp.stage;
-				}
-			},
-			
-			"handle-render": function () {
-				var i = 0;
-				
-				if (this.isOutdated) {
-					this.updateSprites();
-					this.isOutdated = false;
-				}
-				
-				for(i = 0; i < this.shapes.length; i++) {
-					this.shapes[i].x = this.owner.x;
-					this.shapes[i].y = this.owner.y;
-				}
-				
-				if (this.owner.getCollisionGroupAABB) {
-					var aabb = this.owner.getCollisionGroupAABB();
-					if (!this.groupShape) {
-						this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
-						this.groupShape.regX  = 0.5;
-						this.groupShape.regY  = 0.5;
-						this.groupShape.z     = (this.owner.z || 0) + 10000;
-						this.stage.addChild(this.groupShape);
-						console.log(aabb);
-					}
-					this.groupShape.scaleX = aabb.width;
-					this.groupShape.scaleY = aabb.height;
-					this.groupShape.x      = aabb.x;
-					this.groupShape.y      = aabb.y;
-				}
-			},
-			
-			"orientation-updated": function () {
-				this.isOutdated = true;
-			}
-			
-		},
-		
-		methods:{
-			updateSprites: function () {
-				var z    = (this.owner.z || 0) + 10000,
-				i        = 0,
-				j        = 0,
-				width    = this.owner.width  = this.owner.width  || 300,
-				height   = this.owner.height = this.owner.height || 100,
-				shapes   = null,
-				aabb     = null,
-				shape    = null;
+    "use strict";
+    
+    var types = {
+        "aabb":      "255,128,255",
+        "render":    "128,128,128",
+        "collision": "255,0,255",
+        "group":     "0,255,0"
+    },
+    createShape = function (shape, type, width, height, regX, regY, z) {
+        var newShape = null;
+        
+        switch(shape) {
+        case 'rectangle':
+            newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
+            regX += width/2;
+            regY += height/2;
+            break;
+        case 'circle':
+            regX += width/2;
+            regY += width/2;
+            newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").drawCircle(width/2, width/2, width));
+            break;
+        }
+        newShape.regX  = regX;
+        newShape.regY  = regY;
+        newShape.z = z;
+        
+        return newShape;
+    };
+    
+    return platformer.createComponentClass({
+        
+        id: 'render-debug', 
+        
+        constructor: function (definition) {
+            if (definition.acceptInput) {
+                this.hover = definition.acceptInput.hover || false;
+                this.click = definition.acceptInput.click || false;
+            } else {
+                this.hover = false;
+                this.click = false;
+            }
+            
+            this.regX = definition.regX || 0;
+            this.regY = definition.regY || 0;
+            this.stage = null;
+            this.shapes = [];
+            
+            this.isOutdated = true;
+        },
+        
+        events: {// These are messages that this component listens for
+            "handle-render-load": function (resp) {
+                if (!platformer.game.settings.debug) {
+                    this.owner.removeComponent(this);
+                } else if (!this.stage && resp && resp.stage) {
+                    this.stage = resp.stage;
+                }
+            },
+            
+            "handle-render": function () {
+                var i = 0;
+                
+                if (this.isOutdated) {
+                    this.updateSprites();
+                    this.isOutdated = false;
+                }
+                
+                for(i = 0; i < this.shapes.length; i++) {
+                    this.shapes[i].x = this.owner.x;
+                    this.shapes[i].y = this.owner.y;
+                }
+                
+                if (this.owner.getCollisionGroupAABB) {
+                    var aabb = this.owner.getCollisionGroupAABB();
+                    if (!this.groupShape) {
+                        this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
+                        this.groupShape.regX  = 0.5;
+                        this.groupShape.regY  = 0.5;
+                        this.groupShape.z     = (this.owner.z || 0) + 10000;
+                        this.stage.addChild(this.groupShape);
+                        console.log(aabb);
+                    }
+                    this.groupShape.scaleX = aabb.width;
+                    this.groupShape.scaleY = aabb.height;
+                    this.groupShape.x      = aabb.x;
+                    this.groupShape.y      = aabb.y;
+                }
+            },
+            
+            "orientation-updated": function () {
+                this.isOutdated = true;
+            }
+            
+        },
+        
+        methods:{
+            updateSprites: function () {
+                var z    = (this.owner.z || 0) + 10000,
+                i        = 0,
+                j        = 0,
+                width    = this.owner.width  = this.owner.width  || 300,
+                height   = this.owner.height = this.owner.height || 100,
+                shapes   = null,
+                aabb     = null,
+                shape    = null;
 
-				for(i = 0; i < this.shapes.length; i++) {
-					this.stage.removeChild(this.shapes[i]);
-				}
-				this.shapes.length = 0;
+                for(i = 0; i < this.shapes.length; i++) {
+                    this.stage.removeChild(this.shapes[i]);
+                }
+                this.shapes.length = 0;
 
-				if (this.owner.getAABB) {
-					for(j = 0; j < this.owner.collisionTypes.length; j++) {
-						aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
-						width  = this.initialWidth  = aabb.width;
-						height = this.initialHeight = aabb.height;
-						shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
-						
-						shape  = createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--);
-						this.shapes.push(shape);
-						this.stage.addChild(shape);
-						this.addInput(shape);
-						
-						for(i = 0; i < shapes.length; i++) {
-							shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
-							this.shapes.push(shape);
-							this.stage.addChild(shape);
-							this.addInput(shape);
-						}
-					}
-				} else {
-					shape = createShape('rectangle', 'render', width, height, width/2, height/2, z--);
-					this.shapes.push(shape);
-					this.stage.addChild(shape);
-					this.addInput(shape);
-				}
-			},
-			
-			addInput: (function () {
-				var lastEntityLog = null,
-				createHandler = function (self, eventName) {
-					return function (event) {
-						if ((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)) {
-							lastEntityLog = self.owner;
-							console.log('This Entity:', lastEntityLog);
-						}
-						
-						return false;
-					};
-				};
-				
-				return function (sprite) {
-					sprite.addEventListener('mousedown', createHandler(this, 'mousedown'));
-				};
-			}()),
-			
-			destroy: function () {
-				var i = 0;
-				
-				for(i = 0; i < this.shapes.length; i++) {
-					this.stage.removeChild(this.shapes[i]);
-				}
-				this.shapes.length = 0;
-				this.stage = undefined;
-			}
-		}
-	});
+                if (this.owner.getAABB) {
+                    for(j = 0; j < this.owner.collisionTypes.length; j++) {
+                        aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
+                        width  = this.initialWidth  = aabb.width;
+                        height = this.initialHeight = aabb.height;
+                        shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
+                        
+                        shape  = createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--);
+                        this.shapes.push(shape);
+                        this.stage.addChild(shape);
+                        this.addInput(shape);
+                        
+                        for(i = 0; i < shapes.length; i++) {
+                            shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
+                            this.shapes.push(shape);
+                            this.stage.addChild(shape);
+                            this.addInput(shape);
+                        }
+                    }
+                } else {
+                    shape = createShape('rectangle', 'render', width, height, width/2, height/2, z--);
+                    this.shapes.push(shape);
+                    this.stage.addChild(shape);
+                    this.addInput(shape);
+                }
+            },
+            
+            addInput: (function () {
+                var lastEntityLog = null,
+                createHandler = function (self, eventName) {
+                    return function (event) {
+                        if ((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)) {
+                            lastEntityLog = self.owner;
+                            console.log('This Entity:', lastEntityLog);
+                        }
+                        
+                        return false;
+                    };
+                };
+                
+                return function (sprite) {
+                    sprite.addEventListener('mousedown', createHandler(this, 'mousedown'));
+                };
+            }()),
+            
+            destroy: function () {
+                var i = 0;
+                
+                for(i = 0; i < this.shapes.length; i++) {
+                    this.stage.removeChild(this.shapes[i]);
+                }
+                this.shapes.length = 0;
+                this.stage = undefined;
+            }
+        }
+    });
 }());

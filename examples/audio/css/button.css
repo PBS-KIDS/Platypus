@@ -35,10 +35,10 @@ background: #fa0;
 }
 
 .audio-clip > div {
-	display: inline-block;
-	font-size: 0.6em;
-	padding: 0 0 0 1em;
-	color: #ffffcc;
+    display: inline-block;
+    font-size: 0.6em;
+    padding: 0 0 0 1em;
+    color: #ffffcc;
 }
 
 .audio-clip > .play, .audio-clip > .unpause {
@@ -84,5 +84,5 @@ line-height: 2em;
 }
 
 .audio-clip.audio-playing > .play, .audio-clip.audio-playing > .unpause, .audio-clip.audio-stopped > .stop, .audio-clip.audio-stopped > .unpause, .audio-clip.audio-stopped > .pause, .audio-clip.audio-paused > .play, .audio-clip.audio-paused > .pause {
-	display: none;
+    display: none;
 }

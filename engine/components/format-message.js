@@ -32,35 +32,35 @@ This component dynamically creates a message from JSON settings and incoming mes
 //TODO: Edit this component to parse strings without using "new Function" - DDD
 
 (function () {
-	"use strict";
+    "use strict";
 
-	var createNewMessage = function (messageFormat, entity) {
-		var convert = null,
-		event = messageFormat.event || (new function ('entity', 'return ' + messageFormat.customEvent + ';'))(entity);
-		
-		if (messageFormat.message) {
-			convert = new function ('source', 'return ' + messageFormat.message + ';');
-			return function (message) {
-				entity.trigger(event, convert(message));
-			};
-		} else {
-			return function (message) {
-				entity.trigger(event);
-			};
-		}
-	};
+    var createNewMessage = function (messageFormat, entity) {
+        var convert = null,
+        event = messageFormat.event || (new function ('entity', 'return ' + messageFormat.customEvent + ';'))(entity);
+        
+        if (messageFormat.message) {
+            convert = new function ('source', 'return ' + messageFormat.message + ';');
+            return function (message) {
+                entity.trigger(event, convert(message));
+            };
+        } else {
+            return function (message) {
+                entity.trigger(event);
+            };
+        }
+    };
 
-	return platformer.createComponentClass({
-		id: 'format-message',
-		
-		constructor: function (definition) {
-			var event = null;
-			
-			if (definition.messages) {
-				for(event in definition.messages) {
-					this.addEventListener(event, createNewMessage(definition.messages[event], this.owner));
-				}
-			}
-		}
-	});
+    return platformer.createComponentClass({
+        id: 'format-message',
+        
+        constructor: function (definition) {
+            var event = null;
+            
+            if (definition.messages) {
+                for(event in definition.messages) {
+                    this.addEventListener(event, createNewMessage(definition.messages[event], this.owner));
+                }
+            }
+        }
+    });
 }());

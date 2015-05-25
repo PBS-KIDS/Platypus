@@ -28,41 +28,41 @@ This component will listen for a particular collision message and, depending on 
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var collidePos = function (entity, state, event) {
-		return function (collInfo) {
-			if (entity.state[state]) {
-				entity.trigger(event, collInfo);
-			}
-		};
-	},
-	collideNeg = function (entity, state, event) {
-		return function (collInfo) {
-			if (!entity.state[state]) {
-				entity.trigger(event, collInfo);
-			}
-		};
-	};
-	
-	return platformer.createComponentClass({
-		id: 'collision-filter',
-		constructor: function (definition) {
-			var event = null,
-			state = definition.state;
-			
-			if (definition.collisions) {
-				if (state[0] === '!') {
-					state = state.substring(1);
-					for(event in definition.collisions) {
-						this.addEventListener(event, collideNeg(this.owner, state, definition.collisions[event]));
-					}
-				} else {
-					for(event in definition.collisions) {
-						this.addEventListener(event, collidePos(this.owner, state, definition.collisions[event]));
-					}
-				}
-			}
-		}
-	});
+    var collidePos = function (entity, state, event) {
+        return function (collInfo) {
+            if (entity.state[state]) {
+                entity.trigger(event, collInfo);
+            }
+        };
+    },
+    collideNeg = function (entity, state, event) {
+        return function (collInfo) {
+            if (!entity.state[state]) {
+                entity.trigger(event, collInfo);
+            }
+        };
+    };
+    
+    return platformer.createComponentClass({
+        id: 'collision-filter',
+        constructor: function (definition) {
+            var event = null,
+            state = definition.state;
+            
+            if (definition.collisions) {
+                if (state[0] === '!') {
+                    state = state.substring(1);
+                    for(event in definition.collisions) {
+                        this.addEventListener(event, collideNeg(this.owner, state, definition.collisions[event]));
+                    }
+                } else {
+                    for(event in definition.collisions) {
+                        this.addEventListener(event, collidePos(this.owner, state, definition.collisions[event]));
+                    }
+                }
+            }
+        }
+    });
 }());

@@ -2,8 +2,8 @@
  * 
  */
 {
-	"id": "button-jump",
-	"components":[
+    "id": "button-jump",
+    "components":[
         {
             "type": "dom-element",
             "element": "div",
@@ -15,10 +15,10 @@
             "ontouchcancel": "stop-jump"
         },{
             "type": "broadcast-events",
-		    "events":{
+            "events":{
                 "start-jump": "button-jump:down",
                 "stop-jump":  "button-jump:up"
-		    }
-		}
-	]
+            }
+        }
+    ]
 }

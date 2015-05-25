@@ -73,160 +73,160 @@ This component is a general purpose state-machine for an entity, taking in vario
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var changeState = function (changes, state) {
-		return function (value) {
-			var i = null;
-			
-			for (i in changes) {
-				state[i] = changes[i];
-			}
-		};
-	},
-	changeSustainedState = function (change, state) {
-		return function (value) {
-			state[change] = true;
-		};
-	},
-	handleResult = function (title, state, last, checks, changed, self, queue) {
-		var i    = 0,
-		key      = '',
-		resolved = false,
-		message  = checks.message || (checks.message === 0) || (checks.message === false);
-		
-		if (changed) {
-			if (typeof checks === 'string') {
-				self.trigger(checks);
-				resolved = true;
-			} else if (Array.isArray(checks)) {
-				for (i = 0; i < checks.length; i++) {
-					handleResult(title, state, last, checks[i], changed, self, queue);
-				}
-				resolved = true;
-			} else if (checks.event && (message || checks.delay)) {
-				if (checks.delay) {
-					queue.push(checks);
-				} else {
-					self.trigger(checks.event, checks.message);
-				}
-				resolved = true;
-			} else if (checks['true']) {
-				handleResult(title, state, last, checks['true'], changed, self, queue);
-			}
-		}
-		
-		if (!resolved) {
-			for (key in checks) {
-				if (key !== 'true') {
-					handleOutput(key, state, last, checks[key], changed, self, queue);
-				}
-			}
-		}
-	},
-	handleOutput = function (title, state, last, checks, changed, self, queue) {
-		var c = changed, 
-		value = false;
-		
-		if (title.charAt(0) === '!') {
-			value = (state[title.substring(1)] === false);
-			if ((title !== 'outputs') && (last[title.substring(1)] !== state[title.substring(1)])) {
-				c = true;
-			}
-		} else {
-			value = (state[title] === true);
-			if ((title !== 'outputs') && (last[title] !== state[title])) {
-				c = true;
-			}
-		}
-		
-		if (value || (title === 'outputs')) {
-			handleResult(title, state, last, checks, c, self, queue);
-		}
-	};
-	
-	return platformer.createComponentClass({
-		id: 'logic-state-machine',
-		
-		constructor: function (definition) {
-			var i = null;
-			
-			this.state = this.owner.state;
-			
-			if (definition.inputs) {
-				for (i in definition.inputs) {
-					this.addEventListener(i, changeState(definition.inputs[i], this.state));
-				}
-			}
+    var changeState = function (changes, state) {
+        return function (value) {
+            var i = null;
+            
+            for (i in changes) {
+                state[i] = changes[i];
+            }
+        };
+    },
+    changeSustainedState = function (change, state) {
+        return function (value) {
+            state[change] = true;
+        };
+    },
+    handleResult = function (title, state, last, checks, changed, self, queue) {
+        var i    = 0,
+        key      = '',
+        resolved = false,
+        message  = checks.message || (checks.message === 0) || (checks.message === false);
+        
+        if (changed) {
+            if (typeof checks === 'string') {
+                self.trigger(checks);
+                resolved = true;
+            } else if (Array.isArray(checks)) {
+                for (i = 0; i < checks.length; i++) {
+                    handleResult(title, state, last, checks[i], changed, self, queue);
+                }
+                resolved = true;
+            } else if (checks.event && (message || checks.delay)) {
+                if (checks.delay) {
+                    queue.push(checks);
+                } else {
+                    self.trigger(checks.event, checks.message);
+                }
+                resolved = true;
+            } else if (checks['true']) {
+                handleResult(title, state, last, checks['true'], changed, self, queue);
+            }
+        }
+        
+        if (!resolved) {
+            for (key in checks) {
+                if (key !== 'true') {
+                    handleOutput(key, state, last, checks[key], changed, self, queue);
+                }
+            }
+        }
+    },
+    handleOutput = function (title, state, last, checks, changed, self, queue) {
+        var c = changed, 
+        value = false;
+        
+        if (title.charAt(0) === '!') {
+            value = (state[title.substring(1)] === false);
+            if ((title !== 'outputs') && (last[title.substring(1)] !== state[title.substring(1)])) {
+                c = true;
+            }
+        } else {
+            value = (state[title] === true);
+            if ((title !== 'outputs') && (last[title] !== state[title])) {
+                c = true;
+            }
+        }
+        
+        if (value || (title === 'outputs')) {
+            handleResult(title, state, last, checks, c, self, queue);
+        }
+    };
+    
+    return platformer.createComponentClass({
+        id: 'logic-state-machine',
+        
+        constructor: function (definition) {
+            var i = null;
+            
+            this.state = this.owner.state;
+            
+            if (definition.inputs) {
+                for (i in definition.inputs) {
+                    this.addEventListener(i, changeState(definition.inputs[i], this.state));
+                }
+            }
 
-			this.sustainedState = {};
-			if (definition["sustained-inputs"]) {
-				for (i in definition["sustained-inputs"]) {
-					this.addEventListener(i, changeSustainedState(definition["sustained-inputs"][i], this.sustainedState));
-					this.sustainedState[definition["sustained-inputs"][i]] = false;
-				}
-			}
+            this.sustainedState = {};
+            if (definition["sustained-inputs"]) {
+                for (i in definition["sustained-inputs"]) {
+                    this.addEventListener(i, changeSustainedState(definition["sustained-inputs"][i], this.sustainedState));
+                    this.sustainedState[definition["sustained-inputs"][i]] = false;
+                }
+            }
 
-			this.snapshot = {};
-			this.last = {};
-			this.tempQueue = [];
-			this.queueTimes = [];
-			this.queue = [];
-			this.outputs = definition.outputs || null;
-		},
+            this.snapshot = {};
+            this.last = {};
+            this.tempQueue = [];
+            this.queueTimes = [];
+            this.queue = [];
+            this.outputs = definition.outputs || null;
+        },
 
-		events: {
-			"handle-logic":  function (resp) {
-				var i = null;
-				
-				for (i in this.sustainedState) {
-					if (this.owner.state[i] !== this.sustainedState[i]) {
-						this.owner.state[i] = this.sustainedState[i];
-					}
-					this.sustainedState[i] = false;
-				}
-				
-				for (i = this.queue.length - 1; i > -1; i--) {
-					this.queueTimes[i] -= resp.delta;
-					
-					if (this.queueTimes[i] <= 0) {
-						this.owner.trigger(this.queue[i].event, this.queue[i].message);
-						this.queueTimes.splice(i,1);
-						this.queue.splice(i,1);
-					}
-				}
-			},
-			
-			"update-state": function (state) {
-				var i = null;
-				
-				for (i in state) {
-					this.state[i] = state[i];
-				}
-			},
-			
-			"logical-state": function (state) {
-				var i = null;
-				
-				if (this.outputs) {
-					for (i in state) {
-						if (state[i] !== this.snapshot[i]) {
-							this.snapshot[i] = state[i];
-						}
-					}
-					this.tempQueue.length = 0;
-					handleOutput('outputs', this.snapshot, this.last, this.outputs, false, this.owner, this.tempQueue);
-					for (i = 0; i < this.tempQueue.length; i++) {
-						this.queue.push(this.tempQueue[i]);
-						this.queueTimes.push(this.tempQueue[i].delay);
-					}
-					for (i in this.snapshot) {
-						if (this.snapshot[i] !== this.last[i]) {
-							this.last[i] = this.snapshot[i];
-						}
-					}
-				}
-			}
-		}		
-	});
+        events: {
+            "handle-logic":  function (resp) {
+                var i = null;
+                
+                for (i in this.sustainedState) {
+                    if (this.owner.state[i] !== this.sustainedState[i]) {
+                        this.owner.state[i] = this.sustainedState[i];
+                    }
+                    this.sustainedState[i] = false;
+                }
+                
+                for (i = this.queue.length - 1; i > -1; i--) {
+                    this.queueTimes[i] -= resp.delta;
+                    
+                    if (this.queueTimes[i] <= 0) {
+                        this.owner.trigger(this.queue[i].event, this.queue[i].message);
+                        this.queueTimes.splice(i,1);
+                        this.queue.splice(i,1);
+                    }
+                }
+            },
+            
+            "update-state": function (state) {
+                var i = null;
+                
+                for (i in state) {
+                    this.state[i] = state[i];
+                }
+            },
+            
+            "logical-state": function (state) {
+                var i = null;
+                
+                if (this.outputs) {
+                    for (i in state) {
+                        if (state[i] !== this.snapshot[i]) {
+                            this.snapshot[i] = state[i];
+                        }
+                    }
+                    this.tempQueue.length = 0;
+                    handleOutput('outputs', this.snapshot, this.last, this.outputs, false, this.owner, this.tempQueue);
+                    for (i = 0; i < this.tempQueue.length; i++) {
+                        this.queue.push(this.tempQueue[i]);
+                        this.queueTimes.push(this.tempQueue[i].delay);
+                    }
+                    for (i in this.snapshot) {
+                        if (this.snapshot[i] !== this.last[i]) {
+                            this.last[i] = this.snapshot[i];
+                        }
+                    }
+                }
+            }
+        }        
+    });
 }());

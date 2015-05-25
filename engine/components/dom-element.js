@@ -55,205 +55,205 @@ This component creates a DOM element associated with the entity. In addition to 
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var createFunction = function (message, entity) {
-		if (typeof message === 'string') {
-			return function (e) {
-				entity.trigger(message, e);
-				e.preventDefault();
-			};
-		} else if (Array.isArray(message)) {
-			return function (e) {
-				for (var i = 0; i < message.length; i++) {
-					entity.trigger(message[i], e);
-				}
-				e.preventDefault();
-			};
-		} else {
-			return function (e) {
-				entity.trigger(message.event, message.message);
-				e.preventDefault();
-			};
-		}
-	};
-	
-	return platformer.createComponentClass({
-		id: 'dom-element',
-		constructor: function (definition) {
-			var elementType = definition.element   || 'div';
-			
-			this.updateClassName = definition.updateClassName || false;
-			this.className = '';
-			this.states = {};
-			this.stateChange = false;
-			this.potentialParent = definition.parent;
-			this.handleRenderLoadMessage = null;
-			
-			this.element = document.createElement(elementType);
-			if (!this.owner.element) {
-				this.owner.element = this.element;
-			}
-			this.element.ondragstart = function () {return false;}; //prevent element dragging by default
-			
-			for(var i in definition) {
-				if (i === 'style') {
-					for(var j in definition[i]) {
-						this.element.style[j] = definition[i][j]; 
-					}
-				} else if (((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')) {
-					if (i.indexOf('on') === 0) {
-						if (platformer.game.settings.supports.mobile) {
-							if ( i.indexOf('onmouse') == -1) {
-								this.element[i] = createfunction (definition[i], this.owner);
-							}
-						} else {
-							this.element[i] = createfunction (definition[i], this.owner);
-						}
-					} else {
-						this.element[i] = definition[i];
-						if (i == 'className') {
-							this.className = definition[i];
-						}
-					}
-				}
-			}
-			
-			if (this.owner.className) {
-				this.className = this.element.className = this.owner.className;
-			}
-			if (this.owner.innerHTML) {
-				this.element.innerHTML = this.owner.innerHTML;
-			}
-		},
-		events:{
-			"handle-render-load": (function () {
-				var getElementById = function (root, id) {
-					var i = 0,
-					all   = root.getElementsByTagName('*');
+    var createFunction = function (message, entity) {
+        if (typeof message === 'string') {
+            return function (e) {
+                entity.trigger(message, e);
+                e.preventDefault();
+            };
+        } else if (Array.isArray(message)) {
+            return function (e) {
+                for (var i = 0; i < message.length; i++) {
+                    entity.trigger(message[i], e);
+                }
+                e.preventDefault();
+            };
+        } else {
+            return function (e) {
+                entity.trigger(message.event, message.message);
+                e.preventDefault();
+            };
+        }
+    };
+    
+    return platformer.createComponentClass({
+        id: 'dom-element',
+        constructor: function (definition) {
+            var elementType = definition.element   || 'div';
+            
+            this.updateClassName = definition.updateClassName || false;
+            this.className = '';
+            this.states = {};
+            this.stateChange = false;
+            this.potentialParent = definition.parent;
+            this.handleRenderLoadMessage = null;
+            
+            this.element = document.createElement(elementType);
+            if (!this.owner.element) {
+                this.owner.element = this.element;
+            }
+            this.element.ondragstart = function () {return false;}; //prevent element dragging by default
+            
+            for(var i in definition) {
+                if (i === 'style') {
+                    for(var j in definition[i]) {
+                        this.element.style[j] = definition[i][j]; 
+                    }
+                } else if (((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')) {
+                    if (i.indexOf('on') === 0) {
+                        if (platformer.game.settings.supports.mobile) {
+                            if ( i.indexOf('onmouse') == -1) {
+                                this.element[i] = createfunction (definition[i], this.owner);
+                            }
+                        } else {
+                            this.element[i] = createfunction (definition[i], this.owner);
+                        }
+                    } else {
+                        this.element[i] = definition[i];
+                        if (i == 'className') {
+                            this.className = definition[i];
+                        }
+                    }
+                }
+            }
+            
+            if (this.owner.className) {
+                this.className = this.element.className = this.owner.className;
+            }
+            if (this.owner.innerHTML) {
+                this.element.innerHTML = this.owner.innerHTML;
+            }
+        },
+        events:{
+            "handle-render-load": (function () {
+                var getElementById = function (root, id) {
+                    var i = 0,
+                    all   = root.getElementsByTagName('*');
 
-					for (; i < all.length; i++) {
-					    if (all[i].getAttribute('id') === id) {
-					    	return all[i];
-					    }
-					}
-					
-					return document.getElementById(id);
-				};
-				
-				return function (resp) {
-					if (resp.element) {
-						
-						if (!this.parentElement) {
-							if (this.potentialParent) {
-								this.parentElement = getElementById(resp.element, this.potentialParent);
-								this.parentElement.appendChild(this.element);
-							} else {
-								this.parentElement = resp.element;
-								this.parentElement.appendChild(this.element);
-							}
-						}
-			
-						if (this.owner.triggerEventOnChildren) {
-							var message = this.handleRenderLoadMessage = {};
-							for (var item in resp) {
-								message[item] = resp[item];
-							}
-							message.element = this.element;
-							this.owner.triggerEventOnChildren('handle-render-load', message);
-						}
-					}
-				};
-			}()),
-			
-			"child-entity-added": function (entity) {
-				if (this.handleRenderLoadMessage) {
-					entity.trigger("handle-render-load", this.handleRenderLoadMessage);
-				}
-			},
-			
-			"set-parent": function (element) {
-				if (this.parentElement) {
-					this.parentElement.removeChild(this.element);
-				}
-				this.parentElement = element;
-				this.parentElement.appendChild(this.element);
-			},
-			
-			"handle-logic": function (resp) {
-			},
-			
-			"handle-render": function (resp) {
-				var i     = 0,
-				className = this.className;
-				
-				if (this.stateChange && this.updateClassName) {
-					for(i in this.states) {
-						if (this.states[i]) {
-							className += ' ' + i;
-						}
-					}
-					this.element.className = className;
-					this.stateChange = false;
-				}
-			},
-			
-			"set-attribute": function (resp) {
-				var attribute = null;
-				
-				if (resp.attribute) { //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
-					this.element.setAttribute(resp.attribute, resp.value);
-				} else {
-					for (attribute in resp) {
-						this.element.setAttribute(attribute, resp[attribute]);
-					}
-				}
-			},
-			
-			"set-style": function (resp) {
-				var attribute = null;
-				
-				if (resp.attribute) { //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
-					this.element.style[resp.attribute] = resp.value;
-				} else {
-					for (attribute in resp) {
-						this.element.style[attribute] = resp[attribute];
-					}
-				}
-			},
-			
-			"update-content": function (resp) {
-				var text = resp;
-				
-				if (text && (typeof text.text === 'string')) {
-					text = text.text;
-				}
-				
-				if ((typeof text === 'string') && (text !== this.element.innerHTML)) {
-					this.element.innerHTML = text;
-				}
-			},
-		
-			"logical-state": function (state) {
-				for(var i in state) {
-					if (this.states[i] !== state[i]) {
-						this.stateChange = true;
-						this.states[i] = state[i];
-					}
-				}
-			}
-		},
-		methods: {
-			destroy: function () {
-				if (this.parentElement) {
-					this.parentElement.removeChild(this.element);
-					this.parentElement = undefined;
-				}
-				if (this.owner.element === this.element) {
-					this.owner.element = undefined;
-				}
-				this.element = undefined;
-			}
-		}
-	});
+                    for (; i < all.length; i++) {
+                        if (all[i].getAttribute('id') === id) {
+                            return all[i];
+                        }
+                    }
+                    
+                    return document.getElementById(id);
+                };
+                
+                return function (resp) {
+                    if (resp.element) {
+                        
+                        if (!this.parentElement) {
+                            if (this.potentialParent) {
+                                this.parentElement = getElementById(resp.element, this.potentialParent);
+                                this.parentElement.appendChild(this.element);
+                            } else {
+                                this.parentElement = resp.element;
+                                this.parentElement.appendChild(this.element);
+                            }
+                        }
+            
+                        if (this.owner.triggerEventOnChildren) {
+                            var message = this.handleRenderLoadMessage = {};
+                            for (var item in resp) {
+                                message[item] = resp[item];
+                            }
+                            message.element = this.element;
+                            this.owner.triggerEventOnChildren('handle-render-load', message);
+                        }
+                    }
+                };
+            }()),
+            
+            "child-entity-added": function (entity) {
+                if (this.handleRenderLoadMessage) {
+                    entity.trigger("handle-render-load", this.handleRenderLoadMessage);
+                }
+            },
+            
+            "set-parent": function (element) {
+                if (this.parentElement) {
+                    this.parentElement.removeChild(this.element);
+                }
+                this.parentElement = element;
+                this.parentElement.appendChild(this.element);
+            },
+            
+            "handle-logic": function (resp) {
+            },
+            
+            "handle-render": function (resp) {
+                var i     = 0,
+                className = this.className;
+                
+                if (this.stateChange && this.updateClassName) {
+                    for(i in this.states) {
+                        if (this.states[i]) {
+                            className += ' ' + i;
+                        }
+                    }
+                    this.element.className = className;
+                    this.stateChange = false;
+                }
+            },
+            
+            "set-attribute": function (resp) {
+                var attribute = null;
+                
+                if (resp.attribute) { //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
+                    this.element.setAttribute(resp.attribute, resp.value);
+                } else {
+                    for (attribute in resp) {
+                        this.element.setAttribute(attribute, resp[attribute]);
+                    }
+                }
+            },
+            
+            "set-style": function (resp) {
+                var attribute = null;
+                
+                if (resp.attribute) { //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
+                    this.element.style[resp.attribute] = resp.value;
+                } else {
+                    for (attribute in resp) {
+                        this.element.style[attribute] = resp[attribute];
+                    }
+                }
+            },
+            
+            "update-content": function (resp) {
+                var text = resp;
+                
+                if (text && (typeof text.text === 'string')) {
+                    text = text.text;
+                }
+                
+                if ((typeof text === 'string') && (text !== this.element.innerHTML)) {
+                    this.element.innerHTML = text;
+                }
+            },
+        
+            "logical-state": function (state) {
+                for(var i in state) {
+                    if (this.states[i] !== state[i]) {
+                        this.stateChange = true;
+                        this.states[i] = state[i];
+                    }
+                }
+            }
+        },
+        methods: {
+            destroy: function () {
+                if (this.parentElement) {
+                    this.parentElement.removeChild(this.element);
+                    this.parentElement = undefined;
+                }
+                if (this.owner.element === this.element) {
+                    this.owner.element = undefined;
+                }
+                this.element = undefined;
+            }
+        }
+    });
 }());

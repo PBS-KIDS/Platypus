@@ -52,129 +52,129 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var Node = function (definition, map) {
-		if (definition.id) {
-			if (typeof definition.id === 'string') {
-				this.id = definition.id;
-			} else if (Array.isArray(definition.id)) {
-				this.id = definition.id.join('|');
-			} else {
-				this.id = '' + Math.random();
-			}
-		} else {
-			this.id = '' + Math.random();
-		}
-		
-		this.isNode = true;
-		this.map = map;
-		this.contains = [];
-		this.type = definition.type || '';
-		this.x = definition.x || 0;
-		this.y = definition.y || 0;
-		this.z = definition.z || 0;
-		
-		this.neighbors = definition.neighbors || {};
-	},
-	proto = Node.prototype;
-	
-	proto.getNode = function (desc) {
-		var neighbor = null;
-		
-		if (this.neighbors[desc]) {
-			neighbor = this.neighbors[desc];
-			if (neighbor.isNode) {
-				return neighbor;
-			} else if (typeof neighbor === 'string') {
-				neighbor = this.map.getNode(neighbor);
-				if (neighbor) {
-					this.neighbors[desc] = neighbor;
-					return neighbor;
-				}
-			} else if (Array.isArray(neighbor)) {
-				neighbor = this.map.getNode(neighbor.join('|'));
-				if (neighbor) {
-					this.neighbors[desc] = neighbor;
-					return neighbor;
-				}
-			}
-			return null;
-		} else {
-			return null;
-		}
-	};
+    var Node = function (definition, map) {
+        if (definition.id) {
+            if (typeof definition.id === 'string') {
+                this.id = definition.id;
+            } else if (Array.isArray(definition.id)) {
+                this.id = definition.id.join('|');
+            } else {
+                this.id = '' + Math.random();
+            }
+        } else {
+            this.id = '' + Math.random();
+        }
+        
+        this.isNode = true;
+        this.map = map;
+        this.contains = [];
+        this.type = definition.type || '';
+        this.x = definition.x || 0;
+        this.y = definition.y || 0;
+        this.z = definition.z || 0;
+        
+        this.neighbors = definition.neighbors || {};
+    },
+    proto = Node.prototype;
+    
+    proto.getNode = function (desc) {
+        var neighbor = null;
+        
+        if (this.neighbors[desc]) {
+            neighbor = this.neighbors[desc];
+            if (neighbor.isNode) {
+                return neighbor;
+            } else if (typeof neighbor === 'string') {
+                neighbor = this.map.getNode(neighbor);
+                if (neighbor) {
+                    this.neighbors[desc] = neighbor;
+                    return neighbor;
+                }
+            } else if (Array.isArray(neighbor)) {
+                neighbor = this.map.getNode(neighbor.join('|'));
+                if (neighbor) {
+                    this.neighbors[desc] = neighbor;
+                    return neighbor;
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
+    };
 
-	proto.add = function (entity) {
-		for(var i = 0; i < this.contains.length; i++) {
-			if (this.contains[i] === entity) {
-				return false;
-			}
-		}
-		this.contains.push(entity);
-		return entity;
-	};
-	
-	proto.remove = function (entity) {
-		for(var i = 0; i < this.contains.length; i++) {
-			if (this.contains[i] === entity) {
-				return this.contains.splice(i,1)[0];
-			}
-		}
-		return false;
-	};
-	
-	return platformer.createComponentClass({
-		id: 'node-map',
-		
-		constructor: function (definition) {
-			var i = 0;
-			
-			this.map = [];
-			
-			if (definition.map) {
-				for(; i < definition.map.length; i++) {
-					this.map.push(new Node(definition.map[i], this));
-				}
-			}
-		},
+    proto.add = function (entity) {
+        for(var i = 0; i < this.contains.length; i++) {
+            if (this.contains[i] === entity) {
+                return false;
+            }
+        }
+        this.contains.push(entity);
+        return entity;
+    };
+    
+    proto.remove = function (entity) {
+        for(var i = 0; i < this.contains.length; i++) {
+            if (this.contains[i] === entity) {
+                return this.contains.splice(i,1)[0];
+            }
+        }
+        return false;
+    };
+    
+    return platformer.createComponentClass({
+        id: 'node-map',
+        
+        constructor: function (definition) {
+            var i = 0;
+            
+            this.map = [];
+            
+            if (definition.map) {
+                for(; i < definition.map.length; i++) {
+                    this.map.push(new Node(definition.map[i], this));
+                }
+            }
+        },
 
-		events: {
-			"add-node": function (nodeDefinition) {
-				this.map.push(new Node(nodeDefinition, this));
-			},
-			"child-entity-added": function (entity) {
-				if (entity.nodeId) {
-					entity.node = this.getNode(entity.nodeId);
-					entity.trigger('on-node', entity.node);
-				}
-			}
-		},
-		
-		methods: {
-			getNode: function () {
-				var i   = 0,
-				id      = '',
-				divider = '',
-				args    = arguments;
-				
-				if (args.length === 1) {
-					if ((typeof args[0] !== 'string') && args[0].length) {
-						args = args[0];
-					}
-				}
-				
-				for (i = 0; i < args.length; i++) {
-					id += divider + args[i];
-					divider = '|';
-				}
-				for (i = 0; i < this.map.length; i++) {
-					if (this.map[i].id === id) {
-						return this.map[i];
-					}
-				}
-				return null;
-			}
-		}
-	});
+        events: {
+            "add-node": function (nodeDefinition) {
+                this.map.push(new Node(nodeDefinition, this));
+            },
+            "child-entity-added": function (entity) {
+                if (entity.nodeId) {
+                    entity.node = this.getNode(entity.nodeId);
+                    entity.trigger('on-node', entity.node);
+                }
+            }
+        },
+        
+        methods: {
+            getNode: function () {
+                var i   = 0,
+                id      = '',
+                divider = '',
+                args    = arguments;
+                
+                if (args.length === 1) {
+                    if ((typeof args[0] !== 'string') && args[0].length) {
+                        args = args[0];
+                    }
+                }
+                
+                for (i = 0; i < args.length; i++) {
+                    id += divider + args[i];
+                    divider = '|';
+                }
+                for (i = 0; i < this.map.length; i++) {
+                    if (this.map[i].id === id) {
+                        return this.map[i];
+                    }
+                }
+                return null;
+            }
+        }
+    });
 }());

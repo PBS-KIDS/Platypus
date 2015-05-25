@@ -21,36 +21,36 @@ This component will destroy the entity once an animation has finished. This is u
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'render-destroy-me',
+    return platformer.createComponentClass({
+        id: 'render-destroy-me',
 
-		constructor: function (definition) {
-			this.animationIds = null;
-			
-			if (definition.animationId) {
-				this.animationIds = [definition.animationId];
-			} else if (definition.animationIds) {
-				this.animationIds = definition.animationIds;
-			}
-		},
+        constructor: function (definition) {
+            this.animationIds = null;
+            
+            if (definition.animationId) {
+                this.animationIds = [definition.animationId];
+            } else if (definition.animationIds) {
+                this.animationIds = definition.animationIds;
+            }
+        },
 
-		events: {// These are messages that this component listens for
-			"animation-ended": function (animation) {
-				var id = animation.name;
-				
-				if (this.animationIds) {
-					for (var x = 0; x < this.animationIds.length; x++) {
-						if (this.animationIds[x] == id) {
-							this.owner.parent.removeEntity(this.owner);
-							break;
-						}
-					}
-				} else {
-					this.owner.parent.removeEntity(this.owner);
-				}
-			}
-		}
-	});
+        events: {// These are messages that this component listens for
+            "animation-ended": function (animation) {
+                var id = animation.name;
+                
+                if (this.animationIds) {
+                    for (var x = 0; x < this.animationIds.length; x++) {
+                        if (this.animationIds[x] == id) {
+                            this.owner.parent.removeEntity(this.owner);
+                            break;
+                        }
+                    }
+                } else {
+                    this.owner.parent.removeEntity(this.owner);
+                }
+            }
+        }
+    });
 }());

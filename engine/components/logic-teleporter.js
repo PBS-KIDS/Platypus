@@ -33,63 +33,63 @@ This component listens for redirected collision messages and fires a message on 
 
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
+    return platformer.createComponentClass({
         id: 'logic-teleporter',
 
         constructor: function (definition) {
-			
-			this.destination = undefined;
-			this.linkId = this.owner.teleportId || definition.teleportId;
-			this.facing = this.owner.facing || definition.facing || false;
-		
-			if (this.facing) {
-				this.owner.state['facing-' + this.facing] = true;
-			}
+            
+            this.destination = undefined;
+            this.linkId = this.owner.teleportId || definition.teleportId;
+            this.facing = this.owner.facing || definition.facing || false;
+        
+            if (this.facing) {
+                this.owner.state['facing-' + this.facing] = true;
+            }
         },
 
-		events: {// These are messages that this component listens for
-			"peer-entity-added": function (entity) {
-				if (!this.destination && (entity.linkId === this.linkId)) {
-					this.destination = entity;
-				}
-			},
-	
-			"teleport-entity": function (collisionInfo) {
-				switch(this.facing) {
-				case 'up':
-					if (collisionInfo.y < 0) {
-						collisionInfo.entity.trigger('teleport', this.destination);
-					}
-					break;
-				case 'right':
-					if (collisionInfo.x > 0) {
-						collisionInfo.entity.trigger('teleport', this.destination);
-					}
-					break;
-				case 'down':
-					if (collisionInfo.y > 0) {
-						collisionInfo.entity.trigger('teleport', this.destination);
-					}
-					break;
-				case 'left':
-					if (collisionInfo.x < 0) {
-						collisionInfo.entity.trigger('teleport', this.destination);
-					}
-					break;
-				default:
-					collisionInfo.entity.trigger('teleport', this.destination);
-					break;
-				}
-			}
-		},
-		
-		methods: {// These are methods that are called on the component
-			"destroy": function () {
-				this.destination = undefined;
-			}
-		}
-		
-	});
+        events: {// These are messages that this component listens for
+            "peer-entity-added": function (entity) {
+                if (!this.destination && (entity.linkId === this.linkId)) {
+                    this.destination = entity;
+                }
+            },
+    
+            "teleport-entity": function (collisionInfo) {
+                switch(this.facing) {
+                case 'up':
+                    if (collisionInfo.y < 0) {
+                        collisionInfo.entity.trigger('teleport', this.destination);
+                    }
+                    break;
+                case 'right':
+                    if (collisionInfo.x > 0) {
+                        collisionInfo.entity.trigger('teleport', this.destination);
+                    }
+                    break;
+                case 'down':
+                    if (collisionInfo.y > 0) {
+                        collisionInfo.entity.trigger('teleport', this.destination);
+                    }
+                    break;
+                case 'left':
+                    if (collisionInfo.x < 0) {
+                        collisionInfo.entity.trigger('teleport', this.destination);
+                    }
+                    break;
+                default:
+                    collisionInfo.entity.trigger('teleport', this.destination);
+                    break;
+                }
+            }
+        },
+        
+        methods: {// These are methods that are called on the component
+            "destroy": function () {
+                this.destination = undefined;
+            }
+        }
+        
+    });
 }());

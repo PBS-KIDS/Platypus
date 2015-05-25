@@ -30,74 +30,74 @@ This component changes the (x, y) position of an object according to its current
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		
-		id: 'logic-angular-movement', 
-		
-		constructor: function (definition) {
-			this.angle     = 0;
-			this.v         = [0,0];
-			this.maxV      = this.owner.maxVelocity  || definition.maxVelocity  || 3;
-			this.a         = this.owner.acceleration || definition.acceleration || .01;
-			this.moving    = false;
-			this.piOverTwo = Math.PI / 2;
-			this.visualOffset = definition.visualOrientationOffset || 0;
-			this.owner.orientation = this.owner.orientation || this.visualOffset;
-		},
+    return platformer.createComponentClass({
+        
+        id: 'logic-angular-movement', 
+        
+        constructor: function (definition) {
+            this.angle     = 0;
+            this.v         = [0,0];
+            this.maxV      = this.owner.maxVelocity  || definition.maxVelocity  || 3;
+            this.a         = this.owner.acceleration || definition.acceleration || .01;
+            this.moving    = false;
+            this.piOverTwo = Math.PI / 2;
+            this.visualOffset = definition.visualOrientationOffset || 0;
+            this.owner.orientation = this.owner.orientation || this.visualOffset;
+        },
 
-		events: {// These are messages that this component listens for
-			"handle-logic": function (update) {
-				var delta = update.delta;
-				var currentAngle = 0;
-				if (this.moving)
-				{
-					this.v[0] += this.a * Math.cos(this.angle) * delta;
-					this.v[1] += this.a * Math.sin(this.angle) * delta;
-					if (this.v[0] == 0)
-					{
-						if (this.v[1] > 0) {
-							currentAngle = this.piOverTwo;
-						} else if (this.v[1] < 0) {
-							currentAngle = -this.piOverTwo;
-						} else {
-							currentAngle = this.angle;
-						}
-					} else {
-						currentAngle = Math.atan(this.v[1]/this.v[0]);
-						if (this.v[0] < 0) {
-							currentAngle = Math.PI + currentAngle;
-						}
-					}
-					if (this.v[0] >= 0) {
-						this.v[0] = Math.min(this.v[0], this.maxV * Math.cos(currentAngle));
-					} else {
-						this.v[0] = Math.max(this.v[0], this.maxV * Math.cos(currentAngle));
-					}
-					if (this.v[1] >= 0) {
-						this.v[1] = Math.min(this.v[1], this.maxV * Math.sin(currentAngle));
-					} else {
-						this.v[1] = Math.max(this.v[1], this.maxV * Math.sin(currentAngle));
-					}
-					
-					this.owner.x += this.v[0];
-					this.owner.y += this.v[1];
-					this.owner.orientation = currentAngle + this.visualOffset;
-				}				
-			},
-			"set-angle": function (angle) {
-				this.angle = angle;
-			},
-			"move": function () {
-				this.moving = true;
-			},
-			"stop": function () {
-				this.moving = false;
-			},
-			"set-max-velocity": function (newMaxV) {
-				this.maxV = newMaxV;
-			}
-		}
-	});
+        events: {// These are messages that this component listens for
+            "handle-logic": function (update) {
+                var delta = update.delta;
+                var currentAngle = 0;
+                if (this.moving)
+                {
+                    this.v[0] += this.a * Math.cos(this.angle) * delta;
+                    this.v[1] += this.a * Math.sin(this.angle) * delta;
+                    if (this.v[0] == 0)
+                    {
+                        if (this.v[1] > 0) {
+                            currentAngle = this.piOverTwo;
+                        } else if (this.v[1] < 0) {
+                            currentAngle = -this.piOverTwo;
+                        } else {
+                            currentAngle = this.angle;
+                        }
+                    } else {
+                        currentAngle = Math.atan(this.v[1]/this.v[0]);
+                        if (this.v[0] < 0) {
+                            currentAngle = Math.PI + currentAngle;
+                        }
+                    }
+                    if (this.v[0] >= 0) {
+                        this.v[0] = Math.min(this.v[0], this.maxV * Math.cos(currentAngle));
+                    } else {
+                        this.v[0] = Math.max(this.v[0], this.maxV * Math.cos(currentAngle));
+                    }
+                    if (this.v[1] >= 0) {
+                        this.v[1] = Math.min(this.v[1], this.maxV * Math.sin(currentAngle));
+                    } else {
+                        this.v[1] = Math.max(this.v[1], this.maxV * Math.sin(currentAngle));
+                    }
+                    
+                    this.owner.x += this.v[0];
+                    this.owner.y += this.v[1];
+                    this.owner.orientation = currentAngle + this.visualOffset;
+                }                
+            },
+            "set-angle": function (angle) {
+                this.angle = angle;
+            },
+            "move": function () {
+                this.moving = true;
+            },
+            "stop": function () {
+                this.moving = false;
+            },
+            "set-max-velocity": function (newMaxV) {
+                this.maxV = newMaxV;
+            }
+        }
+    });
 }());

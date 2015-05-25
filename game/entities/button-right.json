@@ -1,6 +1,6 @@
 {
-	"id": "button-right",
-	"components":[
+    "id": "button-right",
+    "components":[
         {
             "type": "dom-element",
             "element": "div",
@@ -17,5 +17,5 @@
                 "stop-move":  "button-right:up"
             }
         }
-	]
+    ]
 }

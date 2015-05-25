@@ -29,43 +29,43 @@ This component causes an entity to teleport when receiving a teleport message.
 Requires: ["../vector.js"]
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'logic-teleportee',
-		
-		constructor: function (definition) {
-			this.teleportDestination = new platformer.Vector();
-			this.teleportNow = false;
-			this.DestinationSet = false;
-		},
+    return platformer.createComponentClass({
+        id: 'logic-teleportee',
+        
+        constructor: function (definition) {
+            this.teleportDestination = new platformer.Vector();
+            this.teleportNow = false;
+            this.DestinationSet = false;
+        },
 
-		events: {// These are messages that this component listens for
-			"handle-logic": function () {
-				if (this.teleportNow) {
-					this.owner.trigger('relocate-entity', {position: this.teleportDestination});
-					this.teleportNow = false;
-					this.owner.trigger('teleport-complete');
-				}
-			},
-			"teleport": function () {
-				if (this.destinationSet) {
-					this.teleportNow = true;
-				}
-			},
-			"set-destination": function (position) {
-				this.setDestination(position);
-			},
-			"hit-telepoint": function (collisionInfo) {
-				this.setDestination(collisionInfo.entity);
-			}
-		},
-		
-		methods: {
-			setDestination: function (position) {
-				this.teleportDestination.set(position.x, position.y);
-				this.destinationSet = true;
-			}
-		}
-	});
+        events: {// These are messages that this component listens for
+            "handle-logic": function () {
+                if (this.teleportNow) {
+                    this.owner.trigger('relocate-entity', {position: this.teleportDestination});
+                    this.teleportNow = false;
+                    this.owner.trigger('teleport-complete');
+                }
+            },
+            "teleport": function () {
+                if (this.destinationSet) {
+                    this.teleportNow = true;
+                }
+            },
+            "set-destination": function (position) {
+                this.setDestination(position);
+            },
+            "hit-telepoint": function (collisionInfo) {
+                this.setDestination(collisionInfo.entity);
+            }
+        },
+        
+        methods: {
+            setDestination: function (position) {
+                this.teleportDestination.set(position.x, position.y);
+                this.destinationSet = true;
+            }
+        }
+    });
 }());

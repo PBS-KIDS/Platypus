@@ -4,77 +4,77 @@ Activates audio on mobile devices by handling asset loading after a user interac
 
 Example "progress-bar" entity that could use this component:
 
-	{
-	    "id": "progress-bar",
-	    "components":[{
-	        "type": "audio-mobile"
-	    },{
-	        "type": "asset-loader",
-	        "progressBar": "progress-bar",
-	        "automatic": false
-	    },{
-	        "type": "dom-element",
-	        "id": "mobile-start",
-	        "innerHTML": "Play",
-	        "className": "mobile-start",
-	        "updateClassName": true,
-	        "ontouchstart": "activate-audio"
-	    },{
-	        "type": "dom-element",
-	        "id": "progress-bar-container",
-	        "updateClassName": true
-	    },{
-	        "type": "dom-element",
-	        "id": "progress-bar",
-	        "parent": "progress-bar-container"
-	    },{
-	        "type": "change-scene",
-	        "scene": "menu",
-	        "aliases": {"complete": "new-scene"}
-	    }]
-	}
+    {
+        "id": "progress-bar",
+        "components":[{
+            "type": "audio-mobile"
+        },{
+            "type": "asset-loader",
+            "progressBar": "progress-bar",
+            "automatic": false
+        },{
+            "type": "dom-element",
+            "id": "mobile-start",
+            "innerHTML": "Play",
+            "className": "mobile-start",
+            "updateClassName": true,
+            "ontouchstart": "activate-audio"
+        },{
+            "type": "dom-element",
+            "id": "progress-bar-container",
+            "updateClassName": true
+        },{
+            "type": "dom-element",
+            "id": "progress-bar",
+            "parent": "progress-bar-container"
+        },{
+            "type": "change-scene",
+            "scene": "menu",
+            "aliases": {"complete": "new-scene"}
+        }]
+    }
 
 To make the mobile-start button appear on mobile devices, the CSS might look something like this:
 
-	.mobile-start {
-	  display: none;
-	  position: absolute;
-	  top: 11em;
-	  left: 50%;
-	  width: 3em;
-	  text-align: center;
-	  margin-left: -1.5em;
-	  background: rgba(255,255,255,0.4);
-	  cursor: pointer;
-	}
-	
-	.mobile-start.mobile {
-	  display: block;
-	}
-	
-	#progress-bar-container {
-	  position: absolute;
-	  text-align: center;
-	  width: 4.6em;
-	  top: 11em;
-	  height: 0.75em;
-	  left: 50%;
-	  margin-left: -2.3em;
-	  background: #000;
-	}
-	
-	#progress-bar-container.mobile {
-	  display: none;
-	}
-	
-	#progress-bar {
-	  left: 0;
-	  top: 0;
-	  position: absolute;
-	  height: 100%;
-	  width: 0;
-	  background: #fff;
-	}
+    .mobile-start {
+      display: none;
+      position: absolute;
+      top: 11em;
+      left: 50%;
+      width: 3em;
+      text-align: center;
+      margin-left: -1.5em;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+    }
+    
+    .mobile-start.mobile {
+      display: block;
+    }
+    
+    #progress-bar-container {
+      position: absolute;
+      text-align: center;
+      width: 4.6em;
+      top: 11em;
+      height: 0.75em;
+      left: 50%;
+      margin-left: -2.3em;
+      background: #000;
+    }
+    
+    #progress-bar-container.mobile {
+      display: none;
+    }
+    
+    #progress-bar {
+      left: 0;
+      top: 0;
+      position: absolute;
+      height: 100%;
+      width: 0;
+      background: #fff;
+    }
 
 ## Dependencies:
 - [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
@@ -101,48 +101,48 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 */
 /* global createjs */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		
-		id: 'audio-mobile',
-		
-		constructor: function (definition) {
-			this.audioId = definition.audioId;
-		},
+    return platformer.createComponentClass({
+        
+        id: 'audio-mobile',
+        
+        constructor: function (definition) {
+            this.audioId = definition.audioId;
+        },
 
-		events: {// These are messages that this component listens for
-			"load": function () {
-				if (platformer.game.settings.supports.mobile) {
-					this.owner.state.mobile = true;
-					if ((platformer.game.settings.supports.android || platformer.game.settings.supports.iOS) && !platformer.game.settings.supports.audioAPI) {
-						this.owner.triggerEvent('low-quality-audio');
-					}
-				} else {
-					this.owner.triggerEvent('load-assets');
-				}
-			},
-			"activate-audio": function () {
-				var audio = platformer.game.settings.assets[this.audioId],
-				instance  = null;
-				
-				if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
-					delete platformer.game.settings.assets[this.audioId];
-					
-					audio.data.channels = 1;
-					audio.src = audio.src.replace('ogg', 'm4a');
-					createjs.Sound.registerSounds([audio]);
-					
-					instance = createjs.Sound.play(this.audioId);
-					console.log('Initializing iOS fallback audio.');
-					if (instance.playState === 'playSucceeded') {
-						instance.stop();
-					}
-				}
-				
-				this.owner.state.mobile = false;
-				this.owner.triggerEvent('load-assets');
-			}
-		}
-	});
+        events: {// These are messages that this component listens for
+            "load": function () {
+                if (platformer.game.settings.supports.mobile) {
+                    this.owner.state.mobile = true;
+                    if ((platformer.game.settings.supports.android || platformer.game.settings.supports.iOS) && !platformer.game.settings.supports.audioAPI) {
+                        this.owner.triggerEvent('low-quality-audio');
+                    }
+                } else {
+                    this.owner.triggerEvent('load-assets');
+                }
+            },
+            "activate-audio": function () {
+                var audio = platformer.game.settings.assets[this.audioId],
+                instance  = null;
+                
+                if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
+                    delete platformer.game.settings.assets[this.audioId];
+                    
+                    audio.data.channels = 1;
+                    audio.src = audio.src.replace('ogg', 'm4a');
+                    createjs.Sound.registerSounds([audio]);
+                    
+                    instance = createjs.Sound.play(this.audioId);
+                    console.log('Initializing iOS fallback audio.');
+                    if (instance.playState === 'playSucceeded') {
+                        instance.stop();
+                    }
+                }
+                
+                this.owner.state.mobile = false;
+                this.owner.triggerEvent('load-assets');
+            }
+        }
+    });
 }());

@@ -16,7 +16,7 @@
                 {"type": "button-left"},
                 {"type": "button-right"},
                 {"type": "gui"},
-            	{"type": "fps-counter"}
+                {"type": "fps-counter"}
             ],
             "childEvents": ['time-elapsed']
          }

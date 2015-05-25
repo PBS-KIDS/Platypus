@@ -12,7 +12,7 @@
                 {"type": "button-fullscreen"},
                 {"type": "button-play"},
                 {"type": "gui"},
-            	{"type": "fps-counter"}
+                {"type": "fps-counter"}
             ],
             "childEvents": [ 'time-elapsed']
         }

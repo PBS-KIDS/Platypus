@@ -1,9 +1,9 @@
 {
-	"id": "fps-counter",
-	"components":[
-		{
-			"type": "logic-fps-counter"
-		},{
+    "id": "fps-counter",
+    "components":[
+        {
+            "type": "logic-fps-counter"
+        },{
             "type": "dom-element",
             "className": "fps-counter",
             "style": {
@@ -18,5 +18,5 @@
                 "zIndex": 11
             }
         }
-	]
+    ]
 }

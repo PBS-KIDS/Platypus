@@ -78,126 +78,126 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 */
 /* global createjs */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'audio-mixer',
-			
-		constructor: function (definition) {
-			if (!platformer.game.audioMixer) {
-				platformer.game.audioMixer = {
-					channels: {},
-					paused: false,
-					getChannel: function (id) {
-						if (!this.channels[id]) {
-							this.channels[id] = {
-								volume: 1,
-								mute: false,
-								paused: false,
-								pan: 0,
-								update: 0
-							};
-						}
+    return platformer.createComponentClass({
+        id: 'audio-mixer',
+            
+        constructor: function (definition) {
+            if (!platformer.game.audioMixer) {
+                platformer.game.audioMixer = {
+                    channels: {},
+                    paused: false,
+                    getChannel: function (id) {
+                        if (!this.channels[id]) {
+                            this.channels[id] = {
+                                volume: 1,
+                                mute: false,
+                                paused: false,
+                                pan: 0,
+                                update: 0
+                            };
+                        }
 
-						return this.channels[id];
-					}
-				};
-			}
-			
-			this.mixer = platformer.game.audioMixer;
- 			this.owner.state.muted  = createjs.Sound.getMute();
- 			this.owner.state.paused = this.mixer.paused;
-		},
+                        return this.channels[id];
+                    }
+                };
+            }
+            
+            this.mixer = platformer.game.audioMixer;
+             this.owner.state.muted  = createjs.Sound.getMute();
+             this.owner.state.paused = this.mixer.paused;
+        },
 
-		events: {// These are messages that this component listens for
-	 		"toggle-mute": function (channelId) {
-	 			var mute = false,
-	 			channel  = null;
-	 			
-	 			if (channelId) {
-	 				channel = this.mixer.getChannel(channelId);
-	 				channel.mute = !channel.mute;
-	 				channel.update += 1;
-	 			} else {
-	 				mute = !createjs.Sound.getMute();
-		 			this.owner.state.muted = mute;
-		 			createjs.Sound.setMute(mute);
-	 			}
-	 		},
-	 	    
-	 		"mute-audio": function (channelId) {
-	 			var channel = null;
-	 			
-	 			if (channelId) {
-	 				channel = this.mixer.getChannel(channelId);
-	 				if (!channel.mute) {
-		 				channel.mute = true;
-		 				channel.update += 1;
-	 				}
-	 			} else {
-		 			createjs.Sound.setMute(true);
-		 			this.owner.state.muted = true;
-	 			}
-	 		},
-	 	    
-	 		"unmute-audio": function (channelId) {
-	 			var channel = null;
-	 			
-	 			if (channelId) {
-	 				channel = this.mixer.getChannel(channelId);
-	 				if (channel.mute) {
-	 					channel.mute = false;
-		 				channel.update += 1;
-	 				}
-	 			} else {
-		 			createjs.Sound.setMute(false);
-		 			this.owner.state.muted = false;
-	 			}
-	 		},
+        events: {// These are messages that this component listens for
+             "toggle-mute": function (channelId) {
+                 var mute = false,
+                 channel  = null;
+                 
+                 if (channelId) {
+                     channel = this.mixer.getChannel(channelId);
+                     channel.mute = !channel.mute;
+                     channel.update += 1;
+                 } else {
+                     mute = !createjs.Sound.getMute();
+                     this.owner.state.muted = mute;
+                     createjs.Sound.setMute(mute);
+                 }
+             },
+             
+             "mute-audio": function (channelId) {
+                 var channel = null;
+                 
+                 if (channelId) {
+                     channel = this.mixer.getChannel(channelId);
+                     if (!channel.mute) {
+                         channel.mute = true;
+                         channel.update += 1;
+                     }
+                 } else {
+                     createjs.Sound.setMute(true);
+                     this.owner.state.muted = true;
+                 }
+             },
+             
+             "unmute-audio": function (channelId) {
+                 var channel = null;
+                 
+                 if (channelId) {
+                     channel = this.mixer.getChannel(channelId);
+                     if (channel.mute) {
+                         channel.mute = false;
+                         channel.update += 1;
+                     }
+                 } else {
+                     createjs.Sound.setMute(false);
+                     this.owner.state.muted = false;
+                 }
+             },
 
-	 		"pause-audio": function (channelId) {
-	 			var channel = null;
-	 			
-	 			if (channelId) {
-	 				channel = this.mixer.getChannel(channelId);
-	 				if (!channel.paused) {
-	 					channel.paused = true;
-		 				channel.update += 1;
-	 				}
-	 			} else {
-		 			this.mixer.paused = true;
-		 			this.owner.state.paused = true;
-	 			}
-	 		},
-	 	    
-	 		"unpause-audio": function (channelId) {
-	 			var channel = null;
-	 			
-	 			if (channelId) {
-	 				channel = this.mixer.getChannel(channelId);
-	 				if (channel.paused) {
-	 					channel.paused = false;
-		 				channel.update += 1;
-	 				}
-	 			} else {
-		 			this.mixer.paused = false;
-		 			this.owner.state.paused = false;
-	 			}
-	 		},
-	 		
-	 		"set-volume": function (volume) {
-	 			var channel = null;
-	 			
-	 			if (volume && volume.channelId) {
-	 				channel = this.mixer.getChannel(volume.channelId);
-	 				if (channel.volume !== volume.volume) {
-	 					channel.volume = volume.volume;
-		 				channel.update += 1;
-	 				}
-	 			} else {
-		 			createjs.Sound.setVolume(volume);
-	 			}
-	 		}
-		}
-	});
-}());	
+             "pause-audio": function (channelId) {
+                 var channel = null;
+                 
+                 if (channelId) {
+                     channel = this.mixer.getChannel(channelId);
+                     if (!channel.paused) {
+                         channel.paused = true;
+                         channel.update += 1;
+                     }
+                 } else {
+                     this.mixer.paused = true;
+                     this.owner.state.paused = true;
+                 }
+             },
+             
+             "unpause-audio": function (channelId) {
+                 var channel = null;
+                 
+                 if (channelId) {
+                     channel = this.mixer.getChannel(channelId);
+                     if (channel.paused) {
+                         channel.paused = false;
+                         channel.update += 1;
+                     }
+                 } else {
+                     this.mixer.paused = false;
+                     this.owner.state.paused = false;
+                 }
+             },
+             
+             "set-volume": function (volume) {
+                 var channel = null;
+                 
+                 if (volume && volume.channelId) {
+                     channel = this.mixer.getChannel(volume.channelId);
+                     if (channel.volume !== volume.volume) {
+                         channel.volume = volume.volume;
+                         channel.update += 1;
+                     }
+                 } else {
+                     createjs.Sound.setVolume(volume);
+                 }
+             }
+        }
+    });
+}());    

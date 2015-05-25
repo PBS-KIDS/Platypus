@@ -1,6 +1,6 @@
 {
     "id": "audio",
-	"layers":[{
+    "layers":[{
         "id": "layer",
         "components": [
             {"type": "handler-logic"},

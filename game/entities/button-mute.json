@@ -1,7 +1,7 @@
 {
-	"id": "button-mute",
-	"components":[
-		{
+    "id": "button-mute",
+    "components":[
+        {
             "type":   "logic-button",
             "toggle": true,
             "state":  "pressed"
@@ -15,12 +15,12 @@
         },{
             "type": "audio"
         }
-	],
-	"properties":{
-		"x": 10,
-		"y": 10,
-		"z": 400,
-		"width": 400,
-		"height": 400
-	}
+    ],
+    "properties":{
+        "x": 10,
+        "y": 10,
+        "z": 400,
+        "width": 400,
+        "height": 400
+    }
 }

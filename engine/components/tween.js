@@ -17,78 +17,78 @@ Tween takes a list of tween definitions and plays them as needed.
     {
       "type": "tween",
 
-	  "events": {
-	  // Required. A key/value list of events and an array representing the tween they should trigger.
+      "events": {
+      // Required. A key/value list of events and an array representing the tween they should trigger.
 
-	        "begin-flying": [
-	        // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
+            "begin-flying": [
+            // When "begin-flying" is triggered on this entity, the following tween begins. Tween definitions adhere to a similar structure outlined by the TweenJS documentation. Each milestone on the tween is an item in this array.
 
                 ["to", {
                     "scaleY": 1,
                     "y": 400
                 }, 500],
-				// If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
+                // If the definition is an array, the first parameter is the type of milestone, in this case "to", with all following parameters passed directly to the equivalent Tween function.
                 
                 ["call", "fly"],
                 // "call" milestones can take a function or a string. If it's a string, the string will be triggered as an event on the entity. In this case, the component will trigger "fly".
-	        ]
-	    }
+            ]
+        }
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var createTrigger = function (entity, event, message, debug) {
-		return function () {
-			entity.trigger(event, message, debug);
-		};
-	},
-	createTween = function (definition) {
-		return function (values) {
-			var i  = 0,
-			tweens = definition,
-			tweenDef = null,
-			arr = null,
-			tween = createjs.Tween.get(this.owner);
-			
-			if (Array.isArray(values)) {
-				tweens = values;
-			} else if (!Array.isArray(tweens)) {
-				return;
-			}
-			
-			for (; i < tweens.length; i++) {
-				tweenDef = tweens[i];
-				if (typeof tweenDef === 'string') {
-					tween.call(createTrigger(this.owner, tweenDef));
-				} else if (Array.isArray(tweenDef)) {
-					if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
-						tween.call(createTrigger(this.owner, tweenDef[1]));
-					} else {
-						arr = tweenDef.slice();
-						arr.splice(0,1);
-						tween[tweenDef[0]].apply(tween, arr);
-					}
-				} else {
-					if (tweenDef.method === 'call' && typeof tweenDef.arguments === 'string') {
-						tween.call(createTrigger(this.owner, tweenDef.arguments));
-					} else {
-						tween[tweenDef.method].apply(tween, tweenDef.arguments);
-					}
-				}
-			}
-		};
-	};
+    var createTrigger = function (entity, event, message, debug) {
+        return function () {
+            entity.trigger(event, message, debug);
+        };
+    },
+    createTween = function (definition) {
+        return function (values) {
+            var i  = 0,
+            tweens = definition,
+            tweenDef = null,
+            arr = null,
+            tween = createjs.Tween.get(this.owner);
+            
+            if (Array.isArray(values)) {
+                tweens = values;
+            } else if (!Array.isArray(tweens)) {
+                return;
+            }
+            
+            for (; i < tweens.length; i++) {
+                tweenDef = tweens[i];
+                if (typeof tweenDef === 'string') {
+                    tween.call(createTrigger(this.owner, tweenDef));
+                } else if (Array.isArray(tweenDef)) {
+                    if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
+                        tween.call(createTrigger(this.owner, tweenDef[1]));
+                    } else {
+                        arr = tweenDef.slice();
+                        arr.splice(0,1);
+                        tween[tweenDef[0]].apply(tween, arr);
+                    }
+                } else {
+                    if (tweenDef.method === 'call' && typeof tweenDef.arguments === 'string') {
+                        tween.call(createTrigger(this.owner, tweenDef.arguments));
+                    } else {
+                        tween[tweenDef.method].apply(tween, tweenDef.arguments);
+                    }
+                }
+            }
+        };
+    };
 
-	return platformer.createComponentClass({
-		id: 'tween',
-		
-		constructor: function (definition) {
-			if (definition.events) {
-				for(var event in definition.events) {
-					this.addEventListener(event, createTween(definition.events[event]));
-				}
-			}
-		}
-	});
+    return platformer.createComponentClass({
+        id: 'tween',
+        
+        constructor: function (definition) {
+            if (definition.events) {
+                for(var event in definition.events) {
+                    this.addEventListener(event, createTween(definition.events[event]));
+                }
+            }
+        }
+    });
 }());

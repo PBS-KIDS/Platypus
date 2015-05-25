@@ -39,102 +39,102 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		
-		id: 'logic-wind-up-racer',
-		
-		constructor: function (definition) {
-			this.windTime = definition.windTime || 500;
-			this.raceTime = definition.raceTime || 5000;
-			this.speed = definition.speed || this.owner.speed || 0.3;
-			
-			this.windProgress = 0;
-			
-			this.winding = false;
-			this.racing = false;
-			this.blocked = false;
-			this.right = false;
-			this.left = false;
-			
-			this.state = this.owner.state;
-			this.state.windingUp = false;
-			this.state.racing = false;
-			this.state.blocked = false;
-			
-			if (definition.message) {
-				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "wind-up"} instead.');
-			}
-		},
+    return platformer.createComponentClass({
+        
+        id: 'logic-wind-up-racer',
+        
+        constructor: function (definition) {
+            this.windTime = definition.windTime || 500;
+            this.raceTime = definition.raceTime || 5000;
+            this.speed = definition.speed || this.owner.speed || 0.3;
+            
+            this.windProgress = 0;
+            
+            this.winding = false;
+            this.racing = false;
+            this.blocked = false;
+            this.right = false;
+            this.left = false;
+            
+            this.state = this.owner.state;
+            this.state.windingUp = false;
+            this.state.racing = false;
+            this.state.blocked = false;
+            
+            if (definition.message) {
+                console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "wind-up"} instead.');
+            }
+        },
 
-		events: {// These are messages that this component listens for
-			"handle-logic": function (resp) {
-				if (this.racing) {
-					if (!this.blocked && this.right && this.state.right) {
-						this.owner.x += this.speed;
-						this.owner.trigger('racing');
-					} else if (!this.blocked && this.left && this.state.left) {
-						this.owner.x -= this.speed;
-						this.owner.trigger('racing');
-					} else {
-						this.racing = false;
-						this.owner.trigger('stopped-racing');
-					}
-				} else {
-					if (this.winding) {
-						if ((this.right && this.state.right) || (this.left && this.state.left)) {
-							this.windProgress += resp.delta;
-						}
-						this.owner.trigger('winding');
-					} else {
-						if (this.windProgress) {
-							if (this.windProgress > this.windTime) {
-								this.racing = true;
-							}
-							this.windProgress = 0;
-							this.owner.trigger('stopped-winding');
-						}
-					}
-				}
-				
-				if (this.state.windingUp !== this.winding) {
-					this.state.windingUp = this.winding;
-				}
-				if (this.state.racing !== this.racing) {
-					this.state.racing = this.racing;
-				}
-				if (this.state.blocked !== this.blocked) {
-					this.state.blocked = this.blocked;
-				}
-				
-				this.blocked = false;
-			},
-			"stop-racing": function (value) {
-				this.racing = false;
-				this.owner.trigger('stopped-racing');
-			},
-			"wind-up": function (value) {
-				this.winding = !value || (value.pressed !== false);
-				this.right = this.state.right;
-				this.left  = this.state.left;
-			},
-			"hit-solid": function (collision) {
-				if (collision.x) {
-					if (this.racing && ((this.right && (collision.x > 0)) || (this.left && (collision.x < 0)))) {
-						this.blocked = true;
-						this.owner.trigger('blocked', collision);
-					}
-				}
-			}
-		},
-	
-		methods:{
-			destroy: function () {
-				this.state.windingUp = false;
-				this.state.racing = false;
-				this.state.blocked = false;
-			}			
-		}
-	});
+        events: {// These are messages that this component listens for
+            "handle-logic": function (resp) {
+                if (this.racing) {
+                    if (!this.blocked && this.right && this.state.right) {
+                        this.owner.x += this.speed;
+                        this.owner.trigger('racing');
+                    } else if (!this.blocked && this.left && this.state.left) {
+                        this.owner.x -= this.speed;
+                        this.owner.trigger('racing');
+                    } else {
+                        this.racing = false;
+                        this.owner.trigger('stopped-racing');
+                    }
+                } else {
+                    if (this.winding) {
+                        if ((this.right && this.state.right) || (this.left && this.state.left)) {
+                            this.windProgress += resp.delta;
+                        }
+                        this.owner.trigger('winding');
+                    } else {
+                        if (this.windProgress) {
+                            if (this.windProgress > this.windTime) {
+                                this.racing = true;
+                            }
+                            this.windProgress = 0;
+                            this.owner.trigger('stopped-winding');
+                        }
+                    }
+                }
+                
+                if (this.state.windingUp !== this.winding) {
+                    this.state.windingUp = this.winding;
+                }
+                if (this.state.racing !== this.racing) {
+                    this.state.racing = this.racing;
+                }
+                if (this.state.blocked !== this.blocked) {
+                    this.state.blocked = this.blocked;
+                }
+                
+                this.blocked = false;
+            },
+            "stop-racing": function (value) {
+                this.racing = false;
+                this.owner.trigger('stopped-racing');
+            },
+            "wind-up": function (value) {
+                this.winding = !value || (value.pressed !== false);
+                this.right = this.state.right;
+                this.left  = this.state.left;
+            },
+            "hit-solid": function (collision) {
+                if (collision.x) {
+                    if (this.racing && ((this.right && (collision.x > 0)) || (this.left && (collision.x < 0)))) {
+                        this.blocked = true;
+                        this.owner.trigger('blocked', collision);
+                    }
+                }
+            }
+        },
+    
+        methods:{
+            destroy: function () {
+                this.state.windingUp = false;
+                this.state.racing = false;
+                this.state.blocked = false;
+            }            
+        }
+    });
 }());

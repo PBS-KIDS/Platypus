@@ -19,66 +19,66 @@ This component renders the avg FPS and other developer defined debug data to the
 
 ## JSON Definition:
     {
-		"type": "logic-fps-counter",
-		"ticks": 45
-		//Optional - The number of ticks across which we average the values. Defaults to 30.
-	}
+        "type": "logic-fps-counter",
+        "ticks": 45
+        //Optional - The number of ticks across which we average the values. Defaults to 30.
+    }
 */
 
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'logic-fps-counter',
+    return platformer.createComponentClass({
+        id: 'logic-fps-counter',
         constructor: function (definition) {
-			this.counter = {
-				text: ''
-			};
-			this.times = {};
-			this.timeElapsed = false;
-			this.ticks = definition.ticks || 30; //number of ticks for which to take an average
-			this.count = this.ticks;
-		},
-		events:{
-			"handle-logic": function () {
-				if (!platformer.game.settings.debug && this.owner.parent) {
-					this.owner.parent.removeEntity(this.owner);
-				}
-		
-				if (this.timeElapsed) { //to make sure we're not including 0's from multiple logic calls between time elapsing.
-					this.timeElapsed = false;
-					this.count--;
-					if (!this.count) {
-						this.count = this.ticks;
-						var text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS<br />";
-						for(var name in this.times) {
-							text += '<br />' + name + ': ' + Math.round(this.times[name] / this.ticks) + 'ms';
-							this.times[name] = 0;
-						}
-						this.counter.text = text;
-						this.owner.trigger('update-content', this.counter);
-					}
-				}
-			},
-			"time-elapsed": function (value) {
-				if (value) {
-					if (value.name) {
-						if ((value.name === 'Engine Total') && !this.timeElapsed) {
-							this.timeElapsed = true;
-						}
-						if (!this.times[value.name]) {
-							this.times[value.name] = 0;
-						}
-						this.times[value.name] += value.time;
-					}
-				}
-			}
-		},
-		methods:{
-			destroy: function () {
-				this.counter = null;
-				this.times   = null;
-			}
-		}
-	});
+            this.counter = {
+                text: ''
+            };
+            this.times = {};
+            this.timeElapsed = false;
+            this.ticks = definition.ticks || 30; //number of ticks for which to take an average
+            this.count = this.ticks;
+        },
+        events:{
+            "handle-logic": function () {
+                if (!platformer.game.settings.debug && this.owner.parent) {
+                    this.owner.parent.removeEntity(this.owner);
+                }
+        
+                if (this.timeElapsed) { //to make sure we're not including 0's from multiple logic calls between time elapsing.
+                    this.timeElapsed = false;
+                    this.count--;
+                    if (!this.count) {
+                        this.count = this.ticks;
+                        var text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS<br />";
+                        for(var name in this.times) {
+                            text += '<br />' + name + ': ' + Math.round(this.times[name] / this.ticks) + 'ms';
+                            this.times[name] = 0;
+                        }
+                        this.counter.text = text;
+                        this.owner.trigger('update-content', this.counter);
+                    }
+                }
+            },
+            "time-elapsed": function (value) {
+                if (value) {
+                    if (value.name) {
+                        if ((value.name === 'Engine Total') && !this.timeElapsed) {
+                            this.timeElapsed = true;
+                        }
+                        if (!this.times[value.name]) {
+                            this.times[value.name] = 0;
+                        }
+                        this.times[value.name] += value.time;
+                    }
+                }
+            }
+        },
+        methods:{
+            destroy: function () {
+                this.counter = null;
+                this.times   = null;
+            }
+        }
+    });
 }());

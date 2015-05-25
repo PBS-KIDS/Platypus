@@ -32,47 +32,47 @@ This component allows the entity to initiate a change from the current scene to 
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'change-scene',
-		
-		constructor: function (definition) {
-			this.scene = this.owner.scene || definition.scene;
-			this.transition = this.owner.transition || definition.transition || 'instant';
-			this.persistentData = definition.persistentData || {};
-			this.preload = definition.preload || false;
-			
-			// Notes definition changes from older versions of this component.
-			if (definition.message) {
-				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "new-scene"} instead.');
-			}
-		},
+    return platformer.createComponentClass({
+        id: 'change-scene',
+        
+        constructor: function (definition) {
+            this.scene = this.owner.scene || definition.scene;
+            this.transition = this.owner.transition || definition.transition || 'instant';
+            this.persistentData = definition.persistentData || {};
+            this.preload = definition.preload || false;
+            
+            // Notes definition changes from older versions of this component.
+            if (definition.message) {
+                console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "new-scene"} instead.');
+            }
+        },
 
-		events: {
-			"scene-live": function () {
-				//Makes sure we're in the current scene before preloading the next one.
-				if (this.preload) {
-					platformer.game.loadScene(this.scene, this.transition, this.persistentData, true);
-				}
-			},
-			"new-scene": function (response) {
-				var resp   = response || this,
-				scene      = resp.scene || this.scene,
-				transition = resp.transition || this.transition,
-				data 	   = resp.persistentData || this.persistentData;
-			
-				platformer.game.loadScene(scene, transition, data);
-			},
-			"set-scene": function (scene) {
-				this.scene = scene;
-			},
-			"set-persistent-scene-data": function (dataObj) {
-				for (var x in dataObj)
-				{
-					this.persistentData[x] = dataObj[x];    
-				}
-			}
-		}
-	});
+        events: {
+            "scene-live": function () {
+                //Makes sure we're in the current scene before preloading the next one.
+                if (this.preload) {
+                    platformer.game.loadScene(this.scene, this.transition, this.persistentData, true);
+                }
+            },
+            "new-scene": function (response) {
+                var resp   = response || this,
+                scene      = resp.scene || this.scene,
+                transition = resp.transition || this.transition,
+                data        = resp.persistentData || this.persistentData;
+            
+                platformer.game.loadScene(scene, transition, data);
+            },
+            "set-scene": function (scene) {
+                this.scene = scene;
+            },
+            "set-persistent-scene-data": function (dataObj) {
+                for (var x in dataObj)
+                {
+                    this.persistentData[x] = dataObj[x];    
+                }
+            }
+        }
+    });
 }());

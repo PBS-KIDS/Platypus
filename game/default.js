@@ -9,15 +9,15 @@
  */
 
 (function () {
-	window.loadJS = loadJS = ['../tools/js/compile-game.js'];
+    window.loadJS = loadJS = ['../tools/js/compile-game.js'];
     window.loadJSs = function () {
-    	if (loadJS.length) {
-			var domElement = document.createElement('script');
-			domElement.onload = loadJSs;
-			domElement.setAttribute('type', 'text/javascript');
-			domElement.setAttribute('src', loadJS.splice(0,1)[0]);
-			document.getElementsByTagName('body')[0].appendChild(domElement);
-    	}
+        if (loadJS.length) {
+            var domElement = document.createElement('script');
+            domElement.onload = loadJSs;
+            domElement.setAttribute('type', 'text/javascript');
+            domElement.setAttribute('src', loadJS.splice(0,1)[0]);
+            document.getElementsByTagName('body')[0].appendChild(domElement);
+        }
     };
     loadJSs();
 }());

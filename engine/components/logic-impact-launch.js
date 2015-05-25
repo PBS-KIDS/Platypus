@@ -33,92 +33,92 @@ This component will cause the entity to move in a certain direction on colliding
 
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'logic-impact-launch',
-		constructor: function (definition) {
-			this.stunState = definition.state || "stunned";
-			
-			this.aX = this.owner.accelerationX || definition.accelerationX || -0.2;
-			this.aY = this.owner.accelerationY || definition.accelerationY || -0.6;
-			this.flipX = ((this.owner.flipX === false) || ((this.owner.flipX !== true) && (definition.flipX === false)))?1:-1;
-			this.flipY = (this.owner.flipY || definition.flipY)?-1:1;
-			this.mX = 1;
-			this.mY = 1;
-			
-			if (typeof this.owner.dx !== 'number') {
-				this.owner.dx = 0;
-			}
-			if (typeof this.owner.dy !== 'number') {
-				this.owner.dy = 0;
-			}
-			
-			this.justJumped = false;
-			this.stunned = false;
-			
-			this.state = this.owner.state;
-			this.state.impact  = false;
-			this.state[this.stunState] = false;
+    return platformer.createComponentClass({
+        id: 'logic-impact-launch',
+        constructor: function (definition) {
+            this.stunState = definition.state || "stunned";
+            
+            this.aX = this.owner.accelerationX || definition.accelerationX || -0.2;
+            this.aY = this.owner.accelerationY || definition.accelerationY || -0.6;
+            this.flipX = ((this.owner.flipX === false) || ((this.owner.flipX !== true) && (definition.flipX === false)))?1:-1;
+            this.flipY = (this.owner.flipY || definition.flipY)?-1:1;
+            this.mX = 1;
+            this.mY = 1;
+            
+            if (typeof this.owner.dx !== 'number') {
+                this.owner.dx = 0;
+            }
+            if (typeof this.owner.dy !== 'number') {
+                this.owner.dy = 0;
+            }
+            
+            this.justJumped = false;
+            this.stunned = false;
+            
+            this.state = this.owner.state;
+            this.state.impact  = false;
+            this.state[this.stunState] = false;
 
-			// Notes definition changes from older versions of this component.
-			if (definition.message) {
-				console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "impact-launch"} instead.');
-			}
-		},
-		
-		events:{
-			"handle-logic": function () {
-				if (this.state.impact !== this.justJumped) {
-					this.state.impact = this.justJumped;
-				}
-				if (this.state[this.stunState] !== this.stunned) {
-					this.state[this.stunState] = this.stunned;
-				}
+            // Notes definition changes from older versions of this component.
+            if (definition.message) {
+                console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "impact-launch"} instead.');
+            }
+        },
+        
+        events:{
+            "handle-logic": function () {
+                if (this.state.impact !== this.justJumped) {
+                    this.state.impact = this.justJumped;
+                }
+                if (this.state[this.stunState] !== this.stunned) {
+                    this.state[this.stunState] = this.stunned;
+                }
 
-				if (this.justJumped) {
-					this.justJumped = false;
-					this.stunned = true;
-					this.owner.dx = this.aX * this.mX;
-					this.owner.dy = this.aY * this.mY;
-				}
-			},
-			
-			"impact-launch": function (collisionInfo) {
-				var dx = collisionInfo.x,
-				dy     = collisionInfo.y;
-				
-				if (collisionInfo.entity) {
-					dx = collisionInfo.entity.x - this.owner.x;
-					dy = collisionInfo.entity.y - this.owner.y;
-				}
+                if (this.justJumped) {
+                    this.justJumped = false;
+                    this.stunned = true;
+                    this.owner.dx = this.aX * this.mX;
+                    this.owner.dy = this.aY * this.mY;
+                }
+            },
+            
+            "impact-launch": function (collisionInfo) {
+                var dx = collisionInfo.x,
+                dy     = collisionInfo.y;
+                
+                if (collisionInfo.entity) {
+                    dx = collisionInfo.entity.x - this.owner.x;
+                    dy = collisionInfo.entity.y - this.owner.y;
+                }
 
-				if (!this.stunned) {
-					this.justJumped = true;
-					this.owner.dx = 0;
-					if (dx > 0) {
-						this.mX = 1;
-					} else if (dx < 0) {
-						this.mX = this.flipX;
-					}
-					this.owner.dy = 0;
-					if (dy > 0) {
-						this.mY = 1;
-					} else if (dy < 0) {
-						this.mY = this.flipY;
-					}
-				}
-				return true;
-			},
-			
-			"hit-solid": function (collisionInfo) {
-				if (this.stunned && (collisionInfo.y > 0)) {
-					this.stunned = false;
-					this.owner.dx = 0;
-					this.owner.dy = 0;
-				}
-				return true;
-			}
-		}
-	});
+                if (!this.stunned) {
+                    this.justJumped = true;
+                    this.owner.dx = 0;
+                    if (dx > 0) {
+                        this.mX = 1;
+                    } else if (dx < 0) {
+                        this.mX = this.flipX;
+                    }
+                    this.owner.dy = 0;
+                    if (dy > 0) {
+                        this.mY = 1;
+                    } else if (dy < 0) {
+                        this.mY = this.flipY;
+                    }
+                }
+                return true;
+            },
+            
+            "hit-solid": function (collisionInfo) {
+                if (this.stunned && (collisionInfo.y > 0)) {
+                    this.stunned = false;
+                    this.owner.dx = 0;
+                    this.owner.dy = 0;
+                }
+                return true;
+            }
+        }
+    });
 }());

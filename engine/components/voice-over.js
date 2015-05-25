@@ -44,24 +44,24 @@ This component uses its definition to load two other components (audio and rende
       "spriteSheet": {
       //Required. Defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
 
-	      "images": ["example0", "example1"],
-	      //Required: An array of ids of the images from the asset list in config.js.
-	      
-	      "frames": {
-	      //Required: The dimensions of the frames on the image and how to offset them around the entity position. The image is automatically cut up into pieces based on the dimensions. 
-	      	"width":  100,
-			"height": 100,
-			"regY":   100,
-			"regX":   50
-	      },
-	      
-	      "animations":{
-	      //Required: The list of animation ids and the frames that make up that animation. The speed determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
-			"mouth-o":   0,
-			"mouth-aah": 1,
-			"mouth-t":   2,
-			"mouth-closed": {"frames": [3, 4, 5], "speed": 4}
-		  }
+          "images": ["example0", "example1"],
+          //Required: An array of ids of the images from the asset list in config.js.
+          
+          "frames": {
+          //Required: The dimensions of the frames on the image and how to offset them around the entity position. The image is automatically cut up into pieces based on the dimensions. 
+              "width":  100,
+            "height": 100,
+            "regY":   100,
+            "regX":   50
+          },
+          
+          "animations":{
+          //Required: The list of animation ids and the frames that make up that animation. The speed determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
+            "mouth-o":   0,
+            "mouth-aah": 1,
+            "mouth-t":   2,
+            "mouth-closed": {"frames": [3, 4, 5], "speed": 4}
+          }
       }
       
       //This component also accepts all parameters accepted by either [[render-sprite]] or [[audio]] and passes them along when it creates those components.
@@ -70,122 +70,122 @@ This component uses its definition to load two other components (audio and rende
 Requires: ["audio", "render-sprite"]
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var getEventName = function (msg, VO) {
-		if (VO === ' ') {
-			return msg + 'default';
-		} else {
-			return msg + VO;
-		}
-	},
-	createVO = function (sound, events, message, frameLength) {
-		var i = '',
-		definitions = [],
-		definition = null;
-		
-		if (!events[' ']) {
-			events[' '] = events['default'];
-		}
-		
-		if (Array.isArray(sound)) {
-			for (i in sound) {
-				definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
-			}
-			definition = definitions.splice(0, 1)[0];
-			definition.next = definitions;
-			return definition;
-		} else {
-			return createAudioDefinition(sound, events, message, frameLength);
-		}
-	},
-	createAudioDefinition = function (sound, events, message, frameLength) {
-		var i      = 0,
-		definition = {},
-		time       = 0,
-		lastFrame  = '',
-		thisFrame  = '',
-		voice = sound.voice;
-		
-		if (typeof sound.sound === 'string') {
-			definition.sound = sound.sound;
-			definition.events = [];
-		} else {
-			for(i in sound.sound) {
-				definition[i] = sound.sound[i];
-			}
-			
-			if (definition.events) {
-				definition.events = definition.events.slice();
-			} else {
-				definition.events = [];
-			}
-		}
-		
-		if (voice) {
-			voice += ' ';
-			
-			for (i = 0; i < voice.length; i++) {
-				thisFrame = voice[i];
-				if (thisFrame !== lastFrame) {
-					lastFrame = thisFrame;
-					definition.events.push({
-						"time": time,
-						"event": getEventName(message, thisFrame)
-					});
-				}
-				time += frameLength;
-			}
-		}
-		
-		return definition;
-	};
+    var getEventName = function (msg, VO) {
+        if (VO === ' ') {
+            return msg + 'default';
+        } else {
+            return msg + VO;
+        }
+    },
+    createVO = function (sound, events, message, frameLength) {
+        var i = '',
+        definitions = [],
+        definition = null;
+        
+        if (!events[' ']) {
+            events[' '] = events['default'];
+        }
+        
+        if (Array.isArray(sound)) {
+            for (i in sound) {
+                definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
+            }
+            definition = definitions.splice(0, 1)[0];
+            definition.next = definitions;
+            return definition;
+        } else {
+            return createAudioDefinition(sound, events, message, frameLength);
+        }
+    },
+    createAudioDefinition = function (sound, events, message, frameLength) {
+        var i      = 0,
+        definition = {},
+        time       = 0,
+        lastFrame  = '',
+        thisFrame  = '',
+        voice = sound.voice;
+        
+        if (typeof sound.sound === 'string') {
+            definition.sound = sound.sound;
+            definition.events = [];
+        } else {
+            for(i in sound.sound) {
+                definition[i] = sound.sound[i];
+            }
+            
+            if (definition.events) {
+                definition.events = definition.events.slice();
+            } else {
+                definition.events = [];
+            }
+        }
+        
+        if (voice) {
+            voice += ' ';
+            
+            for (i = 0; i < voice.length; i++) {
+                thisFrame = voice[i];
+                if (thisFrame !== lastFrame) {
+                    lastFrame = thisFrame;
+                    definition.events.push({
+                        "time": time,
+                        "event": getEventName(message, thisFrame)
+                    });
+                }
+                time += frameLength;
+            }
+        }
+        
+        return definition;
+    };
 
-	return platformer.createComponentClass({
-		id: 'voice-over',
-		
-		constructor: function (definition) {
-			var i               = '',
-			audioDefinition     = {
-				audioMap: {},
-	            preventOverlaps: definition.preventOverlaps,
-	            channel: definition.channel,
-	            priority: definition.priority,
-				aliases:  definition.aliases
-			},
-			animationDefinition = {
-				spriteSheet:   definition.spriteSheet,
-				acceptInput:   definition.acceptInput,
-				scaleX:        definition.scaleX,
-				scaleY:        definition.scaleY,
-				rotate:        definition.rotate,
-				mirror:        definition.mirror,
-				flip:          definition.flip,
-				hidden:        definition.hidden,
-				animationMap:  {},
-				pins:          definition.pins,
-				pinTo:         definition.pinTo,
-				aliases:       definition.aliases
-			};
-			
-			this.message = (definition.messagePrefix || 'voice-over') + '-';
-			
-			for (i in definition.animationMap) {
-				animationDefinition.animationMap[getEventName(this.message, i)] = definition.animationMap[i];
-			}
-			animationDefinition.animationMap['default'] = definition.animationMap['default'];
-			this.owner.addComponent(new platformer.components['render-sprite'](this.owner, animationDefinition));
+    return platformer.createComponentClass({
+        id: 'voice-over',
+        
+        constructor: function (definition) {
+            var i               = '',
+            audioDefinition     = {
+                audioMap: {},
+                preventOverlaps: definition.preventOverlaps,
+                channel: definition.channel,
+                priority: definition.priority,
+                aliases:  definition.aliases
+            },
+            animationDefinition = {
+                spriteSheet:   definition.spriteSheet,
+                acceptInput:   definition.acceptInput,
+                scaleX:        definition.scaleX,
+                scaleY:        definition.scaleY,
+                rotate:        definition.rotate,
+                mirror:        definition.mirror,
+                flip:          definition.flip,
+                hidden:        definition.hidden,
+                animationMap:  {},
+                pins:          definition.pins,
+                pinTo:         definition.pinTo,
+                aliases:       definition.aliases
+            };
+            
+            this.message = (definition.messagePrefix || 'voice-over') + '-';
+            
+            for (i in definition.animationMap) {
+                animationDefinition.animationMap[getEventName(this.message, i)] = definition.animationMap[i];
+            }
+            animationDefinition.animationMap['default'] = definition.animationMap['default'];
+            this.owner.addComponent(new platformer.components['render-sprite'](this.owner, animationDefinition));
 
-			for (i in definition.voiceoverMap) {
-				audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
-			}
-			this.owner.addComponent(new platformer.components['audio'](this.owner, audioDefinition));
-		},
+            for (i in definition.voiceoverMap) {
+                audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
+            }
+            this.owner.addComponent(new platformer.components['audio'](this.owner, audioDefinition));
+        },
 
-		events: {// These are messages that this component listens for
-		    "load": function (resp) {
-		        this.owner.removeComponent(this);
-	 	    }
-		}
-	});
+        events: {// These are messages that this component listens for
+            "load": function (resp) {
+                this.owner.removeComponent(this);
+             }
+        }
+    });
 }());

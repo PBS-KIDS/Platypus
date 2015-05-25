@@ -36,140 +36,140 @@ A component that handles the rendering of DOM elements. It creates a div element
 */
 
 (function () {
-	"use strict";
+    "use strict";
 
-	var createFunction = function (message, entity) {
-		if (typeof message === 'string') {
-			return function (e) {
-				entity.trigger(message, e);
-				e.preventDefault();
-			};
-		} else if (Array.isArray(message)) {
-			return function (e) {
-				for (var i = 0; i < message.length; i++) {
-					entity.trigger(message[i], e);
-				}
-				e.preventDefault();
-			};
-		} else {
-			return function (e) {
-				entity.trigger(message.event, message.message);
-				e.preventDefault();
-			};
-		}
-	};
-	
-	return platformer.createComponentClass({
-	
-		id: 'handler-render-dom',
-		
-		constructor: function (definition) {
-			this.element = this.owner.element = document.createElement('div');
-			this.owner.rootElement.appendChild(this.element);
-			this.owner.element = this.element;
-	
-			for(var i in definition) {
-				if (i === 'style') {
-					for(var j in definition[i]) {
-						this.element.style[j] = definition[i][j]; 
-					}
-				} else if (i !== 'type') {
-					if (i.indexOf('on') === 0) {
-						this.element[i] = createfunction (definition[i], this.owner);
-					} else {
-						this.element[i] = definition[i];
-					}
-				}
-			}
+    var createFunction = function (message, entity) {
+        if (typeof message === 'string') {
+            return function (e) {
+                entity.trigger(message, e);
+                e.preventDefault();
+            };
+        } else if (Array.isArray(message)) {
+            return function (e) {
+                for (var i = 0; i < message.length; i++) {
+                    entity.trigger(message[i], e);
+                }
+                e.preventDefault();
+            };
+        } else {
+            return function (e) {
+                entity.trigger(message.event, message.message);
+                e.preventDefault();
+            };
+        }
+    };
+    
+    return platformer.createComponentClass({
+    
+        id: 'handler-render-dom',
+        
+        constructor: function (definition) {
+            this.element = this.owner.element = document.createElement('div');
+            this.owner.rootElement.appendChild(this.element);
+            this.owner.element = this.element;
+    
+            for(var i in definition) {
+                if (i === 'style') {
+                    for(var j in definition[i]) {
+                        this.element.style[j] = definition[i][j]; 
+                    }
+                } else if (i !== 'type') {
+                    if (i.indexOf('on') === 0) {
+                        this.element[i] = createfunction (definition[i], this.owner);
+                    } else {
+                        this.element[i] = definition[i];
+                    }
+                }
+            }
 
-			this.handleChildren = true;
-			this.extraContent = false;
-		},
-		events: {
-			"load": function () {
-				var i = 0,
-				last  = null;
-				
-				// Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
-				for(; i < this.owner.components.length; i++) {
-					if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')) {
-						last = this.owner.components[i];
-					}
-				}
-				
-				if (last !== this) {
-					this.handleChildren = false;
-				} else {
-					this.addEventListener("handle-render-addition", function (addition) {
-						var i = '';
-						
-						if (!this.extraContent) {
-							this.extraContent = {};
-						}
+            this.handleChildren = true;
+            this.extraContent = false;
+        },
+        events: {
+            "load": function () {
+                var i = 0,
+                last  = null;
+                
+                // Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
+                for(; i < this.owner.components.length; i++) {
+                    if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')) {
+                        last = this.owner.components[i];
+                    }
+                }
+                
+                if (last !== this) {
+                    this.handleChildren = false;
+                } else {
+                    this.addEventListener("handle-render-addition", function (addition) {
+                        var i = '';
+                        
+                        if (!this.extraContent) {
+                            this.extraContent = {};
+                        }
 
-						for(i in addition) {
-							this.extraContent[i] = addition[i];
-						}
-					});
-				}
-			},
-			
-			"child-entity-added": function (entity) {
-				var self = this; 
-				
-				entity.trigger('handle-render-load', {
-					element: self.element
-				});
-			},
-			"tick": function (resp) {
-				var i   = '',
-				message = {};
-				
-				if (this.handleChildren) {
-					for(i in resp) {
-						message[i] = resp[i];
-					}
-					if (this.extraContent) {
-						for(i in this.extraContent) {
-							message[i] = this.extraContent[i];
-						}
-					}
-					if (this.owner.triggerEventOnChildren) {
-						this.owner.triggerEventOnChildren('handle-render', message);
-					}
-					if (this.extraContent) {
-						for(i in this.extraContent) {
-							delete this.extraContent[i];
-							delete message[i];
-						}
-					}
-				} else {
-					this.owner.triggerEvent('handle-render-addition', message);
-				}
-			}
-		},
-		
-		methods: {
-			destroy: function () {
-				this.owner.rootElement.removeChild(this.element);
-				this.owner.element = null;
-				this.element = undefined;
-			}
-		},
-		
-		publicMethods: {
-			getElementById: function (id) {
-				var i = 0,
-				all   = this.element.getElementsByTagName('*');
+                        for(i in addition) {
+                            this.extraContent[i] = addition[i];
+                        }
+                    });
+                }
+            },
+            
+            "child-entity-added": function (entity) {
+                var self = this; 
+                
+                entity.trigger('handle-render-load', {
+                    element: self.element
+                });
+            },
+            "tick": function (resp) {
+                var i   = '',
+                message = {};
+                
+                if (this.handleChildren) {
+                    for(i in resp) {
+                        message[i] = resp[i];
+                    }
+                    if (this.extraContent) {
+                        for(i in this.extraContent) {
+                            message[i] = this.extraContent[i];
+                        }
+                    }
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('handle-render', message);
+                    }
+                    if (this.extraContent) {
+                        for(i in this.extraContent) {
+                            delete this.extraContent[i];
+                            delete message[i];
+                        }
+                    }
+                } else {
+                    this.owner.triggerEvent('handle-render-addition', message);
+                }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.owner.rootElement.removeChild(this.element);
+                this.owner.element = null;
+                this.element = undefined;
+            }
+        },
+        
+        publicMethods: {
+            getElementById: function (id) {
+                var i = 0,
+                all   = this.element.getElementsByTagName('*');
 
-				for (; i < all.length; i++) {
-				    if (all[i].getAttribute('id') === id) {
-				    	return all[i];
-				    }
-				}
-				
-				return document.getElementById(id);
-			}
-		}
-	});
+                for (; i < all.length; i++) {
+                    if (all[i].getAttribute('id') === id) {
+                        return all[i];
+                    }
+                }
+                
+                return document.getElementById(id);
+            }
+        }
+    });
 }());

@@ -7,49 +7,49 @@
  */
 
 (function () {
-	if (isJIT) {
-		print('This plugin does not support in-browser compilation.');
-		return;
-	}
+    if (isJIT) {
+        print('This plugin does not support in-browser compilation.');
+        return;
+    }
 
     var setText = function (path, text) {
-	    var file = fileSystem.CreateTextFile(path, true);
-	    file.Write(text);
-	    file.Close();
-	    return text;
+        var file = fileSystem.CreateTextFile(path, true);
+        file.Write(text);
+        file.Close();
+        return text;
     },
     clearFolder = function (path) {
-	    if (fileSystem.FolderExists(path)) {
-		    try {fileSystem.DeleteFile(path + '*.*');} catch(e) {}
-	    } else {
-	    	fileSystem.CreateFolder(path);
-	    }
+        if (fileSystem.FolderExists(path)) {
+            try {fileSystem.DeleteFile(path + '*.*');} catch(e) {}
+        } else {
+            fileSystem.CreateFolder(path);
+        }
     },
     buildGame = function (build, workingDir, buildDir) {
-	    var buildPath = '',
-	    indexPath  = '',
-	    i          = 0;
+        var buildPath = '',
+        indexPath  = '',
+        i          = 0;
 
-	    buildPath = indexPath = buildDir + build.id + '/';
-	    clearFolder(buildPath);
+        buildPath = indexPath = buildDir + build.id + '/';
+        clearFolder(buildPath);
 
-	    if (build.index === false) {
-	        buildPath += build.id + '/';
-		    clearFolder(buildPath);
-	    }
+        if (build.index === false) {
+            buildPath += build.id + '/';
+            clearFolder(buildPath);
+        }
 
-	    clearFolder(buildPath + 'j/');
-	    clearFolder(buildPath + 's/');
+        clearFolder(buildPath + 'j/');
+        clearFolder(buildPath + 's/');
 
-	    if (fileSystem.FolderExists(workingDir + 'server/')) { // if there are files that should be copied to root as-is in a /server/ folder, do so.
-	    	print('..Copying "server/" files to "' + indexPath + '".');
-			fileSystem.CopyFile(workingDir + 'server/*.*', indexPath, true);
-	    }
+        if (fileSystem.FolderExists(workingDir + 'server/')) { // if there are files that should be copied to root as-is in a /server/ folder, do so.
+            print('..Copying "server/" files to "' + indexPath + '".');
+            fileSystem.CopyFile(workingDir + 'server/*.*', indexPath, true);
+        }
 
-	    for(i = 0; i < build.files.length; i++) {
-	    	print('..Writing "' + build.files[i].name + '".');
-		    setText(build.files[i].name, build.files[i].content);
-	    }
+        for(i = 0; i < build.files.length; i++) {
+            print('..Writing "' + build.files[i].name + '".');
+            setText(build.files[i].name, build.files[i].content);
+        }
    },
    workingDir = config.toolsConfig["source-folder"] || '../game/',
    buildDir   = config.toolsConfig["destination-folder"] || '../builds/',
@@ -60,8 +60,8 @@
     print('Preparing to write files.');
     if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
     for (buildIndex in builds) {
-    	print('.Writing files for build "' + builds[buildIndex].id + '".');
-    	buildGame(builds[buildIndex], workingDir, buildDir);
-	}
+        print('.Writing files for build "' + builds[buildIndex].id + '".');
+        buildGame(builds[buildIndex], workingDir, buildDir);
+    }
     print('Completed writing files. Hurrah!');
 }());

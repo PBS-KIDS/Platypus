@@ -31,26 +31,26 @@ This component listens for specified local entity messages and re-broadcasts the
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	var broadcast = function (event) {
-		return function (value, debug) {
-			if (this.owner.parent) {
-				this.owner.parent.trigger(event, value, debug);
-			}
-		};
-	};
-	
-	return platformer.createComponentClass({
-		id: 'relay-parent',
-		
-		constructor: function (definition) {
-			// Messages that this component listens for and then broadcasts to parent.
-			if (definition.events) {
-				for(var event in definition.events) {
-					this.addEventListener(event, broadcast(definition.events[event]));
-				}
-			}
-		}
-	});
+    var broadcast = function (event) {
+        return function (value, debug) {
+            if (this.owner.parent) {
+                this.owner.parent.trigger(event, value, debug);
+            }
+        };
+    };
+    
+    return platformer.createComponentClass({
+        id: 'relay-parent',
+        
+        constructor: function (definition) {
+            // Messages that this component listens for and then broadcasts to parent.
+            if (definition.events) {
+                for(var event in definition.events) {
+                    this.addEventListener(event, broadcast(definition.events[event]));
+                }
+            }
+        }
+    });
 }());

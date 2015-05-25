@@ -56,37 +56,37 @@ This component can request that the camera focus on this entity.
 
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		id: 'camera-follow-me',
-		
-		constructor: function (definition) {
-			this.pauseGame = definition.pause?{
-				time: definition.time
-			}:null;
-			
-			this.followMeMessage = {
-				mode: this.owner.cameraMode || definition.mode || 'forward',
-				entity: this.owner,
-				top: definition.top || undefined,
-				left: definition.left || undefined,
-				offsetX: definition.offsetX || undefined,
-				offsetY: definition.offsetY || undefined,
-				width: definition.width || undefined,
-				height: definition.height || undefined,
-				time: definition.time || 0
-			};
-		},
-		
-		"events": {
-			'follow-me': function () {
-				if (this.pauseGame) {
-					this.owner.parent.trigger('pause-logic',  this.pauseGame);
-					this.owner.parent.trigger('pause-render', this.pauseGame);
-				}
-				this.owner.parent.trigger('follow', this.followMeMessage);
-			}
-		}
-	});
+    return platformer.createComponentClass({
+        id: 'camera-follow-me',
+        
+        constructor: function (definition) {
+            this.pauseGame = definition.pause?{
+                time: definition.time
+            }:null;
+            
+            this.followMeMessage = {
+                mode: this.owner.cameraMode || definition.mode || 'forward',
+                entity: this.owner,
+                top: definition.top || undefined,
+                left: definition.left || undefined,
+                offsetX: definition.offsetX || undefined,
+                offsetY: definition.offsetY || undefined,
+                width: definition.width || undefined,
+                height: definition.height || undefined,
+                time: definition.time || 0
+            };
+        },
+        
+        "events": {
+            'follow-me': function () {
+                if (this.pauseGame) {
+                    this.owner.parent.trigger('pause-logic',  this.pauseGame);
+                    this.owner.parent.trigger('pause-render', this.pauseGame);
+                }
+                this.owner.parent.trigger('follow', this.followMeMessage);
+            }
+        }
+    });
 }());

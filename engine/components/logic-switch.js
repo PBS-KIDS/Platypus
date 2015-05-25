@@ -25,50 +25,50 @@ This component serves as a switch in the game world, typically tied to collision
     }
 */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		
-		id: 'logic-switch',
-		
-		constructor: function (definition) {
-			this.state = this.owner.state;
-			this.pressed = false;
-			this.wasPressed = this.pressed;
-			this.sticky = definition.sticky || false;
-			this.state.pressed = false;
-			this.initialPress = true;
-		},
+    return platformer.createComponentClass({
+        
+        id: 'logic-switch',
+        
+        constructor: function (definition) {
+            this.state = this.owner.state;
+            this.pressed = false;
+            this.wasPressed = this.pressed;
+            this.sticky = definition.sticky || false;
+            this.state.pressed = false;
+            this.initialPress = true;
+        },
 
-		events: {// These are messages that this component listens for
-			'handle-logic': function () {
-				if (this.sticky) {
-					if (this.pressed && !this.wasPressed) {
-						this.state.pressed = true;
-						this.wasPressed = true;
-						this.owner.trigger('switch-on');
-					}
-				} else {
-					if (this.pressed != this.wasPressed) {
-						if (this.pressed) {	
-							this.state.pressed = true;
-							this.owner.trigger('switch-on');
-						} else {
-							this.state.pressed = false;
-							this.owner.trigger('switch-off');
-						}
-					}
-					this.wasPressed = this.pressed;
-					this.pressed = false;
-				}
-			},
-			'switch-pressed': function () {
-				this.pressed = true; 
-				if (this.initialPress) {
-					this.owner.trigger('initial-press');
-					this.initialPress = false;
-				}
-			}
-		}		
-	});
+        events: {// These are messages that this component listens for
+            'handle-logic': function () {
+                if (this.sticky) {
+                    if (this.pressed && !this.wasPressed) {
+                        this.state.pressed = true;
+                        this.wasPressed = true;
+                        this.owner.trigger('switch-on');
+                    }
+                } else {
+                    if (this.pressed != this.wasPressed) {
+                        if (this.pressed) {    
+                            this.state.pressed = true;
+                            this.owner.trigger('switch-on');
+                        } else {
+                            this.state.pressed = false;
+                            this.owner.trigger('switch-off');
+                        }
+                    }
+                    this.wasPressed = this.pressed;
+                    this.pressed = false;
+                }
+            },
+            'switch-pressed': function () {
+                this.pressed = true; 
+                if (this.initialPress) {
+                    this.owner.trigger('initial-press');
+                    this.initialPress = false;
+                }
+            }
+        }        
+    });
 }());
