@@ -318,7 +318,6 @@
                             index = 0,
                             x = 0,
                             y = 0,
-                            z = 0,
                             data = layer.data;
 
                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
@@ -335,7 +334,7 @@
                                 data      = [];
                                 for (x = 0; x < newWidth; x++) {
                                     for (y = 0; y < newHeight; y++) {
-                                        data[x + y * newWidth] = data[x + y * width];
+                                        data[x + y * newWidth] = layer.data[x + y * width];
                                     }
                                 }
                                 width  = newWidth;
