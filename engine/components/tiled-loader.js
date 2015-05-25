@@ -398,7 +398,7 @@
                         }
                         self.layerZ += self.layerIncrement;
 
-                        if ((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth)) {
+                        if ((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
                             combineRenderLayer.trigger('add-tiles', renderTiles);
                             return combineRenderLayer;
                         } else {
