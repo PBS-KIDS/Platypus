@@ -55,13 +55,13 @@ This component can request that the camera focus on this entity.
     }
 
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'camera-follow-me',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.pauseGame = definition.pause?{
 				time: definition.time
 			}:null;
@@ -80,8 +80,8 @@ This component can request that the camera focus on this entity.
 		},
 		
 		"events": {
-			'follow-me': function(){
-				if(this.pauseGame){
+			'follow-me': function () {
+				if (this.pauseGame) {
 					this.owner.parent.trigger('pause-logic',  this.pauseGame);
 					this.owner.parent.trigger('pause-render', this.pauseGame);
 				}
@@ -89,4 +89,4 @@ This component can request that the camera focus on this entity.
 			}
 		}
 	});
-})();
+}());

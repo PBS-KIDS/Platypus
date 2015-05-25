@@ -30,12 +30,12 @@ This component listens for specified local entity messages and re-broadcasts the
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var broadcast = function(event){
-		return function(value, debug){
-			if(this.owner.parent) {
+	var broadcast = function (event) {
+		return function (value, debug) {
+			if (this.owner.parent) {
 				this.owner.parent.trigger(event, value, debug);
 			}
 		};
@@ -44,13 +44,13 @@ This component listens for specified local entity messages and re-broadcasts the
 	return platformer.createComponentClass({
 		id: 'relay-parent',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			// Messages that this component listens for and then broadcasts to parent.
-			if(definition.events){
-				for(var event in definition.events){
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, broadcast(definition.events[event]));
 				}
 			}
 		}
 	});
-})();
+}());

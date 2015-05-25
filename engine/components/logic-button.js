@@ -30,34 +30,34 @@ This component handles the pressed/released state of a button according to input
       // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-button',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.state = this.owner.state;
 			this.state.released = true;
 			this.state.pressed  = false;
 			this.stateChange = '';
 			this.toggle = !!definition.toggle;
 
-			if(definition.state === 'pressed'){
+			if (definition.state === 'pressed') {
 				this.stateChange = 'pressed';
 			}
 		},
 		events:{
-			"mousedown": function(){
-				if(!this.toggle){
+			"mousedown": function () {
+				if (!this.toggle) {
 					this.stateChange = 'pressed';
 				}
 			},
-			"pressed": function(){
+			"pressed": function () {
 				this.stateChange = 'pressed';
 			},
-			"pressup": function(){
-				if(this.toggle){
-					if(this.state.pressed){
+			"pressup": function () {
+				if (this.toggle) {
+					if (this.state.pressed) {
 						this.owner.triggerEvent('released');
 					} else {
 						this.owner.triggerEvent('pressed');
@@ -66,9 +66,9 @@ This component handles the pressed/released state of a button according to input
 					this.owner.triggerEvent('released');
 				}
 			},
-			"mouseup": function(){
-				if(this.toggle){
-					if(this.state.pressed){
+			"mouseup": function () {
+				if (this.toggle) {
+					if (this.state.pressed) {
 						this.owner.triggerEvent('released');
 					} else {
 						this.owner.triggerEvent('pressed');
@@ -77,16 +77,16 @@ This component handles the pressed/released state of a button according to input
 					this.owner.triggerEvent('released');
 				}
 			},
-			"released": function(){
+			"released": function () {
 				this.stateChange = 'released';
 			},
-			"handle-logic": function(resp){
-				if(this.state.released && (this.stateChange === 'pressed')){
+			"handle-logic": function (resp) {
+				if (this.state.released && (this.stateChange === 'pressed')) {
 					this.stateChange = '';
 					this.state.pressed = true;
 					this.state.released = false;
 				}
-				if(this.state.pressed && (this.stateChange === 'released')){
+				if (this.state.pressed && (this.stateChange === 'released')) {
 					this.stateChange = '';
 					this.state.pressed = false;
 					this.state.released = true;
@@ -94,4 +94,4 @@ This component handles the pressed/released state of a button according to input
 			}
 		}
 	});
-})();
+}());

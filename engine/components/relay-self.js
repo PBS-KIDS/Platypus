@@ -29,11 +29,11 @@ This component listens for specified local entity messages and re-broadcasts the
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var broadcast = function(event){
-		return function(value, debug){
+	var broadcast = function (event) {
+		return function (value, debug) {
 			this.owner.trigger(event, value, debug);
 		};
 	};
@@ -41,13 +41,13 @@ This component listens for specified local entity messages and re-broadcasts the
 	return platformer.createComponentClass({
 		id: 'relay-self',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			// Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
-			if(definition.events){
-				for(var event in definition.events){
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, broadcast(definition.events[event]));
 				}
 			}
 		}
 	});
-})();
+}());

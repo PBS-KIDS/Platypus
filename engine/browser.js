@@ -5,7 +5,7 @@ Browser.js is one large function that is used to discover what browser is being 
 All of this information is added to platformer.settings.supports and used throughout the code, including when determining which layers to display (e.g. adding a button layer for mobile devices), and in audio so that we load and play the correct sound types.
 * 
 */
-(function(){
+(function () {
 	"use strict";
 	
 	var uagent   = navigator.userAgent.toLowerCase(),
@@ -53,9 +53,9 @@ All of this information is added to platformer.settings.supports and used throug
 	supports.audioAPI = !supports.iOS || (!supports.iPad2 && !supports.iPhone4);
 	
 	//Determine multitouch:
-	if(supports.touch){
-		if (supports.android){
-			if(parseInt(uagent.slice(uagent.indexOf("android") + 8)) > 2){
+	if (supports.touch) {
+		if (supports.android) {
+			if (parseInt(uagent.slice(uagent.indexOf("android") + 8)) > 2) {
 				supports.multitouch = true;
 			}
 		} else {
@@ -64,9 +64,9 @@ All of this information is added to platformer.settings.supports and used throug
 	}
 	
 	// Determine audio support
-	if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"'))){
+	if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"'))) {
 	    supports.ogg = false;
-	    if(supports.ie || !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mp4'))){
+	    if (supports.ie || !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mp4'))) {
 	    	supports.m4a = false; //make IE use mp3's since it doesn't like the version of m4a made for mobiles
 	    }
 	}
@@ -82,38 +82,38 @@ All of this information is added to platformer.settings.supports and used throug
 
 	//replace settings aspects build array with actual support of aspects
 	platformer.settings.manifest = {};
-	for (i in aspects){
+	for (i in aspects) {
 		foundAspect = false;
 		listAspects = '';
-		for (j in aspects[i]){
+		for (j in aspects[i]) {
 			listAspects += ' ' + j;
-			if (uagent.search(j) > -1){
+			if (uagent.search(j) > -1) {
 				foundAspect = aspects[i][j];
 				break;
 			}
 		}
-		if(!foundAspect){
+		if (!foundAspect) {
 			console.warn('This browser doesn\'t support any of the following: ' + listAspects);
 		} else {
-			for (j in aspects[i]){
+			for (j in aspects[i]) {
 				platformer.settings.manifest[aspects[i][j]] = foundAspect;
 			}
 		}
 	}
 
 	// Handle audio loading on distinct browsers.
-	if(window.createjs && createjs.Sound){
+	if (window.createjs && createjs.Sound) {
 
 		// Allow iOS 5- to play HTML5 audio. (Otherwise there is no audio support for iOS 5-.)
-		if(createjs.HTMLAudioPlugin){
+		if (createjs.HTMLAudioPlugin) {
 			createjs.HTMLAudioPlugin.enableIOS = true;
 		}
 		
-		if(!supports.audioAPI){ // older versions of iOS Safari seem to crash when loading large audio files unless we go this route.
+		if (!supports.audioAPI) { // older versions of iOS Safari seem to crash when loading large audio files unless we go this route.
 			createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
 			//hijacking asset list: //TODO: add time to end of clips here.
 			
-		} else if(supports.ie){ // HTML5 audio in IE is not performing well, so we use Flash if it's available.
+		} else if (supports.ie) { // HTML5 audio in IE is not performing well, so we use Flash if it's available.
 			createjs.FlashPlugin.swfPath = "./";
 			createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.HTMLAudioPlugin]);
 		} else {
@@ -125,4 +125,4 @@ All of this information is added to platformer.settings.supports and used throug
 	
 	platformer.settings.supports = supports;
 
-})();
+}());

@@ -28,14 +28,14 @@ This component changes the (x, y) position of an object according to its speed a
       // Optional. Position in the cycle that the movement should begin. Defaults in the middle at 0; PI/2 and -PI/2 will put you at the extremes.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		
 		id: 'logic-pacing-platform',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.ang		      = this.owner.angle 	 || definition.angle 	|| 0; //PI/2 makes it go down first
 			this.dist			  = this.owner.distance || definition.distance || 128; //Distance in pixels
 			this.period			  = this.owner.period	|| definition.period 	|| 4000;
@@ -47,7 +47,7 @@ This component changes the (x, y) position of an object according to its speed a
 		},
 
 		events: {// These are messages that this component listens for
-			'handle-logic': function (update){
+			'handle-logic': function (update) {
 				var delta = update.delta;
 				
 				this.time += delta;
@@ -61,4 +61,4 @@ This component changes the (x, y) position of an object according to its speed a
 			}
 		}
 	});
-})();
+}());

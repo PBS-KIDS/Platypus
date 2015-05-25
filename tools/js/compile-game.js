@@ -35,11 +35,11 @@ include = null,
 isJIT = false;
 
 if (typeof window === 'undefined') { // Outside the browser, use Rhino or ActiveX for file manipulation.
-    include = function(path){
+    include = function (path) {
 		var file = undefined,
 		line     = '',
 		text     = '';
-		if (typeof ActiveXObject != 'undefined'){
+		if (typeof ActiveXObject != 'undefined') {
 			file = new ActiveXObject("Scripting.FileSystemObject").OpenTextFile(path);
 			text = file.ReadAll();
 			file.Close();
@@ -55,15 +55,15 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 	include('js/file-io.js');  // Including support for either ActiveX or Rhino file and shell support.
 	include('js/json2.js');    // Including json2.js to support JSON if it doesn't exist.
 
-	var alert  = function(val){print(val);},
-    getText    = function(path){
+	var alert  = function (val) {print(val);},
+    getText    = function (path) {
  	   var file = undefined,
  	   text     = '';
  	   try {
  		   file = fileSystem.OpenTextFile(path);
  		   try {
  			   text = file.ReadAll();
- 		   } catch(e){
+ 		   } catch(e) {
  			   alert('Error reading from "' + path + '": ' + e.description);
  		   }
  		   file.Close();
@@ -76,15 +76,15 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 	isJIT = true;
 	
 	window.platformer = {};
-	window.include = function(path){loadJS.push(path);};
-	window.print   = function(txt){console.log(txt);};
-	window.alert   = function(txt){console.error(txt);};
-	window.getText = function(path){
+	window.include = function (path) {loadJS.push(path);};
+	window.print   = function (txt) {console.log(txt);};
+	window.alert   = function (txt) {console.error(txt);};
+	window.getText = function (path) {
 		var xhr = new XMLHttpRequest();
 		
 		xhr.open('GET', path, false);
 		xhr.send();
-		if(xhr.status === 200){
+		if (xhr.status === 200) {
 			return xhr.responseText;
 		} else {
 			   alert('Error opening "' + path + '": ' + xhr.description);
@@ -96,8 +96,8 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
  * Compile JSON files into a single configuration file
  */
 
-(function(){
-    var engineComponent = (function(){
+(function () {
+    var engineComponent = (function () {
     	// This is a list of all the components in the engine. This list must be updated as new components are added.
     	var components = ["asset-loader"
    	                  , "audio"
@@ -177,18 +177,18 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
    	                  , "xhr"
    	                  , "ai-chaser"
    	                  , "ai-pacer"];
-   	return function(id){
+   	return function (id) {
    		var i = 0;
    		
-   		for (; i < components.length; i++){
-   			if(components[i] === id){
+   		for (; i < components.length; i++) {
+   			if (components[i] === id) {
        			return true;    			
    			}
    		}
    		return false;
        };
-    })(),
-    csvToArray = function( strData, strDelimiter ){
+    }()),
+    csvToArray = function ( strData, strDelimiter ) {
 	    // ref: http://stackoverflow.com/a/1293163/2343
 	    // This will parse a delimited string into an array of
 	    // arrays. The default delimiter is the comma, but this
@@ -202,13 +202,13 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
             ), "gi");
         var arrData = [[]];
         var arrMatches = null;
-        while (arrMatches = objPattern.exec( strData )){
+        while (arrMatches = objPattern.exec( strData )) {
             var strMatchedDelimiter = arrMatches[ 1 ];
-            if (strMatchedDelimiter.length && strMatchedDelimiter !== strDelimiter){
+            if (strMatchedDelimiter.length && strMatchedDelimiter !== strDelimiter) {
                 arrData.push( [] );
             }
             var strMatchedValue;
-            if (arrMatches[ 2 ]){
+            if (arrMatches[ 2 ]) {
                 strMatchedValue = arrMatches[ 2 ].replace(new RegExp( "\"\"", "g" ), "\"");
             } else {
                 strMatchedValue = arrMatches[ 3 ];
@@ -217,7 +217,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
         }
         return( arrData );
     },
-    getJSON = function(path){
+    getJSON = function (path) {
 	    try{
 		    return eval('(' + getText(path) + ')'); //Using "eval" to allow comments in JSON definition files
 	    } catch(e) {
@@ -225,8 +225,8 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 		    return {};
 	    }
     },
-   setText    = function(path, text){
-	   if(isJIT){
+   setText    = function (path, text) {
+	   if (isJIT) {
 		   return text;
 	   }
 	   
@@ -235,26 +235,26 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 	   file.Close();
 	   return text;
    },
-   setJSON    = function(path, obj){return setText(path, JSON.stringify(obj));},
-   getSubDir  = function (path){
+   setJSON    = function (path, obj) {return setText(path, JSON.stringify(obj));},
+   getSubDir  = function (path) {
 	   var arr = undefined, subDir = '';
-	   if(path.indexOf('/') > -1){
+	   if (path.indexOf('/') > -1) {
 		   arr = path.split('/');
-		   for (var i = 0; i < arr.length - 1; i++){
+		   for (var i = 0; i < arr.length - 1; i++) {
 			   subDir += arr[i] + '/'; 
 		   }
 	   }
 	   return subDir;
    },
-   fixUpPath  = function(path) {
+   fixUpPath  = function (path) {
 	   var arr = undefined, preArr = [], postArr = [];
-	   if(path.indexOf('/') > -1){
+	   if (path.indexOf('/') > -1) {
 		   arr = path.split('/');
 		   postArr = arr.slice();
 		   postArr.splice(0,1);
-		   for (var i = 1; i < arr.length; i++){
+		   for (var i = 1; i < arr.length; i++) {
 			   postArr.splice(0,1);
-			   if((arr[i] === '..') && (arr[i - 1] !== '..')){
+			   if ((arr[i] === '..') && (arr[i - 1] !== '..')) {
 				   return fixUpPath(preArr.join('/') + '/' + postArr.join('/'));
 			   } else {
 				   preArr.push(arr[i - 1]);
@@ -264,28 +264,28 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 	    }
 	    return path;
    },
-   isJSON     = function(path){
+   isJSON     = function (path) {
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === 'json');
    },
-   isJS       = function(path){
+   isJS       = function (path) {
 	   var check = path.substring(path.length - 3).toLowerCase();
 	   return (check === '.js');
    },
-   checkComponent = function(component){
+   checkComponent = function (component) {
    	   var j   = 0,
  	   found   = false,
  	   file    = null;
     	
-	   if(component){
-		   for(j = 0; j < componentList.length; j++){
-			   if((component === componentList[j]) || (component === componentList[j].id)){
+	   if (component) {
+		   for(j = 0; j < componentList.length; j++) {
+			   if ((component === componentList[j]) || (component === componentList[j].id)) {
 				   found = true;
 				   break;
 			   }
 		   }
-		   if(!found){
-			   if(engineComponent(component)){
+		   if (!found) {
+			   if (engineComponent(component)) {
 				   file = {
 				       id: component,
 				       src: '../engine/components/' + component + '.js'
@@ -303,21 +303,21 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 		   }
 	   }
     },
-    checkComponents = function(components){
-  	   for(var i = 0; i < components.length; i++){
+    checkComponents = function (components) {
+  	   for(var i = 0; i < components.length; i++) {
   		   
 		   checkComponent(components[i].type);
 		   
-		   if(components[i].entities){ // check these entities for components
-			   for(var j = 0; j < components[i].entities.length; j++){
-				   if(components[i].entities[j].components){
+		   if (components[i].entities) { // check these entities for components
+			   for(var j = 0; j < components[i].entities.length; j++) {
+				   if (components[i].entities[j].components) {
 					   checkComponents(components[i].entities[j].components);
 				   }
 			   }
 		   }
 	   }
     },
-    checkDependencies = function(asset){
+    checkDependencies = function (asset) {
   	   var i   = 0,
   	   j       = 0,
   	   text    = '',
@@ -327,33 +327,33 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
   	   file    = '',
   	   arr     = null;
   	   
-  	   if(typeof asset === 'string'){ //JS File
-  		   if(asset.substring(0,4).toLowerCase() !== 'http'){
+  	   if (typeof asset === 'string') { //JS File
+  		   if (asset.substring(0,4).toLowerCase() !== 'http') {
   	 		   subDir = getSubDir(asset);
   	 		   text = getText(asset);
   	 		   matches = text.match(/[Rr]equires:\s*\[[\w"'.\\\/, \-_:]*\]/g);
-  	 		   if(matches && matches.length){
+  	 		   if (matches && matches.length) {
   	 			   try {
   	 				   arr = JSON.parse(matches[0].match(/\[[\w"'.\\\/, \-_:]*\]/g)[0]);
   	 			   } catch(e) {
   	 				   alert("Error in '" + asset + "': Dependency list is malformed.");
   	 				   return;
   	 			   }
-  	 	 		   if(isJS(arr[i])){ // Is this a JavaScript path name?
-  	 	 			   for(i = 0; i < arr.length; i++){
+  	 	 		   if (isJS(arr[i])) { // Is this a JavaScript path name?
+  	 	 			   for(i = 0; i < arr.length; i++) {
   	 	 				   found = false;
-  	 	 				   if(arr[i].substring(0,4).toLowerCase() === 'http'){
+  	 	 				   if (arr[i].substring(0,4).toLowerCase() === 'http') {
   	 	 					   file = arr[i];
   	 	 				   } else {
   	 	 	 				   file = fixUpPath(subDir + arr[i]);
   	 	 				   }
-  	 	 				   for(j = 0; j < dependencyList.length; j++){
-  	 	 					   if((file === dependencyList[j]) || (file === dependencyList[j].src)){
+  	 	 				   for(j = 0; j < dependencyList.length; j++) {
+  	 	 					   if ((file === dependencyList[j]) || (file === dependencyList[j].src)) {
   	 	 						   found = true;
   	 	 						   break;
   	 	 					   }
   	 	 				   }
-  	 	 				   if(!found){
+  	 	 				   if (!found) {
   	 	 					   dependencyList.push(file);
   	 	 					   checkDependencies(file);
   	 	 				   }
@@ -363,81 +363,81 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
   	 	 		   }
   	 		   }
   		   }
-  	   } else if (asset){ //should be a JSON object
-  		   if(asset.components){
+  	   } else if (asset) { //should be a JSON object
+  		   if (asset.components) {
   			   checkComponents(asset.components);
-  		   } else if(asset.layers){
-  			   for (var i = 0; i < asset.layers.length; i++){
-  				   if(asset.layers[i].components){
+  		   } else if (asset.layers) {
+  			   for (var i = 0; i < asset.layers.length; i++) {
+  				   if (asset.layers[i].components) {
   		 			   checkComponents(asset.layers[i].components);
   				   }
   			   }
   		   }
   	   }
      },
-   handleList = function(section, sectionId, workingDir){
+   handleList = function (section, sectionId, workingDir) {
 	    var subDir     = '',
 	    asset      = undefined,
 	    assetId    = 0,
 	    retainId   = '',
 	    srcId      = '';
 
-	    for (; assetId < section.length; assetId++){
+	    for (; assetId < section.length; assetId++) {
 	    	asset = section[assetId];
 		    try {
-		    	if(typeof asset === 'string'){
-		    		if(asset.substring(0,4).toLowerCase() !== 'http'){
-			    		if(isJSON(asset)){
+		    	if (typeof asset === 'string') {
+		    		if (asset.substring(0,4).toLowerCase() !== 'http') {
+			    		if (isJSON(asset)) {
 			    			print('....Filling in data for "' + asset + '"');
 			    			retainId = asset;
 						    subDir = workingDir + getSubDir(asset);
 						    asset  = getJSON(workingDir + asset);
 		    				checkDependencies(asset);
-						    if(asset.tilesets){
-		 				    	for (var ts in asset.tilesets){
-								    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
+						    if (asset.tilesets) {
+		 				    	for (var ts in asset.tilesets) {
+								    if (asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
 							    }
 		 				    }
 		 				    asset.id = asset.id || retainId;
 			    		} else {
 		    			    asset = {src: fixUpPath(workingDir + asset), id: asset};
-			    			if(isJS(asset.src)){
+			    			if (isJS(asset.src)) {
 			    				checkDependencies(asset.src);
 			    			}
 			    		}
 		    		} else {
 		    			asset = {src: asset, id: asset};
 		    		}
-		    	} else if(asset.src){
-			    	if(typeof asset.src === 'string'){
-			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
-				    		if(isJSON(asset.src)){
+		    	} else if (asset.src) {
+			    	if (typeof asset.src === 'string') {
+			    		if (asset.src.substring(0,4).toLowerCase() !== 'http') {
+				    		if (isJSON(asset.src)) {
 				    			print('....Filling in data for "' + asset.id + '" from "' + asset.src + '"');
 				    			retainId = asset.id;
 							    subDir = workingDir + getSubDir(asset.src);
 							    asset  = getJSON(workingDir + asset.src);
 			    				checkDependencies(asset);
-							    if(asset.tilesets){
-			 				    	for (var ts in asset.tilesets){
-									    if(asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
+							    if (asset.tilesets) {
+			 				    	for (var ts in asset.tilesets) {
+									    if (asset.tilesets[ts].image) asset.tilesets[ts].image = fixUpPath(subDir + asset.tilesets[ts].image);
 								    }
 			 				    }
 			 				    asset.id = asset.id || retainId;
 				    		} else {
 			    			    asset.src = fixUpPath(workingDir + asset.src);
-				    			if(isJS(asset.src)){
+				    			if (isJS(asset.src)) {
 				    				checkDependencies(asset.src);
 				    			}
 				    		}
 			    		}
 			    	} else {
-			    		for(srcId in asset.src){
-					    	if((typeof asset.src[srcId]) == 'string'){
-					    		if(asset.src[srcId].substring(0,4).toLowerCase() !== 'http'){
+			    		for(srcId in asset.src) {
+					    	if ((typeof asset.src[srcId]) == 'string') {
+					    		if (asset.src[srcId].substring(0,4).toLowerCase() !== 'http') {
 				    			    asset.src[srcId] = fixUpPath(workingDir + asset.src[srcId]);
 					    		}
 					    	} else {
-					    		if(asset.src[srcId].src.substring(0,4).toLowerCase() !== 'http'){
+					    		if (asset.src[srcId].src.substring(0,4).toLowerCase() !== 'http') {
 				    			    asset.src[srcId].src = fixUpPath(workingDir + asset.src[srcId].src);
 					    		}
 					    	}
@@ -445,13 +445,13 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 			    	}
 
 			    	// Pull in json-based asset data stored separately
-			    	if(asset.data && (typeof asset.data === 'string') && isJSON(asset.data)){
+			    	if (asset.data && (typeof asset.data === 'string') && isJSON(asset.data)) {
 		    			print('.....Filling in data for "' + asset.id + '"');
 					    asset.data = getJSON(workingDir + asset.data);
 		    		}
 
 			    	// Pull in json-based CreateJS spritesheets
-			    	if(asset.data && asset.data.spritesheet && (typeof asset.data.spritesheet === 'string') && isJSON(asset.data.spritesheet)){
+			    	if (asset.data && asset.data.spritesheet && (typeof asset.data.spritesheet === 'string') && isJSON(asset.data.spritesheet)) {
 		    			print('.....Filling in spritesheet data for "' + asset.id + '"');
 					    asset.data.spritesheet = getJSON(workingDir + asset.data.spritesheet);
 					    asset.data.spritesheet.images = [asset.id];
@@ -463,7 +463,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 		    }
 	    }
    },
-    incrementGameVersion = function(buildDir){
+    incrementGameVersion = function (buildDir) {
 	    var v = null,
 	    arr   = null;
 	    
@@ -473,7 +473,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 		    v = {};
 	    }
 	    
-	    if(!v.version){
+	    if (!v.version) {
 	    	v.version = "0.0.1";
 	    } else {
 		    arr = v.version.split('.');
@@ -482,10 +482,10 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 	    	arr[2] = parseInt(arr[2] || 0);
 	    	
 	    	arr[2] += 1;
-	    	if(arr[2] === 10){
+	    	if (arr[2] === 10) {
 	    		arr[2] = 0;
 		    	arr[1] += 1;
-		    	if(arr[1] === 10){
+		    	if (arr[1] === 10) {
 		    		arr[1] = 0;
 			    	arr[0] += 1;
 		    	}
@@ -514,7 +514,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
     build      = null,
     version    = null;
     
-    if(isJIT){
+    if (isJIT) {
         game.version    = 'debug';
     } else {
     	version = incrementGameVersion(buildDir);
@@ -526,10 +526,10 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
     print('--- BUILD VERSION ' + game.version + ' ---');
     print('Composing game from ' + workingDir + 'config.json.');
     
-    for(sectionId in source){
-    	if((sectionId !== 'includes') && (sectionId !== 'components')){
+    for(sectionId in source) {
+    	if ((sectionId !== 'includes') && (sectionId !== 'components')) {
         	print('..Handling "' + sectionId + '" section.');
-        	if(typeof source[sectionId] === 'string'){
+        	if (typeof source[sectionId] === 'string') {
         		source[sectionId] = getJSON(workingDir + source[sectionId]);
         	}
         	
@@ -543,7 +543,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
    
     game.toolsConfig = compConfig || {}; //save compile information for compilation tools that use this configuration.
 
-    if(game.languages){
+    if (game.languages) {
         print('..Loading language reference.');
         
         try {
@@ -555,10 +555,10 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
         }
     }
     
-    if(isJIT){
+    if (isJIT) {
         // Create single build for testing.
-    	for (buildIndex in builds){
-        	if(builds[buildIndex].id === 'debug'){
+    	for (buildIndex in builds) {
+        	if (builds[buildIndex].id === 'debug') {
         		build = builds[buildIndex];
         		break;
         	}
@@ -566,7 +566,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
         build = build || {id: 'debug', debug: true, index: true};
         game.builds = [build];
     } else {
-        for (buildIndex in builds){
+        for (buildIndex in builds) {
         	build = builds[buildIndex];
 
         	print('..Copying templates for build "' + build.id + '".');
@@ -580,12 +580,12 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
     
 	config = game;
 	
-	if(isJIT){
-		for(var k = 0; k < plugins.length; k++){
+	if (isJIT) {
+		for(var k = 0; k < plugins.length; k++) {
 	    	include('../tools/' + plugins[k]);
 	    }
 	} else {
-		for(var k = 0; k < plugins.length; k++){
+		for(var k = 0; k < plugins.length; k++) {
 	    	print(' ');
 	    	print('--- BEGIN PLUGIN "' + plugins[k] + '" ---');
 	    	include(plugins[k]);
@@ -595,4 +595,4 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
 	}
     
     print('Completed full config.json.');
-})();
+}());

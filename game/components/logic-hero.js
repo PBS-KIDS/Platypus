@@ -1,10 +1,10 @@
-(function(){
+(function () {
 
 	return platformer.createComponentClass({
 
 		id: "logic-hero",
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var state = this.state = this.owner.state;
 			state.swing = false;
 			state.swingHit = false;
@@ -16,7 +16,7 @@
 		},
 		
 		events:{
-			"handle-logic": function(){			
+			"handle-logic": function () {			
 			},
 			
 			"portal-waiting": function (portal) {
@@ -25,4 +25,4 @@
 
 		}
 	});
-})();
+}());

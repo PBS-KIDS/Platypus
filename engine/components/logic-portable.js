@@ -29,12 +29,12 @@ This component allows this entity to be carried by other entities with which it 
       // This is an object specifying the directions that this portable entity can be carried on. Default is {down:true}, but "up", "down", "left", and/or "right" can be specified as object properties set to `true`.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-portable',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.portableDirections = definition.portableDirections || {
 				down: true //default is false, 'true' means as soon as carrier is connected downward
 			};
@@ -45,10 +45,10 @@ This component allows this entity to be carried by other entities with which it 
 	        };
 		},
 		events:{
-			"handle-logic": function(resp){
-				if(this.carrierConnected){
-					if(this.carrier != this.lastCarrier){
-						if(this.lastCarrier){
+			"handle-logic": function (resp) {
+				if (this.carrierConnected) {
+					if (this.carrier != this.lastCarrier) {
+						if (this.lastCarrier) {
 							this.lastCarrier.trigger('release-me', this.message);
 						}
 						this.carrier.trigger('carry-me', this.message);
@@ -56,30 +56,30 @@ This component allows this entity to be carried by other entities with which it 
 					
 					this.carrierConnected = false;
 				} else {
-					if(this.carrier){
+					if (this.carrier) {
 						this.carrier.trigger('release-me', this.message);
 						this.carrier = undefined;
 					}
 				}
 				this.lastCarrier = this.carrier;
 			},
-			"hit-solid": function(collisionInfo){
-				if(collisionInfo.y > 0){
+			"hit-solid": function (collisionInfo) {
+				if (collisionInfo.y > 0) {
 					this.updateCarrier(collisionInfo.entity, 'down');
-				} else if(collisionInfo.y < 0){
+				} else if (collisionInfo.y < 0) {
 					this.updateCarrier(collisionInfo.entity, 'up');
-				} else if(collisionInfo.x < 0){
+				} else if (collisionInfo.x < 0) {
 					this.updateCarrier(collisionInfo.entity, 'left');
-				} else if(collisionInfo.x > 0){
+				} else if (collisionInfo.x > 0) {
 					this.updateCarrier(collisionInfo.entity, 'right');
 				}
 			}
 		},
 		methods: {
-			updateCarrier: function(entity, direction){
-				if(this.portableDirections[direction]){
-					if(entity){
-						if (entity !== this.carrier){
+			updateCarrier: function (entity, direction) {
+				if (this.portableDirections[direction]) {
+					if (entity) {
+						if (entity !== this.carrier) {
 							this.carrier = entity;
 						}
 						this.carrierConnected = true;
@@ -88,4 +88,4 @@ This component allows this entity to be carried by other entities with which it 
 			}
 		}
 	});
-})();
+}());

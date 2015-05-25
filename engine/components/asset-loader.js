@@ -48,14 +48,15 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 [link1]: http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html
 
 */
-/* global createjs */
-(function(){
+/*global createjs */
+/*global platformer */
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'asset-loader',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.useXHR = (definition.useXHR !== false);
 			
 			this.assets = definition.assets || platformer.game.settings.assets;
@@ -75,25 +76,25 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		},
 
 		events: {// These are messages that this component listens for
-		    "load": function(){
-		    	if(this.automatic){
+		    "load": function () {
+		    	if (this.automatic) {
 		    		this.owner.triggerEvent('load-assets');
 		    	}
 		    },
 		    
-		    "load-assets": function(){
+		    "load-assets": function () {
 		    	var i = '',
 		    	self = this,
-		    	checkPush = function(asset, list){
+		    	checkPush = function (asset, list) {
 		    		var i = 0,
 		    		found = false;
-		    		for(i in list){
-		    			if(list[i].id === asset.id){
+		    		for(i in list) {
+		    			if (list[i].id === asset.id) {
 		    				found = true;
 		    				break;
 		    			}
 		    		}
-		    		if(!found){
+		    		if (!found) {
 		    			list.push(asset);
 		    		}
 		    	},
@@ -102,7 +103,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	optimizeImages = platformer.game.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
 		    	scale = platformer.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages):1,
 //		    	scale = platformer.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
-		    	scaleImage = function(img, columns, rows){
+		    	scaleImage = function (img, columns, rows) {
 		    		var r          = rows    || 1,
 		    		c              = columns || 1,
 		    		imgWidth       = Math.ceil((img.width  / c) * scale) * c,
@@ -121,9 +122,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    		data     = item.data,
 		    		result   = event.result;
 		    		
-		    		if(event.item.type == "image"){
-		    			if(optimizeImages && (scale !== 1)){
-		    				if(data){
+		    		if (event.item.type == "image") {
+		    			if (optimizeImages && (scale !== 1)) {
+		    				if (data) {
 		    					result = scaleImage(result, data.columns, data.rows);
 		    				} else {
 		    					result = scaleImage(result);
@@ -135,19 +136,19 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    		
 		    		self.message.progress += 1;
 		    		self.message.fraction = self.message.progress/self.message.total;
-		    		if(self.message.progress === self.message.total){
+		    		if (self.message.progress === self.message.total) {
 		    			self.message.complete = true;
 		    		}
 	    			self.owner.trigger('fileload', self.message);
 		    	},
-		    	forceTypeForManifest = function(asset){
+		    	forceTypeForManifest = function (asset) {
 		    		var ext  = '',
 		    		newSrc   = null,
 		    		manifest = platformer.game.settings.manifest;
-	    			if(manifest){
+	    			if (manifest) {
 		    			newSrc = asset.src.split('.');
 		    			ext    = newSrc[newSrc.length - 1];
-	    				if(manifest[ext] && (manifest[ext] !== ext)){
+	    				if (manifest[ext] && (manifest[ext] !== ext)) {
 		    				newSrc[newSrc.length - 1] = manifest[ext];
 		    				asset.src = newSrc.join('.');
 	    				}
@@ -157,26 +158,26 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	
 		    	loader.addEventListener('fileload', fileloadfunc);
 		    	
-		    	loader.addEventListener('error', function(event){
-		    	    if(event.item && !event.error) { //Handles this PreloadJS bug: https://github.com/CreateJS/PreloadJS/issues/46
+		    	loader.addEventListener('error', function (event) {
+		    	    if (event.item && !event.error) { //Handles this PreloadJS bug: https://github.com/CreateJS/PreloadJS/issues/46
 		    	        event.item.tag.src = event.item.src;
 		    	        fileloadfunc(event);
 		    	    }
 		    	});
 		    	
 		    	loader.addEventListener('complete', function (event) {
-		    		setTimeout(function(){ // Allow current process to finish before firing completion.
+		    		setTimeout(function () { // Allow current process to finish before firing completion.
 		    			self.owner.triggerEvent('complete');
 		    		}, 10);
 		    	});
 		    	
-		    	for(i in this.assets){
-		    		if(typeof this.assets[i].src === 'string'){
+		    	for(i in this.assets) {
+		    		if (typeof this.assets[i].src === 'string') {
 		    			checkPush(forceTypeForManifest(this.assets[i]), loadAssets);
 		    		}
 		    	}
 
-		    	if(createjs.Sound){
+		    	if (createjs.Sound) {
 			    	loader.installPlugin(createjs.Sound);
 		    	}
 		    	self.message.total = loadAssets.length;
@@ -184,12 +185,12 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    	platformer.assets = [];
 		    },
 		
-		    "fileload": function(resp) {
+		    "fileload": function (resp) {
 		    	var pb = null;
 		    	
-		    	if(this.progressBar){
+		    	if (this.progressBar) {
 		    		pb = document.getElementById(this.progressBar);
-		    		if(pb){
+		    		if (pb) {
 		    			pb = pb.style;
 		    			
 		    			pb.width = (resp.fraction * 100) + '%';
@@ -200,4 +201,4 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		}
 		
 	});
-})();
+}());

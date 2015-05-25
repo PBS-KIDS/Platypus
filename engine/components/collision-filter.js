@@ -27,18 +27,18 @@ This component will listen for a particular collision message and, depending on 
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var collidePos = function(entity, state, event){
-		return function(collInfo){
+	var collidePos = function (entity, state, event) {
+		return function (collInfo) {
 			if (entity.state[state]) {
 				entity.trigger(event, collInfo);
 			}
 		};
 	},
-	collideNeg = function(entity, state, event){
-		return function(collInfo){
+	collideNeg = function (entity, state, event) {
+		return function (collInfo) {
 			if (!entity.state[state]) {
 				entity.trigger(event, collInfo);
 			}
@@ -47,22 +47,22 @@ This component will listen for a particular collision message and, depending on 
 	
 	return platformer.createComponentClass({
 		id: 'collision-filter',
-		constructor: function(definition){
+		constructor: function (definition) {
 			var event = null,
 			state = definition.state;
 			
-			if(definition.collisions) {
-				if(state[0] === '!'){
+			if (definition.collisions) {
+				if (state[0] === '!') {
 					state = state.substring(1);
-					for(event in definition.collisions){
+					for(event in definition.collisions) {
 						this.addEventListener(event, collideNeg(this.owner, state, definition.collisions[event]));
 					}
 				} else {
-					for(event in definition.collisions){
+					for(event in definition.collisions) {
 						this.addEventListener(event, collidePos(this.owner, state, definition.collisions[event]));
 					}
 				}
 			}
 		}
 	});
-})();
+}());

@@ -29,26 +29,26 @@ This component allows this entity carry other entities with which it collides. E
     
 Requires: ["collision-group"]
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-carrier',
-		constructor: function(definition){},
+		constructor: function (definition) {},
 		events:{
-			"load": function(resp){
-				if(!this.owner.trigger('add-collision-entity', this.owner)){
+			"load": function (resp) {
+				if (!this.owner.trigger('add-collision-entity', this.owner)) {
 					// This message wasn't handled, so add a collision-group component and try again!
 					this.owner.addComponent(new platformer.components['collision-group'](this.owner, {}));
 					this.owner.trigger('add-collision-entity', this.owner);
 				}
 			},
-			"carry-me": function(resp){
+			"carry-me": function (resp) {
 				this.owner.trigger('add-collision-entity', resp.entity);
 			},
-			"release-me": function(resp){
+			"release-me": function (resp) {
 				this.owner.trigger('remove-collision-entity', resp.entity);
 			}
 		}
 	});
-})();
+}());

@@ -53,55 +53,55 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
       // Optional. Determines whether the entity's orientation is updated by movement across the node-map. Default is false.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var createGateway = function(node, map, gateway){
-		return function(resp){
+	var createGateway = function (node, map, gateway) {
+		return function (resp) {
 			this.gotoNode(map.getNode(node), gateway); // ensure it's a node if one is available at this gateway
 		};
 	},
-	distance = function(origin, destination){
+	distance = function (origin, destination) {
 		var x = destination.x - origin.x,
 		y = destination.y - origin.y,
 		z = destination.z - origin.z;
 		
 		return Math.sqrt(x*x + y*y + z*z);
 	},
-	angle = function(origin, destination, distance){
+	angle = function (origin, destination, distance) {
 		var x = destination.x - origin.x,
 		y     = destination.y - origin.y,
 		a     = 0;
 		
-		if(!distance){
+		if (!distance) {
 			return a;
 		}
 
 		a = Math.acos(x/distance);
-		if (y < 0){
+		if (y < 0) {
 			a = (Math.PI * 2) - a;
 		}
 		return a;
 	},
-	axisProgress = function(r, o, d){
+	axisProgress = function (r, o, d) {
 		return o * (1 - r) + d * r;
 	},
-	isFriendly = function(entities, kinds){
+	isFriendly = function (entities, kinds) {
 		var x = 0,
 		y     = 0,
 		found = false;
 		
-		if(!kinds){
+		if (!kinds) {
 			return false;
 		}
 		
-		for(; x < entities.length; x++){
-			for(y = 0; y < kinds.length; y++){
-				if(entities[x].type === kinds[y]){
+		for(; x < entities.length; x++) {
+			for(y = 0; y < kinds.length; y++) {
+				if (entities[x].type === kinds[y]) {
 					found = true;
 				}
 			}
-			if(!found){
+			if (!found) {
 				return false;
 			} else {
 				found = false;
@@ -115,7 +115,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 		
 		id: 'node-resident',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.nodeId = definition.nodeId || this.owner.nodeId;
 			
 			this.friendlyNodes = definition.nodes || null;
@@ -130,24 +130,24 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 		},
 		
 		events: {
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 				var ratio = 0,
 				node = null;
 				
-				if(this.destinationNode){
+				if (this.destinationNode) {
 					this.state.moving = true;
 					
-					if(this.node){
+					if (this.node) {
 						this.owner.triggerEvent('leave-node');
 					}
-					if(!this.speed || !this.lastNode){
+					if (!this.speed || !this.lastNode) {
 						this.owner.triggerEvent('on-node', this.destinationNode);
 						this.destinationNode = null;
 					} else {
 						this.progress += resp.delta * this.speed;
 						ratio = this.progress / this.distance;
 						
-						if(ratio > 1){
+						if (ratio > 1) {
 							this.owner.triggerEvent('on-node', this.destinationNode);
 							this.destinationNode = null;
 						} else {
@@ -158,10 +158,10 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 						}
 					}
 				} else {
-					if(this.followEntity){
+					if (this.followEntity) {
 						node = this.followEntity.node || this.followEntity;
 						console.log('Following (' + (node && node.isNode && (node !== this.node)) + ')', node);
-						if(node && node.isNode && (node !== this.node)){
+						if (node && node.isNode && (node !== this.node)) {
 							this.state.moving = this.attemptGotoNode(node);
 						} else {
 						    this.followEntity = null;
@@ -171,7 +171,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 					}
 				}
 			},
-			"on-node": function(node){
+			"on-node": function (node) {
 				var i = '',
 				j     = 0,
 				entities = null;
@@ -186,36 +186,36 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				this.owner.z = this.node.z;
 				
 				//add listeners for directions
-				for (i in node.neighbors){
+				for (i in node.neighbors) {
 					this.addEventListener(i, createGateway(node.neighbors[i], node.map, i));
 					
 					//trigger "next-to" events
 					entities = node.map.getNode(node.neighbors[i]).contains;
-					for (j = 0; j < entities.length; j++){
+					for (j = 0; j < entities.length; j++) {
 						entities[j].triggerEvent("next-to-" + this.owner.type, this.owner);
 						this.owner.triggerEvent("next-to-" + entities[j].type, entities[j]);
 					}
 				}
 				
 				//trigger mapped messages for node types
-				if(this.friendlyNodes && this.friendlyNodes[node.type]){
+				if (this.friendlyNodes && this.friendlyNodes[node.type]) {
 					this.owner.trigger(this.friendlyNodes[node.type]);
 				}
 
 				//trigger "with" events
 				entities = node.contains;
-				for (j = 0; j < entities.length; j++){
-					if(this.owner !== entities[j]){
+				for (j = 0; j < entities.length; j++) {
+					if (this.owner !== entities[j]) {
 						entities[j].triggerEvent("with-" + this.owner.type, this.owner);
 						this.owner.triggerEvent("with-" + entities[j].type, entities[j]);
 					}
 				}
 			},
-			"leave-node": function(){
-				if(this.node){
+			"leave-node": function () {
+				if (this.node) {
 					this.node.remove(this.owner);
 					this.owner.triggerEvent('left-node', this.node);
-					for (var i in this.node.neighbors){
+					for (var i in this.node.neighbors) {
 						this.removeEventListener(i);
 						delete this[i];
 					}
@@ -223,35 +223,35 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				this.lastNode = this.node;
 				this.node = null;
 			},
-			"goto-node": function(node){
+			"goto-node": function (node) {
 				this.attemptGotoNode(node);
 			},
-			"follow": function(entityOrNode){
+			"follow": function (entityOrNode) {
 				this.followEntity = entityOrNode;
 			}
 		},
 		
 		methods:{
-			isPassable: function(node){
+			isPassable: function (node) {
 				return node && (this.node !== node) && (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== 'undefined')) && (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
 			},
-			traverseNode: function(node, goal){
+			traverseNode: function (node, goal) {
 				var i = '',
 				nodes = [];
 				
-				if(node === goal){
+				if (node === goal) {
 					return false;
 				}
 				
-				if(this.isPassable(node) && !node.checked){
-					for (i in node.neighbors){
+				if (this.isPassable(node) && !node.checked) {
+					for (i in node.neighbors) {
 						nodes.push(node.neighbors[i]);
 					}
 					node.checked = true;
 				}
 				return nodes;
 			},
-			attemptGotoNode: function(node){
+			attemptGotoNode: function (node) {
 				var i = '',
 				j     = 0,
 				k     = 0,
@@ -264,14 +264,14 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				count = 0,
 				depth = 20; //TODO: arbitrary limit
 				
-				if(this.node && node){
+				if (this.node && node) {
 					this.followEntity = node;
 					map = this.node.map || node.map;
-					for(i in this.node.neighbors){
+					for(i in this.node.neighbors) {
 						directions[i] = this.traverseNode(map.getNode(this.node.neighbors[i]), node);
-						if(!directions[i]){
+						if (!directions[i]) {
 							foundDirection = true;
-							for(k = 0; k < all.length; k++){
+							for(k = 0; k < all.length; k++) {
 								map.getNode(all[k]).checked = false;
 							}
 							return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
@@ -279,19 +279,19 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 							all = all.concat(directions[i]);
 						}
 					}
-					while(!foundDirection && (count <= depth)){
+					while(!foundDirection && (count <= depth)) {
 						count += 1;
 						//console.log(count + ': ' + JSON.stringify(directions));
-						for(i in directions){
+						for(i in directions) {
 							tempArray = [];
-							for (j = 0; j < directions[i].length; j++){
+							for (j = 0; j < directions[i].length; j++) {
 								arr = this.traverseNode(map.getNode(directions[i][j]), node);
-								if(arr){
+								if (arr) {
 									tempArray = tempArray.concat(arr);
 									all = all.concat(arr);
 								} else {
 									foundDirection = true;
-									for(k = 0; k < all.length; k++){
+									for(k = 0; k < all.length; k++) {
 										map.getNode(all[k]).checked = false;
 									}
 									return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
@@ -300,19 +300,19 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 							directions[i] = tempArray;
 						}
 					}
-					for(k = 0; k < all.length; k++){
+					for(k = 0; k < all.length; k++) {
 						map.getNode(all[k]).checked = false;
 					}
 				}
 				
 				return false;
 			},
-			gotoNode: function(node, gateway){
-				if(this.isPassable(node)){
+			gotoNode: function (node, gateway) {
+				if (this.isPassable(node)) {
 					this.destinationNode = node;
-					if(this.node){
+					if (this.node) {
 						this.distance = distance(this.node, node);
-						if(this.updateOrientation){
+						if (this.updateOrientation) {
 							this.owner.orientation = angle(this.node, node, this.distance);
 						}
 					} else {
@@ -326,12 +326,12 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 				
 				return false;
 			},
-			setState: function(state){
-				if(state === 'on-node'){
+			setState: function (state) {
+				if (state === 'on-node') {
 					this.state['on-node'] = true;
 				} else {
 					this.state['on-node'] = false;
-					if(this.currentState){
+					if (this.currentState) {
 						this.state[this.currentState] = false;
 					}
 					this.currentState = state;
@@ -340,4 +340,4 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 			}
 		}
 	});
-})();
+}());

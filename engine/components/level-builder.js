@@ -40,10 +40,10 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
       // Optional. If set, no single map is used twice in the creation of the combined map.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var mergeData = function(levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis){
+	var mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {
 		var x        = 0,
 		    y        = 0,
 			z        = 0,
@@ -63,15 +63,15 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 			return levelData.concat(segmentData);
 		}
 	},
-	mergeObjects  = function(obj1s, obj2s, mergeAxisLength, mergeAxis){
+	mergeObjects  = function (obj1s, obj2s, mergeAxisLength, mergeAxis) {
 		var i 	 = 0,
 		    j    = 0,
 			list = obj1s.slice(),
 			obj  = null;
 		
-		for (; i < obj2s.length; i++){
+		for (; i < obj2s.length; i++) {
 			obj = {};
-			for (j in obj2s[i]){
+			for (j in obj2s[i]) {
 				obj[j] = obj2s[i][j];
 			}
 			if (mergeAxis == 'horizontal') {
@@ -83,7 +83,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		}
 		return list;
 	},
-	mergeSegment  = function(level, segment, mergeAxis){
+	mergeSegment  = function (level, segment, mergeAxis) {
 		var i = 0,
 		    j = 0;
 
@@ -111,18 +111,18 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 			}
 		}
 		
-		for (; i < segment.layers.length; i++){
-			if (!level.layers[i]){
+		for (; i < segment.layers.length; i++) {
+			if (!level.layers[i]) {
 				//if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
 				level.layers[i] = {};
-				for (j in segment.layers[i]){
+				for (j in segment.layers[i]) {
 					level.layers[i][j] = segment.layers[i][j];
 				}
 			} else {
 				if (level.layers[i].type == segment.layers[i].type)
 				{
 					//if the level does have a layer, we're appending the new data to it.
-					if(level.layers[i].data && segment.layers[i].data) {
+					if (level.layers[i].data && segment.layers[i].data) {
 						if (mergeAxis == 'horizontal') {
 							level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
 							level.layers[i].width += segment.width;
@@ -151,13 +151,13 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		}
 		
 		//Go through all the STUFF in segment and copy it to the level if it's not already there.
-		for(i in segment){
-			if(!level[i]){
+		for(i in segment) {
+			if (!level[i]) {
 				level[i] = segment[i];
 			}
 		}
 	},
-	mergeLevels = function(levelSegments){
+	mergeLevels = function (levelSegments) {
 		var i  = 0;
 		var j  = 0;
 		var levelDefinitions = platformer.game.settings.levels;
@@ -186,7 +186,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 			for (j = 0; j < levelSegments[i].length; j++)
 			{
 				//Merge horizontally
-				if(typeof levelSegments[i][j] === 'string'){
+				if (typeof levelSegments[i][j] === 'string') {
 					mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
 				} else {
 					mergeSegment(row, levelSegments[i][j], 'horizontal');
@@ -200,9 +200,9 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 
 	return platformer.createComponentClass({
 		id: 'level-builder',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.levelTemplate = this.owner.levelTemplate || definition.levelTemplate;
-			if((this.owner.useUniques || definition.useUniques) === false){
+			if ((this.owner.useUniques || definition.useUniques) === false) {
 				this.useUniques = false;
 			} else {
 				this.useUniques = true;
@@ -212,7 +212,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		},
 
 		events: {// These are messages that this component listens for
-			"scene-loaded": function(persistentData) {
+			"scene-loaded": function (persistentData) {
 				var templateRow  = null,
 				    piecesToCopy = null,
 				    x            = '',
@@ -242,17 +242,17 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 				}
 
 				if (this.levelTemplate) {
-					if(typeof this.levelTemplate == "string") {
+					if (typeof this.levelTemplate == "string") {
 						this.levelMessage.level = [this.getLevelPiece(this.levelTemplate)];
 					} else if (this.levelTemplate.length) {
 						this.levelMessage.level = [];
-						for (i = 0; i < this.levelTemplate.length; i++){
+						for (i = 0; i < this.levelTemplate.length; i++) {
 							templateRow = this.levelTemplate[i];
 							if (typeof templateRow == "string") {
 								this.levelMessage.level[i] = this.getLevelPiece(templateRow);
 							} else if (templateRow.length) {
 								this.levelMessage.level[i] = [];
-								for (j = 0; j < templateRow.length; j++){
+								for (j = 0; j < templateRow.length; j++) {
 									this.levelMessage.level[i][j] = this.getLevelPiece(templateRow[j]);
 								}
 							} else {
@@ -266,7 +266,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 					console.warn('Level Builder: There is no level template.');
 				}
 				
-				if(this.levelMessage.level){
+				if (this.levelMessage.level) {
 					this.levelMessage.level = mergeLevels(this.levelMessage.level);
 					this.owner.triggerEvent('load-level', this.levelMessage);
 				}
@@ -278,8 +278,8 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 				var pieces = this.levelPieces[type] || type;
 				var temp = null;
 				var random = 0;
-				if(pieces){
-					if(typeof pieces == "string"){
+				if (pieces) {
+					if (typeof pieces == "string") {
 						if (this.useUniques) {
 							temp = pieces;
 							this.levelPieces[type] = null;
@@ -312,9 +312,9 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		},
 		
 		publicMethods: {
-			mergeLevels: function(levels){
+			mergeLevels: function (levels) {
 				return mergeLevels(levels);
 			}
 		}
 	});
-})();
+}());

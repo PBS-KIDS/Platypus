@@ -8,24 +8,24 @@
  * @uses Component
  */
 // Requires: ["../collision-shape.js", "../aabb.js"]
-(function(){
+(function () {
 	"use strict";
 	
-	var handleStuck = function(position, data, owner){
+	var handleStuck = function (position, data, owner) {
 		var m    = 0,
 		s        = data.stuck;
 		
-		if(s){
+		if (s) {
 			m = position.magnitude();
-			if(data.thatShape.owner && (Math.abs(s) > 1)){
+			if (data.thatShape.owner && (Math.abs(s) > 1)) {
 				s *= 0.05;
 			}
-			if(!m || (m > Math.abs(s))){
-				if(data.vector.x){
+			if (!m || (m > Math.abs(s))) {
+				if (data.vector.x) {
 					position.x = s;
 					position.y = 0;
 				}
-				if(data.vector.y){
+				if (data.vector.y) {
 					position.x = 0;
 					position.y = s;
 				}
@@ -39,50 +39,50 @@
 	 * @event *
 	 * @param collision {Object} A list of key/value pairs describing the collision.
 	 */
-	entityBroadcast = function(event, solidOrSoft, collisionType){
-		if(typeof event === 'string'){
-			return function(value){
-				if(value.myType === collisionType){
-					if(value.hitType === solidOrSoft){
+	entityBroadcast = function (event, solidOrSoft, collisionType) {
+		if (typeof event === 'string') {
+			return function (value) {
+				if (value.myType === collisionType) {
+					if (value.hitType === solidOrSoft) {
 						this.owner.triggerEvent(event, value);
 					}
 				}
 			};
-		} else if(Array.isArray(event)){
-			return function(value){
-				if(value.myType === collisionType){
-					if(value.hitType === solidOrSoft){
-						for (var e in event){
+		} else if (Array.isArray(event)) {
+			return function (value) {
+				if (value.myType === collisionType) {
+					if (value.hitType === solidOrSoft) {
+						for (var e in event) {
 							this.owner.triggerEvent(event[e], value);
 						}
 					}
 				}
 			};
 		} else {
-			return function(collisionInfo){
+			return function (collisionInfo) {
 				var dx = collisionInfo.x,
 				dy     = collisionInfo.y;
 				
-				if(collisionInfo.entity && !(dx || dy)){
+				if (collisionInfo.entity && !(dx || dy)) {
 					dx = collisionInfo.entity.x - this.owner.x;
 					dy = collisionInfo.entity.y - this.owner.y;
 				}
 				
-				if(collisionInfo.myType === collisionType){
-					if(collisionInfo.hitType === solidOrSoft){
-						if((dy > 0) && event['bottom']){
+				if (collisionInfo.myType === collisionType) {
+					if (collisionInfo.hitType === solidOrSoft) {
+						if ((dy > 0) && event['bottom']) {
 							this.owner.trigger(event['bottom'], collisionInfo);
 						}
-						if((dy < 0) && event['top']){
+						if ((dy < 0) && event['top']) {
 							this.owner.trigger(event['top'], collisionInfo);
 						}
-						if((dx > 0) && event['right']){
+						if ((dx > 0) && event['right']) {
 							this.owner.trigger(event['right'], collisionInfo);
 						}
-						if((dx < 0) && event['left']){
+						if ((dx < 0) && event['left']) {
 							this.owner.trigger(event['left'], collisionInfo);
 						}
-						if(event['all']){
+						if (event['all']) {
 							this.owner.trigger(event['all'], collisionInfo);
 						}
 					}
@@ -90,64 +90,64 @@
 			};
 		}
 	},
-	setupCollisionFunctions = function(self, entity){
+	setupCollisionFunctions = function (self, entity) {
 		// This allows the same component type to be added multiple times.
-		if(!entity.collisionFunctions){
+		if (!entity.collisionFunctions) {
 			entity.collisionFunctions = {};
-			entity.getAABB = function(collisionType){
-				if(!collisionType){
+			entity.getAABB = function (collisionType) {
+				if (!collisionType) {
 					var aabb = entity.aabb = entity.aabb || new platformer.AABB();
 					aabb.reset();
-					for(var i in entity.collisionFunctions){
+					for(var i in entity.collisionFunctions) {
 						aabb.include(entity.collisionFunctions[i].getAABB());
 					}
 					return aabb;
-				} else if(entity.collisionFunctions[collisionType]){
+				} else if (entity.collisionFunctions[collisionType]) {
 					return entity.collisionFunctions[collisionType].getAABB();
 				} else {
 					return null;
 				}
 			};
 
-			entity.getPreviousAABB = function(collisionType){
-				if(entity.collisionFunctions[collisionType]){
+			entity.getPreviousAABB = function (collisionType) {
+				if (entity.collisionFunctions[collisionType]) {
 					return entity.collisionFunctions[collisionType].getPreviousAABB();
 				} else {
 					return null;
 				}
 			};
 
-			entity.getShapes = function(collisionType){
-				if(entity.collisionFunctions[collisionType]){
+			entity.getShapes = function (collisionType) {
+				if (entity.collisionFunctions[collisionType]) {
 					return entity.collisionFunctions[collisionType].getShapes();
 				} else {
 					return null;
 				}
 			};
 			
-			entity.getPrevShapes = function(collisionType){
-				if(entity.collisionFunctions[collisionType]){
+			entity.getPrevShapes = function (collisionType) {
+				if (entity.collisionFunctions[collisionType]) {
 					return entity.collisionFunctions[collisionType].getPrevShapes();
 				} else {
 					return null;
 				}
 			};
 			
-			entity.prepareCollision = function(x, y){
-				for(var i in entity.collisionFunctions){
+			entity.prepareCollision = function (x, y) {
+				for(var i in entity.collisionFunctions) {
 					entity.collisionFunctions[i].prepareCollision(x, y);
 				}
 			};
 			
-			entity.relocateEntity = function(vector, collisionData){
+			entity.relocateEntity = function (vector, collisionData) {
 				var v = null;
 				
-				if(collisionData.xCount){
+				if (collisionData.xCount) {
 					v = new platformer.Vector(0,0,0);
 					handleStuck(v, collisionData.getXEntry(0), entity);
 				}
 
-				if(collisionData.yCount){
+				if (collisionData.yCount) {
 					v = v || new platformer.Vector(0,0,0);
 					handleStuck(v, collisionData.getYEntry(0), entity);
 				}
@@ -155,43 +155,43 @@
 				entity.triggerEvent('relocate-entity', {position: vector, unstick: v});
 			};
 			
-			entity.movePreviousX = function(x){
-				for(var i in entity.collisionFunctions){
+			entity.movePreviousX = function (x) {
+				for(var i in entity.collisionFunctions) {
 					entity.collisionFunctions[i].movePreviousX(x);
 				}
 			};
 			
-			entity.getCollisionTypes = function(){
+			entity.getCollisionTypes = function () {
 				return entity.collisionTypes;
 			};
 
-			entity.getSolidCollisions = function(){
+			entity.getSolidCollisions = function () {
 				return entity.solidCollisions;
 			};
 		}
 
 		entity.collisionFunctions[self.collisionType] = {
-			getAABB: function(){
+			getAABB: function () {
 				return self.getAABB();
 			},
 
-			getPreviousAABB: function(){
+			getPreviousAABB: function () {
 				return self.getPreviousAABB();
 			},
 
-			getShapes: function(){
+			getShapes: function () {
 				return self.getShapes();
 			},
 			
-			getPrevShapes: function(){
+			getPrevShapes: function () {
 				return self.getPrevShapes();
 			},
 			
-			prepareCollision: function(x, y){
+			prepareCollision: function (x, y) {
 				self.prepareCollision(x, y);
 			},
 			
-			movePreviousX: function(x){
+			movePreviousX: function (x) {
 				self.movePreviousX(x);
 			}
 		};
@@ -323,7 +323,7 @@
 			jumpThrough: false
 		},
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var x        = 0,
 			shapes       = null,
 			regX         = this.regX,
@@ -336,11 +336,11 @@
 			marginTop    = this.margin.top    || this.margin,
 			marginBottom = this.margin.bottom || this.margin;
 			
-			if(regX === null){
+			if (regX === null) {
 				regX = this.regX = width / 2;
 			}
 			
-			if(regY === null){
+			if (regY === null) {
 				regY = this.regY = height / 2;
 			}
 			
@@ -352,10 +352,10 @@
 			this.aabb     = new platformer.AABB();
 			this.prevAABB = new platformer.AABB();
 			
-			if(this.shapes){
+			if (this.shapes) {
 				shapes = this.shapes;
 			} else {
-				if(this.shapeType === 'circle'){
+				if (this.shapeType === 'circle') {
 					radius = radius || (((width || 0) + (height || 0)) / 4);
 					shapes = [{
 						regX: (isNaN(regX)?radius:regX) - (marginRight - marginLeft) / 2,
@@ -383,7 +383,7 @@
 			this.shapes = [];
 			this.prevShapes = [];
 			this.entities = undefined;
-			for (x in shapes){
+			for (x in shapes) {
 				this.shapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
 				this.prevShapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
 				this.prevAABB.include(this.prevShapes[x].getAABB());
@@ -407,11 +407,11 @@
 			 */
 			this.owner.solidCollisions = this.owner.solidCollisions || {};
 			this.owner.solidCollisions[this.collisionType] = [];
-			if(definition.solidCollisions){
-				for(var i in definition.solidCollisions){
+			if (definition.solidCollisions) {
+				for(var i in definition.solidCollisions) {
 					this.owner.solidCollisions[this.collisionType].push(i);
 					this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
-					if(definition.solidCollisions[i]){
+					if (definition.solidCollisions[i]) {
 						this.addEventListener('hit-by-' + i, entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType));
 					}
 				}
@@ -431,10 +431,10 @@
 			 */
 			this.owner.softCollisions = this.owner.softCollisions || {};
 			this.owner.softCollisions[this.collisionType] = [];
-			if(definition.softCollisions){
-				for(var i in definition.softCollisions){
+			if (definition.softCollisions) {
+				for(var i in definition.softCollisions) {
 					this.owner.softCollisions[this.collisionType].push(i);
-					if(definition.softCollisions[i]){
+					if (definition.softCollisions[i]) {
 						this.addEventListener('hit-by-' + i, entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
 					}
 				}
@@ -449,7 +449,7 @@
 			 * 
 			 * @method 'collide-on'
 			 */
-			"collide-on": function(){
+			"collide-on": function () {
 				/**
 				 * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
 				 * 
@@ -464,7 +464,7 @@
 			 * 
 			 * @method 'collide-off'
 			 */
-			"collide-off": function(){
+			"collide-off": function () {
 				/**
 				 * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
 				 * 
@@ -482,24 +482,24 @@
 			 * @param position.y {number} The new y coordinate.
 			 * @param [position.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
 			 */
-			"relocate-entity": function(resp){
+			"relocate-entity": function (resp) {
 				var unstick = resp.unstick,
 				um          = 0;
 				
-				if(unstick){
+				if (unstick) {
 					um = unstick.magnitude();
 				}
 				
 				this.move = null;
 				
-				if(resp.relative){
+				if (resp.relative) {
 					this.owner.position.set(this.owner.previousPosition).add(resp.position);
 				} else {
 					this.owner.position.set(resp.position);
 				}
 
-				if(this.stuck){
-					if(um > 0){
+				if (this.stuck) {
+					if (um > 0) {
 						this.owner.position.add(unstick);
 					} else {
 						this.stuck = false;
@@ -507,15 +507,15 @@
 				}
 				
 				this.aabb.reset();
-				for (var x in this.shapes){
+				for (var x in this.shapes) {
 					this.shapes[x].update(this.owner.x, this.owner.y);
 					this.aabb.include(this.shapes[x].getAABB());
 				}
 
 				this.owner.previousPosition.set(this.owner.position);
 				
-				if(um > 0){ // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
-					if(!this.stuck){
+				if (um > 0) { // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
+					if (!this.stuck) {
 						this.stuck = true;
 					}
 					this.move = this.owner.stuckWith.copy().add(-this.owner.x, -this.owner.y).normalize();
@@ -527,8 +527,8 @@
 			 * 
 			 * @method 'handle-logic'
 			 */
-			"handle-logic": function(){
-				if(this.move){
+			"handle-logic": function () {
+				if (this.move) {
 					this.owner.position.add(this.move); // By trying to move into it, we should get pushed back out.
 				}
 			},
@@ -539,11 +539,11 @@
 			 * @method 'orientation-updated'
 			 * @param matrix {Array} A 2D matrix describing the new orientation.
 			 */
-			"orientation-updated": function(matrix){
+			"orientation-updated": function (matrix) {
 				var i = 0;
 				
-				if(!this.ignoreOrientation){
-					for(i = 0; i < this.shapes.length; i++){
+				if (!this.ignoreOrientation) {
+					for(i = 0; i < this.shapes.length; i++) {
 						this.shapes[i].multiply(matrix);
 					}
 				}
@@ -551,23 +551,23 @@
 		},
 		
 		methods: {
-			getAABB: function(){
+			getAABB: function () {
 				return this.aabb;
 			},
 			
-			getPreviousAABB: function(){
+			getPreviousAABB: function () {
 				return this.prevAABB;
 			},
 			
-			getShapes: function(){
+			getShapes: function () {
 				return this.shapes;
 			},
 			
-			getPrevShapes: function(){
+			getPrevShapes: function () {
 				return this.prevShapes;
 			},
 			
-			prepareCollision: function(x, y){
+			prepareCollision: function (x, y) {
 				var i      = 0,
 				tempShapes = this.prevShapes;
 				
@@ -581,20 +581,20 @@
 				this.aabb.reset();
 				
 				// update shapes
-				for (i = 0; i < this.shapes.length; i++){
+				for (i = 0; i < this.shapes.length; i++) {
 					this.shapes[i].update(this.owner.x, this.owner.y);
 					this.aabb.include(this.shapes[i].getAABB());
 				}
 			},
 			
-			movePreviousX: function(x){
+			movePreviousX: function (x) {
 				this.prevAABB.moveX(x);
 				for(var k = 0; k < this.prevShapes.length; k++) {
 					this.prevShapes[k].setXWithEntityX(x);
 				}
 			},
 			
-			destroy: function(){
+			destroy: function () {
 				var i = 0,
 				col   = "";
 				
@@ -605,21 +605,21 @@
 				delete this.aabb;
 				delete this.prevAABB;
 				
-				for(i = 0; i < this.owner.collisionTypes.length; i++){
-					if(this.owner.collisionTypes[i] === this.collisionType){
+				for(i = 0; i < this.owner.collisionTypes.length; i++) {
+					if (this.owner.collisionTypes[i] === this.collisionType) {
 						this.owner.collisionTypes.splice(i,1);
 						break;
 					}
 				}
-				if(this.owner.solidCollisions[this.collisionType]){
+				if (this.owner.solidCollisions[this.collisionType]) {
 					this.owner.solidCollisions[this.collisionType].length = 0;
 					delete this.owner.solidCollisions[this.collisionType];
 				}
-				for(col in this.owner.solidCollisions){
+				for(col in this.owner.solidCollisions) {
 					this.owner.collides = true;
 					break;
 				}
-				if(this.owner.softCollisions[this.collisionType]){
+				if (this.owner.softCollisions[this.collisionType]) {
 					this.owner.softCollisions[this.collisionType].length = 0;
 					delete this.owner.softCollisions[this.collisionType];
 				}
@@ -629,11 +629,11 @@
 				this.prevShapes.length = 0;
 				delete this.entities;
 
-				if(this.owner.collisionTypes.length){
+				if (this.owner.collisionTypes.length) {
 					this.owner.parent.trigger('add-collision-entity', this.owner);
 				}
 			}
 		}
 	});
-})();
+}());
 	

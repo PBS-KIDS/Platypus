@@ -12,15 +12,15 @@
  * @class Component
  * @static
  */
-(function (ns){
+(function (ns) {
 	"use strict";
 	
-	var setupProperty = function(property, component, owner){
+	var setupProperty = function (property, component, owner) {
 		Object.defineProperty(component, property, {
-		    get: function(){
+		    get: function () {
 		        return owner[property];
 		    },
-		    set: function(value){
+		    set: function (value) {
 		    	owner[property] = value;
 		    },
 		    enumerable: true
@@ -29,14 +29,14 @@
 		
 	ns.components = {};
 	
-	ns.createComponentClass = function(componentDefinition, Prototype){
-		var	component = function(owner, definition){
+	ns.createComponentClass = function (componentDefinition, Prototype) {
+		var	component = function (owner, definition) {
 			var prop = null,
 			func     = null,
 			name     = '';
 			
 			// if prototype provided, set up its properties here.
-			if(Prototype){
+			if (Prototype) {
 				Prototype.call(this);
 			}
 			
@@ -49,11 +49,11 @@
 			this.type = componentDefinition.id;
 			
 			// Set up properties, prioritizing component settings, entity settings, and finally defaults.
-			if(componentDefinition.properties){
-				for(prop in componentDefinition.properties){
-					if(typeof definition[prop] !== 'undefined'){
+			if (componentDefinition.properties) {
+				for(prop in componentDefinition.properties) {
+					if (typeof definition[prop] !== 'undefined') {
 						this[prop] = definition[prop];
-					} else if(typeof this.owner[prop] !== 'undefined') {
+					} else if (typeof this.owner[prop] !== 'undefined') {
 						this[prop] = this.owner[prop];
 					} else {
 						this[prop] = componentDefinition.properties[prop];
@@ -62,12 +62,12 @@
 			}
 			
 			// These component properties are equivalent with `entity.property`
-			if(componentDefinition.publicProperties){
-				for(prop in componentDefinition.publicProperties){
+			if (componentDefinition.publicProperties) {
+				for(prop in componentDefinition.publicProperties) {
 					setupProperty(prop, this, owner);
-					if(typeof definition[prop] !== 'undefined'){
+					if (typeof definition[prop] !== 'undefined') {
 						this[prop] = definition[prop];
-					} else if(typeof this.owner[prop] !== 'undefined') {
+					} else if (typeof this.owner[prop] !== 'undefined') {
 						this[prop] = this.owner[prop];
 					} else {
 						this[prop] = componentDefinition.publicProperties[prop];
@@ -75,12 +75,12 @@
 				}
 			}
 			
-			if(componentDefinition.events){
-				for(func in componentDefinition.events){
+			if (componentDefinition.events) {
+				for(func in componentDefinition.events) {
 					this.addEventListener(func, componentDefinition.events[func]);
-					if(definition.aliases){
-						for (var alias in definition.aliases){
-							if(definition.aliases[alias] === func){
+					if (definition.aliases) {
+						for (var alias in definition.aliases) {
+							if (definition.aliases[alias] === func) {
 								this.addEventListener(alias, componentDefinition.events[func]);
 							}
 						}
@@ -88,12 +88,12 @@
 				}
 			}
 			
-			if(componentDefinition.publicMethods){
-				for(func in componentDefinition.publicMethods){
+			if (componentDefinition.publicMethods) {
+				for(func in componentDefinition.publicMethods) {
 					name = func;
-					if(definition.aliases){
-						for (var alias in definition.aliases){
-							if(definition.aliases[alias] === func){
+					if (definition.aliases) {
+						for (var alias in definition.aliases) {
+							if (definition.aliases[alias] === func) {
 								name = alias;
 							}
 						}
@@ -102,28 +102,28 @@
 				}
 			}
 						
-			if (this.constructor){
+			if (this.constructor) {
 				this.constructor(definition);
 			}
 		},
 		func  = null,
 		proto = component.prototype;
 		
-		if(Prototype){ //absorb template prototype if it exists.
+		if (Prototype) { //absorb template prototype if it exists.
 			proto = component.prototype = new Prototype();
 		}
 		
 		// Have to copy rather than replace so definition is not corrupted
 		proto.constructor = componentDefinition.constructor;
 
-		if (componentDefinition.methods) for(func in componentDefinition.methods){
-			if(func === 'destroy'){
+		if (componentDefinition.methods) for(func in componentDefinition.methods) {
+			if (func === 'destroy') {
 				proto['___' + func] = componentDefinition.methods[func];
 			} else {
 				proto[func] = componentDefinition.methods[func];
 			}
 		}
-		if (componentDefinition.publicMethods) for(func in componentDefinition.publicMethods){
+		if (componentDefinition.publicMethods) for(func in componentDefinition.publicMethods) {
 			proto[func] = componentDefinition.publicMethods[func];
 		}
 		
@@ -134,7 +134,7 @@
 		 * @return {String}
 		 * @private
 		 */
-		proto.toString = function(){
+		proto.toString = function () {
 			return "[component " + this.type + "]";
 		};
 
@@ -144,15 +144,15 @@
 		 * @method destroy
 		 * @private
 		 */
-		proto.destroy = function(){
+		proto.destroy = function () {
 			
 			// Handle component's destroy method before removing messaging and methods.
-			if(this.___destroy){
+			if (this.___destroy) {
 				this.___destroy();
 			}
 			
 			// Now remove event listeners and methods.
-			for(func in this.publicMethods){
+			for(func in this.publicMethods) {
 				this.removeMethod(func);
 			}
 			this.removeEventListeners();
@@ -165,19 +165,19 @@
 		 * @param [listeners] {Array} The list of listeners to remove. If not supplied, all event listeners are removed.
 		 * @private
 		 */
-		proto.removeEventListeners = function(listeners){
+		proto.removeEventListeners = function (listeners) {
 			var events = null,
 			messages = null;
 			
-			if(!listeners){
+			if (!listeners) {
 				events   = this.listener.events;
 				messages = this.listener.messages;
-				for(var i = 0; i < events.length; i++){
+				for(var i = 0; i < events.length; i++) {
 					this.removeEventListener(events[i], messages[i]);
 				}
 			} else {
 				events   = listeners;
-				for(var i = 0; i < events.length; i++){
+				for(var i = 0; i < events.length; i++) {
 					this.removeEventListener(events[i]);
 				}
 			}
@@ -191,7 +191,7 @@
 		 * @param callback {Function} The handler for the event.
 		 * @private
 		 */
-		proto.addEventListener = function(event, callback){
+		proto.addEventListener = function (event, callback) {
 			this.listener.events.push(event);
 			this.listener.messages.push(callback);
 			this.owner.bind(event, callback, this);
@@ -205,13 +205,13 @@
 		 * @param func {Function} The function describing the method.
 		 * @private
 		 */
-		proto.addMethod = function(name, func){
+		proto.addMethod = function (name, func) {
 			var self = this;
 			
-			if(this.owner[name]){
+			if (this.owner[name]) {
 				console.warn(this.owner.type + ': Entity already has a method called "' + name + '". Method not added.');
 			} else {
-				this.owner[name] = function(){
+				this.owner[name] = function () {
 					return func.apply(self, arguments);
 				};
 				this.publicMethods[name] = func;
@@ -226,11 +226,11 @@
 		 * @param callback {Function} The listener to remove. If not supplied, all event listeners for the provided event are removed.
 		 * @private
 		 */
-		proto.removeEventListener = function(event, callback){
+		proto.removeEventListener = function (event, callback) {
 			var events = this.listener.events,
 			messages   = this.listener.messages;
-			for(var i = 0; i < events.length; i++){
-				if((events[i] === event) && (!callback || (messages[i] === callback))){
+			for(var i = 0; i < events.length; i++) {
+				if ((events[i] === event) && (!callback || (messages[i] === callback))) {
 					this.owner.unbind(event, messages[i], this);
 				}
 			}
@@ -243,8 +243,8 @@
 		 * @param name {String} The name of the method to be removed.
 		 * @private
 		 */
-		proto.removeMethod = function(name){
-			if(!this.owner[name]){
+		proto.removeMethod = function (name) {
+			if (!this.owner[name]) {
 				console.warn(this.owner.type + ': Entity does not have a method called "' + name + '".');
 			} else {
 				delete this.owner[name];

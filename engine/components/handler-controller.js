@@ -34,14 +34,14 @@ This component handles capturing and relaying input information to the entities 
     }
 */
 
-(function(){
+(function () {
 	"use strict";
 
-	var relayUpDown = function(event, self){
-		return function(value){
-			if (value.released){
+	var relayUpDown = function (event, self) {
+		return function (value) {
+			if (value.released) {
 				event += ':up';
-			} else if (value.pressed){
+			} else if (value.pressed) {
 				event += ':down';
 			}
 			for (var x = 0; x < self.entities.length; x++) {
@@ -49,8 +49,8 @@ This component handles capturing and relaying input information to the entities 
 			}
 		}; 
 	},
-	relay = function(event, self){
-		return function(value){
+	relay = function (event, self) {
+		return function (value) {
 			for (var x = 0; x < self.entities.length; x++) {
 				self.entities[x].trigger(event, value);
 			}
@@ -159,7 +159,7 @@ This component handles capturing and relaying input information to the entities 
 
 	return platformer.createComponentClass({
 		id: 'handler-controller',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.entities = [];
 			this.timeElapsed = {
 				name: 'Controller',
@@ -167,21 +167,21 @@ This component handles capturing and relaying input information to the entities 
 			};
 		},
 		events: {
-			"keydown": function(event){
-				for (var x = 0; x < this.entities.length; x++){
+			"keydown": function (event) {
+				for (var x = 0; x < this.entities.length; x++) {
 					this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
 				}
 			},
-			"keyup": function(event){
-				for (var x = 0; x < this.entities.length; x++){
+			"keyup": function (event) {
+				for (var x = 0; x < this.entities.length; x++) {
 					this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
 				}
 			},
-			"tick": function(resp){
+			"tick": function (resp) {
 				var time    = new Date().getTime();
 		
-				for (var x = this.entities.length - 1; x > -1; x--){
-					if(!this.entities[x].trigger('handle-controller', resp)) {
+				for (var x = this.entities.length - 1; x > -1; x--) {
+					if (!this.entities[x].trigger('handle-controller', resp)) {
 						this.entities.splice(x, 1);
 					}
 				}
@@ -189,33 +189,33 @@ This component handles capturing and relaying input information to the entities 
 				this.timeElapsed.time = new Date().getTime() - time;
 				platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
 			},
-			"child-entity-added": function(entity){
+			"child-entity-added": function (entity) {
 				this.updateEntity(entity);
 			},
-			"child-entity-updated": function(entity){
+			"child-entity-updated": function (entity) {
 				this.updateEntity(entity);
 			}
 		},
 		methods: {
-			updateEntity: function(entity){
+			updateEntity: function (entity) {
 				var messageIds = entity.getMessageIds(),
 				alreadyHere = false; 
 				
-				for (var x = 0; x < messageIds.length; x++){
-					if (messageIds[x] == 'handle-controller'){
-						for (var j = 0; j < this.entities.length; j++){
-							if(this.entities[j] == entity){
+				for (var x = 0; x < messageIds.length; x++) {
+					if (messageIds[x] == 'handle-controller') {
+						for (var j = 0; j < this.entities.length; j++) {
+							if (this.entities[j] == entity) {
 								alreadyHere = true;
 								break;
 							}
 						}
 						
-						if(!alreadyHere){
+						if (!alreadyHere) {
 							// Check for custom input messages that should be relayed from scene.
-							if(entity.controlMap){
-								for(var y in entity.controlMap){
-									if((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)){
-										if(!this[y]){
+							if (entity.controlMap) {
+								for(var y in entity.controlMap) {
+									if ((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)) {
+										if (!this[y]) {
 											this.addEventListener(y,           relayUpDown(y,     this));
 											this.addEventListener(y + ':up',   relay(y + ':up',   this));
 											this.addEventListener(y + ':down', relay(y + ':down', this));
@@ -231,9 +231,9 @@ This component handles capturing and relaying input information to the entities 
 					}
 				}
 			},
-			destroy: function(){
+			destroy: function () {
 				this.entities.length = 0;
 			}
 		}
 	});
-})();
+}());

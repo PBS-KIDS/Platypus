@@ -77,19 +77,19 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
 /* global createjs */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'audio-mixer',
 			
-		constructor: function(definition){
-			if(!platformer.game.audioMixer){
+		constructor: function (definition) {
+			if (!platformer.game.audioMixer) {
 				platformer.game.audioMixer = {
 					channels: {},
 					paused: false,
-					getChannel: function(id){
-						if(!this.channels[id]){
+					getChannel: function (id) {
+						if (!this.channels[id]) {
 							this.channels[id] = {
 								volume: 1,
 								mute: false,
@@ -110,11 +110,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		},
 
 		events: {// These are messages that this component listens for
-	 		"toggle-mute": function(channelId){
+	 		"toggle-mute": function (channelId) {
 	 			var mute = false,
 	 			channel  = null;
 	 			
-	 			if(channelId){
+	 			if (channelId) {
 	 				channel = this.mixer.getChannel(channelId);
 	 				channel.mute = !channel.mute;
 	 				channel.update += 1;
@@ -125,12 +125,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 	 	    
-	 		"mute-audio": function(channelId){
+	 		"mute-audio": function (channelId) {
 	 			var channel = null;
 	 			
-	 			if(channelId){
+	 			if (channelId) {
 	 				channel = this.mixer.getChannel(channelId);
-	 				if(!channel.mute){
+	 				if (!channel.mute) {
 		 				channel.mute = true;
 		 				channel.update += 1;
 	 				}
@@ -140,12 +140,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 	 	    
-	 		"unmute-audio": function(channelId){
+	 		"unmute-audio": function (channelId) {
 	 			var channel = null;
 	 			
-	 			if(channelId){
+	 			if (channelId) {
 	 				channel = this.mixer.getChannel(channelId);
-	 				if(channel.mute){
+	 				if (channel.mute) {
 	 					channel.mute = false;
 		 				channel.update += 1;
 	 				}
@@ -155,12 +155,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 
-	 		"pause-audio": function(channelId){
+	 		"pause-audio": function (channelId) {
 	 			var channel = null;
 	 			
-	 			if(channelId){
+	 			if (channelId) {
 	 				channel = this.mixer.getChannel(channelId);
-	 				if(!channel.paused){
+	 				if (!channel.paused) {
 	 					channel.paused = true;
 		 				channel.update += 1;
 	 				}
@@ -170,12 +170,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 	 	    
-	 		"unpause-audio": function(channelId){
+	 		"unpause-audio": function (channelId) {
 	 			var channel = null;
 	 			
-	 			if(channelId){
+	 			if (channelId) {
 	 				channel = this.mixer.getChannel(channelId);
-	 				if(channel.paused){
+	 				if (channel.paused) {
 	 					channel.paused = false;
 		 				channel.update += 1;
 	 				}
@@ -185,12 +185,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			}
 	 		},
 	 		
-	 		"set-volume": function(volume){
+	 		"set-volume": function (volume) {
 	 			var channel = null;
 	 			
-	 			if(volume && volume.channelId){
+	 			if (volume && volume.channelId) {
 	 				channel = this.mixer.getChannel(volume.channelId);
-	 				if(channel.volume !== volume.volume){
+	 				if (channel.volume !== volume.volume) {
 	 					channel.volume = volume.volume;
 		 				channel.update += 1;
 	 				}
@@ -200,4 +200,4 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 		}
 		}
 	});
-})();	
+}());	

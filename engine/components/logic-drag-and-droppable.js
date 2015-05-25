@@ -28,7 +28,7 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 		"type": "logic-drag-and-droppable"
 	}
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
@@ -43,7 +43,7 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 		
 		id: 'logic-drag-and-droppable',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.nextX = this.owner.x;
 			this.nextY = this.owner.y;
 			this.grabOffsetX = 0;
@@ -56,17 +56,17 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 				this.owner.x = this.nextX;
 				this.owner.y = this.nextY;
 				
 				this.owner.state.noDrop = false;
 				
 			},
-			"handle-post-collision-logic": function(resp){
+			"handle-post-collision-logic": function (resp) {
 				if (this.tryDrop) {
 					this.tryDrop = false;
-					if(this.hitSomething) {
+					if (this.hitSomething) {
 						this.dropFailed = false;
 						this.owner.state.noDrop = true;
 						this.owner.state.dragging = true;
@@ -80,25 +80,25 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 				}
 				this.hitSomething = false;
 			},
-			"mousedown": function(eventData) {
+			"mousedown": function (eventData) {
 				this.grabOffsetX = eventData.x - this.owner.x;
 				this.grabOffsetY = eventData.y - this.owner.y;
 				this.owner.state.dragging = true;
 			},
-			"mouseup": function(eventData) {
+			"mouseup": function (eventData) {
 				this.tryDrop = true;
 			},
-			"pressmove": function(eventData) {
+			"pressmove": function (eventData) {
 				this.nextX = eventData.x - this.grabOffsetX;
 				this.nextY = eventData.y - this.grabOffsetY;
 			},
-			"no-drop": function(collisionData) {
+			"no-drop": function (collisionData) {
 				this.hitSomething = true;
 			}
 		},
 		
 		methods: {// These are methods that are called by this component.
-			destroy: function() {
+			destroy: function () {
 				this.owner.state.dragging = null;
 				this.owner.state.noDrop = null;
 			}
@@ -110,4 +110,4 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 			
 		}
 	});
-})();
+}());

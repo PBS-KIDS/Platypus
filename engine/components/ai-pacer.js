@@ -30,43 +30,44 @@ This component acts as a simple AI that will reverse the movement direction of a
       // Optional: "up", "right", "down", or "left". This specifies the initial direction of movement. Defaults to "up", or "left" if `movement` is horizontal.
     }
 */
-(function(){
+/*global platformer */
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: "ai-pacer",
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.movement         = definition.movement  || 'both';
 			this.lastDirection    = '';
-			this.currentDirection = definition.direction || ((this.movement === 'horizontal')?'left':'up');
+			this.currentDirection = definition.direction || ((this.movement === 'horizontal') ? 'left' : 'up');
 		},
 		
 		events: {
-			"handle-ai": function(obj){
-				if(this.currentDirection !== this.lastDirection){
+			"handle-ai": function (obj) {
+				if (this.currentDirection !== this.lastDirection) {
 					this.lastDirection = this.currentDirection;
 					this.owner.trigger('stop');
 					this.owner.trigger('go-' + this.currentDirection);
 				}
 			},
 			
-			"turn-around": function(collisionInfo){
-				if ((this.movement === 'both') || (this.movement === 'horizontal')){
-					if(collisionInfo.x > 0){
+			"turn-around": function (collisionInfo) {
+				if ((this.movement === 'both') || (this.movement === 'horizontal')) {
+					if (collisionInfo.x > 0) {
 						this.currentDirection = 'left';
 					} else if (collisionInfo.x < 0) {
 						this.currentDirection = 'right';
 					}
-				} 
-				if ((this.movement === 'both') || (this.movement === 'vertical')){
-					if(collisionInfo.y > 0){
+				}
+				if ((this.movement === 'both') || (this.movement === 'vertical')) {
+					if (collisionInfo.y > 0) {
 						this.currentDirection = 'up';
 					} else if (collisionInfo.y < 0) {
 						this.currentDirection = 'down';
 					}
-				} 
+				}
 			}
 		}
 	});
-})();
+}());

@@ -41,12 +41,12 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 	  //Optional - The max value, positive or negative, that the timer will count to. At which it stops counting. Default to 3600000 which equals an hour.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-timer',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.time = this.owner.time || definition.time ||  0;
 			this.prevTime = this.time;
 			this.alarmTime = this.owner.alarmTime || definition.alarmTime || undefined;
@@ -58,8 +58,8 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 			this.maxTime = this.owner.maxTime || definition.maxTime || 3600000; //Max time is 1hr by default.
 		},
 		events:{
-			"handle-logic": function(data){
-				if (this.isOn){
+			"handle-logic": function (data) {
+				if (this.isOn) {
 					this.prevTime = this.time;
 					this.isIncrementing ? this.time += data.delta : this.time -= data.delta;
 					if (Math.abs(this.time) > this.maxTime)
@@ -108,15 +108,15 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 				}
 				this.owner.trigger(this.updateMessage, {time: this.time});
 			},
-			"set-timer": function(data){
+			"set-timer": function (data) {
 				this.time = data.time;
 			},
-			"start-timer": function(){
+			"start-timer": function () {
 				this.isOn = true;
 			},
-			"stop-timer": function(){
+			"stop-timer": function () {
 				this.isOn = false;
 			}
 		}
 	});
-})();
+}());

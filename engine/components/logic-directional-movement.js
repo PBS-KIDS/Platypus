@@ -32,32 +32,32 @@ This component changes the (x, y) position of an object according to its current
     }
 */
 // Requires: ["mover"]
-(function(){
+(function () {
 	"use strict";
 	
-	var processDirection = function(direction){
-		return function (state){
+	var processDirection = function (direction) {
+		return function (state) {
 			this[direction] = state && (state.pressed !== false);
 		};
 	},
-	doNothing = function(){},
+	doNothing = function () {},
 	rotate = {
-		x: function(heading, lastHeading){
-			if(heading !== lastHeading){
-				if(((heading > 180) && (lastHeading <= 180)) || ((heading <= 180) && (lastHeading > 180))){
+		x: function (heading, lastHeading) {
+			if (heading !== lastHeading) {
+				if (((heading > 180) && (lastHeading <= 180)) || ((heading <= 180) && (lastHeading > 180))) {
 					this.owner.triggerEvent('transform', 'vertical');
 				}
 			}
 		},
-		y: function(heading, lastHeading){
-			if(heading !== lastHeading){
-				if(((heading > 90 && heading <= 270) && (lastHeading <= 90 || lastHeading > 270)) || ((heading <= 90 || heading > 270) && (lastHeading > 90 && lastHeading <= 270))){
+		y: function (heading, lastHeading) {
+			if (heading !== lastHeading) {
+				if (((heading > 90 && heading <= 270) && (lastHeading <= 90 || lastHeading > 270)) || ((heading <= 90 || heading > 270) && (lastHeading > 90 && lastHeading <= 270))) {
 					this.owner.triggerEvent('transform', 'horizontal');
 				}
 			}
 		},
-		z: function(heading, lastHeading){
-			if(heading !== lastHeading){
+		z: function (heading, lastHeading) {
+			if (heading !== lastHeading) {
 				this.owner.triggerEvent('replace-transform', 'rotate-' + heading);
 			}
 		}
@@ -72,30 +72,30 @@ This component changes the (x, y) position of an object according to its current
 			speed: 0.3
 		},
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var self = this;
 			
-			if(!isNaN(this.speed)){
+			if (!isNaN(this.speed)) {
 				this.speed = [this.speed, 0, 0];
 			}
 			this.initialVector = new platformer.Vector(this.speed);
 			this.reorient = rotate[this.axis];
-			if(!this.reorient){
+			if (!this.reorient) {
 				this.reorient = doNothing;
 			}
 			
 			this.paused = false;
 			
-			if(definition.pause){
-				if(typeof definition.pause === 'string'){
+			if (definition.pause) {
+				if (typeof definition.pause === 'string') {
 					this.pausers = [definition.pause];
 				} else {
 					this.pausers = definition.pause;
 				}
-				this.addEventListener('logical-state', function(state){
+				this.addEventListener('logical-state', function (state) {
 					var paused = false;
-					if(definition.pause){
-						for(var i = 0; i < self.pausers.length; i++){
+					if (definition.pause) {
+						for(var i = 0; i < self.pausers.length; i++) {
 							paused = paused || state[self.pausers[i]];
 						}
 						this.paused = paused;
@@ -124,8 +124,8 @@ This component changes the (x, y) position of an object according to its current
 			this.owner.heading = 0;
 		},
 		events:{
-			"load": function(){
-				if(!this.owner.addMover){
+			"load": function () {
+				if (!this.owner.addMover) {
 					console.warn('The "logic-directional-movement" component requires a "mover" component to function correctly.');
 					return;
 				}
@@ -138,7 +138,7 @@ This component changes the (x, y) position of an object according to its current
 				this.owner.triggerEvent('moving', this.moving);
 			},
 			
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 				var up    = this.up        || this.upLeft || this.downLeft,
 				upLeft    = this.upLeft    || (this.up   && this.left),
 				left      = this.left      || this.upLeft || this.downLeft,
@@ -148,7 +148,7 @@ This component changes the (x, y) position of an object according to its current
 				right     = this.right     || this.upRight || this.downRight,
 				upRight   = this.upRight   || (this.up   && this.right);
 				
-				if (up && down){
+				if (up && down) {
 					this.moving = false;
 				} else if (left && right) {
 					this.moving = false;
@@ -168,7 +168,7 @@ This component changes the (x, y) position of an object according to its current
 					this.moving = true;
 					this.facing = 'down-right';
 					this.heading = 45;
-				} else if(left)	{
+				} else if (left)	{
 					this.moving = true;
 					this.facing = 'left';
 					this.heading = 180;
@@ -188,7 +188,7 @@ This component changes the (x, y) position of an object according to its current
 					this.moving = false;
 					
 					// This is to retain the entity's direction even if there is no movement. There's probably a better way to do this since this is a bit of a retrofit. - DDD
-					switch(this.facing){
+					switch(this.facing) {
 					case 'up': up = true; break;
 					case 'down': down = true; break;
 					case 'left': left = true; break;
@@ -200,28 +200,28 @@ This component changes the (x, y) position of an object according to its current
 					}
 				}
 				
-				if(this.owner.heading !== this.heading){
+				if (this.owner.heading !== this.heading) {
 					this.direction.set(this.initialVector).rotate((this.heading / 180) * Math.PI);
 					this.reorient(this.heading, this.owner.heading);
 					this.owner.heading = this.heading;
 				}
 				
 				//TODO: possibly remove the separation of this.state.direction and this.direction to just use state?
-				if(this.state.moving !== this.moving){
+				if (this.state.moving !== this.moving) {
 					this.owner.triggerEvent('moving', this.moving);
 					this.state.moving = this.moving;
 				}
 
-				if(this.state.up !== up){
+				if (this.state.up !== up) {
 					this.state.up = up;
 				}
-				if(this.state.right !== right){
+				if (this.state.right !== right) {
 					this.state.right = right;
 				}
-				if(this.state.down !== down){
+				if (this.state.down !== down) {
 					this.state.down = down;
 				}
-				if(this.state.left !== left){
+				if (this.state.left !== left) {
 					this.state.left = left;
 				}
 			},
@@ -243,8 +243,8 @@ This component changes the (x, y) position of an object according to its current
 			"go-down-right": processDirection('downRight'),
 			"go-southeast": processDirection('downRight'),
 
-			"stop": function(state){
-				if(!state || (state.pressed !== false)){
+			"stop": function (state) {
+				if (!state || (state.pressed !== false)) {
 					this.left = false;
 					this.right = false;
 					this.up = false;
@@ -256,10 +256,10 @@ This component changes the (x, y) position of an object according to its current
 				}
 			},
 			
-			"accelerate": function(velocity) {
+			"accelerate": function (velocity) {
 				this.initialVector.normalize().multiply(velocity);
 				this.direction.normalize().multiply(velocity);
 			}
 		}
 	});
-})();
+}());

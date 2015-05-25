@@ -33,48 +33,48 @@ The Messenger object facilitates communication between components and other game
 - **getMessageIds** - This method returns all the messages that this entity is concerned about.
   - @return Array - An array of strings listing all the messages for which this messenger has handlers.
 */
-platformer.Messenger = (function(){
+platformer.Messenger = (function () {
 	"use strict";
 
-	var messenger = function (){
+	var messenger = function () {
 		this.messages    = {};
 		this.loopCheck   = [];
 		this.unbindLater = [];
 	},
 	proto = messenger.prototype;
 	
-	proto.toString = function(){
+	proto.toString = function () {
 		return "[messenger Object]";
 	};
 	
-	proto.bind = function(event, callback, scope){
-		if(!this.messages[event]) this.messages[event] = [];
+	proto.bind = function (event, callback, scope) {
+		if (!this.messages[event]) this.messages[event] = [];
 		this.messages[event].push({callback: callback, scope: scope});
 	};
 	
-	proto.unbind = function(event, callback, scope){
+	proto.unbind = function (event, callback, scope) {
 		var found = false, j = 0;
 		
-		if(this.loopCheck.length){
-			for(j = 0; j < this.loopCheck.length; j++){
-				if(this.loopCheck[j] === event){
+		if (this.loopCheck.length) {
+			for(j = 0; j < this.loopCheck.length; j++) {
+				if (this.loopCheck[j] === event) {
 					found = true;
 					break;
 				}
 			}
 		}
 			
-		if(found){ //We're currently busy triggering messages like this, so we shouldn't remove message handlers until we're finished.
+		if (found) { //We're currently busy triggering messages like this, so we shouldn't remove message handlers until we're finished.
 			this.unbindLater.push({event: event, callback: callback, scope: scope});
 		} else {
 			this.safelyUnbind(event, callback, scope);
 		}
 	};
 
-	proto.safelyUnbind = function(event, callback, scope){
-		if(!this.messages[event]) this.messages[event] = [];
-		for (var x in this.messages[event]){
-			if((this.messages[event][x].callback === callback) && (this.messages[event][x].scope === scope)){
+	proto.safelyUnbind = function (event, callback, scope) {
+		if (!this.messages[event]) this.messages[event] = [];
+		for (var x in this.messages[event]) {
+			if ((this.messages[event][x].callback === callback) && (this.messages[event][x].scope === scope)) {
 				this.messages[event].splice(x,1);
 				break;
 			}
@@ -82,13 +82,13 @@ platformer.Messenger = (function(){
 	};
 	
 	// This handles multiple event structures: "", [], and {}
-	proto.trigger = function(events, message, debug){
+	proto.trigger = function (events, message, debug) {
 		var i = 0, count = 0;
 		
-		if(typeof events === 'string') {
+		if (typeof events === 'string') {
 			return this.triggerEvent(events, message, debug);
 		} else if (Array.isArray(events)) {
-			for (; i < events.length; i++){
+			for (; i < events.length; i++) {
 				count += this.trigger(events[i], message, debug);
 			}
 			return count;
@@ -101,21 +101,21 @@ platformer.Messenger = (function(){
 	};
 	
 	// This handles string events only
-	proto.triggerEvent = function(event, value, debug){
+	proto.triggerEvent = function (event, value, debug) {
 		var i = 0, j = 0, debugCount = 0;
 		
 		// Debug logging.
-		if(this.debug || debug || (value && value.debug)){
-			if(this.messages[event] && this.messages[event].length){
+		if (this.debug || debug || (value && value.debug)) {
+			if (this.messages[event] && this.messages[event].length) {
 				console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length>1)?'s':'') + '.', value);
 			} else {
 				console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
 			}
 			
-			for (i = 0; i < this.loopCheck.length; i++){
-				if(this.loopCheck[i] === event){
+			for (i = 0; i < this.loopCheck.length; i++) {
+				if (this.loopCheck[i] === event) {
 					debugCount += 1;
-					if(debugCount > 5){
+					if (debugCount > 5) {
 						throw "Endless loop detected for '" + event + "'.";
 					} else {
 						console.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
@@ -126,15 +126,15 @@ platformer.Messenger = (function(){
 		}
 
 		this.loopCheck.push(event);
-		if(this.messages[event]){
-			for (i = 0; i < this.messages[event].length; i++){
+		if (this.messages[event]) {
+			for (i = 0; i < this.messages[event].length; i++) {
 				this.messages[event][i].callback.call(this.messages[event][i].scope || this, value, debug);
 			}
 		}
 		this.loopCheck.length = this.loopCheck.length - 1;
 		
-		if(!this.loopCheck.length && this.unbindLater.length){
-			for(j = 0; j < this.unbindLater.length; j++){
+		if (!this.loopCheck.length && this.unbindLater.length) {
+			for(j = 0; j < this.unbindLater.length; j++) {
 				this.safelyUnbind(this.unbindLater[j].event, this.unbindLater[j].callback, this.unbindLater[j].scope);
 			}
 			this.unbindLater.length = 0;
@@ -143,17 +143,17 @@ platformer.Messenger = (function(){
 		return i;
 	};
 	
-	proto.getMessageIds = function(){
+	proto.getMessageIds = function () {
 		var events = [];
-		for (var event in this.messages){
+		for (var event in this.messages) {
 			events.push(event);
 		}
 		return events;
 	};
 	
-	proto.copyEventHandlers = function(event){
+	proto.copyEventHandlers = function (event) {
 		return this.messages[event] || null;
 	};
 	
 	return messenger;
-})();
+}());

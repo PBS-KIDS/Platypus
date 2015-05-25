@@ -49,7 +49,7 @@ This component is attached to entities that will appear in the game world. It se
 [link1]: http://createjs.com/Docs/EaselJS/Stage.html
 */
 
-(function(){
+(function () {
 	"use strict";
 	
 	var types = {
@@ -58,10 +58,10 @@ This component is attached to entities that will appear in the game world. It se
 		"collision": "255,0,255",
 		"group":     "0,255,0"
 	},
-	createShape = function(shape, type, width, height, regX, regY, z){
+	createShape = function (shape, type, width, height, regX, regY, z) {
 		var newShape = null;
 		
-		switch(shape){
+		switch(shape) {
 		case 'rectangle':
 			newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
 			regX += width/2;
@@ -84,8 +84,8 @@ This component is attached to entities that will appear in the game world. It se
 		
 		id: 'render-debug', 
 		
-		constructor: function(definition){
-			if(definition.acceptInput){
+		constructor: function (definition) {
+			if (definition.acceptInput) {
 				this.hover = definition.acceptInput.hover || false;
 				this.click = definition.acceptInput.click || false;
 			} else {
@@ -102,30 +102,30 @@ This component is attached to entities that will appear in the game world. It se
 		},
 		
 		events: {// These are messages that this component listens for
-			"handle-render-load": function(resp){
-				if(!platformer.game.settings.debug){
+			"handle-render-load": function (resp) {
+				if (!platformer.game.settings.debug) {
 					this.owner.removeComponent(this);
-				} else if(!this.stage && resp && resp.stage){
+				} else if (!this.stage && resp && resp.stage) {
 					this.stage = resp.stage;
 				}
 			},
 			
-			"handle-render": function(){
+			"handle-render": function () {
 				var i = 0;
 				
-				if(this.isOutdated){
+				if (this.isOutdated) {
 					this.updateSprites();
 					this.isOutdated = false;
 				}
 				
-				for(i = 0; i < this.shapes.length; i++){
+				for(i = 0; i < this.shapes.length; i++) {
 					this.shapes[i].x = this.owner.x;
 					this.shapes[i].y = this.owner.y;
 				}
 				
-				if(this.owner.getCollisionGroupAABB){
+				if (this.owner.getCollisionGroupAABB) {
 					var aabb = this.owner.getCollisionGroupAABB();
-					if(!this.groupShape){
+					if (!this.groupShape) {
 						this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
 						this.groupShape.regX  = 0.5;
 						this.groupShape.regY  = 0.5;
@@ -140,14 +140,14 @@ This component is attached to entities that will appear in the game world. It se
 				}
 			},
 			
-			"orientation-updated": function(){
+			"orientation-updated": function () {
 				this.isOutdated = true;
 			}
 			
 		},
 		
 		methods:{
-			updateSprites: function(){
+			updateSprites: function () {
 				var z    = (this.owner.z || 0) + 10000,
 				i        = 0,
 				j        = 0,
@@ -157,13 +157,13 @@ This component is attached to entities that will appear in the game world. It se
 				aabb     = null,
 				shape    = null;
 
-				for(i = 0; i < this.shapes.length; i++){
+				for(i = 0; i < this.shapes.length; i++) {
 					this.stage.removeChild(this.shapes[i]);
 				}
 				this.shapes.length = 0;
 
-				if(this.owner.getAABB){
-					for(j = 0; j < this.owner.collisionTypes.length; j++){
+				if (this.owner.getAABB) {
+					for(j = 0; j < this.owner.collisionTypes.length; j++) {
 						aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
 						width  = this.initialWidth  = aabb.width;
 						height = this.initialHeight = aabb.height;
@@ -174,7 +174,7 @@ This component is attached to entities that will appear in the game world. It se
 						this.stage.addChild(shape);
 						this.addInput(shape);
 						
-						for(i = 0; i < shapes.length; i++){
+						for(i = 0; i < shapes.length; i++) {
 							shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
 							this.shapes.push(shape);
 							this.stage.addChild(shape);
@@ -189,11 +189,11 @@ This component is attached to entities that will appear in the game world. It se
 				}
 			},
 			
-			addInput: (function(){
+			addInput: (function () {
 				var lastEntityLog = null,
-				createHandler = function(self, eventName){
-					return function(event) {
-						if((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)){
+				createHandler = function (self, eventName) {
+					return function (event) {
+						if ((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)) {
 							lastEntityLog = self.owner;
 							console.log('This Entity:', lastEntityLog);
 						}
@@ -202,15 +202,15 @@ This component is attached to entities that will appear in the game world. It se
 					};
 				};
 				
-				return function(sprite){
+				return function (sprite) {
 					sprite.addEventListener('mousedown', createHandler(this, 'mousedown'));
 				};
-			})(),
+			}()),
 			
-			destroy: function(){
+			destroy: function () {
 				var i = 0;
 				
-				for(i = 0; i < this.shapes.length; i++){
+				for(i = 0; i < this.shapes.length; i++) {
 					this.stage.removeChild(this.shapes[i]);
 				}
 				this.shapes.length = 0;
@@ -218,4 +218,4 @@ This component is attached to entities that will appear in the game world. It se
 			}
 		}
 	});
-})();
+}());

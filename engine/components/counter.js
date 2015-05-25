@@ -21,12 +21,12 @@ A simple component that keeps count of something and sends messages each time th
     }
 */
 
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'counter',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.count = 0;
 			this.total = 0;
 			this.showTotal = definition.showTotal || false;
@@ -35,38 +35,38 @@ A simple component that keeps count of something and sends messages each time th
 			};
 
 			// Notes definition changes from older versions of this component.
-			if(definition.countMessage){
+			if (definition.countMessage) {
 				console.warn('"' + this.type + '" components no longer accept "countMessage": "' + definition.countMessage + '" as a definition parameter. Use "aliases": {"' + definition.countMessage + '": "change-count"} instead.');
 			}
-			if(definition.incrementMessage){
+			if (definition.incrementMessage) {
 				console.warn('"' + this.type + '" components no longer accept "incrementMessage": "' + definition.incrementMessage + '" as a definition parameter. Use "aliases": {"' + definition.incrementMessage + '": "increment-count"} instead.');
 			}
-			if(definition.totalMessage){
+			if (definition.totalMessage) {
 				console.warn('"' + this.type + '" components no longer accept "totalMessage": "' + definition.totalMessage + '" as a definition parameter. Use "aliases": {"' + definition.totalMessage + '": "change-total"} instead.');
 			}
 		},
 		events: {
-			"change-total": function(total){
+			"change-total": function (total) {
 				this.total = total;
-				if(this.total){
+				if (this.total) {
 					this.output.text = this.count + "/" + this.total;
 				} else {
 					this.output.text = '' + this.count;
 				}
 				this.owner.trigger('update-content', this.output);
 			},
-			"change-count": function(count){
+			"change-count": function (count) {
 				this.count = count;
-				if(this.total){
+				if (this.total) {
 					this.output.text = this.count + "/" + this.total;
 				} else {
 					this.output.text = '' + this.count;
 				}
 				this.owner.trigger('update-content', this.output);
 			},
-			"increment-count": function(){
+			"increment-count": function () {
 				this.count++;
-				if(this.total){
+				if (this.total) {
 					this.output.text = this.count + "/" + this.total;
 				} else {
 					this.output.text = '' + this.count;
@@ -75,4 +75,4 @@ A simple component that keeps count of something and sends messages each time th
 			}
 		}
 	});
-})();
+}());

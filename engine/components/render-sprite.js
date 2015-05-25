@@ -184,17 +184,17 @@ This component is attached to entities that will appear in the game world. It re
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
 */
-(function(){
+(function () {
 	"use strict";
 	
 	var dpr = window.devicePixelRatio || 1,
 	ssCache = {},
-	changeState = function(state){
-		return function(value){
+	changeState = function (state) {
+		return function (value) {
 			//9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
 			//				We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
-			//if(this.currentAnimation !== state){
-				if(this.animationFinished || (this.lastState >= -1)){
+			//if (this.currentAnimation !== state) {
+				if (this.animationFinished || (this.lastState >= -1)) {
 					this.currentAnimation = state;
 					this.lastState = -1;
 					this.animationFinished = false;
@@ -206,16 +206,16 @@ This component is attached to entities that will appear in the game world. It re
 			//}
 		};
 	},
-	createTest = function(testStates, animation){
+	createTest = function (testStates, animation) {
 		var states = testStates.replace(/ /g, '').split(',');
-		if(testStates === 'default'){
-			return function(state){
+		if (testStates === 'default') {
+			return function (state) {
 				return animation;
 			};
 		} else {
-			return function(state){
-				for(var i = 0; i < states.length; i++){
-					if(!state[states[i]]){
+			return function (state) {
+				for(var i = 0; i < states.length; i++) {
+					if (!state[states[i]]) {
 						return false;
 					}
 				}
@@ -223,36 +223,36 @@ This component is attached to entities that will appear in the game world. It re
 			};
 		}
 	},
-	processGraphics = (function(){
-		var process = function(gfx, value){
+	processGraphics = (function () {
+		var process = function (gfx, value) {
 			var paren = value.indexOf('('),
 			func      = value.substring(0, paren),
 			values    = value.substring(paren + 1, value.indexOf(')'));
 			
-			if(values.length){
+			if (values.length) {
 				gfx[func].apply(gfx, values.split(','));
 			} else {
 				gfx[func]();
 			}
 		};
 		
-		return function(gfx, value){
+		return function (gfx, value) {
 			var i = 0,
 			arr   = value.split('.');
 			
-			for (; i < arr.length; i++){
+			for (; i < arr.length; i++) {
 				process(gfx, arr[i]);
 			}
 		};
-	})();
+	}());
 	
 	return platformer.createComponentClass({
 		
 		id: 'render-sprite',
 		
-		constructor: (function(){
+		constructor: (function () {
 			var defaultAnimations = {"default": 0},
-			createSpriteSheet = function(def, entity){
+			createSpriteSheet = function (def, entity) {
 				var i  = 0,
 				arr    = null,
 				image  = null,
@@ -272,54 +272,54 @@ This component is attached to entities that will appear in the game world. It re
 				};
 				
 				// Find SS definition in image data if it has not otherwise been provided.
-				if(!srcSS && (typeof def.image === 'string')){
+				if (!srcSS && (typeof def.image === 'string')) {
 					//check cache and bail if it's available
-					if(ssCache[def.image]){
+					if (ssCache[def.image]) {
 						return ssCache[def.image];
-					} else if(platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet){
+					} else if (platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet) {
 						ssCache[def.image] = cache;
 						srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
 					}
 				}
 				
 				// Set framerate.
-				if(srcSS && !isNaN(srcSS.framerate)){
+				if (srcSS && !isNaN(srcSS.framerate)) {
 					ss.framerate = srcSS.framerate;
-				} else if(!isNaN(def.framerate)){
+				} else if (!isNaN(def.framerate)) {
 					ss.framerate = def.framerate;
-				} else if(!isNaN(entity.framerate)) {
+				} else if (!isNaN(entity.framerate)) {
 					ss.framerate = entity.framerate;
 				}
 				
 				// Set source image(s)
-				if(srcSS && Array.isArray(srcSS.images)){
+				if (srcSS && Array.isArray(srcSS.images)) {
 					ss.images = srcSS.images.slice();
-				} else if(srcSS && srcSS.image){
+				} else if (srcSS && srcSS.image) {
 					ss.images = [srcSS.image];
-				} else if(def.images){
+				} else if (def.images) {
 					ss.images = def.images.slice();
-				} else if(def.image){
+				} else if (def.image) {
 					ss.images = [def.image];
-				} else if(entity.images){
+				} else if (entity.images) {
 					ss.images = entity.images.slice();
-				} else if(entity.image){
+				} else if (entity.image) {
 					ss.images = [entity.image];
 				} else {
 					console.warn('"' + entity.type + '" render component: No source image defined.');
 				}
 				
 				// Convert image names into Image resources
-				for (i = 0; i < ss.images.length; i++){
-					if(typeof ss.images[i] === 'string'){
-						if(platformer.assets[ss.images[i]]){
+				for (i = 0; i < ss.images.length; i++) {
+					if (typeof ss.images[i] === 'string') {
+						if (platformer.assets[ss.images[i]]) {
 							ss.images[i] = platformer.assets[ss.images[i]];
 							
 							// Check here whether to scale coordinates in the frame setup section.
-							if(!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))){
+							if (!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))) {
 								scaled = true;
 							}
 						} else {
-							if(platformer.settings.supports.iOS){
+							if (platformer.settings.supports.iOS) {
 								console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
 							} else {
 								console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset.');
@@ -329,13 +329,13 @@ This component is attached to entities that will appear in the game world. It re
 				}
 
 				// Set frames.
-				if(srcSS && srcSS.frames){
+				if (srcSS && srcSS.frames) {
 					ss.frames = srcSS.frames;
-				} else if(def.frames){
+				} else if (def.frames) {
 					ss.frames = def.frames;
-				} else if(entity.frames) {
+				} else if (entity.frames) {
 					ss.frames = entity.frames;
-				} else if(def.source){
+				} else if (def.source) {
 					//TODO: Remove this option at some point once "render-image" notation is no longer in common use. - DDD 5/1/2014
 					ss.frames = [[
 					    def.source.x      || def.x      || 0,
@@ -350,7 +350,7 @@ This component is attached to entities that will appear in the game world. It re
 				} else {
 					// assume this is a single frame image and define accordingly.
 					image = ss.images[0];
-					if(image){
+					if (image) {
 						ss.frames = [[
 						    def.x      || 0,
 						    def.y      || 0,
@@ -364,11 +364,11 @@ This component is attached to entities that will appear in the game world. It re
 				}
 				
 				// Process frames if the image size has been scaled from the original definition image. (This is sent as data on the image itself, usually due to dynamically reducing the size of source images for smaller devices.)
-				if(scaled){
-					if(Array.isArray(ss.frames)){ //frames are an array
+				if (scaled) {
+					if (Array.isArray(ss.frames)) { //frames are an array
 						arr = ss.frames;
 						ss.frames = [];
-						for (i = 0; i < arr.length; i++){
+						for (i = 0; i < arr.length; i++) {
 							scaleX = ss.images[arr[i][4]].scaleX || 1;
 							scaleY = ss.images[arr[i][4]].scaleY || 1;
 							
@@ -395,11 +395,11 @@ This component is attached to entities that will appear in the game world. It re
 				}
 				
 				// Set animations.
-				if(srcSS && srcSS.animations){
+				if (srcSS && srcSS.animations) {
 					ss.animations = srcSS.animations;
-				} else if(def.animations){
+				} else if (def.animations) {
 					ss.animations = def.animations;
-				} else if(entity.animations) {
+				} else if (entity.animations) {
 					ss.animations = entity.animations;
 				} else {
 					// assume this is a single frame image and define accordingly.
@@ -410,51 +410,51 @@ This component is attached to entities that will appear in the game world. It re
 				
 				return cache;
 			},
-			createAnimationMap = function(def, ss){
+			createAnimationMap = function (def, ss) {
 				var map = null,
 				anim    = '';
 				
-				if(def.animationMap){
+				if (def.animationMap) {
 					return def.animationMap;
 				} else if (Array.isArray(ss.frames) && (ss.frames.length === 1)) {
 					// This is a single frame animation, so no mapping is necessary
 					return null;
 				} else { // create 1-to-1 animation map since none was defined
 					map = {};
-					for (anim in ss.animations){
+					for (anim in ss.animations) {
 						map[anim] = anim;
 					}
 					return map;
 				}
 			},
-			setupEventsAndStates = function(component, map){
+			setupEventsAndStates = function (component, map) {
 				var anim  = '',
 				animation = '';
 				
 				component.followThroughs = {};
 				component.checkStates = [];
 
-				for(anim in map){
+				for(anim in map) {
 					animation = map[anim];
 					
 					//TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
-					if(animation[animation.length - 1] === '!'){
+					if (animation[animation.length - 1] === '!') {
 						animation = animation.substring(0, animation.length - 1);
 						component.followThroughs[animation] = true;
 					} else {
 						component.followThroughs[animation] = false;
 					}
 					
-					if(component.eventBased){
+					if (component.eventBased) {
 						component.addEventListener(anim, changeState(animation));
 					}
-					if(component.stateBased){
+					if (component.stateBased) {
 						component.checkStates.push(createTest(anim, animation));
 					}
 				}
 			};
 			
-			return function(definition){
+			return function (definition) {
 				var self = this, 
 				ss       = createSpriteSheet(definition, this.owner),
 				map      = createAnimationMap(definition, ss.definition),
@@ -479,13 +479,13 @@ This component is attached to entities that will appear in the game world. It re
 
 				this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
 				
-				if(definition.facing === 'left'){
+				if (definition.facing === 'left') {
 					initialScaleX = -initialScaleX;
 				}
 				this.imageScaleX     = ss.definition.images[0].scaleX || 1;
 				this.imageScaleY     = ss.definition.images[0].scaleY || 1;
 				
-				if(definition.acceptInput){
+				if (definition.acceptInput) {
 					this.hover = definition.acceptInput.hover || false;
 					this.click = definition.acceptInput.click || false;
 					this.touch = definition.acceptInput.touch || false;
@@ -494,13 +494,13 @@ This component is attached to entities that will appear in the game world. It re
 						x: 0,
 						y: 0
 					};
-					this.addEventListener('camera-update', function(camera){
+					this.addEventListener('camera-update', function (camera) {
 						self.camera.x = camera.viewportLeft;
 						self.camera.y = camera.viewportTop;
 					});
 				}
 				
-				if(this.eventBased || this.stateBased){
+				if (this.eventBased || this.stateBased) {
 					setupEventsAndStates(this, map);
 					this.currentAnimation = map['default'] || '';
 				}
@@ -509,9 +509,9 @@ This component is attached to entities that will appear in the game world. It re
 				 * CreateJS Sprite created here:
 				 */
 				this.sprite = new createjs.Sprite(ss.spritesheet, this.currentAnimation || 0);
-				this.sprite.addEventListener('animationend', function(animationInstance){
+				this.sprite.addEventListener('animationend', function (animationInstance) {
 					self.owner.trigger('animation-ended', animationInstance);
-					if(self.waitingAnimation){
+					if (self.waitingAnimation) {
 						self.currentAnimation = self.waitingAnimation;
 						self.waitingAnimation = false;
 						self.lastState = self.waitingState;
@@ -532,7 +532,7 @@ This component is attached to entities that will appear in the game world. It re
 				this.owner.skewY    = this.owner.skewY  || this.owner.skew  || 0;
 				
 				// add pins to sprite and setup this.container if needed.
-				if(definition.pins){
+				if (definition.pins) {
 					this.container = new createjs.Container();
 					this.container.addChild(this.sprite);
 					this.sprite.z = 0;
@@ -549,8 +549,8 @@ This component is attached to entities that will appear in the game world. It re
 				/* These next few need this.container set up */
 				
 				//handle hitArea
-				if(definition.acceptInput && definition.acceptInput.hitArea){
-					if(typeof definition.acceptInput.hitArea === 'string'){
+				if (definition.acceptInput && definition.acceptInput.hitArea) {
+					if (typeof definition.acceptInput.hitArea === 'string') {
 						this.container.hitArea = this.setHitArea(definition.acceptInput.hitArea);
 					} else {
 						this.container.hitArea = this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
@@ -558,13 +558,13 @@ This component is attached to entities that will appear in the game world. It re
 				}
 				
 				//handle mask
-				if(definition.mask){
+				if (definition.mask) {
 					this.container.mask = this.setMask(definition.mask);
 				}
 	
 				// pin to another render-sprite
 				this.pinTo = definition.pinTo || false;
-				if(this.pinTo){
+				if (this.pinTo) {
 					this.owner.triggerEvent('pin-me', this.pinTo);
 				}
 				
@@ -584,24 +584,24 @@ This component is attached to entities that will appear in the game world. It re
 				//Check state against entity's prior state to update animation if necessary on instantiation.
 				this.stateChange = true;
 				
-				if(definition.cache){
+				if (definition.cache) {
 					this.updateSprite();
 					this.owner.cacheRender = this.container;
 				}
 			};
-		})(),
+		}()),
 		
 		events: {
-			"handle-render-load": function(resp){
-				if(!this.stage && resp && resp.stage){
+			"handle-render-load": function (resp) {
+				if (!this.stage && resp && resp.stage) {
 					this.addStage(resp.stage);
 				}
 			},
 			
-			"handle-render": function(resp){
-				if(!this.stage){
-					if(!this.pinTo) { //In case this component was added after handler-render is initiated
-						if(!this.addStage(resp.stage)){
+			"handle-render": function (resp) {
+				if (!this.stage) {
+					if (!this.pinTo) { //In case this component was added after handler-render is initiated
+						if (!this.addStage(resp.stage)) {
 							console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
 							this.owner.removeComponent(this);
 							return;
@@ -614,26 +614,26 @@ This component is attached to entities that will appear in the game world. It re
 				this.updateSprite();
 			},
 			
-			"logical-state": function(state){
+			"logical-state": function (state) {
 				this.stateChange = true;
 			},
 			
-			"hide-sprite": function(){
+			"hide-sprite": function () {
 				this.container.hidden = true;
 			},
 
-			"show-sprite": function(){
+			"show-sprite": function () {
 				this.container.hidden = false;
 			},
 			
-			"pin-me": function(pinId){
-				if(this.pins && this.pins[pinId]){
+			"pin-me": function (pinId) {
+				if (this.pins && this.pins[pinId]) {
 					this.owner.trigger("attach-pin", this.pins[pinId]);
 				}
 			},
 			
-			"attach-pin": function(pinInfo){
-				if(pinInfo.pinId === this.pinTo){
+			"attach-pin": function (pinInfo) {
+				if (pinInfo.pinId === this.pinTo) {
 					this.stage = pinInfo.container;
 					this.stage.addChild(this.container);
 					this.addInputs();				
@@ -641,37 +641,37 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			"remove-pin": function(pinInfo){
-				if(pinInfo.pinId === this.pinTo){
+			"remove-pin": function (pinInfo) {
+				if (pinInfo.pinId === this.pinTo) {
 					this.stage.removeChild(this.container);
 					this.stage = null;
 					this.pinnedTo = null;
 				}
 			},
 			
-			"dispatch-event": function(event){
+			"dispatch-event": function (event) {
 				this.sprite.dispatchEvent(event);
 			},
 			
-			"input-on": function(){
-				if(!this.removeInputListeners){
+			"input-on": function () {
+				if (!this.removeInputListeners) {
 					this.addInputs();
 				}
 			},
 			
-			"input-off": function(){
-				if(this.removeInputListeners){
+			"input-off": function () {
+				if (this.removeInputListeners) {
 					this.removeInputListeners();
 				}
 			}
 		},
 		
 		methods: {
-			addStage: function(stage){
-				if(stage && !this.pinTo){
+			addStage: function (stage) {
+				if (stage && !this.pinTo) {
 					this.stage = stage;
 					this.stage.addChild(this.container);
-//					if(this.container.mask) this.stage.addChild(this.container.mask);
+//					if (this.container.mask) this.stage.addChild(this.container.mask);
 					this.addInputs();
 					return stage;
 				} else {
@@ -679,12 +679,12 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			updateSprite: (function(){
-				var sort = function(a, b) {
+			updateSprite: (function () {
+				var sort = function (a, b) {
 					return a.z - b.z;
 				};
 				
-				return function(resp){
+				return function (resp) {
 					var i    = 0,
 					x        = 0,
 					y        = 0,
@@ -695,12 +695,12 @@ This component is attached to entities that will appear in the game world. It re
 					angle    = null,
 					matrix   = this.container.transformMatrix;
 					
-					if(this.pinnedTo){
-						if(this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]){
+					if (this.pinnedTo) {
+						if (this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]) {
 							x = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].x;
 							y = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].y;
-							if(this.container.z !== this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z){
-								if(this.stage){
+							if (this.container.z !== this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z) {
+								if (this.stage) {
 									this.stage.reorder = true;
 								}
 								this.container.z = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z;
@@ -710,8 +710,8 @@ This component is attached to entities that will appear in the game world. It re
 						} else if (this.pinnedTo.defaultPin) {
 							x = this.pinnedTo.defaultPin.x;
 							y = this.pinnedTo.defaultPin.y;
-							if(this.container.z !== this.pinnedTo.defaultPin.z){
-								if(this.stage){
+							if (this.container.z !== this.pinnedTo.defaultPin.z) {
+								if (this.stage) {
 									this.stage.reorder = true;
 								}
 								this.container.z = this.pinnedTo.defaultPin.z;
@@ -724,49 +724,49 @@ This component is attached to entities that will appear in the game world. It re
 					} else {
 						x = this.owner.x;
 						y = this.owner.y;
-						if(this.rotate) {
+						if (this.rotate) {
 							rotation = this.owner.rotation;
 						}
-						if(this.container.z !== (this.owner.z + this.offsetZ)){
-							if(this.stage){
+						if (this.container.z !== (this.owner.z + this.offsetZ)) {
+							if (this.stage) {
 								this.stage.reorder = true;
 							}
 							this.container.z = (this.owner.z + this.offsetZ);
 						}
 	
-						if(!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))){
+						if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
 							this.container.alpha = this.owner.opacity;
 						}
 					}
 					
-					if(this.container.reorder){
+					if (this.container.reorder) {
 						this.container.reorder = false;
 						this.container.sortChildren(sort);
 					}
 					
-					if(this.mirror || this.flip){
+					if (this.mirror || this.flip) {
 						angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
 						
-						if(this.mirror && (angle > 90) && (angle < 270)){
+						if (this.mirror && (angle > 90) && (angle < 270)) {
 							mirrored = -1;
 						}
 						
-						if(this.flip && (angle < 180)){
+						if (this.flip && (angle < 180)) {
 							flipped = -1;
 						}
 					}
 					
-					if(this.stateBased && this.stateChange){
-						if(this.state['hidden'] !== undefined) {
+					if (this.stateBased && this.stateChange) {
+						if (this.state['hidden'] !== undefined) {
 							this.container.hidden = this.state['hidden'];
 						}
 
-						if(this.checkStates){
-							for(; i < this.checkStates.length; i++){
+						if (this.checkStates) {
+							for(; i < this.checkStates.length; i++) {
 								testCase = this.checkStates[i](this.state);
-								if(testCase){
-									if(this.currentAnimation !== testCase){
-										if(!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))){
+								if (testCase) {
+									if (this.currentAnimation !== testCase) {
+										if (!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))) {
 											this.currentAnimation = testCase;
 											this.lastState = +i;
 											this.animationFinished = false;
@@ -775,7 +775,7 @@ This component is attached to entities that will appear in the game world. It re
 											this.waitingAnimation = testCase;
 											this.waitingState = +i;
 										}
-									} else if(this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
+									} else if (this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
 										this.waitingAnimation = false;
 									}
 									break;
@@ -789,7 +789,7 @@ This component is attached to entities that will appear in the game world. It re
 					var m = matrix.copy(this.affine),
 					o = null;
 					
-					if(this.owner.orientationMatrix){ // This is a 3x3 2D matrix describing an affine transformation.
+					if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
 						o = this.owner.orientationMatrix;
 						m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
 					}
@@ -797,15 +797,15 @@ This component is attached to entities that will appear in the game world. It re
 					m.prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
 					
 					// Handle rotation
-					if(rotation){
+					if (rotation) {
 						m.appendTransform(0,0,1,1, rotation);
 					}
 				};
-			})(),
+			}()),
 			
-			addInputs: (function(){
-				var createHandler = function(self, eventName){
-					return function(event) {
+			addInputs: (function () {
+				var createHandler = function (self, eventName) {
+					return function (event) {
 						self.owner.trigger(eventName, {
 							event: event.nativeEvent,
 							cjsEvent: event,
@@ -816,7 +816,7 @@ This component is attached to entities that will appear in the game world. It re
 					};
 				};
 				
-				return function(){
+				return function () {
 					var self = this,
 					mousedown = null,
 					mouseover = null,
@@ -829,8 +829,8 @@ This component is attached to entities that will appear in the game world. It re
 					dblclick  = null;
 					
 					// The following appends necessary information to displayed objects to allow them to receive touches and clicks
-					if(this.click || this.touch){
-						if(this.touch && !this.stage.__touch){ //__touch check due to this being overridden if we do this multiple times. - DDD
+					if (this.click || this.touch) {
+						if (this.touch && !this.stage.__touch) { //__touch check due to this being overridden if we do this multiple times. - DDD
 							createjs.Touch.enable(this.stage);
 						}
 						
@@ -846,7 +846,7 @@ This component is attached to entities that will appear in the game world. It re
 						this.sprite.addEventListener('click',     click    );
 						this.sprite.addEventListener('dblclick',  dblclick );
 					}
-					if(this.hover){
+					if (this.hover) {
 						this.stage.enableMouseOver();
 						mouseover = createHandler(this, 'mouseover');
 						mouseout  = createHandler(this, 'mouseout' );
@@ -859,15 +859,15 @@ This component is attached to entities that will appear in the game world. It re
 						this.container.addEventListener('rollout',   rollout  );
 					}
 
-					this.removeInputListeners = function(){
-						if(this.click || this.touch){
+					this.removeInputListeners = function () {
+						if (this.click || this.touch) {
 							this.sprite.removeEventListener('mousedown', mousedown);
 							this.sprite.removeEventListener('pressmove', pressmove);
 							this.sprite.removeEventListener('pressup',   pressup  );
 							this.sprite.removeEventListener('click',     click    );
 							this.sprite.removeEventListener('dblclick',  dblclick );
 						}
-						if(this.hover){
+						if (this.hover) {
 							this.sprite.removeEventListener('mouseover', mouseover);
 							this.sprite.removeEventListener('mouseout',  mouseout );
 							this.container.removeEventListener('rollover',  rollover );
@@ -876,9 +876,9 @@ This component is attached to entities that will appear in the game world. It re
 						this.removeInputListeners = null;
 					};
 				};
-			})(),
+			}()),
 			
-			addPins: function(pins, frames){
+			addPins: function (pins, frames) {
 				var i = 0,
 				j     = 0,
 				pin   = null,
@@ -890,10 +890,10 @@ This component is attached to entities that will appear in the game world. It re
 				
 				this.pins = {};
 				
-				for (; i < pins.length; i++){
+				for (; i < pins.length; i++) {
 					this.pinsToRemove.push(pins[i].pinId);
 
-					if(isArray){
+					if (isArray) {
 						regX = (frames[0][5] || 0) / this.imageScaleX;
 						regY = (frames[0][6] || 0) / this.imageScaleY;
 					}
@@ -903,7 +903,7 @@ This component is attached to entities that will appear in the game world. It re
 						sprite: this.sprite,
 						container: this.container
 					};
-					if((typeof pins[i].x === 'number') && (typeof pins[i].y === 'number')){
+					if ((typeof pins[i].x === 'number') && (typeof pins[i].y === 'number')) {
 						pin.defaultPin = {
 							x: (pins[i].x - regX),
 							y: (pins[i].y - regY),
@@ -912,15 +912,15 @@ This component is attached to entities that will appear in the game world. It re
 						};
 					}
 					
-					if(pins[i].frames){
+					if (pins[i].frames) {
 						pin.frames = [];
-						for (j = 0; j < pins[i].frames.length; j++){
-							if(pins[i].frames[j]){
-								if(isArray){
+						for (j = 0; j < pins[i].frames.length; j++) {
+							if (pins[i].frames[j]) {
+								if (isArray) {
 									regX = (frames[j][5] || 0) / this.imageScaleX;
 									regY = (frames[j][6] || 0) / this.imageScaleY;
 								}
-								if((typeof pins[i].frames[j].x === 'number') && (typeof pins[i].frames[j].y === 'number')){
+								if ((typeof pins[i].frames[j].x === 'number') && (typeof pins[i].frames[j].y === 'number')) {
 									pin.frames.push({
 										x: (pins[i].frames[j].x - regX),
 										y: (pins[i].frames[j].y - regY),
@@ -928,14 +928,14 @@ This component is attached to entities that will appear in the game world. It re
 										angle: pins[i].frames[j].angle || (pin.defaultPin?pin.defaultPin.angle:0)
 									});
 								} else if (pin.defaultPin) {
-									if(typeof pins[i].frames[j].x === 'number'){
+									if (typeof pins[i].frames[j].x === 'number') {
 										pin.frames.push({
 											x: (pins[i].frames[j].x - regX),
 											y: pin.defaultPin.y,
 											z: pins[i].frames[j].z || pin.defaultPin.z,
 											angle: pins[i].frames[j].angle || pin.defaultPin.angle
 										});
-									} else if(typeof pins[i].frames[j].y === 'number'){
+									} else if (typeof pins[i].frames[j].y === 'number') {
 										pin.frames.push({
 											x: pin.defaultPin.x,
 											y: (pins[i].frames[j].y - regY),
@@ -957,11 +957,11 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 
-			removePins: function(){
+			removePins: function () {
 				var i = 0;
 				
-				if(this.pins && this.pinsToRemove){
-					for (; i < this.pinsToRemove.length; i++){
+				if (this.pins && this.pinsToRemove) {
+					for (; i < this.pinsToRemove.length; i++) {
 						this.owner.trigger('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
 						delete this.pins[this.pinsToRemove[i]];
 					}
@@ -969,17 +969,17 @@ This component is attached to entities that will appear in the game world. It re
 				}
 			},
 			
-			setMask: function(shape){
+			setMask: function (shape) {
 				var mask = new createjs.Shape(),
 				gfx      = mask.graphics;
 				
 				mask.x   = 0;
 				mask.y   = 0;
 				
-				if(typeof shape === 'string'){
+				if (typeof shape === 'string') {
 					processGraphics(gfx, shape);
 				} else {
-					if(shape.radius){
+					if (shape.radius) {
 						gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
 					} else {
 						gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
@@ -989,15 +989,15 @@ This component is attached to entities that will appear in the game world. It re
 				return mask;
 			},
 			
-			setHitArea: (function(){
+			setHitArea: (function () {
 				var savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
 				
-				return function(shape){
+				return function (shape) {
 					var ha = null,
 					gfx    = null,
 					sav    = '';
 					
-					if(typeof shape === 'string'){
+					if (typeof shape === 'string') {
 						sav = shape;
 					} else {
 						sav = JSON.stringify(shape);
@@ -1005,7 +1005,7 @@ This component is attached to entities that will appear in the game world. It re
 					
 					ha = savedHitAreas[sav];
 
-					if(!ha){
+					if (!ha) {
 						ha   = new createjs.Shape();
 						gfx  = ha.graphics;
 						ha.x = 0;
@@ -1013,9 +1013,9 @@ This component is attached to entities that will appear in the game world. It re
 
 						gfx.beginFill("#000"); // Force the fill.
 
-						if(typeof shape === 'string'){
+						if (typeof shape === 'string') {
 							processGraphics(gfx, shape);
-						} else if(shape.radius){
+						} else if (shape.radius) {
 							gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
 						} else {
 							gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
@@ -1026,13 +1026,13 @@ This component is attached to entities that will appear in the game world. It re
 					
 					return ha;
 				};
-			})(),
+			}()),
 			
-			destroy: function(){
-				if(this.removeInputListeners){
+			destroy: function () {
+				if (this.removeInputListeners) {
 					this.removeInputListeners();
 				}
-				if (this.stage){
+				if (this.stage) {
 					this.stage.removeChild(this.container);
 					this.stage = undefined;
 				}
@@ -1043,4 +1043,4 @@ This component is attached to entities that will appear in the game world. It re
 			}
 		}
 	});
-})();
+}());

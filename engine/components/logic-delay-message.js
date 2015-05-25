@@ -53,12 +53,12 @@ This component allows certain messages to trigger new messages at a later time. 
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var createMessage = function(event){
-		var includeMessage = function(event, message){
-			if(message && !event.message){
+	var createMessage = function (event) {
+		var includeMessage = function (event, message) {
+			if (message && !event.message) {
 				return {
 					event: event.event,
 					message: message,
@@ -69,35 +69,35 @@ This component allows certain messages to trigger new messages at a later time. 
 				return event;
 			}
 		};
-		if(event.singleInstance){
-			return function(message){
+		if (event.singleInstance) {
+			return function (message) {
 				var i = 0,
 				add = true;
 				
-				for (; i < this.queue.length; i++){
-					if(this.queue[i].event === event.event){
+				for (; i < this.queue.length; i++) {
+					if (this.queue[i].event === event.event) {
 						add = false;
 					}
 				}
 				
-				if(add){
+				if (add) {
 					this.queue.push(includeMessage(event, message));
 					this.queueTimes.push(event.delay);
 				}
 			};
 		} else {
-			return function(message){
+			return function (message) {
 				this.queue.push(includeMessage(event, message));
 				this.queueTimes.push(event.delay);
 			};
 		}
 	},
-	createCancellation = function(cancelEvent){
-		return function(){
+	createCancellation = function (cancelEvent) {
+		return function () {
 			var i = this.queue.length - 1;
 			
-			for (; i > -1; i--){
-				if(this.queue[i] === cancelEvent){
+			for (; i > -1; i--) {
+				if (this.queue[i] === cancelEvent) {
 					this.queueTimes.splice(i,1);
 					this.queue.splice(i,1);
 				}
@@ -108,15 +108,15 @@ This component allows certain messages to trigger new messages at a later time. 
 	return platformer.createComponentClass({
 		id: 'logic-delay-message',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.queueTimes = [];
 			this.queue = [];
 			
-			if(definition.events){
-				for(var event in definition.events){
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, createMessage(definition.events[event]));
 					
-					if(definition.events[event].cancelEvent) {
+					if (definition.events[event].cancelEvent) {
 						this.addEventListener(definition.events[event].cancelEvent, createCancellation(definition.events[event]));
 					}
 				}
@@ -124,17 +124,17 @@ This component allows certain messages to trigger new messages at a later time. 
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-logic":  function(resp){
+			"handle-logic":  function (resp) {
 				var i = this.queue.length - 1;
 				
-				for (; i > -1; i--){
+				for (; i > -1; i--) {
 					this.queueTimes[i] -= resp.delta;
 					
-					if(this.queueTimes[i] <= 0){
+					if (this.queueTimes[i] <= 0) {
 						this.owner.trigger(this.queue[i].event, this.queue[i].message);
 						
-						if(this.queue[i]){ // Have to check this in case the delayed event matches the cancellation event which would cause this queued message to already be removed.
-							if(this.queue[i].repeat){
+						if (this.queue[i]) { // Have to check this in case the delayed event matches the cancellation event which would cause this queued message to already be removed.
+							if (this.queue[i].repeat) {
 								this.queueTimes[i] += this.queue[i].delay;
 							} else {
 								this.queueTimes.splice(i,1);
@@ -147,10 +147,10 @@ This component allows certain messages to trigger new messages at a later time. 
 		},
 		
 		methods: {
-			destroy: function(){
+			destroy: function () {
 				this.queueTimes.length = 0;
 				this.queue.length = 0;
 			}
 		}
 	});
-})();
+}());

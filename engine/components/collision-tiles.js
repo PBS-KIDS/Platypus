@@ -5,157 +5,157 @@
  * @uses Component
  */
 // Requires: ["../collision-shape.js"]
-(function(){
+(function () {
 	"use strict";
 	
 	var storedTiles = [],
 	storedTileIndex = 0,
 	serveTiles      = [],
-	flip = function (num, arr){
-		if(num < -1){
+	flip = function (num, arr) {
+		if (num < -1) {
 			num = Math.abs(num) - 2;
 			return arr[num];
 		} else {
 			return num;
 		}
 	},
-	copySection = function(array, originX, originY, width, height){
+	copySection = function (array, originX, originY, width, height) {
 		var x = 0,
 		y     = 0,
 		arr   = [];
 		
-		for(y = 0; y < height; y++){
+		for(y = 0; y < height; y++) {
 			arr[y] = [];
-			for(x = 0; x < width; x++){
+			for(x = 0; x < width; x++) {
 				arr[y][x] = array[originX + x][originY + y];
 			}
 		}
 		return arr;
 	},
-	cutSection = function(array, originX, originY, width, height){
+	cutSection = function (array, originX, originY, width, height) {
 		var x = 0,
 		y     = 0,
 		arr   = [];
 		
-		for(y = 0; y < height; y++){
+		for(y = 0; y < height; y++) {
 			arr[y] = [];
-			for(x = 0; x < width; x++){
+			for(x = 0; x < width; x++) {
 				arr[y][x] = array[originX + x][originY + y];
 				array[originX + x][originY + y] = -1;
 			}
 		}
 		return arr;
 	},
-	pasteSection = function(destinationArray, sourceArray, originX, originY, width, height){
+	pasteSection = function (destinationArray, sourceArray, originX, originY, width, height) {
 		var x = 0,
 		y     = 0;
 		
-		for(y = 0; y < height; y++){
-			for(x = 0; x < width; x++){
+		for(y = 0; y < height; y++) {
+			for(x = 0; x < width; x++) {
 				destinationArray[originX + x][originY + y] = sourceArray[y][x];
 			}
 		}
 		return destinationArray;
 	},
 	transforms = {
-		"diagonal": function(array, originX, originY, width, height){
+		"diagonal": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-5, -4, -3, -2];  
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + x][originY + y] = flip(arr[x][y], flips);
 				}
 			}
 			return array;
 		},
-		"diagonal-inverse": function(array, originX, originY, width, height){
+		"diagonal-inverse": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-3, -2, -5, -4];
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + width - x - 1][originY + height - y - 1] = flip(arr[x][y], flips);
 				}
 			}
 			return array;
 		},
-		"horizontal": function(array, originX, originY, width, height){
+		"horizontal": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-2, -5, -4, -3];
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + width - x - 1][originY + y] = flip(arr[y][x], flips);
 				}
 			}
 			return array;
 		},
-		"vertical": function(array, originX, originY, width, height){
+		"vertical": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-4, -3, -2, -5];
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + x][originY + height - y - 1] = flip(arr[y][x], flips);
 				}
 			}
 			return array;
 		},
-		"rotate-90": function(array, originX, originY, width, height){
+		"rotate-90": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-3, -4, -5, -2];
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + height - y - 1][originY + x] = flip(arr[y][x], flips);
 				}
 			}
 			return array;
 		},
-		"rotate-180": function(array, originX, originY, width, height){
+		"rotate-180": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-4, -5, -2, -3];
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + width - x - 1][originY + height - y - 1] = flip(arr[y][x], flips);
 				}
 			}
 			return array;
 		},
-		"rotate-270": function(array, originX, originY, width, height){
+		"rotate-270": function (array, originX, originY, width, height) {
 			var arr = copySection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0,
 			flips   = [-5, -2, -3, -4];
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + y][originY + width - x - 1] = flip(arr[y][x], flips);
 				}
 			}
 			return array;
 		},
-		"translate": function(array, originX, originY, width, height, dx, dy){
+		"translate": function (array, originX, originY, width, height, dx, dy) {
 			var arr = cutSection(array, originX, originY, width, height),
 			x       = 0,
 			y       = 0;
 			
-			for(y = 0; y < height; y++){
-				for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++) {
+				for(x = 0; x < width; x++) {
 					array[originX + x + dx][originY + y + dy] = arr[y][x];
 				}
 			}
@@ -194,7 +194,7 @@
 			 */
 			tileHeight: 10
 		},
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.tileHalfWidth  = this.tileWidth  / 2;
 			this.tileHalfHeight = this.tileHeight / 2;
 		},
@@ -211,7 +211,7 @@
 			 * @param [transform.width=grid.width] {number} Cell width of the bounding box.
 			 * @param [transform.height=grid.height] {number} Cell height of the bounding box.
 			 */
-			"transform": function(transform){
+			"transform": function (transform) {
 				this.transform(transform);
 			},
 
@@ -227,16 +227,16 @@
 			 * @param [translate.width=grid.width] {number} Cell width of the bounding box.
 			 * @param [translate.height=grid.height] {number} Cell height of the bounding box.
 			 */
-			"translate": function(translate){
+			"translate": function (translate) {
 				this.translate(translate);
 			}
 		},
 		
 		methods: {
-			getShape: function(prevAABB, x, y){
+			getShape: function (prevAABB, x, y) {
 				var shape = null;
 				
-				if(storedTileIndex < storedTiles.length){
+				if (storedTileIndex < storedTiles.length) {
 					shape = storedTiles[storedTileIndex];
 					storedTileIndex += 1;
 					shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
@@ -254,28 +254,28 @@
 				return shape;
 			},
 			
-			addShape: function(shapes, prevAABB, x, y){
+			addShape: function (shapes, prevAABB, x, y) {
 				if (this.collisionMap[x][y] > -1) {
 					shapes.push(this.getShape(prevAABB, x, y));
 				} else if (this.collisionMap[x][y] < -1) {
-					switch(this.collisionMap[x][y]){
+					switch(this.collisionMap[x][y]) {
 					case -2: //Top
-						if(prevAABB.bottom <= y * this.tileHeight){
+						if (prevAABB.bottom <= y * this.tileHeight) {
 							shapes.push(this.getShape(prevAABB, x, y));
 						}
 						break;
 					case -3: //Right
-						if(prevAABB.left >= (x + 1) * this.tileWidth){
+						if (prevAABB.left >= (x + 1) * this.tileWidth) {
 							shapes.push(this.getShape(prevAABB, x, y));
 						}
 						break;
 					case -4: //Bottom
-						if(prevAABB.top >= (y + 1) * this.tileHeight){
+						if (prevAABB.top >= (y + 1) * this.tileHeight) {
 							shapes.push(this.getShape(prevAABB, x, y));
 						}
 						break;
 					case -5: //Left
-						if(prevAABB.right <= x * this.tileWidth){
+						if (prevAABB.right <= x * this.tileWidth) {
 							shapes.push(this.getShape(prevAABB, x, y));
 						}
 						break;
@@ -292,7 +292,7 @@
 			 * @method getAABB
 			 * @return aabb {AABB} The returned object provides the top, left, width, and height of the collision map.
 			 */
-			getAABB: function(){
+			getAABB: function () {
 				return {
 					left: 0,
 					top:  0,
@@ -321,7 +321,7 @@
 			 * @param prevAABB {AABB} The axis-aligned bounding box for a previous location to test for jump-through tiles.
 			 * @return {Array} Each returned object provides the [CollisionShape](CollisionShape.html) of a tile.
 			 */
-			getTileShapes: function(aabb, prevAABB){
+			getTileShapes: function (aabb, prevAABB) {
 				var left = Math.max(Math.floor(aabb.left   / this.tileWidth),  0),
 				top      = Math.max(Math.floor(aabb.top    / this.tileHeight), 0),
 				right    = Math.min(Math.ceil(aabb.right   / this.tileWidth),  this.collisionMap.length),
@@ -333,8 +333,8 @@
 				serveTiles.length = 0;
 				storedTileIndex   = 0;
 				
-				for (x = left; x < right; x++){
-					for (y = top; y < bottom; y++){
+				for (x = left; x < right; x++) {
+					for (y = top; y < bottom; y++) {
 						this.addShape(shapes, prevAABB, x, y);
 					}
 				}
@@ -353,7 +353,7 @@
 			 * @param [transform.width=grid.width] {number} Cell width of the bounding box.
 			 * @param [transform.height=grid.height] {number} Cell height of the bounding box.
 			 */
-			transform: function(transform){
+			transform: function (transform) {
 				var t  = transform || {},
 				x      = t.left    || 0,
 				y      = t.top     || 0,
@@ -361,7 +361,7 @@
 				height = t.height  || this.collisionMap.length,
 				type   = t.type    || "horizontal";
 				
-				if(transforms[type]){
+				if (transforms[type]) {
 					return transforms[type](this.collisionMap, x, y, width, height);
 				} else {
 					return null;
@@ -380,7 +380,7 @@
 			 * @param [translate.width=grid.width] {number} Cell width of the bounding box.
 			 * @param [translate.height=grid.height] {number} Cell height of the bounding box.
 			 */
-			translate: function(translate){
+			translate: function (translate) {
 				var t  = translate || {},
 				x      = t.left    || 0,
 				y      = t.top     || 0,
@@ -402,7 +402,7 @@
 			 * @param height {number} Cell height of the bounding box.
 			 * @return {Array}
 			 */
-			getCollisionMatrix: function(originX, originY, width, height){
+			getCollisionMatrix: function (originX, originY, width, height) {
 				return copySection(this.collisionMap, originX, originY, width, height);
 			},
 			
@@ -416,9 +416,9 @@
 			 * @param width {number} Cell width of the bounding box.
 			 * @param height {number} Cell height of the bounding box.
 			 */
-			setCollisionMatrix: function(sourceArray, originX, originY, width, height){
+			setCollisionMatrix: function (sourceArray, originX, originY, width, height) {
 				return pasteSection(this.collisionMap, sourceArray, originX, originY, width, height);
 			}
 		}
 	});
-})();
+}());

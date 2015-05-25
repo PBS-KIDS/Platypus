@@ -31,20 +31,20 @@ This component dynamically creates a message from JSON settings and incoming mes
 
 //TODO: Edit this component to parse strings without using "new Function" - DDD
 
-(function(){
+(function () {
 	"use strict";
 
-	var createNewMessage = function(messageFormat, entity){
+	var createNewMessage = function (messageFormat, entity) {
 		var convert = null,
-		event = messageFormat.event || (new Function('entity', 'return ' + messageFormat.customEvent + ';'))(entity);
+		event = messageFormat.event || (new function ('entity', 'return ' + messageFormat.customEvent + ';'))(entity);
 		
-		if(messageFormat.message){
-			convert = new Function('source', 'return ' + messageFormat.message + ';');
-			return function(message){
+		if (messageFormat.message) {
+			convert = new function ('source', 'return ' + messageFormat.message + ';');
+			return function (message) {
 				entity.trigger(event, convert(message));
 			};
 		} else {
-			return function(message){
+			return function (message) {
 				entity.trigger(event);
 			};
 		}
@@ -53,14 +53,14 @@ This component dynamically creates a message from JSON settings and incoming mes
 	return platformer.createComponentClass({
 		id: 'format-message',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var event = null;
 			
-			if(definition.messages){
-				for(event in definition.messages){
+			if (definition.messages) {
+				for(event in definition.messages) {
 					this.addEventListener(event, createNewMessage(definition.messages[event], this.owner));
 				}
 			}
 		}
 	});
-})();
+}());

@@ -4,7 +4,7 @@
  * @class "component-template" Component
  * @uses Component
  */
-(function(){
+(function () {
 	"use strict";
 	
 	/*********************************************************************
@@ -54,7 +54,7 @@
 			"propertyName2": "property-value"
 		},
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			/*********************************************************************
 			 TODO: Place code here for anything that should happen on component
 			       instantiation. Use the "load" event shown below for anything
@@ -69,7 +69,7 @@
 			       component is listening for.
 				
 				   e.g.
-				   "load": function(resp){
+				   "load": function (resp) {
 				       // Handle "load" event here
 				   }
 			*********************************************************************/
@@ -81,7 +81,7 @@
 		           the format below.
 		           
 				   e.g.
-				   destroy: function(){
+				   destroy: function () {
 				       // clean up component properties here
 				   }
 		    *********************************************************************/
@@ -98,7 +98,7 @@
 		           above, since they can also be called at the component level.
 		           
 				   e.g.
-				   whatIsMyFavoriteColor: function(){
+				   whatIsMyFavoriteColor: function () {
 				       return '#ffff00';
 				   }
 				   
@@ -108,4 +108,4 @@
 			
 		}
 	});
-})();
+}());

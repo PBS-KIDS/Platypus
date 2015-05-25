@@ -7,10 +7,10 @@
  * @param [y] {number} The y coordinate.
  * @param [z] {number} The z coordinate.
  */
-platformer.Vector = (function(){
+platformer.Vector = (function () {
 	"use strict";
 	
-	var Vector = function(x, y, z){
+	var Vector = function (x, y, z) {
 		this.matrix = [0,0,0];
 		this.set(x, y, z);
 	};
@@ -24,10 +24,10 @@ platformer.Vector = (function(){
 	 * @default 0
 	 */
 	Object.defineProperty(proto, 'x', {
-	    get: function(){
+	    get: function () {
 	        return this.matrix[0];
 	    },
-	    set: function(value){
+	    set: function (value) {
 	    	this.matrix[0] = value;
 	    }
 	});
@@ -40,10 +40,10 @@ platformer.Vector = (function(){
 	 * @default 0
 	 */
 	Object.defineProperty(proto, 'y', {
-	    get: function(){
+	    get: function () {
 	        return this.matrix[1];
 	    },
-	    set: function(value){
+	    set: function (value) {
 	    	this.matrix[1] = value;
 	    }
 	});
@@ -56,10 +56,10 @@ platformer.Vector = (function(){
 	 * @default 0
 	 */
 	Object.defineProperty(proto, 'z', {
-	    get: function(){
+	    get: function () {
 	        return this.matrix[2];
 	    },
-	    set: function(value){
+	    set: function (value) {
 	    	this.matrix[2] = value;
 	    }
 	});
@@ -70,7 +70,7 @@ platformer.Vector = (function(){
 	 * @method toString
 	 * @return {String}
 	 */
-	proto.toString = function(){
+	proto.toString = function () {
 		return '[' + this.matrix.join(',') + ']';
 	},
 	
@@ -81,11 +81,11 @@ platformer.Vector = (function(){
 	 * @param func {Function} A function describing the operation, which accepts the following parameters: coordinate value, index, and coordinate array.
 	 * @param limit {number} The number of coordinates to limit the operation to. For example, set to `2` for a 2-dimensional operation. If unspecified, the opartion occurs across all coordinates.
 	 */
-	proto.forEach = function(func, limit){
+	proto.forEach = function (func, limit) {
 		var i = 0,
 			l = limit || this.matrix.length;
 		
-		for(i = 0; i < l; i++){
+		for(i = 0; i < l; i++) {
 			func(this.matrix[i], i, this.matrix);
 		}
 	};
@@ -99,15 +99,15 @@ platformer.Vector = (function(){
 	 * @param [z] {number} The z coordinate.
 	 * @chainable
 	 */
-	proto.set = function(x, y, z){
+	proto.set = function (x, y, z) {
 		var m = null,
-		set = function(coordinate, index, matrix){
+		set = function (coordinate, index, matrix) {
 			matrix[index] = m[index];
 		};
 		
-	    if(x && Array.isArray(x)){   // Passing in an array.
+	    if (x && Array.isArray(x)) {   // Passing in an array.
 	        m = x;
-	    } else if (x && x.matrix){   // Passing in a vector.
+	    } else if (x && x.matrix) {   // Passing in a vector.
 	        m = x.matrix;
 	    } else {                     // Passing in coordinates.
             this.x = x || 0;
@@ -115,7 +115,7 @@ platformer.Vector = (function(){
             this.z = z || 0;
 	    }
 	    
-	    if(m){
+	    if (m) {
 			this.matrix.length = m.length;
 			this.forEach(set, y);
 	    }
@@ -129,7 +129,7 @@ platformer.Vector = (function(){
 	 * @param otherVector {Vector} The other vector.
 	 * @chainable
 	 */
-	proto.copyValues = function(otherVector){
+	proto.copyValues = function (otherVector) {
 		return this.set(otherVector);
 	};
 	
@@ -140,9 +140,9 @@ platformer.Vector = (function(){
 	 * @param [dimensions] {number} The dimensions to include. Defaults to all dimensions.
 	 * @return {number} The magnitude of the vector.
 	 */
-	proto.magnitude = function(dimensions){
+	proto.magnitude = function (dimensions) {
 		var squares = 0,
-		square = function(coordinate){
+		square = function (coordinate) {
 			squares += Math.pow(coordinate, 2);
 		};
 		
@@ -156,13 +156,13 @@ platformer.Vector = (function(){
 	 * 
 	 * @return {number} The direction of the vector in radians.
 	 */
-	proto.getAngle = function(){
+	proto.getAngle = function () {
 		var mag = this.magnitude(2);
         var angle = 0;
 
-        if (mag != 0){
+        if (mag != 0) {
                 angle = Math.acos(this.x / mag);
-                if (this.y < 0){
+                if (this.y < 0) {
                         angle = (Math.PI * 2) - angle;
                 }
         }
@@ -175,7 +175,7 @@ platformer.Vector = (function(){
 	 * @method getUnit
 	 * @return {Vector} A normalized vector in the same direction as this vector.
 	 */
-	proto.getUnit = function(){
+	proto.getUnit = function () {
 		return new platformer.Vector(this).normalize();
 	};
 	
@@ -185,7 +185,7 @@ platformer.Vector = (function(){
 	 * @method getInverse
 	 * @return {Vector}
 	 */
-	proto.getInverse = function(){
+	proto.getInverse = function () {
 		return new platformer.Vector(this).multiply(-1);
 	};
 	
@@ -195,7 +195,7 @@ platformer.Vector = (function(){
 	 * @method normalize
 	 * @chainable
 	 */
-	proto.normalize = function(){
+	proto.normalize = function () {
 		var mag = this.magnitude();
 		
 		if (mag == 0) {
@@ -212,12 +212,12 @@ platformer.Vector = (function(){
 	 * @param vector {Vector} The vector to cross this vector with.
 	 * @chainable
 	 */
-	proto.cross = (function(){
-		var det = function(a, b, c, d){
+	proto.cross = (function () {
+		var det = function (a, b, c, d) {
 			return a * d - b * c;
 		};
 		
-		return function(v){
+		return function (v) {
 			var tempX = det(this.y, this.z, v.y, v.z),
 			tempY     = -det(this.x, this.z, v.x, v.z),
 			tempZ     = det(this.x, this.y, v.x, v.y);
@@ -227,7 +227,7 @@ platformer.Vector = (function(){
 			
 			return this;
 		};
-	})();
+	}());
 	
 	/**
 	 * Crosses this vector with the parameter vector and returns the cross product.
@@ -236,7 +236,7 @@ platformer.Vector = (function(){
 	 * @param vector {Vector} The vector to cross this vector with.
 	 * @return {Vector} The cross product.
 	 */
-	proto.getCrossProduct = function(v){
+	proto.getCrossProduct = function (v) {
 		return new platformer.Vector(this).cross(v);
 	};
 	
@@ -248,7 +248,7 @@ platformer.Vector = (function(){
 	 * @param [axis="z"] {String|Vector} A vector describing the axis around which the rotation should occur or 'x', 'y', or 'z'.
 	 * @chainable
 	 */
-	proto.rotate = function(angle, axis){
+	proto.rotate = function (angle, axis) {
 		var a = axis,
 		cos   = Math.cos(angle),
 		sin   = Math.sin(angle),
@@ -257,12 +257,12 @@ platformer.Vector = (function(){
 		y     = 0,
 		z     = 0;
 		
-		if(a){
-			if(a === 'x'){
+		if (a) {
+			if (a === 'x') {
 				a = new Vector(1,0,0);
-			} else if(a === 'y'){
+			} else if (a === 'y') {
 				a = new Vector(0,1,0);
-			} else if(a === 'z'){
+			} else if (a === 'z') {
 				a = new Vector(0,0,1);
 			}
 		} else {
@@ -288,21 +288,21 @@ platformer.Vector = (function(){
 	 * @param limit {number} For scaling, determines which coordinates are affected.
 	 * @chainable
 	 */
-	proto.multiply = function (multiplier, limit){
+	proto.multiply = function (multiplier, limit) {
 		var i = 0,
 		j = 0,
 		self = null,
-		mult = function(coordinate, index, matrix){
+		mult = function (coordinate, index, matrix) {
 			matrix[index] = coordinate * multiplier;
 		},
 		l = 0;
 		
-		if(Array.isArray(multiplier)){
+		if (Array.isArray(multiplier)) {
 			self = this.matrix.slice();
 			l = limit || multiplier.length;
-			for(i = 0; i < l; i++){
+			for(i = 0; i < l; i++) {
 				this.matrix[i] = 0;
-				for(j = 0; j < l; j++){
+				for(j = 0; j < l; j++) {
 					this.matrix[i] += self[j] * multiplier[i][j];
 				}
 			}
@@ -322,15 +322,15 @@ platformer.Vector = (function(){
 	 * @param [z] {number} The z component to add.
 	 * @chainable
 	 */
-	proto.add = function (x, y, z){
+	proto.add = function (x, y, z) {
 		var addMatrix = x,
 		limit = 0,
-		add = function(coordinate, index, matrix){
+		add = function (coordinate, index, matrix) {
 			matrix[index] += addMatrix[index];
 		};
 
-		if(!Array.isArray(addMatrix)){
-			if(addMatrix.matrix){
+		if (!Array.isArray(addMatrix)) {
+			if (addMatrix.matrix) {
 				addMatrix = addMatrix.matrix;
 				limit = y || 0;
 			} else {
@@ -352,7 +352,7 @@ platformer.Vector = (function(){
 	 * @param otherVector {Vector} The vector to add.
 	 * @chainable
 	 */
-	proto.addVector = function(otherVector, dimensions){
+	proto.addVector = function (otherVector, dimensions) {
 		return this.add(otherVector, dimensions);
 	};
 	
@@ -363,7 +363,7 @@ platformer.Vector = (function(){
 	 * @param otherVector {Vector} The vector to subtract.
 	 * @chainable
 	 */
-	proto.subtractVector = function(otherVector, dimensions){
+	proto.subtractVector = function (otherVector, dimensions) {
 		return this.add(otherVector.getInverse(), dimensions);
 	};
 	
@@ -375,7 +375,7 @@ platformer.Vector = (function(){
 	 * @param limit {number} Determines which coordinates are affected. Defaults to all coordinates.
 	 * @chainable
 	 */
-	proto.scale = function(factor, limit) {
+	proto.scale = function (factor, limit) {
 		return this.multiply(factor, limit);
 	};
 	
@@ -386,9 +386,9 @@ platformer.Vector = (function(){
 	 * @param otherVector {Vector} The other vector.
 	 * @return {number} The dot product.
 	 */
-	proto.dot = function(otherVector, limit) {
+	proto.dot = function (otherVector, limit) {
 		var sum = 0,
-		mult = function(coordinate, index){
+		mult = function (coordinate, index) {
 			sum += coordinate * (otherVector.matrix[index] || 0);
 		};
 		
@@ -404,7 +404,7 @@ platformer.Vector = (function(){
 	 * @param otherVector {Vector} The other vector.
 	 * @return {number} The angle between this vector and the received vector.
 	 */
-	proto.angleTo = function(otherVector) {
+	proto.angleTo = function (otherVector) {
 		var v1 = this.getUnit(),
 		v2 = otherVector.getUnit();
 		
@@ -419,11 +419,11 @@ platformer.Vector = (function(){
 	 * @param normal {Vector} A normal vector determining the resultant sign of the angle between two vectors.
 	 * @return {number} The angle between this vector and the received vector.
 	 */
-	proto.signedAngleTo = function(otherVector, normal) {
+	proto.signedAngleTo = function (otherVector, normal) {
 		var v1 = this.getUnit(),
 		v2 = otherVector.getUnit();
 		
-		if(v1.getCrossProduct(v2).dot(normal) < 0){
+		if (v1.getCrossProduct(v2).dot(normal) < 0) {
 	    	return -Math.acos(v1.dot(v2));
 	    }
 	    return Math.acos(v1.dot(v2));
@@ -437,7 +437,7 @@ platformer.Vector = (function(){
 	 * @return {number} The magnitude of the projection. 
 
 	 */
-	proto.scalarProjection = function(vectorOrAngle) {
+	proto.scalarProjection = function (vectorOrAngle) {
 		var angle = 0;
 		if (typeof vectorOrAngle == "number") {
 			angle = vectorOrAngle;
@@ -452,7 +452,7 @@ platformer.Vector = (function(){
 	 * 
 	 * @return {Vector} A copy of this vector.
 	 */
-	proto.copy = function() {
+	proto.copy = function () {
 		return new platformer.Vector(this);
 	};
 	
@@ -464,13 +464,13 @@ platformer.Vector = (function(){
 	 * @param propertyName {String} A string describing the property name where the vector is accessable.
 	 * @param [coordinateName*] {String} One or more parameters describing coordinate values on the object.
 	 */
-	Vector.assign = (function(){
-		var createProperty = function(property, obj, vector, index){
+	Vector.assign = (function () {
+		var createProperty = function (property, obj, vector, index) {
 			var temp = null,
 			propertyInUse = false;
 			
-			if(typeof property === 'string'){
-				if(typeof obj[property] !== 'undefined'){
+			if (typeof property === 'string') {
+				if (typeof obj[property] !== 'undefined') {
 					temp = obj[property];
 					delete obj[property];
 					propertyInUse = true;
@@ -478,31 +478,31 @@ platformer.Vector = (function(){
 			}
 			
 			Object.defineProperty(obj, property, {
-			    get: function(){
+			    get: function () {
 			        return vector.matrix[index];
 			    },
-			    set: function(value){
+			    set: function (value) {
 			    	vector.matrix[index] = value;
 			    },
 			    enumerable: true
 			});
 			
-			if(propertyInUse){
+			if (propertyInUse) {
 				obj[property] = temp;
 			}
 		};
 		
-		return function(){
+		return function () {
 			var i = 0,
 			obj   = arguments[0],
 			prop  = arguments[1];
 			
-			if(obj && prop){
-				if(!obj[prop]){
+			if (obj && prop) {
+				if (!obj[prop]) {
 					obj[prop] = new platformer.Vector();
 					
-					for(i = 2; i < arguments.length; i++){
-						if(arguments[i] !== prop){
+					for(i = 2; i < arguments.length; i++) {
+						if (arguments[i] !== prop) {
 							createProperty(arguments[i], obj, obj[prop], i - 2);
 						}
 					}
@@ -514,7 +514,7 @@ platformer.Vector = (function(){
 				return null;
 			}
 		};
-	})();
+	}());
 	
 	return Vector;
-})();
+}());

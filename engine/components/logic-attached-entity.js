@@ -1,12 +1,12 @@
 /**
 //TODO: This should probably be merged with `logic-shield` since it performs a subset of the `logic-shield` behaviors. - DDD
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-attached-entity',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.entityType = this.owner.entityType || definition.entityType;
 			this.entityProperties = this.owner.entityProperties || definition.entityProperties || {x: 0, y: 0, z: 0};
 			this.offsetX = this.owner.offsetX || definition.offsetX || 0;
@@ -21,7 +21,7 @@
 		},
 
 		events: {// These are messages that this component listens for
-			"adopted": function(resp){
+			"adopted": function (resp) {
 				this.entityProperties.x = this.owner.x + this.offsetX;
 				this.entityProperties.y = this.owner.y + this.offsetY;
 				this.entityProperties.z = this.owner.z + 1;
@@ -29,7 +29,7 @@
 				this.attachedEntity = this.owner.parent.addEntity(new platformer.Entity(platformer.game.settings.entities[this.entityType], {properties:this.entityProperties}));
 				this.owner.triggerEvent('entity-created', this.attachedEntity);
 			},
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 				if (this.attachedEntity && !this.attachedEntity.components.length) {
 					this.attachedEntity = null;
 				} else if (this.attachedEntity) {
@@ -41,7 +41,7 @@
 		},
 		
 		methods: {// These are methods that are called by this component.
-			destroy: function(){
+			destroy: function () {
 				this.entityProperties = null;
 				if (this.attachedEntity && this.attachedEntity.parent) {
 					this.attachedEntity.parent.removeEntity(this.attachedEntity);
@@ -55,4 +55,4 @@
 			
 		}
 	});
-})();
+}());

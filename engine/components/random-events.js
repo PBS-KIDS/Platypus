@@ -24,11 +24,11 @@ This component listens for certain messages, picks a message from a related list
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var createTrigger = function(eventList){
-		return function(value, debug){
+	var createTrigger = function (eventList) {
+		return function (value, debug) {
 			this.owner.trigger(eventList[Math.floor(Math.random() * eventList.length)], value, debug);
 		};
 	};
@@ -36,12 +36,12 @@ This component listens for certain messages, picks a message from a related list
 	return platformer.createComponentClass({
 		id: 'random-events',
 		
-		constructor: function(definition){
-			if(definition.events){
-				for(var event in definition.events){
+		constructor: function (definition) {
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, createTrigger(definition.events[event]));
 				}
 			}
 		}
 	});
-})();
+}());

@@ -47,18 +47,18 @@ This component allows an entity to communicate directly with one or more entitie
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var trigger = function(entities, event, value, debug){
+	var trigger = function (entities, event, value, debug) {
 		var i = 0;
 		
-		for(; i < entities.length; i++){
+		for(; i < entities.length; i++) {
 			entities[i].trigger(event, value, debug);
 		}
 	},
-	broadcast = function(event){
-		return function(value, debug){
+	broadcast = function (event) {
+		return function (value, debug) {
 			trigger(this.owner.familyLinks, event, value, debug);
 		};
 	};
@@ -66,9 +66,9 @@ This component allows an entity to communicate directly with one or more entitie
 	return platformer.createComponentClass({
 		id: 'relay-family',
 		
-		constructor: function(definition){
-			if(definition.events){
-				for(var event in definition.events){
+		constructor: function (definition) {
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, broadcast(definition.events[event]));
 				}
 			}
@@ -77,20 +77,20 @@ This component allows an entity to communicate directly with one or more entitie
 		},
 		
 		events: {
-			"link-family": function(links){
+			"link-family": function (links) {
 				var i   = 0,
 				oldList = this.owner.familyLinks,
 				newList = links.concat(oldList);
 
-				for(; i < newList.length; i++){
+				for(; i < newList.length; i++) {
 					newList[i].familyLinks = newList;
 				}
 				trigger(links,   'family-members-added', oldList);
 				trigger(oldList, 'family-members-added', links);
 			},
 			
-			"entity-created": function(entity){
-				if(!entity.triggerEvent('link-family', this.owner.familyLinks)){
+			"entity-created": function (entity) {
+				if (!entity.triggerEvent('link-family', this.owner.familyLinks)) {
 					entity.addComponent(new platformer.components['relay-family'](entity, {}));
 					entity.triggerEvent('link-family', this.owner.familyLinks);
 				}
@@ -98,10 +98,10 @@ This component allows an entity to communicate directly with one or more entitie
 		},
 		
 		methods: {
-			destroy: function(){
+			destroy: function () {
 				var i = 0;
-				for(; i < this.owner.familyLinks.length; i++){
-					if(this.owner === this.owner.familyLinks[i]){
+				for(; i < this.owner.familyLinks.length; i++) {
+					if (this.owner === this.owner.familyLinks[i]) {
 						this.owner.familyLinks.splice(i, 1);
 						break;
 					}
@@ -110,4 +110,4 @@ This component allows an entity to communicate directly with one or more entitie
 			}
 		}
 	});
-})();
+}());

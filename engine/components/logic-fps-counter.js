@@ -25,12 +25,12 @@ This component renders the avg FPS and other developer defined debug data to the
 	}
 */
 
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-fps-counter',
-        constructor: function(definition){
+        constructor: function (definition) {
 			this.counter = {
 				text: ''
 			};
@@ -40,18 +40,18 @@ This component renders the avg FPS and other developer defined debug data to the
 			this.count = this.ticks;
 		},
 		events:{
-			"handle-logic": function(){
-				if(!platformer.game.settings.debug && this.owner.parent){
+			"handle-logic": function () {
+				if (!platformer.game.settings.debug && this.owner.parent) {
 					this.owner.parent.removeEntity(this.owner);
 				}
 		
-				if(this.timeElapsed){ //to make sure we're not including 0's from multiple logic calls between time elapsing.
+				if (this.timeElapsed) { //to make sure we're not including 0's from multiple logic calls between time elapsing.
 					this.timeElapsed = false;
 					this.count--;
-					if(!this.count){
+					if (!this.count) {
 						this.count = this.ticks;
 						var text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS<br />";
-						for(var name in this.times){
+						for(var name in this.times) {
 							text += '<br />' + name + ': ' + Math.round(this.times[name] / this.ticks) + 'ms';
 							this.times[name] = 0;
 						}
@@ -60,13 +60,13 @@ This component renders the avg FPS and other developer defined debug data to the
 					}
 				}
 			},
-			"time-elapsed": function(value){
-				if(value){
-					if(value.name){
-						if((value.name === 'Engine Total') && !this.timeElapsed){
+			"time-elapsed": function (value) {
+				if (value) {
+					if (value.name) {
+						if ((value.name === 'Engine Total') && !this.timeElapsed) {
 							this.timeElapsed = true;
 						}
-						if (!this.times[value.name]){
+						if (!this.times[value.name]) {
 							this.times[value.name] = 0;
 						}
 						this.times[value.name] += value.time;
@@ -75,10 +75,10 @@ This component renders the avg FPS and other developer defined debug data to the
 			}
 		},
 		methods:{
-			destroy: function(){
+			destroy: function () {
 				this.counter = null;
 				this.times   = null;
 			}
 		}
 	});
-})();
+}());

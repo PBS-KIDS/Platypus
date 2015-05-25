@@ -6,7 +6,7 @@
  * @uses Component
  */
 // Requires: ["motion"]
-(function(){
+(function () {
     "use strict";
 	
 	var tempVector = new platformer.Vector();
@@ -81,7 +81,7 @@
 			maxMagnitude: Infinity
 		},
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			platformer.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
 			platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
@@ -102,8 +102,8 @@
 			 * @method 'component-added'
 			 * @param component {"motion" Component} The motion to add as a mover on this entity.
 			 */
-			"component-added": function(component){
-				if(component.type === 'motion'){
+			"component-added": function (component) {
+				if (component.type === 'motion') {
 					this.movers.push(component);
 				}
 			},
@@ -114,12 +114,12 @@
 			 * @method 'component-removed'
 			 * @param component {"motion" Component} The motion to remove as a mover from this entity.
 			 */
-			"component-removed": function(component){
+			"component-removed": function (component) {
 				var i = 0;
 				
-				if(component.type === 'motion'){
-					for(i = 0; i < this.motions.length; i++){
-						if(component === this.motions[i]){
+				if (component.type === 'motion') {
+					for(i = 0; i < this.motions.length; i++) {
+						if (component === this.motions[i]) {
 							this.movers.splice(i, 1);
 							break;
 						}
@@ -132,7 +132,7 @@
 			 * 
 			 * @method 'load'
 			 */
-			"load": function(){
+			"load": function () {
 				var i = 0,
 				movs  = this.moversCopy;
 				
@@ -142,8 +142,8 @@
 				}
 				
 				// Set up speed property if supplied.
-				if(this.speed){
-					if(!isNaN(this.speed)){
+				if (this.speed) {
+					if (!isNaN(this.speed)) {
 						this.speed = [this.speed, 0, 0];
 					}
 					this.speed = this.addMover({
@@ -153,8 +153,8 @@
 				}
 
 				// Set up gravity property if supplied.
-				if(this.gravity){
-					if(!isNaN(this.gravity)){
+				if (this.gravity) {
+					if (!isNaN(this.gravity)) {
 						this.gravity = [0, this.gravity, 0];
 					}
 					this.gravity = this.addMover({
@@ -166,8 +166,8 @@
 				}
 				
 				// Set up jump property if supplied.
-				if(this.jump){
-					if(!isNaN(this.jump)){
+				if (this.jump) {
+					if (!isNaN(this.jump)) {
 						this.jump = [0, this.jump, 0];
 					}
 					this.jump = this.addMover({
@@ -188,14 +188,14 @@
 			 * @param tick {Object}
 			 * @param tick.delta {number} The amount of time in milliseconds since the last tick.
 			 */
-			"handle-logic": function(tick){
+			"handle-logic": function (tick) {
 				var i = 0,
 				delta    = tick.delta,
 				vect     = tempVector,
 				velocity = this.velocity,
 				position = this.position;
 				
-				if(this.owner.state.paused){
+				if (this.owner.state.paused) {
 					return;
 				}
 				
@@ -204,18 +204,18 @@
 				}
 				
 				// Finally, add aggregated velocity to the position
-				if(this.grounded){
+				if (this.grounded) {
 					velocity.multiply(this.friction);
 				} else {
 					velocity.multiply(this.drag);
 				}
-				if(velocity.magnitude() > this.maxMagnitude){
+				if (velocity.magnitude() > this.maxMagnitude) {
 					velocity.normalize().multiply(this.maxMagnitude);
 				}
 				vect.set(velocity).multiply(delta);
 				position.add(vect);
 				
-				if(this.grounded !== this.owner.state.grounded){
+				if (this.grounded !== this.owner.state.grounded) {
 					this.owner.state.grounded = this.grounded;
 				}
 				this.grounded = false;
@@ -228,22 +228,22 @@
 			 * @param collisionInfo {Object}
 			 * @param collisionInfo.direction {Vector} The direction of collision from the entity's position.
 			 */
-			"hit-solid": function(collisionInfo){
+			"hit-solid": function (collisionInfo) {
 				var s = this.velocity.scalarProjection(collisionInfo.direction),
 				v     = tempVector;
 				
-				if(collisionInfo.direction.dot(this.ground) > 0){
+				if (collisionInfo.direction.dot(this.ground) > 0) {
 					this.grounded = true;
 				}
 				
-			    if(v.set(collisionInfo.direction).normalize().multiply(s).dot(this.velocity) > 0){
+			    if (v.set(collisionInfo.direction).normalize().multiply(s).dot(this.velocity) > 0) {
 					this.velocity.subtractVector(v);
 				}
 			}
 		},
 		
 		methods: {
-			destroy: function(){
+			destroy: function () {
 				var v = "";
 				
 				for (v in this.movers) {
@@ -260,7 +260,7 @@
 			 * @param mover {Object} For motion definition properties, see the ["motion"]("motion"%20Component.html) component.
 			 * @return motion {"motion" Component}
 			 */
-			addMover: function(mover){
+			addMover: function (mover) {
 				var m = this.owner.addComponent(new platformer.components["motion"](this.owner, mover));
 
 				return m;
@@ -272,9 +272,9 @@
 			 * @method removeMover
 			 * @param motion {"motion" Component}
 			 */
-			removeMover: function(m){
+			removeMover: function (m) {
 				this.owner.removeComponent(m);
 			}
 		}
 	});
-})();
+}());

@@ -4,7 +4,7 @@
  * @class "logic-destroy-me" Component
  * @uses Component
  */
-(function(){
+(function () {
 	"use strict";
 	
 	return platformer.createComponentClass({	
@@ -40,7 +40,7 @@
 			 * @method 'handle-logic'
 			 * @param message.delta {number} To measure the delay before removal, the component keeps a running count of step lengths.
 			 */
-			"handle-logic": function(tick){
+			"handle-logic": function (tick) {
 				var dT = tick.delta;
 				if (this.destroyed && !this.owner.state.paused)
 				{
@@ -56,10 +56,10 @@
 			 * 
 			 * @method 'destroy-me'
 			 */
-			"destroy-me": function(){
+			"destroy-me": function () {
 				this.destroyed = true;
 			}
 				   
 		}
 	});
-})();
+}());

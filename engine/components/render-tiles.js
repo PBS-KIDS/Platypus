@@ -51,17 +51,17 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-(function(){
+(function () {
 	"use strict";
 
-	var initializeCanvasConservation = function(displayObject){ //To make CreateJS Display Object have better canvas conservation.
+	var initializeCanvasConservation = function (displayObject) { //To make CreateJS Display Object have better canvas conservation.
 		var canvas = [document.createElement("canvas"), document.createElement("canvas")],
 		current    = 0;
 		
-		if(!displayObject.___cache){ //make sure this is only set up once
+		if (!displayObject.___cache) { //make sure this is only set up once
 			displayObject.___cache = displayObject.cache;
 			
-			displayObject.cache = function(x, y, width, height, scale) {
+			displayObject.cache = function (x, y, width, height, scale) {
 				current = 1 - current;
 				this.cacheCanvas = canvas[current];
 				this.___cache(x, y, width, height, scale);
@@ -76,7 +76,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 		t: -1,
 		r: 0
 	},
-	transformCheck = function(value){
+	transformCheck = function (value) {
 		var v = +(value.substring(4)),
 		resp  = transform,
 		a = !!(0x20000000 & v),
@@ -88,22 +88,22 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 		resp.y = 1;
 		resp.r = 0;
 
-		if(a || b || c){
-			if(a && b && c){
+		if (a || b || c) {
+			if (a && b && c) {
 				resp.x = -1;
 				resp.r = 90;
-			} else if (a && c){
+			} else if (a && c) {
 				resp.r = 90;
-			} else if (b && c){
+			} else if (b && c) {
 				resp.r = 180;
-			} else if (a && b){
+			} else if (a && b) {
 				resp.r = 270;
-			} else if (a){
+			} else if (a) {
 				resp.y = -1;
 				resp.r = 90;
-			} else if (b){
+			} else if (b) {
 				resp.y = -1;
-			} else if (c){
+			} else if (c) {
 				resp.x = -1;
 			}
 		}
@@ -114,17 +114,17 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 		
 		id: 'render-tiles',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var x = 0,
 			images = definition.spriteSheet.images.slice(),
 			spriteSheet = null,
 			scaleX = 1,
 			scaleY = 1;
 			
-			if(images[0] && (typeof images[0] === 'string')){
+			if (images[0] && (typeof images[0] === 'string')) {
 				images = images.slice(); //so we do not overwrite settings array
-				for (x = 0; x < images.length; x++){
-					if(platformer.assets[images[x]]){
+				for (x = 0; x < images.length; x++) {
+					if (platformer.assets[images[x]]) {
 						images[x] = platformer.assets[images[x]];
 					}
 				}
@@ -138,7 +138,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 			scaleX = spriteSheet.images[0].scaleX || 1;
 			scaleY = spriteSheet.images[0].scaleY || 1;
 	
-			if((scaleX !== 1) || (scaleY !== 1)){
+			if ((scaleX !== 1) || (scaleY !== 1)) {
 				spriteSheet.frames = {
 					width: spriteSheet.frames.width * scaleX,	
 					height: spriteSheet.frames.height * scaleY,	
@@ -184,7 +184,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-render-load": function(resp){
+			"handle-render-load": function (resp) {
 				var x = 0,
 				y     = 0,
 				stage = null,
@@ -192,10 +192,10 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				imgMapDefinition = this.imageMap,
 				newImgMap = [];
 
-				if(resp && resp.stage){
+				if (resp && resp.stage) {
 					stage = this.stage = resp.stage;
 					
-					if(stage && !this.reorderedStage){
+					if (stage && !this.reorderedStage) {
 						stage.reorder = true;
 						this.reorderedStage = true;
 					}
@@ -203,11 +203,11 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 					this.tilesToRender = initializeCanvasConservation(new createjs.Container());
 					this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
 					
-					for(x = 0; x < imgMapDefinition.length; x++){
+					for(x = 0; x < imgMapDefinition.length; x++) {
 						newImgMap[x] = [];
-						for (y = 0; y < imgMapDefinition[x].length; y++){
+						for (y = 0; y < imgMapDefinition[x].length; y++) {
 							newImgMap[x][y] = index = imgMapDefinition[x][y];
-							if(!this.tiles[index]){
+							if (!this.tiles[index]) {
 								this.tiles[index] = this.createTile(index);
 							}
 						}
@@ -225,7 +225,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				}
 			},
 			
-			"peer-entity-added": function(entity){
+			"peer-entity-added": function (entity) {
 				var x = 0,
 				y     = 0,
 				imgMap = this.imageMap,
@@ -237,8 +237,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				left = 0;
 				
 				// Determine whether to merge this image with the background.
-				if(this.entityCache && object){ //TODO: currently only handles a single display object on the cached entity.
-					if(!this.doMap){
+				if (this.entityCache && object) { //TODO: currently only handles a single display object on the cached entity.
+					if (!this.doMap) {
 						this.doMap = [];
 					}
 
@@ -250,12 +250,12 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 					right  = Math.min(imgMap.length, Math.ceil((entity.x - bounds.x + bounds.width) / this.tileWidth));
 					
 					// Find tiles that should include this display object
-					for(x = left; x < right; x++){
-						if(!this.doMap[x]){
+					for(x = left; x < right; x++) {
+						if (!this.doMap[x]) {
 							this.doMap[x] = [];
 						}
-						for (y = top; y < bottom; y++){
-							if(!this.doMap[x][y]){
+						for (y = top; y < bottom; y++) {
+							if (!this.doMap[x][y]) {
 								this.doMap[x][y] = [];
 							}
 							this.doMap[x][y].push(object); //TODO: may want to properly handle z-order here at some point?
@@ -267,23 +267,23 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				}
 			},
 			
-			"add-tiles": function(definition){
+			"add-tiles": function (definition) {
 				var x = 0,
 				y     = 0,
 				map   = definition.imageMap,
 				index = '',
 				newIndex = 0;
 				
-				if(map){
-					for(x = 0; x < this.imageMap.length; x++){
-						for (y = 0; y < this.imageMap[x].length; y++){
+				if (map) {
+					for(x = 0; x < this.imageMap.length; x++) {
+						for (y = 0; y < this.imageMap[x].length; y++) {
 							newIndex = map[x][y];
 							index = this.imageMap[x][y];
-							if(this.tiles[index]){
+							if (this.tiles[index]) {
 								delete this.tiles[index];
 							}
 							index = this.imageMap[x][y] += ' ' + newIndex;
-							if(!this.tiles[index]){
+							if (!this.tiles[index]) {
 								this.tiles[index] = this.createTile(index);
 							}
 						}
@@ -291,12 +291,12 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				}
 			},
 
-			"camera-loaded": function(dimensions){
+			"camera-loaded": function (dimensions) {
 				this.worldWidth  = dimensions.width;
 				this.worldHeight = dimensions.height;
 			},
 
-			"camera-update": function(camera){
+			"camera-update": function (camera) {
 				var x  = 0,
 				y      = 0,
 				z      = 0,
@@ -321,7 +321,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				this.tilesToRender.x = camera.viewportLeft - camL;
 				this.tilesToRender.y = camera.viewportTop  - camT;
 						
-				if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)){
+				if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
 					this.camera.x = vpL;
 					this.camera.y = vpT;
 					
@@ -331,8 +331,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 					maxY = Math.min(Math.ceil((vpT + camera.viewportHeight + buffer) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
 					minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
 		
-					if((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)){
-						if(this.tilesToRender.cacheCanvas){
+					if ((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)) {
+						if (this.tilesToRender.cacheCanvas) {
 							canvas = this.tilesToRender.cacheCanvas;
 							this.tilesToRender.uncache();
 						}
@@ -340,9 +340,9 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 						this.tilesToRender.removeChildAt(0);
 						this.tilesToRender.cache(minX * this.tileWidth, minY * this.tileHeight, (maxX - minX + 1) * this.tileWidth, (maxY - minY + 1) * this.tileHeight, 1);
 						
-						for(x = minX; x <= maxX; x++){
-							for (y = minY; y <= maxY; y++){
-								if((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)){
+						for(x = minX; x <= maxX; x++) {
+							for (y = minY; y <= maxY; y++) {
+								if ((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)) {
 									// draw tiles
 									tile = this.tiles[this.imageMap[x][y]];
 									this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
@@ -352,10 +352,10 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 									this.tilesToRender.updateCache('source-over');
 
 									// check for cached entities
-									if(this.doMap && this.doMap[x] && this.doMap[x][y]){
+									if (this.doMap && this.doMap[x] && this.doMap[x][y]) {
 										oList = this.doMap[x][y];
-										for(z = 0; z < oList.length; z++){
-											if(!oList[z].drawn){
+										for(z = 0; z < oList.length; z++) {
+											if (!oList[z].drawn) {
 												oList[z].drawn = true;
 												ents.push(oList[z]);
 											}
@@ -366,8 +366,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 						}
 						
 						// Draw cached entities
-						if(ents.length){
-							for(z = 0; z < ents.length; z++){
+						if (ents.length) {
+							for(z = 0; z < ents.length; z++) {
 								delete ents[z].drawn;
 								this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
 								this.tilesToRender.addChild(ents[z]);
@@ -375,7 +375,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 							}
 						}
 		
-						if(canvas){
+						if (canvas) {
 							context = this.tilesToRender.cacheCanvas.getContext('2d');
 							width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
 							height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
@@ -391,15 +391,15 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 		},
 	
 		methods:{
-			convertCamera: function(distance, worldDistance, tileDistance, viewportDistance){
-				if(((worldDistance / this.scaleX) === tileDistance) || ((worldDistance / this.scaleX) === viewportDistance)){
+			convertCamera: function (distance, worldDistance, tileDistance, viewportDistance) {
+				if (((worldDistance / this.scaleX) === tileDistance) || ((worldDistance / this.scaleX) === viewportDistance)) {
 					return distance;
 				} else {
 					return distance * (tileDistance - viewportDistance) / ((worldDistance / this.scaleX) - viewportDistance);
 				}
 			},
 			
-			createTile: function(imageName){
+			createTile: function (imageName) {
 				var i = 1,
 				imageArray = imageName.split(' '),
 				mergedTile = null,
@@ -410,7 +410,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				tile.y = 0;
 				tile.regX = this.tileWidth / 2;
 				tile.regY = this.tileHeight / 2;
-				if(imageArray[0] !== 'tile-1'){
+				if (imageArray[0] !== 'tile-1') {
 					layer = transformCheck(imageArray[0]);
 					tile.scaleX = layer.x;
 					tile.scaleY = layer.y;
@@ -420,9 +420,9 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 					tile.gotoAndStop('tile-1');
 				}
 				
-				for (; i < imageArray.length; i++){
-					if(imageArray[i] !== 'tile-1'){
-						if(!mergedTile){
+				for (; i < imageArray.length; i++) {
+					if (imageArray[i] !== 'tile-1') {
+						if (!mergedTile) {
 							mergedTile = new createjs.Container();
 							mergedTile.addChild(tile);
 							mergedTile.cache(-this.tileWidth/2,-this.tileHeight/2,this.tileWidth,this.tileHeight,1);
@@ -436,7 +436,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 					}
 				}
 
-				if(mergedTile){
+				if (mergedTile) {
 					return mergedTile;
 				} else {
 					tile.cache(0,0,this.tileWidth,this.tileHeight,1);
@@ -444,7 +444,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 				}
 			},
 			
-			destroy: function(){
+			destroy: function () {
 				this.tilesToRender.removeAllChildren();
 				this.stage.removeChild(this.tilesToRender);
 				this.imageMap.length = 0;
@@ -455,4 +455,4 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 			}
 		}
 	});
-})();
+}());

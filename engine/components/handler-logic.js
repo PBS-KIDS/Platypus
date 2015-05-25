@@ -6,15 +6,15 @@
  * @uses Component
  **/
 
-(function(){
+(function () {
 	"use strict";
 
-	var updateState = function(entity){
+	var updateState = function (entity) {
 		var state = null,
 		changed   = false;
 		
-		for (state in entity.state){
-			if (entity.state[state] !== entity.lastState[state]){
+		for (state in entity.state) {
+			if (entity.state[state] !== entity.lastState[state]) {
 				entity.lastState[state] = entity.state[state];
 				changed = true;
 			}
@@ -53,7 +53,7 @@
 			 */
 			 maxStepsPerTick: 100
 		},
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.entities = [];
 			this.activeEntities = this.entities;
 			
@@ -86,12 +86,12 @@
 			 * @method 'child-entity-added'
 			 * @param entity {Entity} The entity that is being considered for addition to the handler.
 			 */
-			"child-entity-added": function(entity){
+			"child-entity-added": function (entity) {
 				var messageIds = entity.getMessageIds(); 
 				
 				for (var x = 0; x < messageIds.length; x++)
 				{
-					if (messageIds[x] == 'handle-logic' || messageIds[x] == 'handle-post-collision-logic'){
+					if (messageIds[x] == 'handle-logic' || messageIds[x] == 'handle-post-collision-logic') {
 						this.entities.push(entity);
 						this.updateNeeded = this.camera.active;
 						break;
@@ -105,9 +105,9 @@
 			 * @method 'child-entity-removed'
 			 * @param entity {Entity} The entity to be removed from the handler.
 			 */
-			"child-entity-removed": function(entity){
+			"child-entity-removed": function (entity) {
 				for (var j = this.entities.length - 1; j > -1; j--) {
-					if(this.entities[j] === entity){
+					if (this.entities[j] === entity) {
 						this.entities.splice(j, 1);
 						break;
 					}
@@ -121,8 +121,8 @@
 			 * @param [options] {Object}
 			 * @param [options.time] {number} If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered.
 			 */
-			"pause-logic": function(resp){
-				if(resp && resp.time){
+			"pause-logic": function (resp) {
+				if (resp && resp.time) {
 					this.paused = resp.time;
 				} else {
 					this.paused = -1;
@@ -134,7 +134,7 @@
 			 * 
 			 * @method 'unpause-logic'
 			 */
-			"unpause-logic": function(){
+			"unpause-logic": function () {
 				this.paused = 0;
 			},
 			
@@ -148,13 +148,13 @@
 			 * @param camera.viewportWidth {number} The width of the camera viewport in world units.
 			 * @param camera.viewportHeight {number} The height of the camera viewport in world units.
 			 */
-			"camera-update": function(camera){
+			"camera-update": function (camera) {
 				this.camera.left = camera.viewportLeft;
 				this.camera.top = camera.viewportTop;
 				this.camera.width = camera.viewportWidth;
 				this.camera.height = camera.viewportHeight;
 				
-				if(this.camera.buffer == -1) {
+				if (this.camera.buffer == -1) {
 					this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
 				}
 				
@@ -170,7 +170,7 @@
 			 * @param tick {Object} Tick information that is passed on to children entities via "handle-logic" events.
 			 * @param tick.delta {number} The time passed since the last tick.
 			 */
-			"tick": function(resp){
+			"tick": function (resp) {
 				var cycles = 0,
 				child   = undefined,
 				time    = new Date().getTime();
@@ -190,27 +190,27 @@
 				this.message.delta = this.stepLength;
 				this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
 		
-				if(this.paused > 0){
+				if (this.paused > 0) {
 					this.paused -= resp.delta;
-					if(this.paused < 0){
+					if (this.paused < 0) {
 						this.paused = 0;
 					}
 				}
 				
-				if(!this.paused) {
-					if(!this.message.tick){
+				if (!this.paused) {
+					if (!this.message.tick) {
 						this.message.tick = resp;
 					}
 					
-					//if(this.updateNeeded){//causes blocks to fall through dirt - not sure the connection here, so leaving out this optimization for now. - DDD
-						if(this.activeEntities === this.entities){
+					//if (this.updateNeeded) {//causes blocks to fall through dirt - not sure the connection here, so leaving out this optimization for now. - DDD
+						if (this.activeEntities === this.entities) {
 							this.message.movers = this.activeEntities = [];
 						}
 						
 						this.activeEntities.length = 0;
 						for (var j = this.entities.length - 1; j > -1; j--) {
 							child = this.entities[j];
-							if(child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))){
+							if (child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
 								this.activeEntities.push(child);
 							}
 						}
@@ -219,7 +219,7 @@
 					//Prevents game lockdown when processing takes longer than time alotted.
 					cycles = Math.min(cycles, this.maxStepsPerTick);
 					
-					for(var i = 0; i < cycles; i++){
+					for(var i = 0; i < cycles; i++) {
 						
 						/**
 						 * This event is triggered on children entities to run their logic.
@@ -230,7 +230,7 @@
 						 */
 						for (var j = this.activeEntities.length - 1; j > -1; j--) {
 							child = this.activeEntities[j];
-							if(child.triggerEvent('handle-logic', this.message)){
+							if (child.triggerEvent('handle-logic', this.message)) {
 								child.checkCollision = true;
 							}
 						}
@@ -247,7 +247,7 @@
 						 * @param tick {Object}
 						 * @param tick.delta {Number} The time that has passed since the last tick.
 						 */
-						if(this.owner.triggerEvent('check-collision-group', this.message)){ // If a collision group is attached, make sure collision is processed on each logic tick.
+						if (this.owner.triggerEvent('check-collision-group', this.message)) { // If a collision group is attached, make sure collision is processed on each logic tick.
 							this.timeElapsed.name = 'Collision';
 							this.timeElapsed.time = new Date().getTime() - time;
 							platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
@@ -270,7 +270,7 @@
 							for (var j = this.activeEntities.length - 1; j > -1; j--) {
 								child = this.activeEntities[j];
 								child.triggerEvent('handle-post-collision-logic', this.message);
-								if(updateState(child)){
+								if (updateState(child)) {
 									child.triggerEvent('logical-state', child.state);
 								}
 							}
@@ -282,7 +282,7 @@
 						} else {
 							for (var j = this.activeEntities.length - 1; j > -1; j--) {
 								child = this.activeEntities[j];
-								if(updateState(child)){
+								if (updateState(child)) {
 									child.triggerEvent('logical-state', child.state);
 								}
 							}
@@ -297,4 +297,4 @@
 			}
 		}
 	});
-})();
+}());

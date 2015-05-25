@@ -21,33 +21,33 @@
  * 
  */
 
-(function(){
-	if(isJIT){
+(function () {
+	if (isJIT) {
 		print('This plugin does not support in-browser compilation.');
 		return;
 	}
 	
-   var alert  = function(val){print(val);},
-   checkPush  = function(list, item){
+   var alert  = function (val) {print(val);},
+   checkPush  = function (list, item) {
 	   var itIsThere = false;
-	   for (var index in list){
-		   if(list[index] === item) itIsThere = true;
+	   for (var index in list) {
+		   if (list[index] === item) itIsThere = true;
 	   }
-	   if(!itIsThere) list.push(item);
+	   if (!itIsThere) list.push(item);
 	   return !itIsThere;
    },
-   checkPushSrc = function(list, item){
+   checkPushSrc = function (list, item) {
 	   var itIsThere = false;
-	   for (var index in list){
-		   if(list[index].src === item.src) itIsThere = true;
+	   for (var index in list) {
+		   if (list[index].src === item.src) itIsThere = true;
 	   }
-	   if(!itIsThere) list.push(item);
+	   if (!itIsThere) list.push(item);
 	   return !itIsThere;
    },
-   hypPath    = function(path){
+   hypPath    = function (path) {
 	   return path.replace(workingDir, '').replace(/\.\.\//g, '').replace(/\//g, '-').replace(/images-/, '').replace(/audio-/, '').replace(/fonts-/, '');
    },
-   copyFiles  = function(assets, destination, buildId){
+   copyFiles  = function (assets, destination, buildId) {
 	    var assetIndex = 0,
 	    asset          = null,
 	    source         = '',
@@ -55,17 +55,17 @@
 	    
 	    if (!fileSystem.FolderExists(destination)) fileSystem.CreateFolder(destination);
 	    fileSystem.DeleteFile(destination + '*.*');
-	    for (assetIndex in assets){
+	    for (assetIndex in assets) {
 		    asset = assets[assetIndex];
-		    if(asset.src !== ''){
+		    if (asset.src !== '') {
 		    	fileName = hypPath(asset.src);
 		    	source = asset.src;
 		    	
 		    	// sourceFiles is an alternate location for a named file, useful for build-specific files.
-		    	if(asset.sourceFiles){
-		    		if(asset.sourceFiles[buildId]){
+		    	if (asset.sourceFiles) {
+		    		if (asset.sourceFiles[buildId]) {
 		    			source = asset.sourceFiles[buildId];
-		    		} else if (asset.sourceFiles['default']){
+		    		} else if (asset.sourceFiles['default']) {
 		    			source = asset.sourceFiles['default'];
 		    		}
 		    	}
@@ -75,19 +75,19 @@
 		    }
 	    }
     },
-   isImage    = function(path){
+   isImage    = function (path) {
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === '.jpg') || (check === 'jpeg') || (check === '.png') || (check === '.gif') || (check === '.ico');
    },
-   isAudio    = function(path){
+   isAudio    = function (path) {
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === '.ogg') || (check === '.mp3') || (check === '.m4a') || (check === '.wav') || (check === '.mp4');
    },
-   isFont    = function(path){
+   isFont    = function (path) {
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === '.ttf') || (check === '.otf') || (check === 'woff');
    },
-	addAllTypes = function(assets, asset){
+	addAllTypes = function (assets, asset) {
 		var i  = 0,
 		j      = '',
 		newSrc = asset.src.split('.'),
@@ -95,18 +95,18 @@
 		newAsset = null,
 		arr    = null;
 
-		if(manifest[ext]){
-			for(i = 0; i < manifest[ext].length; i++){
+		if (manifest[ext]) {
+			for(i = 0; i < manifest[ext].length; i++) {
 				newAsset = {};
-				for (j in asset){
+				for (j in asset) {
 					newAsset[j] = asset[j];
 				}
 
 				newSrc[newSrc.length - 1] = manifest[ext][i];
 				newAsset.src = newSrc.join('.');
-				if(asset.sourceFiles){
+				if (asset.sourceFiles) {
 					newAsset.sourceFiles = {};
-					for(j in asset.sourceFiles){
+					for(j in asset.sourceFiles) {
 						arr = asset.sourceFiles[j].split('.');
 						arr[arr.length - 1] = manifest[ext][i];
 						asset.sourceFiles[j] = arr.join('.');
@@ -136,11 +136,11 @@
    aspects    = game.manifest,
    manifest   = null;
    
-	if(aspects){
+	if (aspects) {
 		manifest = {};
-		for (var i in aspects){
+		for (var i in aspects) {
 			var listAspects = [];
-			for (j in aspects[i]){
+			for (j in aspects[i]) {
 				checkPush(listAspects, aspects[i][j]);
 				manifest[aspects[i][j]] = listAspects;
 			}
@@ -148,15 +148,15 @@
 	}
 
 	print('Compiling list of assets.');
-    for(sectionId in source){
+    for(sectionId in source) {
     	section = source[sectionId];
-	    for (assetId in section){
+	    for (assetId in section) {
 	    	asset = section[assetId];
 		    try {
-			    if(asset.src){
-			    	if((typeof asset.src) == 'string'){
-			    		if(asset.src.substring(0,4).toLowerCase() !== 'http'){
-			    			if(manifest){
+			    if (asset.src) {
+			    	if ((typeof asset.src) == 'string') {
+			    		if (asset.src.substring(0,4).toLowerCase() !== 'http') {
+			    			if (manifest) {
 				    			addAllTypes(assets, asset);
 			    			} else {
 			    				checkPushSrc(assets, asset);
@@ -171,25 +171,25 @@
     }
    
     print('Separating asset types.');
-    for (var asset in assets){
-	    if(isImage(assets[asset].src)){
+    for (var asset in assets) {
+	    if (isImage(assets[asset].src)) {
 	 	    images.push(assets[asset]);
-	    } else if(isAudio(assets[asset].src)){
+	    } else if (isAudio(assets[asset].src)) {
 		    audio.push(assets[asset]);
-	    } else if(isFont(assets[asset].src)){
+	    } else if (isFont(assets[asset].src)) {
 		    fonts.push(assets[asset]);
 	    }
     }
    
     print('Copying assets to build folders.');
     if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
-    for (buildIndex in builds){
+    for (buildIndex in builds) {
         print('..Copying assets to build "' + builds[buildIndex].id + '".');
         
         buildPath = buildDir + builds[buildIndex].id + '/';
 	    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
 	    
-	    if(builds[buildIndex].index === false){
+	    if (builds[buildIndex].index === false) {
 	        buildPath += builds[buildIndex].id + '/';
 		    if (!fileSystem.FolderExists(buildPath)) fileSystem.CreateFolder(buildPath);
 	    }
@@ -200,4 +200,4 @@
 	}
     
     print('Completed asset compilation.');
-})();
+}());

@@ -4,7 +4,7 @@
  * @class "xhr" Component
  * @uses Component
  */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
@@ -48,7 +48,7 @@
 			withCredentials: false
 		},
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.setProperties(definition);
 		},
 
@@ -64,10 +64,10 @@
 			 * @param [message.data] {Object} An object of string key/value pairs to be transmitted to the server.
 			 * @param message.onload {Function} A function that should be run on receiving a response from the server. This defaults to triggering a "response" message containing the responseText value.
 			 */
-			"request": function(resp){
+			"request": function (resp) {
 				this.setProperties(resp);
 				
-				if(this.method === "GET"){
+				if (this.method === "GET") {
 					this.get();
 				} else if (this.method === "POST") {
 					this.post();
@@ -78,7 +78,7 @@
 		},
 		
 		methods: {// These are methods that are called on the component
-			setProperties: function(properties){
+			setProperties: function (properties) {
 				var key = null,
 				divider = '',
 				self    = this,
@@ -89,7 +89,7 @@
 				this.responseType = props.responseType || this.responseType || "text";
 				this.withCredentials = props.withCredentials || this.withCredentials || false;
 				
-				if((props !== this) && props.data){
+				if ((props !== this) && props.data) {
 					this.data = '';
 					for (key in props.data) {
 						this.data += divider + key + '=' + props.data[key];
@@ -99,7 +99,7 @@
 					this.data = '';
 				}
 				
-				this.onload = props.onload || this.onload || function(e) {
+				this.onload = props.onload || this.onload || function (e) {
 				    if (this.status === 200) {
 						/**
 						 * This message is triggered on receiving a response from the server (if "onload" is not set by the original "request" message).
@@ -111,11 +111,11 @@
 				    }
 				};
 			},
-			get: function(){
+			get: function () {
 				var xhr = new XMLHttpRequest(),
 				path    = this.path;
 				
-				if(this.data){
+				if (this.data) {
 					path += '?' + this.data;
 				}
 				
@@ -125,7 +125,7 @@
 				xhr.onload = this.onload;
 				xhr.send();
 			},
-			post: function(){
+			post: function () {
 				var xhr = new XMLHttpRequest();
 				
 				xhr.open(this.method, this.path, true);
@@ -137,4 +137,4 @@
 			}
 		}
 	});
-})();
+}());

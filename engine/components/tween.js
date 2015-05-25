@@ -35,34 +35,34 @@ Tween takes a list of tween definitions and plays them as needed.
 	    }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var createTrigger = function(entity, event, message, debug){
-		return function(){
+	var createTrigger = function (entity, event, message, debug) {
+		return function () {
 			entity.trigger(event, message, debug);
 		};
 	},
-	createTween = function(definition){
-		return function(values){
+	createTween = function (definition) {
+		return function (values) {
 			var i  = 0,
 			tweens = definition,
 			tweenDef = null,
 			arr = null,
 			tween = createjs.Tween.get(this.owner);
 			
-			if(Array.isArray(values)){
+			if (Array.isArray(values)) {
 				tweens = values;
-			} else if(!Array.isArray(tweens)){
+			} else if (!Array.isArray(tweens)) {
 				return;
 			}
 			
-			for (; i < tweens.length; i++){
+			for (; i < tweens.length; i++) {
 				tweenDef = tweens[i];
-				if(typeof tweenDef === 'string'){
+				if (typeof tweenDef === 'string') {
 					tween.call(createTrigger(this.owner, tweenDef));
 				} else if (Array.isArray(tweenDef)) {
-					if(tweenDef[0] === 'call' && typeof tweenDef[1] === 'string'){
+					if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
 						tween.call(createTrigger(this.owner, tweenDef[1]));
 					} else {
 						arr = tweenDef.slice();
@@ -70,7 +70,7 @@ Tween takes a list of tween definitions and plays them as needed.
 						tween[tweenDef[0]].apply(tween, arr);
 					}
 				} else {
-					if(tweenDef.method === 'call' && typeof tweenDef.arguments === 'string'){
+					if (tweenDef.method === 'call' && typeof tweenDef.arguments === 'string') {
 						tween.call(createTrigger(this.owner, tweenDef.arguments));
 					} else {
 						tween[tweenDef.method].apply(tween, tweenDef.arguments);
@@ -83,12 +83,12 @@ Tween takes a list of tween definitions and plays them as needed.
 	return platformer.createComponentClass({
 		id: 'tween',
 		
-		constructor: function(definition){
-			if(definition.events){
-				for(var event in definition.events){
+		constructor: function (definition) {
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, createTween(definition.events[event]));
 				}
 			}
 		}
 	});
-})();
+}());

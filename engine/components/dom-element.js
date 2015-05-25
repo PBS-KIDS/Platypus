@@ -54,24 +54,24 @@ This component creates a DOM element associated with the entity. In addition to 
       //Optional. In addition to the event syntax above, an Array of strings may be provided, causing multiple messages to be triggered in the order listed.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var createFunction = function(message, entity){
-		if(typeof message === 'string'){
-			return function(e){
+	var createFunction = function (message, entity) {
+		if (typeof message === 'string') {
+			return function (e) {
 				entity.trigger(message, e);
 				e.preventDefault();
 			};
-		} else if (Array.isArray(message)){
-			return function(e){
-				for (var i = 0; i < message.length; i++){
+		} else if (Array.isArray(message)) {
+			return function (e) {
+				for (var i = 0; i < message.length; i++) {
 					entity.trigger(message[i], e);
 				}
 				e.preventDefault();
 			};
 		} else {
-			return function(e){
+			return function (e) {
 				entity.trigger(message.event, message.message);
 				e.preventDefault();
 			};
@@ -80,7 +80,7 @@ This component creates a DOM element associated with the entity. In addition to 
 	
 	return platformer.createComponentClass({
 		id: 'dom-element',
-		constructor: function(definition){
+		constructor: function (definition) {
 			var elementType = definition.element   || 'div';
 			
 			this.updateClassName = definition.updateClassName || false;
@@ -91,49 +91,49 @@ This component creates a DOM element associated with the entity. In addition to 
 			this.handleRenderLoadMessage = null;
 			
 			this.element = document.createElement(elementType);
-			if(!this.owner.element){
+			if (!this.owner.element) {
 				this.owner.element = this.element;
 			}
-			this.element.ondragstart = function() {return false;}; //prevent element dragging by default
+			this.element.ondragstart = function () {return false;}; //prevent element dragging by default
 			
-			for(var i in definition){
-				if(i === 'style'){
-					for(var j in definition[i]){
+			for(var i in definition) {
+				if (i === 'style') {
+					for(var j in definition[i]) {
 						this.element.style[j] = definition[i][j]; 
 					}
-				} else if(((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')){
-					if(i.indexOf('on') === 0){
+				} else if (((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')) {
+					if (i.indexOf('on') === 0) {
 						if (platformer.game.settings.supports.mobile) {
 							if ( i.indexOf('onmouse') == -1) {
-								this.element[i] = createFunction(definition[i], this.owner);
+								this.element[i] = createfunction (definition[i], this.owner);
 							}
 						} else {
-							this.element[i] = createFunction(definition[i], this.owner);
+							this.element[i] = createfunction (definition[i], this.owner);
 						}
 					} else {
 						this.element[i] = definition[i];
-						if(i == 'className'){
+						if (i == 'className') {
 							this.className = definition[i];
 						}
 					}
 				}
 			}
 			
-			if(this.owner.className){
+			if (this.owner.className) {
 				this.className = this.element.className = this.owner.className;
 			}
-			if(this.owner.innerHTML){
+			if (this.owner.innerHTML) {
 				this.element.innerHTML = this.owner.innerHTML;
 			}
 		},
 		events:{
-			"handle-render-load": (function(){
-				var getElementById = function(root, id){
+			"handle-render-load": (function () {
+				var getElementById = function (root, id) {
 					var i = 0,
 					all   = root.getElementsByTagName('*');
 
 					for (; i < all.length; i++) {
-					    if(all[i].getAttribute('id') === id){
+					    if (all[i].getAttribute('id') === id) {
 					    	return all[i];
 					    }
 					}
@@ -141,11 +141,11 @@ This component creates a DOM element associated with the entity. In addition to 
 					return document.getElementById(id);
 				};
 				
-				return function(resp){
-					if(resp.element){
+				return function (resp) {
+					if (resp.element) {
 						
-						if(!this.parentElement){
-							if(this.potentialParent){
+						if (!this.parentElement) {
+							if (this.potentialParent) {
 								this.parentElement = getElementById(resp.element, this.potentialParent);
 								this.parentElement.appendChild(this.element);
 							} else {
@@ -154,9 +154,9 @@ This component creates a DOM element associated with the entity. In addition to 
 							}
 						}
 			
-						if(this.owner.triggerEventOnChildren){
+						if (this.owner.triggerEventOnChildren) {
 							var message = this.handleRenderLoadMessage = {};
-							for (var item in resp){
+							for (var item in resp) {
 								message[item] = resp[item];
 							}
 							message.element = this.element;
@@ -164,32 +164,32 @@ This component creates a DOM element associated with the entity. In addition to 
 						}
 					}
 				};
-			})(),
+			}()),
 			
-			"child-entity-added": function(entity){
-				if(this.handleRenderLoadMessage){
+			"child-entity-added": function (entity) {
+				if (this.handleRenderLoadMessage) {
 					entity.trigger("handle-render-load", this.handleRenderLoadMessage);
 				}
 			},
 			
-			"set-parent": function(element){
-				if(this.parentElement){
+			"set-parent": function (element) {
+				if (this.parentElement) {
 					this.parentElement.removeChild(this.element);
 				}
 				this.parentElement = element;
 				this.parentElement.appendChild(this.element);
 			},
 			
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 			},
 			
-			"handle-render": function(resp){
+			"handle-render": function (resp) {
 				var i     = 0,
 				className = this.className;
 				
-				if(this.stateChange && this.updateClassName){
-					for(i in this.states){
-						if(this.states[i]){
+				if (this.stateChange && this.updateClassName) {
+					for(i in this.states) {
+						if (this.states[i]) {
 							className += ' ' + i;
 						}
 					}
@@ -198,45 +198,45 @@ This component creates a DOM element associated with the entity. In addition to 
 				}
 			},
 			
-			"set-attribute": function(resp){
+			"set-attribute": function (resp) {
 				var attribute = null;
 				
-				if(resp.attribute){ //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
+				if (resp.attribute) { //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
 					this.element.setAttribute(resp.attribute, resp.value);
 				} else {
-					for (attribute in resp){
+					for (attribute in resp) {
 						this.element.setAttribute(attribute, resp[attribute]);
 					}
 				}
 			},
 			
-			"set-style": function(resp){
+			"set-style": function (resp) {
 				var attribute = null;
 				
-				if(resp.attribute){ //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
+				if (resp.attribute) { //Backwards compatibility for {attribute: 'attribute-name', value: 'new-value'} syntax
 					this.element.style[resp.attribute] = resp.value;
 				} else {
-					for (attribute in resp){
+					for (attribute in resp) {
 						this.element.style[attribute] = resp[attribute];
 					}
 				}
 			},
 			
-			"update-content": function(resp){
+			"update-content": function (resp) {
 				var text = resp;
 				
-				if(text && (typeof text.text === 'string')){
+				if (text && (typeof text.text === 'string')) {
 					text = text.text;
 				}
 				
-				if((typeof text === 'string') && (text !== this.element.innerHTML)){
+				if ((typeof text === 'string') && (text !== this.element.innerHTML)) {
 					this.element.innerHTML = text;
 				}
 			},
 		
-			"logical-state": function(state){
-				for(var i in state){
-					if(this.states[i] !== state[i]){
+			"logical-state": function (state) {
+				for(var i in state) {
+					if (this.states[i] !== state[i]) {
 						this.stateChange = true;
 						this.states[i] = state[i];
 					}
@@ -244,16 +244,16 @@ This component creates a DOM element associated with the entity. In addition to 
 			}
 		},
 		methods: {
-			destroy: function(){
-				if(this.parentElement){
+			destroy: function () {
+				if (this.parentElement) {
 					this.parentElement.removeChild(this.element);
 					this.parentElement = undefined;
 				}
-				if(this.owner.element === this.element){
+				if (this.owner.element === this.element) {
 					this.owner.element = undefined;
 				}
 				this.element = undefined;
 			}
 		}
 	});
-})();
+}());

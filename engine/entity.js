@@ -68,11 +68,11 @@
  * Requires: ["messenger.js"]
  */
 
-platformer.Entity = (function(){
+platformer.Entity = (function () {
 	"use strict";
 	
 	var entityIds = {},
-	entity = function (definition, instanceDefinition){
+	entity = function (definition, instanceDefinition) {
 		var self             = this,
 		index                = undefined,
 		componentDefinition  = undefined,
@@ -89,8 +89,8 @@ platformer.Entity = (function(){
 		self.type = def.id || 'none';
 		
 		self.id = instanceDefinition.id || instanceProperties.id;
-		if(!self.id){
-			if(!entityIds[self.type]){
+		if (!self.id) {
+			if (!entityIds[self.type]) {
 				entityIds[self.type] = 0;
 			}
 			self.id = self.type + '-' + entityIds[self.type];
@@ -99,18 +99,18 @@ platformer.Entity = (function(){
 
 		this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
 		this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
-		this.bind('set-property', function(keyValuePairs){
+		this.bind('set-property', function (keyValuePairs) {
 			self.setProperty(keyValuePairs);
 		});
 		
-		if(!self.state){
+		if (!self.state) {
 			self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
 		}
 		self.lastState = {}; //This is used to determine if the state of the entity has changed.
 		
-		for (index in componentDefinitions){
+		for (index in componentDefinitions) {
 			componentDefinition = componentDefinitions[index];
-			if(platformer.components[componentDefinition.type]){
+			if (platformer.components[componentDefinition.type]) {
 				self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
 			} else {
 				console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
@@ -127,7 +127,7 @@ platformer.Entity = (function(){
  * @method toString
  * @return {String} Returns the entity type as a string of the form "[entity entity-type]".
  **/
-	proto.toString = function(){
+	proto.toString = function () {
 		return "[entity " + this.type + "]";
 	};
 	
@@ -138,7 +138,7 @@ platformer.Entity = (function(){
  * @param {Component} component Must be an object that functions as a [[Component]].
  * @return {Component} Returns the same object that was submitted.
  **/
-	proto.addComponent = function(component){
+	proto.addComponent = function (component) {
 	    this.components.push(component);
 	    this.triggerEvent('component-added', component);
 	    return component;
@@ -151,12 +151,12 @@ platformer.Entity = (function(){
  * @param {Component} component Must be a [[Component]] attached to the entity.
  * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
  **/
-	proto.removeComponent = function(component){
+	proto.removeComponent = function (component) {
 		var index = '';
 		
-		if(typeof component === 'string'){
-		    for (index in this.components){
-			    if(this.components[index].type === component){
+		if (typeof component === 'string') {
+		    for (index in this.components) {
+			    if (this.components[index].type === component) {
 			    	component = this.components[index];
 			    	this.components.splice(index, 1);
 				    this.triggerEvent('component-removed', this.components[index]);
@@ -165,8 +165,8 @@ platformer.Entity = (function(){
 			    }
 		    }
 		} else {
-		    for (index in this.components){
-			    if(this.components[index] === component){
+		    for (index in this.components) {
+			    if (this.components[index] === component) {
 			    	this.components.splice(index, 1);
 				    this.triggerEvent('component-removed', this.components[index]);
 			    	component.destroy();
@@ -184,10 +184,10 @@ platformer.Entity = (function(){
  * @param {Object} properties A list of key/value pairs to set as properties on the entity.
  * @method setProperty
  **/
-	proto.setProperty = function(properties){
+	proto.setProperty = function (properties) {
 		var index = '';
 		
-		for (index in properties){ // This takes a list of properties and appends them directly to the object.
+		for (index in properties) { // This takes a list of properties and appends them directly to the object.
 			this[index] = properties[index];
 		}
 	};
@@ -197,7 +197,7 @@ platformer.Entity = (function(){
  * 
  * @method destroy
  **/
-	proto.destroy = function(){
+	proto.destroy = function () {
 		for (var x in this.components) {
 			this.components[x].destroy();
 		}
@@ -205,4 +205,4 @@ platformer.Entity = (function(){
 	};
 	
 	return entity;
-})();
+}());

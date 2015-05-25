@@ -3,10 +3,10 @@
  * 
  * @class CollisionData
  */
-platformer.CollisionData = (function(){
+platformer.CollisionData = (function () {
 	"use strict";
 	
-	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck){
+	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck) {
 		this.occurred = occurred || false;
 		this.direction = direction || null;
 		this.position = position || null;
@@ -19,7 +19,7 @@ platformer.CollisionData = (function(){
 	};
 	var proto = collisionData.prototype;
 	
-	proto.copy = function (dataToCopy){
+	proto.copy = function (dataToCopy) {
 		this.occurred 		= dataToCopy.occurred;
 		this.direction 		= dataToCopy.direction;
 		this.position 		= dataToCopy.position;
@@ -30,7 +30,7 @@ platformer.CollisionData = (function(){
 		this.vector         = dataToCopy.vector;
 		this.stuck          = dataToCopy.stuck;
 	};
-	proto.clear = function (){
+	proto.clear = function () {
 		this.occurred 		   = false;
 		this.direction 		   = null;
 		this.position 		   = null;
@@ -42,12 +42,12 @@ platformer.CollisionData = (function(){
 		this.stuck             = 0;
 	};
 	return collisionData;
-})();
+}());
 
-platformer.CollisionDataContainer = (function(){
+platformer.CollisionDataContainer = (function () {
 	"use strict";
 	
-	var collisionDataContainer = function(){
+	var collisionDataContainer = function () {
 		this.xData = [new platformer.CollisionData(), new platformer.CollisionData()];
 		this.yData = [new platformer.CollisionData(), new platformer.CollisionData()];
 		this.xCount = 0;
@@ -97,7 +97,7 @@ platformer.CollisionDataContainer = (function(){
 		return false;
 	};
 	
-	proto.ensureRoomX = function() {
+	proto.ensureRoomX = function () {
 		var goalLength = this.xData.length * 2;
 		if (this.xData.length <= this.xCount)
 		{
@@ -108,7 +108,7 @@ platformer.CollisionDataContainer = (function(){
 		}
 	};
 	
-	proto.ensureRoomY = function() {
+	proto.ensureRoomY = function () {
 		var goalLength = this.yData.length * 2;
 		if (this.yData.length <= this.yCount)
 		{
@@ -119,7 +119,7 @@ platformer.CollisionDataContainer = (function(){
 		}
 	};
 	
-	proto.reset = function() {
+	proto.reset = function () {
 		this.xCount = 0;
 		this.yCount = 0;
 		this.xDeltaMovement = Infinity;
@@ -127,4 +127,4 @@ platformer.CollisionDataContainer = (function(){
 	};
 	
 	return collisionDataContainer;
-})();
+}());

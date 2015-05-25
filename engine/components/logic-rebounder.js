@@ -34,13 +34,13 @@ This component works with `collision-basic` to cause entities to bounce away on 
 
 Requires: ["../vector.js"]
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'logic-rebounder',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
 			this.owner.mass = this.owner.mass || definition.mass || 1;
@@ -140,4 +140,4 @@ Requires: ["../vector.js"]
 
 		}
 	});
-})();
+}());

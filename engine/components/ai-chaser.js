@@ -26,15 +26,15 @@ This component acts as a simple AI that will chase another entity.
       "type": "ai-chaser"
     }
 */
-
-(function(){
+/*global platformer */
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		
-		id: 'ai-chaser', 
+		id: 'ai-chaser',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.target = this.owner.target || null;
 			this.piOverTwo = Math.PI / 2;
 			this.prevAngle = 0;
@@ -43,16 +43,14 @@ This component acts as a simple AI that will chase another entity.
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-ai": function(){
-				if (this.target && this.chasing)
-				{
+			"handle-ai": function () {
+				if (this.target && this.chasing) {
 					//figure out angle
 					this.owner.trigger('move');
-					var angle = 0;
-					var dX = this.target.x + this.offset.x - this.owner.x;
-					var dY = this.target.y + this.offset.y - this.owner.y;
-					if (dX == 0)
-					{
+					var angle = 0,
+                        dX = this.target.x + this.offset.x - this.owner.x,
+                        dY = this.target.y + this.offset.y - this.owner.y;
+					if (dX === 0) {
 						if (dY > 0) {
 							angle = this.piOverTwo;
 						} else if (dY < 0) {
@@ -62,7 +60,7 @@ This component acts as a simple AI that will chase another entity.
 							this.owner.trigger('stop');
 						}
 					} else {
-						angle = Math.atan(dY/dX);
+						angle = Math.atan(dY / dX);
 						if (dX < 0) {
 							angle = Math.PI + angle;
 						}
@@ -73,29 +71,29 @@ This component acts as a simple AI that will chase another entity.
 					this.owner.trigger('stop');
 				}
 			},
-			"set-target": function(entity){
+			"set-target": function (entity) {
 				this.target = entity;
 				this.offset.x = 0;
 				this.offset.y = 0;
 			},
-			"set-target-offset": function(offset){
+			"set-target-offset": function (offset) {
 				this.offset.x = offset.x;
 				this.offset.y = offset.y;
 			},
-			"start-chasing": function(){
+			"start-chasing": function () {
 				this.chasing = true;
 			},
-			"stop-chasing": function(){
+			"stop-chasing": function () {
 				this.chasing = false;
 			}
 				   
 		},
 		
 		methods: {// These are methods that are called on the component
-			destroy: function(){
+			destroy: function () {
 				this.target = null;
 			}
 		}
 		
 	});
-})();
+}());

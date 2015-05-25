@@ -24,14 +24,14 @@ This component serves as a switch in the game world, typically tied to collision
       // Optional. Whether a pressed switch should stay pressed once collision messages cease. Defaults to `false`.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		
 		id: 'logic-switch',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.state = this.owner.state;
 			this.pressed = false;
 			this.wasPressed = this.pressed;
@@ -62,13 +62,13 @@ This component serves as a switch in the game world, typically tied to collision
 					this.pressed = false;
 				}
 			},
-			'switch-pressed': function() {
+			'switch-pressed': function () {
 				this.pressed = true; 
-				if(this.initialPress){
+				if (this.initialPress) {
 					this.owner.trigger('initial-press');
 					this.initialPress = false;
 				}
 			}
 		}		
 	});
-})();
+}());

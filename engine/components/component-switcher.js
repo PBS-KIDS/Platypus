@@ -43,27 +43,27 @@ This component listens for messages and, according to its preset settings, will 
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var addRemoveComponents = function(definition, owner){
-		return function(){
+	var addRemoveComponents = function (definition, owner) {
+		return function () {
 			//Perform this swap outside of the entity's message loop to prevent endless loop errors due to messages not being able to be unbound.
 			//TODO: should probably create a "safe" tick message to handle this sort of entity restructuring operation within the game loop.
-			setTimeout(function(){
+			setTimeout(function () {
 				var i = 0, j = 0;
 				
-				if(definition.remove){
-					if(typeof definition.remove === 'string'){
-						for(i = owner.components.length - 1; i > -1; i--){
-							if(owner.components[i].type === definition.remove){
+				if (definition.remove) {
+					if (typeof definition.remove === 'string') {
+						for(i = owner.components.length - 1; i > -1; i--) {
+							if (owner.components[i].type === definition.remove) {
 								owner.removeComponent(owner.components[i]);
 							}
 						}
 					} else {
-						for (i = 0; i < definition.remove.length; i++){
-							for(j = owner.components.length - 1; j > -1; j--){
-								if(owner.components[j].type === definition.remove[i]){
+						for (i = 0; i < definition.remove.length; i++) {
+							for(j = owner.components.length - 1; j > -1; j--) {
+								if (owner.components[j].type === definition.remove[i]) {
 									owner.removeComponent(owner.components[j]);
 								}
 							}
@@ -71,17 +71,17 @@ This component listens for messages and, according to its preset settings, will 
 					}
 				}
 
-				if(definition.add){
-					if(!Array.isArray(definition.add)){
+				if (definition.add) {
+					if (!Array.isArray(definition.add)) {
 						owner.addComponent(new platformer.components[definition.add.type](owner, definition.add));
 					} else {
-						for (i = 0; i < definition.add.length; i++){
+						for (i = 0; i < definition.add.length; i++) {
 							owner.addComponent(new platformer.components[definition.add[i].type](owner, definition.add[i]));
 						}
 					}
 				}
 				
-				if(owner.parent){
+				if (owner.parent) {
 					owner.parent.triggerEvent('child-entity-updated', owner);
 				}
 			}, 1);
@@ -90,12 +90,12 @@ This component listens for messages and, according to its preset settings, will 
 	
 	return platformer.createComponentClass({
 		id: 'component-switcher',
-		constructor: function(definition){
-			if(definition.componentMap){
-				for(var event in definition.componentMap){
+		constructor: function (definition) {
+			if (definition.componentMap) {
+				for(var event in definition.componentMap) {
 					this.addEventListener(event, addRemoveComponents(definition.componentMap[event], this.owner));
 				}
 			}
 		}
 	});
-})();
+}());

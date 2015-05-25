@@ -51,12 +51,12 @@ This component sets up a node-map to be used by the [[node-resident]] component 
       ]
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var Node = function(definition, map){
-		if(definition.id){
-			if(typeof definition.id === 'string'){
+	var Node = function (definition, map) {
+		if (definition.id) {
+			if (typeof definition.id === 'string') {
 				this.id = definition.id;
 			} else if (Array.isArray(definition.id)) {
 				this.id = definition.id.join('|');
@@ -79,22 +79,22 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 	},
 	proto = Node.prototype;
 	
-	proto.getNode = function(desc){
+	proto.getNode = function (desc) {
 		var neighbor = null;
 		
-		if(this.neighbors[desc]){
+		if (this.neighbors[desc]) {
 			neighbor = this.neighbors[desc];
-			if(neighbor.isNode){
+			if (neighbor.isNode) {
 				return neighbor;
-			} else if(typeof neighbor === 'string'){
+			} else if (typeof neighbor === 'string') {
 				neighbor = this.map.getNode(neighbor);
-				if(neighbor){
+				if (neighbor) {
 					this.neighbors[desc] = neighbor;
 					return neighbor;
 				}
 			} else if (Array.isArray(neighbor)) {
 				neighbor = this.map.getNode(neighbor.join('|'));
-				if(neighbor){
+				if (neighbor) {
 					this.neighbors[desc] = neighbor;
 					return neighbor;
 				}
@@ -105,9 +105,9 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 		}
 	};
 
-	proto.add = function(entity){
-		for(var i = 0; i < this.contains.length; i++){
-			if(this.contains[i] === entity){
+	proto.add = function (entity) {
+		for(var i = 0; i < this.contains.length; i++) {
+			if (this.contains[i] === entity) {
 				return false;
 			}
 		}
@@ -115,9 +115,9 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 		return entity;
 	};
 	
-	proto.remove = function(entity){
-		for(var i = 0; i < this.contains.length; i++){
-			if(this.contains[i] === entity){
+	proto.remove = function (entity) {
+		for(var i = 0; i < this.contains.length; i++) {
+			if (this.contains[i] === entity) {
 				return this.contains.splice(i,1)[0];
 			}
 		}
@@ -127,24 +127,24 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 	return platformer.createComponentClass({
 		id: 'node-map',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var i = 0;
 			
 			this.map = [];
 			
-			if(definition.map){
-				for(; i < definition.map.length; i++){
+			if (definition.map) {
+				for(; i < definition.map.length; i++) {
 					this.map.push(new Node(definition.map[i], this));
 				}
 			}
 		},
 
 		events: {
-			"add-node": function(nodeDefinition){
+			"add-node": function (nodeDefinition) {
 				this.map.push(new Node(nodeDefinition, this));
 			},
-			"child-entity-added": function(entity){
-				if(entity.nodeId){
+			"child-entity-added": function (entity) {
+				if (entity.nodeId) {
 					entity.node = this.getNode(entity.nodeId);
 					entity.trigger('on-node', entity.node);
 				}
@@ -152,24 +152,24 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 		},
 		
 		methods: {
-			getNode: function(){
+			getNode: function () {
 				var i   = 0,
 				id      = '',
 				divider = '',
 				args    = arguments;
 				
-				if(args.length === 1){
-					if((typeof args[0] !== 'string') && args[0].length){
+				if (args.length === 1) {
+					if ((typeof args[0] !== 'string') && args[0].length) {
 						args = args[0];
 					}
 				}
 				
-				for (i = 0; i < args.length; i++){
+				for (i = 0; i < args.length; i++) {
 					id += divider + args[i];
 					divider = '|';
 				}
-				for (i = 0; i < this.map.length; i++){
-					if(this.map[i].id === id){
+				for (i = 0; i < this.map.length; i++) {
+					if (this.map[i].id === id) {
 						return this.map[i];
 					}
 				}
@@ -177,4 +177,4 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 			}
 		}
 	});
-})();
+}());

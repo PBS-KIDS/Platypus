@@ -29,14 +29,14 @@ This component changes the (x, y) position of an object according to its current
       // Optional. Defines how much to rotate the image in addition to the movement rotation.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		
 		id: 'logic-angular-movement', 
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.angle     = 0;
 			this.v         = [0,0];
 			this.maxV      = this.owner.maxVelocity  || definition.maxVelocity  || 3;
@@ -48,7 +48,7 @@ This component changes the (x, y) position of an object according to its current
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-logic": function(update){
+			"handle-logic": function (update) {
 				var delta = update.delta;
 				var currentAngle = 0;
 				if (this.moving)
@@ -86,18 +86,18 @@ This component changes the (x, y) position of an object according to its current
 					this.owner.orientation = currentAngle + this.visualOffset;
 				}				
 			},
-			"set-angle": function(angle){
+			"set-angle": function (angle) {
 				this.angle = angle;
 			},
-			"move": function(){
+			"move": function () {
 				this.moving = true;
 			},
-			"stop": function(){
+			"stop": function () {
 				this.moving = false;
 			},
-			"set-max-velocity": function(newMaxV){
+			"set-max-velocity": function (newMaxV) {
 				this.maxV = newMaxV;
 			}
 		}
 	});
-})();
+}());

@@ -53,14 +53,14 @@ This component allows an entity to communicate directly with one or more entitie
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
-	var broadcast = function(event){
-		return function(value, debug){
+	var broadcast = function (event) {
+		return function (value, debug) {
 			var i = 0;
 			
-			for(; i < this.links.length; i++){
+			for(; i < this.links.length; i++) {
 				this.links[i].trigger(event, value, debug);
 			}
 		};
@@ -68,30 +68,30 @@ This component allows an entity to communicate directly with one or more entitie
 
 	return platformer.createComponentClass({
 		id: 'relay-linker',
-		constructor: function(definition){
+		constructor: function (definition) {
 			var self = this;
 
-			if(definition.events){
-				for(var event in definition.events){
+			if (definition.events) {
+				for(var event in definition.events) {
 					this.addEventListener(event, broadcast(definition.events[event]));
 				}
 			}
 	
 			this.linkId = definition.linkId || this.owner.linkId || 'linked';
 			
-			if(!this.owner.linkId){
+			if (!this.owner.linkId) {
 				this.owner.linkId = this.linkId;
 			}
 			
 			this.addEventListener('to-' + this.linkId + '-entities', broadcast('from-' + this.linkId + '-entities'));
-			this.addEventListener('from-' + this.linkId + '-entities', function(resp){
+			this.addEventListener('from-' + this.linkId + '-entities', function (resp) {
 				self.owner.trigger(resp.message, resp.value, resp.debug);
 			});
 			
 			this.links = [];
 			
-			if(this.owner.linkEntities){
-				for (var entity in this.owner.linkEntities){
+			if (this.owner.linkEntities) {
+				for (var entity in this.owner.linkEntities) {
 					this.links.push(this.owner.linkEntities[entity]);
 				}
 			}
@@ -107,32 +107,32 @@ This component allows an entity to communicate directly with one or more entitie
 			};
 			
 			// In case linker is added after adoption
-			if(this.owner.parent){
+			if (this.owner.parent) {
 				this.resolveAdoption();
 			}
 		},
 		
 		events: {
-			"adopted": function(resp){
+			"adopted": function (resp) {
 				this.resolveAdoption(resp);
 			},
 			
-			"link-entity": function(resp){
+			"link-entity": function (resp) {
 				var i   = 0,
 				already = false;
 				
-				if((resp.linkId === this.linkId) && (resp.entity !== this.owner)){
+				if ((resp.linkId === this.linkId) && (resp.entity !== this.owner)) {
 					// Make sure this link is not already in place
-					for (; i < this.links.length; i++){
-						if(this.links[i] === resp.entity){
+					for (; i < this.links.length; i++) {
+						if (this.links[i] === resp.entity) {
 							already = true;
 							break;
 						}
 					}
 					
-					if(!already){
+					if (!already) {
 						this.links.push(resp.entity);
-						if(resp.reciprocate){
+						if (resp.reciprocate) {
 							this.linkMessage.reciprocate = false;
 							resp.entity.trigger('link-entity', this.linkMessage);
 						}
@@ -140,10 +140,10 @@ This component allows an entity to communicate directly with one or more entitie
 				}
 			},
 			
-			"unlink-entity": function(resp){
+			"unlink-entity": function (resp) {
 				var i = 0;
-				for(; i < this.links.length; i++){
-					if(resp.entity === this.links[i]){
+				for(; i < this.links.length; i++) {
+					if (resp.entity === this.links[i]) {
 						this.links.splice(i, 1);
 						break;
 					}
@@ -152,22 +152,22 @@ This component allows an entity to communicate directly with one or more entitie
 		},
 		
 		methods: {
-			resolveAdoption: function(resp){
+			resolveAdoption: function (resp) {
 				var grandparent = this.owner.parent;
-				while(grandparent.parent){
+				while(grandparent.parent) {
 					grandparent = grandparent.parent;
 				}
 				this.linkMessage.reciprocate = true; 
 				grandparent.trigger('link-entity', this.linkMessage, true);
 			},
 			
-			destroy: function(){
+			destroy: function () {
 				var i = 0;
-				for (; i < this.links.length; i++){
+				for (; i < this.links.length; i++) {
 					this.links[i].trigger('unlink-entity', this.linkMessage);
 				}
 				this.links.length = 0;
 			}
 		}
 	});
-})();
+}());

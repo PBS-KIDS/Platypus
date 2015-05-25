@@ -1,9 +1,9 @@
-this.shell = (function(){
-	if (typeof ActiveXObject != 'undefined'){
+this.shell = (function () {
+	if (typeof ActiveXObject != 'undefined') {
 		return new ActiveXObject("wscript.shell");
 	} else {
 		var shell = {
-		    Run: function(cmd, num, pause){
+		    Run: function (cmd, num, pause) {
 		    	var args = cmd.split(' ');
 		    	return runCommand.apply(this,args);
 		    },
@@ -11,31 +11,31 @@ this.shell = (function(){
 		};
 		return shell;
 	};
-})();
+}());
 
-if(typeof print === 'undefined'){
-   	print = function(txt){
+if (typeof print === 'undefined') {
+   	print = function (txt) {
    		WScript.Echo(txt);
    	};
 }
 
-this.fileSystem = (function(){
-	if (typeof ActiveXObject != 'undefined'){
+this.fileSystem = (function () {
+	if (typeof ActiveXObject != 'undefined') {
 		var fso    = new ActiveXObject("Scripting.FileSystemObject"),
 		strm       = new ActiveXObject("ADODB.Stream"),
 		fileSystem = {
-		    OpenTextFile: function(path){
+		    OpenTextFile: function (path) {
 		    	strm.Open();
 				strm.LoadFromFile(path);
 		    	return {
 		    		path: path,
-		    		Close: function(){
+		    		Close: function () {
 		    			strm.Close();
 		    		},
-		    		ReadAll: function(){
+		    		ReadAll: function () {
 		    			return strm.ReadText();
 		    		},
-		    		Write: function(str){
+		    		Write: function (str) {
 		    			var bs = new ActiveXObject("ADODB.Stream");
 		    			
 		    			strm.WriteText(str);
@@ -50,14 +50,14 @@ this.fileSystem = (function(){
 		    		}
 		    	};
 		    },
-		    CreateTextFile: function(path, options){
+		    CreateTextFile: function (path, options) {
 		    	strm.Open();
 		    	return {
 		    		path: path,
-		    		Close: function(){
+		    		Close: function () {
 		    			strm.Close();
 		    		},
-		    		Write: function(str){
+		    		Write: function (str) {
 		    			var bs = new ActiveXObject("ADODB.Stream");
 		    			
 		    			strm.WriteText(str);
@@ -72,22 +72,22 @@ this.fileSystem = (function(){
 		    		}
 		    	};
 		    },
-		    FileExists: function(path){
+		    FileExists: function (path) {
 		    	return fso.FileExists(path);
 		    },
-		    FolderExists: function(path){
+		    FolderExists: function (path) {
 		    	return fso.FolderExists(path);
 		    },
-		    CreateFolder: function(path){
+		    CreateFolder: function (path) {
 		    	return fso.CreateFolder(path);
 		    },
-		    MoveFile: function(fromPath, toPath){
+		    MoveFile: function (fromPath, toPath) {
 		    	return fso.MoveFile(fromPath, toPath);
 		    },
-		    CopyFile: function(fromPath, toPath){
+		    CopyFile: function (fromPath, toPath) {
 		    	return fso.CopyFile(fromPath, toPath);
 		    },
-		    DeleteFile: function(path){
+		    DeleteFile: function (path) {
 		    	return fso.DeleteFile(path);
 		    }
 		};
@@ -96,39 +96,39 @@ this.fileSystem = (function(){
 
 		return fileSystem;
 	} else {
-		var file   = function(path){
+		var file   = function (path) {
 	    	this.path   = path;
 	    	this.reader = undefined;
 	    	this.writer = undefined;
 	    	this.file   = undefined;
 		},
 		fileSystem = {
-		    OpenTextFile: function(path){
+		    OpenTextFile: function (path) {
 		    	return new file(path);
 		    },
-		    CreateTextFile: function(path){
+		    CreateTextFile: function (path) {
 		    	return new file(path);
 		    },
-		    FileExists: function(path){
+		    FileExists: function (path) {
 		    	var file = java.io.File(path);
 		    	return file.exists();
 		    },
-		    FolderExists: function(path){
+		    FolderExists: function (path) {
 		    	var file = java.io.File(path);
 		    	return file.isDirectory();
 		    },
-		    CreateFolder: function(path){
+		    CreateFolder: function (path) {
 		    	var file = java.io.File(path);
 		    	return file.mkdirs();
 		    },
-		    MoveFile: function(fromPath, toPath){
+		    MoveFile: function (fromPath, toPath) {
 		    	var file = java.io.File(fromPath);
 		    	return file.renameTo(new java.io.File(toPath));
 		    },
-		    CopyFile: function(fromPath, toPath){
+		    CopyFile: function (fromPath, toPath) {
 		    	return runCommand('bash', '-c', 'cp ' + fromPath + ' ' + toPath);
 		    },
-		    DeleteFile: function(path){
+		    DeleteFile: function (path) {
 		    	return runCommand('bash', '-c', 'rm ' + path);
 		    	//Need to use runCommand, because JScript cannot handle a function named "delete"
 //		    	var file = java.io.File(path);
@@ -137,15 +137,15 @@ this.fileSystem = (function(){
 		},
 		proto = file.prototype;
 		
-		proto.Close   = function(){
-    		if(this.reader) this.reader.close();
-    		if(this.writer) this.writer.close();
+		proto.Close   = function () {
+    		if (this.reader) this.reader.close();
+    		if (this.writer) this.writer.close();
     	};
-    	proto.ReadAll = function() {
+    	proto.ReadAll = function () {
 	    	var line = undefined,
     		str      = '';
 	    	
-	    	if(!this.reader){
+	    	if (!this.reader) {
 	    		this.reader = new java.io.BufferedReader(new java.io.FileReader(this.path));
 	    	}
 	    	
@@ -154,8 +154,8 @@ this.fileSystem = (function(){
     		}
     		return str;
     	};
-    	proto.Write = function(str) {
-	    	if(!this.writer){
+    	proto.Write = function (str) {
+	    	if (!this.writer) {
 	    		this.writer = new java.io.FileWriter(this.path);
 	    	}
 	    	
@@ -166,4 +166,4 @@ this.fileSystem = (function(){
 		
 	    return fileSystem;
 	}
-})();
+}());

@@ -20,13 +20,13 @@ This component will destroy the entity once an animation has finished. This is u
       //This or animationIds Required. Array of Strings identifying the animations that should destroy this entity on their completion.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		id: 'render-destroy-me',
 
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.animationIds = null;
 			
 			if (definition.animationId) {
@@ -37,10 +37,10 @@ This component will destroy the entity once an animation has finished. This is u
 		},
 
 		events: {// These are messages that this component listens for
-			"animation-ended": function(animation){
+			"animation-ended": function (animation) {
 				var id = animation.name;
 				
-				if(this.animationIds){
+				if (this.animationIds) {
 					for (var x = 0; x < this.animationIds.length; x++) {
 						if (this.animationIds[x] == id) {
 							this.owner.parent.removeEntity(this.owner);
@@ -53,4 +53,4 @@ This component will destroy the entity once an animation has finished. This is u
 			}
 		}
 	});
-})();
+}());

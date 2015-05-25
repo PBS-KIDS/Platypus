@@ -12,11 +12,11 @@
  
  // Requires: ["scene.js"]
 
-platformer.Game = (function(){
+platformer.Game = (function () {
 	"use strict";
 	
-	var bindEvent = function(eventId, callback){return function(event){callback(eventId, event);};};
-	var game      = function (definition, onFinishedLoading){
+	var bindEvent = function (eventId, callback) {return function (event) {callback(eventId, event);};};
+	var game      = function (definition, onFinishedLoading) {
 		var innerRootElement = document.createElement('div'),
 		outerRootElement = null;
 
@@ -27,20 +27,20 @@ platformer.Game = (function(){
 		this.settings = definition;
 
 		// platform-specific settings should apply if not explicitly changed.
-		if(!definition.aspects)    definition.aspects    = platformer.settings.aspects;
-		if(!definition.supports)   definition.supports   = platformer.settings.supports;
-		if(!definition.classes)    definition.classes    = platformer.settings.classes;
-		if(!definition.components) definition.components = platformer.settings.components;
+		if (!definition.aspects)    definition.aspects    = platformer.settings.aspects;
+		if (!definition.supports)   definition.supports   = platformer.settings.supports;
+		if (!definition.classes)    definition.classes    = platformer.settings.classes;
+		if (!definition.components) definition.components = platformer.settings.components;
 		
-		if(document.getElementById(definition.global.rootElement || "root")){
+		if (document.getElementById(definition.global.rootElement || "root")) {
 			outerRootElement = document.getElementById(definition.global.rootElement || "root");
 		} else {
 			outerRootElement = document.createElement('div');
 			outerRootElement.id = definition.global.rootElement || "root";
 			document.getElementsByTagName('body')[0].appendChild(outerRootElement);
 		}
-		for (var i in definition.supports){
-			if(definition.supports[i]){
+		for (var i in definition.supports) {
+			if (definition.supports[i]) {
 				outerRootElement.className += ' supports-' + i;
 			}
 		}
@@ -56,12 +56,12 @@ platformer.Game = (function(){
 		var self = this,
 		callback = null;
 		
-		if(definition.debug){ //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-			callback = function(eventId, event){
+		if (definition.debug) { //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
+			callback = function (eventId, event) {
 				self.currentScene.trigger(eventId, event);
 			};
 		} else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
-			callback = function(eventId, event){
+			callback = function (eventId, event) {
 				self.currentScene.trigger(eventId, event);
 				event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
 			};
@@ -72,14 +72,14 @@ platformer.Game = (function(){
 		this.addEventListener(window, 'keyup',   callback);
 
 		// If aspect ratio of game area should be maintained on resizing, create new callback to handle it
-		if(definition.global.aspectRatio){
+		if (definition.global.aspectRatio) {
 			
-			callback = function(eventId, event){
+			callback = function (eventId, event) {
 				var element = innerRootElement;
 				var ratio   = definition.global.aspectRatio;
 				var newW    = outerRootElement.offsetWidth;
 				var newH    = outerRootElement.offsetHeight;
-				if(definition.global.maxWidth && (definition.global.maxWidth < newW)){
+				if (definition.global.maxWidth && (definition.global.maxWidth < newW)) {
 					newW = definition.global.maxWidth;
 				}
 				var bodyRatio = newW / newH;
@@ -93,7 +93,7 @@ platformer.Game = (function(){
 				    newH = newW / ratio;
 				    element.style.height = newH + 'px';
 				}
-				if(definition.global.resizeFont){
+				if (definition.global.resizeFont) {
 					outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
 				}
 				element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
@@ -103,8 +103,8 @@ platformer.Game = (function(){
 				self.currentScene.trigger(eventId, event);
 			};
 			callback('resize');
-		} else if(definition.global.resizeFont) {
-			callback = function(eventId, event){
+		} else if (definition.global.resizeFont) {
+			callback = function (eventId, event) {
 				outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
 				self.currentScene.trigger(eventId, event);
 			};
@@ -113,24 +113,24 @@ platformer.Game = (function(){
 		this.addEventListener(window, 'orientationchange', callback);
 		this.addEventListener(window, 'resize',            callback);
 		
-		if(onFinishedLoading){
+		if (onFinishedLoading) {
 			onFinishedLoading(this);
 		}
 
 		createjs.Ticker.timingMode = 'raf';
 		createjs.Ticker.setFPS(definition.global.fps || 60);
-		this.tickWrapper = function(e){
+		this.tickWrapper = function (e) {
 			self.tick(e);
 		};
 		createjs.Ticker.addEventListener("tick", this.tickWrapper);
 		
 		//Add entity-finder for debugging
-		if(window){
-			window.getEntityById = function(id){
+		if (window) {
+			window.getEntityById = function (id) {
 				return self.getEntityById(id);
 			};
 
-			window.getEntitiesByType = function(type){
+			window.getEntitiesByType = function (type) {
 				return self.getEntitiesByType(type);
 			};
 		}
@@ -143,11 +143,11 @@ platformer.Game = (function(){
  * @method tick
  * @param {Object} tickEvent - CreateJS tick message object.
  **/
-	proto.tick = function(tickEvent){
-		if(this.loadedScene){
+	proto.tick = function (tickEvent) {
+		if (this.loadedScene) {
 			this.loadedScene.trigger('tick', tickEvent);
 		}
-		if(this.currentScene){
+		if (this.currentScene) {
 			this.currentScene.trigger('tick', tickEvent);
 		}
 	};
@@ -159,26 +159,26 @@ platformer.Game = (function(){
  * @param sceneId {String} The scene to load.
  * @param transition {String} What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
  **/
- 	proto.loadScene = function(sceneId, transition, persistantData, preloading){
+ 	proto.loadScene = function (sceneId, transition, persistantData, preloading) {
 		var self = this,
 		element  = null;
 
-		if(this.leavingScene){
+		if (this.leavingScene) {
 			this.leavingScene.destroy();
 		}
 		
 		this.inTransition = true;
 		this.leavingScene = this.currentScene;
 		
-		if(preloading){
+		if (preloading) {
 			this.loadNextScene(sceneId);
 			return;
-		} else if(this.loadedScene){
+		} else if (this.loadedScene) {
 			this.loadedScene.destroy();
 			this.loadedScene = null;
 		}
 		
-		switch(transition){
+		switch(transition) {
 		case 'fade-to-black':
 			element = document.createElement('div');
 			this.rootElement.appendChild(element);
@@ -188,35 +188,35 @@ platformer.Game = (function(){
 			element.style.zIndex = '12';
 			element.style.opacity = '0';
 			element.style.background = '#000';
-			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function(t){
-				if(!self.loaded) {
+			new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function (t) {
+				if (!self.loaded) {
 					self.loadNextScene(sceneId, persistantData);
 				}
 				self.completeSceneTransition(persistantData);
-			}).wait(500).to({opacity:0}, 500).call(function(t){
+			}).wait(500).to({opacity:0}, 500).call(function (t) {
 				self.rootElement.removeChild(element);
 				element = null;
 			});
 			break;
 		case 'crossfade':
 			var root = null,
-			callSet  = function(t){
-				if(loaded === self.loaded){
+			callSet  = function (t) {
+				if (loaded === self.loaded) {
 					self.completeSceneTransition(persistantData);
 				}
 			},
 			loaded   = this.loaded; // This variable is a sanity check to cause an abort if another scene load is started during the crossfade.
 			
-			if(!this.loaded) {
+			if (!this.loaded) {
 				self.loadNextScene(sceneId, persistantData);
 				loaded = this.loaded;
 			}
 			root = this.loadedScene.layers;
-			for(var i = 0; i < root.length; i++){
-				if(root[i].element){
+			for(var i = 0; i < root.length; i++) {
+				if (root[i].element) {
 					element = root[i].element.style;
 					element.opacity = '0';
-					if(callSet){                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
+					if (callSet) {                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
 						new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(callSet);
 						callSet = null;
 					} else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
@@ -224,13 +224,13 @@ platformer.Game = (function(){
 					}
 				}
 			}
-			if(callSet){ // nothing to crossfade so we just finish loading the scene.
+			if (callSet) { // nothing to crossfade so we just finish loading the scene.
 				self.completeSceneTransition(persistantData);
 			}
 			break;
 		case 'instant':
 		default:
-			if(!this.loaded){
+			if (!this.loaded) {
 				self.loadNextScene(sceneId, persistantData);
 			}
 			this.completeSceneTransition(persistantData);
@@ -244,10 +244,10 @@ platformer.Game = (function(){
  * @param {String} sceneId The scene to load.
  * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
  **/
- 	proto.loadNextScene = function(sceneId, persistantData){
+ 	proto.loadNextScene = function (sceneId, persistantData) {
 		var scene = null;
 		
-		if(typeof sceneId === 'string'){
+		if (typeof sceneId === 'string') {
 			scene = this.settings.scenes[sceneId];
 		} else {
 			scene = sceneId;
@@ -266,16 +266,16 @@ platformer.Game = (function(){
  * @method completeSceneTransition
  * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
  **/
-	proto.completeSceneTransition = function(persistantData){
+	proto.completeSceneTransition = function (persistantData) {
 		var sceneId = this.loaded;
 		
-		if(this.loadedScene){
+		if (this.loadedScene) {
 			this.currentScene = this.loadedScene;
 			this.loadedScene  = null;
 			
 			this.loaded = false;
 			this.inTransition = false;
-			if(this.leavingScene){
+			if (this.leavingScene) {
 				this.leavingScene.destroy();
 				this.leavingScene = false;
 			}
@@ -293,7 +293,7 @@ platformer.Game = (function(){
  * @param event {DOMEvent} The event to listen for.
  * @param callback {Function} - The function to call when the event occurs.
  **/
-	proto.addEventListener = function(element, event, callback){
+	proto.addEventListener = function (element, event, callback) {
 		this.bindings[event] = {element: element, event: event, callback: bindEvent(event, callback)};
 		element.addEventListener(event, this.bindings[event].callback, true);
 	};
@@ -305,8 +305,8 @@ platformer.Game = (function(){
  * @param {string} id The entity id to find.
  * @return {Entity} Returns the entity that matches the specified entity id.
  **/
-	proto.getEntityById = function(id){
-		if(this.currentScene){
+	proto.getEntityById = function (id) {
+		if (this.currentScene) {
 			return this.currentScene.getEntityById(id);
 		} else {
 			return null;
@@ -320,8 +320,8 @@ platformer.Game = (function(){
  * @param {String} type The entity type to find.
  * @return entities {Array} Returns the entities that match the specified entity type.
  **/
-	proto.getEntitiesByType = function(type){
-		if(this.currentScene){
+	proto.getEntitiesByType = function (type) {
+		if (this.currentScene) {
 			return this.currentScene.getEntitiesByType(type);
 		} else {
 			return [];
@@ -336,11 +336,11 @@ platformer.Game = (function(){
 	proto.destroy = function ()
 	{
 		createjs.Ticker.removeEventListener("tick", this.tickWrapper);
-		for (var binding in this.bindings){
+		for (var binding in this.bindings) {
 			this.bindings[binding].element.removeEventListener(this.bindings[binding].event, this.bindings[binding].callback);
 		}
 		this.bindings.length = 0;
 	};
 	
 	return game;
-})();
+}());

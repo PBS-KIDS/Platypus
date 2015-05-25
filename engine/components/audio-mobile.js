@@ -100,33 +100,33 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 */
 /* global createjs */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		
 		id: 'audio-mobile',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.audioId = definition.audioId;
 		},
 
 		events: {// These are messages that this component listens for
-			"load": function(){
-				if(platformer.game.settings.supports.mobile){
+			"load": function () {
+				if (platformer.game.settings.supports.mobile) {
 					this.owner.state.mobile = true;
-					if((platformer.game.settings.supports.android || platformer.game.settings.supports.iOS) && !platformer.game.settings.supports.audioAPI){
+					if ((platformer.game.settings.supports.android || platformer.game.settings.supports.iOS) && !platformer.game.settings.supports.audioAPI) {
 						this.owner.triggerEvent('low-quality-audio');
 					}
 				} else {
 					this.owner.triggerEvent('load-assets');
 				}
 			},
-			"activate-audio": function(){
+			"activate-audio": function () {
 				var audio = platformer.game.settings.assets[this.audioId],
 				instance  = null;
 				
-				if(audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI){
+				if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
 					delete platformer.game.settings.assets[this.audioId];
 					
 					audio.data.channels = 1;
@@ -135,7 +135,7 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 					
 					instance = createjs.Sound.play(this.audioId);
 					console.log('Initializing iOS fallback audio.');
-					if(instance.playState === 'playSucceeded'){
+					if (instance.playState === 'playSucceeded') {
 						instance.stop();
 					}
 				}
@@ -145,4 +145,4 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 			}
 		}
 	});
-})();
+}());

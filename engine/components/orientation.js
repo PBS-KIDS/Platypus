@@ -20,7 +20,7 @@
  * @class "orientation" Component
  * @uses Component
  */
-(function(){
+(function () {
 	"use strict";
 	
 	var matrices = {
@@ -46,43 +46,43 @@
 			                        [-1, 0, 0],
 			                        [ 0, 0, 1]]
 	},
-	multiply = (function(){
-		var cell = function(row, column, m){
+	multiply = (function () {
+		var cell = function (row, column, m) {
 			var i = 0,
 			sum = 0;
 			
-			for(i = 0; i < row.length; i++){
+			for(i = 0; i < row.length; i++) {
 				sum += row[i] * m[i][column];
 			}
 			
 			return sum;
 		};
 		
-		return function(a, b, dest){
+		return function (a, b, dest) {
 			var i  = 0,
 			j      = 0,
 			arr    = [];
 			
-			for(i = 0; i < a.length; i++){
-				for(j = 0; j < a[0].length; j++){
+			for(i = 0; i < a.length; i++) {
+				for(j = 0; j < a[0].length; j++) {
 					arr.push(cell(a[i], j, b)); 
 				}
 			}
 
-			for(i = 0; i < a.length; i++){
-				for(j = 0; j < a[0].length; j++){
+			for(i = 0; i < a.length; i++) {
+				for(j = 0; j < a[0].length; j++) {
 					dest[i][j] = arr.splice(0,1)[0]; 
 				}
 			}
 		};
-	})(),
-	identitize = function(m){
+	}()),
+	identitize = function (m) {
 		var i = 0,
 		j     = 0;
 		
-		for (i = 0; i < 3; i++){
-			for (j = 0; j < 3; j++){
-				if(i === j){
+		for (i = 0; i < 3; i++) {
+			for (j = 0; j < 3; j++) {
+				if (i === j) {
 					m[i][j] = 1;
 				} else {
 					m[i][j] = 0;
@@ -141,8 +141,8 @@
 			 */
 			"orientationMatrix": null
 		},
-		constructor: (function(){
-			var setupOrientation = function(self, orientation){
+		constructor: (function () {
+			var setupOrientation = function (self, orientation) {
 				var normal = new platformer.Vector([0, 0, 1]),
 				origin     = new platformer.Vector([1, 0, 0]),
 				vector     = new platformer.Vector([1, 0, 0]),
@@ -152,7 +152,7 @@
 				              [0, 0, 1]];
 				
 				Object.defineProperty(owner, 'orientationMatrix', {
-					get: function() {
+					get: function () {
 						multiply(self.matrixTween, self.matrix, identitize(matrix));
 						return matrix;
 					},
@@ -161,23 +161,23 @@
 
 				delete owner.orientation;
 				Object.defineProperty(owner, 'orientation', {
-				    get: function(){
+				    get: function () {
 				        return vector.signedAngleTo(origin, normal);
 				    },
-				    set: function(value){
+				    set: function (value) {
 				    	vector.set(origin).rotate(value);
 				    },
 				    enumerable: true
 				});
 
-				if(orientation){
+				if (orientation) {
 					vector.rotate(orientation);
 				}
 
 				return vector;
 			};
 			
-			return function(definition){
+			return function (definition) {
 				this.loadedOrientationMatrix = this.orientationMatrix;
 				
 				// This is the stationary transform
@@ -192,7 +192,7 @@
 				
 				this.owner.triggerEvent('orient-vector', setupOrientation(this, this.orientation));
 			};
-		})(),
+		}()),
 
 		events: {
 			/**
@@ -200,26 +200,26 @@
 			 * 
 			 * @method 'load'
 			 */
-			"load": function(){
-				if(this.loadedOrientationMatrix){
+			"load": function () {
+				if (this.loadedOrientationMatrix) {
 					this.transform(this.loadedOrientationMatrix);
 				} else {
-					if(this.scaleX && this.scaleX < 0){
+					if (this.scaleX && this.scaleX < 0) {
 						this.scaleX = -this.scaleX;
 						this.transform('horizontal');
 					}
-					if(this.scaleY && this.scaleY < 0){
+					if (this.scaleY && this.scaleY < 0) {
 						this.scaleY = -this.scaleY;
 						this.transform('vertical');
 					}
-					if(this.rotation){
-						if(!((this.rotation + 270) % 360)){
+					if (this.rotation) {
+						if (!((this.rotation + 270) % 360)) {
 							this.rotation = 0;
 							this.transform('rotate-90');
-						} else if(!((this.rotation + 180) % 360)){
+						} else if (!((this.rotation + 180) % 360)) {
 							this.rotation = 0;
 							this.transform('rotate-180');
-						} else if(!((this.rotation + 90) % 360)){
+						} else if (!((this.rotation + 90) % 360)) {
 							this.rotation = 0;
 							this.transform('rotate-270');
 						}
@@ -234,29 +234,29 @@
 			 * @method 'handle-logic'
 			 * @param tick.delta {number} Time passed since the last logic step.
 			 */
-			"handle-logic": function(tick){
+			"handle-logic": function (tick) {
 				var i = 0,
 				delta = tick.delta,
 				state = this.owner.state,
 				finishedTweening = [];
 				
-				if(this.tweens.length){
+				if (this.tweens.length) {
 					state.reorienting = true;
 					identitize(this.matrixTween);
 					
-					for(i = this.tweens.length - 1; i >= 0; i--){
-						if(this.updateTween(this.tweens[i], delta)){ // finished tweening
+					for(i = this.tweens.length - 1; i >= 0; i--) {
+						if (this.updateTween(this.tweens[i], delta)) { // finished tweening
 							finishedTweening.push(this.tweens.splice(i,1)[0]);
 						}
 					}
-					for(i = 0; i < this.vectors.length; i++){
+					for(i = 0; i < this.vectors.length; i++) {
 						this.updateVector(this.vectors[i], this.inverses[i]);
 					}
-					for(i = 0; i < finishedTweening.length; i++){
+					for(i = 0; i < finishedTweening.length; i++) {
 						this.transform(finishedTweening[i].endMatrix);
 						finishedTweening[i].onFinished(finishedTweening[i].endMatrix);
 					}
-				} else if(state.reorienting){
+				} else if (state.reorienting) {
 					identitize(this.matrixTween);
 					state.reorienting = false;
 				}
@@ -267,9 +267,9 @@
 			 * 
 			 * @method 'drop-tweens'
 			 */
-			"drop-tweens": function(){
+			"drop-tweens": function () {
 				this.tweens.length = 0;
-				for(var i = 0; i < this.vectors.length; i++){
+				for(var i = 0; i < this.vectors.length; i++) {
 					this.updateVector(this.vectors[i], this.inverses[i]);
 				}
 			},
@@ -280,24 +280,24 @@
 			 * @method 'orient-vector'
 			 * @param vector {Vector} The vector whose orientation will be maintained.
 			 */
-			"orient-vector": function(vector){
+			"orient-vector": function (vector) {
 				var i = 0,
 				found = false,
 				aligned = vector.aligned || false;
 				
-				if(vector.vector){
+				if (vector.vector) {
 					vector = vector.vector;
 				}
 				
-				for(i = 0; i < this.vectors.length; i++){
-					if(vector === this.vectors[i]){
+				for(i = 0; i < this.vectors.length; i++) {
+					if (vector === this.vectors[i]) {
 						found = true;
 						break;
 					}
 				}
 				
-				if(!found){
-					if(!aligned){
+				if (!found) {
+					if (!aligned) {
 						vector.multiply(this.matrix);
 					}
 					this.vectors.push(vector);
@@ -311,11 +311,11 @@
 			 * @method 'remove-vector'
 			 * @param vector {Vector} The vector to be removed.
 			 */
-			"remove-vector": function(vector){
+			"remove-vector": function (vector) {
 				var i = 0;
 				
-				for(i = 0; i < this.vectors.length; i++){
-					if(vector === this.vectors[i]){
+				for(i = 0; i < this.vectors.length; i++) {
+					if (vector === this.vectors[i]) {
 						this.vectors.splice(i,1);
 						this.inverses.splice(i,1);
 						break;
@@ -336,24 +336,24 @@
 			 * @param [options.onTick] {Function} A function that should be processed on each tick as the tween occurs.
 			 * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
 			 */			
-			"tween-transform": (function(){
-				var doNothing = function(){
+			"tween-transform": (function () {
+				var doNothing = function () {
 					// Doing nothing!
 				},
-				linearEase = function(t){
+				linearEase = function (t) {
 					return t;
 				};
 
-				return function(props){
+				return function (props) {
 					var angle = props.angle || 0,
 					matrix    = props.matrix;
 					
-					if(!matrix){
+					if (!matrix) {
 						matrix = matrices[props.transform];
 					}
 					
-					if(!angle && (props.transform.indexOf('rotate') === 0)){
-						switch(props.transform){
+					if (!angle && (props.transform.indexOf('rotate') === 0)) {
+						switch(props.transform) {
 						case 'rotate-90':  angle = Math.PI / 2;  break;
 						case 'rotate-180': angle = Math.PI;      break;
 						case 'rotate-270': angle = -Math.PI / 2; break;
@@ -374,7 +374,7 @@
 						onTick: props.onTick || doNothing
 					});
 				};
-			})(),
+			}()),
 			
 			/**
 			 * This message performs an immediate transform of the entity by performing the transformation via a prepended matrix multiplication.
@@ -382,7 +382,7 @@
 			 * @method 'transform'
 			 * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
 			 */
-			"transform": function(transform){
+			"transform": function (transform) {
 				this.transform(transform);
 			},
 			
@@ -392,7 +392,7 @@
 			 * @method 'prepend-transform'
 			 * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
 			 */
-			"prepend-transform": function(transform){
+			"prepend-transform": function (transform) {
 				this.transform(transform);
 			},
 			
@@ -402,7 +402,7 @@
 			 * @method 'append-transform'
 			 * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
 			 */
-			"append-transform": function(transform){
+			"append-transform": function (transform) {
 				this.transform(transform, true);
 			},
 			
@@ -412,33 +412,33 @@
 			 * @method 'replace-transform'
 			 * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
 			 */
-			"replace-transform": function(transform){
+			"replace-transform": function (transform) {
 				this.replace(transform);
 			}
 		},
 		
 		methods: {
-			transform: function(transform, append){
-				if(Array.isArray(transform)){
+			transform: function (transform, append) {
+				if (Array.isArray(transform)) {
 					this.multiply(transform, append);
 				} else if (typeof transform === 'string') {
-					if(matrices[transform]){
+					if (matrices[transform]) {
 						this.multiply(matrices[transform], append);
 					}
 				}
 			},
 			
-			multiply: (function(){
-				return function(m, append){
+			multiply: (function () {
+				return function (m, append) {
 					var i = 0;
 					
-					if(append){
+					if (append) {
 						multiply(this.matrix, m, this.matrix);
 					} else {
 						multiply(m, this.matrix, this.matrix);
 					}
 					
-					for(i = 0; i < this.vectors.length; i++){
+					for(i = 0; i < this.vectors.length; i++) {
 						this.vectors[i].multiply(m);
 						this.inverses[i].multiply(m);
 					}
@@ -451,23 +451,23 @@
 					 */
 					this.owner.triggerEvent('orientation-updated', m);
 				};
-			})(),
+			}()),
 
-			replace: (function(){
-				var det2 = function(a, b, c, d){
+			replace: (function () {
+				var det2 = function (a, b, c, d) {
 					return a * d - b * c;
 				},
-				det3 = function(a){
+				det3 = function (a) {
 					var i  = 0,
 					sum    = 0;
 					
-					for(i = 0; i < 3; i++){
+					for(i = 0; i < 3; i++) {
 						sum += a[i][0] * a[(i + 1) % 3][1] * a[(i + 2) % 3][2];
 						sum -= a[i][2] * a[(i + 1) % 3][1] * a[(i + 2) % 3][0];
 					}
 					return sum;
 				},
-				invert = function(a){
+				invert = function (a) {
 					var arr    = [[],[],[]],
 					inv        = 1 / det3(a);
 					
@@ -484,19 +484,19 @@
 					return arr;
 				};
 				
-				return function(m){
+				return function (m) {
 					// We invert the matrix so we can re-orient all vectors for the incoming replacement matrix.
 					this.multiply(invert(this.matrix));
 					this.multiply(m);
 				};
-			})(),
+			}()),
 			
-			updateTween: (function(){
-				var getMid = function(a, b, t){
+			updateTween: (function () {
+				var getMid = function (a, b, t) {
 					return (a * (1 - t) + b * t);
 				};
 				
-				return function(tween, delta){
+				return function (tween, delta) {
 					var t = 0,
 					a = 1,				//  a c -
 					b = 0,				//  b d -
@@ -509,13 +509,13 @@
 					
 					tween.time += delta;
 					
-					if(tween.time >= tween.endTime){
+					if (tween.time >= tween.endTime) {
 						return true;
 					}
 					
 					t = tween.tween(tween.time / tween.endTime);
 					
-					if(tween.angle){
+					if (tween.angle) {
 						angle = t * tween.angle;
 						a = d = Math.cos(angle);
 						b = Math.sin(angle);
@@ -534,15 +534,15 @@
 
 					tween.onTick(t, matrix);
 				};
-			})(),
+			}()),
 			
-			updateVector: function(vector, inverse){
+			updateVector: function (vector, inverse) {
 				inverse.set(vector.add(inverse));
 				vector.multiply(this.matrixTween);
 				inverse.subtractVector(vector);
 			},
 			
-			destroy: function() {
+			destroy: function () {
 				
 			}
 		},
@@ -551,4 +551,4 @@
 			
 		}
 	});
-})();
+}());

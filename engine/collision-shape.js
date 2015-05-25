@@ -18,10 +18,10 @@
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
-platformer.CollisionShape = (function(){
+platformer.CollisionShape = (function () {
 	"use strict";
 	
-	var collisionShape = function(owner, definition, collisionType){
+	var collisionShape = function (owner, definition, collisionType) {
 		var regX = definition.regX,
 		regY     = definition.regY;
 		
@@ -32,10 +32,10 @@ platformer.CollisionShape = (function(){
 		this.height = definition.height || definition.radius || 0;
 		this.radius = definition.radius || 0;
 		
-		if(typeof regX !== 'number'){
+		if (typeof regX !== 'number') {
 			regX = this.width / 2;
 		}
-		if(typeof regY !== 'number'){
+		if (typeof regY !== 'number') {
 			regY = this.height / 2;
 		}
 		
@@ -44,7 +44,7 @@ platformer.CollisionShape = (function(){
 		this.offsetY = definition.offsetY || ((this.height / 2) - regY);
 		
 		platformer.Vector.assign(this, 'position', 'x', 'y');
-		if(owner){
+		if (owner) {
 			this.x = owner.x + this.offsetX;
 			this.y = owner.y + this.offsetY;
 		} else {
@@ -94,7 +94,7 @@ platformer.CollisionShape = (function(){
 	 * @param ownerX {number} The x position of the owner.
 	 * @param ownerY {number} The y position of the owner.
 	 */
-	proto.update = function(ownerX, ownerY){
+	proto.update = function (ownerX, ownerY) {
 		this.x = ownerX + this.offsetX;
 		this.y = ownerY + this.offsetY;
 		this.aABB.move(this.x, this.y);
@@ -106,7 +106,7 @@ platformer.CollisionShape = (function(){
 	 * @method moveX
 	 * @param x {number} The x position to which the shape should be moved.
 	 */
-	proto.moveX = function(x){
+	proto.moveX = function (x) {
 		this.x = x;
 		this.aABB.moveX(this.x);
 	};
@@ -117,7 +117,7 @@ platformer.CollisionShape = (function(){
 	 * @method moveY
 	 * @param y {number} The y position to which the shape should be moved.
 	 */
-	proto.moveY = function(y){
+	proto.moveY = function (y) {
 		this.y = y;
 		this.aABB.moveY(this.y);
 	};
@@ -128,7 +128,7 @@ platformer.CollisionShape = (function(){
 	 * @method getAABB
 	 * @return {AABB} The AABB of the shape.
 	 */
-	proto.getAABB = function(){
+	proto.getAABB = function () {
 		return this.aABB;
 	};
 	
@@ -138,7 +138,7 @@ platformer.CollisionShape = (function(){
 	 * @method setXWithEntityX
 	 * @param entityX {number} The x position of the entity.
 	 */
-	proto.setXWithEntityX = function(entityX){
+	proto.setXWithEntityX = function (entityX) {
 		this.x = entityX + this.offsetX;
 		this.aABB.moveX(this.x);
 	};
@@ -149,7 +149,7 @@ platformer.CollisionShape = (function(){
 	 * @method setYWithEntityY
 	 * @param entityY {number} The y position of the entity.
 	 */
-	proto.setYWithEntityY = function(entityY){
+	proto.setYWithEntityY = function (entityY) {
 		this.y = entityY + this.offsetY;
 		this.aABB.moveY(this.y);
 	};
@@ -159,7 +159,7 @@ platformer.CollisionShape = (function(){
 	 * 
 	 * @method destroy
 	 */
-	proto.destroy = function(){
+	proto.destroy = function () {
 		this.aABB = undefined;
 	};
 	
@@ -169,7 +169,7 @@ platformer.CollisionShape = (function(){
 	 * @method multiply
 	 * @param matrix {Array} A matrix used to transform the shape.
 	 */
-	proto.multiply = function(m){
+	proto.multiply = function (m) {
 		this.position.subtractVector(this.owner.position);
 		
 		this.position.multiply(m);
@@ -184,4 +184,4 @@ platformer.CollisionShape = (function(){
 	};
 	
 	return collisionShape;
-})();
+}());

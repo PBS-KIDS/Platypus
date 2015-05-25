@@ -13,21 +13,21 @@
  *     
  */
 
-(function(){
-	if(isJIT){
+(function () {
+	if (isJIT) {
 		print('This plugin does not support in-browser compilation.');
 		return;
 	}
 	
-   var alert  = function(val){print(val);},
-   getText    = function(path){
+   var alert  = function (val) {print(val);},
+   getText    = function (path) {
 	    var file = undefined,
 	    text     = '';
 	    try {
 		    file = fileSystem.OpenTextFile(path);
 		    try {
 			    text = file.ReadAll();
-		    } catch(e){
+		    } catch(e) {
 			    alert('Error reading from "' + path + '": ' + e.description);
 		    }
 		    file.Close();
@@ -36,30 +36,30 @@
 	    }
 	    return text;
     },
-    setText    = function(path, text){
+    setText    = function (path, text) {
 	    var file = fileSystem.CreateTextFile(path, true);
 	    file.Write(text);
 	    file.Close();
 	    return text;
     },
-    compressGame = function(build){
+    compressGame = function (build) {
 	    var i = 0,
 	    files = build.files,
 	    file  = null,
 	    css   = build.compression || build.cssCompression,
 	    js    = build.compression || build.jsCompression;
 
-	    if(css || js){
+	    if (css || js) {
 	    	print('.Compressing scripts for build "' + build.id + '".');
-		    for(i = 0; i < files.length; i++){
+		    for(i = 0; i < files.length; i++) {
 		    	file = files[i];
-		    	if(file){
-		    		if(isJS(file.name) && js){
+		    	if (file) {
+		    		if (isJS(file.name) && js) {
 				    	print('..Compressing "' + file.name + '".');
 			    	    setText('combine.js', file.content);   
 		    	    	shell.Run("java -jar yui/yui.jar combine.js -o compress.js --charset utf-8",   7, true);
 			    	    file.content = getText("compress.js");
-		    		} else if (isCSS(file.name) && css){
+		    		} else if (isCSS(file.name) && css) {
 				    	print('..Compressing "' + file.name + '".');
 			    	    setText('combine.css', file.content);
 		    	    	shell.Run("java -jar yui/yui.jar combine.css -o compress.css --charset utf-8", 7, true);
@@ -71,11 +71,11 @@
 	    	print('.Skipping compression for build "' + build.id + '".');
 	    }
    },
-   isCSS     = function(path){
+   isCSS     = function (path) {
 	   var check = path.substring(path.length - 4).toLowerCase();
 	   return (check === '.css');
    },
-   isJS      = function(path){
+   isJS      = function (path) {
 	   var check = path.substring(path.length - 3).toLowerCase();
 	   return (check === '.js');
    },
@@ -84,7 +84,7 @@
 
     //Create builds
     print('Preparing to compress scripts.');
-    for (buildIndex in builds){
+    for (buildIndex in builds) {
     	compressGame(builds[buildIndex]);
 	}
 
@@ -95,4 +95,4 @@
     try {fileSystem.DeleteFile('compress.css');} catch(e) {}
     
     print('Completed script compression.');
-})();
+}());

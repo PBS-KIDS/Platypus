@@ -31,14 +31,14 @@ This component spawns new entities within a given area at set intervals.
       }
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	return platformer.createComponentClass({
 		
 		id: 'logic-region-spawner',
 		
-		constructor: function(definition){
+		constructor: function (definition) {
 			var x   = 0,
 			y       = 0,
 			columns = 1,
@@ -60,15 +60,15 @@ This component spawns new entities within a given area at set intervals.
 			this.usedRegions = null;
 			this.regionWidth = 0;
 			this.regionHeight = 0;
-			if(definition.regions){
+			if (definition.regions) {
 				this.regions = [];
 				this.usedRegions = [];
 				this.regionWidth  = width  = definition.regions.width  || this.owner.width;
 				this.regionHeight = height = definition.regions.height || this.owner.height;
 				columns = Math.round(this.owner.width  / width);
 				rows    = Math.round(this.owner.height / height);
-				for (x = 0; x < columns; x++){
-					for (y = 0; y < rows; y++){
+				for (x = 0; x < columns; x++) {
+					for (y = 0; y < rows; y++) {
 						rw = Math.min(width,  this.owner.width  - x * width);
 						rh = Math.min(height, this.owner.height - y * height);
 						this.regions.push({
@@ -88,17 +88,17 @@ This component spawns new entities within a given area at set intervals.
 		},
 
 		events: {// These are messages that this component listens for
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 				var regions = this.regions,
 				region = null;
 				
 				this.time += resp.delta;
 				
-				if (this.time > this.interval){
+				if (this.time > this.interval) {
 					this.time -= this.interval;
 					
-					if(regions){
-						if(!regions.length){
+					if (regions) {
+						if (!regions.length) {
 							this.regions = this.usedRegions;
 							this.usedRegions = regions;
 							regions = this.regions;
@@ -118,4 +118,4 @@ This component spawns new entities within a given area at set intervals.
 			}
 		}
 	});
-})();
+}());

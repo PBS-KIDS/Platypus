@@ -6,10 +6,10 @@
  * @class "camera" Component
  * @uses Component
 */
-(function(){
+(function () {
 	"use strict";
 	
-	var resize = function (self){
+	var resize = function (self) {
 		var element = self.canvas;
 		
 		//The dimensions of the camera in the window
@@ -18,11 +18,11 @@
 		self.window.viewportWidth = element.offsetWidth || self.worldWidth;
 		self.window.viewportHeight = element.offsetHeight || self.worldHeight;
 
-		if(self.zoomSnap){
+		if (self.zoomSnap) {
 			self.world.viewportWidth = self.window.viewportWidth / Math.ceil(self.window.viewportWidth / self.zoomSnap);
 		}
 		
-		if(!self.stretch || self.zoomSnap){
+		if (!self.stretch || self.zoomSnap) {
 			self.world.viewportHeight = self.window.viewportHeight * self.world.viewportWidth / self.window.viewportWidth;
 		}
 		
@@ -163,7 +163,7 @@
 			 **/
 			"worldHeight": 0
 		},
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.entities = [];
 
 			//The dimensions of the camera in the window
@@ -254,7 +254,7 @@
 			this.viewportUpdate = false;
 		},
 		events: {
-			"load": function(){
+			"load": function () {
 				resize(this);
 			},
 			
@@ -264,7 +264,7 @@
  * @method 'child-entity-added'
  * @param entity {Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
   **/
-			"child-entity-added": function(entity){
+			"child-entity-added": function (entity) {
 				var messageIds = entity.getMessageIds(); 
 				
 				for (var x = 0; x < messageIds.length; x++)
@@ -273,7 +273,7 @@
 						this.entities.push(entity);
 						this.viewportUpdate = true;
 						
-						if(this.worldIsLoaded){
+						if (this.worldIsLoaded) {
 /**
  * On receiving a "world-loaded" message, the camera broadcasts the world size to all children in the world.
  * 
@@ -299,11 +299,11 @@
  * @method 'child-entity-removed'
  * @param entity {Entity} Expects an entity as the message object to determine the entity to remove from its list.
  **/
-			"child-entity-removed": function(entity){
+			"child-entity-removed": function (entity) {
 				var x = 0;
 
 				for (x in this.entities) {
-					if(this.entities[x] === entity){
+					if (this.entities[x] === entity) {
 						this.entities.splice(x, 1);
 						break;
 					}
@@ -319,11 +319,11 @@
  * @param [message.height] {number} The height of the loaded world.
  * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
  **/
-			"world-loaded": function(values){
+			"world-loaded": function (values) {
 				this.worldIsLoaded = true;
 				this.worldWidth    = values.width;
 				this.worldHeight   = values.height;
-				if(values.camera){
+				if (values.camera) {
 					this.follow(values.camera);
 				}
 				for (var x = this.entities.length - 1; x > -1; x--) {
@@ -338,11 +338,11 @@
  * @param message {Object}
  * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
  **/  
-			"tick": function(resp){		
+			"tick": function (resp) {		
 				switch (this.state)
 				{
 				case 'following':
-					if (this.followingFunction(this.following, resp.delta)) {
+					if (this.followingfunction (this.following, resp.delta)) {
 						this.viewportUpdate = true;
 					}
 					break;
@@ -351,7 +351,7 @@
 					break;
 				}
 				
-				if(this.viewportUpdate){
+				if (this.viewportUpdate) {
 					this.viewportUpdate = false;
 					this.stationary = false;
 					
@@ -399,12 +399,12 @@
 					
 					for (var x = this.entities.length - 1; x > -1; x--)
 					{
-						if(!this.entities[x].trigger('camera-update', this.message)){
+						if (!this.entities[x].trigger('camera-update', this.message)) {
 							this.entities.splice(x, 1);
 						}
 					}
 					
-				} else if (!this.stationary){
+				} else if (!this.stationary) {
 					
 /**
  * This component triggers "camera-stationary" on the entity when the camera stops moving.
@@ -416,8 +416,8 @@
 					
 				}
 				
-				if(this.lastFollow.begin){
-					if(this.lastFollow.begin < new Date().getTime()){
+				if (this.lastFollow.begin) {
+					if (this.lastFollow.begin < new Date().getTime()) {
 						this.follow(this.lastFollow);
 					}
 				}
@@ -428,11 +428,11 @@
  * 
  * @method 'resize'
  **/
-			"resize": function(){
+			"resize": function () {
 				resize(this);
 			},
 			
-			"relocate": function(loc){
+			"relocate": function (loc) {
 				if (this.move(loc.x, loc.y)) {
 					this.viewportUpdate = true;
 				}
@@ -444,7 +444,7 @@
  * 
  * @method 'orientationchange'
  **/
-			"orientationchange": function(){
+			"orientationchange": function () {
 				resize(this);
 			},
 			
@@ -465,7 +465,7 @@
  * @param [message.offsetY] {number} How far to offset the camera from the entity vertically.
  * @param [message.time] {number} How many milliseconds to follow the entity.
  **/
-			"follow": function (def){
+			"follow": function (def) {
 				this.follow(def);
 			},
 			
@@ -480,7 +480,7 @@
  * @param [shake.yFrequency] {number} How quickly to shake along the y axis.
  * @param [shake.time] {number} How long the camera should shake.
  **/
-			"shake": function(shakeDef) {
+			"shake": function (shakeDef) {
 				var def = shakeDef || {},
 					xMag    = def.xMagnitude || 0,
 					yMag    = def.yMagnitude || 0,
@@ -518,9 +518,9 @@
 		},
 		
 		methods: {
-			follow: function (def){
-				if (def.time){ //save current follow
-					if(!this.lastFollow.begin){
+			follow: function (def) {
+				if (def.time) { //save current follow
+					if (!this.lastFollow.begin) {
 						this.lastFollow.entity = this.following;
 						this.lastFollow.mode   = this.mode;
 						this.lastFollow.offsetX = this.offsetX;
@@ -528,7 +528,7 @@
 					}
 					this.lastFollow.begin  = new Date().getTime() + def.time;
 				} else {
-					if(this.lastFollow.begin){
+					if (this.lastFollow.begin) {
 						this.lastFollow.begin = 0;
 					}
 				}
@@ -575,31 +575,31 @@
 					this.state = 'static';
 					this.following = undefined;
 					this.followingFunction = undefined;
-					if(def && (typeof def.top === 'number') && (typeof def.left === 'number')){
+					if (def && (typeof def.top === 'number') && (typeof def.left === 'number')) {
 						this.move(def.left, def.top, def.orientation || 0);
 						this.viewportUpdate = true;
 					}
 					break;
 				}
 				
-				if(def.begin){ // get rid of last follow
+				if (def.begin) { // get rid of last follow
 					def.begin = 0;
 				}
 
 			},
 			
-			move: function (newLeft, newTop, newOrientation){
+			move: function (newLeft, newTop, newOrientation) {
 				var moved = this.moveLeft(newLeft);
 				moved = this.moveTop(newTop) || moved;
-				if(this.rotate){
+				if (this.rotate) {
 					moved = this.reorient(newOrientation || 0) || moved;
 				}
 				return moved;
 			},
 			
-			moveLeft: function (newLeft){
-				if(Math.abs(this.world.viewportLeft - newLeft) > this.threshold){
-					if (this.worldWidth && this.worldWidth != 0 && this.worldWidth < this.world.viewportWidth){
+			moveLeft: function (newLeft) {
+				if (Math.abs(this.world.viewportLeft - newLeft) > this.threshold) {
+					if (this.worldWidth && this.worldWidth != 0 && this.worldWidth < this.world.viewportWidth) {
 						this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
 					} else if (this.worldWidth && this.worldWidth != 0 && (newLeft + this.world.viewportWidth > this.worldWidth)) {
 						this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
@@ -614,8 +614,8 @@
 			},
 			
 			moveTop: function (newTop) {
-				if(Math.abs(this.world.viewportTop - newTop) > this.threshold){
-					if (this.worldHeight && this.worldHeight != 0 && this.worldHeight < this.world.viewportHeight){
+				if (Math.abs(this.world.viewportTop - newTop) > this.threshold) {
+					if (this.worldHeight && this.worldHeight != 0 && this.worldHeight < this.world.viewportHeight) {
 						this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
 					} else if (this.worldHeight && this.worldHeight != 0 && (newTop + this.world.viewportHeight > this.worldHeight)) {
 						this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
@@ -631,41 +631,41 @@
 			},
 			
 			reorient: function (newOrientation) {
-				if(Math.abs(this.world.viewportOrientation - newOrientation) > 0.0001){
+				if (Math.abs(this.world.viewportOrientation - newOrientation) > 0.0001) {
 					this.world.viewportOrientation = newOrientation;
 					return true;
 				}
 				return false;
 			},
 			
-			lockedFollow: (function(){
+			lockedFollow: (function () {
 				var min = Math.min,
-				getTransitionalPoint = function(a, b, ratio){
+				getTransitionalPoint = function (a, b, ratio) {
 					// Find point between two points according to ratio.
 					return ratio * b + (1 - ratio) * a;
 				},
-				getRatio = function(transition, time){
+				getRatio = function (transition, time) {
 					// Look at the target transition time (in milliseconds) and set up ratio accordingly.
-					if(transition){
+					if (transition) {
 						return min(time / transition, 1);
 					} else {
 						return 1;
 					}
 				};
 				
-				return function (entity, time, slowdown){
+				return function (entity, time, slowdown) {
 					var x = getTransitionalPoint(this.world.viewportLeft,        entity.x - (this.world.viewportWidth / 2),  getRatio(this.transitionX,     time)),
 					y     = getTransitionalPoint(this.world.viewportTop,         entity.y - (this.world.viewportHeight / 2), getRatio(this.transitionY,     time));
 
-					if(this.rotate){ // Only run the orientation calculations if we need them.
+					if (this.rotate) { // Only run the orientation calculations if we need them.
 						return this.move(x, y, getTransitionalPoint(this.world.viewportOrientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
 					} else {
 						return this.move(x, y, 0);
 					}
 				};
-			})(),
+			}()),
 			
-			forwardFollow: function (entity, time){
+			forwardFollow: function (entity, time) {
 				var ff = this.forwardFollower,
 				standardizeTimeDistance = 15 / time, //This allows the camera to pan appropriately on slower devices or longer ticks
 				moved  = false,
@@ -673,7 +673,7 @@
 				y = entity.y + this.offsetY,
 				a = (entity.orientation || 0) + this.offsetAngle;
 				
-				if(this.followFocused && (this.lastLeft === x) && (this.lastTop === y)){
+				if (this.followFocused && (this.lastLeft === x) && (this.lastTop === y)) {
 					return this.lockedFollow(ff, time);
 				} else {
 					// span over last 10 ticks to prevent jerkiness
@@ -682,17 +682,17 @@
 					this.averageOffsetX += 0.1 * (x - this.lastLeft) * standardizeTimeDistance;
 					this.averageOffsetY += 0.1 * (y - this.lastTop)  * standardizeTimeDistance;
 
-					if (Math.abs(this.averageOffsetX) > (this.world.viewportWidth / (this.forwardX * 2))){
+					if (Math.abs(this.averageOffsetX) > (this.world.viewportWidth / (this.forwardX * 2))) {
 						this.averageOffsetX = 0;
 					}
-					if (Math.abs(this.averageOffsetY) > (this.world.viewportHeight / (this.forwardY * 2))){
+					if (Math.abs(this.averageOffsetY) > (this.world.viewportHeight / (this.forwardY * 2))) {
 						this.averageOffsetY = 0;
 					}
 					
-					if(this.rotate){
+					if (this.rotate) {
 						this.averageOffsetAngle *= 0.9;
 						this.averageOffsetAngle += 0.1 * (a - this.lastOrientation) * standardizeTimeDistance;
-						if (Math.abs(this.averageOffsetAngle) > (this.world.viewportOrientation / (this.forwardAngle * 2))){
+						if (Math.abs(this.averageOffsetAngle) > (this.world.viewportOrientation / (this.forwardAngle * 2))) {
 							this.averageOffsetAngle = 0;
 						}
 					}
@@ -707,7 +707,7 @@
 					
 					moved = this.lockedFollow(ff, time);
 
-					if(!this.followFocused && !moved){
+					if (!this.followFocused && !moved) {
 						this.followFocused = true;
 					}
 					
@@ -717,14 +717,14 @@
 				
 			},
 			
-			setBoundingArea: function (top, left, width, height){
+			setBoundingArea: function (top, left, width, height) {
 				this.bBBorderY = (typeof top !== 'undefined') ? top : this.world.viewportHeight  * 0.25;
 				this.bBBorderX = (typeof left !== 'undefined') ? left : this.world.viewportWidth * 0.4;
 				this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.world.viewportWidth - (2 * this.bBBorderX);
 				this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.world.viewportHeight - (2 * this.bBBorderY);
 			},
 			
-			boundingFollow: function (entity, time){
+			boundingFollow: function (entity, time) {
 				var newLeft = null,
 				newTop      = null,
 				ratioX      = (this.transitionX?Math.min(time / this.transitionX, 1):1),
@@ -732,46 +732,46 @@
 				ratioY      = (this.transitionY?Math.min(time / this.transitionY, 1):1),
 				iratioY     = 1 - ratioY;
 				
-				if (entity.x > this.world.viewportLeft + this.bBBorderX + this.bBInnerWidth){
+				if (entity.x > this.world.viewportLeft + this.bBBorderX + this.bBInnerWidth) {
 					newLeft = entity.x -(this.bBBorderX + this.bBInnerWidth);
 				} else if (entity.x < this.world.viewportLeft + this.bBBorderX) {
 					newLeft = entity.x - this.bBBorderX;
 				}
 				
-				if (entity.y > this.world.viewportTop + this.bBBorderY + this.bBInnerHeight){
+				if (entity.y > this.world.viewportTop + this.bBBorderY + this.bBInnerHeight) {
 					newTop = entity.y - (this.bBBorderY + this.bBInnerHeight);
 				} else if (entity.y < this.world.viewportTop + this.bBBorderY) {
 					newTop = entity.y - this.bBBorderY;
 				}
 				
-				if (typeof newLeft !== 'null'){
+				if (typeof newLeft !== 'null') {
 					newLeft = this.moveLeft(ratioX * newLeft + iratioX * this.world.viewportLeft);
 				}
 				
-				if (typeof newTop !== 'null'){
+				if (typeof newTop !== 'null') {
 					newTop = this.moveTop(ratioY * newTop + iratioY * this.world.viewportTop);
 				}
 				
 				return newLeft || newTop;
 			},
 			
-			windowToWorld: function (sCoords){
+			windowToWorld: function (sCoords) {
 				var wCoords = [];
 				wCoords[0] = Math.round((sCoords[0] - this.window.viewportLeft) * this.worldPerWindowUnitWidth);
 				wCoords[1] = Math.round((sCoords[1] - this.window.viewportTop)  * this.worldPerWindowUnitHeight);
 				return wCoords; 
 			},
 			
-			worldToWindow: function (wCoords){
+			worldToWindow: function (wCoords) {
 				var sCoords = [];
 				sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.window.viewportLeft);
 				sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.window.viewportTop);
 				return sCoords;
 			},
 			
-			destroy: function(){
+			destroy: function () {
 				this.entities.length = 0;
 			}
 		}
 	});
-})();
+}());

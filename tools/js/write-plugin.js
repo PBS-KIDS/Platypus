@@ -6,26 +6,26 @@
  * 
  */
 
-(function(){
-	if(isJIT){
+(function () {
+	if (isJIT) {
 		print('This plugin does not support in-browser compilation.');
 		return;
 	}
 
-    var setText = function(path, text){
+    var setText = function (path, text) {
 	    var file = fileSystem.CreateTextFile(path, true);
 	    file.Write(text);
 	    file.Close();
 	    return text;
     },
-    clearFolder = function(path){
+    clearFolder = function (path) {
 	    if (fileSystem.FolderExists(path)) {
 		    try {fileSystem.DeleteFile(path + '*.*');} catch(e) {}
 	    } else {
 	    	fileSystem.CreateFolder(path);
 	    }
     },
-    buildGame = function(build, workingDir, buildDir){
+    buildGame = function (build, workingDir, buildDir) {
 	    var buildPath = '',
 	    indexPath  = '',
 	    i          = 0;
@@ -33,7 +33,7 @@
 	    buildPath = indexPath = buildDir + build.id + '/';
 	    clearFolder(buildPath);
 
-	    if(build.index === false){
+	    if (build.index === false) {
 	        buildPath += build.id + '/';
 		    clearFolder(buildPath);
 	    }
@@ -41,12 +41,12 @@
 	    clearFolder(buildPath + 'j/');
 	    clearFolder(buildPath + 's/');
 
-	    if (fileSystem.FolderExists(workingDir + 'server/')){ // if there are files that should be copied to root as-is in a /server/ folder, do so.
+	    if (fileSystem.FolderExists(workingDir + 'server/')) { // if there are files that should be copied to root as-is in a /server/ folder, do so.
 	    	print('..Copying "server/" files to "' + indexPath + '".');
 			fileSystem.CopyFile(workingDir + 'server/*.*', indexPath, true);
 	    }
 
-	    for(i = 0; i < build.files.length; i++){
+	    for(i = 0; i < build.files.length; i++) {
 	    	print('..Writing "' + build.files[i].name + '".');
 		    setText(build.files[i].name, build.files[i].content);
 	    }
@@ -59,9 +59,9 @@
     //Create builds
     print('Preparing to write files.');
     if (!fileSystem.FolderExists(buildDir)) fileSystem.CreateFolder(buildDir);
-    for (buildIndex in builds){
+    for (buildIndex in builds) {
     	print('.Writing files for build "' + builds[buildIndex].id + '".');
     	buildGame(builds[buildIndex], workingDir, buildDir);
 	}
     print('Completed writing files. Hurrah!');
-})();
+}());

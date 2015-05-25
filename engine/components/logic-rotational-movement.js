@@ -33,22 +33,22 @@ This component changes the (x, y) position of an object according to its current
       // Optional: Unit in radian that the angle should change per millisecond.
     }
 */
-(function(){
+(function () {
 	"use strict";
 
 	var pi = Math.PI,
 	cos = Math.cos,
 	sin = Math.sin,
-	polarToCartesianX = function(m, a){
+	polarToCartesianX = function (m, a) {
 		return m * cos(a);
 	},
-	polarToCartesianY = function(m, a){
+	polarToCartesianY = function (m, a) {
 		return m * sin(a);
 	};
 	
 	return platformer.createComponentClass({
 		id: 'logic-rotational-movement',
-		constructor: function(definition){
+		constructor: function (definition) {
 			this.speed = definition.speed || .3;
 			this.magnitude = 0;
 			this.degree = (definition.degree || 1) * pi / 180;
@@ -66,19 +66,19 @@ This component changes the (x, y) position of an object according to its current
 			this.turningLeft = false;
 		},
 		events:{
-			"handle-logic": function(resp){
+			"handle-logic": function (resp) {
 				var vX    = 0,
 				vY        = 0;
 				
-				if(this.turningRight){
+				if (this.turningRight) {
 					this.angle += this.degree * resp.delta / 15;
 				}
 		
-				if(this.turningLeft){
+				if (this.turningLeft) {
 					this.angle -= this.degree * resp.delta / 15;
 				}
 				
-				if(this.moving){
+				if (this.moving) {
 					vX = polarToCartesianX(this.magnitude, this.angle);
 					vY = polarToCartesianY(this.magnitude, this.angle);
 				}
@@ -86,67 +86,67 @@ This component changes the (x, y) position of an object according to its current
 				this.owner.x += (vX * resp.delta);
 				this.owner.y += (vY * resp.delta);
 				
-				if(this.state.moving !== this.moving){
+				if (this.state.moving !== this.moving) {
 					this.state.moving = this.moving;
 				}
-				if(this.state.turningLeft !== this.turningLeft){
+				if (this.state.turningLeft !== this.turningLeft) {
 					this.state.turningLeft = this.turningLeft;
 				}
-				if(this.state.turningRight !== this.turningRight){
+				if (this.state.turningRight !== this.turningRight) {
 					this.state.turningRight = this.turningRight;
 				}
-				if(this.owner.orientation !== this.angle){
+				if (this.owner.orientation !== this.angle) {
 					this.owner.orientation = this.angle;
 				}
 			},
-			"turn-right": function (state){
-				if(state){
+			"turn-right": function (state) {
+				if (state) {
 					this.turningRight = state.pressed;
 				} else {
 					this.turningRight = true;
 				}
 			},
-			"turn-left": function (state){
-				if(state){
+			"turn-left": function (state) {
+				if (state) {
 					this.turningLeft = state.pressed;
 				} else {
 					this.turningLeft = true;
 				}
 			},
-			"go-forward": function(state){
-				if(!state || state.pressed){
+			"go-forward": function (state) {
+				if (!state || state.pressed) {
 					this.moving = true;
 					this.magnitude = this.speed;
 				} else {
 					this.moving = false;
 				}
 			},
-			"go-backward": function(state){
-				if(!state || state.pressed){
+			"go-backward": function (state) {
+				if (!state || state.pressed) {
 					this.moving = true;
 					this.magnitude = -this.speed;
 				} else {
 					this.moving = false;
 				}
 			},
-			"stop": function(state){
-				if(!state || state.pressed){
+			"stop": function (state) {
+				if (!state || state.pressed) {
 					this.moving = false;
 					this.turningLeft = false;
 					this.turningRight = false;
 				}
 			},
-			"stop-moving": function(state){
-				if(!state || state.pressed){
+			"stop-moving": function (state) {
+				if (!state || state.pressed) {
 					this.moving = false;
 				}
 			},
-			"stop-turning": function(state){
-				if(!state || state.pressed){
+			"stop-turning": function (state) {
+				if (!state || state.pressed) {
 					this.turningLeft = false;
 					this.turningRight = false;
 				}
 			}
 		}
 	});
-})();
+}());
