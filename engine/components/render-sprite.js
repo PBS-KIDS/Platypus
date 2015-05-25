@@ -214,7 +214,7 @@ This component is attached to entities that will appear in the game world. It re
             };
         } else {
             return function (state) {
-                for(var i = 0; i < states.length; i++) {
+                for (var i = 0; i < states.length; i++) {
                     if (!state[states[i]]) {
                         return false;
                     }
@@ -434,7 +434,7 @@ This component is attached to entities that will appear in the game world. It re
                 component.followThroughs = {};
                 component.checkStates = [];
 
-                for(anim in map) {
+                for (anim in map) {
                     animation = map[anim];
                     
                     //TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
@@ -762,7 +762,7 @@ This component is attached to entities that will appear in the game world. It re
                         }
 
                         if (this.checkStates) {
-                            for(; i < this.checkStates.length; i++) {
+                            for (; i < this.checkStates.length; i++) {
                                 testCase = this.checkStates[i](this.state);
                                 if (testCase) {
                                     if (this.currentAnimation !== testCase) {

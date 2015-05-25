@@ -25,6 +25,7 @@
  *     
 Requires: ["entity.js"]
 */
+/*global platformer */
 platformer.Scene = (function () {
     "use strict";
     
@@ -41,11 +42,11 @@ platformer.Scene = (function () {
         
         this.rootElement = rootElement;
         this.layers = [];
-        for(var layer in layers) {
+        for (var layer in layers) {
             layerDefinition = layers[layer];
             properties = {rootElement: this.rootElement, parent: this};
             if (layerDefinition.properties) {
-                for(i in layerDefinition.properties) {
+                for (i in layerDefinition.properties) {
                     properties[i] = layerDefinition.properties[i];
                 }
             }
@@ -58,14 +59,14 @@ platformer.Scene = (function () {
             if (layerDefinition.filter) {
                 if (layerDefinition.filter.includes) {
                     supportedLayer = false;
-                    for(var filter in layerDefinition.filter.includes) {
+                    for (var filter in layerDefinition.filter.includes) {
                         if (platformer.game.settings.supports[layerDefinition.filter.includes[filter]]) {
                             supportedLayer = true;
                         }
                     }
                 }
                 if (layerDefinition.filter.excludes) {
-                    for(var filter in layerDefinition.filter.excludes) {
+                    for (var filter in layerDefinition.filter.excludes) {
                         if (platformer.game.settings.supports[layerDefinition.filter.excludes[filter]]) {
                             supportedLayer = false;
                         }
@@ -81,7 +82,7 @@ platformer.Scene = (function () {
         // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
         messages = this.storedMessages;
         this.storedMessages = false;
-        for(var i = 0; i < messages.length; i++) {
+        for (var i = 0; i < messages.length; i++) {
             this.trigger(messages[i].message, messages[i].value);
         }
         messages.length = 0;
@@ -118,7 +119,7 @@ platformer.Scene = (function () {
                 this.trigger('time-elapsed', this.timeElapsed);
                 this.time = time;
             }
-            for(; i < this.layers.length; i++) {
+            for (; i < this.layers.length; i++) {
                 this.layers[i].trigger(eventId, event);
             }
             if (eventId === 'tick') {
@@ -142,7 +143,7 @@ platformer.Scene = (function () {
         var i = 0,
         selection = null;
         
-        for(; i < this.layers.length; i++) {
+        for (; i < this.layers.length; i++) {
             if (this.layers[i].id === id) {
                 return this.layers[i];
             }
@@ -168,7 +169,7 @@ platformer.Scene = (function () {
         selection = null,
         entities  = [];
         
-        for(; i < this.layers.length; i++) {
+        for (; i < this.layers.length; i++) {
             if (this.layers[i].type === type) {
                 entities.push(this.layers[i]);
             }
@@ -188,7 +189,7 @@ platformer.Scene = (function () {
  * @method destroy
  **/
     proto.destroy = function () {
-        for(var layer in this.layers) {
+        for (var layer in this.layers) {
             this.layers[layer].destroy();
         }
         this.layers.length = 0;

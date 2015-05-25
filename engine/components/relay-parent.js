@@ -47,7 +47,7 @@ This component listens for specified local entity messages and re-broadcasts the
         constructor: function (definition) {
             // Messages that this component listens for and then broadcasts to parent.
             if (definition.events) {
-                for(var event in definition.events) {
+                for (var event in definition.events) {
                     this.addEventListener(event, broadcast(definition.events[event]));
                 }
             }

@@ -278,7 +278,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
         file    = null;
         
        if (component) {
-           for(j = 0; j < componentList.length; j++) {
+           for (j = 0; j < componentList.length; j++) {
                if ((component === componentList[j]) || (component === componentList[j].id)) {
                    found = true;
                    break;
@@ -304,12 +304,12 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
        }
     },
     checkComponents = function (components) {
-         for(var i = 0; i < components.length; i++) {
+         for (var i = 0; i < components.length; i++) {
              
            checkComponent(components[i].type);
            
            if (components[i].entities) { // check these entities for components
-               for(var j = 0; j < components[i].entities.length; j++) {
+               for (var j = 0; j < components[i].entities.length; j++) {
                    if (components[i].entities[j].components) {
                        checkComponents(components[i].entities[j].components);
                    }
@@ -340,14 +340,14 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
                           return;
                       }
                        if (isJS(arr[i])) { // Is this a JavaScript path name?
-                           for(i = 0; i < arr.length; i++) {
+                           for (i = 0; i < arr.length; i++) {
                                found = false;
                                if (arr[i].substring(0,4).toLowerCase() === 'http') {
                                    file = arr[i];
                                } else {
                                     file = fixUpPath(subDir + arr[i]);
                                }
-                               for(j = 0; j < dependencyList.length; j++) {
+                               for (j = 0; j < dependencyList.length; j++) {
                                    if ((file === dependencyList[j]) || (file === dependencyList[j].src)) {
                                        found = true;
                                        break;
@@ -431,7 +431,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
                             }
                         }
                     } else {
-                        for(srcId in asset.src) {
+                        for (srcId in asset.src) {
                             if ((typeof asset.src[srcId]) == 'string') {
                                 if (asset.src[srcId].substring(0,4).toLowerCase() !== 'http') {
                                     asset.src[srcId] = fixUpPath(workingDir + asset.src[srcId]);
@@ -526,7 +526,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
     print('--- BUILD VERSION ' + game.version + ' ---');
     print('Composing game from ' + workingDir + 'config.json.');
     
-    for(sectionId in source) {
+    for (sectionId in source) {
         if ((sectionId !== 'includes') && (sectionId !== 'components')) {
             print('..Handling "' + sectionId + '" section.');
             if (typeof source[sectionId] === 'string') {
@@ -581,11 +581,11 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
     config = game;
     
     if (isJIT) {
-        for(var k = 0; k < plugins.length; k++) {
+        for (var k = 0; k < plugins.length; k++) {
             include('../tools/' + plugins[k]);
         }
     } else {
-        for(var k = 0; k < plugins.length; k++) {
+        for (var k = 0; k < plugins.length; k++) {
             print(' ');
             print('--- BEGIN PLUGIN "' + plugins[k] + '" ---');
             include(plugins[k]);

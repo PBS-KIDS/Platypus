@@ -162,7 +162,7 @@ This component listens for input messages triggered on the entity and updates th
             this.stateSummary.triggered = this.current && !this.last;
             this.stateSummary.over      = this.over;
             if (this.filters) {
-                for(; i < this.filters.length; i++) {
+                for (; i < this.filters.length; i++) {
                     if (this.stateSummary[this.filters[i]]) {
                         this.trigger(this.event, this.stateSummary);
                     }
@@ -218,7 +218,7 @@ This component listens for input messages triggered on the entity and updates th
             if (definition && definition.controlMap) {
                 this.owner.controlMap = definition.controlMap; // this is used and expected by the handler-controller to handle messages not covered by key and mouse inputs.
                 this.actions  = {};
-                for(key in definition.controlMap) {
+                for (key in definition.controlMap) {
                     if (typeof definition.controlMap[key] === 'string') {
                         actionState = addActionState(this.actions, definition.controlMap[key], trigger);
                     } else {

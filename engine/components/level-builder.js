@@ -151,7 +151,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
         }
         
         //Go through all the STUFF in segment and copy it to the level if it's not already there.
-        for(i in segment) {
+        for (i in segment) {
             if (!level[i]) {
                 level[i] = segment[i];
             }

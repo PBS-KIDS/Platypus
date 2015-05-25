@@ -226,7 +226,7 @@
                     this.updateLiveList = true;
                 } else {
                     if (types) {
-                        for(; i < types.length; i++) {
+                        for (; i < types.length; i++) {
                             if (!this.entitiesByType[types[i]]) {
                                 this.entitiesByType[types[i]] = [];
                                 this.entitiesByTypeLive[types[i]] = [];
@@ -248,7 +248,7 @@
                 types = entity.collisionTypes;
 
                 if (types) {
-                    for(; i < types.length; i++) {
+                    for (; i < types.length; i++) {
                         for (x in this.entitiesByType[types[i]]) {
                             if (this.entitiesByType[types[i]][x] === entity) {
                                 this.entitiesByType[types[i]].splice(x, 1);
@@ -535,7 +535,7 @@
                 if (entityDeltaX || entityDeltaY) {
                     
                     if (ent.bullet) {
-                        for(var i in collisionTypes) {
+                        for (var i in collisionTypes) {
                             aabb = entityOrGroup.getAABB(collisionTypes[i]);
                             sW = Math.min(sW, aabb.width);
                             sH = Math.min(sH, aabb.height);
@@ -552,7 +552,7 @@
                         dY    = entityDeltaY;
                     }
                     
-                    for(step = 0; step < steps; step++) {
+                    for (step = 0; step < steps; step++) {
                         entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
 
                         finalMovementInfo.set(ent.position);
@@ -610,7 +610,7 @@
                     
 //                    if (!entityOrGroup.jumpThrough || (entityDeltaY >= 0)) { //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
     
-                        for(var i = 0; i < collisionTypes.length; i++) {
+                        for (var i = 0; i < collisionTypes.length; i++) {
                             //Sweep the full movement of each collision type
                             potentialCollidingShapes[i] = [];
                             collisionType = collisionTypes[i];
@@ -627,7 +627,7 @@
                                 if (entitiesByTypeLive[otherCollisionType]) {
                                     otherEntities = entitiesByTypeLive[otherCollisionType];
                                     
-                                    for(var z = 0; z < otherEntities.length; z++) {
+                                    for (var z = 0; z < otherEntities.length; z++) {
                                         
                                         //Chop out all the special case entities we don't want to check against.
                                         otherEntity = otherEntities[z];
@@ -671,7 +671,7 @@
                 return function (ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY) {
 
                     if (entityDeltaX != 0) {
-                        for(var j = 0; j < collisionTypes.length; j++) {
+                        for (var j = 0; j < collisionTypes.length; j++) {
                             //Move each collision type in X to find the min X movement
                             collisionData.clear();
                             collisionData = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'x', potentialCollidingShapes[j], collisionData);
@@ -694,7 +694,7 @@
                     entityOrGroup.movePreviousX(finalMovementInfo.x);
                     
                     if (entityDeltaY != 0) {
-                        for(var j = 0; j < collisionTypes.length; j++) {
+                        for (var j = 0; j < collisionTypes.length; j++) {
                             //Move each collision type in Y to find the min Y movement
                             collisionData.clear();
                             collisionData = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'y', potentialCollidingShapes[j], collisionData);
@@ -923,7 +923,7 @@
                     };
                 };
 
-                for(x = 0; x < this.softEntitiesLive.length; x++) {
+                for (x = 0; x < this.softEntitiesLive.length; x++) {
                     this.checkEntityForSoftCollisions(this.softEntitiesLive[x], this.getWorldEntities(), trigger(this.softEntitiesLive[x]));
                 }
             },
@@ -953,7 +953,7 @@
                         otherCollisionType = softCollisions[y];
                         otherEntities = entitiesByTypeLive[otherCollisionType]; 
                         if (otherEntities) {
-                            for(z = 0; z < otherEntities.length; z++) {
+                            for (z = 0; z < otherEntities.length; z++) {
                                 collisionFound = false;
                                 otherEntity = otherEntities[z];
                                 if ((otherEntity !== ent) && (checkAABBCollision(ent.getAABB(ent.collisionTypes[i]), otherEntity.getAABB(otherCollisionType)))) {
@@ -1036,7 +1036,7 @@
                 this.checkEntityForSoftCollisions(entity, entities || this.entitiesByTypeLive, function (collision) {
                     var i = '',
                     save  = {};
-                    for(i in collision) {
+                    for (i in collision) {
                         save[i] = collision[i];
                     }
                     collisions.push(save);

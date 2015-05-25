@@ -50,7 +50,7 @@
             
             // Set up properties, prioritizing component settings, entity settings, and finally defaults.
             if (componentDefinition.properties) {
-                for(prop in componentDefinition.properties) {
+                for (prop in componentDefinition.properties) {
                     if (typeof definition[prop] !== 'undefined') {
                         this[prop] = definition[prop];
                     } else if (typeof this.owner[prop] !== 'undefined') {
@@ -63,7 +63,7 @@
             
             // These component properties are equivalent with `entity.property`
             if (componentDefinition.publicProperties) {
-                for(prop in componentDefinition.publicProperties) {
+                for (prop in componentDefinition.publicProperties) {
                     setupProperty(prop, this, owner);
                     if (typeof definition[prop] !== 'undefined') {
                         this[prop] = definition[prop];
@@ -76,7 +76,7 @@
             }
             
             if (componentDefinition.events) {
-                for(func in componentDefinition.events) {
+                for (func in componentDefinition.events) {
                     this.addEventListener(func, componentDefinition.events[func]);
                     if (definition.aliases) {
                         for (var alias in definition.aliases) {
@@ -89,7 +89,7 @@
             }
             
             if (componentDefinition.publicMethods) {
-                for(func in componentDefinition.publicMethods) {
+                for (func in componentDefinition.publicMethods) {
                     name = func;
                     if (definition.aliases) {
                         for (var alias in definition.aliases) {
@@ -116,14 +116,14 @@
         // Have to copy rather than replace so definition is not corrupted
         proto.constructor = componentDefinition.constructor;
 
-        if (componentDefinition.methods) for(func in componentDefinition.methods) {
+        if (componentDefinition.methods) for (func in componentDefinition.methods) {
             if (func === 'destroy') {
                 proto['___' + func] = componentDefinition.methods[func];
             } else {
                 proto[func] = componentDefinition.methods[func];
             }
         }
-        if (componentDefinition.publicMethods) for(func in componentDefinition.publicMethods) {
+        if (componentDefinition.publicMethods) for (func in componentDefinition.publicMethods) {
             proto[func] = componentDefinition.publicMethods[func];
         }
         
@@ -152,7 +152,7 @@
             }
             
             // Now remove event listeners and methods.
-            for(func in this.publicMethods) {
+            for (func in this.publicMethods) {
                 this.removeMethod(func);
             }
             this.removeEventListeners();
@@ -172,12 +172,12 @@
             if (!listeners) {
                 events   = this.listener.events;
                 messages = this.listener.messages;
-                for(var i = 0; i < events.length; i++) {
+                for (var i = 0; i < events.length; i++) {
                     this.removeEventListener(events[i], messages[i]);
                 }
             } else {
                 events   = listeners;
-                for(var i = 0; i < events.length; i++) {
+                for (var i = 0; i < events.length; i++) {
                     this.removeEventListener(events[i]);
                 }
             }
@@ -229,7 +229,7 @@
         proto.removeEventListener = function (event, callback) {
             var events = this.listener.events,
             messages   = this.listener.messages;
-            for(var i = 0; i < events.length; i++) {
+            for (var i = 0; i < events.length; i++) {
                 if ((events[i] === event) && (!callback || (messages[i] === callback))) {
                     this.owner.unbind(event, messages[i], this);
                 }

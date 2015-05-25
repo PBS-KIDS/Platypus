@@ -55,14 +55,14 @@ This component listens for messages and, according to its preset settings, will 
                 
                 if (definition.remove) {
                     if (typeof definition.remove === 'string') {
-                        for(i = owner.components.length - 1; i > -1; i--) {
+                        for (i = owner.components.length - 1; i > -1; i--) {
                             if (owner.components[i].type === definition.remove) {
                                 owner.removeComponent(owner.components[i]);
                             }
                         }
                     } else {
                         for (i = 0; i < definition.remove.length; i++) {
-                            for(j = owner.components.length - 1; j > -1; j--) {
+                            for (j = owner.components.length - 1; j > -1; j--) {
                                 if (owner.components[j].type === definition.remove[i]) {
                                     owner.removeComponent(owner.components[j]);
                                 }
@@ -92,7 +92,7 @@ This component listens for messages and, according to its preset settings, will 
         id: 'component-switcher',
         constructor: function (definition) {
             if (definition.componentMap) {
-                for(var event in definition.componentMap) {
+                for (var event in definition.componentMap) {
                     this.addEventListener(event, addRemoveComponents(definition.componentMap[event], this.owner));
                 }
             }

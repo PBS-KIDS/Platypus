@@ -147,7 +147,7 @@
     translate  = function (list, dictionary, syntax, v, newV) {
         var i = 0;
         
-        for(i = 0; i < list.length; i++) {
+        for (i = 0; i < list.length; i++) {
             print('...Translating "' + list[i].name + '".');
             list[i].content = translateFile(list[i].content, dictionary, syntax, isJSorJSON(list[i].name));
             

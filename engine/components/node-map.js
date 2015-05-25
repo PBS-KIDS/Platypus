@@ -106,7 +106,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     };
 
     proto.add = function (entity) {
-        for(var i = 0; i < this.contains.length; i++) {
+        for (var i = 0; i < this.contains.length; i++) {
             if (this.contains[i] === entity) {
                 return false;
             }
@@ -116,7 +116,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     };
     
     proto.remove = function (entity) {
-        for(var i = 0; i < this.contains.length; i++) {
+        for (var i = 0; i < this.contains.length; i++) {
             if (this.contains[i] === entity) {
                 return this.contains.splice(i,1)[0];
             }
@@ -133,7 +133,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
             this.map = [];
             
             if (definition.map) {
-                for(; i < definition.map.length; i++) {
+                for (; i < definition.map.length; i++) {
                     this.map.push(new Node(definition.map[i], this));
                 }
             }

@@ -32,9 +32,9 @@ Requires: ["../aabb.js"]
         length = hostArray.length,
         found  = false;
         
-        for(; i < insertArray.length; i++) {
+        for (; i < insertArray.length; i++) {
             found = false;
-            for(j = 0; j < length; j++) {
+            for (j = 0; j < length; j++) {
                 if (insertArray[i] === hostArray[j]) {
                     found = true;
                     break;
@@ -147,7 +147,7 @@ Requires: ["../aabb.js"]
                 types = entity.collisionTypes;
                 
                 if (types) {
-                    for(; i < types.length; i++) {
+                    for (; i < types.length; i++) {
                         if (entity.solidCollisions[types[i]].length && !entity.immobile) {
                             this.solidEntities[this.solidEntities.length] = entity;
                         }
@@ -162,7 +162,7 @@ Requires: ["../aabb.js"]
                 types = entity.collisionTypes;
 
                 if (types) {
-                    for(; i < types.length; i++) {
+                    for (; i < types.length; i++) {
                         if (entity.solidCollisions[types[i]].length) {
                             for (x in this.solidEntities) {
                                 if (this.solidEntities[x] === entity) {
@@ -332,14 +332,14 @@ Requires: ["../aabb.js"]
                 this.owner.saveDX -= vector.x - this.owner.previousX;
                 this.owner.saveDY -= vector.y - this.owner.previousY;
 
-                for(i = 0; i < collisionData.xCount; i++) {
+                for (i = 0; i < collisionData.xCount; i++) {
                     if (collisionData.getXEntry(i).thisShape.owner === this.owner) {
                         this.owner.saveDX = 0;
                         break;
                     }
                 }
                 
-                for(i = 0; i < collisionData.yCount; i++) {
+                for (i = 0; i < collisionData.yCount; i++) {
                     if (collisionData.getYEntry(i).thisShape.owner === this.owner) {
                         this.owner.saveDY = 0;
                         break;

@@ -219,7 +219,7 @@
                     //Prevents game lockdown when processing takes longer than time alotted.
                     cycles = Math.min(cycles, this.maxStepsPerTick);
                     
-                    for(var i = 0; i < cycles; i++) {
+                    for (var i = 0; i < cycles; i++) {
                         
                         /**
                          * This event is triggered on children entities to run their logic.

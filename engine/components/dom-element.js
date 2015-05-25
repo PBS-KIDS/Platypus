@@ -96,19 +96,19 @@ This component creates a DOM element associated with the entity. In addition to 
             }
             this.element.ondragstart = function () {return false;}; //prevent element dragging by default
             
-            for(var i in definition) {
+            for (var i in definition) {
                 if (i === 'style') {
-                    for(var j in definition[i]) {
+                    for (var j in definition[i]) {
                         this.element.style[j] = definition[i][j]; 
                     }
                 } else if (((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')) {
                     if (i.indexOf('on') === 0) {
                         if (platformer.game.settings.supports.mobile) {
                             if ( i.indexOf('onmouse') == -1) {
-                                this.element[i] = createfunction (definition[i], this.owner);
+                                this.element[i] = createFunction(definition[i], this.owner);
                             }
                         } else {
-                            this.element[i] = createfunction (definition[i], this.owner);
+                            this.element[i] = createFunction(definition[i], this.owner);
                         }
                     } else {
                         this.element[i] = definition[i];
@@ -188,7 +188,7 @@ This component creates a DOM element associated with the entity. In addition to 
                 className = this.className;
                 
                 if (this.stateChange && this.updateClassName) {
-                    for(i in this.states) {
+                    for (i in this.states) {
                         if (this.states[i]) {
                             className += ' ' + i;
                         }
@@ -235,7 +235,7 @@ This component creates a DOM element associated with the entity. In addition to 
             },
         
             "logical-state": function (state) {
-                for(var i in state) {
+                for (var i in state) {
                     if (this.states[i] !== state[i]) {
                         this.stateChange = true;
                         this.states[i] = state[i];

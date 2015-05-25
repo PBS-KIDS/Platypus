@@ -34,7 +34,7 @@ A component that handles the rendering of DOM elements. It creates a div element
       //Optional. If specified properties begin with "on", it is assumed that the property is an event handler and the listed value is broadcast as a message on the entity where the message object is the event handler's event object.
     }
 */
-
+/*global platformer */
 (function () {
     "use strict";
 
@@ -68,14 +68,14 @@ A component that handles the rendering of DOM elements. It creates a div element
             this.owner.rootElement.appendChild(this.element);
             this.owner.element = this.element;
     
-            for(var i in definition) {
+            for (var i in definition) {
                 if (i === 'style') {
-                    for(var j in definition[i]) {
+                    for (var j in definition[i]) {
                         this.element.style[j] = definition[i][j]; 
                     }
                 } else if (i !== 'type') {
                     if (i.indexOf('on') === 0) {
-                        this.element[i] = createfunction (definition[i], this.owner);
+                        this.element[i] = createFunction(definition[i], this.owner);
                     } else {
                         this.element[i] = definition[i];
                     }
@@ -91,7 +91,7 @@ A component that handles the rendering of DOM elements. It creates a div element
                 last  = null;
                 
                 // Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
-                for(; i < this.owner.components.length; i++) {
+                for (; i < this.owner.components.length; i++) {
                     if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')) {
                         last = this.owner.components[i];
                     }
@@ -107,7 +107,7 @@ A component that handles the rendering of DOM elements. It creates a div element
                             this.extraContent = {};
                         }
 
-                        for(i in addition) {
+                        for (i in addition) {
                             this.extraContent[i] = addition[i];
                         }
                     });
@@ -126,11 +126,11 @@ A component that handles the rendering of DOM elements. It creates a div element
                 message = {};
                 
                 if (this.handleChildren) {
-                    for(i in resp) {
+                    for (i in resp) {
                         message[i] = resp[i];
                     }
                     if (this.extraContent) {
-                        for(i in this.extraContent) {
+                        for (i in this.extraContent) {
                             message[i] = this.extraContent[i];
                         }
                     }
@@ -138,7 +138,7 @@ A component that handles the rendering of DOM elements. It creates a div element
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
                     if (this.extraContent) {
-                        for(i in this.extraContent) {
+                        for (i in this.extraContent) {
                             delete this.extraContent[i];
                             delete message[i];
                         }

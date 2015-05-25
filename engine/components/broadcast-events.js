@@ -89,20 +89,20 @@ This component listens for specified local entity messages and re-broadcasts the
         constructor: function (definition) {
             // Messages that this component listens for and then broadcasts to all layers.
             if (definition.events) {
-                for(var event in definition.events) {
+                for (var event in definition.events) {
                     this.addEventListener(event, gameBroadcast(definition.events[event]));
                 }
             }
             
             if (definition.parentEvents) {
-                for(var event in definition.parentEvents) {
+                for (var event in definition.parentEvents) {
                     this.addEventListener(event, parentBroadcast(definition.parentEvents[event]));
                 }
             }
             
             // Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
             if (definition.renameEvents) {
-                for(var event in definition.renameEvents) {
+                for (var event in definition.renameEvents) {
                     this.addEventListener(event, entityBroadcast(definition.renameEvents[event]));
                 }
             }

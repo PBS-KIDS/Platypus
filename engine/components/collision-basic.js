@@ -98,7 +98,7 @@
                 if (!collisionType) {
                     var aabb = entity.aabb = entity.aabb || new platformer.AABB();
                     aabb.reset();
-                    for(var i in entity.collisionFunctions) {
+                    for (var i in entity.collisionFunctions) {
                         aabb.include(entity.collisionFunctions[i].getAABB());
                     }
                     return aabb;
@@ -134,7 +134,7 @@
             };
             
             entity.prepareCollision = function (x, y) {
-                for(var i in entity.collisionFunctions) {
+                for (var i in entity.collisionFunctions) {
                     entity.collisionFunctions[i].prepareCollision(x, y);
                 }
             };
@@ -156,7 +156,7 @@
             };
             
             entity.movePreviousX = function (x) {
-                for(var i in entity.collisionFunctions) {
+                for (var i in entity.collisionFunctions) {
                     entity.collisionFunctions[i].movePreviousX(x);
                 }
             };
@@ -408,7 +408,7 @@
             this.owner.solidCollisions = this.owner.solidCollisions || {};
             this.owner.solidCollisions[this.collisionType] = [];
             if (definition.solidCollisions) {
-                for(var i in definition.solidCollisions) {
+                for (var i in definition.solidCollisions) {
                     this.owner.solidCollisions[this.collisionType].push(i);
                     this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
                     if (definition.solidCollisions[i]) {
@@ -432,7 +432,7 @@
             this.owner.softCollisions = this.owner.softCollisions || {};
             this.owner.softCollisions[this.collisionType] = [];
             if (definition.softCollisions) {
-                for(var i in definition.softCollisions) {
+                for (var i in definition.softCollisions) {
                     this.owner.softCollisions[this.collisionType].push(i);
                     if (definition.softCollisions[i]) {
                         this.addEventListener('hit-by-' + i, entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
@@ -543,7 +543,7 @@
                 var i = 0;
                 
                 if (!this.ignoreOrientation) {
-                    for(i = 0; i < this.shapes.length; i++) {
+                    for (i = 0; i < this.shapes.length; i++) {
                         this.shapes[i].multiply(matrix);
                     }
                 }
@@ -589,7 +589,7 @@
             
             movePreviousX: function (x) {
                 this.prevAABB.moveX(x);
-                for(var k = 0; k < this.prevShapes.length; k++) {
+                for (var k = 0; k < this.prevShapes.length; k++) {
                     this.prevShapes[k].setXWithEntityX(x);
                 }
             },
@@ -605,7 +605,7 @@
                 delete this.aabb;
                 delete this.prevAABB;
                 
-                for(i = 0; i < this.owner.collisionTypes.length; i++) {
+                for (i = 0; i < this.owner.collisionTypes.length; i++) {
                     if (this.owner.collisionTypes[i] === this.collisionType) {
                         this.owner.collisionTypes.splice(i,1);
                         break;
@@ -615,7 +615,7 @@
                     this.owner.solidCollisions[this.collisionType].length = 0;
                     delete this.owner.solidCollisions[this.collisionType];
                 }
-                for(col in this.owner.solidCollisions) {
+                for (col in this.owner.solidCollisions) {
                     this.owner.collides = true;
                     break;
                 }

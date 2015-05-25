@@ -51,7 +51,7 @@
 
         if (css || js) {
             print('.Compressing scripts for build "' + build.id + '".');
-            for(i = 0; i < files.length; i++) {
+            for (i = 0; i < files.length; i++) {
                 file = files[i];
                 if (file) {
                     if (isJS(file.name) && js) {

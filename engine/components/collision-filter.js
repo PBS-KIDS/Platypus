@@ -54,11 +54,11 @@ This component will listen for a particular collision message and, depending on 
             if (definition.collisions) {
                 if (state[0] === '!') {
                     state = state.substring(1);
-                    for(event in definition.collisions) {
+                    for (event in definition.collisions) {
                         this.addEventListener(event, collideNeg(this.owner, state, definition.collisions[event]));
                     }
                 } else {
-                    for(event in definition.collisions) {
+                    for (event in definition.collisions) {
                         this.addEventListener(event, collidePos(this.owner, state, definition.collisions[event]));
                     }
                 }

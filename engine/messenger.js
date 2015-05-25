@@ -56,7 +56,7 @@ platformer.Messenger = (function () {
         var found = false, j = 0;
         
         if (this.loopCheck.length) {
-            for(j = 0; j < this.loopCheck.length; j++) {
+            for (j = 0; j < this.loopCheck.length; j++) {
                 if (this.loopCheck[j] === event) {
                     found = true;
                     break;
@@ -134,7 +134,7 @@ platformer.Messenger = (function () {
         this.loopCheck.length = this.loopCheck.length - 1;
         
         if (!this.loopCheck.length && this.unbindLater.length) {
-            for(j = 0; j < this.unbindLater.length; j++) {
+            for (j = 0; j < this.unbindLater.length; j++) {
                 this.safelyUnbind(this.unbindLater[j].event, this.unbindLater[j].callback, this.unbindLater[j].scope);
             }
             this.unbindLater.length = 0;

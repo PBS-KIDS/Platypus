@@ -46,7 +46,7 @@
             fileSystem.CopyFile(workingDir + 'server/*.*', indexPath, true);
         }
 
-        for(i = 0; i < build.files.length; i++) {
+        for (i = 0; i < build.files.length; i++) {
             print('..Writing "' + build.files[i].name + '".');
             setText(build.files[i].name, build.files[i].content);
         }

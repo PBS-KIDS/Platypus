@@ -57,7 +57,7 @@ This component dynamically creates a message from JSON settings and incoming mes
             var event = null;
             
             if (definition.messages) {
-                for(event in definition.messages) {
+                for (event in definition.messages) {
                     this.addEventListener(event, createNewMessage(definition.messages[event], this.owner));
                 }
             }

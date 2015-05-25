@@ -51,7 +51,7 @@ This component renders the avg FPS and other developer defined debug data to the
                     if (!this.count) {
                         this.count = this.ticks;
                         var text = Math.floor(createjs.Ticker.getMeasuredFPS()) + " FPS<br />";
-                        for(var name in this.times) {
+                        for (var name in this.times) {
                             text += '<br />' + name + ': ' + Math.round(this.times[name] / this.ticks) + 'ms';
                             this.times[name] = 0;
                         }

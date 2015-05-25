@@ -96,7 +96,7 @@
         arr    = null;
 
         if (manifest[ext]) {
-            for(i = 0; i < manifest[ext].length; i++) {
+            for (i = 0; i < manifest[ext].length; i++) {
                 newAsset = {};
                 for (j in asset) {
                     newAsset[j] = asset[j];
@@ -106,7 +106,7 @@
                 newAsset.src = newSrc.join('.');
                 if (asset.sourceFiles) {
                     newAsset.sourceFiles = {};
-                    for(j in asset.sourceFiles) {
+                    for (j in asset.sourceFiles) {
                         arr = asset.sourceFiles[j].split('.');
                         arr[arr.length - 1] = manifest[ext][i];
                         asset.sourceFiles[j] = arr.join('.');
@@ -148,7 +148,7 @@
     }
 
     print('Compiling list of assets.');
-    for(sectionId in source) {
+    for (sectionId in source) {
         section = source[sectionId];
         for (assetId in section) {
             asset = section[assetId];

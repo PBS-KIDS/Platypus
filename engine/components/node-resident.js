@@ -95,8 +95,8 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
             return false;
         }
         
-        for(; x < entities.length; x++) {
-            for(y = 0; y < kinds.length; y++) {
+        for (; x < entities.length; x++) {
+            for (y = 0; y < kinds.length; y++) {
                 if (entities[x].type === kinds[y]) {
                     found = true;
                 }
@@ -267,11 +267,11 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                 if (this.node && node) {
                     this.followEntity = node;
                     map = this.node.map || node.map;
-                    for(i in this.node.neighbors) {
+                    for (i in this.node.neighbors) {
                         directions[i] = this.traverseNode(map.getNode(this.node.neighbors[i]), node);
                         if (!directions[i]) {
                             foundDirection = true;
-                            for(k = 0; k < all.length; k++) {
+                            for (k = 0; k < all.length; k++) {
                                 map.getNode(all[k]).checked = false;
                             }
                             return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
@@ -282,7 +282,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                     while(!foundDirection && (count <= depth)) {
                         count += 1;
                         //console.log(count + ': ' + JSON.stringify(directions));
-                        for(i in directions) {
+                        for (i in directions) {
                             tempArray = [];
                             for (j = 0; j < directions[i].length; j++) {
                                 arr = this.traverseNode(map.getNode(directions[i][j]), node);
@@ -291,7 +291,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                                     all = all.concat(arr);
                                 } else {
                                     foundDirection = true;
-                                    for(k = 0; k < all.length; k++) {
+                                    for (k = 0; k < all.length; k++) {
                                         map.getNode(all[k]).checked = false;
                                     }
                                     return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
@@ -300,7 +300,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                             directions[i] = tempArray;
                         }
                     }
-                    for(k = 0; k < all.length; k++) {
+                    for (k = 0; k < all.length; k++) {
                         map.getNode(all[k]).checked = false;
                     }
                 }

@@ -83,7 +83,7 @@
         ext      = newSrc[newSrc.length - 1];
 
         if (manifests[ext]) {
-            for(i = 0; i < manifests[ext].length; i++) {
+            for (i = 0; i < manifests[ext].length; i++) {
                 newSrc[newSrc.length - 1] = manifests[ext][i];
                 handleAsset(newSrc.join('.'), aspects[manifests[ext][i]], path, remSF);
             }
@@ -176,8 +176,8 @@
                     tempMan = build.manifestTemplate.replace('CACHE:', 'CACHE:\n' + aspects[i].join('\n'));
                     str += '\nRewriteCond %{HTTP_USER_AGENT} "';
                     rewriteConds.length = 0;
-                    for(supId in game.manifest) {
-                        for(uaId in game.manifest[supId]) {
+                    for (supId in game.manifest) {
+                        for (uaId in game.manifest[supId]) {
                             if (game.manifest[supId][uaId] === i) {
                                 rewriteConds.push(uaId);
                             }
@@ -188,7 +188,7 @@
                     
                     if (languages && (!build.languageBuilds)) {
                         // handle language redirection if needed
-                        for(j in languages) {
+                        for (j in languages) {
                             build.htaccessTemplate += str + 'RewriteCond %{HTTP:Accept-Language} (' + languages[j] + ') [NC]\n';
                             build.htaccessTemplate += 'RewriteRule ^cache\\.manifest$ ' + languages[j] + '-' + version + '-' + i + '.manifest [L]\n';
                         }
@@ -254,8 +254,8 @@
     
     if (supports) { // Prepare multiple manifest files
         print('.Creating arrays to store cache.manifest file versions.');
-        for(supId in supports) {
-            for(uaId in supports[supId]) {
+        for (supId in supports) {
+            for (uaId in supports[supId]) {
                 if (!aspects[supports[supId][uaId]]) {
                     aspects[supports[supId][uaId]] = ['\n# ' + supId.toUpperCase() + ' - ' + supports[supId][uaId] + ':\n'];
                 }

@@ -144,7 +144,7 @@
         delete game.languages;
 
         //Fix up paths on Game Assets; Combine JavaScript and CSS Assets
-        for(sectionId in source) {
+        for (sectionId in source) {
             print('...Handling "' + sectionId + '" section.');
             section = source[sectionId];
             if ((sectionId === 'components') || (sectionId === 'classes')) {
@@ -189,10 +189,10 @@
             return ;
         }
 
-        for(i = 0; i < nsArray.length - 1; i++) {
+        for (i = 0; i < nsArray.length - 1; i++) {
             nsName = '';
             divider = '';
-            for(j = 0; j <= i; j++) {
+            for (j = 0; j <= i; j++) {
                 nsName += divider + nsArray[j];
                 divider = '.';
             }

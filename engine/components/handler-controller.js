@@ -213,7 +213,7 @@ This component handles capturing and relaying input information to the entities 
                         if (!alreadyHere) {
                             // Check for custom input messages that should be relayed from scene.
                             if (entity.controlMap) {
-                                for(var y in entity.controlMap) {
+                                for (var y in entity.controlMap) {
                                     if ((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)) {
                                         if (!this[y]) {
                                             this.addEventListener(y,           relayUpDown(y,     this));

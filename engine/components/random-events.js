@@ -38,7 +38,7 @@ This component listens for certain messages, picks a message from a related list
         
         constructor: function (definition) {
             if (definition.events) {
-                for(var event in definition.events) {
+                for (var event in definition.events) {
                     this.addEventListener(event, createTrigger(definition.events[event]));
                 }
             }

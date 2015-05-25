@@ -78,7 +78,7 @@
     assetId    = 0;
    
     print('Finding PNG images.');
-    for(sectionId in source) {
+    for (sectionId in source) {
         section = source[sectionId];
         for (assetId in section) {
             asset = section[assetId];

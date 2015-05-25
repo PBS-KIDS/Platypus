@@ -53,7 +53,7 @@ This component allows an entity to communicate directly with one or more entitie
     var trigger = function (entities, event, value, debug) {
         var i = 0;
         
-        for(; i < entities.length; i++) {
+        for (; i < entities.length; i++) {
             entities[i].trigger(event, value, debug);
         }
     },
@@ -68,7 +68,7 @@ This component allows an entity to communicate directly with one or more entitie
         
         constructor: function (definition) {
             if (definition.events) {
-                for(var event in definition.events) {
+                for (var event in definition.events) {
                     this.addEventListener(event, broadcast(definition.events[event]));
                 }
             }
@@ -82,7 +82,7 @@ This component allows an entity to communicate directly with one or more entitie
                 oldList = this.owner.familyLinks,
                 newList = links.concat(oldList);
 
-                for(; i < newList.length; i++) {
+                for (; i < newList.length; i++) {
                     newList[i].familyLinks = newList;
                 }
                 trigger(links,   'family-members-added', oldList);
@@ -100,7 +100,7 @@ This component allows an entity to communicate directly with one or more entitie
         methods: {
             destroy: function () {
                 var i = 0;
-                for(; i < this.owner.familyLinks.length; i++) {
+                for (; i < this.owner.familyLinks.length; i++) {
                     if (this.owner === this.owner.familyLinks[i]) {
                         this.owner.familyLinks.splice(i, 1);
                         break;

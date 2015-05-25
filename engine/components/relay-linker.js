@@ -60,7 +60,7 @@ This component allows an entity to communicate directly with one or more entitie
         return function (value, debug) {
             var i = 0;
             
-            for(; i < this.links.length; i++) {
+            for (; i < this.links.length; i++) {
                 this.links[i].trigger(event, value, debug);
             }
         };
@@ -72,7 +72,7 @@ This component allows an entity to communicate directly with one or more entitie
             var self = this;
 
             if (definition.events) {
-                for(var event in definition.events) {
+                for (var event in definition.events) {
                     this.addEventListener(event, broadcast(definition.events[event]));
                 }
             }
@@ -142,7 +142,7 @@ This component allows an entity to communicate directly with one or more entitie
             
             "unlink-entity": function (resp) {
                 var i = 0;
-                for(; i < this.links.length; i++) {
+                for (; i < this.links.length; i++) {
                     if (resp.entity === this.links[i]) {
                         this.links.splice(i, 1);
                         break;

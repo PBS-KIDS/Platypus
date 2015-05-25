@@ -113,7 +113,7 @@ This component allows certain messages to trigger new messages at a later time. 
             this.queue = [];
             
             if (definition.events) {
-                for(var event in definition.events) {
+                for (var event in definition.events) {
                     this.addEventListener(event, createMessage(definition.events[event]));
                     
                     if (definition.events[event].cancelEvent) {

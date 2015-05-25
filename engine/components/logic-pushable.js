@@ -74,7 +74,7 @@ A component that enables an entity to be pushed.
                     this.lastX = this.owner.x;
                     this.lastY = this.owner.y;
                 }
-                for(var i = 0; i < this.pushers.length; i++) {
+                for (var i = 0; i < this.pushers.length; i++) {
                     this.pushers[i].triggerEvent('pushed', this.owner);
                 }
                 this.pushers.length = 0;

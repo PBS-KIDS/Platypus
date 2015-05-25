@@ -106,7 +106,7 @@ This component allows the entity to contain child entities. It will add several 
             
             this.childEvents = [];
             if (definition.childEvents) {
-                for(var event in definition.childEvents) {
+                for (var event in definition.childEvents) {
                     this.addNewPublicEvent(definition.childEvents[event]);
                 }
             }
@@ -162,7 +162,7 @@ This component allows the entity to contain child entities. It will add several 
                 this.addNewPrivateEvent(event);
                 
                 // Listen for message on owner
-                for(var i = 0; i < this.childEvents.length; i++) {
+                for (var i = 0; i < this.childEvents.length; i++) {
                     if (this.childEvents[i] === event) {
                         return false;
                     }
@@ -214,7 +214,7 @@ This component allows the entity to contain child entities. It will add several 
                     events   = entity.containerListener.events;
                     messages = entity.containerListener.messages;
                     scopes   = entity.containerListener.scopes;
-                    for(var i = 0; i < events.length; i++) {
+                    for (var i = 0; i < events.length; i++) {
                         this.removeChildEventListener(entity, events[i], messages[i], scopes[i]);
                     }
                     entity.containerListener = null;
@@ -239,7 +239,7 @@ This component allows the entity to contain child entities. It will add several 
                 var events = entity.containerListener.events,
                 messages   = entity.containerListener.messages,
                 scopes     = entity.containerListener.scopes;
-                for(var i = 0; i < events.length; i++) {
+                for (var i = 0; i < events.length; i++) {
                     if ((events[i] === event) && (!callback || (messages[i] === callback)) && (!scope || (scopes[i] === scope))) {
                         this.unbind(event, messages[i], scopes[i]);
                     }
@@ -260,7 +260,7 @@ This component allows the entity to contain child entities. It will add several 
                 var i = 0,
                 selection = null;
                 
-                for(; i < this.entities.length; i++) {
+                for (; i < this.entities.length; i++) {
                     if (this.entities[i].id === id) {
                         return this.entities[i];
                     }
@@ -279,7 +279,7 @@ This component allows the entity to contain child entities. It will add several 
                 selection = null,
                 entities  = [];
                 
-                for(; i < this.entities.length; i++) {
+                for (; i < this.entities.length; i++) {
                     if (this.entities[i].type === type) {
                         entities.push(this.entities[i]);
                     }

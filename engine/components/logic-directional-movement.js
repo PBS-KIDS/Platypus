@@ -95,7 +95,7 @@ This component changes the (x, y) position of an object according to its current
                 this.addEventListener('logical-state', function (state) {
                     var paused = false;
                     if (definition.pause) {
-                        for(var i = 0; i < self.pausers.length; i++) {
+                        for (var i = 0; i < self.pausers.length; i++) {
                             paused = paused || state[self.pausers[i]];
                         }
                         this.paused = paused;

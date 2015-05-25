@@ -7,6 +7,7 @@
  * @param [y] {number} The y coordinate.
  * @param [z] {number} The z coordinate.
  */
+/*global platformer */
 platformer.Vector = (function () {
     "use strict";
     
@@ -85,7 +86,7 @@ platformer.Vector = (function () {
         var i = 0,
             l = limit || this.matrix.length;
         
-        for(i = 0; i < l; i++) {
+        for (i = 0; i < l; i++) {
             func(this.matrix[i], i, this.matrix);
         }
     };
@@ -300,9 +301,9 @@ platformer.Vector = (function () {
         if (Array.isArray(multiplier)) {
             self = this.matrix.slice();
             l = limit || multiplier.length;
-            for(i = 0; i < l; i++) {
+            for (i = 0; i < l; i++) {
                 this.matrix[i] = 0;
-                for(j = 0; j < l; j++) {
+                for (j = 0; j < l; j++) {
                     this.matrix[i] += self[j] * multiplier[i][j];
                 }
             }
@@ -501,7 +502,7 @@ platformer.Vector = (function () {
                 if (!obj[prop]) {
                     obj[prop] = new platformer.Vector();
                     
-                    for(i = 2; i < arguments.length; i++) {
+                    for (i = 2; i < arguments.length; i++) {
                         if (arguments[i] !== prop) {
                             createProperty(arguments[i], obj, obj[prop], i - 2);
                         }

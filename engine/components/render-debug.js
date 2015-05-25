@@ -118,7 +118,7 @@ This component is attached to entities that will appear in the game world. It se
                     this.isOutdated = false;
                 }
                 
-                for(i = 0; i < this.shapes.length; i++) {
+                for (i = 0; i < this.shapes.length; i++) {
                     this.shapes[i].x = this.owner.x;
                     this.shapes[i].y = this.owner.y;
                 }
@@ -157,13 +157,13 @@ This component is attached to entities that will appear in the game world. It se
                 aabb     = null,
                 shape    = null;
 
-                for(i = 0; i < this.shapes.length; i++) {
+                for (i = 0; i < this.shapes.length; i++) {
                     this.stage.removeChild(this.shapes[i]);
                 }
                 this.shapes.length = 0;
 
                 if (this.owner.getAABB) {
-                    for(j = 0; j < this.owner.collisionTypes.length; j++) {
+                    for (j = 0; j < this.owner.collisionTypes.length; j++) {
                         aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
                         width  = this.initialWidth  = aabb.width;
                         height = this.initialHeight = aabb.height;
@@ -174,7 +174,7 @@ This component is attached to entities that will appear in the game world. It se
                         this.stage.addChild(shape);
                         this.addInput(shape);
                         
-                        for(i = 0; i < shapes.length; i++) {
+                        for (i = 0; i < shapes.length; i++) {
                             shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
                             this.shapes.push(shape);
                             this.stage.addChild(shape);
@@ -210,7 +210,7 @@ This component is attached to entities that will appear in the game world. It se
             destroy: function () {
                 var i = 0;
                 
-                for(i = 0; i < this.shapes.length; i++) {
+                for (i = 0; i < this.shapes.length; i++) {
                     this.stage.removeChild(this.shapes[i]);
                 }
                 this.shapes.length = 0;

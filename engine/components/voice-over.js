@@ -111,7 +111,7 @@ Requires: ["audio", "render-sprite"]
             definition.sound = sound.sound;
             definition.events = [];
         } else {
-            for(i in sound.sound) {
+            for (i in sound.sound) {
                 definition[i] = sound.sound[i];
             }
             

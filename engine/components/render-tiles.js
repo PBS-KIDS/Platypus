@@ -203,7 +203,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                     this.tilesToRender = initializeCanvasConservation(new createjs.Container());
                     this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
                     
-                    for(x = 0; x < imgMapDefinition.length; x++) {
+                    for (x = 0; x < imgMapDefinition.length; x++) {
                         newImgMap[x] = [];
                         for (y = 0; y < imgMapDefinition[x].length; y++) {
                             newImgMap[x][y] = index = imgMapDefinition[x][y];
@@ -250,7 +250,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                     right  = Math.min(imgMap.length, Math.ceil((entity.x - bounds.x + bounds.width) / this.tileWidth));
                     
                     // Find tiles that should include this display object
-                    for(x = left; x < right; x++) {
+                    for (x = left; x < right; x++) {
                         if (!this.doMap[x]) {
                             this.doMap[x] = [];
                         }
@@ -275,7 +275,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                 newIndex = 0;
                 
                 if (map) {
-                    for(x = 0; x < this.imageMap.length; x++) {
+                    for (x = 0; x < this.imageMap.length; x++) {
                         for (y = 0; y < this.imageMap[x].length; y++) {
                             newIndex = map[x][y];
                             index = this.imageMap[x][y];
@@ -340,7 +340,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                         this.tilesToRender.removeChildAt(0);
                         this.tilesToRender.cache(minX * this.tileWidth, minY * this.tileHeight, (maxX - minX + 1) * this.tileWidth, (maxY - minY + 1) * this.tileHeight, 1);
                         
-                        for(x = minX; x <= maxX; x++) {
+                        for (x = minX; x <= maxX; x++) {
                             for (y = minY; y <= maxY; y++) {
                                 if ((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)) {
                                     // draw tiles
@@ -354,7 +354,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                                     // check for cached entities
                                     if (this.doMap && this.doMap[x] && this.doMap[x][y]) {
                                         oList = this.doMap[x][y];
-                                        for(z = 0; z < oList.length; z++) {
+                                        for (z = 0; z < oList.length; z++) {
                                             if (!oList[z].drawn) {
                                                 oList[z].drawn = true;
                                                 ents.push(oList[z]);
@@ -367,7 +367,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                         
                         // Draw cached entities
                         if (ents.length) {
-                            for(z = 0; z < ents.length; z++) {
+                            for (z = 0; z < ents.length; z++) {
                                 delete ents[z].drawn;
                                 this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
                                 this.tilesToRender.addChild(ents[z]);

@@ -51,7 +51,7 @@
             var i = 0,
             sum = 0;
             
-            for(i = 0; i < row.length; i++) {
+            for (i = 0; i < row.length; i++) {
                 sum += row[i] * m[i][column];
             }
             
@@ -63,14 +63,14 @@
             j      = 0,
             arr    = [];
             
-            for(i = 0; i < a.length; i++) {
-                for(j = 0; j < a[0].length; j++) {
+            for (i = 0; i < a.length; i++) {
+                for (j = 0; j < a[0].length; j++) {
                     arr.push(cell(a[i], j, b)); 
                 }
             }
 
-            for(i = 0; i < a.length; i++) {
-                for(j = 0; j < a[0].length; j++) {
+            for (i = 0; i < a.length; i++) {
+                for (j = 0; j < a[0].length; j++) {
                     dest[i][j] = arr.splice(0,1)[0]; 
                 }
             }
@@ -244,15 +244,15 @@
                     state.reorienting = true;
                     identitize(this.matrixTween);
                     
-                    for(i = this.tweens.length - 1; i >= 0; i--) {
+                    for (i = this.tweens.length - 1; i >= 0; i--) {
                         if (this.updateTween(this.tweens[i], delta)) { // finished tweening
                             finishedTweening.push(this.tweens.splice(i,1)[0]);
                         }
                     }
-                    for(i = 0; i < this.vectors.length; i++) {
+                    for (i = 0; i < this.vectors.length; i++) {
                         this.updateVector(this.vectors[i], this.inverses[i]);
                     }
-                    for(i = 0; i < finishedTweening.length; i++) {
+                    for (i = 0; i < finishedTweening.length; i++) {
                         this.transform(finishedTweening[i].endMatrix);
                         finishedTweening[i].onFinished(finishedTweening[i].endMatrix);
                     }
@@ -269,7 +269,7 @@
              */
             "drop-tweens": function () {
                 this.tweens.length = 0;
-                for(var i = 0; i < this.vectors.length; i++) {
+                for (var i = 0; i < this.vectors.length; i++) {
                     this.updateVector(this.vectors[i], this.inverses[i]);
                 }
             },
@@ -289,7 +289,7 @@
                     vector = vector.vector;
                 }
                 
-                for(i = 0; i < this.vectors.length; i++) {
+                for (i = 0; i < this.vectors.length; i++) {
                     if (vector === this.vectors[i]) {
                         found = true;
                         break;
@@ -314,7 +314,7 @@
             "remove-vector": function (vector) {
                 var i = 0;
                 
-                for(i = 0; i < this.vectors.length; i++) {
+                for (i = 0; i < this.vectors.length; i++) {
                     if (vector === this.vectors[i]) {
                         this.vectors.splice(i,1);
                         this.inverses.splice(i,1);
@@ -438,7 +438,7 @@
                         multiply(m, this.matrix, this.matrix);
                     }
                     
-                    for(i = 0; i < this.vectors.length; i++) {
+                    for (i = 0; i < this.vectors.length; i++) {
                         this.vectors[i].multiply(m);
                         this.inverses[i].multiply(m);
                     }
@@ -461,7 +461,7 @@
                     var i  = 0,
                     sum    = 0;
                     
-                    for(i = 0; i < 3; i++) {
+                    for (i = 0; i < 3; i++) {
                         sum += a[i][0] * a[(i + 1) % 3][1] * a[(i + 2) % 3][2];
                         sum -= a[i][2] * a[(i + 1) % 3][1] * a[(i + 2) % 3][0];
                     }

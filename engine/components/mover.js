@@ -118,7 +118,7 @@
                 var i = 0;
                 
                 if (component.type === 'motion') {
-                    for(i = 0; i < this.motions.length; i++) {
+                    for (i = 0; i < this.motions.length; i++) {
                         if (component === this.motions[i]) {
                             this.movers.splice(i, 1);
                             break;

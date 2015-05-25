@@ -212,7 +212,7 @@ platformer.Game = (function () {
                 loaded = this.loaded;
             }
             root = this.loadedScene.layers;
-            for(var i = 0; i < root.length; i++) {
+            for (var i = 0; i < root.length; i++) {
                 if (root[i].element) {
                     element = root[i].element.style;
                     element.opacity = '0';
