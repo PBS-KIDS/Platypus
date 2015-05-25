@@ -54,6 +54,8 @@ This component allows an entity to communicate directly with one or more entitie
     }
 */
 (function(){
+	"use strict";
+
 	var broadcast = function(event){
 		return function(value, debug){
 			var i = 0;

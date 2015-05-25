@@ -5,6 +5,7 @@
  */
 platformer.CollisionData = (function(){
 	"use strict";
+	
 	var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck){
 		this.occurred = occurred || false;
 		this.direction = direction || null;

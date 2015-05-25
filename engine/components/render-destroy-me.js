@@ -21,6 +21,8 @@ This component will destroy the entity once an animation has finished. This is u
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'render-destroy-me',
 

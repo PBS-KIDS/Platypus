@@ -76,7 +76,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
+/* global createjs */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'audio-mixer',
 			
@@ -186,7 +189,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 	 			var channel = null;
 	 			
 	 			if(volume && volume.channelId){
-	 				channel = this.mixer.getChannel(channelId);
+	 				channel = this.mixer.getChannel(volume.channelId);
 	 				if(channel.volume !== volume.volume){
 	 					channel.volume = volume.volume;
 		 				channel.update += 1;

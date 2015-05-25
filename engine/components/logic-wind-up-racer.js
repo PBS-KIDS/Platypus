@@ -39,6 +39,8 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		
 		id: 'logic-wind-up-racer',

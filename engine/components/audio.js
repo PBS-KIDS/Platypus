@@ -76,7 +76,10 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
+/* global createjs */
 (function(){
+	"use strict";
+
 	var channels = {},
 	defaultSettings = {
 		interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
@@ -89,10 +92,6 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 		paused:    false,		
 		next:      false,
 		events:    false
-	},
-	stop = {
-		stop: true,
-		playthrough: true
 	},
 	audioInProgress = function(channel){
 		var list = channels[channel];

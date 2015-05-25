@@ -78,6 +78,8 @@ This component allows the entity to contain child entities. It will add several 
  */
 
 (function(){
+	"use strict";
+
 	var childBroadcast = function(event){
 		return function(value, debug){
 			this.triggerOnChildren(event, value, debug);
@@ -116,7 +118,7 @@ This component allows the entity to contain child entities. It will add several 
 			"load": function(){
 				// putting this here so all other components will have been loaded and can listen for "entity-added" calls.
 				var i    = 0,
-				j        = 0,
+				j        = '',
 				k        = 0,
 				entities = this.definedEntities,
 				definition = null;

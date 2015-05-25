@@ -35,6 +35,8 @@ This component works with `collision-basic` to cause entities to bounce away on 
 Requires: ["../vector.js"]
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-rebounder',
 		

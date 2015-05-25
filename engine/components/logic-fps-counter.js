@@ -26,6 +26,8 @@ This component renders the avg FPS and other developer defined debug data to the
 */
 
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-fps-counter',
         constructor: function(definition){

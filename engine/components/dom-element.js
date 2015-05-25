@@ -55,6 +55,8 @@ This component creates a DOM element associated with the entity. In addition to 
     }
 */
 (function(){
+	"use strict";
+
 	var createFunction = function(message, entity){
 		if(typeof message === 'string'){
 			return function(e){

@@ -48,6 +48,8 @@ This component allows an entity to communicate directly with one or more entitie
     }
 */
 (function(){
+	"use strict";
+
 	var trigger = function(entities, event, value, debug){
 		var i = 0;
 		

@@ -23,6 +23,8 @@ This component groups other entities with this entity for collision checking. Th
 Requires: ["../aabb.js"]
 */
 (function(){
+	"use strict";
+
 	//set here to make them reusable objects
 	var appendUniqueItems = function(hostArray, insertArray){
 		var i  = 0,
@@ -273,7 +275,8 @@ Requires: ["../aabb.js"]
 
 			getPrevShapes: function(collisionType){
 				var childEntity = null,
-				shapes = [];
+				    newShapes = null,
+					shapes = [];
 				
 				for (var x = 0; x < this.solidEntities.length; x++){
 					childEntity = this.solidEntities[x];
@@ -348,7 +351,7 @@ Requires: ["../aabb.js"]
 					if((childEntity !== this.owner) && childEntity.collisionGroup){
 						childEntity = childEntity.collisionGroup;
 					}
-					childEntity.relocateEntity(new platformer.Vector(x - entity.saveOX, y - entity.saveOY), collisionData);
+					childEntity.relocateEntity(new platformer.Vector(vector.x - entity.saveOX, vector.y - entity.saveOY), collisionData);
 					entity.x += entity.saveDX;
 					entity.y += entity.saveDY;
 					if(entity !== this.owner){

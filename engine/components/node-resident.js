@@ -54,6 +54,8 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
     }
 */
 (function(){
+	"use strict";
+
 	var createGateway = function(node, map, gateway){
 		return function(resp){
 			this.gotoNode(map.getNode(node), gateway); // ensure it's a node if one is available at this gateway

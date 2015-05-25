@@ -73,6 +73,8 @@ This component is a general purpose state-machine for an entity, taking in vario
     }
 */
 (function(){
+	"use strict";
+
 	var changeState = function(changes, state){
 		return function(value){
 			var i = null;
@@ -88,9 +90,10 @@ This component is a general purpose state-machine for an entity, taking in vario
 		};
 	},
 	handleResult = function(title, state, last, checks, changed, self, queue){
-		var i = 0,
+		var i    = 0,
+		key      = '',
 		resolved = false,
-		message = checks.message || (checks.message === 0) || (checks.message === false);
+		message  = checks.message || (checks.message === 0) || (checks.message === false);
 		
 		if(changed){
 			if(typeof checks === 'string') {
@@ -114,9 +117,9 @@ This component is a general purpose state-machine for an entity, taking in vario
 		}
 		
 		if(!resolved) {
-			for (i in checks) {
-				if(i !== 'true'){
-					handleOutput(i, state, last, checks[i], changed, self, queue);
+			for (key in checks) {
+				if(key !== 'true'){
+					handleOutput(key, state, last, checks[key], changed, self, queue);
 				}
 			}
 		}

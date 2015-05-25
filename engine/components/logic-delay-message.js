@@ -54,6 +54,8 @@ This component allows certain messages to trigger new messages at a later time. 
     }
 */
 (function(){
+	"use strict";
+
 	var createMessage = function(event){
 		var includeMessage = function(event, message){
 			if(message && !event.message){

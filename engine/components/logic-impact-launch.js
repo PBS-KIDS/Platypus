@@ -33,6 +33,8 @@ This component will cause the entity to move in a certain direction on colliding
 
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-impact-launch',
 		constructor: function(definition){

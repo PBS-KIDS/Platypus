@@ -5,6 +5,8 @@
  * @uses Component
  */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'xhr',
 		

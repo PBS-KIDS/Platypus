@@ -31,6 +31,8 @@ This component handles the pressed/released state of a button according to input
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-button',
 		constructor: function(definition){

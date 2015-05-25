@@ -35,6 +35,8 @@ This component handles capturing and relaying input information to the entities 
 */
 
 (function(){
+	"use strict";
+
 	var relayUpDown = function(event, self){
 		return function(value){
 			if (value.released){

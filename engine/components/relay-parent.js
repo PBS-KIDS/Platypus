@@ -31,6 +31,8 @@ This component listens for specified local entity messages and re-broadcasts the
     }
 */
 (function(){
+	"use strict";
+
 	var broadcast = function(event){
 		return function(value, debug){
 			if(this.owner.parent) {

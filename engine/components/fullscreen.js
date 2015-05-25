@@ -20,6 +20,8 @@ Note: This component connects to the browser's fullscreen API if available. It a
 
 //TODO: Ideally this should be set up to work for any given element, not just the game container. - DDD
 (function(){
+	"use strict";
+
 	var enabled = false,
 	element = null,
 	turnOffFullScreen = function(){

@@ -28,6 +28,8 @@ This component will listen for a particular collision message and, depending on 
     }
 */
 (function(){
+	"use strict";
+
 	var collidePos = function(entity, state, event){
 		return function(collInfo){
 			if (entity.state[state]) {

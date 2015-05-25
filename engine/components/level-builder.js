@@ -41,10 +41,13 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
     }
 */
 (function(){
+	"use strict";
+
 	var mergeData = function(levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis){
-		var x = 0;
-		var y = 0;
-		var combined = levelData.slice();
+		var x        = 0,
+		    y        = 0,
+			z        = 0,
+			combined = levelData.slice();
 		
 		if (mergeAxis == 'horizontal')
 		{
@@ -61,9 +64,10 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		}
 	},
 	mergeObjects  = function(obj1s, obj2s, mergeAxisLength, mergeAxis){
-		var i 	 = 0;
-		var list = obj1s.slice();
-		var obj  = null;
+		var i 	 = 0,
+		    j    = 0,
+			list = obj1s.slice(),
+			obj  = null;
 		
 		for (; i < obj2s.length; i++){
 			obj = {};
@@ -80,8 +84,8 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 		return list;
 	},
 	mergeSegment  = function(level, segment, mergeAxis){
-		var i = 0;
-		var j = 0;
+		var i = 0,
+		    j = 0;
 
 		if (!level.tilewidth && !level.tileheight) {
 			//set level tile size data if it's not already set.
@@ -209,8 +213,12 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 
 		events: {// These are messages that this component listens for
 			"scene-loaded": function(persistentData) {
-				var templateRow = null,
-				piecesToCopy = null;
+				var templateRow  = null,
+				    piecesToCopy = null,
+				    x            = '',
+					y            = 0,
+				    i            = 0,
+					j            = 0;
 				
 				this.levelMessage.persistentData = persistentData;
 
@@ -219,12 +227,12 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 				piecesToCopy = persistentData.levelPieces || this.levelPieces;
 				this.levelPieces = {};
 				if (piecesToCopy) {
-					for (var x in piecesToCopy) {
+					for (x in piecesToCopy) {
 						if (typeof piecesToCopy[x] == "string") {
 							this.levelPieces[x] = piecesToCopy[x];
 						} else if (piecesToCopy[x].length) {
 							this.levelPieces[x] = [];
-							for (var y = 0; y < piecesToCopy[x].length; y++) {
+							for (y = 0; y < piecesToCopy[x].length; y++) {
 								this.levelPieces[x].push(piecesToCopy[x][y]); 
 							}
 						} else {
@@ -238,14 +246,14 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 						this.levelMessage.level = [this.getLevelPiece(this.levelTemplate)];
 					} else if (this.levelTemplate.length) {
 						this.levelMessage.level = [];
-						for (var x = 0; x < this.levelTemplate.length; x++){
-							templateRow = this.levelTemplate[x];
+						for (i = 0; i < this.levelTemplate.length; i++){
+							templateRow = this.levelTemplate[i];
 							if (typeof templateRow == "string") {
-								this.levelMessage.level[x] = this.getLevelPiece(templateRow);
+								this.levelMessage.level[i] = this.getLevelPiece(templateRow);
 							} else if (templateRow.length) {
-								this.levelMessage.level[x] = [];
-								for (var y = 0; y < templateRow.length; y++){
-									this.levelMessage.level[x][y] = this.getLevelPiece(templateRow[y]);
+								this.levelMessage.level[i] = [];
+								for (j = 0; j < templateRow.length; j++){
+									this.levelMessage.level[i][j] = this.getLevelPiece(templateRow[j]);
 								}
 							} else {
 								console.warn('Level Builder: Template row is neither a string or array. What is it?');

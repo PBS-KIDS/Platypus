@@ -29,6 +29,8 @@ This component creates an entity and connects it with the current entity. This i
     }
 */
 (function(){
+	"use strict";
+
 	var linkId = 0;
 	
 	return platformer.createComponentClass({

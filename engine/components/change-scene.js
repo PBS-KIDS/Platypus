@@ -32,6 +32,8 @@ This component allows the entity to initiate a change from the current scene to 
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'change-scene',
 		
@@ -57,7 +59,7 @@ This component allows the entity to initiate a change from the current scene to 
 			"new-scene": function(response){
 				var resp   = response || this,
 				scene      = resp.scene || this.scene,
-				transition = resp.transition || this.transition;
+				transition = resp.transition || this.transition,
 				data 	   = resp.persistentData || this.persistentData;
 			
 				platformer.game.loadScene(scene, transition, data);

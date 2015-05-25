@@ -48,7 +48,10 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 [link1]: http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html
 
 */
+/* global createjs */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'asset-loader',
 		
@@ -80,7 +83,6 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 		    
 		    "load-assets": function(){
 		    	var i = '',
-		    	j     = 0,
 		    	self = this,
 		    	checkPush = function(asset, list){
 		    		var i = 0,

@@ -32,6 +32,8 @@ This component dynamically creates a message from JSON settings and incoming mes
 //TODO: Edit this component to parse strings without using "new Function" - DDD
 
 (function(){
+	"use strict";
+
 	var createNewMessage = function(messageFormat, entity){
 		var convert = null,
 		event = messageFormat.event || (new Function('entity', 'return ' + messageFormat.customEvent + ';'))(entity);

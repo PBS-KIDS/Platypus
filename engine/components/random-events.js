@@ -25,6 +25,8 @@ This component listens for certain messages, picks a message from a related list
     }
 */
 (function(){
+	"use strict";
+
 	var createTrigger = function(eventList){
 		return function(value, debug){
 			this.owner.trigger(eventList[Math.floor(Math.random() * eventList.length)], value, debug);

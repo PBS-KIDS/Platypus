@@ -36,6 +36,8 @@ Tween takes a list of tween definitions and plays them as needed.
     }
 */
 (function(){
+	"use strict";
+
 	var createTrigger = function(entity, event, message, debug){
 		return function(){
 			entity.trigger(event, message, debug);

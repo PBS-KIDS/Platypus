@@ -70,6 +70,8 @@ This component uses its definition to load two other components (audio and rende
 Requires: ["audio", "render-sprite"]
 */
 (function(){
+	"use strict";
+
 	var getEventName = function(msg, VO){
 		if(VO === ' '){
 			return msg + 'default';

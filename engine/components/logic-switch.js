@@ -25,6 +25,7 @@ This component serves as a switch in the game world, typically tied to collision
     }
 */
 (function(){
+	"use strict";
 
 	return platformer.createComponentClass({
 		

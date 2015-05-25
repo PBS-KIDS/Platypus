@@ -42,6 +42,8 @@ A timer that can used to trigger events. The timer can increment and decrement. 
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-timer',
 		constructor: function(definition){

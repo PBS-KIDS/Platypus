@@ -36,6 +36,28 @@ A component that handles the rendering of DOM elements. It creates a div element
 */
 
 (function(){
+	"use strict";
+
+	var createFunction = function(message, entity){
+		if(typeof message === 'string'){
+			return function(e){
+				entity.trigger(message, e);
+				e.preventDefault();
+			};
+		} else if (Array.isArray(message)){
+			return function(e){
+				for (var i = 0; i < message.length; i++){
+					entity.trigger(message[i], e);
+				}
+				e.preventDefault();
+			};
+		} else {
+			return function(e){
+				entity.trigger(message.event, message.message);
+				e.preventDefault();
+			};
+		}
+	};
 	
 	return platformer.createComponentClass({
 	

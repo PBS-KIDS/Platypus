@@ -29,6 +29,8 @@ This component causes an entity to teleport when receiving a teleport message.
 Requires: ["../vector.js"]
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-teleportee',
 		

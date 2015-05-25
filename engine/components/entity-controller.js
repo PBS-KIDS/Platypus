@@ -67,6 +67,8 @@ This component listens for input messages triggered on the entity and updates th
     }
 */
 (function(){
+	"use strict";
+
 	var distance = function(origin, destination){
 		var x = destination.x - origin.x,
 		y = destination.y - origin.y;

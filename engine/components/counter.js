@@ -22,6 +22,8 @@ A simple component that keeps count of something and sends messages each time th
 */
 
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'counter',
 		constructor: function(definition){

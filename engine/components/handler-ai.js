@@ -26,6 +26,8 @@ A component that handles updating ai components. Each tick it calls all the enti
 
 	
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'handler-ai',
 		constructor: function(definition){

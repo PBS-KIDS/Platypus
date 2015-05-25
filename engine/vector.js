@@ -176,7 +176,7 @@ platformer.Vector = (function(){
 	 * @return {Vector} A normalized vector in the same direction as this vector.
 	 */
 	proto.getUnit = function(){
-		return new Vector(this).normalize();
+		return new platformer.Vector(this).normalize();
 	};
 	
 	/**
@@ -186,7 +186,7 @@ platformer.Vector = (function(){
 	 * @return {Vector}
 	 */
 	proto.getInverse = function(){
-		return new Vector(this).multiply(-1);
+		return new platformer.Vector(this).multiply(-1);
 	};
 	
 	/**
@@ -237,7 +237,7 @@ platformer.Vector = (function(){
 	 * @return {Vector} The cross product.
 	 */
 	proto.getCrossProduct = function(v){
-		return new Vector(this).cross(v);
+		return new platformer.Vector(this).cross(v);
 	};
 	
 	/**
@@ -453,7 +453,7 @@ platformer.Vector = (function(){
 	 * @return {Vector} A copy of this vector.
 	 */
 	proto.copy = function() {
-		return new Vector(this);
+		return new platformer.Vector(this);
 	};
 	
 	/**
@@ -499,7 +499,7 @@ platformer.Vector = (function(){
 			
 			if(obj && prop){
 				if(!obj[prop]){
-					obj[prop] = new Vector();
+					obj[prop] = new platformer.Vector();
 					
 					for(i = 2; i < arguments.length; i++){
 						if(arguments[i] !== prop){

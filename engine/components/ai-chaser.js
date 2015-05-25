@@ -28,6 +28,7 @@ This component acts as a simple AI that will chase another entity.
 */
 
 (function(){
+	"use strict";
 
 	return platformer.createComponentClass({
 		

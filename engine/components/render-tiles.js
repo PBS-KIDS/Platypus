@@ -52,6 +52,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
 (function(){
+	"use strict";
+
 	var initializeCanvasConservation = function(displayObject){ //To make CreateJS Display Object have better canvas conservation.
 		var canvas = [document.createElement("canvas"), document.createElement("canvas")],
 		current    = 0;

@@ -32,6 +32,8 @@ This component spawns new entities within a given area at set intervals.
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		
 		id: 'logic-region-spawner',

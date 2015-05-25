@@ -31,6 +31,8 @@ This component acts as a simple AI that will reverse the movement direction of a
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: "ai-pacer",
 		

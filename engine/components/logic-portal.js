@@ -32,6 +32,8 @@ A component which changes the scene when activated. When the portal receives an 
 */
 	
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-portal',
  		constructor: function(definition){

@@ -305,8 +305,8 @@
 			 * Confirms whether a particular map grid coordinate contains a tile.
 			 * 
 			 * @method isTile
-			 * @param x {number} Integer specifying the row of tiles in the collision map to check.
-			 * @param y {number} Integer specifying the column of tiles in the collision map to check.
+			 * @param x {number} Integer specifying the column of tiles in the collision map to check.
+			 * @param y {number} Integer specifying the row of tiles in the collision map to check.
 			 * @return {boolean} Returns `true` if the coordinate contains a collision tile, `false` if it does not.
 			 */
 			isTile: function (x, y) {

@@ -32,6 +32,8 @@ A component that enables an entity to be pushed.
 
 	
 (function(){
+	"use strict";
+
 	var setMagnitude = function(direction, magnitude){
 		return (direction / Math.abs(direction)) * magnitude;
 	};

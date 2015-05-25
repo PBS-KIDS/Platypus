@@ -30,6 +30,8 @@ This component allows this entity to be carried by other entities with which it 
     }
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-portable',
 		constructor: function(definition){

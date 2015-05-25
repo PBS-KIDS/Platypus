@@ -2,6 +2,8 @@
 //TODO: This should probably be merged with `logic-shield` since it performs a subset of the `logic-shield` behaviors. - DDD
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-attached-entity',
 		constructor: function(definition){

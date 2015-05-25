@@ -99,12 +99,9 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 */
+/* global createjs */
 (function(){
-	/*********************************************************************
-	 TODO: Place helper functions here that are suitable across all
-	       component instances and should never be accessible from
-	       outside this component.
-	*********************************************************************/
+	"use strict";
 
 	return platformer.createComponentClass({
 		

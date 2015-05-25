@@ -33,6 +33,8 @@ This component listens for redirected collision messages and fires a message on 
 
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
         id: 'logic-teleporter',
 

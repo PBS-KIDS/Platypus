@@ -30,6 +30,8 @@ This component allows this entity carry other entities with which it collides. E
 Requires: ["collision-group"]
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'logic-carrier',
 		constructor: function(definition){},

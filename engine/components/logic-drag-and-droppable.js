@@ -29,6 +29,8 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
 	}
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		/*********************************************************************
 		 "createComponentClass" creates the component class and adds the

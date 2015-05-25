@@ -44,6 +44,8 @@ This component listens for messages and, according to its preset settings, will 
     }
 */
 (function(){
+	"use strict";
+
 	var addRemoveComponents = function(definition, owner){
 		return function(){
 			//Perform this swap outside of the entity's message loop to prevent endless loop errors due to messages not being able to be unbound.

@@ -56,6 +56,8 @@ This component can request that the camera focus on this entity.
 
 */
 (function(){
+	"use strict";
+
 	return platformer.createComponentClass({
 		id: 'camera-follow-me',
 		

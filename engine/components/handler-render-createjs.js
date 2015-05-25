@@ -62,6 +62,8 @@ A component that handles updating rendering for components that are rendering vi
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
 (function(){
+	"use strict";
+
 	var uagent = navigator.userAgent.toLowerCase(),
 	android4   = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false, // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
 	dpr        = window.devicePixelRatio || 1;

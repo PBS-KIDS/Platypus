@@ -30,6 +30,7 @@ This component changes the (x, y) position of an object according to its current
     }
 */
 (function(){
+	"use strict";
 
 	return platformer.createComponentClass({
 		

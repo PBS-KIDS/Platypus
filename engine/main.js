@@ -5,6 +5,8 @@
 **/
 
 (function(window){
+	"use strict";
+
 	if(window){
 		
 		// Clean up console logging for MSIE: Make sure window has at least console stub.

@@ -63,6 +63,8 @@ This component listens for specified local entity messages and re-broadcasts the
     }
 */
 (function(){
+	"use strict";
+
 	var gameBroadcast = function(event){
 		return function(value, debug){
 			platformer.game.currentScene.trigger(event, value, debug);

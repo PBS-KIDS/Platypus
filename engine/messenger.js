@@ -34,6 +34,8 @@ The Messenger object facilitates communication between components and other game
   - @return Array - An array of strings listing all the messages for which this messenger has handlers.
 */
 platformer.Messenger = (function(){
+	"use strict";
+
 	var messenger = function (){
 		this.messages    = {};
 		this.loopCheck   = [];
@@ -150,7 +152,7 @@ platformer.Messenger = (function(){
 	};
 	
 	proto.copyEventHandlers = function(event){
-		return this.messages[events] || null;
+		return this.messages[event] || null;
 	};
 	
 	return messenger;

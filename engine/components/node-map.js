@@ -52,6 +52,8 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     }
 */
 (function(){
+	"use strict";
+
 	var Node = function(definition, map){
 		if(definition.id){
 			if(typeof definition.id === 'string'){
@@ -59,10 +61,10 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 			} else if (Array.isArray(definition.id)) {
 				this.id = definition.id.join('|');
 			} else {
-				id = '' + Math.random();
+				this.id = '' + Math.random();
 			}
 		} else {
-			id = '' + Math.random();
+			this.id = '' + Math.random();
 		}
 		
 		this.isNode = true;

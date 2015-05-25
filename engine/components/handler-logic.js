@@ -7,6 +7,8 @@
  **/
 
 (function(){
+	"use strict";
+
 	var updateState = function(entity){
 		var state = null,
 		changed   = false;
