@@ -35,6 +35,7 @@ A component that handles the rendering of DOM elements. It creates a div element
     }
 */
 /*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -46,7 +47,9 @@ A component that handles the rendering of DOM elements. It creates a div element
             };
         } else if (Array.isArray(message)) {
             return function (e) {
-                for (var i = 0; i < message.length; i++) {
+                var i = 0;
+                
+                for (i = 0; i < message.length; i++) {
                     entity.trigger(message[i], e);
                 }
                 e.preventDefault();
@@ -64,20 +67,27 @@ A component that handles the rendering of DOM elements. It creates a div element
         id: 'handler-render-dom',
         
         constructor: function (definition) {
+            var i = '',
+                j = '';
+            
             this.element = this.owner.element = document.createElement('div');
             this.owner.rootElement.appendChild(this.element);
             this.owner.element = this.element;
     
-            for (var i in definition) {
-                if (i === 'style') {
-                    for (var j in definition[i]) {
-                        this.element.style[j] = definition[i][j]; 
-                    }
-                } else if (i !== 'type') {
-                    if (i.indexOf('on') === 0) {
-                        this.element[i] = createFunction(definition[i], this.owner);
-                    } else {
-                        this.element[i] = definition[i];
+            for (i in definition) {
+                if (definition.hasOwnProperty(i)) {
+                    if (i === 'style') {
+                        for (j in definition[i]) {
+                            if (definition[i].hasOwnProperty(j)) {
+                                this.element.style[j] = definition[i][j];
+                            }
+                        }
+                    } else if (i !== 'type') {
+                        if (i.indexOf('on') === 0) {
+                            this.element[i] = createFunction(definition[i], this.owner);
+                        } else {
+                            this.element[i] = definition[i];
+                        }
                     }
                 }
             }
@@ -88,11 +98,11 @@ A component that handles the rendering of DOM elements. It creates a div element
         events: {
             "load": function () {
                 var i = 0,
-                last  = null;
+                    last = null;
                 
                 // Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
-                for (; i < this.owner.components.length; i++) {
-                    if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')) {
+                for (i = 0; i < this.owner.components.length; i++) {
+                    if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0, 14) === 'handler-render')) {
                         last = this.owner.components[i];
                     }
                 }
@@ -108,30 +118,36 @@ A component that handles the rendering of DOM elements. It creates a div element
                         }
 
                         for (i in addition) {
-                            this.extraContent[i] = addition[i];
+                            if (addition.hasOwnProperty(i)) {
+                                this.extraContent[i] = addition[i];
+                            }
                         }
                     });
                 }
             },
             
             "child-entity-added": function (entity) {
-                var self = this; 
+                var self = this;
                 
                 entity.trigger('handle-render-load', {
                     element: self.element
                 });
             },
             "tick": function (resp) {
-                var i   = '',
-                message = {};
+                var i = '',
+                    message = {};
                 
                 if (this.handleChildren) {
                     for (i in resp) {
-                        message[i] = resp[i];
+                        if (resp.hasOwnProperty(i)) {
+                            message[i] = resp[i];
+                        }
                     }
                     if (this.extraContent) {
                         for (i in this.extraContent) {
-                            message[i] = this.extraContent[i];
+                            if (this.extraContent.hasOwnProperty(i)) {
+                                message[i] = this.extraContent[i];
+                            }
                         }
                     }
                     if (this.owner.triggerEventOnChildren) {
@@ -139,8 +155,10 @@ A component that handles the rendering of DOM elements. It creates a div element
                     }
                     if (this.extraContent) {
                         for (i in this.extraContent) {
-                            delete this.extraContent[i];
-                            delete message[i];
+                            if (this.extraContent.hasOwnProperty(i)) {
+                                delete this.extraContent[i];
+                                delete message[i];
+                            }
                         }
                     }
                 } else {
@@ -160,9 +178,9 @@ A component that handles the rendering of DOM elements. It creates a div element
         publicMethods: {
             getElementById: function (id) {
                 var i = 0,
-                all   = this.element.getElementsByTagName('*');
+                    all = this.element.getElementsByTagName('*');
 
-                for (; i < all.length; i++) {
+                for (i = 0; i < all.length; i++) {
                     if (all[i].getAttribute('id') === id) {
                         return all[i];
                     }

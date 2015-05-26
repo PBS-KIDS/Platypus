@@ -76,7 +76,8 @@ This component allows the entity to contain child entities. It will add several 
 /*
  * Requires: ["../messenger.js"]
  */
-
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -90,7 +91,8 @@ This component allows the entity to contain child entities. It will add several 
         id: 'entity-container',
         
         constructor: function (definition) {
-            var self = this;
+            var self  = this,
+                event = '';
     
             this.entities = [];
             
@@ -106,40 +108,50 @@ This component allows the entity to contain child entities. It will add several 
             
             this.childEvents = [];
             if (definition.childEvents) {
-                for (var event in definition.childEvents) {
-                    this.addNewPublicEvent(definition.childEvents[event]);
+                for (event in definition.childEvents) {
+                    if (definition.childEvents.hasOwnProperty(event)) {
+                        this.addNewPublicEvent(definition.childEvents[event]);
+                    }
                 }
             }
             this.addNewPrivateEvent('peer-entity-added');
             this.addNewPrivateEvent('peer-entity-removed');
         },
         
-        events:{
+        events: {
             "load": function () {
                 // putting this here so all other components will have been loaded and can listen for "entity-added" calls.
-                var i    = 0,
-                j        = '',
-                k        = 0,
-                entities = this.definedEntities,
-                definition = null;
+                var i          = 0,
+                    j          = '',
+                    k          = 0,
+                    entities   = this.definedEntities,
+                    definition = null;
                 
                 this.definedEntities = false;
                 
                 if (entities) {
-                    for (i = 0; i < entities.length; i++)
-                    {
-                        definition = {properties:{parent: this.owner}};
+                    for (i = 0; i < entities.length; i++) {
+                        definition = {
+                            properties: {
+                                parent: this.owner
+                            }
+                        };
+                        
                         for (j in entities[i]) {
-                            if (j === 'properties') {
-                                for (k in entities[i].properties) {
-                                    definition.properties[k] = entities[i].properties[k];
+                            if (entities[i].hasOwnProperty(j)) {
+                                if (j === 'properties') {
+                                    for (k in entities[i].properties) {
+                                        if (entities[i].properties.hasOwnProperty(k)) {
+                                            definition.properties[k] = entities[i].properties[k];
+                                        }
+                                    }
+                                } else {
+                                    definition[j] = entities[i][j];
                                 }
-                            } else {
-                                definition[j] = entities[i][j];
                             }
                         }
         
-                        this.owner.triggerEvent('entity-created', this.addEntity(new platformer.Entity(entities[i].id?entities[i]:platformer.game.settings.entities[entities[i].type], definition)));
+                        this.owner.triggerEvent('entity-created', this.addEntity(new platformer.Entity(entities[i].id ? entities[i] : platformer.game.settings.entities[entities[i].type], definition)));
                     }
                 }
             },
@@ -157,12 +169,14 @@ This component allows the entity to contain child entities. It will add several 
             }
         },
         
-        methods:{
+        methods: {
             addNewPublicEvent: function (event) {
+                var i = 0;
+                
                 this.addNewPrivateEvent(event);
                 
                 // Listen for message on owner
-                for (var i = 0; i < this.childEvents.length; i++) {
+                for (i = 0; i < this.childEvents.length; i++) {
                     if (this.childEvents[i] === event) {
                         return false;
                     }
@@ -172,6 +186,9 @@ This component allows the entity to contain child entities. It will add several 
             },
             
             addNewPrivateEvent: function (event) {
+                var x = 0,
+                    y = 0;
+                
                 if (this.messages[event]) {
                     return false; // event is already added.
                 }
@@ -179,9 +196,9 @@ This component allows the entity to contain child entities. It will add several 
                 this.messages[event] = []; //to signify it's been added even if not used
                 
                 //Listen for message on children
-                for (var x = 0; x < this.entities.length; x++) {
+                for (x = 0; x < this.entities.length; x++) {
                     if (this.entities[x].messages[event]) {
-                        for (var y = 0; y < this.entities[x].messages[event].length; y++) {
+                        for (y = 0; y < this.entities[x].messages[event].length; y++) {
                             this.addChildEventListener(this.entities[x], event, this.entities[x].messages[event][y].callback, this.entities[x].messages[event][y].scope);
                         }
                     }
@@ -194,11 +211,12 @@ This component allows the entity to contain child entities. It will add several 
             },
             
             addChildEventListeners: function (entity) {
-                var event = '';
+                var y     = 0,
+                    event = '';
                 
                 for (event in this.messages) {
-                    if (entity.messages[event]) {
-                        for (var y = 0; y < entity.messages[event].length; y++) {
+                    if (this.messages.hasOwnProperty(event) && entity.messages[event]) {
+                        for (y = 0; y < entity.messages[event].length; y++) {
                             this.addChildEventListener(entity, event, entity.messages[event][y].callback, entity.messages[event][y].scope);
                         }
                     }
@@ -206,15 +224,16 @@ This component allows the entity to contain child entities. It will add several 
             },
             
             removeChildEventListeners: function (entity) {
-                var events = null,
-                messages   = null,
-                scopes     = null;
+                var i        = 0,
+                    events   = null,
+                    messages = null,
+                    scopes   = null;
                 
                 if (entity.containerListener) {
                     events   = entity.containerListener.events;
                     messages = entity.containerListener.messages;
                     scopes   = entity.containerListener.scopes;
-                    for (var i = 0; i < events.length; i++) {
+                    for (i = 0; i < events.length; i++) {
                         this.removeChildEventListener(entity, events[i], messages[i], scopes[i]);
                     }
                     entity.containerListener = null;
@@ -236,10 +255,12 @@ This component allows the entity to contain child entities. It will add several 
             },
             
             removeChildEventListener: function (entity, event, callback, scope) {
-                var events = entity.containerListener.events,
-                messages   = entity.containerListener.messages,
-                scopes     = entity.containerListener.scopes;
-                for (var i = 0; i < events.length; i++) {
+                var i        = 0,
+                    events   = entity.containerListener.events,
+                    messages = entity.containerListener.messages,
+                    scopes   = entity.containerListener.scopes;
+                
+                for (i = 0; i < events.length; i++) {
                     if ((events[i] === event) && (!callback || (messages[i] === callback)) && (!scope || (scopes[i] === scope))) {
                         this.unbind(event, messages[i], scopes[i]);
                     }
@@ -247,7 +268,9 @@ This component allows the entity to contain child entities. It will add several 
             },
 
             destroy: function () {
-                for (var i in this.entities) {
+                var i = 0;
+                
+                for (i = 0; i < this.entities.length; i++) {
                     this.removeChildEventListeners(this.entities[i]);
                     this.entities[i].destroy();
                 }
@@ -257,10 +280,10 @@ This component allows the entity to contain child entities. It will add several 
         
         publicMethods: {
             getEntityById: function (id) {
-                var i = 0,
-                selection = null;
+                var i         = 0,
+                    selection = null;
                 
-                for (; i < this.entities.length; i++) {
+                for (i = 0; i < this.entities.length; i++) {
                     if (this.entities[i].id === id) {
                         return this.entities[i];
                     }
@@ -268,18 +291,18 @@ This component allows the entity to contain child entities. It will add several 
                         selection = this.entities[i].getEntityById(id);
                         if (selection) {
                             return selection;
-                        };
+                        }
                     }
                 }
                 return undefined;
             },
 
             getEntitiesByType: function (type) {
-                var i     = 0,
-                selection = null,
-                entities  = [];
+                var i         = 0,
+                    selection = null,
+                    entities  = [];
                 
-                for (; i < this.entities.length; i++) {
+                for (i = 0; i < this.entities.length; i++) {
                     if (this.entities[i].type === type) {
                         entities.push(this.entities[i]);
                     }
@@ -287,17 +310,19 @@ This component allows the entity to contain child entities. It will add several 
                         selection = this.entities[i].getEntitiesByType(type);
                         if (selection) {
                             entities = entities.concat(selection);
-                        };
+                        }
                     }
                 }
                 return entities;
             },
 
             addEntity: function (entity) {
+                var x = 0;
+                
                 entity.parent = this.owner;
                 entity.trigger('adopted');
                 
-                for (var x = 0; x < this.entities.length; x++) {
+                for (x = 0; x < this.entities.length; x++) {
                     if (!entity.triggerEvent('peer-entity-added', this.entities[x])) {
                         break;
                     }
@@ -312,7 +337,9 @@ This component allows the entity to contain child entities. It will add several 
             },
             
             removeEntity: function (entity) {
-                for (var x = 0; x < this.entities.length; x++) {
+                var x = 0;
+
+                for (x = 0; x < this.entities.length; x++) {
                     if (this.entities[x] === entity) {
                         this.removeChildEventListeners(entity);
                         this.entities.splice(x, 1);

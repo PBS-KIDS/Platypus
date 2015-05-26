@@ -61,12 +61,15 @@ A component that handles updating rendering for components that are rendering vi
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
+/*global createjs */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
-    var uagent = navigator.userAgent.toLowerCase(),
-    android4   = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false, // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
-    dpr        = window.devicePixelRatio || 1;
+    var uagent   = navigator.userAgent.toLowerCase(),
+        android4 = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false, // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
+        dpr      = window.devicePixelRatio || 1;
     
     return platformer.createComponentClass({
 
@@ -84,7 +87,7 @@ A component that handles updating rendering for components that are rendering vi
             } else {
                 this.owner.canvasParent = this.owner.rootElement;
                 this.owner.rootElement.appendChild(this.canvas);
-                this.owner.element = this.canvas; 
+                this.owner.element = this.canvas;
             }
             
             this.stage = new createjs.Stage(this.canvas);
@@ -121,14 +124,14 @@ A component that handles updating rendering for components that are rendering vi
             this.extraContent = false;
         },
         
-        events:{
+        events: {
             "load": function () {
                 var i = 0,
-                last  = null;
+                    last = null;
                 
                 // Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
-                for (; i < this.owner.components.length; i++) {
-                    if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0,14) === 'handler-render')) {
+                for (i = 0; i < this.owner.components.length; i++) {
+                    if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0, 14) === 'handler-render')) {
                         last = this.owner.components[i];
                     }
                 }
@@ -144,7 +147,9 @@ A component that handles updating rendering for components that are rendering vi
                         }
 
                         for (i in addition) {
-                            this.extraContent[i] = addition[i];
+                            if (addition.hasOwnProperty(i)) {
+                                this.extraContent[i] = addition[i];
+                            }
                         }
                     });
                 }
@@ -174,10 +179,12 @@ A component that handles updating rendering for components that are rendering vi
                 };
                 
                 return function (resp) {
-                    var i   = '',
-                    child   = undefined,
-                    time    = new Date().getTime(),
-                    message = this.renderMessage;
+                    var i = '',
+                        x = 0,
+                        child   = null,
+                        time    = new Date().getTime(),
+                        message = this.renderMessage,
+                        bounds  = null;
                     
                     message.delta = resp.delta;
 
@@ -191,7 +198,9 @@ A component that handles updating rendering for components that are rendering vi
                     if (this.handleChildren) {
                         if (this.extraContent) {
                             for (i in this.extraContent) {
-                                message[i] = this.extraContent[i];
+                                if (this.extraContent.hasOwnProperty(i)) {
+                                    message[i] = this.extraContent[i];
+                                }
                             }
                         }
                         if (this.owner.triggerEventOnChildren) {
@@ -199,8 +208,10 @@ A component that handles updating rendering for components that are rendering vi
                         }
                         if (this.extraContent) {
                             for (i in this.extraContent) {
-                                delete this.extraContent[i];
-                                delete message[i];
+                                if (this.extraContent.hasOwnProperty(i)) {
+                                    delete this.extraContent[i];
+                                    delete message[i];
+                                }
                             }
                         }
                     } else {
@@ -208,16 +219,22 @@ A component that handles updating rendering for components that are rendering vi
                     }
                     
                     if (this.stage) {
-                        for (var x = this.stage.children.length - 1; x > -1; x--) {
+                        for (x = this.stage.children.length - 1; x > -1; x--) {
                             child = this.stage.children[x];
                             if (child.hidden) {
-                                if (child.visible) child.visible = false;
+                                if (child.visible) {
+                                    child.visible = false;
+                                }
                             } else if (child.name !== 'entity-managed') {
-                                var bounds = child.getTransformedBounds();
+                                bounds = child.getTransformedBounds();
                                 if (!bounds || ((bounds.x + bounds.width >= this.camera.x) && (bounds.x <= this.camera.x + this.camera.width) && (bounds.y + bounds.height >= this.camera.y) && (bounds.y <= this.camera.y + this.camera.height))) {
-                                    if (!child.visible) child.visible = true;
+                                    if (!child.visible) {
+                                        child.visible = true;
+                                    }
                                 } else {
-                                    if (child.visible) child.visible = false;
+                                    if (child.visible) {
+                                        child.visible = false;
+                                    }
                                 }
                             }
                             
@@ -247,20 +264,20 @@ A component that handles updating rendering for components that are rendering vi
                             this.canvas.style.opacity = 0.99;
 
                             setTimeout(function () {
-                              this.canvas.style.opacity = 1;
+                                this.canvas.style.opacity = 1;
                             }, 0);
                         }
                         
                         this.timeElapsed.name = 'Render';
                         this.timeElapsed.time = new Date().getTime() - time;
                         platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                    } 
+                    }
                 };
             }()),
             "camera-update": function (cameraInfo) {
-                var dpr = (window.devicePixelRatio || 1),
-                viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
-                viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2;
+                var dpr             = (window.devicePixelRatio || 1),
+                    viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
+                    viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2;
                 
                 this.camera.x = cameraInfo.viewportLeft;
                 this.camera.y = cameraInfo.viewportTop;
@@ -276,65 +293,65 @@ A component that handles updating rendering for components that are rendering vi
                 }
             }
         },
-        methods:{
+        methods: {
             setupInput: (function () {
                 return function (enableTouch, triggerOnAllMovement, cameraMovementMovesMouse) {
                     var self = this,
-                    originalEvent   = null,
-                    x        = 0,
-                    y        = 0,
-                    setXY   = function (event) {
-                        originalEvent = event;
-                        x  = (event.stageX / dpr) / self.stage.scaleX + self.camera.x;
-                        y  = (event.stageY / dpr) / self.stage.scaleY + self.camera.y;
-                    },
-                    mousedown = function (event) {
-                        setXY(event);
-                        self.owner.trigger('mousedown', {
-                            event: event.nativeEvent,
-                            x: x,
-                            y: y,
-                            entity: self.owner
-                        });
-                        
-                        // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
-                        if (cameraMovementMovesMouse) {
-                            self.moveMouse = function () {
-                                setXY(originalEvent);
+                        originalEvent   = null,
+                        x        = 0,
+                        y        = 0,
+                        setXY   = function (event) {
+                            originalEvent = event;
+                            x  = (event.stageX / dpr) / self.stage.scaleX + self.camera.x;
+                            y  = (event.stageY / dpr) / self.stage.scaleY + self.camera.y;
+                        },
+                        mousedown = function (event) {
+                            setXY(event);
+                            self.owner.trigger('mousedown', {
+                                event: event.nativeEvent,
+                                x: x,
+                                y: y,
+                                entity: self.owner
+                            });
+
+                            // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
+                            if (cameraMovementMovesMouse) {
+                                self.moveMouse = function () {
+                                    setXY(originalEvent);
+                                    self.owner.trigger('mousemove', {
+                                        event: event.nativeEvent,
+                                        x: x,
+                                        y: y,
+                                        entity: self.owner
+                                    });
+                                };
+                            }
+                        },
+                        mouseup = function (event) {
+                            setXY(event);
+                            self.owner.trigger('mouseup', {
+                                event: event.nativeEvent,
+                                x: x,
+                                y: y,
+                                entity: self.owner
+                            });
+                            if (cameraMovementMovesMouse) {
+                                self.moveMouse = null;
+                            }
+                        },
+                        mousemove = function (event) {
+                            setXY(event);
+                            if (triggerOnAllMovement || event.nativeEvent.which || event.nativeEvent.touches) {
                                 self.owner.trigger('mousemove', {
                                     event: event.nativeEvent,
                                     x: x,
                                     y: y,
                                     entity: self.owner
                                 });
-                            };
-                        }
-                    },
-                    mouseup = function (event) {
-                        setXY(event);
-                        self.owner.trigger('mouseup', {
-                            event: event.nativeEvent,
-                            x: x,
-                            y: y,
-                            entity: self.owner
-                        });
-                        if (cameraMovementMovesMouse) {
-                            self.moveMouse = null;
-                        }
-                    },
-                    mousemove = function (event) {
-                        setXY(event);
-                        if (triggerOnAllMovement || event.nativeEvent.which || event.nativeEvent.touches) {
-                            self.owner.trigger('mousemove', {
-                                event: event.nativeEvent,
-                                x: x,
-                                y: y,
-                                entity: self.owner
-                            });
-                        }
-                    };
+                            }
+                        };
                     
-                    if (enableTouch && !this.stage.__touch) { //__touch check due to this being overridden if we do this multiple times. - DDD
+                    if (enableTouch) {
                         createjs.Touch.enable(this.stage);
                     }
 

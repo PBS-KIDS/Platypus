@@ -1,17 +1,17 @@
-/* global platformer */
 /**
  * A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages. This component is usually used on an "action-layer".
  * 
  * @class "handler-logic" Component
  * @uses Component
  **/
-
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var updateState = function (entity) {
-        var state = null,
-        changed   = false;
+        var state   = null,
+            changed = false;
         
         for (state in entity.state) {
             if (entity.state[state] !== entity.lastState[state]) {
@@ -33,7 +33,7 @@
              * @type number
              * @default camera width / 10
              */
-            "buffer": -1,
+            buffer: -1,
 
             /**
              * The length in milliseconds of a single logic step. If the framerate drops too low, logic is run for each step of this many milliseconds. This property is available on the Entity as `entity.stepLength`.
@@ -42,7 +42,7 @@
              * @type number
              * @default 5
              */
-            "stepLength": 5,
+            stepLength: 5,
             
             /**
              * The maximum number of steps to take for a given tick, to prevent lag overflow.
@@ -51,7 +51,7 @@
              * @type number
              * @default 100
              */
-             maxStepsPerTick: 100
+            maxStepsPerTick: 100
         },
         constructor: function (definition) {
             this.entities = [];
@@ -79,7 +79,7 @@
             };
         },
         
-        events:{
+        events: {
             /**
              * Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities.
              * 
@@ -87,11 +87,11 @@
              * @param entity {Entity} The entity that is being considered for addition to the handler.
              */
             "child-entity-added": function (entity) {
-                var messageIds = entity.getMessageIds(); 
+                var x = 0,
+                    messageIds = entity.getMessageIds();
                 
-                for (var x = 0; x < messageIds.length; x++)
-                {
-                    if (messageIds[x] == 'handle-logic' || messageIds[x] == 'handle-post-collision-logic') {
+                for (x = 0; x < messageIds.length; x++) {
+                    if (messageIds[x] === 'handle-logic' || messageIds[x] === 'handle-post-collision-logic') {
                         this.entities.push(entity);
                         this.updateNeeded = this.camera.active;
                         break;
@@ -106,7 +106,9 @@
              * @param entity {Entity} The entity to be removed from the handler.
              */
             "child-entity-removed": function (entity) {
-                for (var j = this.entities.length - 1; j > -1; j--) {
+                var j = 0;
+                
+                for (j = this.entities.length - 1; j > -1; j--) {
                     if (this.entities[j] === entity) {
                         this.entities.splice(j, 1);
                         break;
@@ -154,7 +156,7 @@
                 this.camera.width = camera.viewportWidth;
                 this.camera.height = camera.viewportHeight;
                 
-                if (this.camera.buffer == -1) {
+                if (this.camera.buffer === -1) {
                     this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
                 }
                 
@@ -171,9 +173,11 @@
              * @param tick.delta {number} The time passed since the last tick.
              */
             "tick": function (resp) {
-                var cycles = 0,
-                child   = undefined,
-                time    = new Date().getTime();
+                var i = 0,
+                    j = 0,
+                    cycles = 0,
+                    child  = null,
+                    time   = new Date().getTime();
                 
                 this.leftoverTime += resp.delta;
                 cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
@@ -203,23 +207,23 @@
                     }
                     
                     //if (this.updateNeeded) {//causes blocks to fall through dirt - not sure the connection here, so leaving out this optimization for now. - DDD
-                        if (this.activeEntities === this.entities) {
-                            this.message.movers = this.activeEntities = [];
+                    if (this.activeEntities === this.entities) {
+                        this.message.movers = this.activeEntities = [];
+                    }
+
+                    this.activeEntities.length = 0;
+                    for (j = this.entities.length - 1; j > -1; j--) {
+                        child = this.entities[j];
+                        if (child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
+                            this.activeEntities.push(child);
                         }
-                        
-                        this.activeEntities.length = 0;
-                        for (var j = this.entities.length - 1; j > -1; j--) {
-                            child = this.entities[j];
-                            if (child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
-                                this.activeEntities.push(child);
-                            }
-                        }
+                    }
                     //}
                     
                     //Prevents game lockdown when processing takes longer than time alotted.
                     cycles = Math.min(cycles, this.maxStepsPerTick);
                     
-                    for (var i = 0; i < cycles; i++) {
+                    for (i = 0; i < cycles; i++) {
                         
                         /**
                          * This event is triggered on children entities to run their logic.
@@ -228,7 +232,7 @@
                          * @param tick {Object}
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          */
-                        for (var j = this.activeEntities.length - 1; j > -1; j--) {
+                        for (j = this.activeEntities.length - 1; j > -1; j--) {
                             child = this.activeEntities[j];
                             if (child.triggerEvent('handle-logic', this.message)) {
                                 child.checkCollision = true;
@@ -267,7 +271,7 @@
                              * @event 'logical-state'
                              * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
                              */
-                            for (var j = this.activeEntities.length - 1; j > -1; j--) {
+                            for (j = this.activeEntities.length - 1; j > -1; j--) {
                                 child = this.activeEntities[j];
                                 child.triggerEvent('handle-post-collision-logic', this.message);
                                 if (updateState(child)) {
@@ -280,7 +284,7 @@
                             platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                             time += this.timeElapsed.time;
                         } else {
-                            for (var j = this.activeEntities.length - 1; j > -1; j--) {
+                            for (j = this.activeEntities.length - 1; j > -1; j--) {
                                 child = this.activeEntities[j];
                                 if (updateState(child)) {
                                     child.triggerEvent('logical-state', child.state);

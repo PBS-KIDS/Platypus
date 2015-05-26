@@ -11,7 +11,7 @@
             "ontouchend": "stop-jump",
             "ontouchcancel": "stop-jump"
         },{
-            "type": "broadcast-events",
+            "type": "relay-game",
             "events":{
                 "start-jump": ["button-jump:down", "button-right:down"],
                 "stop-jump":  ["button-jump:up",   "button-right:up"]

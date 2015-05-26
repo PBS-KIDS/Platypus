@@ -6,7 +6,8 @@
  */
  
 // Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-data-container.js"]
-
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
@@ -24,66 +25,67 @@
      * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
      */
     var triggerMessage = {
-        entity: null,
-        type:   null,
-        x: 0,
-        y: 0,
-        hitType: null,
-        myType: null
-    },
-    entityCollisionDataContainer = new platformer.CollisionDataContainer(),
-    AABBCollision = function (boxX, boxY) {
-        if (boxX.left   >=  boxY.right)  return false;
-        if (boxX.right  <=  boxY.left)   return false;
-        if (boxX.top    >=  boxY.bottom) return false;
-        if (boxX.bottom <=  boxY.top)    return false;
-        return true;
-    },
-    shapeCollision = function (shapeA, shapeB) {
-        var distSquared = 0;
-        var radiiSquared = 0;
-        var circle = undefined;
-        var rect = undefined;
-        var shapeDistanceX = 0;
-        var shapeDistanceY = 0;
-        var rectAabb = undefined;
-        var cornerDistanceSq = 0;
-        if (shapeA.type == 'rectangle' && shapeB.type == 'rectangle') {
+            entity: null,
+            type:   null,
+            x: 0,
+            y: 0,
+            hitType: null,
+            myType: null
+        },
+        entityCollisionDataContainer = new platformer.CollisionDataContainer(),
+        isAABBCollision = function (boxX, boxY) {
+            if ((boxX.left       >=  boxY.right)  ||
+                    (boxX.right  <=  boxY.left)   ||
+                    (boxX.top    >=  boxY.bottom) ||
+                    (boxX.bottom <=  boxY.top)) {
+                return false;
+            }
             return true;
-        } else if (shapeA.type == 'circle' && shapeB.type == 'circle') {
-            distSquared = Math.pow((shapeA.x - shapeB.x), 2) + Math.pow((shapeA.y - shapeB.y), 2);
-            radiiSquared = Math.pow((shapeA.radius + shapeB.radius), 2);
-            if (distSquared <= radiiSquared)
-            {
-                return true;
-            } 
-        } else if (shapeA.type == 'circle' && shapeB.type == 'rectangle' || shapeA.type == 'rectangle' && shapeB.type == 'circle' ) {
-            if (shapeA.type == 'circle')
-            {
-                circle = shapeA;
-                rect = shapeB;
-            } else {
-                circle = shapeB;
-                rect = shapeA;
-            }
-            rectAabb = rect.getAABB();
+        },
+        shapeCollision = function (shapeA, shapeB) {
+            var distSquared      = 0,
+                radiiSquared     = 0,
+                circle           = null,
+                rect             = null,
+                shapeDistanceX   = 0,
+                shapeDistanceY   = 0,
+                rectAabb         = null,
+                cornerDistanceSq = 0;
             
-            shapeDistanceX = Math.abs(circle.x - rect.x);
-            shapeDistanceY = Math.abs(circle.y - rect.y);
-
-            if (shapeDistanceX >= (rectAabb.halfWidth + circle.radius)) { return false; }
-            if (shapeDistanceY >= (rectAabb.halfHeight + circle.radius)) { return false; }
-
-            if (shapeDistanceX < (rectAabb.halfWidth)) { return true; } 
-            if (shapeDistanceY < (rectAabb.halfHeight)) { return true; }
-
-            cornerDistanceSq = Math.pow((shapeDistanceX - rectAabb.halfWidth), 2) + Math.pow((shapeDistanceY - rectAabb.halfHeight), 2);
-            if (cornerDistanceSq < Math.pow(circle.radius, 2)) {
+            if (shapeA.type === 'rectangle' && shapeB.type === 'rectangle') {
                 return true;
+            } else if (shapeA.type === 'circle' && shapeB.type === 'circle') {
+                distSquared = Math.pow((shapeA.x - shapeB.x), 2) + Math.pow((shapeA.y - shapeB.y), 2);
+                radiiSquared = Math.pow((shapeA.radius + shapeB.radius), 2);
+                if (distSquared <= radiiSquared) {
+                    return true;
+                }
+            } else if ((shapeA.type === 'circle' && shapeB.type === 'rectangle') || (shapeA.type === 'rectangle' && shapeB.type === 'circle')) {
+                if (shapeA.type === 'circle') {
+                    circle = shapeA;
+                    rect = shapeB;
+                } else {
+                    circle = shapeB;
+                    rect = shapeA;
+                }
+                rectAabb = rect.getAABB();
+
+                shapeDistanceX = Math.abs(circle.x - rect.x);
+                shapeDistanceY = Math.abs(circle.y - rect.y);
+
+                if (shapeDistanceX >= (rectAabb.halfWidth + circle.radius)) { return false; }
+                if (shapeDistanceY >= (rectAabb.halfHeight + circle.radius)) { return false; }
+
+                if (shapeDistanceX < (rectAabb.halfWidth)) { return true; }
+                if (shapeDistanceY < (rectAabb.halfHeight)) { return true; }
+
+                cornerDistanceSq = Math.pow((shapeDistanceX - rectAabb.halfWidth), 2) + Math.pow((shapeDistanceY - rectAabb.halfHeight), 2);
+                if (cornerDistanceSq < Math.pow(circle.radius, 2)) {
+                    return true;
+                }
             }
-        }
-        return false;
-    };
+            return false;
+        };
     
     return platformer.createComponentClass({
         id: 'handler-collision',
@@ -114,7 +116,7 @@
             };
         },
         
-        events:{
+        events: {
             /**
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
              * 
@@ -218,15 +220,15 @@
         
         methods: {
             addCollisionEntity: function (entity) {
-                var i = 0,
-                types = entity.collisionTypes;
+                var i     = 0,
+                    types = entity.collisionTypes;
                 
-                if ((entity.type == 'tile-layer') || (entity.type == 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
+                if ((entity.type === 'tile-layer') || (entity.type === 'collision-layer')) { //TODO: probably should have these reference a required function on the obj, rather than an explicit type list since new collision entity map types could be created - DDD
                     this.terrain = entity;
                     this.updateLiveList = true;
                 } else {
                     if (types) {
-                        for (; i < types.length; i++) {
+                        for (i = 0; i < types.length; i++) {
                             if (!this.entitiesByType[types[i]]) {
                                 this.entitiesByType[types[i]] = [];
                                 this.entitiesByTypeLive[types[i]] = [];
@@ -242,13 +244,13 @@
             },
 
             removeCollisionEntity: function (entity) {
-                var x = 0,
-                i     = 0,
-                j      = 0,
-                types = entity.collisionTypes;
+                var x     = 0,
+                    i     = 0,
+                    j     = 0,
+                    types = entity.collisionTypes;
 
                 if (types) {
-                    for (; i < types.length; i++) {
+                    for (i = 0; i < types.length; i++) {
                         for (x in this.entitiesByType[types[i]]) {
                             if (this.entitiesByType[types[i]][x] === entity) {
                                 this.entitiesByType[types[i]].splice(x, 1);
@@ -260,7 +262,7 @@
                     if (!entity.immobile) {
                         for (j = 0; j < this.allEntities.length; j++) {
                             if (this.allEntities[j] === entity) {
-                                this.allEntities.splice(j,1);
+                                this.allEntities.splice(j, 1);
                                 break;
                             }
                         }
@@ -274,25 +276,25 @@
                     return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
                 };
                 return function (camera, movers) {
-                    var i  = 0,
-                    j      = 0,
-                    length = 0,
-                    list   = null,
-                    all    = null,
-                    softs  = null,
-                    solids = null,
-                    groups = null,
-                    width  = camera.width,
-                    height = camera.height,
-                    x      = camera.left + width  / 2,
-                    y      = camera.top  + height / 2,
-                    buffer = camera.buffer,
-                    entities = undefined,
-                    entity = undefined,
-                    check  = AABBCollision,
-                    aabbLogic     = this.cameraLogicAABB,
-                    aabbCollision = this.cameraCollisionAABB,
-                    types = null;
+                    var i        = 0,
+                        j        = 0,
+                        length   = 0,
+                        list     = null,
+                        all      = null,
+                        softs    = null,
+                        solids   = null,
+                        groups   = null,
+                        width    = camera.width,
+                        height   = camera.height,
+                        x        = camera.left + width  / 2,
+                        y        = camera.top  + height / 2,
+                        buffer   = camera.buffer,
+                        entities      = null,
+                        entity        = null,
+                        check         = isAABBCollision,
+                        aabbLogic     = this.cameraLogicAABB,
+                        aabbCollision = this.cameraCollisionAABB,
+                        types = null;
                     
                     // store buffered size since the actual width x height is not used below.
                     width  += buffer * 2;
@@ -304,55 +306,56 @@
                         
                         // Removing this line since it allows logic to run without collision turned on. Not certain why, but can turn this back on and trace down the issue if optimization is necessary. - DDD 12/31/2014
                         //if (this.updateLiveList || !aabbCollision.contains(aabbLogic)) { //if the camera has not moved beyond the original buffer, we do not continue these calculations
-                            this.updateLiveList = false;
-    
-                            all = this.allEntitiesLive;
-                            all.length = 0;
-                            
-                            solids = this.solidEntitiesLive;
-                            solids.length = 0;
-                            
-                            softs = this.softEntitiesLive;
-                            softs.length = 0;
-                            
-                            groups = this.groupsLive;
-                            groups.length = 0;
-    
-                            length = this.allEntities.length;// console.log(length);
-                            for (i = 0; i < length; i++) {
-                                entity = this.allEntities[i];
-                                if (entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)) {
-                                    entity.checkCollision = false;  //TML - This should be here. I think. :)
-                                    all[all.length] = entity;
-    
-                                    types = entity.collisionTypes;
-                                    if (entity !== this.owner) {
-                                        for (j = 0; j < types.length; j++) {
-                                            if (entity.solidCollisions[types[j]].length) {
-                                                solids[solids.length] = entity;
-                                                break;
-                                            }
-                                        }
-                                    }
+                        this.updateLiveList = false;
+
+                        all = this.allEntitiesLive;
+                        all.length = 0;
+
+                        solids = this.solidEntitiesLive;
+                        solids.length = 0;
+
+                        softs = this.softEntitiesLive;
+                        softs.length = 0;
+
+                        groups = this.groupsLive;
+                        groups.length = 0;
+
+                        length = this.allEntities.length;// console.log(length);
+                        for (i = 0; i < length; i++) {
+                            entity = this.allEntities[i];
+                            if (entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)) {
+                                entity.checkCollision = false;  //TML - This should be here. I think. :)
+                                all[all.length] = entity;
+
+                                types = entity.collisionTypes;
+                                if (entity !== this.owner) {
                                     for (j = 0; j < types.length; j++) {
-                                        if (entity.softCollisions[types[j]].length) {
-                                            softs[softs.length] = entity;
+                                        if (entity.solidCollisions[types[j]].length) {
+                                            solids[solids.length] = entity;
                                             break;
                                         }
                                     }
-                                    
-                                    if (entity.collisionGroup) {
-                                        groups.push(entity);
+                                }
+                                for (j = 0; j < types.length; j++) {
+                                    if (entity.softCollisions[types[j]].length) {
+                                        softs[softs.length] = entity;
+                                        break;
                                     }
-                                } 
+                                }
+
+                                if (entity.collisionGroup) {
+                                    groups.push(entity);
+                                }
                             }
-                            
-                            groups.sort(groupSortBySize);
-                            
-                            // add buffer again to capture stationary entities along the border that may be collided against 
-                            aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
-                            
-                            for (i in this.entitiesByType) {
+                        }
+
+                        groups.sort(groupSortBySize);
+
+                        // add buffer again to capture stationary entities along the border that may be collided against 
+                        aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
+
+                        for (i in this.entitiesByType) {
+                            if (this.entitiesByType.hasOwnProperty(i)) {
                                 entities = this.entitiesByType[i];
                                 list = this.entitiesByTypeLive[i];
                                 list.length = 0;
@@ -364,13 +367,15 @@
                                     }
                                 }
                             }
+                        }
                         //}
                     }
                 };
             }()),
             
             prepareCollisions: function (resp) {
-                var entity = null;
+                var x      = 0,
+                    entity = null;
                 
                 this.nonColliders.length = 0;
                 
@@ -380,7 +385,7 @@
                  * @event 'prepare-for-collision'
                  * @param tick {Object} Object containing information about the current logic step.
                  */
-                for (var x = this.allEntitiesLive.length - 1; x > -1; x--) {
+                for (x = this.allEntitiesLive.length - 1; x > -1; x--) {
                     entity = this.allEntitiesLive[x];
                     entity.triggerEvent('prepare-for-collision', resp);
                     if (!entity.collides) {
@@ -390,11 +395,12 @@
             },
             
             resolveNonCollisions: function (resp) {
-                var entity = null,
-                xy         = {
-                    position: new platformer.Vector(),
-                    relative: false
-                };
+                var x      = 0,
+                    entity = null,
+                    xy     = {
+                        position: new platformer.Vector(),
+                        relative: false
+                    };
                 
                 /**
                  * This message is triggered on an entity that has been repositioned due to a solid collision.
@@ -403,7 +409,7 @@
                  * @param object {Object}
                  * @param object.position {Vector} The relocated position of the entity.
                  */
-                for (var x = this.nonColliders.length - 1; x > -1; x--) {
+                for (x = this.nonColliders.length - 1; x > -1; x--) {
                     entity = this.nonColliders[x];
                     xy.position.set(entity.position);
                     entity.trigger('relocate-entity', xy);
@@ -413,47 +419,47 @@
             checkGroupCollisions:  (function () {
                 var triggerCollisionMessages = function (entity, otherEntity, thisType, thatType, x, y, hitType, vector) {
                     
-                    triggerMessage.entity = otherEntity;
-                    triggerMessage.myType = thisType;
-                    triggerMessage.type   = thatType;
-                    triggerMessage.x      = x;
-                    triggerMessage.y      = y;
+                    triggerMessage.entity    = otherEntity;
+                    triggerMessage.myType    = thisType;
+                    triggerMessage.type      = thatType;
+                    triggerMessage.x         = x;
+                    triggerMessage.y         = y;
                     triggerMessage.direction = vector;
-                    triggerMessage.hitType= hitType;
+                    triggerMessage.hitType   = hitType;
                     entity.triggerEvent('hit-by-' + thatType, triggerMessage);
                     
                     if (otherEntity) {
-                        triggerMessage.entity = entity;
-                        triggerMessage.type   = thisType;
-                        triggerMessage.myType = thatType;
-                        triggerMessage.x      = -x;
-                        triggerMessage.y      = -y;
+                        triggerMessage.entity    = entity;
+                        triggerMessage.type      = thisType;
+                        triggerMessage.myType    = thatType;
+                        triggerMessage.x         = -x;
+                        triggerMessage.y         = -y;
                         triggerMessage.direction = vector.getInverse();
-                        triggerMessage.hitType= hitType;
+                        triggerMessage.hitType   = hitType;
                         otherEntity.triggerEvent('hit-by-' + thisType, triggerMessage);
                     }
 
                 };
 
                 return function () {
-                    var entities = this.groupsLive,
-                    fmi          = new platformer.Vector(),
-                    messageData  = null;
+                    var x           = 0,
+                        i           = 0,
+                        entities    = this.groupsLive,
+                        fmi         = new platformer.Vector(),
+                        messageData = null;
                     
-                    for (var x = entities.length - 1; x > -1; x--) {
+                    for (x = entities.length - 1; x > -1; x--) {
                         if (entities[x].collisionGroup.getSize() > 1) {
                             entityCollisionDataContainer.reset();
-                            fmi.set(0,0,0);
+                            fmi.set(0, 0, 0);
                             fmi = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, fmi);
                             
-                            for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
-                            {
+                            for (i = 0; i < entityCollisionDataContainer.xCount; i++) {
                                 messageData = entityCollisionDataContainer.getXEntry(i);
                                 triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
                             }
                             
-                            for (i = 0; i < entityCollisionDataContainer.yCount; i++)
-                            {
+                            for (i = 0; i < entityCollisionDataContainer.yCount; i++) {
                                 messageData = entityCollisionDataContainer.getYEntry(i);
                                 triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
                             }
@@ -465,46 +471,46 @@
             checkSolidCollisions: (function () {
                 var triggerCollisionMessages = function (entity, otherEntity, thisType, thatType, x, y, hitType, vector) {
                     
-                    triggerMessage.entity = otherEntity;
-                    triggerMessage.myType = thisType;
-                    triggerMessage.type   = thatType;
-                    triggerMessage.x      = x;
-                    triggerMessage.y      = y;
+                    triggerMessage.entity    = otherEntity;
+                    triggerMessage.myType    = thisType;
+                    triggerMessage.type      = thatType;
+                    triggerMessage.x         = x;
+                    triggerMessage.y         = y;
                     triggerMessage.direction = vector;
-                    triggerMessage.hitType= hitType;
+                    triggerMessage.hitType   = hitType;
                     entity.triggerEvent('hit-by-' + thatType, triggerMessage);
                     
                     if (otherEntity) {
-                        triggerMessage.entity = entity;
-                        triggerMessage.type   = thisType;
-                        triggerMessage.myType = thatType;
-                        triggerMessage.x      = -x;
-                        triggerMessage.y      = -y;
+                        triggerMessage.entity    = entity;
+                        triggerMessage.type      = thisType;
+                        triggerMessage.myType    = thatType;
+                        triggerMessage.x         = -x;
+                        triggerMessage.y         = -y;
                         triggerMessage.direction = vector.getInverse();
-                        triggerMessage.hitType= hitType;
+                        triggerMessage.hitType   = hitType;
                         otherEntity.triggerEvent('hit-by-' + thisType, triggerMessage);
                     }
 
                 };
 
                 return function () {
-                    var messageData = null,
-                    entities = this.solidEntitiesLive,
-                    fmi = new platformer.Vector();
+                    var x           = 0,
+                        i           = 0,
+                        messageData = null,
+                        entities    = this.solidEntitiesLive,
+                        fmi         = new platformer.Vector();
                     
-                    for (var x = entities.length - 1; x > -1; x--) {
+                    for (x = entities.length - 1; x > -1; x--) {
                         entityCollisionDataContainer.reset();
-                        fmi.set(0,0,0);
+                        fmi.set(0, 0, 0);
                         fmi = this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer, fmi);
                         
-                        for (var i = 0; i < entityCollisionDataContainer.xCount; i++)
-                        {
+                        for (i = 0; i < entityCollisionDataContainer.xCount; i++) {
                             messageData = entityCollisionDataContainer.getXEntry(i);
                             triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
                         }
                         
-                        for (i = 0; i < entityCollisionDataContainer.yCount; i++)
-                        {
+                        for (i = 0; i < entityCollisionDataContainer.yCount; i++) {
                             messageData = entityCollisionDataContainer.getYEntry(i);
                             triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
                         }
@@ -513,18 +519,19 @@
             }()),
             
             checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection, xyInfo) {
-                var steps         = 0,
-                step              = 0,
-                finalMovementInfo = xyInfo,
-                entityDeltaX      = ent.x - ent.previousX,
-                entityDeltaY      = ent.y - ent.previousY,
-                aabb              = null,
-                dX                = 0,
-                dY                = 0,
-                sW                = Infinity,
-                sH                = Infinity,
-                collisionTypes    = entityOrGroup.getCollisionTypes(),
-                ignoredEntities   = false;
+                var steps             = 0,
+                    step              = 0,
+                    i                 = 0,
+                    finalMovementInfo = xyInfo,
+                    entityDeltaX      = ent.x - ent.previousX,
+                    entityDeltaY      = ent.y - ent.previousY,
+                    aabb              = null,
+                    dX                = 0,
+                    dY                = 0,
+                    sW                = Infinity,
+                    sH                = Infinity,
+                    collisionTypes    = entityOrGroup.getCollisionTypes(),
+                    ignoredEntities   = false;
                 
                 if (entityOrGroup.getSolidEntities) {
                     ignoredEntities = entityOrGroup.getSolidEntities();
@@ -535,7 +542,7 @@
                 if (entityDeltaX || entityDeltaY) {
                     
                     if (ent.bullet) {
-                        for (var i in collisionTypes) {
+                        for (i = 0; i < collisionTypes.length; i++) {
                             aabb = entityOrGroup.getAABB(collisionTypes[i]);
                             sW = Math.min(sW, aabb.width);
                             sH = Math.min(sH, aabb.height);
@@ -574,90 +581,95 @@
             },
             
             processCollisionStep: (function () {
-                var sweepAABB = new platformer.AABB(),
-                includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
-                    var otherAABB = otherEntity.getAABB(otherCollisionType);
-                    if (otherEntity === thisEntity) {
-                        return false;
-                    } else if (otherEntity.jumpThrough && (aabb.bottom > otherAABB.top)) {
-                        return false;
-                    } else if (thisEntity.jumpThrough  && (otherAABB.bottom > aabb.top)) { // This will allow platforms to hit something solid sideways if it runs into them from the side even though originally they were above the top. - DDD
-                        return false;
-                    } else if (ignoredEntities) {
-                        for (var i = 0; i < ignoredEntities.length; i++) {
-                            if (otherEntity === ignoredEntities[i]) {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                };
-
-                return function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY, collisionTypes) {
-                    var potentialCollision = false;
-                    var potentialCollidingShapes = [];
-                    var previousAABB = null;
-                    var currentAABB = null;
-                    var collisionType = null;
-                    
-                    var otherEntity = null;
-                    var otherCollisionType = '';
-                    var otherShapes = null;
-                    var entitiesByTypeLive = this.getWorldEntities();
-                    var otherEntities = null;
-                    var terrain = this.getWorldTerrain(),
-                    solidCollisions = entityOrGroup.getSolidCollisions();
-                    
-//                    if (!entityOrGroup.jumpThrough || (entityDeltaY >= 0)) { //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
-    
-                        for (var i = 0; i < collisionTypes.length; i++) {
-                            //Sweep the full movement of each collision type
-                            potentialCollidingShapes[i] = [];
-                            collisionType = collisionTypes[i];
-                            previousAABB = entityOrGroup.getPreviousAABB(collisionType);
-                            currentAABB = entityOrGroup.getAABB(collisionType);
-                            
-                            sweepAABB.reset();
-                            sweepAABB.include(currentAABB);
-                            sweepAABB.include(previousAABB);
+                var sweepAABB     = new platformer.AABB(),
+                    includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
+                        var i         = 0,
+                            otherAABB = otherEntity.getAABB(otherCollisionType);
                         
-                            for (var y = 0; y < solidCollisions[collisionType].length; y++) {
-                                otherCollisionType = solidCollisions[collisionType][y];
-    
-                                if (entitiesByTypeLive[otherCollisionType]) {
-                                    otherEntities = entitiesByTypeLive[otherCollisionType];
-                                    
-                                    for (var z = 0; z < otherEntities.length; z++) {
-                                        
-                                        //Chop out all the special case entities we don't want to check against.
-                                        otherEntity = otherEntities[z];
-                                        
-                                        //Do our sweep check against the AABB of the other object and add potentially colliding shapes to our list.
-                                        if (includeEntity(ent, previousAABB, otherEntity, otherCollisionType, ignoredEntities) && (AABBCollision(sweepAABB, otherEntity.getAABB(otherCollisionType)))) {
-                                            otherShapes = otherEntity.getShapes(otherCollisionType);
-                                            
-                                            for (var q = 0; q < otherShapes.length; q++) {
-                                                //Push the shapes on the end!
-                                                potentialCollidingShapes[i].push(otherShapes[q]);
-                                            } 
-                                            potentialCollision = true;
-                                        }
-                                    }
-                                } else if (terrain && (otherCollisionType === 'tiles')) {
-                                    //Do our sweep check against the tiles and add potentially colliding shapes to our list.
-                                    otherShapes = terrain.getTileShapes(sweepAABB, previousAABB);
-                                    for (var q = 0; q < otherShapes.length; q++) {
-                                        //Push the shapes on the end!
-                                        potentialCollidingShapes[i].push(otherShapes[q]);
-                                        potentialCollision = true;
-                                    }
+                        if (otherEntity === thisEntity) {
+                            return false;
+                        } else if (otherEntity.jumpThrough && (aabb.bottom > otherAABB.top)) {
+                            return false;
+                        } else if (thisEntity.jumpThrough  && (otherAABB.bottom > aabb.top)) { // This will allow platforms to hit something solid sideways if it runs into them from the side even though originally they were above the top. - DDD
+                            return false;
+                        } else if (ignoredEntities) {
+                            for (i = 0; i < ignoredEntities.length; i++) {
+                                if (otherEntity === ignoredEntities[i]) {
+                                    return false;
                                 }
                             }
                         }
+                        return true;
+                    };
+
+                return function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY, collisionTypes) {
+                    var i = 0,
+                        y = 0,
+                        z = 0,
+                        q = 0,
+                        potentialCollision       = false,
+                        potentialCollidingShapes = [],
+                        previousAABB             = null,
+                        currentAABB              = null,
+                        collisionType            = null,
+                        otherEntity              = null,
+                        otherCollisionType       = '',
+                        otherShapes              = null,
+                        entitiesByTypeLive       = this.getWorldEntities(),
+                        otherEntities            = null,
+                        terrain                  = this.getWorldTerrain(),
+                        solidCollisions          = entityOrGroup.getSolidCollisions();
+                    
+//                    if (!entityOrGroup.jumpThrough || (entityDeltaY >= 0)) { //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
     
-                        if (potentialCollision) {
-                            finalMovementInfo = this.resolveCollisionPosition(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY);
+                    for (i = 0; i < collisionTypes.length; i++) {
+                        //Sweep the full movement of each collision type
+                        potentialCollidingShapes[i] = [];
+                        collisionType = collisionTypes[i];
+                        previousAABB = entityOrGroup.getPreviousAABB(collisionType);
+                        currentAABB = entityOrGroup.getAABB(collisionType);
+
+                        sweepAABB.reset();
+                        sweepAABB.include(currentAABB);
+                        sweepAABB.include(previousAABB);
+
+                        for (y = 0; y < solidCollisions[collisionType].length; y++) {
+                            otherCollisionType = solidCollisions[collisionType][y];
+
+                            if (entitiesByTypeLive[otherCollisionType]) {
+                                otherEntities = entitiesByTypeLive[otherCollisionType];
+
+                                for (z = 0; z < otherEntities.length; z++) {
+
+                                    //Chop out all the special case entities we don't want to check against.
+                                    otherEntity = otherEntities[z];
+
+                                    //Do our sweep check against the AABB of the other object and add potentially colliding shapes to our list.
+                                    if (includeEntity(ent, previousAABB, otherEntity, otherCollisionType, ignoredEntities) && (isAABBCollision(sweepAABB, otherEntity.getAABB(otherCollisionType)))) {
+                                        otherShapes = otherEntity.getShapes(otherCollisionType);
+
+                                        for (q = 0; q < otherShapes.length; q++) {
+                                            //Push the shapes on the end!
+                                            potentialCollidingShapes[i].push(otherShapes[q]);
+                                        }
+                                        potentialCollision = true;
+                                    }
+                                }
+                            } else if (terrain && (otherCollisionType === 'tiles')) {
+                                //Do our sweep check against the tiles and add potentially colliding shapes to our list.
+                                otherShapes = terrain.getTileShapes(sweepAABB, previousAABB);
+                                for (q = 0; q < otherShapes.length; q++) {
+                                    //Push the shapes on the end!
+                                    potentialCollidingShapes[i].push(otherShapes[q]);
+                                    potentialCollision = true;
+                                }
+                            }
                         }
+                    }
+
+                    if (potentialCollision) {
+                        finalMovementInfo = this.resolveCollisionPosition(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY);
+                    }
     
 //                    }
                     
@@ -669,15 +681,15 @@
                 var collisionData = new platformer.CollisionData();
                 
                 return function (ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY) {
-
-                    if (entityDeltaX != 0) {
-                        for (var j = 0; j < collisionTypes.length; j++) {
+                    var j = 0;
+                    
+                    if (entityDeltaX !== 0) {
+                        for (j = 0; j < collisionTypes.length; j++) {
                             //Move each collision type in X to find the min X movement
                             collisionData.clear();
                             collisionData = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'x', potentialCollidingShapes[j], collisionData);
                             
-                            if (collisionData.occurred)
-                            {
+                            if (collisionData.occurred) {
                                 collisionDataCollection.tryToAddX(collisionData);
                             }
                         }
@@ -693,21 +705,19 @@
                     // This moves the previous position of everything so that the check in Y can begin.
                     entityOrGroup.movePreviousX(finalMovementInfo.x);
                     
-                    if (entityDeltaY != 0) {
-                        for (var j = 0; j < collisionTypes.length; j++) {
+                    if (entityDeltaY !== 0) {
+                        for (j = 0; j < collisionTypes.length; j++) {
                             //Move each collision type in Y to find the min Y movement
                             collisionData.clear();
                             collisionData = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'y', potentialCollidingShapes[j], collisionData);
                             
-                            if (collisionData.occurred)
-                            {
+                            if (collisionData.occurred) {
                                 collisionDataCollection.tryToAddY(collisionData);
                             }
                         }
                     }
                     
-                    if (collisionDataCollection.yCount > 0)
-                    {
+                    if (collisionDataCollection.yCount > 0) {
                         collisionData.copy(collisionDataCollection.getYEntry(0));
                         finalMovementInfo.y = ent.previousY + collisionData.deltaMovement * collisionData.direction;
                     } else {
@@ -723,11 +733,11 @@
                 
                 return function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
                     //Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
+                    var i          = 0,
+                        shapes     = entityOrGroup.getShapes(collisionType),
+                        prevShapes = entityOrGroup.getPrevShapes(collisionType);
                     
-                    var shapes = entityOrGroup.getShapes(collisionType);
-                    var prevShapes = entityOrGroup.getPrevShapes(collisionType);
-                    
-                    for (var i = 0; i < shapes.length; i++) {
+                    for (i = 0; i < shapes.length; i++) {
                         shapeCollisionData.clear();
                         shapeCollisionData = this.findMinShapeMovementCollision(prevShapes[i], shapes[i], axis, potentialCollidingShapes, shapeCollisionData);
                         
@@ -758,134 +768,134 @@
             findMinShapeMovementCollision: (function () {
 
                 var storeCollisionData = function (collisionData, direction, position, initial, thisShape, thatShape, vector) {
-                    collisionData.occurred = true;
-                    collisionData.direction = direction;
-                    collisionData.position = position;
-                    collisionData.deltaMovement = Math.abs(position - initial);
-                    collisionData.aABB = thatShape.getAABB();
-                    collisionData.thisShape = thisShape;
-                    collisionData.thatShape = thatShape;
-                    collisionData.vector = vector.copy();
-                },
-                findAxisCollisionPosition = (function () {
-                    var v = new platformer.Vector(),
-                    returnInfo = {
-                        position: 0,
-                        contactVector: v
-                    }, 
-                    getMovementDistance = function (currentDistance, minimumDistance) {
-                        return Math.sqrt(Math.pow(minimumDistance, 2) - Math.pow(currentDistance, 2));
+                        collisionData.occurred = true;
+                        collisionData.direction = direction;
+                        collisionData.position = position;
+                        collisionData.deltaMovement = Math.abs(position - initial);
+                        collisionData.aABB = thatShape.getAABB();
+                        collisionData.thisShape = thisShape;
+                        collisionData.thatShape = thatShape;
+                        collisionData.vector = vector.copy();
                     },
-                    getCorner = function (circlePos, rectanglePos, half) {
-                        var diff = circlePos - rectanglePos;
-                        return diff - (diff/Math.abs(diff)) * half;
-                    },
-                    getOffsetForAABB = function (axis, thisAABB, thatAABB) {
-                        if (axis === 'x') {
-                            return thatAABB.halfWidth + thisAABB.halfWidth;
-                        } else if (axis === 'y') {
-                            return thatAABB.halfHeight + thisAABB.halfHeight;
-                        }
-                    },
-                    
-                    getOffsetForCircleVsAABB = function (axis, circle, rect, moving, direction) {
-                        var newAxisPosition = 0;
-                        
-                        if (axis === 'x') {
-                            if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom) {
-                                return rect.aABB.halfWidth + circle.radius;
-                            } else {
-                                v.y = getCorner(circle.y, rect.y, rect.aABB.halfHeight);
-                                newAxisPosition = rect.aABB.halfWidth + getMovementDistance(v.y, circle.radius);
-                                if (moving === circle) {
-                                    v.x = -getCorner(circle.x - direction * newAxisPosition, rect.x, rect.aABB.halfWidth) / 2;
-                                    v.y = -v.y;
-                                } else {
-                                    v.x = getCorner(circle.x, rect.x - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
+                    findAxisCollisionPosition = (function () {
+                        var v = new platformer.Vector(),
+                            returnInfo = {
+                                position: 0,
+                                contactVector: v
+                            },
+                            getMovementDistance = function (currentDistance, minimumDistance) {
+                                return Math.sqrt(Math.pow(minimumDistance, 2) - Math.pow(currentDistance, 2));
+                            },
+                            getCorner = function (circlePos, rectanglePos, half) {
+                                var diff = circlePos - rectanglePos;
+                                return diff - (diff / Math.abs(diff)) * half;
+                            },
+                            getOffsetForAABB = function (axis, thisAABB, thatAABB) {
+                                if (axis === 'x') {
+                                    return thatAABB.halfWidth + thisAABB.halfWidth;
+                                } else if (axis === 'y') {
+                                    return thatAABB.halfHeight + thisAABB.halfHeight;
                                 }
-                                v.normalize();
-                                return newAxisPosition;
-                            }
-                        } else if (axis === 'y') {
-                            if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right) {
-                                return rect.aABB.halfHeight + circle.radius;
-                            } else {
-                                v.x = getCorner(circle.x, rect.x, rect.aABB.halfWidth);
-                                newAxisPosition = rect.aABB.halfHeight + getMovementDistance(v.x, circle.radius);
-                                if (moving === circle) {
-                                    v.x = -v.x;
-                                    v.y = -getCorner(circle.y - direction * newAxisPosition, rect.y, rect.aABB.halfWidth) / 2;
-                                } else {
-                                    v.y = getCorner(circle.y, rect.y - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
-                                }
-                                v.normalize();
-                                return newAxisPosition;
-                            }
-                        }
-                    },
-                    getOffsetForCircles = function (axis, thisShape, thatShape) {
-                        if (axis === 'x') {
-                            return getMovementDistance(thisShape.y - thatShape.y, thisShape.radius + thatShape.radius);
-                        } else if (axis === 'y') {
-                            return getMovementDistance(thisShape.x - thatShape.x, thisShape.radius + thatShape.radius);
-                        }
-                    };
+                            },
+                            getOffsetForCircleVsAABB = function (axis, circle, rect, moving, direction) {
+                                var newAxisPosition = 0;
 
-                    return function (axis, direction, thisShape, thatShape) {
-                        //Returns the value of the axis at which point thisShape collides with thatShape
-                        
-                        if (thisShape.type == 'rectangle') {
-                            if (thatShape.type == 'rectangle') {
-                                returnInfo.position = thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.getAABB(), thatShape.getAABB());
-                                v.x = 0;
-                                v.y = 0;
-                                v[axis] = direction;
-                                return returnInfo;
-                            } else if (thatShape.type == 'circle') {
-                                v.x = 0;
-                                v.y = 0;
-                                v[axis] = direction;
-                                returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thatShape, thisShape, thisShape, direction);
-                                return returnInfo;
+                                if (axis === 'x') {
+                                    if (circle.y >= rect.aABB.top && circle.y <= rect.aABB.bottom) {
+                                        return rect.aABB.halfWidth + circle.radius;
+                                    } else {
+                                        v.y = getCorner(circle.y, rect.y, rect.aABB.halfHeight);
+                                        newAxisPosition = rect.aABB.halfWidth + getMovementDistance(v.y, circle.radius);
+                                        if (moving === circle) {
+                                            v.x = -getCorner(circle.x - direction * newAxisPosition, rect.x, rect.aABB.halfWidth) / 2;
+                                            v.y = -v.y;
+                                        } else {
+                                            v.x = getCorner(circle.x, rect.x - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
+                                        }
+                                        v.normalize();
+                                        return newAxisPosition;
+                                    }
+                                } else if (axis === 'y') {
+                                    if (circle.x >= rect.aABB.left && circle.x <= rect.aABB.right) {
+                                        return rect.aABB.halfHeight + circle.radius;
+                                    } else {
+                                        v.x = getCorner(circle.x, rect.x, rect.aABB.halfWidth);
+                                        newAxisPosition = rect.aABB.halfHeight + getMovementDistance(v.x, circle.radius);
+                                        if (moving === circle) {
+                                            v.x = -v.x;
+                                            v.y = -getCorner(circle.y - direction * newAxisPosition, rect.y, rect.aABB.halfWidth) / 2;
+                                        } else {
+                                            v.y = getCorner(circle.y, rect.y - direction * newAxisPosition, rect.aABB.halfWidth) / 2;
+                                        }
+                                        v.normalize();
+                                        return newAxisPosition;
+                                    }
+                                }
+                            },
+                            getOffsetForCircles = function (axis, thisShape, thatShape) {
+                                if (axis === 'x') {
+                                    return getMovementDistance(thisShape.y - thatShape.y, thisShape.radius + thatShape.radius);
+                                } else if (axis === 'y') {
+                                    return getMovementDistance(thisShape.x - thatShape.x, thisShape.radius + thatShape.radius);
+                                }
+                            };
+
+                        return function (axis, direction, thisShape, thatShape) {
+                            //Returns the value of the axis at which point thisShape collides with thatShape
+
+                            if (thisShape.type === 'rectangle') {
+                                if (thatShape.type === 'rectangle') {
+                                    returnInfo.position = thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.getAABB(), thatShape.getAABB());
+                                    v.x = 0;
+                                    v.y = 0;
+                                    v[axis] = direction;
+                                    return returnInfo;
+                                } else if (thatShape.type === 'circle') {
+                                    v.x = 0;
+                                    v.y = 0;
+                                    v[axis] = direction;
+                                    returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thatShape, thisShape, thisShape, direction);
+                                    return returnInfo;
+                                }
+                            } else if (thisShape.type === 'circle') {
+                                if (thatShape.type === 'rectangle') {
+                                    v.x = 0;
+                                    v.y = 0;
+                                    v[axis] = direction;
+                                    returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thisShape, thatShape, thisShape, direction);
+                                    return returnInfo;
+                                } else if (thatShape.type === 'circle') {
+                                    returnInfo.position = thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
+                                    v.x = thatShape.x - thisShape.x;
+                                    v.y = thatShape.y - thisShape.y;
+                                    v[axis] = thatShape[axis] - returnInfo.position;
+                                    v.normalize();
+                                    return returnInfo;
+                                }
                             }
-                        } else if (thisShape.type == 'circle') {
-                            if (thatShape.type == 'rectangle') {
-                                v.x = 0;
-                                v.y = 0;
-                                v[axis] = direction;
-                                returnInfo.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thisShape, thatShape, thisShape, direction);
-                                return returnInfo;
-                            } else if (thatShape.type == 'circle') {
-                                returnInfo.position = thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
-                                v.x = thatShape.x - thisShape.x;
-                                v.y = thatShape.y - thisShape.y;
-                                v[axis] = thatShape[axis] - returnInfo.position; 
-                                v.normalize();
-                                return returnInfo;
-                            }
-                        }
-                    };
-                }());
+                        };
+                    }());
                 
                 return function (prevShape, currentShape, axis, potentialCollidingShapes, collisionData) {
-                    var initialPoint = prevShape[axis];
-                    var goalPoint = currentShape[axis];
-                    var translatedShape = prevShape;
-                    var direction = (initialPoint < goalPoint) ? 1 : -1;
-                    var position = goalPoint;
-                    var collisionInfo = null;
-                    var finalPosition = goalPoint;
+                    var i = 0,
+                        initialPoint    = prevShape[axis],
+                        goalPoint       = currentShape[axis],
+                        translatedShape = prevShape,
+                        direction       = ((initialPoint < goalPoint) ? 1 : -1),
+                        position        = goalPoint,
+                        collisionInfo   = null,
+                        finalPosition   = goalPoint;
                     
-                    if (initialPoint != goalPoint) {
+                    if (initialPoint !== goalPoint) {
                         if (axis === 'x') {
                             translatedShape.moveX(goalPoint);
                         } else if (axis === 'y') {
                             translatedShape.moveY(goalPoint);
                         }
                         
-                        for (var i = 0; i < potentialCollidingShapes.length; i++) {
+                        for (i = 0; i < potentialCollidingShapes.length; i++) {
                             position = goalPoint;
-                            if (AABBCollision(translatedShape.getAABB(), potentialCollidingShapes[i].getAABB())) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
+                            if (isAABBCollision(translatedShape.getAABB(), potentialCollidingShapes[i].getAABB())) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
                                 if (shapeCollision(translatedShape, potentialCollidingShapes[i])) {
                                     collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, potentialCollidingShapes[i]);
                                     position = collisionInfo.position;
@@ -915,13 +925,13 @@
                 };
             }()),
             
-            checkSoftCollisions: function (resp)    {
+            checkSoftCollisions: function (resp) {
                 var x = 0,
-                trigger = function (ent) {
-                    return function (collision) {
-                        ent.trigger('hit-by-' + collision.type, collision);
+                    trigger = function (ent) {
+                        return function (collision) {
+                            ent.trigger('hit-by-' + collision.type, collision);
+                        };
                     };
-                };
 
                 for (x = 0; x < this.softEntitiesLive.length; x++) {
                     this.checkEntityForSoftCollisions(this.softEntitiesLive[x], this.getWorldEntities(), trigger(this.softEntitiesLive[x]));
@@ -929,20 +939,20 @@
             },
             
             checkEntityForSoftCollisions: function (ent, entitiesByTypeLive, callback) {
-                var otherEntity = undefined,
-                message = triggerMessage,
-                i   = 0,
-                j    = 0,
-                k    = 0,
-                y   = 0,
-                z   = 0,
-                checkAABBCollision = AABBCollision,
-                softCollisions = null,
-                otherEntities  = null,
-                otherCollisionType = null,
-                shapes = null,
-                otherShapes = null,
-                collisionFound = false;
+                var otherEntity = null,
+                    message = triggerMessage,
+                    i   = 0,
+                    j    = 0,
+                    k    = 0,
+                    y   = 0,
+                    z   = 0,
+                    checkAABBCollision = isAABBCollision,
+                    softCollisions = null,
+                    otherEntities  = null,
+                    otherCollisionType = null,
+                    shapes = null,
+                    otherShapes = null,
+                    collisionFound = false;
 
                 message.x = 0;
                 message.y = 0;
@@ -951,7 +961,7 @@
                     softCollisions = ent.softCollisions[ent.collisionTypes[i]];
                     for (y = 0; y < softCollisions.length; y++) {
                         otherCollisionType = softCollisions[y];
-                        otherEntities = entitiesByTypeLive[otherCollisionType]; 
+                        otherEntities = entitiesByTypeLive[otherCollisionType];
                         if (otherEntities) {
                             for (z = 0; z < otherEntities.length; z++) {
                                 collisionFound = false;
@@ -959,17 +969,15 @@
                                 if ((otherEntity !== ent) && (checkAABBCollision(ent.getAABB(ent.collisionTypes[i]), otherEntity.getAABB(otherCollisionType)))) {
                                     shapes = ent.getShapes(ent.collisionTypes[i]);
                                     otherShapes = otherEntity.getShapes(otherCollisionType);
-                                    for (j = 0; j < shapes.length; j++)
-                                    {
-                                        for (k = 0; k < otherShapes.length; k++)
-                                        {
+                                    for (j = 0; j < shapes.length; j++) {
+                                        for (k = 0; k < otherShapes.length; k++) {
                                             if (shapeCollision(shapes[j], otherShapes[k])) {
                                                 //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
-                                                message.entity = otherEntity;
-                                                message.type   = otherCollisionType;
-                                                message.myType = ent.collisionTypes[i];
-                                                message.shape  = otherShapes[k];
-                                                message.hitType= 'soft';
+                                                message.entity  = otherEntity;
+                                                message.type    = otherCollisionType;
+                                                message.myType  = ent.collisionTypes[i];
+                                                message.shape   = otherShapes[k];
+                                                message.hitType = 'soft';
                                                 
                                                 callback(message);
                                                 
@@ -991,12 +999,16 @@
             },
             
             destroy: function () {
+                var key = '';
+                
                 this.allEntities.length = 0;
                 this.allEntitiesLive.length = 0;
                 this.softEntitiesLive.length = 0;
                 this.solidEntitiesLive.length = 0;
-                for (var i in this.entitiesByType) {
-                    this.entitiesByType[i].length = 0;
+                for (key in this.entitiesByType) {
+                    if (this.entitiesByType.hasOwnProperty(key)) {
+                        this.entitiesByType[key].length = 0;
+                    }
                 }
             }
         },
@@ -1034,10 +1046,13 @@
                 var collisions = [];
                 
                 this.checkEntityForSoftCollisions(entity, entities || this.entitiesByTypeLive, function (collision) {
-                    var i = '',
-                    save  = {};
+                    var i    = '',
+                        save = {};
+                    
                     for (i in collision) {
-                        save[i] = collision[i];
+                        if (collision.hasOwnProperty(i)) {
+                            save[i] = collision[i];
+                        }
                     }
                     collisions.push(save);
                 });

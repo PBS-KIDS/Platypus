@@ -11,7 +11,7 @@
             "ontouchend": "stop-move",
             "ontouchcancel": "stop-move"
         },{
-            "type": "broadcast-events",
+            "type": "relay-game",
             "events":{
                 "start-move": "button-right:down",
                 "stop-move":  "button-right:up"

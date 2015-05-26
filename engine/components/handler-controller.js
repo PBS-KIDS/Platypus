@@ -33,129 +33,134 @@ This component handles capturing and relaying input information to the entities 
       "type": "handler-controller",
     }
 */
-
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var relayUpDown = function (event, self) {
-        return function (value) {
-            if (value.released) {
-                event += ':up';
-            } else if (value.pressed) {
-                event += ':down';
-            }
-            for (var x = 0; x < self.entities.length; x++) {
-                self.entities[x].trigger(event, value);
-            }
-        }; 
-    },
-    relay = function (event, self) {
-        return function (value) {
-            for (var x = 0; x < self.entities.length; x++) {
-                self.entities[x].trigger(event, value);
-            }
-        }; 
-    },
-    keyMap = { //Note: if this list is changed, be sure to update https://git.pbs.org/html5-platformer-engine/pages/Handler-Controller-Key-List
-        kc0:   'unknown',         
-        kc8:   'backspace',
-        kc9:   'tab',
-        kc12:  'numpad-5-shift',
-        kc13:  'enter',
-        kc16:  'shift',
-        kc17:  'ctrl',
-        kc18:  'alt',
-        kc19:  'pause',
-        kc20:  'caps-lock',
-        kc27:  'esc',
-        kc32:  'space',
-        kc33:  'page-up',
-        kc34:  'page-down',
-        kc35:  'end',
-        kc36:  'home',
-        kc37:  'left-arrow',
-        kc38:  'up-arrow',
-        kc39:  'right-arrow',
-        kc40:  'down-arrow',
-        kc42:  'numpad-multiply',
-        kc43:  'numpad-add',
-        kc44:  'print-screen',
-        kc45:  'insert',
-        kc46:  'delete',
-        kc47:  'numpad-division',
-        kc48:  '0',
-        kc49:  '1',
-        kc50:  '2',
-        kc51:  '3',
-        kc52:  '4',
-        kc53:  '5',
-        kc54:  '6',
-        kc55:  '7',
-        kc56:  '8',
-        kc57:  '9',
-        kc59:  'semicolon',
-        kc61:  'equals',
-        kc65:  'a',
-        kc66:  'b',
-        kc67:  'c',
-        kc68:  'd',
-        kc69:  'e',
-        kc70:  'f',
-        kc71:  'g',
-        kc72:  'h',
-        kc73:  'i',
-        kc74:  'j',
-        kc75:  'k',
-        kc76:  'l',
-        kc77:  'm',
-        kc78:  'n',
-        kc79:  'o',
-        kc80:  'p',
-        kc81:  'q',
-        kc82:  'r',
-        kc83:  's',
-        kc84:  't',
-        kc85:  'u',
-        kc86:  'v',
-        kc87:  'w',
-        kc88:  'x',
-        kc89:  'y',
-        kc90:  'z',
-        kc91:  'left-windows-start',
-        kc92:  'right-windows-start',
-        kc93:  'windows-menu',
-        kc96:  'back-quote',
-        kc106: 'numpad-multiply',
-        kc107: 'numpad-add',
-        kc109: 'numpad-minus',
-        kc110: 'numpad-period',
-        kc111: 'numpad-division',
-        kc112: 'f1',
-        kc113: 'f2',
-        kc114: 'f3',
-        kc115: 'f4',
-        kc116: 'f5',
-        kc117: 'f6',
-        kc118: 'f7',
-        kc119: 'f8',
-        kc120: 'f9',
-        kc121: 'f10',
-        kc122: 'f11',
-        kc123: 'f12',
-        kc144: 'num-lock',
-        kc145: 'scroll-lock',
-        kc186: 'semicolon',
-        kc187: 'equals',
-        kc188: 'comma',
-        kc189: 'hyphen',
-        kc190: 'period',
-        kc191: 'forward-slash',
-        kc192: 'back-quote',
-        kc219: 'open-bracket',
-        kc220: 'back-slash',
-        kc221: 'close-bracket',
-        kc222: 'quote'
-    };
+            return function (value) {
+                var x = 0;
+
+                if (value.released) {
+                    event += ':up';
+                } else if (value.pressed) {
+                    event += ':down';
+                }
+                for (x = 0; x < self.entities.length; x++) {
+                    self.entities[x].trigger(event, value);
+                }
+            };
+        },
+        relay = function (event, self) {
+            return function (value) {
+                var x = 0;
+                
+                for (x = 0; x < self.entities.length; x++) {
+                    self.entities[x].trigger(event, value);
+                }
+            };
+        },
+        keyMap = { //Note: if this list is changed, be sure to update https://git.pbs.org/html5-platformer-engine/pages/Handler-Controller-Key-List
+            kc0:   'unknown',
+            kc8:   'backspace',
+            kc9:   'tab',
+            kc12:  'numpad-5-shift',
+            kc13:  'enter',
+            kc16:  'shift',
+            kc17:  'ctrl',
+            kc18:  'alt',
+            kc19:  'pause',
+            kc20:  'caps-lock',
+            kc27:  'esc',
+            kc32:  'space',
+            kc33:  'page-up',
+            kc34:  'page-down',
+            kc35:  'end',
+            kc36:  'home',
+            kc37:  'left-arrow',
+            kc38:  'up-arrow',
+            kc39:  'right-arrow',
+            kc40:  'down-arrow',
+            kc42:  'numpad-multiply',
+            kc43:  'numpad-add',
+            kc44:  'print-screen',
+            kc45:  'insert',
+            kc46:  'delete',
+            kc47:  'numpad-division',
+            kc48:  '0',
+            kc49:  '1',
+            kc50:  '2',
+            kc51:  '3',
+            kc52:  '4',
+            kc53:  '5',
+            kc54:  '6',
+            kc55:  '7',
+            kc56:  '8',
+            kc57:  '9',
+            kc59:  'semicolon',
+            kc61:  'equals',
+            kc65:  'a',
+            kc66:  'b',
+            kc67:  'c',
+            kc68:  'd',
+            kc69:  'e',
+            kc70:  'f',
+            kc71:  'g',
+            kc72:  'h',
+            kc73:  'i',
+            kc74:  'j',
+            kc75:  'k',
+            kc76:  'l',
+            kc77:  'm',
+            kc78:  'n',
+            kc79:  'o',
+            kc80:  'p',
+            kc81:  'q',
+            kc82:  'r',
+            kc83:  's',
+            kc84:  't',
+            kc85:  'u',
+            kc86:  'v',
+            kc87:  'w',
+            kc88:  'x',
+            kc89:  'y',
+            kc90:  'z',
+            kc91:  'left-windows-start',
+            kc92:  'right-windows-start',
+            kc93:  'windows-menu',
+            kc96:  'back-quote',
+            kc106: 'numpad-multiply',
+            kc107: 'numpad-add',
+            kc109: 'numpad-minus',
+            kc110: 'numpad-period',
+            kc111: 'numpad-division',
+            kc112: 'f1',
+            kc113: 'f2',
+            kc114: 'f3',
+            kc115: 'f4',
+            kc116: 'f5',
+            kc117: 'f6',
+            kc118: 'f7',
+            kc119: 'f8',
+            kc120: 'f9',
+            kc121: 'f10',
+            kc122: 'f11',
+            kc123: 'f12',
+            kc144: 'num-lock',
+            kc145: 'scroll-lock',
+            kc186: 'semicolon',
+            kc187: 'equals',
+            kc188: 'comma',
+            kc189: 'hyphen',
+            kc190: 'period',
+            kc191: 'forward-slash',
+            kc192: 'back-quote',
+            kc219: 'open-bracket',
+            kc220: 'back-slash',
+            kc221: 'close-bracket',
+            kc222: 'quote'
+        };
 
     return platformer.createComponentClass({
         id: 'handler-controller',
@@ -168,19 +173,24 @@ This component handles capturing and relaying input information to the entities 
         },
         events: {
             "keydown": function (event) {
-                for (var x = 0; x < this.entities.length; x++) {
+                var x = 0;
+                
+                for (x = 0; x < this.entities.length; x++) {
                     this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
                 }
             },
             "keyup": function (event) {
-                for (var x = 0; x < this.entities.length; x++) {
+                var x = 0;
+                
+                for (x = 0; x < this.entities.length; x++) {
                     this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
                 }
             },
             "tick": function (resp) {
-                var time    = new Date().getTime();
+                var x    = 0,
+                    time = new Date().getTime();
         
-                for (var x = this.entities.length - 1; x > -1; x--) {
+                for (x = this.entities.length - 1; x > -1; x--) {
                     if (!this.entities[x].trigger('handle-controller', resp)) {
                         this.entities.splice(x, 1);
                     }
@@ -198,13 +208,16 @@ This component handles capturing and relaying input information to the entities 
         },
         methods: {
             updateEntity: function (entity) {
-                var messageIds = entity.getMessageIds(),
-                alreadyHere = false; 
+                var x = 0,
+                    j = 0,
+                    y = '',
+                    messageIds  = entity.getMessageIds(),
+                    alreadyHere = false;
                 
-                for (var x = 0; x < messageIds.length; x++) {
-                    if (messageIds[x] == 'handle-controller') {
-                        for (var j = 0; j < this.entities.length; j++) {
-                            if (this.entities[j] == entity) {
+                for (x = 0; x < messageIds.length; x++) {
+                    if (messageIds[x] === 'handle-controller') {
+                        for (j = 0; j < this.entities.length; j++) {
+                            if (this.entities[j] === entity) {
                                 alreadyHere = true;
                                 break;
                             }
@@ -213,8 +226,8 @@ This component handles capturing and relaying input information to the entities 
                         if (!alreadyHere) {
                             // Check for custom input messages that should be relayed from scene.
                             if (entity.controlMap) {
-                                for (var y in entity.controlMap) {
-                                    if ((y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)) {
+                                for (y in entity.controlMap) {
+                                    if (entity.controlMap.hasOwnProperty(y) && (y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)) {
                                         if (!this[y]) {
                                             this.addEventListener(y,           relayUpDown(y,     this));
                                             this.addEventListener(y + ':up',   relay(y + ':up',   this));

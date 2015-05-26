@@ -18,7 +18,6 @@
                           , "audio"
                           , "audio-mixer"
                           , "audio-mobile"
-                          , "broadcast-events"
                           , "camera"
                           , "camera-follow-me"
                           , "change-scene"

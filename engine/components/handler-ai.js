@@ -24,7 +24,7 @@ A component that handles updating ai components. Each tick it calls all the enti
 */
 
 
-    
+/*global platformer */
 (function () {
     "use strict";
 
@@ -32,7 +32,7 @@ A component that handles updating ai components. Each tick it calls all the enti
         id: 'handler-ai',
         constructor: function (definition) {
         },
-        events:{
+        events: {
             "tick": function (message) {
                 if (this.owner.triggerEventOnChildren) {
                     this.owner.triggerEventOnChildren('handle-ai', message);
