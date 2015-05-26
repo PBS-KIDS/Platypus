@@ -20,10 +20,10 @@ A simple component that keeps count of something and sends messages each time th
       "type": "counter"
     }
 */
-
+/*global platformer */
 (function () {
     "use strict";
-
+    
     return platformer.createComponentClass({
         id: 'counter',
         constructor: function (definition) {
@@ -33,43 +33,27 @@ A simple component that keeps count of something and sends messages each time th
             this.output = {
                 text: ''
             };
-
-            // Notes definition changes from older versions of this component.
-            if (definition.countMessage) {
-                console.warn('"' + this.type + '" components no longer accept "countMessage": "' + definition.countMessage + '" as a definition parameter. Use "aliases": {"' + definition.countMessage + '": "change-count"} instead.');
-            }
-            if (definition.incrementMessage) {
-                console.warn('"' + this.type + '" components no longer accept "incrementMessage": "' + definition.incrementMessage + '" as a definition parameter. Use "aliases": {"' + definition.incrementMessage + '": "increment-count"} instead.');
-            }
-            if (definition.totalMessage) {
-                console.warn('"' + this.type + '" components no longer accept "totalMessage": "' + definition.totalMessage + '" as a definition parameter. Use "aliases": {"' + definition.totalMessage + '": "change-total"} instead.');
-            }
         },
         events: {
             "change-total": function (total) {
                 this.total = total;
-                if (this.total) {
-                    this.output.text = this.count + "/" + this.total;
-                } else {
-                    this.output.text = '' + this.count;
-                }
-                this.owner.trigger('update-content', this.output);
+                this.updateText();
             },
             "change-count": function (count) {
                 this.count = count;
-                if (this.total) {
-                    this.output.text = this.count + "/" + this.total;
-                } else {
-                    this.output.text = '' + this.count;
-                }
-                this.owner.trigger('update-content', this.output);
+                this.updateText();
             },
             "increment-count": function () {
-                this.count++;
+                this.count += 1;
+                this.updateText();
+            }
+        },
+        methods: {
+            updateText: function () {
                 if (this.total) {
-                    this.output.text = this.count + "/" + this.total;
+                    this.output.text = String(this.count) + "/" + String(this.total);
                 } else {
-                    this.output.text = '' + this.count;
+                    this.output.text = String(this.count);
                 }
                 this.owner.trigger('update-content', this.output);
             }

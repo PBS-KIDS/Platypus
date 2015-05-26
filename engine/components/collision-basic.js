@@ -8,195 +8,212 @@
  * @uses Component
  */
 // Requires: ["../collision-shape.js", "../aabb.js"]
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
     var handleStuck = function (position, data, owner) {
-        var m    = 0,
-        s        = data.stuck;
-        
-        if (s) {
-            m = position.magnitude();
-            if (data.thatShape.owner && (Math.abs(s) > 1)) {
-                s *= 0.05;
+            var m = 0,
+                s = data.stuck;
+
+            if (s) {
+                m = position.magnitude();
+                if (data.thatShape.owner && (Math.abs(s) > 1)) {
+                    s *= 0.05;
+                }
+                if (!m || (m > Math.abs(s))) {
+                    if (data.vector.x) {
+                        position.x = s;
+                        position.y = 0;
+                    }
+                    if (data.vector.y) {
+                        position.x = 0;
+                        position.y = s;
+                    }
+                    owner.stuckWith = new platformer.Vector(data.thatShape.x, data.thatShape.y);
+                }
             }
-            if (!m || (m > Math.abs(s))) {
-                if (data.vector.x) {
-                    position.x = s;
-                    position.y = 0;
-                }
-                if (data.vector.y) {
-                    position.x = 0;
-                    position.y = s;
-                }
-                owner.stuckWith = new platformer.Vector(data.thatShape.x, data.thatShape.y);
+        },
+        /**
+         * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
+         * 
+         * @event *
+         * @param collision {Object} A list of key/value pairs describing the collision.
+         */
+        entityBroadcast = function (event, solidOrSoft, collisionType) {
+            if (typeof event === 'string') {
+                return function (value) {
+                    if (value.myType === collisionType) {
+                        if (value.hitType === solidOrSoft) {
+                            this.owner.triggerEvent(event, value);
+                        }
+                    }
+                };
+            } else if (Array.isArray(event)) {
+                return function (value) {
+                    var i = 0;
+                    
+                    if (value.myType === collisionType) {
+                        if (value.hitType === solidOrSoft) {
+                            for (i = 0; i < event.length; i++) {
+                                this.owner.triggerEvent(event[i], value);
+                            }
+                        }
+                    }
+                };
+            } else {
+                return function (collisionInfo) {
+                    var dx = collisionInfo.x,
+                        dy = collisionInfo.y;
+
+                    if (collisionInfo.entity && !(dx || dy)) {
+                        dx = collisionInfo.entity.x - this.owner.x;
+                        dy = collisionInfo.entity.y - this.owner.y;
+                    }
+
+                    if (collisionInfo.myType === collisionType) {
+                        if (collisionInfo.hitType === solidOrSoft) {
+                            if ((dy > 0) && event.bottom) {
+                                this.owner.trigger(event.bottom, collisionInfo);
+                            }
+                            if ((dy < 0) && event.top) {
+                                this.owner.trigger(event.top, collisionInfo);
+                            }
+                            if ((dx > 0) && event.right) {
+                                this.owner.trigger(event.right, collisionInfo);
+                            }
+                            if ((dx < 0) && event.left) {
+                                this.owner.trigger(event.left, collisionInfo);
+                            }
+                            if (event.all) {
+                                this.owner.trigger(event.all, collisionInfo);
+                            }
+                        }
+                    }
+                };
             }
-        }
-    },
-    /**
-     * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
-     * 
-     * @event *
-     * @param collision {Object} A list of key/value pairs describing the collision.
-     */
-    entityBroadcast = function (event, solidOrSoft, collisionType) {
-        if (typeof event === 'string') {
-            return function (value) {
-                if (value.myType === collisionType) {
-                    if (value.hitType === solidOrSoft) {
-                        this.owner.triggerEvent(event, value);
+        },
+        setupCollisionFunctions = function (self, entity) {
+            // This allows the same component type to be added multiple times.
+            if (!entity.collisionFunctions) {
+                entity.collisionFunctions = {};
+                entity.getAABB = function (collisionType) {
+                    var aabb = null,
+                        key  = '';
+
+                    if (!collisionType) {
+                        aabb = entity.aabb = entity.aabb || new platformer.AABB();
+                        aabb.reset();
+                        for (key in entity.collisionFunctions) {
+                            if (entity.collisionFunctions.hasOwnProperty(key)) {
+                                aabb.include(entity.collisionFunctions[key].getAABB());
+                            }
+                        }
+                        return aabb;
+                    } else if (entity.collisionFunctions[collisionType]) {
+                        return entity.collisionFunctions[collisionType].getAABB();
+                    } else {
+                        return null;
                     }
-                }
-            };
-        } else if (Array.isArray(event)) {
-            return function (value) {
-                if (value.myType === collisionType) {
-                    if (value.hitType === solidOrSoft) {
-                        for (var e in event) {
-                            this.owner.triggerEvent(event[e], value);
+                };
+
+                entity.getPreviousAABB = function (collisionType) {
+                    if (entity.collisionFunctions[collisionType]) {
+                        return entity.collisionFunctions[collisionType].getPreviousAABB();
+                    } else {
+                        return null;
+                    }
+                };
+
+                entity.getShapes = function (collisionType) {
+                    if (entity.collisionFunctions[collisionType]) {
+                        return entity.collisionFunctions[collisionType].getShapes();
+                    } else {
+                        return null;
+                    }
+                };
+
+                entity.getPrevShapes = function (collisionType) {
+                    if (entity.collisionFunctions[collisionType]) {
+                        return entity.collisionFunctions[collisionType].getPrevShapes();
+                    } else {
+                        return null;
+                    }
+                };
+
+                entity.prepareCollision = function (x, y) {
+                    var key = '';
+                    
+                    for (key in entity.collisionFunctions) {
+                        if (entity.collisionFunctions.hasOwnProperty(key)) {
+                            entity.collisionFunctions[key].prepareCollision(x, y);
                         }
                     }
-                }
-            };
-        } else {
-            return function (collisionInfo) {
-                var dx = collisionInfo.x,
-                dy     = collisionInfo.y;
-                
-                if (collisionInfo.entity && !(dx || dy)) {
-                    dx = collisionInfo.entity.x - this.owner.x;
-                    dy = collisionInfo.entity.y - this.owner.y;
-                }
-                
-                if (collisionInfo.myType === collisionType) {
-                    if (collisionInfo.hitType === solidOrSoft) {
-                        if ((dy > 0) && event['bottom']) {
-                            this.owner.trigger(event['bottom'], collisionInfo);
-                        }
-                        if ((dy < 0) && event['top']) {
-                            this.owner.trigger(event['top'], collisionInfo);
-                        }
-                        if ((dx > 0) && event['right']) {
-                            this.owner.trigger(event['right'], collisionInfo);
-                        }
-                        if ((dx < 0) && event['left']) {
-                            this.owner.trigger(event['left'], collisionInfo);
-                        }
-                        if (event['all']) {
-                            this.owner.trigger(event['all'], collisionInfo);
+                };
+
+                entity.relocateEntity = function (vector, collisionData) {
+                    var v = null;
+
+                    if (collisionData.xCount) {
+                        v = new platformer.Vector(0, 0, 0);
+                        handleStuck(v, collisionData.getXEntry(0), entity);
+                    }
+
+                    if (collisionData.yCount) {
+                        v = v || new platformer.Vector(0, 0, 0);
+                        handleStuck(v, collisionData.getYEntry(0), entity);
+                    }
+
+                    entity.triggerEvent('relocate-entity', {position: vector, unstick: v});
+                };
+
+                entity.movePreviousX = function (x) {
+                    var key = '';
+                    
+                    for (key in entity.collisionFunctions) {
+                        if (entity.collisionFunctions.hasOwnProperty(key)) {
+                            entity.collisionFunctions[key].movePreviousX(x);
                         }
                     }
-                }
-            };
-        }
-    },
-    setupCollisionFunctions = function (self, entity) {
-        // This allows the same component type to be added multiple times.
-        if (!entity.collisionFunctions) {
-            entity.collisionFunctions = {};
-            entity.getAABB = function (collisionType) {
-                if (!collisionType) {
-                    var aabb = entity.aabb = entity.aabb || new platformer.AABB();
-                    aabb.reset();
-                    for (var i in entity.collisionFunctions) {
-                        aabb.include(entity.collisionFunctions[i].getAABB());
-                    }
-                    return aabb;
-                } else if (entity.collisionFunctions[collisionType]) {
-                    return entity.collisionFunctions[collisionType].getAABB();
-                } else {
-                    return null;
-                }
-            };
+                };
 
-            entity.getPreviousAABB = function (collisionType) {
-                if (entity.collisionFunctions[collisionType]) {
-                    return entity.collisionFunctions[collisionType].getPreviousAABB();
-                } else {
-                    return null;
-                }
-            };
+                entity.getCollisionTypes = function () {
+                    return entity.collisionTypes;
+                };
 
-            entity.getShapes = function (collisionType) {
-                if (entity.collisionFunctions[collisionType]) {
-                    return entity.collisionFunctions[collisionType].getShapes();
-                } else {
-                    return null;
-                }
-            };
-            
-            entity.getPrevShapes = function (collisionType) {
-                if (entity.collisionFunctions[collisionType]) {
-                    return entity.collisionFunctions[collisionType].getPrevShapes();
-                } else {
-                    return null;
-                }
-            };
-            
-            entity.prepareCollision = function (x, y) {
-                for (var i in entity.collisionFunctions) {
-                    entity.collisionFunctions[i].prepareCollision(x, y);
-                }
-            };
-            
-            entity.relocateEntity = function (vector, collisionData) {
-                var v = null;
-                
-                if (collisionData.xCount) {
-                    v = new platformer.Vector(0,0,0);
-                    handleStuck(v, collisionData.getXEntry(0), entity);
-                }
-
-                if (collisionData.yCount) {
-                    v = v || new platformer.Vector(0,0,0);
-                    handleStuck(v, collisionData.getYEntry(0), entity);
-                }
-                
-                entity.triggerEvent('relocate-entity', {position: vector, unstick: v});
-            };
-            
-            entity.movePreviousX = function (x) {
-                for (var i in entity.collisionFunctions) {
-                    entity.collisionFunctions[i].movePreviousX(x);
-                }
-            };
-            
-            entity.getCollisionTypes = function () {
-                return entity.collisionTypes;
-            };
-
-            entity.getSolidCollisions = function () {
-                return entity.solidCollisions;
-            };
-        }
-
-        entity.collisionFunctions[self.collisionType] = {
-            getAABB: function () {
-                return self.getAABB();
-            },
-
-            getPreviousAABB: function () {
-                return self.getPreviousAABB();
-            },
-
-            getShapes: function () {
-                return self.getShapes();
-            },
-            
-            getPrevShapes: function () {
-                return self.getPrevShapes();
-            },
-            
-            prepareCollision: function (x, y) {
-                self.prepareCollision(x, y);
-            },
-            
-            movePreviousX: function (x) {
-                self.movePreviousX(x);
+                entity.getSolidCollisions = function () {
+                    return entity.solidCollisions;
+                };
             }
+
+            entity.collisionFunctions[self.collisionType] = {
+                getAABB: function () {
+                    return self.getAABB();
+                },
+
+                getPreviousAABB: function () {
+                    return self.getPreviousAABB();
+                },
+
+                getShapes: function () {
+                    return self.getShapes();
+                },
+
+                getPrevShapes: function () {
+                    return self.getPrevShapes();
+                },
+
+                prepareCollision: function (x, y) {
+                    self.prepareCollision(x, y);
+                },
+
+                movePreviousX: function (x) {
+                    self.movePreviousX(x);
+                }
+            };
+
         };
-        
-    };
 
     return platformer.createComponentClass({
         
@@ -324,17 +341,18 @@
         },
         
         constructor: function (definition) {
-            var x        = 0,
-            shapes       = null,
-            regX         = this.regX,
-            regY         = this.regY,
-            width        = this.width,
-            height       = this.height,
-            radius       = this.radius,
-            marginLeft   = this.margin.left   || this.margin,
-            marginRight  = this.margin.right  || this.margin,
-            marginTop    = this.margin.top    || this.margin,
-            marginBottom = this.margin.bottom || this.margin;
+            var x            = 0,
+                key          = '',
+                shapes       = null,
+                regX         = this.regX,
+                regY         = this.regY,
+                width        = this.width,
+                height       = this.height,
+                radius       = this.radius,
+                marginLeft   = this.margin.left   || this.margin,
+                marginRight  = this.margin.right  || this.margin,
+                marginTop    = this.margin.top    || this.margin,
+                marginBottom = this.margin.bottom || this.margin;
             
             if (regX === null) {
                 regX = this.regX = width / 2;
@@ -358,8 +376,8 @@
                 if (this.shapeType === 'circle') {
                     radius = radius || (((width || 0) + (height || 0)) / 4);
                     shapes = [{
-                        regX: (isNaN(regX)?radius:regX) - (marginRight - marginLeft) / 2,
-                        regY: (isNaN(regY)?radius:regY) - (marginBottom - marginTop) / 2,
+                        regX: (isNaN(regX) ? radius : regX) - (marginRight - marginLeft) / 2,
+                        regY: (isNaN(regY) ? radius : regY) - (marginBottom - marginTop) / 2,
                         radius: radius,
                         width:  radius * 2,
                         height: radius * 2,
@@ -367,8 +385,8 @@
                     }];
                 } else {
                     shapes = [{
-                        regX: (isNaN(regX)?(width  || 0) / 2:regX) - (marginRight  - marginLeft)/2,
-                        regY: (isNaN(regY)?(height || 0) / 2:regY) - (marginBottom - marginTop )/2,
+                        regX: (isNaN(regX) ? (width  || 0) / 2 : regX) - (marginRight  - marginLeft) / 2,
+                        regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
                         points: definition.points,
                         width:  (width  || 0) + marginLeft + marginRight,
                         height: (height || 0) + marginTop  + marginBottom,
@@ -383,7 +401,7 @@
             this.shapes = [];
             this.prevShapes = [];
             this.entities = undefined;
-            for (x in shapes) {
+            for (x = 0; x < shapes.length; x++) {
                 this.shapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
                 this.prevShapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
                 this.prevAABB.include(this.prevShapes[x].getAABB());
@@ -408,11 +426,13 @@
             this.owner.solidCollisions = this.owner.solidCollisions || {};
             this.owner.solidCollisions[this.collisionType] = [];
             if (definition.solidCollisions) {
-                for (var i in definition.solidCollisions) {
-                    this.owner.solidCollisions[this.collisionType].push(i);
-                    this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
-                    if (definition.solidCollisions[i]) {
-                        this.addEventListener('hit-by-' + i, entityBroadcast(definition.solidCollisions[i], 'solid', this.collisionType));
+                for (key in definition.solidCollisions) {
+                    if (definition.solidCollisions.hasOwnProperty(key)) {
+                        this.owner.solidCollisions[this.collisionType].push(key);
+                        this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
+                        if (definition.solidCollisions[key]) { // To make sure it's not an empty string.
+                            this.addEventListener('hit-by-' + key, entityBroadcast(definition.solidCollisions[key], 'solid', this.collisionType));
+                        }
                     }
                 }
             }
@@ -432,10 +452,12 @@
             this.owner.softCollisions = this.owner.softCollisions || {};
             this.owner.softCollisions[this.collisionType] = [];
             if (definition.softCollisions) {
-                for (var i in definition.softCollisions) {
-                    this.owner.softCollisions[this.collisionType].push(i);
-                    if (definition.softCollisions[i]) {
-                        this.addEventListener('hit-by-' + i, entityBroadcast(definition.softCollisions[i], 'soft', this.collisionType));
+                for (key in definition.softCollisions) {
+                    if (definition.softCollisions.hasOwnProperty(key)) {
+                        this.owner.softCollisions[this.collisionType].push(key);
+                        if (definition.softCollisions[key]) { // To make sure it's not an empty string.
+                            this.addEventListener('hit-by-' + key, entityBroadcast(definition.softCollisions[key], 'soft', this.collisionType));
+                        }
                     }
                 }
             }
@@ -443,7 +465,7 @@
             this.stuck = false;
         },
         
-        events:{
+        events: {
             /**
              * On receiving this message, the component triggers `add-collision-entity` on the parent.
              * 
@@ -484,7 +506,8 @@
              */
             "relocate-entity": function (resp) {
                 var unstick = resp.unstick,
-                um          = 0;
+                    um      = 0,
+                    i       = 0;
                 
                 if (unstick) {
                     um = unstick.magnitude();
@@ -507,9 +530,9 @@
                 }
                 
                 this.aabb.reset();
-                for (var x in this.shapes) {
-                    this.shapes[x].update(this.owner.x, this.owner.y);
-                    this.aabb.include(this.shapes[x].getAABB());
+                for (i = 0; i < this.shapes.length; i++) {
+                    this.shapes[i].update(this.owner.x, this.owner.y);
+                    this.aabb.include(this.shapes[i].getAABB());
                 }
 
                 this.owner.previousPosition.set(this.owner.position);
@@ -568,8 +591,8 @@
             },
             
             prepareCollision: function (x, y) {
-                var i      = 0,
-                tempShapes = this.prevShapes;
+                var i          = 0,
+                    tempShapes = this.prevShapes;
                 
                 this.owner.x = x;
                 this.owner.y = y;
@@ -588,15 +611,17 @@
             },
             
             movePreviousX: function (x) {
+                var i = 0;
+                
                 this.prevAABB.moveX(x);
-                for (var k = 0; k < this.prevShapes.length; k++) {
-                    this.prevShapes[k].setXWithEntityX(x);
+                for (i = 0; i < this.prevShapes.length; i++) {
+                    this.prevShapes[i].setXWithEntityX(x);
                 }
             },
             
             destroy: function () {
-                var i = 0,
-                col   = "";
+                var i   = 0,
+                    col = '';
                 
                 this.owner.parent.trigger('remove-collision-entity', this.owner);
 
@@ -607,7 +632,7 @@
                 
                 for (i = 0; i < this.owner.collisionTypes.length; i++) {
                     if (this.owner.collisionTypes[i] === this.collisionType) {
-                        this.owner.collisionTypes.splice(i,1);
+                        this.owner.collisionTypes.splice(i, 1);
                         break;
                     }
                 }
@@ -615,9 +640,8 @@
                     this.owner.solidCollisions[this.collisionType].length = 0;
                     delete this.owner.solidCollisions[this.collisionType];
                 }
-                for (col in this.owner.solidCollisions) {
+                if (Object.keys(this.owner.solidCollisions).length > 0) {
                     this.owner.collides = true;
-                    break;
                 }
                 if (this.owner.softCollisions[this.collisionType]) {
                     this.owner.softCollisions[this.collisionType].length = 0;

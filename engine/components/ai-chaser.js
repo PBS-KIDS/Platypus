@@ -28,72 +28,72 @@ This component acts as a simple AI that will chase another entity.
 */
 /*global platformer */
 (function () {
-	"use strict";
+    "use strict";
 
-	return platformer.createComponentClass({
-		
-		id: 'ai-chaser',
-		
-		constructor: function (definition) {
-			this.target = this.owner.target || null;
-			this.piOverTwo = Math.PI / 2;
-			this.prevAngle = 0;
-			this.chasing = true;
-			this.offset = {x: 0, y: 0};
-		},
+    return platformer.createComponentClass({
+        
+        id: 'ai-chaser',
+        
+        constructor: function (definition) {
+            this.target = this.owner.target || null;
+            this.piOverTwo = Math.PI / 2;
+            this.prevAngle = 0;
+            this.chasing = true;
+            this.offset = {x: 0, y: 0};
+        },
 
-		events: {// These are messages that this component listens for
-			"handle-ai": function () {
-				if (this.target && this.chasing) {
-					//figure out angle
-					this.owner.trigger('move');
-					var angle = 0,
+        events: {// These are messages that this component listens for
+            "handle-ai": function () {
+                if (this.target && this.chasing) {
+                    //figure out angle
+                    this.owner.trigger('move');
+                    var angle = 0,
                         dX = this.target.x + this.offset.x - this.owner.x,
                         dY = this.target.y + this.offset.y - this.owner.y;
-					if (dX === 0) {
-						if (dY > 0) {
-							angle = this.piOverTwo;
-						} else if (dY < 0) {
-							angle = -this.piOverTwo;
-						} else {
-							angle = this.prevAngle;
-							this.owner.trigger('stop');
-						}
-					} else {
-						angle = Math.atan(dY / dX);
-						if (dX < 0) {
-							angle = Math.PI + angle;
-						}
-					}
-					this.owner.trigger('set-angle', angle);
-					this.prevAngle = angle;
-				} else {
-					this.owner.trigger('stop');
-				}
-			},
-			"set-target": function (entity) {
-				this.target = entity;
-				this.offset.x = 0;
-				this.offset.y = 0;
-			},
-			"set-target-offset": function (offset) {
-				this.offset.x = offset.x;
-				this.offset.y = offset.y;
-			},
-			"start-chasing": function () {
-				this.chasing = true;
-			},
-			"stop-chasing": function () {
-				this.chasing = false;
-			}
-				   
-		},
-		
-		methods: {// These are methods that are called on the component
-			destroy: function () {
-				this.target = null;
-			}
-		}
-		
-	});
+                    if (dX === 0) {
+                        if (dY > 0) {
+                            angle = this.piOverTwo;
+                        } else if (dY < 0) {
+                            angle = -this.piOverTwo;
+                        } else {
+                            angle = this.prevAngle;
+                            this.owner.trigger('stop');
+                        }
+                    } else {
+                        angle = Math.atan(dY / dX);
+                        if (dX < 0) {
+                            angle = Math.PI + angle;
+                        }
+                    }
+                    this.owner.trigger('set-angle', angle);
+                    this.prevAngle = angle;
+                } else {
+                    this.owner.trigger('stop');
+                }
+            },
+            "set-target": function (entity) {
+                this.target = entity;
+                this.offset.x = 0;
+                this.offset.y = 0;
+            },
+            "set-target-offset": function (offset) {
+                this.offset.x = offset.x;
+                this.offset.y = offset.y;
+            },
+            "start-chasing": function () {
+                this.chasing = true;
+            },
+            "stop-chasing": function () {
+                this.chasing = false;
+            }
+                   
+        },
+        
+        methods: {// These are methods that are called on the component
+            destroy: function () {
+                this.target = null;
+            }
+        }
+        
+    });
 }());

@@ -6,6 +6,8 @@
  * @class "camera" Component
  * @uses Component
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
@@ -26,10 +28,10 @@
             self.world.viewportHeight = self.window.viewportHeight * self.world.viewportWidth / self.window.viewportWidth;
         }
         
-        self.worldPerWindowUnitWidth  = self.world.viewportWidth / self.window.viewportWidth;
-        self.worldPerWindowUnitHeight = self.world.viewportHeight / self.window.viewportHeight;
-        self.windowPerWorldUnitWidth  = self.window.viewportWidth / self.world.viewportWidth;
-        self.windowPerWorldUnitHeight = self.window.viewportHeight/ self.world.viewportHeight;
+        self.worldPerWindowUnitWidth  = self.world.viewportWidth   / self.window.viewportWidth;
+        self.worldPerWindowUnitHeight = self.world.viewportHeight  / self.window.viewportHeight;
+        self.windowPerWorldUnitWidth  = self.window.viewportWidth  / self.world.viewportWidth;
+        self.windowPerWorldUnitHeight = self.window.viewportHeight / self.world.viewportHeight;
         
         self.viewportUpdate = true;
     };
@@ -107,7 +109,7 @@
              * @type number
              * @default 600
              **/
-            "transitionY": 600, 
+            "transitionY": 600,
              
             /**
              * Sets how quickly the camera should rotate to a new orientation.
@@ -265,11 +267,11 @@
  * @param entity {Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
   **/
             "child-entity-added": function (entity) {
-                var messageIds = entity.getMessageIds(); 
+                var x          = 0,
+                    messageIds = entity.getMessageIds();
                 
-                for (var x = 0; x < messageIds.length; x++)
-                {
-                    if (messageIds[x] == 'camera-update') {
+                for (x = 0; x < messageIds.length; x++) {
+                    if (messageIds[x] === 'camera-update') {
                         this.entities.push(entity);
                         this.viewportUpdate = true;
                         
@@ -320,13 +322,15 @@
  * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
  **/
             "world-loaded": function (values) {
+                var x = 0;
+                
                 this.worldIsLoaded = true;
                 this.worldWidth    = values.width;
                 this.worldHeight   = values.height;
                 if (values.camera) {
                     this.follow(values.camera);
                 }
-                for (var x = this.entities.length - 1; x > -1; x--) {
+                for (x = this.entities.length - 1; x > -1; x--) {
                     this.entities[x].trigger('camera-loaded', values);
                 }
             },
@@ -337,25 +341,19 @@
  * @method 'tick'
  * @param message {Object}
  * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
- **/  
-            "tick": function (resp) {        
-                switch (this.state)
-                {
-                case 'following':
-                    if (this.followingfunction (this.following, resp.delta)) {
-                        this.viewportUpdate = true;
-                    }
-                    break;
-                case 'static':
-                default:
-                    break;
+ **/
+            "tick": function (resp) {
+                var x = 0;
+                
+                if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
+                    this.viewportUpdate = true;
                 }
                 
                 if (this.viewportUpdate) {
                     this.viewportUpdate = false;
                     this.stationary = false;
                     
-                    if (this.shakeIncrementor < this.shakeTime ) {
+                    if (this.shakeIncrementor < this.shakeTime) {
                         this.viewportUpdate = true;
                         this.shakeIncrementor += resp.delta;
                         this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
@@ -397,8 +395,7 @@
                     this.owner.trigger('camera-update', this.message);
 
                     
-                    for (var x = this.entities.length - 1; x > -1; x--)
-                    {
+                    for (x = this.entities.length - 1; x > -1; x--) {
                         if (!this.entities[x].trigger('camera-update', this.message)) {
                             this.entities.splice(x, 1);
                         }
@@ -497,7 +494,7 @@
                 this.xMagnitude = xMag;
                 this.yMagnitude = yMag;
                 
-                if (xFreq == 0) {
+                if (xFreq === 0) {
                     this.xWaveLength = 1;
                     this.xShakeTime = 0;
                 } else {
@@ -505,7 +502,7 @@
                     this.xShakeTime = Math.ceil(time / this.xWaveLength) * this.xWaveLength;
                 }
                 
-                if (yFreq == 0) {
+                if (yFreq === 0) {
                     this.yWaveLength = 1;
                     this.yShakeTime = 0;
                 } else {
@@ -570,7 +567,6 @@
                     this.setBoundingArea(def.top, def.left, def.width, def.height);
                     this.followingFunction = this.boundingFollow;
                     break;
-                case 'static':
                 default:
                     this.state = 'static';
                     this.following = undefined;
@@ -599,12 +595,12 @@
             
             moveLeft: function (newLeft) {
                 if (Math.abs(this.world.viewportLeft - newLeft) > this.threshold) {
-                    if (this.worldWidth && this.worldWidth != 0 && this.worldWidth < this.world.viewportWidth) {
+                    if (this.worldWidth && this.worldWidth !== 0 && this.worldWidth < this.world.viewportWidth) {
                         this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
-                    } else if (this.worldWidth && this.worldWidth != 0 && (newLeft + this.world.viewportWidth > this.worldWidth)) {
+                    } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft + this.world.viewportWidth > this.worldWidth)) {
                         this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
-                    } else if (this.worldWidth && this.worldWidth != 0 && (newLeft < 0)) {
-                        this.world.viewportLeft = 0; 
+                    } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft < 0)) {
+                        this.world.viewportLeft = 0;
                     } else {
                         this.world.viewportLeft = newLeft;
                     }
@@ -615,12 +611,12 @@
             
             moveTop: function (newTop) {
                 if (Math.abs(this.world.viewportTop - newTop) > this.threshold) {
-                    if (this.worldHeight && this.worldHeight != 0 && this.worldHeight < this.world.viewportHeight) {
+                    if (this.worldHeight && this.worldHeight !== 0 && this.worldHeight < this.world.viewportHeight) {
                         this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
-                    } else if (this.worldHeight && this.worldHeight != 0 && (newTop + this.world.viewportHeight > this.worldHeight)) {
+                    } else if (this.worldHeight && this.worldHeight !== 0 && (newTop + this.world.viewportHeight > this.worldHeight)) {
                         this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
-                    } else if (this.worldHeight && this.worldHeight != 0 && (newTop < 0)) {
-                        this.world.viewportTop = 0; 
+                    } else if (this.worldHeight && this.worldHeight !== 0 && (newTop < 0)) {
+                        this.world.viewportTop = 0;
                     } else {
                         this.world.viewportTop = newTop;
 //                        console.log(newTop + ',' + this.world.viewportHeight + ',' + this.worldHeight);
@@ -640,22 +636,22 @@
             
             lockedFollow: (function () {
                 var min = Math.min,
-                getTransitionalPoint = function (a, b, ratio) {
-                    // Find point between two points according to ratio.
-                    return ratio * b + (1 - ratio) * a;
-                },
-                getRatio = function (transition, time) {
-                    // Look at the target transition time (in milliseconds) and set up ratio accordingly.
-                    if (transition) {
-                        return min(time / transition, 1);
-                    } else {
-                        return 1;
-                    }
-                };
+                    getTransitionalPoint = function (a, b, ratio) {
+                        // Find point between two points according to ratio.
+                        return ratio * b + (1 - ratio) * a;
+                    },
+                    getRatio = function (transition, time) {
+                        // Look at the target transition time (in milliseconds) and set up ratio accordingly.
+                        if (transition) {
+                            return min(time / transition, 1);
+                        } else {
+                            return 1;
+                        }
+                    };
                 
                 return function (entity, time, slowdown) {
-                    var x = getTransitionalPoint(this.world.viewportLeft,        entity.x - (this.world.viewportWidth / 2),  getRatio(this.transitionX,     time)),
-                    y     = getTransitionalPoint(this.world.viewportTop,         entity.y - (this.world.viewportHeight / 2), getRatio(this.transitionY,     time));
+                    var x = getTransitionalPoint(this.world.viewportLeft, entity.x - (this.world.viewportWidth / 2),  getRatio(this.transitionX,     time)),
+                        y = getTransitionalPoint(this.world.viewportTop,  entity.y - (this.world.viewportHeight / 2), getRatio(this.transitionY,     time));
 
                     if (this.rotate) { // Only run the orientation calculations if we need them.
                         return this.move(x, y, getTransitionalPoint(this.world.viewportOrientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
@@ -667,11 +663,11 @@
             
             forwardFollow: function (entity, time) {
                 var ff = this.forwardFollower,
-                standardizeTimeDistance = 15 / time, //This allows the camera to pan appropriately on slower devices or longer ticks
-                moved  = false,
-                x = entity.x + this.offsetX,
-                y = entity.y + this.offsetY,
-                a = (entity.orientation || 0) + this.offsetAngle;
+                    standardizeTimeDistance = 15 / time, //This allows the camera to pan appropriately on slower devices or longer ticks
+                    moved  = false,
+                    x = entity.x + this.offsetX,
+                    y = entity.y + this.offsetY,
+                    a = (entity.orientation || 0) + this.offsetAngle;
                 
                 if (this.followFocused && (this.lastLeft === x) && (this.lastTop === y)) {
                     return this.lockedFollow(ff, time);
@@ -726,14 +722,14 @@
             
             boundingFollow: function (entity, time) {
                 var newLeft = null,
-                newTop      = null,
-                ratioX      = (this.transitionX?Math.min(time / this.transitionX, 1):1),
-                iratioX     = 1 - ratioX,
-                ratioY      = (this.transitionY?Math.min(time / this.transitionY, 1):1),
-                iratioY     = 1 - ratioY;
+                    newTop  = null,
+                    ratioX  = (this.transitionX ? Math.min(time / this.transitionX, 1) : 1),
+                    iratioX = 1 - ratioX,
+                    ratioY  = (this.transitionY ? Math.min(time / this.transitionY, 1) : 1),
+                    iratioY = 1 - ratioY;
                 
                 if (entity.x > this.world.viewportLeft + this.bBBorderX + this.bBInnerWidth) {
-                    newLeft = entity.x -(this.bBBorderX + this.bBInnerWidth);
+                    newLeft = entity.x - (this.bBBorderX + this.bBInnerWidth);
                 } else if (entity.x < this.world.viewportLeft + this.bBBorderX) {
                     newLeft = entity.x - this.bBBorderX;
                 }
@@ -759,7 +755,7 @@
                 var wCoords = [];
                 wCoords[0] = Math.round((sCoords[0] - this.window.viewportLeft) * this.worldPerWindowUnitWidth);
                 wCoords[1] = Math.round((sCoords[1] - this.window.viewportTop)  * this.worldPerWindowUnitHeight);
-                return wCoords; 
+                return wCoords;
             },
             
             worldToWindow: function (wCoords) {

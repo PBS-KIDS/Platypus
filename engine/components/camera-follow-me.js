@@ -55,6 +55,7 @@ This component can request that the camera focus on this entity.
     }
 
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -62,9 +63,9 @@ This component can request that the camera focus on this entity.
         id: 'camera-follow-me',
         
         constructor: function (definition) {
-            this.pauseGame = definition.pause?{
+            this.pauseGame = definition.pause ? {
                 time: definition.time
-            }:null;
+            } : null;
             
             this.followMeMessage = {
                 mode: this.owner.cameraMode || definition.mode || 'forward',

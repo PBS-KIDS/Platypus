@@ -31,6 +31,8 @@ This component allows the entity to initiate a change from the current scene to 
       // Optional. An object containing key/value pairs of information that should be passed into the new scene on the new scenes "scene-loaded" call.
     }
 */
+/*global console */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -57,10 +59,10 @@ This component allows the entity to initiate a change from the current scene to 
                 }
             },
             "new-scene": function (response) {
-                var resp   = response || this,
-                scene      = resp.scene || this.scene,
-                transition = resp.transition || this.transition,
-                data        = resp.persistentData || this.persistentData;
+                var resp       = response || this,
+                    scene      = resp.scene || this.scene,
+                    transition = resp.transition || this.transition,
+                    data       = resp.persistentData || this.persistentData;
             
                 platformer.game.loadScene(scene, transition, data);
             },
@@ -68,9 +70,12 @@ This component allows the entity to initiate a change from the current scene to 
                 this.scene = scene;
             },
             "set-persistent-scene-data": function (dataObj) {
-                for (var x in dataObj)
-                {
-                    this.persistentData[x] = dataObj[x];    
+                var key = '';
+                
+                for (key in dataObj) {
+                    if (dataObj.hasOwnProperty(key)) {
+                        this.persistentData[key] = dataObj[key];
+                    }
                 }
             }
         }

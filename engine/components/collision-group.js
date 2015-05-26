@@ -22,17 +22,19 @@ This component groups other entities with this entity for collision checking. Th
     
 Requires: ["../aabb.js"]
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     //set here to make them reusable objects
     var appendUniqueItems = function (hostArray, insertArray) {
-        var i  = 0,
-        j      = 0,
-        length = hostArray.length,
-        found  = false;
+        var i      = 0,
+            j      = 0,
+            length = hostArray.length,
+            found  = false;
         
-        for (; i < insertArray.length; i++) {
+        for (i = 0; i < insertArray.length; i++) {
             found = false;
             for (j = 0; j < length; j++) {
                 if (insertArray[i] === hostArray[j]) {
@@ -67,10 +69,11 @@ Requires: ["../aabb.js"]
             
             this.collisionGroup = this.owner.collisionGroup = {
                 getAllEntities: function () {
-                    var count = 0,
-                    childEntity = null;
+                    var x           = 0,
+                        count       = 0,
+                        childEntity = null;
                     
-                    for (var x = 0; x < self.solidEntities.length; x++) {
+                    for (x = 0; x < self.solidEntities.length; x++) {
                         childEntity = self.solidEntities[x];
                         if ((childEntity !== self.owner) && childEntity.collisionGroup) {
                             count += childEntity.collisionGroup.getAllEntities();
@@ -118,7 +121,7 @@ Requires: ["../aabb.js"]
             };
         },
         
-        events:{
+        events: {
             "child-entity-added": function (entity) {
                 this.addCollisionEntity(entity);
             },
@@ -143,11 +146,11 @@ Requires: ["../aabb.js"]
         
         methods: {
             addCollisionEntity: function (entity) {
-                var i = 0,
-                types = entity.collisionTypes;
+                var i     = 0,
+                    types = entity.collisionTypes;
                 
                 if (types) {
-                    for (; i < types.length; i++) {
+                    for (i = 0; i < types.length; i++) {
                         if (entity.solidCollisions[types[i]].length && !entity.immobile) {
                             this.solidEntities[this.solidEntities.length] = entity;
                         }
@@ -157,12 +160,12 @@ Requires: ["../aabb.js"]
             },
             
             removeCollisionEntity: function (entity) {
-                var x = 0,
-                i     = 0,
-                types = entity.collisionTypes;
+                var x     = 0,
+                    i     = 0,
+                    types = entity.collisionTypes;
 
                 if (types) {
-                    for (; i < types.length; i++) {
+                    for (i = 0; i < types.length; i++) {
                         if (entity.solidCollisions[types[i]].length) {
                             for (x in this.solidEntities) {
                                 if (this.solidEntities[x] === entity) {
@@ -177,10 +180,11 @@ Requires: ["../aabb.js"]
             },
             
             getCollisionTypes: function () {
-                var childEntity = null,
-                compiledList = [];
+                var x            = 0,
+                    childEntity  = null,
+                    compiledList = [];
                 
-                for (var x = 0; x < this.solidEntities.length; x++) {
+                for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
@@ -192,18 +196,22 @@ Requires: ["../aabb.js"]
             },
 
             getSolidCollisions: function () {
-                var childEntity = null,
-                compiledList = {},
-                entityList = null;
+                var x            = 0,
+                    key          = '',
+                    childEntity  = null,
+                    compiledList = {},
+                    entityList   = null;
                 
-                for (var x = 0; x < this.solidEntities.length; x++) {
+                for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
                     entityList = childEntity.getSolidCollisions();
-                    for (var z in entityList) {
-                        compiledList[z] = appendUniqueItems(compiledList[z] || [], entityList[z]);
+                    for (key in entityList) {
+                        if (entityList.hasOwnProperty(key)) {
+                            compiledList[key] = appendUniqueItems(compiledList[key] || [], entityList[key]);
+                        }
                     }
                 }
                 
@@ -211,13 +219,15 @@ Requires: ["../aabb.js"]
             },
             
             getAABB: function (collisionType) {
-                var childEntity = null;
+                var x           = 0,
+                    aabb        = null,
+                    childEntity = null;
                 
                 if (!collisionType) {
                     return this.aabb;
                 } else {
-                    var aabb = new platformer.AABB();
-                    for (var x = 0; x < this.solidEntities.length; x++) {
+                    aabb = new platformer.AABB();
+                    for (x = 0; x < this.solidEntities.length; x++) {
                         childEntity = this.solidEntities[x];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                             childEntity = childEntity.collisionGroup;
@@ -230,13 +240,15 @@ Requires: ["../aabb.js"]
             },
 
             getPreviousAABB: function (collisionType) {
-                var childEntity = null;
+                var x           = 0,
+                    aabb        = null,
+                    childEntity = null;
                 
                 if (!collisionType) {
                     return this.prevAABB;
                 } else {
-                    var aabb = new platformer.AABB();
-                    for (var x = 0; x < this.solidEntities.length; x++) {
+                    aabb = new platformer.AABB();
+                    for (x = 0; x < this.solidEntities.length; x++) {
                         childEntity = this.solidEntities[x];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                             childEntity = childEntity.collisionGroup;
@@ -249,18 +261,21 @@ Requires: ["../aabb.js"]
             },
             
             updateAABB: function () {
+                var x = 0;
+                
                 this.aabb.reset();
-                for (var x = 0; x < this.solidEntities.length; x++) {
-                    this.aabb.include(((this.solidEntities[x] !== this.owner) && this.solidEntities[x].getCollisionGroupAABB)?this.solidEntities[x].getCollisionGroupAABB():this.solidEntities[x].getAABB());
+                for (x = 0; x < this.solidEntities.length; x++) {
+                    this.aabb.include(((this.solidEntities[x] !== this.owner) && this.solidEntities[x].getCollisionGroupAABB) ? this.solidEntities[x].getCollisionGroupAABB() : this.solidEntities[x].getAABB());
                 }
             },
             
             getShapes: function (collisionType) {
-                var childEntity = null,
-                shapes = [],
-                newShapes = null;
+                var x           = 0,
+                    childEntity = null,
+                    shapes      = [],
+                    newShapes   = null;
                 
-                for (var x = 0; x < this.solidEntities.length; x++) {
+                for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
@@ -274,11 +289,12 @@ Requires: ["../aabb.js"]
             },
 
             getPrevShapes: function (collisionType) {
-                var childEntity = null,
-                    newShapes = null,
-                    shapes = [];
+                var x           = 0,
+                    childEntity = null,
+                    newShapes   = null,
+                    shapes      = [];
                 
-                for (var x = 0; x < this.solidEntities.length; x++) {
+                for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
@@ -292,11 +308,12 @@ Requires: ["../aabb.js"]
             },
             
             prepareCollision: function (x, y) {
-                var childEntity = null,
-                oX = 0,
-                oY = 0;
+                var i           = 0,
+                    childEntity = null,
+                    oX          = 0,
+                    oY          = 0;
                 
-                for (var i = 0; i < this.solidEntities.length; i++) {
+                for (i = 0; i < this.solidEntities.length; i++) {
                     childEntity = this.solidEntities[i];
                     childEntity.saveDX = childEntity.x - childEntity.previousX;
                     childEntity.saveDY = childEntity.y - childEntity.previousY;
@@ -311,10 +328,10 @@ Requires: ["../aabb.js"]
             
             movePreviousX: function (x) {
                 var childEntity = null,
-                offset = 0,
-                i = 0;
+                    offset      = 0,
+                    i           = 0;
                 
-                for (; i < this.solidEntities.length; i++) {
+                for (i = 0; i < this.solidEntities.length; i++) {
                     childEntity = this.solidEntities[i];
                     offset = childEntity.saveOX;
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
@@ -326,8 +343,8 @@ Requires: ["../aabb.js"]
             
             relocateEntity: function (vector, collisionData) {
                 var childEntity = null,
-                entity = null,
-                i = 0;
+                    entity      = null,
+                    i           = 0;
                 
                 this.owner.saveDX -= vector.x - this.owner.previousX;
                 this.owner.saveDY -= vector.y - this.owner.previousY;
@@ -346,7 +363,7 @@ Requires: ["../aabb.js"]
                     }
                 }
                 
-                for (var i = 0; i < this.solidEntities.length; i++) {
+                for (i = 0; i < this.solidEntities.length; i++) {
                     childEntity = entity = this.solidEntities[i];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;

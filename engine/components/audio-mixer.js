@@ -76,7 +76,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
-/* global createjs */
+/*global createjs */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -105,99 +106,99 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
             }
             
             this.mixer = platformer.game.audioMixer;
-             this.owner.state.muted  = createjs.Sound.getMute();
-             this.owner.state.paused = this.mixer.paused;
+            this.owner.state.muted  = createjs.Sound.getMute();
+            this.owner.state.paused = this.mixer.paused;
         },
 
         events: {// These are messages that this component listens for
-             "toggle-mute": function (channelId) {
-                 var mute = false,
-                 channel  = null;
+            "toggle-mute": function (channelId) {
+                var mute    = false,
+                    channel = null;
+                
+                if (channelId) {
+                    channel = this.mixer.getChannel(channelId);
+                    channel.mute = !channel.mute;
+                    channel.update += 1;
+                } else {
+                    mute = !createjs.Sound.getMute();
+                    this.owner.state.muted = mute;
+                    createjs.Sound.setMute(mute);
+                }
+            },
+            
+            "mute-audio": function (channelId) {
+                var channel = null;
+                
+                if (channelId) {
+                    channel = this.mixer.getChannel(channelId);
+                    if (!channel.mute) {
+                        channel.mute = true;
+                        channel.update += 1;
+                    }
+                } else {
+                    createjs.Sound.setMute(true);
+                    this.owner.state.muted = true;
+                }
+            },
+            
+            "unmute-audio": function (channelId) {
+                var channel = null;
+                
+                if (channelId) {
+                    channel = this.mixer.getChannel(channelId);
+                    if (channel.mute) {
+                        channel.mute = false;
+                        channel.update += 1;
+                    }
+                } else {
+                    createjs.Sound.setMute(false);
+                    this.owner.state.muted = false;
+                }
+            },
+            
+            "pause-audio": function (channelId) {
+                var channel = null;
                  
-                 if (channelId) {
-                     channel = this.mixer.getChannel(channelId);
-                     channel.mute = !channel.mute;
-                     channel.update += 1;
-                 } else {
-                     mute = !createjs.Sound.getMute();
-                     this.owner.state.muted = mute;
-                     createjs.Sound.setMute(mute);
-                 }
-             },
-             
-             "mute-audio": function (channelId) {
-                 var channel = null;
-                 
-                 if (channelId) {
-                     channel = this.mixer.getChannel(channelId);
-                     if (!channel.mute) {
-                         channel.mute = true;
-                         channel.update += 1;
-                     }
-                 } else {
-                     createjs.Sound.setMute(true);
-                     this.owner.state.muted = true;
-                 }
-             },
-             
-             "unmute-audio": function (channelId) {
-                 var channel = null;
-                 
-                 if (channelId) {
-                     channel = this.mixer.getChannel(channelId);
-                     if (channel.mute) {
-                         channel.mute = false;
-                         channel.update += 1;
-                     }
-                 } else {
-                     createjs.Sound.setMute(false);
-                     this.owner.state.muted = false;
-                 }
-             },
-
-             "pause-audio": function (channelId) {
-                 var channel = null;
-                 
-                 if (channelId) {
-                     channel = this.mixer.getChannel(channelId);
-                     if (!channel.paused) {
-                         channel.paused = true;
-                         channel.update += 1;
-                     }
-                 } else {
-                     this.mixer.paused = true;
-                     this.owner.state.paused = true;
-                 }
-             },
-             
-             "unpause-audio": function (channelId) {
-                 var channel = null;
-                 
-                 if (channelId) {
-                     channel = this.mixer.getChannel(channelId);
-                     if (channel.paused) {
-                         channel.paused = false;
-                         channel.update += 1;
-                     }
-                 } else {
-                     this.mixer.paused = false;
-                     this.owner.state.paused = false;
-                 }
-             },
-             
-             "set-volume": function (volume) {
-                 var channel = null;
-                 
-                 if (volume && volume.channelId) {
-                     channel = this.mixer.getChannel(volume.channelId);
-                     if (channel.volume !== volume.volume) {
-                         channel.volume = volume.volume;
-                         channel.update += 1;
-                     }
-                 } else {
-                     createjs.Sound.setVolume(volume);
-                 }
-             }
+                if (channelId) {
+                    channel = this.mixer.getChannel(channelId);
+                    if (!channel.paused) {
+                        channel.paused = true;
+                        channel.update += 1;
+                    }
+                } else {
+                    this.mixer.paused = true;
+                    this.owner.state.paused = true;
+                }
+            },
+            
+            "unpause-audio": function (channelId) {
+                var channel = null;
+                
+                if (channelId) {
+                    channel = this.mixer.getChannel(channelId);
+                    if (channel.paused) {
+                        channel.paused = false;
+                        channel.update += 1;
+                    }
+                } else {
+                    this.mixer.paused = false;
+                    this.owner.state.paused = false;
+                }
+            },
+            
+            "set-volume": function (volume) {
+                var channel = null;
+                
+                if (volume && volume.channelId) {
+                    channel = this.mixer.getChannel(volume.channelId);
+                    if (channel.volume !== volume.volume) {
+                        channel.volume = volume.volume;
+                        channel.update += 1;
+                    }
+                } else {
+                    createjs.Sound.setVolume(volume);
+                }
+            }
         }
     });
-}());    
+}());

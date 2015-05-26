@@ -54,6 +54,8 @@ This component creates a DOM element associated with the entity. In addition to 
       //Optional. In addition to the event syntax above, an Array of strings may be provided, causing multiple messages to be triggered in the order listed.
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -65,7 +67,9 @@ This component creates a DOM element associated with the entity. In addition to 
             };
         } else if (Array.isArray(message)) {
             return function (e) {
-                for (var i = 0; i < message.length; i++) {
+                var i = 0;
+                
+                for (i = 0; i < message.length; i++) {
                     entity.trigger(message[i], e);
                 }
                 e.preventDefault();
@@ -81,7 +85,9 @@ This component creates a DOM element associated with the entity. In addition to 
     return platformer.createComponentClass({
         id: 'dom-element',
         constructor: function (definition) {
-            var elementType = definition.element   || 'div';
+            var key         = '',
+                style       = '',
+                elementType = definition.element   || 'div';
             
             this.updateClassName = definition.updateClassName || false;
             this.className = '';
@@ -94,26 +100,32 @@ This component creates a DOM element associated with the entity. In addition to 
             if (!this.owner.element) {
                 this.owner.element = this.element;
             }
-            this.element.ondragstart = function () {return false;}; //prevent element dragging by default
+            this.element.ondragstart = function () {
+                return false; //prevent element dragging by default
+            };
             
-            for (var i in definition) {
-                if (i === 'style') {
-                    for (var j in definition[i]) {
-                        this.element.style[j] = definition[i][j]; 
-                    }
-                } else if (((i !== 'type') || (elementType === 'input')) && (i !== 'element') && (i !== 'parent') && (i !== 'updateClassName') && (i !== 'attributes') && (i !== 'messageMap')) {
-                    if (i.indexOf('on') === 0) {
-                        if (platformer.game.settings.supports.mobile) {
-                            if ( i.indexOf('onmouse') == -1) {
-                                this.element[i] = createFunction(definition[i], this.owner);
+            for (key in definition) {
+                if (definition.hasOwnProperty(key)) {
+                    if (key === 'style') {
+                        for (style in definition.style) {
+                            if (definition.style.hasOwnProperty(style)) {
+                                this.element.style[style] = definition.style[style];
+                            }
+                        }
+                    } else if (((key !== 'type') || (elementType === 'input')) && (key !== 'element') && (key !== 'parent') && (key !== 'updateClassName') && (key !== 'attributes') && (key !== 'messageMap')) {
+                        if (key.indexOf('on') === 0) {
+                            if (platformer.game.settings.supports.mobile) {
+                                if (key.indexOf('onmouse') === -1) {
+                                    this.element[key] = createFunction(definition[key], this.owner);
+                                }
+                            } else {
+                                this.element[key] = createFunction(definition[key], this.owner);
                             }
                         } else {
-                            this.element[i] = createFunction(definition[i], this.owner);
-                        }
-                    } else {
-                        this.element[i] = definition[i];
-                        if (i == 'className') {
-                            this.className = definition[i];
+                            this.element[key] = definition[key];
+                            if (key === 'className') {
+                                this.className = definition[key];
+                            }
                         }
                     }
                 }
@@ -126,13 +138,13 @@ This component creates a DOM element associated with the entity. In addition to 
                 this.element.innerHTML = this.owner.innerHTML;
             }
         },
-        events:{
+        events: {
             "handle-render-load": (function () {
                 var getElementById = function (root, id) {
-                    var i = 0,
-                    all   = root.getElementsByTagName('*');
+                    var i   = 0,
+                        all = root.getElementsByTagName('*');
 
-                    for (; i < all.length; i++) {
+                    for (i = 0; i < all.length; i++) {
                         if (all[i].getAttribute('id') === id) {
                             return all[i];
                         }
@@ -142,8 +154,10 @@ This component creates a DOM element associated with the entity. In addition to 
                 };
                 
                 return function (resp) {
+                    var item    = '',
+                        message = null;
+                    
                     if (resp.element) {
-                        
                         if (!this.parentElement) {
                             if (this.potentialParent) {
                                 this.parentElement = getElementById(resp.element, this.potentialParent);
@@ -155,9 +169,11 @@ This component creates a DOM element associated with the entity. In addition to 
                         }
             
                         if (this.owner.triggerEventOnChildren) {
-                            var message = this.handleRenderLoadMessage = {};
-                            for (var item in resp) {
-                                message[item] = resp[item];
+                            message = this.handleRenderLoadMessage = {};
+                            for (item in resp) {
+                                if (resp.hasOwnProperty(item)) {
+                                    message[item] = resp[item];
+                                }
                             }
                             message.element = this.element;
                             this.owner.triggerEventOnChildren('handle-render-load', message);
@@ -184,13 +200,13 @@ This component creates a DOM element associated with the entity. In addition to 
             },
             
             "handle-render": function (resp) {
-                var i     = 0,
-                className = this.className;
+                var state     = 0,
+                    className = this.className;
                 
                 if (this.stateChange && this.updateClassName) {
-                    for (i in this.states) {
-                        if (this.states[i]) {
-                            className += ' ' + i;
+                    for (state in this.states) {
+                        if (this.states.hasOwnProperty(state) && this.states[state]) {
+                            className += ' ' + state;
                         }
                     }
                     this.element.className = className;
@@ -205,7 +221,9 @@ This component creates a DOM element associated with the entity. In addition to 
                     this.element.setAttribute(resp.attribute, resp.value);
                 } else {
                     for (attribute in resp) {
-                        this.element.setAttribute(attribute, resp[attribute]);
+                        if (resp.hasOwnProperty(attribute)) {
+                            this.element.setAttribute(attribute, resp[attribute]);
+                        }
                     }
                 }
             },
@@ -217,7 +235,9 @@ This component creates a DOM element associated with the entity. In addition to 
                     this.element.style[resp.attribute] = resp.value;
                 } else {
                     for (attribute in resp) {
-                        this.element.style[attribute] = resp[attribute];
+                        if (resp.hasOwnProperty(attribute)) {
+                            this.element.style[attribute] = resp[attribute];
+                        }
                     }
                 }
             },
@@ -235,10 +255,12 @@ This component creates a DOM element associated with the entity. In addition to 
             },
         
             "logical-state": function (state) {
-                for (var i in state) {
-                    if (this.states[i] !== state[i]) {
+                var key = '';
+                
+                for (key in state) {
+                    if (state.hasOwnProperty(key) && (this.states[key] !== state[key])) {
                         this.stateChange = true;
-                        this.states[i] = state[i];
+                        this.states[key] = state[key];
                     }
                 }
             }

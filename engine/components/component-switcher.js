@@ -43,6 +43,8 @@ This component listens for messages and, according to its preset settings, will 
       }
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -91,9 +93,13 @@ This component listens for messages and, according to its preset settings, will 
     return platformer.createComponentClass({
         id: 'component-switcher',
         constructor: function (definition) {
+            var event = '';
+            
             if (definition.componentMap) {
-                for (var event in definition.componentMap) {
-                    this.addEventListener(event, addRemoveComponents(definition.componentMap[event], this.owner));
+                for (event in definition.componentMap) {
+                    if (definition.componentMap.hasOwnProperty(event)) {
+                        this.addEventListener(event, addRemoveComponents(definition.componentMap[event], this.owner));
+                    }
                 }
             }
         }

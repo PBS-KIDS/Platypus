@@ -39,7 +39,7 @@
         },
         entityTransformCheck = function (v) {
             var resp = transform,
-                //		a = !!(0x20000000 & v),
+                //        a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
                 c = !!(0x80000000 & v);
 
@@ -411,8 +411,8 @@
                                     frames: {
                                         width: tWidth * self.unitsPerPixel / self.imagesScale,
                                         height: tHeight * self.unitsPerPixel / self.imagesScale //,
-                                            //									regX: (tileWidth * self.unitsPerPixel / self.imagesScale) / 2,
-                                            //						regY: (tileHeight * self.unitsPerPixel / self.imagesScale) / 2
+                                            //                                    regX: (tileWidth * self.unitsPerPixel / self.imagesScale) / 2,
+                                            //                        regY: (tileHeight * self.unitsPerPixel / self.imagesScale) / 2
                                     },
                                     animations: importAnimation
                                 };

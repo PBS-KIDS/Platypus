@@ -99,7 +99,9 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 
 [link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
 */
-/* global createjs */
+/*global console */
+/*global createjs */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -123,8 +125,8 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
                 }
             },
             "activate-audio": function () {
-                var audio = platformer.game.settings.assets[this.audioId],
-                instance  = null;
+                var audio    = platformer.game.settings.assets[this.audioId],
+                    instance = null;
                 
                 if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
                     delete platformer.game.settings.assets[this.audioId];
