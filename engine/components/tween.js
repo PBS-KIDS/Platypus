@@ -35,58 +35,64 @@ Tween takes a list of tween definitions and plays them as needed.
         }
     }
 */
+/*global createjs, platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var createTrigger = function (entity, event, message, debug) {
-        return function () {
-            entity.trigger(event, message, debug);
-        };
-    },
-    createTween = function (definition) {
-        return function (values) {
-            var i  = 0,
-            tweens = definition,
-            tweenDef = null,
-            arr = null,
-            tween = createjs.Tween.get(this.owner);
-            
-            if (Array.isArray(values)) {
-                tweens = values;
-            } else if (!Array.isArray(tweens)) {
-                return;
-            }
-            
-            for (; i < tweens.length; i++) {
-                tweenDef = tweens[i];
-                if (typeof tweenDef === 'string') {
-                    tween.call(createTrigger(this.owner, tweenDef));
-                } else if (Array.isArray(tweenDef)) {
-                    if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
-                        tween.call(createTrigger(this.owner, tweenDef[1]));
+            return function () {
+                entity.trigger(event, message, debug);
+            };
+        },
+        createTween = function (definition) {
+            return function (values) {
+                var i  = 0,
+                    tweens = definition,
+                    tweenDef = null,
+                    arr = null,
+                    tween = createjs.Tween.get(this.owner);
+
+                if (Array.isArray(values)) {
+                    tweens = values;
+                } else if (!Array.isArray(tweens)) {
+                    return;
+                }
+
+                for (i = 0; i < tweens.length; i++) {
+                    tweenDef = tweens[i];
+                    if (typeof tweenDef === 'string') {
+                        tween.call(createTrigger(this.owner, tweenDef));
+                    } else if (Array.isArray(tweenDef)) {
+                        if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
+                            tween.call(createTrigger(this.owner, tweenDef[1]));
+                        } else {
+                            arr = tweenDef.slice();
+                            arr.splice(0, 1);
+                            tween[tweenDef[0]].apply(tween, arr);
+                        }
                     } else {
-                        arr = tweenDef.slice();
-                        arr.splice(0,1);
-                        tween[tweenDef[0]].apply(tween, arr);
-                    }
-                } else {
-                    if (tweenDef.method === 'call' && typeof tweenDef.arguments === 'string') {
-                        tween.call(createTrigger(this.owner, tweenDef.arguments));
-                    } else {
-                        tween[tweenDef.method].apply(tween, tweenDef.arguments);
+                        if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
+                            tween.call(createTrigger(this.owner, tweenDef.params));
+                        } else {
+                            tween[tweenDef.method].apply(tween, tweenDef.params);
+                        }
                     }
                 }
-            }
+            };
         };
-    };
 
     return platformer.createComponentClass({
         id: 'tween',
         
         constructor: function (definition) {
+            var event = '';
+            
             if (definition.events) {
-                for (var event in definition.events) {
-                    this.addEventListener(event, createTween(definition.events[event]));
+                for (event in definition.events) {
+                    if (definition.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, createTween(definition.events[event]));
+                    }
                 }
             }
         }

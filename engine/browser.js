@@ -1,20 +1,20 @@
-/* global createjs */
 /**
 # Function
 Browser.js is one large function that is used to discover what browser is being used the capabilities of the browser. In addition to browser type, we determine whether it is mobile or desktop, whether it supports multi or single-touch, what type of audio it can play, and whether it supports canvas or not. 
 All of this information is added to platformer.settings.supports and used throughout the code, including when determining which layers to display (e.g. adding a button layer for mobile devices), and in audio so that we load and play the correct sound types.
 * 
 */
+/*global console, createjs, platformer */
 (function () {
     "use strict";
     
     var uagent   = navigator.userAgent.toLowerCase(),
         
         myAudio  = document.createElement('audio'),
-        
+        canvas   = document.createElement('canvas'),
         supports = {
             canvas:      false, // determined below
-            touch:       !!('ontouchstart' in window),
+            touch:       (window.ontouchstart !== 'undefined'),
 
             // specific browsers as determined above
             iPod:        (uagent.search('ipod')    > -1),
@@ -45,7 +45,7 @@ All of this information is added to platformer.settings.supports and used throug
         foundAspect = false,
         listAspects = '';
     
-    supports.iPhone4 = supports.iPhone && (window.screen.height == (960 / 2));
+    supports.iPhone4 = supports.iPhone && (window.screen.height === (960 / 2));
     supports.iPad2   = supports.iPad && (!window.devicePixelRatio || (window.devicePixelRatio === 1));
     supports.iOS     = supports.iPod || supports.iPhone  || supports.iPad;
     supports.mobile  = supports.iOS  || supports.android || supports.silk;
@@ -55,7 +55,7 @@ All of this information is added to platformer.settings.supports and used throug
     //Determine multitouch:
     if (supports.touch) {
         if (supports.android) {
-            if (parseInt(uagent.slice(uagent.indexOf("android") + 8)) > 2) {
+            if (parseInt(uagent.slice(uagent.indexOf("android") + 8), 10) > 2) {
                 supports.multitouch = true;
             }
         } else {
@@ -64,18 +64,17 @@ All of this information is added to platformer.settings.supports and used throug
     }
     
     // Determine audio support
-    if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/ogg; codecs="vorbis"'))) {
+    if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" !== myAudio.canPlayType('audio/ogg; codecs="vorbis"'))) {
         supports.ogg = false;
-        if (supports.ie || !(!!myAudio.canPlayType && "" != myAudio.canPlayType('audio/mp4'))) {
+        if (supports.ie || !(!!myAudio.canPlayType && "" !== myAudio.canPlayType('audio/mp4'))) {
             supports.m4a = false; //make IE use mp3's since it doesn't like the version of m4a made for mobiles
         }
     }
 
     // Does the browser support canvas?
-    var canvas = document.createElement('canvas');
-    try    {
+    try {
         supports.canvas = !!(canvas.getContext('2d')); // S60
-    } catch(e) {
+    } catch (e) {
         supports.canvas = !!(canvas.getContext); // IE
     }
     canvas = null;
@@ -83,20 +82,26 @@ All of this information is added to platformer.settings.supports and used throug
     //replace settings aspects build array with actual support of aspects
     platformer.settings.manifest = {};
     for (i in aspects) {
-        foundAspect = false;
-        listAspects = '';
-        for (j in aspects[i]) {
-            listAspects += ' ' + j;
-            if (uagent.search(j) > -1) {
-                foundAspect = aspects[i][j];
-                break;
-            }
-        }
-        if (!foundAspect) {
-            console.warn('This browser doesn\'t support any of the following: ' + listAspects);
-        } else {
+        if (aspects.hasOwnProperty(i)) {
+            foundAspect = false;
+            listAspects = '';
             for (j in aspects[i]) {
-                platformer.settings.manifest[aspects[i][j]] = foundAspect;
+                if (aspects[i].hasOwnProperty(j)) {
+                    listAspects += ' ' + j;
+                    if (uagent.search(j) > -1) {
+                        foundAspect = aspects[i][j];
+                        break;
+                    }
+                }
+            }
+            if (!foundAspect) {
+                console.warn('This browser doesn\'t support any of the following: ' + listAspects);
+            } else {
+                for (j in aspects[i]) {
+                    if (aspects[i].hasOwnProperty(j)) {
+                        platformer.settings.manifest[aspects[i][j]] = foundAspect;
+                    }
+                }
             }
         }
     }

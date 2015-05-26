@@ -51,33 +51,35 @@ This component sets up a node-map to be used by the [[node-resident]] component 
       ]
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var Node = function (definition, map) {
-        if (definition.id) {
-            if (typeof definition.id === 'string') {
-                this.id = definition.id;
-            } else if (Array.isArray(definition.id)) {
-                this.id = definition.id.join('|');
+            if (definition.id) {
+                if (typeof definition.id === 'string') {
+                    this.id = definition.id;
+                } else if (Array.isArray(definition.id)) {
+                    this.id = definition.id.join('|');
+                } else {
+                    this.id = String(Math.random());
+                }
             } else {
-                this.id = '' + Math.random();
+                this.id = String(Math.random());
             }
-        } else {
-            this.id = '' + Math.random();
-        }
-        
-        this.isNode = true;
-        this.map = map;
-        this.contains = [];
-        this.type = definition.type || '';
-        this.x = definition.x || 0;
-        this.y = definition.y || 0;
-        this.z = definition.z || 0;
-        
-        this.neighbors = definition.neighbors || {};
-    },
-    proto = Node.prototype;
+
+            this.isNode = true;
+            this.map = map;
+            this.contains = [];
+            this.type = definition.type || '';
+            this.x = definition.x || 0;
+            this.y = definition.y || 0;
+            this.z = definition.z || 0;
+
+            this.neighbors = definition.neighbors || {};
+        },
+        proto = Node.prototype;
     
     proto.getNode = function (desc) {
         var neighbor = null;
@@ -106,7 +108,9 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     };
 
     proto.add = function (entity) {
-        for (var i = 0; i < this.contains.length; i++) {
+        var i = 0;
+        
+        for (i = 0; i < this.contains.length; i++) {
             if (this.contains[i] === entity) {
                 return false;
             }
@@ -116,9 +120,11 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     };
     
     proto.remove = function (entity) {
-        for (var i = 0; i < this.contains.length; i++) {
+        var i = 0;
+        
+        for (i = 0; i < this.contains.length; i++) {
             if (this.contains[i] === entity) {
-                return this.contains.splice(i,1)[0];
+                return this.contains.splice(i, 1)[0];
             }
         }
         return false;
@@ -133,7 +139,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
             this.map = [];
             
             if (definition.map) {
-                for (; i < definition.map.length; i++) {
+                for (i = 0; i < definition.map.length; i++) {
                     this.map.push(new Node(definition.map[i], this));
                 }
             }
@@ -153,10 +159,10 @@ This component sets up a node-map to be used by the [[node-resident]] component 
         
         methods: {
             getNode: function () {
-                var i   = 0,
-                id      = '',
-                divider = '',
-                args    = arguments;
+                var i       = 0,
+                    id      = '',
+                    divider = '',
+                    args    = arguments;
                 
                 if (args.length === 1) {
                     if ((typeof args[0] !== 'string') && args[0].length) {

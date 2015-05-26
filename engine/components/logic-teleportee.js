@@ -28,6 +28,7 @@ This component causes an entity to teleport when receiving a teleport message.
 
 Requires: ["../vector.js"]
 */
+/*global platformer */
 (function () {
     "use strict";
 

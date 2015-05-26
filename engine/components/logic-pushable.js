@@ -30,7 +30,8 @@ A component that enables an entity to be pushed.
     }
 */
 
-    
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -42,7 +43,7 @@ A component that enables an entity to be pushed.
         id: 'logic-pushable',
         constructor: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;
-            this.xPush = definition.push || definition.xPush || .1;
+            this.xPush = definition.push || definition.xPush || 0.1;
             if (definition.roll) {
                 this.radius = definition.radius || this.owner.radius || ((this.owner.width || this.owner.height || 2) / 2);
                 this.owner.orientation = this.owner.orientation || 0;
@@ -55,9 +56,10 @@ A component that enables an entity to be pushed.
             this.lastY = this.owner.y;
             this.pushers = [];
         },
-        events:{
+        events: {
             "handle-logic": function (resp) {
-                var delta = resp.delta;
+                var i = 0,
+                    delta = resp.delta;
                 
                 if (this.currentPushY) {
                     this.owner.y += setMagnitude(this.currentPushY, this.yPush * delta);
@@ -74,14 +76,14 @@ A component that enables an entity to be pushed.
                     this.lastX = this.owner.x;
                     this.lastY = this.owner.y;
                 }
-                for (var i = 0; i < this.pushers.length; i++) {
+                for (i = 0; i < this.pushers.length; i++) {
                     this.pushers[i].triggerEvent('pushed', this.owner);
                 }
                 this.pushers.length = 0;
             },
             "push-entity": function (collisionInfo) {
                 var x = (collisionInfo.x || 0),
-                y     = (collisionInfo.y || 0);
+                    y = (collisionInfo.y || 0);
                 
                 this.currentPushX -= x;
                 this.currentPushY -= y;

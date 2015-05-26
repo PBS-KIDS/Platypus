@@ -1,4 +1,3 @@
-/* global platformer */
 /**
  * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
  * 
@@ -6,6 +5,8 @@
  * @uses Component
  */
 // Requires: ["motion"]
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
@@ -134,9 +135,9 @@
              */
             "load": function () {
                 var i = 0,
-                movs  = this.moversCopy;
+                    movs = this.moversCopy;
                 
-                delete this.moversCopy;                
+                delete this.moversCopy;
                 for (i = 0; i < movs.length; i++) {
                     this.addMover(movs[i]);
                 }
@@ -190,10 +191,10 @@
              */
             "handle-logic": function (tick) {
                 var i = 0,
-                delta    = tick.delta,
-                vect     = tempVector,
-                velocity = this.velocity,
-                position = this.position;
+                    delta    = tick.delta,
+                    vect     = tempVector,
+                    velocity = this.velocity,
+                    position = this.position;
                 
                 if (this.owner.state.paused) {
                     return;
@@ -230,7 +231,7 @@
              */
             "hit-solid": function (collisionInfo) {
                 var s = this.velocity.scalarProjection(collisionInfo.direction),
-                v     = tempVector;
+                    v = tempVector;
                 
                 if (collisionInfo.direction.dot(this.ground) > 0) {
                     this.grounded = true;
@@ -244,10 +245,10 @@
         
         methods: {
             destroy: function () {
-                var v = "";
+                var i = 0;
                 
-                for (v in this.movers) {
-                    this.removeMover(v);
+                for (i = this.movers.length - 1; i >= 0; i--) {
+                    this.removeMover(this.movers[i]);
                 }
             }
         },
@@ -261,7 +262,7 @@
              * @return motion {"motion" Component}
              */
             addMover: function (mover) {
-                var m = this.owner.addComponent(new platformer.components["motion"](this.owner, mover));
+                var m = this.owner.addComponent(new platformer.components.motion(this.owner, mover));
 
                 return m;
             },

@@ -32,36 +32,39 @@ This component changes the (x, y) position of an object according to its current
     }
 */
 // Requires: ["mover"]
+/*global console */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
     var processDirection = function (direction) {
-        return function (state) {
-            this[direction] = state && (state.pressed !== false);
+            return function (state) {
+                this[direction] = state && (state.pressed !== false);
+            };
+        },
+        doNothing = function () {},
+        rotate = {
+            x: function (heading, lastHeading) {
+                if (heading !== lastHeading) {
+                    if (((heading > 180) && (lastHeading <= 180)) || ((heading <= 180) && (lastHeading > 180))) {
+                        this.owner.triggerEvent('transform', 'vertical');
+                    }
+                }
+            },
+            y: function (heading, lastHeading) {
+                if (heading !== lastHeading) {
+                    if (((heading > 90 && heading <= 270) && (lastHeading <= 90 || lastHeading > 270)) || ((heading <= 90 || heading > 270) && (lastHeading > 90 && lastHeading <= 270))) {
+                        this.owner.triggerEvent('transform', 'horizontal');
+                    }
+                }
+            },
+            z: function (heading, lastHeading) {
+                if (heading !== lastHeading) {
+                    this.owner.triggerEvent('replace-transform', 'rotate-' + heading);
+                }
+            }
         };
-    },
-    doNothing = function () {},
-    rotate = {
-        x: function (heading, lastHeading) {
-            if (heading !== lastHeading) {
-                if (((heading > 180) && (lastHeading <= 180)) || ((heading <= 180) && (lastHeading > 180))) {
-                    this.owner.triggerEvent('transform', 'vertical');
-                }
-            }
-        },
-        y: function (heading, lastHeading) {
-            if (heading !== lastHeading) {
-                if (((heading > 90 && heading <= 270) && (lastHeading <= 90 || lastHeading > 270)) || ((heading <= 90 || heading > 270) && (lastHeading > 90 && lastHeading <= 270))) {
-                    this.owner.triggerEvent('transform', 'horizontal');
-                }
-            }
-        },
-        z: function (heading, lastHeading) {
-            if (heading !== lastHeading) {
-                this.owner.triggerEvent('replace-transform', 'rotate-' + heading);
-            }
-        }
-    };
     
     return platformer.createComponentClass({
         id: 'logic-directional-movement',
@@ -93,9 +96,11 @@ This component changes the (x, y) position of an object according to its current
                     this.pausers = definition.pause;
                 }
                 this.addEventListener('logical-state', function (state) {
-                    var paused = false;
+                    var i = 0,
+                        paused = false;
+                    
                     if (definition.pause) {
-                        for (var i = 0; i < self.pausers.length; i++) {
+                        for (i = 0; i < self.pausers.length; i++) {
                             paused = paused || state[self.pausers[i]];
                         }
                         this.paused = paused;
@@ -123,7 +128,7 @@ This component changes the (x, y) position of an object according to its current
             
             this.owner.heading = 0;
         },
-        events:{
+        events: {
             "load": function () {
                 if (!this.owner.addMover) {
                     console.warn('The "logic-directional-movement" component requires a "mover" component to function correctly.');
@@ -139,14 +144,14 @@ This component changes the (x, y) position of an object according to its current
             },
             
             "handle-logic": function (resp) {
-                var up    = this.up        || this.upLeft || this.downLeft,
-                upLeft    = this.upLeft    || (this.up   && this.left),
-                left      = this.left      || this.upLeft || this.downLeft,
-                downLeft  = this.downLeft  || (this.down && this.left),
-                down      = this.down      || this.downLeft || this.downRight,
-                downRight = this.downRight || (this.down && this.right),
-                right     = this.right     || this.upRight || this.downRight,
-                upRight   = this.upRight   || (this.up   && this.right);
+                var up        = this.up        || this.upLeft || this.downLeft,
+                    upLeft    = this.upLeft    || (this.up   && this.left),
+                    left      = this.left      || this.upLeft || this.downLeft,
+                    downLeft  = this.downLeft  || (this.down && this.left),
+                    down      = this.down      || this.downLeft || this.downRight,
+                    downRight = this.downRight || (this.down && this.right),
+                    right     = this.right     || this.upRight || this.downRight,
+                    upRight   = this.upRight   || (this.up   && this.right);
                 
                 if (up && down) {
                     this.moving = false;
@@ -168,7 +173,7 @@ This component changes the (x, y) position of an object according to its current
                     this.moving = true;
                     this.facing = 'down-right';
                     this.heading = 45;
-                } else if (left)    {
+                } else if (left) {
                     this.moving = true;
                     this.facing = 'left';
                     this.heading = 180;
@@ -188,15 +193,35 @@ This component changes the (x, y) position of an object according to its current
                     this.moving = false;
                     
                     // This is to retain the entity's direction even if there is no movement. There's probably a better way to do this since this is a bit of a retrofit. - DDD
-                    switch(this.facing) {
-                    case 'up': up = true; break;
-                    case 'down': down = true; break;
-                    case 'left': left = true; break;
-                    case 'right': right = true; break;
-                    case 'up-left': up = true; left = true; break;
-                    case 'up-right': up = true; right = true; break;
-                    case 'down-left': down = true; left = true; break;
-                    case 'down-right': right = true; right = true; break;
+                    switch (this.facing) {
+                    case 'up':
+                        up = true;
+                        break;
+                    case 'down':
+                        down = true;
+                        break;
+                    case 'left':
+                        left = true;
+                        break;
+                    case 'right':
+                        right = true;
+                        break;
+                    case 'up-left':
+                        up = true;
+                        left = true;
+                        break;
+                    case 'up-right':
+                        up = true;
+                        right = true;
+                        break;
+                    case 'down-left':
+                        down = true;
+                        left = true;
+                        break;
+                    case 'down-right':
+                        down = true;
+                        right = true;
+                        break;
                     }
                 }
                 

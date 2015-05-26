@@ -31,6 +31,8 @@ This component creates an entity and propels it away. This is useful for casting
       // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -39,26 +41,28 @@ This component creates an entity and propels it away. This is useful for casting
         id: 'logic-spawner',
         
         constructor: function (definition) {
+            var className = this.owner.spawneeClass || definition.spawneeClass,
+                prop = '',
+                x = 0;
+
             this.state = this.owner.state;
             this.stateName = definition.state || 'spawning';
-            var className = this.owner.spawneeClass || definition.spawneeClass;
             this.entityClass = platformer.game.settings.entities[className];
             this.speed = definition.speed || this.owner.speed || 0;
 
             this.state[this.stateName] = false;
             
             this.spawneeProperties = {
-                x:0,
-                y:0,
-                z:0,
+                x:  0,
+                y:  0,
+                z:  0,
                 dx: 0,
                 dy: 0,
                 spawner: this.owner
             };
             
-            var prop;
             if (definition.passOnProperties) {
-                for (var x = 0; x < definition.passOnProperties.length; x++) {
+                for (x = 0; x < definition.passOnProperties.length; x++) {
                     prop = definition.passOnProperties[x];
                     if (this.owner[prop]) {
                         this.spawneeProperties[prop] = this.owner[prop];
@@ -79,9 +83,9 @@ This component creates an entity and propels it away. This is useful for casting
 
         events: {// These are messages that this component listens for
             "handle-logic": function () {
-                var offset = 0;
-                var classZ = 0;
-                var state = this.state;
+                var offset = 0,
+                    classZ = 0,
+                    state  = this.state;
                 
                 if (this.firing) {
                     this.spawneeProperties.x = this.owner.x;
@@ -119,7 +123,7 @@ This component creates an entity and propels it away. This is useful for casting
                     } else {
                         delete this.spawneeProperties.dx;
                         delete this.spawneeProperties.dy;
-                    } 
+                    }
                     
                     if (this.parent) {
                         this.owner.triggerEvent('entity-created', this.parent.addEntity(new platformer.Entity(this.entityClass, this.propertiesContainer)));

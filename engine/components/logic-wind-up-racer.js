@@ -38,6 +38,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
       // Optional. Velocity at which the entity should travel while racing. Defaults to 0.3.
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -62,10 +63,6 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             this.state.windingUp = false;
             this.state.racing = false;
             this.state.blocked = false;
-            
-            if (definition.message) {
-                console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "wind-up"} instead.');
-            }
         },
 
         events: {// These are messages that this component listens for
@@ -129,12 +126,12 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             }
         },
     
-        methods:{
+        methods: {
             destroy: function () {
                 this.state.windingUp = false;
                 this.state.racing = false;
                 this.state.blocked = false;
-            }            
+            }
         }
     });
 }());

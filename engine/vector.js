@@ -8,14 +8,15 @@
  * @param [z] {number} The z coordinate.
  */
 /*global platformer */
+/*jslint plusplus:true */
 platformer.Vector = (function () {
     "use strict";
     
     var Vector = function (x, y, z) {
-        this.matrix = [0,0,0];
-        this.set(x, y, z);
-    };
-    var proto = Vector.prototype;
+            this.matrix = [0, 0, 0];
+            this.set(x, y, z);
+        },
+        proto = Vector.prototype;
     
     /**
      * The x component of the vector.
@@ -73,7 +74,7 @@ platformer.Vector = (function () {
      */
     proto.toString = function () {
         return '[' + this.matrix.join(',') + ']';
-    },
+    };
     
     /**
      * Performs an operation on each vector coordinate.
@@ -102,9 +103,9 @@ platformer.Vector = (function () {
      */
     proto.set = function (x, y, z) {
         var m = null,
-        set = function (coordinate, index, matrix) {
-            matrix[index] = m[index];
-        };
+            set = function (coordinate, index, matrix) {
+                matrix[index] = m[index];
+            };
         
         if (x && Array.isArray(x)) {   // Passing in an array.
             m = x;
@@ -143,9 +144,9 @@ platformer.Vector = (function () {
      */
     proto.magnitude = function (dimensions) {
         var squares = 0,
-        square = function (coordinate) {
-            squares += Math.pow(coordinate, 2);
-        };
+            square = function (coordinate) {
+                squares += Math.pow(coordinate, 2);
+            };
         
         this.forEach(square, dimensions);
         
@@ -158,16 +159,16 @@ platformer.Vector = (function () {
      * @return {number} The direction of the vector in radians.
      */
     proto.getAngle = function () {
-        var mag = this.magnitude(2);
-        var angle = 0;
+        var mag   = this.magnitude(2),
+            angle = 0;
 
-        if (mag != 0) {
-                angle = Math.acos(this.x / mag);
-                if (this.y < 0) {
-                        angle = (Math.PI * 2) - angle;
-                }
+        if (mag !== 0) {
+            angle = Math.acos(this.x / mag);
+            if (this.y < 0) {
+                angle = (Math.PI * 2) - angle;
+            }
         }
-        return angle; 
+        return angle;
     };
     
     /**
@@ -199,7 +200,7 @@ platformer.Vector = (function () {
     proto.normalize = function () {
         var mag = this.magnitude();
         
-        if (mag == 0) {
+        if (mag === 0) {
             return this.multiply(0);
         } else {
             return this.multiply(1 / mag);
@@ -220,8 +221,9 @@ platformer.Vector = (function () {
         
         return function (v) {
             var tempX = det(this.y, this.z, v.y, v.z),
-            tempY     = -det(this.x, this.z, v.x, v.z),
-            tempZ     = det(this.x, this.y, v.x, v.y);
+                tempY = -det(this.x, this.z, v.x, v.z),
+                tempZ = det(this.x, this.y, v.x, v.y);
+            
             this.x = tempX;
             this.y = tempY;
             this.z = tempZ;
@@ -250,24 +252,24 @@ platformer.Vector = (function () {
      * @chainable
      */
     proto.rotate = function (angle, axis) {
-        var a = axis,
-        cos   = Math.cos(angle),
-        sin   = Math.sin(angle),
-        icos  = 1 - cos,
-        x     = 0,
-        y     = 0,
-        z     = 0;
+        var a    = axis,
+            cos  = Math.cos(angle),
+            sin  = Math.sin(angle),
+            icos = 1 - cos,
+            x    = 0,
+            y    = 0,
+            z    = 0;
         
         if (a) {
             if (a === 'x') {
-                a = new Vector(1,0,0);
+                a = new Vector(1, 0, 0);
             } else if (a === 'y') {
-                a = new Vector(0,1,0);
+                a = new Vector(0, 1, 0);
             } else if (a === 'z') {
-                a = new Vector(0,0,1);
+                a = new Vector(0, 0, 1);
             }
         } else {
-            a = new Vector(0,0,1);
+            a = new Vector(0, 0, 1);
         }
         
         x     = a.x;
@@ -275,9 +277,9 @@ platformer.Vector = (function () {
         z     = a.z;
         
         return this.multiply([
-            [    cos  + x*x*icos, x*y*icos -   z*sin , x*z*icos +   y*sin ],
-            [y*x*icos +   z*sin ,     cos  + y*y*icos, y*z*icos -   x*sin ],
-            [z*x*icos -   y*sin , z*y*icos +   x*sin ,     cos  + z*z*icos]
+            [    cos + x * x * icos, x * y * icos - z * sin, x * z * icos + y * sin],
+            [y * x * icos + z * sin,     cos + y * y * icos, y * z * icos - x * sin],
+            [z * x * icos - y * sin, z * y * icos + x * sin,     cos + z * z * icos]
         ]);
     };
     
@@ -291,12 +293,12 @@ platformer.Vector = (function () {
      */
     proto.multiply = function (multiplier, limit) {
         var i = 0,
-        j = 0,
-        self = null,
-        mult = function (coordinate, index, matrix) {
-            matrix[index] = coordinate * multiplier;
-        },
-        l = 0;
+            j = 0,
+            self = null,
+            mult = function (coordinate, index, matrix) {
+                matrix[index] = coordinate * multiplier;
+            },
+            l = 0;
         
         if (Array.isArray(multiplier)) {
             self = this.matrix.slice();
@@ -325,10 +327,10 @@ platformer.Vector = (function () {
      */
     proto.add = function (x, y, z) {
         var addMatrix = x,
-        limit = 0,
-        add = function (coordinate, index, matrix) {
-            matrix[index] += addMatrix[index];
-        };
+            limit = 0,
+            add = function (coordinate, index, matrix) {
+                matrix[index] += addMatrix[index];
+            };
 
         if (!Array.isArray(addMatrix)) {
             if (addMatrix.matrix) {
@@ -389,9 +391,9 @@ platformer.Vector = (function () {
      */
     proto.dot = function (otherVector, limit) {
         var sum = 0,
-        mult = function (coordinate, index) {
-            sum += coordinate * (otherVector.matrix[index] || 0);
-        };
+            mult = function (coordinate, index) {
+                sum += coordinate * (otherVector.matrix[index] || 0);
+            };
         
         this.forEach(mult, limit);
         
@@ -407,7 +409,7 @@ platformer.Vector = (function () {
      */
     proto.angleTo = function (otherVector) {
         var v1 = this.getUnit(),
-        v2 = otherVector.getUnit();
+            v2 = otherVector.getUnit();
         
         return Math.acos(v1.dot(v2));
     };
@@ -422,7 +424,7 @@ platformer.Vector = (function () {
      */
     proto.signedAngleTo = function (otherVector, normal) {
         var v1 = this.getUnit(),
-        v2 = otherVector.getUnit();
+            v2 = otherVector.getUnit();
         
         if (v1.getCrossProduct(v2).dot(normal) < 0) {
             return -Math.acos(v1.dot(v2));
@@ -440,7 +442,7 @@ platformer.Vector = (function () {
      */
     proto.scalarProjection = function (vectorOrAngle) {
         var angle = 0;
-        if (typeof vectorOrAngle == "number") {
+        if (typeof vectorOrAngle === "number") {
             angle = vectorOrAngle;
         } else {
             angle = this.angleTo(vectorOrAngle);
@@ -468,7 +470,7 @@ platformer.Vector = (function () {
     Vector.assign = (function () {
         var createProperty = function (property, obj, vector, index) {
             var temp = null,
-            propertyInUse = false;
+                propertyInUse = false;
             
             if (typeof property === 'string') {
                 if (typeof obj[property] !== 'undefined') {
@@ -493,11 +495,9 @@ platformer.Vector = (function () {
             }
         };
         
-        return function () {
-            var i = 0,
-            obj   = arguments[0],
-            prop  = arguments[1];
-            
+        return function (obj, prop) {
+            var i = 0;
+
             if (obj && prop) {
                 if (!obj[prop]) {
                     obj[prop] = new platformer.Vector();
@@ -508,7 +508,7 @@ platformer.Vector = (function () {
                         }
                     }
                     
-                    return ;
+                    return;
                 }
                 return obj[prop];
             } else {

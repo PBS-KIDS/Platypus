@@ -30,6 +30,7 @@ This component handles the pressed/released state of a button according to input
       // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -46,7 +47,7 @@ This component handles the pressed/released state of a button according to input
                 this.stateChange = 'pressed';
             }
         },
-        events:{
+        events: {
             "mousedown": function () {
                 if (!this.toggle) {
                     this.stateChange = 'pressed';

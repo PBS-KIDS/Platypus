@@ -10,10 +10,8 @@
  * @class "tiled-loader" Component
  * @uses Component
  */
-/*global platformer */
-/*global console */
-/*jslint bitwise: true */
-/*jslint plusplus: true */
+/*global console, platformer */
+/*jslint bitwise: true, plusplus: true */
 (function () {
     "use strict";
 

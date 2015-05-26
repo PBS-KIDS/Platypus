@@ -28,6 +28,7 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
         "type": "logic-drag-and-droppable"
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 

@@ -12,102 +12,114 @@
  * @class Component
  * @static
  */
-(function (ns) {
+/*global console, platformer */
+/*jslint nomen:true, plusplus:true */
+(function () {
     "use strict";
     
     var setupProperty = function (property, component, owner) {
-        Object.defineProperty(component, property, {
-            get: function () {
-                return owner[property];
-            },
-            set: function (value) {
-                owner[property] = value;
-            },
-            enumerable: true
-        });
-    };
+            Object.defineProperty(component, property, {
+                get: function () {
+                    return owner[property];
+                },
+                set: function (value) {
+                    owner[property] = value;
+                },
+                enumerable: true
+            });
+        };
         
-    ns.components = {};
+    platformer.components = {};
     
-    ns.createComponentClass = function (componentDefinition, Prototype) {
-        var    component = function (owner, definition) {
-            var prop = null,
-            func     = null,
-            name     = '';
-            
-            // if prototype provided, set up its properties here.
-            if (Prototype) {
-                Prototype.call(this);
-            }
-            
-            this.owner = owner;
-            this.listener = {
-                events: [],
-                messages: []
-            };
-            this.publicMethods = {};
-            this.type = componentDefinition.id;
-            
-            // Set up properties, prioritizing component settings, entity settings, and finally defaults.
-            if (componentDefinition.properties) {
-                for (prop in componentDefinition.properties) {
-                    if (typeof definition[prop] !== 'undefined') {
-                        this[prop] = definition[prop];
-                    } else if (typeof this.owner[prop] !== 'undefined') {
-                        this[prop] = this.owner[prop];
-                    } else {
-                        this[prop] = componentDefinition.properties[prop];
-                    }
+    platformer.createComponentClass = function (componentDefinition, Prototype) {
+        var component = function (owner, definition) {
+                var prop  = '',
+                    func  = '',
+                    name  = '',
+                    alias = '';
+
+
+                // if prototype provided, set up its properties here.
+                if (Prototype) {
+                    Prototype.call(this);
                 }
-            }
-            
-            // These component properties are equivalent with `entity.property`
-            if (componentDefinition.publicProperties) {
-                for (prop in componentDefinition.publicProperties) {
-                    setupProperty(prop, this, owner);
-                    if (typeof definition[prop] !== 'undefined') {
-                        this[prop] = definition[prop];
-                    } else if (typeof this.owner[prop] !== 'undefined') {
-                        this[prop] = this.owner[prop];
-                    } else {
-                        this[prop] = componentDefinition.publicProperties[prop];
-                    }
-                }
-            }
-            
-            if (componentDefinition.events) {
-                for (func in componentDefinition.events) {
-                    this.addEventListener(func, componentDefinition.events[func]);
-                    if (definition.aliases) {
-                        for (var alias in definition.aliases) {
-                            if (definition.aliases[alias] === func) {
-                                this.addEventListener(alias, componentDefinition.events[func]);
+
+                this.owner = owner;
+                this.listener = {
+                    events: [],
+                    messages: []
+                };
+                this.publicMethods = {};
+                this.type = componentDefinition.id;
+
+                // Set up properties, prioritizing component settings, entity settings, and finally defaults.
+                if (componentDefinition.properties) {
+                    for (prop in componentDefinition.properties) {
+                        if (componentDefinition.properties.hasOwnProperty(prop)) {
+                            if (typeof definition[prop] !== 'undefined') {
+                                this[prop] = definition[prop];
+                            } else if (typeof this.owner[prop] !== 'undefined') {
+                                this[prop] = this.owner[prop];
+                            } else {
+                                this[prop] = componentDefinition.properties[prop];
                             }
                         }
                     }
                 }
-            }
-            
-            if (componentDefinition.publicMethods) {
-                for (func in componentDefinition.publicMethods) {
-                    name = func;
-                    if (definition.aliases) {
-                        for (var alias in definition.aliases) {
-                            if (definition.aliases[alias] === func) {
-                                name = alias;
+
+                // These component properties are equivalent with `entity.property`
+                if (componentDefinition.publicProperties) {
+                    for (prop in componentDefinition.publicProperties) {
+                        if (componentDefinition.publicProperties.hasOwnProperty(prop)) {
+                            setupProperty(prop, this, owner);
+                            if (typeof definition[prop] !== 'undefined') {
+                                this[prop] = definition[prop];
+                            } else if (typeof this.owner[prop] !== 'undefined') {
+                                this[prop] = this.owner[prop];
+                            } else {
+                                this[prop] = componentDefinition.publicProperties[prop];
                             }
                         }
                     }
-                    this.addMethod(name, componentDefinition.publicMethods[func]);
                 }
-            }
-                        
-            if (this.constructor) {
-                this.constructor(definition);
-            }
-        },
-        func  = null,
-        proto = component.prototype;
+
+                if (componentDefinition.events) {
+                    for (func in componentDefinition.events) {
+                        if (componentDefinition.events.hasOwnProperty(func)) {
+                            this.addEventListener(func, componentDefinition.events[func]);
+                            if (definition.aliases) {
+                                for (alias in definition.aliases) {
+                                    if (definition.aliases.hasOwnProperty(alias) && (definition.aliases[alias] === func)) {
+                                        this.addEventListener(alias, componentDefinition.events[func]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (componentDefinition.publicMethods) {
+                    for (func in componentDefinition.publicMethods) {
+                        if (componentDefinition.publicMethods.hasOwnProperty(func)) {
+                            name = func;
+                            if (definition.aliases) {
+                                for (alias in definition.aliases) {
+                                    if (definition.aliases.hasOwnProperty(alias) && (definition.aliases[alias] === func)) {
+                                        name = alias;
+                                    }
+                                }
+                            }
+                            this.addMethod(name, componentDefinition.publicMethods[func]);
+                        }
+                    }
+                }
+
+                if (this.constructor) {
+                    this.constructor(definition);
+                }
+            },
+            func  = null,
+            proto = component.prototype;
         
         if (Prototype) { //absorb template prototype if it exists.
             proto = component.prototype = new Prototype();
@@ -116,15 +128,23 @@
         // Have to copy rather than replace so definition is not corrupted
         proto.constructor = componentDefinition.constructor;
 
-        if (componentDefinition.methods) for (func in componentDefinition.methods) {
-            if (func === 'destroy') {
-                proto['___' + func] = componentDefinition.methods[func];
-            } else {
-                proto[func] = componentDefinition.methods[func];
+        if (componentDefinition.methods) {
+            for (func in componentDefinition.methods) {
+                if (componentDefinition.methods.hasOwnProperty(func)) {
+                    if (func === 'destroy') {
+                        proto._destroy = componentDefinition.methods[func];
+                    } else {
+                        proto[func] = componentDefinition.methods[func];
+                    }
+                }
             }
         }
-        if (componentDefinition.publicMethods) for (func in componentDefinition.publicMethods) {
-            proto[func] = componentDefinition.publicMethods[func];
+        if (componentDefinition.publicMethods) {
+            for (func in componentDefinition.publicMethods) {
+                if (componentDefinition.publicMethods.hasOwnProperty(func)) {
+                    proto[func] = componentDefinition.publicMethods[func];
+                }
+            }
         }
         
         /**
@@ -145,15 +165,18 @@
          * @private
          */
         proto.destroy = function () {
+            var func = '';
             
             // Handle component's destroy method before removing messaging and methods.
-            if (this.___destroy) {
-                this.___destroy();
+            if (this._destroy) {
+                this._destroy();
             }
             
             // Now remove event listeners and methods.
             for (func in this.publicMethods) {
-                this.removeMethod(func);
+                if (this.publicMethods.hasOwnProperty(func)) {
+                    this.removeMethod(func);
+                }
             }
             this.removeEventListeners();
         };
@@ -166,18 +189,19 @@
          * @private
          */
         proto.removeEventListeners = function (listeners) {
-            var events = null,
-            messages = null;
+            var i = 0,
+                events   = null,
+                messages = null;
             
             if (!listeners) {
                 events   = this.listener.events;
                 messages = this.listener.messages;
-                for (var i = 0; i < events.length; i++) {
+                for (i = 0; i < events.length; i++) {
                     this.removeEventListener(events[i], messages[i]);
                 }
             } else {
                 events   = listeners;
-                for (var i = 0; i < events.length; i++) {
+                for (i = 0; i < events.length; i++) {
                     this.removeEventListener(events[i]);
                 }
             }
@@ -227,9 +251,11 @@
          * @private
          */
         proto.removeEventListener = function (event, callback) {
-            var events = this.listener.events,
-            messages   = this.listener.messages;
-            for (var i = 0; i < events.length; i++) {
+            var i = 0,
+                events   = this.listener.events,
+                messages = this.listener.messages;
+            
+            for (i = 0; i < events.length; i++) {
                 if ((events[i] === event) && (!callback || (messages[i] === callback))) {
                     this.owner.unbind(event, messages[i], this);
                 }
@@ -252,6 +278,6 @@
             delete this.publicMethods[name];
         };
 
-        ns.components[componentDefinition.id] = component;
+        platformer.components[componentDefinition.id] = component;
     };
-})(platformer);
+}());

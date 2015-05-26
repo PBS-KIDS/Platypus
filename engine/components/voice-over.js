@@ -69,123 +69,132 @@ This component uses its definition to load two other components (audio and rende
     
 Requires: ["audio", "render-sprite"]
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var getEventName = function (msg, VO) {
-        if (VO === ' ') {
-            return msg + 'default';
-        } else {
-            return msg + VO;
-        }
-    },
-    createVO = function (sound, events, message, frameLength) {
-        var i = '',
-        definitions = [],
-        definition = null;
-        
-        if (!events[' ']) {
-            events[' '] = events['default'];
-        }
-        
-        if (Array.isArray(sound)) {
-            for (i in sound) {
-                definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
-            }
-            definition = definitions.splice(0, 1)[0];
-            definition.next = definitions;
-            return definition;
-        } else {
-            return createAudioDefinition(sound, events, message, frameLength);
-        }
-    },
-    createAudioDefinition = function (sound, events, message, frameLength) {
-        var i      = 0,
-        definition = {},
-        time       = 0,
-        lastFrame  = '',
-        thisFrame  = '',
-        voice = sound.voice;
-        
-        if (typeof sound.sound === 'string') {
-            definition.sound = sound.sound;
-            definition.events = [];
-        } else {
-            for (i in sound.sound) {
-                definition[i] = sound.sound[i];
-            }
-            
-            if (definition.events) {
-                definition.events = definition.events.slice();
+            if (VO === ' ') {
+                return msg + 'default';
             } else {
+                return msg + VO;
+            }
+        },
+        createAudioDefinition = function (sound, events, message, frameLength) {
+            var i          = 0,
+                key        = '',
+                definition = {},
+                time       = 0,
+                lastFrame  = '',
+                thisFrame  = '',
+                voice = sound.voice;
+
+            if (typeof sound.sound === 'string') {
+                definition.sound = sound.sound;
                 definition.events = [];
-            }
-        }
-        
-        if (voice) {
-            voice += ' ';
-            
-            for (i = 0; i < voice.length; i++) {
-                thisFrame = voice[i];
-                if (thisFrame !== lastFrame) {
-                    lastFrame = thisFrame;
-                    definition.events.push({
-                        "time": time,
-                        "event": getEventName(message, thisFrame)
-                    });
+            } else {
+                for (key in sound.sound) {
+                    if (sound.sound.hasOwnProperty(key)) {
+                        definition[key] = sound.sound[key];
+                    }
                 }
-                time += frameLength;
+
+                if (definition.events) {
+                    definition.events = definition.events.slice();
+                } else {
+                    definition.events = [];
+                }
             }
-        }
-        
-        return definition;
-    };
+
+            if (voice) {
+                voice += ' ';
+
+                for (i = 0; i < voice.length; i++) {
+                    thisFrame = voice[i];
+                    if (thisFrame !== lastFrame) {
+                        lastFrame = thisFrame;
+                        definition.events.push({
+                            "time": time,
+                            "event": getEventName(message, thisFrame)
+                        });
+                    }
+                    time += frameLength;
+                }
+            }
+
+            return definition;
+        },
+        createVO = function (sound, events, message, frameLength) {
+            var i = 0,
+                definitions = [],
+                definition = null;
+
+            if (!events[' ']) {
+                events[' '] = events['default'];
+            }
+
+            if (Array.isArray(sound)) {
+                for (i = 0; i < sound.length; i++) {
+                    definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
+                }
+                definition = definitions.splice(0, 1)[0];
+                definition.next = definitions;
+                return definition;
+            } else {
+                return createAudioDefinition(sound, events, message, frameLength);
+            }
+        };
 
     return platformer.createComponentClass({
         id: 'voice-over',
         
         constructor: function (definition) {
-            var i               = '',
-            audioDefinition     = {
-                audioMap: {},
-                preventOverlaps: definition.preventOverlaps,
-                channel: definition.channel,
-                priority: definition.priority,
-                aliases:  definition.aliases
-            },
-            animationDefinition = {
-                spriteSheet:   definition.spriteSheet,
-                acceptInput:   definition.acceptInput,
-                scaleX:        definition.scaleX,
-                scaleY:        definition.scaleY,
-                rotate:        definition.rotate,
-                mirror:        definition.mirror,
-                flip:          definition.flip,
-                hidden:        definition.hidden,
-                animationMap:  {},
-                pins:          definition.pins,
-                pinTo:         definition.pinTo,
-                aliases:       definition.aliases
-            };
+            var i = '',
+                audioDefinition     = {
+                    audioMap: {},
+                    preventOverlaps: definition.preventOverlaps,
+                    channel: definition.channel,
+                    priority: definition.priority,
+                    aliases:  definition.aliases
+                },
+                animationDefinition = {
+                    spriteSheet:   definition.spriteSheet,
+                    acceptInput:   definition.acceptInput,
+                    scaleX:        definition.scaleX,
+                    scaleY:        definition.scaleY,
+                    rotate:        definition.rotate,
+                    mirror:        definition.mirror,
+                    flip:          definition.flip,
+                    hidden:        definition.hidden,
+                    animationMap:  {},
+                    pins:          definition.pins,
+                    pinTo:         definition.pinTo,
+                    aliases:       definition.aliases
+                };
             
             this.message = (definition.messagePrefix || 'voice-over') + '-';
             
             for (i in definition.animationMap) {
-                animationDefinition.animationMap[getEventName(this.message, i)] = definition.animationMap[i];
+                if (definition.animationMap.hasOwnProperty(i)) {
+                    animationDefinition.animationMap[getEventName(this.message, i)] = definition.animationMap[i];
+                }
             }
             animationDefinition.animationMap['default'] = definition.animationMap['default'];
             this.owner.addComponent(new platformer.components['render-sprite'](this.owner, animationDefinition));
 
             for (i in definition.voiceoverMap) {
-                audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
+                if (definition.voiceoverMap.hasOwnProperty(i)) {
+                    audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
+                }
             }
-            this.owner.addComponent(new platformer.components['audio'](this.owner, audioDefinition));
+            this.owner.addComponent(new platformer.components.audio(this.owner, audioDefinition));
         },
 
         events: {// These are messages that this component listens for
             "load": function (resp) {
                 this.owner.removeComponent(this);
-             }
+            }
         }
     });
 }());

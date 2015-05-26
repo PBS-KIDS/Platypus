@@ -26,74 +26,79 @@
 Requires: ["entity.js"]
 */
 /*global platformer */
+/*jslint plusplus:true */
 platformer.Scene = (function () {
     "use strict";
     
     var scene = function (definition, rootElement) {
-        var layers = definition.layers,
-        supportedLayer = true,
-        layerDefinition = false,
-        properties = null,
-        messages = null;
-        
-        this.id = definition.id;
-        
-        this.storedMessages = [];
-        
-        this.rootElement = rootElement;
-        this.layers = [];
-        for (var layer in layers) {
-            layerDefinition = layers[layer];
-            properties = {rootElement: this.rootElement, parent: this};
-            if (layerDefinition.properties) {
-                for (i in layerDefinition.properties) {
-                    properties[i] = layerDefinition.properties[i];
-                }
-            }
+            var i = 0,
+                key = '',
+                layers = definition.layers,
+                supportedLayer = true,
+                layerDefinition = false,
+                properties = null,
+                messages = null;
 
-            if (layerDefinition.type) { // this layer should be loaded from an entity definition rather than this instance
-                layerDefinition = platformer.game.settings.entities[layerDefinition.type];
-            }
-            
-            supportedLayer = true;
-            if (layerDefinition.filter) {
-                if (layerDefinition.filter.includes) {
-                    supportedLayer = false;
-                    for (var filter in layerDefinition.filter.includes) {
-                        if (platformer.game.settings.supports[layerDefinition.filter.includes[filter]]) {
-                            supportedLayer = true;
+            this.id = definition.id;
+
+            this.storedMessages = [];
+
+            this.rootElement = rootElement;
+            this.layers = [];
+            for (i = 0; i < layers.length; i++) {
+                layerDefinition = layers[i];
+                properties = {rootElement: this.rootElement, parent: this};
+                if (layerDefinition.properties) {
+                    for (key in layerDefinition.properties) {
+                        if (layerDefinition.properties.hasOwnProperty(key)) {
+                            properties[key] = layerDefinition.properties[key];
                         }
                     }
                 }
-                if (layerDefinition.filter.excludes) {
-                    for (var filter in layerDefinition.filter.excludes) {
-                        if (platformer.game.settings.supports[layerDefinition.filter.excludes[filter]]) {
-                            supportedLayer = false;
+
+                if (layerDefinition.type) { // this layer should be loaded from an entity definition rather than this instance
+                    layerDefinition = platformer.game.settings.entities[layerDefinition.type];
+                }
+
+                supportedLayer = true;
+                if (layerDefinition.filter) {
+                    if (layerDefinition.filter.includes) {
+                        supportedLayer = false;
+                        for (key in layerDefinition.filter.includes) {
+                            if (layerDefinition.filter.includes.hasOwnProperty(key) && platformer.game.settings.supports[layerDefinition.filter.includes[key]]) {
+                                supportedLayer = true;
+                            }
+                        }
+                    }
+                    if (layerDefinition.filter.excludes) {
+                        for (key in layerDefinition.filter.excludes) {
+                            if (layerDefinition.filter.excludes.hasOwnProperty(key) && platformer.game.settings.supports[layerDefinition.filter.excludes[key]]) {
+                                supportedLayer = false;
+                            }
                         }
                     }
                 }
+                if (supportedLayer) {
+                    this.layers.push(new platformer.Entity(layerDefinition, {
+                        properties: properties
+                    }));
+                }
             }
-            if (supportedLayer) {
-                this.layers.push(new platformer.Entity(layerDefinition, {
-                    properties: properties
-                }));
+            // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
+            messages = this.storedMessages;
+            this.storedMessages = false;
+            for (i = 0; i < messages.length; i++) {
+                this.trigger(messages[i].message, messages[i].value);
             }
-        }
-        // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
-        messages = this.storedMessages;
-        this.storedMessages = false;
-        for (var i = 0; i < messages.length; i++) {
-            this.trigger(messages[i].message, messages[i].value);
-        }
-        messages.length = 0;
-        
-        this.time = new Date().getTime();
-        this.timeElapsed = {
-            name: '',
-            time: 0
-        };
-    };
-    var proto = scene.prototype;
+            messages.length = 0;
+
+            this.time = new Date().getTime();
+            this.timeElapsed = {
+                name: '',
+                time: 0
+            };
+        },
+        proto = scene.prototype;
     
 /**
  * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
@@ -103,8 +108,8 @@ platformer.Scene = (function () {
  * @param {*} event This is a message object or other value to pass along to component functions.
  **/
     proto.trigger = function (eventId, event) {
-        var i = 0,
-        time  = 0;
+        var i    = 0,
+            time = 0;
         
         if (this.storedMessages) {
             this.storedMessages.push({
@@ -119,7 +124,7 @@ platformer.Scene = (function () {
                 this.trigger('time-elapsed', this.timeElapsed);
                 this.time = time;
             }
-            for (; i < this.layers.length; i++) {
+            for (i = 0; i < this.layers.length; i++) {
                 this.layers[i].trigger(eventId, event);
             }
             if (eventId === 'tick') {
@@ -141,9 +146,9 @@ platformer.Scene = (function () {
  **/
     proto.getEntityById = function (id) {
         var i = 0,
-        selection = null;
+            selection = null;
         
-        for (; i < this.layers.length; i++) {
+        for (i = 0; i < this.layers.length; i++) {
             if (this.layers[i].id === id) {
                 return this.layers[i];
             }
@@ -151,7 +156,7 @@ platformer.Scene = (function () {
                 selection = this.layers[i].getEntityById(id);
                 if (selection) {
                     return selection;
-                };
+                }
             }
         }
         return undefined;
@@ -165,11 +170,11 @@ platformer.Scene = (function () {
  * @return entities {Array} Returns the entities that match the specified entity type.
  **/
     proto.getEntitiesByType = function (type) {
-        var i     = 0,
-        selection = null,
-        entities  = [];
+        var i = 0,
+            selection = null,
+            entities  = [];
         
-        for (; i < this.layers.length; i++) {
+        for (i = 0; i < this.layers.length; i++) {
             if (this.layers[i].type === type) {
                 entities.push(this.layers[i]);
             }
@@ -177,7 +182,7 @@ platformer.Scene = (function () {
                 selection = this.layers[i].getEntitiesByType(type);
                 if (selection) {
                     entities = entities.concat(selection);
-                };
+                }
             }
         }
         return entities;
@@ -189,8 +194,10 @@ platformer.Scene = (function () {
  * @method destroy
  **/
     proto.destroy = function () {
-        for (var layer in this.layers) {
-            this.layers[layer].destroy();
+        var i = 0;
+        
+        for (i = 0; i < this.layers.length; i++) {
+            this.layers[i].destroy();
         }
         this.layers.length = 0;
     };

@@ -31,6 +31,8 @@ This component spawns new entities within a given area at set intervals.
       }
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -39,14 +41,14 @@ This component spawns new entities within a given area at set intervals.
         id: 'logic-region-spawner',
         
         constructor: function (definition) {
-            var x   = 0,
-            y       = 0,
-            columns = 1,
-            rows    = 1,
-            width   = 0,
-            height  = 0,
-            rw      = 0,
-            rh      = 0;
+            var x       = 0,
+                y       = 0,
+                columns = 1,
+                rows    = 1,
+                width   = 0,
+                height  = 0,
+                rw      = 0,
+                rh      = 0;
             
             this.spawnPosition = {
                 x: 0,
@@ -90,7 +92,7 @@ This component spawns new entities within a given area at set intervals.
         events: {// These are messages that this component listens for
             "handle-logic": function (resp) {
                 var regions = this.regions,
-                region = null;
+                    region  = null;
                 
                 this.time += resp.delta;
                 

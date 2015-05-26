@@ -29,18 +29,19 @@ This component changes the (x, y) position of an object according to its current
       // Optional. Defines how much to rotate the image in addition to the movement rotation.
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
     return platformer.createComponentClass({
         
-        id: 'logic-angular-movement', 
+        id: 'logic-angular-movement',
         
         constructor: function (definition) {
             this.angle     = 0;
-            this.v         = [0,0];
+            this.v         = [0, 0];
             this.maxV      = this.owner.maxVelocity  || definition.maxVelocity  || 3;
-            this.a         = this.owner.acceleration || definition.acceleration || .01;
+            this.a         = this.owner.acceleration || definition.acceleration || 0.01;
             this.moving    = false;
             this.piOverTwo = Math.PI / 2;
             this.visualOffset = definition.visualOrientationOffset || 0;
@@ -49,14 +50,13 @@ This component changes the (x, y) position of an object according to its current
 
         events: {// These are messages that this component listens for
             "handle-logic": function (update) {
-                var delta = update.delta;
-                var currentAngle = 0;
-                if (this.moving)
-                {
+                var delta        = update.delta,
+                    currentAngle = 0;
+                
+                if (this.moving) {
                     this.v[0] += this.a * Math.cos(this.angle) * delta;
                     this.v[1] += this.a * Math.sin(this.angle) * delta;
-                    if (this.v[0] == 0)
-                    {
+                    if (this.v[0] === 0) {
                         if (this.v[1] > 0) {
                             currentAngle = this.piOverTwo;
                         } else if (this.v[1] < 0) {
@@ -65,7 +65,7 @@ This component changes the (x, y) position of an object according to its current
                             currentAngle = this.angle;
                         }
                     } else {
-                        currentAngle = Math.atan(this.v[1]/this.v[0]);
+                        currentAngle = Math.atan(this.v[1] / this.v[0]);
                         if (this.v[0] < 0) {
                             currentAngle = Math.PI + currentAngle;
                         }
@@ -84,7 +84,7 @@ This component changes the (x, y) position of an object according to its current
                     this.owner.x += this.v[0];
                     this.owner.y += this.v[1];
                     this.owner.orientation = currentAngle + this.visualOffset;
-                }                
+                }
             },
             "set-angle": function (angle) {
                 this.angle = angle;

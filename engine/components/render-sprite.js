@@ -184,16 +184,18 @@ This component is attached to entities that will appear in the game world. It re
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
 */
+/*global console, createjs, platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
     var dpr = window.devicePixelRatio || 1,
-    ssCache = {},
-    changeState = function (state) {
-        return function (value) {
-            //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
-            //                We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
-            //if (this.currentAnimation !== state) {
+        ssCache = {},
+        changeState = function (state) {
+            return function (value) {
+                //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
+                //                We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
+                //if (this.currentAnimation !== state) {
                 if (this.animationFinished || (this.lastState >= -1)) {
                     this.currentAnimation = state;
                     this.lastState = -1;
@@ -203,48 +205,50 @@ This component is attached to entities that will appear in the game world. It re
                     this.waitingAnimation = state;
                     this.waitingState = -1;
                 }
-            //}
-        };
-    },
-    createTest = function (testStates, animation) {
-        var states = testStates.replace(/ /g, '').split(',');
-        if (testStates === 'default') {
-            return function (state) {
-                return animation;
+                //}
             };
-        } else {
-            return function (state) {
-                for (var i = 0; i < states.length; i++) {
-                    if (!state[states[i]]) {
-                        return false;
-                    }
-                }
-                return animation;
-            };
-        }
-    },
-    processGraphics = (function () {
-        var process = function (gfx, value) {
-            var paren = value.indexOf('('),
-            func      = value.substring(0, paren),
-            values    = value.substring(paren + 1, value.indexOf(')'));
-            
-            if (values.length) {
-                gfx[func].apply(gfx, values.split(','));
-            } else {
-                gfx[func]();
-            }
-        };
-        
-        return function (gfx, value) {
+        },
+        createTest = function (testStates, animation) {
             var i = 0,
-            arr   = value.split('.');
+                states = testStates.replace(/ /g, '').split(',');
             
-            for (; i < arr.length; i++) {
-                process(gfx, arr[i]);
+            if (testStates === 'default') {
+                return function (state) {
+                    return animation;
+                };
+            } else {
+                return function (state) {
+                    for (i = 0; i < states.length; i++) {
+                        if (!state[states[i]]) {
+                            return false;
+                        }
+                    }
+                    return animation;
+                };
             }
-        };
-    }());
+        },
+        processGraphics = (function () {
+            var process = function (gfx, value) {
+                var paren  = value.indexOf('('),
+                    func   = value.substring(0, paren),
+                    values = value.substring(paren + 1, value.indexOf(')'));
+
+                if (values.length) {
+                    gfx[func].apply(gfx, values.split(','));
+                } else {
+                    gfx[func]();
+                }
+            };
+
+            return function (gfx, value) {
+                var i = 0,
+                    arr = value.split('.');
+
+                for (i = 0; i < arr.length; i++) {
+                    process(gfx, arr[i]);
+                }
+            };
+        }());
     
     return platformer.createComponentClass({
         
@@ -252,217 +256,221 @@ This component is attached to entities that will appear in the game world. It re
         
         constructor: (function () {
             var defaultAnimations = {"default": 0},
-            createSpriteSheet = function (def, entity) {
-                var i  = 0,
-                arr    = null,
-                image  = null,
-                scaleX = 1,
-                scaleY = 1,
-                scaled = false,
-                srcSS  = def.spritesheet || def.spriteSheet, // To prevent silly bugs.
-                ss     = {
-                    framerate:     0,
-                    images:     null,
-                    frames:     null,
-                    animations: null
-                },
-                cache  = {
-                    definition: ss,
-                    spritesheet: null
-                };
-                
-                // Find SS definition in image data if it has not otherwise been provided.
-                if (!srcSS && (typeof def.image === 'string')) {
-                    //check cache and bail if it's available
-                    if (ssCache[def.image]) {
-                        return ssCache[def.image];
-                    } else if (platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet) {
-                        ssCache[def.image] = cache;
-                        srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
+                createSpriteSheet = function (def, entity) {
+                    var i  = 0,
+                        arr    = null,
+                        image  = null,
+                        scaleX = 1,
+                        scaleY = 1,
+                        scaled = false,
+                        srcSS  = def.spritesheet || def.spriteSheet, // To prevent silly bugs.
+                        ss     = {
+                            framerate:     0,
+                            images:     null,
+                            frames:     null,
+                            animations: null
+                        },
+                        cache  = {
+                            definition: ss,
+                            spritesheet: null
+                        };
+
+                    // Find SS definition in image data if it has not otherwise been provided.
+                    if (!srcSS && (typeof def.image === 'string')) {
+                        //check cache and bail if it's available
+                        if (ssCache[def.image]) {
+                            return ssCache[def.image];
+                        } else if (platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet) {
+                            ssCache[def.image] = cache;
+                            srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
+                        }
                     }
-                }
-                
-                // Set framerate.
-                if (srcSS && !isNaN(srcSS.framerate)) {
-                    ss.framerate = srcSS.framerate;
-                } else if (!isNaN(def.framerate)) {
-                    ss.framerate = def.framerate;
-                } else if (!isNaN(entity.framerate)) {
-                    ss.framerate = entity.framerate;
-                }
-                
-                // Set source image(s)
-                if (srcSS && Array.isArray(srcSS.images)) {
-                    ss.images = srcSS.images.slice();
-                } else if (srcSS && srcSS.image) {
-                    ss.images = [srcSS.image];
-                } else if (def.images) {
-                    ss.images = def.images.slice();
-                } else if (def.image) {
-                    ss.images = [def.image];
-                } else if (entity.images) {
-                    ss.images = entity.images.slice();
-                } else if (entity.image) {
-                    ss.images = [entity.image];
-                } else {
-                    console.warn('"' + entity.type + '" render component: No source image defined.');
-                }
-                
-                // Convert image names into Image resources
-                for (i = 0; i < ss.images.length; i++) {
-                    if (typeof ss.images[i] === 'string') {
-                        if (platformer.assets[ss.images[i]]) {
-                            ss.images[i] = platformer.assets[ss.images[i]];
-                            
-                            // Check here whether to scale coordinates in the frame setup section.
-                            if (!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))) {
-                                scaled = true;
+
+                    // Set framerate.
+                    if (srcSS && !isNaN(srcSS.framerate)) {
+                        ss.framerate = srcSS.framerate;
+                    } else if (!isNaN(def.framerate)) {
+                        ss.framerate = def.framerate;
+                    } else if (!isNaN(entity.framerate)) {
+                        ss.framerate = entity.framerate;
+                    }
+
+                    // Set source image(s)
+                    if (srcSS && Array.isArray(srcSS.images)) {
+                        ss.images = srcSS.images.slice();
+                    } else if (srcSS && srcSS.image) {
+                        ss.images = [srcSS.image];
+                    } else if (def.images) {
+                        ss.images = def.images.slice();
+                    } else if (def.image) {
+                        ss.images = [def.image];
+                    } else if (entity.images) {
+                        ss.images = entity.images.slice();
+                    } else if (entity.image) {
+                        ss.images = [entity.image];
+                    } else {
+                        console.warn('"' + entity.type + '" render component: No source image defined.');
+                    }
+
+                    // Convert image names into Image resources
+                    for (i = 0; i < ss.images.length; i++) {
+                        if (typeof ss.images[i] === 'string') {
+                            if (platformer.assets[ss.images[i]]) {
+                                ss.images[i] = platformer.assets[ss.images[i]];
+
+                                // Check here whether to scale coordinates in the frame setup section.
+                                if (!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))) {
+                                    scaled = true;
+                                }
+                            } else {
+                                if (platformer.settings.supports.iOS) {
+                                    console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
+                                } else {
+                                    console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset.');
+                                }
+                            }
+                        }
+                    }
+
+                    // Set frames.
+                    if (srcSS && srcSS.frames) {
+                        ss.frames = srcSS.frames;
+                    } else if (def.frames) {
+                        ss.frames = def.frames;
+                    } else if (entity.frames) {
+                        ss.frames = entity.frames;
+                    } else if (def.source) {
+                        //TODO: Remove this option at some point once "render-image" notation is no longer in common use. - DDD 5/1/2014
+                        ss.frames = [[
+                            def.source.x      || def.x      || 0,
+                            def.source.y      || def.y      || 0,
+                            def.source.width  || def.width  || ss.images[0].width  || entity.width,
+                            def.source.height || def.height || ss.images[0].height || entity.height,
+                            0,
+                            def.regX          || entity.regX         || 0,
+                            def.regY          || entity.regY         || 0
+                        ]];
+                        console.warn('"' + entity.type + '" render component: The original render-image "source" parameter will soon be deprecated in favor of placing source information as individual parameters directly on the render component.');
+                    } else {
+                        // assume this is a single frame image and define accordingly.
+                        image = ss.images[0];
+                        if (image) {
+                            ss.frames = [[
+                                def.x      || 0,
+                                def.y      || 0,
+                                def.width  || ss.images[0].width  || entity.width,
+                                def.height || ss.images[0].height || entity.height,
+                                0,
+                                def.regX   || entity.regX         || 0,
+                                def.regY   || entity.regY         || 0
+                            ]];
+                        }
+                    }
+
+                    // Process frames if the image size has been scaled from the original definition image. (This is sent as data on the image itself, usually due to dynamically reducing the size of source images for smaller devices.)
+                    if (scaled) {
+                        if (Array.isArray(ss.frames)) { //frames are an array
+                            arr = ss.frames;
+                            ss.frames = [];
+                            for (i = 0; i < arr.length; i++) {
+                                scaleX = ss.images[arr[i][4]].scaleX || 1;
+                                scaleY = ss.images[arr[i][4]].scaleY || 1;
+
+                                ss.frames.push([
+                                    arr[i][0] * scaleX,
+                                    arr[i][1] * scaleY,
+                                    arr[i][2] * scaleX,
+                                    arr[i][3] * scaleY,
+                                    arr[i][4],
+                                    arr[i][5] * scaleX,
+                                    arr[i][6] * scaleY
+                                ]);
                             }
                         } else {
-                            if (platformer.settings.supports.iOS) {
-                                console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
+                            scaleX = ss.images[0].scaleX || 1;
+                            scaleY = ss.images[0].scaleY || 1;
+                            ss.frames = {
+                                width: ss.frames.width * scaleX,
+                                height: ss.frames.height * scaleY,
+                                regX: ss.frames.regX * scaleX,
+                                regY: ss.frames.regY * scaleY
+                            };
+                        }
+                    }
+
+                    // Set animations.
+                    if (srcSS && srcSS.animations) {
+                        ss.animations = srcSS.animations;
+                    } else if (def.animations) {
+                        ss.animations = def.animations;
+                    } else if (entity.animations) {
+                        ss.animations = entity.animations;
+                    } else {
+                        // assume this is a single frame image and define accordingly.
+                        ss.animations = defaultAnimations;
+                    }
+
+                    cache.spritesheet = new createjs.SpriteSheet(cache.definition);
+
+                    return cache;
+                },
+                createAnimationMap = function (def, ss) {
+                    var map  = null,
+                        anim = '';
+
+                    if (def.animationMap) {
+                        return def.animationMap;
+                    } else if (Array.isArray(ss.frames) && (ss.frames.length === 1)) {
+                        // This is a single frame animation, so no mapping is necessary
+                        return null;
+                    } else { // create 1-to-1 animation map since none was defined
+                        map = {};
+                        for (anim in ss.animations) {
+                            if (ss.animations.hasOwnProperty(anim)) {
+                                map[anim] = anim;
+                            }
+                        }
+                        return map;
+                    }
+                },
+                setupEventsAndStates = function (component, map) {
+                    var anim      = '',
+                        animation = '';
+
+                    component.followThroughs = {};
+                    component.checkStates = [];
+
+                    for (anim in map) {
+                        if (map.hasOwnProperty(anim)) {
+                            animation = map[anim];
+
+                            //TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
+                            if (animation[animation.length - 1] === '!') {
+                                animation = animation.substring(0, animation.length - 1);
+                                component.followThroughs[animation] = true;
                             } else {
-                                console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset.');
+                                component.followThroughs[animation] = false;
+                            }
+
+                            if (component.eventBased) {
+                                component.addEventListener(anim, changeState(animation));
+                            }
+                            if (component.stateBased) {
+                                component.checkStates.push(createTest(anim, animation));
                             }
                         }
                     }
-                }
-
-                // Set frames.
-                if (srcSS && srcSS.frames) {
-                    ss.frames = srcSS.frames;
-                } else if (def.frames) {
-                    ss.frames = def.frames;
-                } else if (entity.frames) {
-                    ss.frames = entity.frames;
-                } else if (def.source) {
-                    //TODO: Remove this option at some point once "render-image" notation is no longer in common use. - DDD 5/1/2014
-                    ss.frames = [[
-                        def.source.x      || def.x      || 0,
-                        def.source.y      || def.y      || 0,
-                        def.source.width  || def.width  || ss.images[0].width  || entity.width,
-                        def.source.height || def.height || ss.images[0].height || entity.height,
-                        0,
-                        def.regX          || entity.regX         || 0,
-                        def.regY          || entity.regY         || 0
-                    ]];
-                    console.warn('"' + entity.type + '" render component: The original render-image "source" parameter will soon be deprecated in favor of placing source information as individual parameters directly on the render component.');
-                } else {
-                    // assume this is a single frame image and define accordingly.
-                    image = ss.images[0];
-                    if (image) {
-                        ss.frames = [[
-                            def.x      || 0,
-                            def.y      || 0,
-                            def.width  || ss.images[0].width  || entity.width,
-                            def.height || ss.images[0].height || entity.height,
-                            0,
-                            def.regX   || entity.regX         || 0,
-                            def.regY   || entity.regY         || 0
-                        ]];
-                    }
-                }
-                
-                // Process frames if the image size has been scaled from the original definition image. (This is sent as data on the image itself, usually due to dynamically reducing the size of source images for smaller devices.)
-                if (scaled) {
-                    if (Array.isArray(ss.frames)) { //frames are an array
-                        arr = ss.frames;
-                        ss.frames = [];
-                        for (i = 0; i < arr.length; i++) {
-                            scaleX = ss.images[arr[i][4]].scaleX || 1;
-                            scaleY = ss.images[arr[i][4]].scaleY || 1;
-                            
-                            ss.frames.push([
-                                arr[i][0] * scaleX,
-                                arr[i][1] * scaleY,
-                                arr[i][2] * scaleX,
-                                arr[i][3] * scaleY,
-                                arr[i][4],
-                                arr[i][5] * scaleX,
-                                arr[i][6] * scaleY
-                            ]);
-                        }
-                    } else {
-                        scaleX = ss.images[0].scaleX || 1;
-                        scaleY = ss.images[0].scaleY || 1;
-                        ss.frames = {
-                            width: ss.frames.width * scaleX,    
-                            height: ss.frames.height * scaleY,    
-                            regX: ss.frames.regX * scaleX,    
-                            regY: ss.frames.regY * scaleY
-                        };
-                    }
-                }
-                
-                // Set animations.
-                if (srcSS && srcSS.animations) {
-                    ss.animations = srcSS.animations;
-                } else if (def.animations) {
-                    ss.animations = def.animations;
-                } else if (entity.animations) {
-                    ss.animations = entity.animations;
-                } else {
-                    // assume this is a single frame image and define accordingly.
-                    ss.animations = defaultAnimations;
-                }
-
-                cache.spritesheet = new createjs.SpriteSheet(cache.definition);
-                
-                return cache;
-            },
-            createAnimationMap = function (def, ss) {
-                var map = null,
-                anim    = '';
-                
-                if (def.animationMap) {
-                    return def.animationMap;
-                } else if (Array.isArray(ss.frames) && (ss.frames.length === 1)) {
-                    // This is a single frame animation, so no mapping is necessary
-                    return null;
-                } else { // create 1-to-1 animation map since none was defined
-                    map = {};
-                    for (anim in ss.animations) {
-                        map[anim] = anim;
-                    }
-                    return map;
-                }
-            },
-            setupEventsAndStates = function (component, map) {
-                var anim  = '',
-                animation = '';
-                
-                component.followThroughs = {};
-                component.checkStates = [];
-
-                for (anim in map) {
-                    animation = map[anim];
-                    
-                    //TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
-                    if (animation[animation.length - 1] === '!') {
-                        animation = animation.substring(0, animation.length - 1);
-                        component.followThroughs[animation] = true;
-                    } else {
-                        component.followThroughs[animation] = false;
-                    }
-                    
-                    if (component.eventBased) {
-                        component.addEventListener(anim, changeState(animation));
-                    }
-                    if (component.stateBased) {
-                        component.checkStates.push(createTest(anim, animation));
-                    }
-                }
-            };
+                };
             
             return function (definition) {
-                var self = this, 
-                ss       = createSpriteSheet(definition, this.owner),
-                map      = createAnimationMap(definition, ss.definition),
-                initialScaleX   = definition.scaleX   || 1,
-                initialScaleY   = definition.scaleY   || 1,
-                initialRotation = definition.rotation || 0,
-                initialSkewX    = definition.skewX    || 0,
-                initialSkewY    = definition.skewY    || 0;
+                var self = this,
+                    ss       = createSpriteSheet(definition, this.owner),
+                    map      = createAnimationMap(definition, ss.definition),
+                    initialScaleX   = definition.scaleX   || 1,
+                    initialScaleY   = definition.scaleY   || 1,
+                    initialRotation = definition.rotation || 0,
+                    initialSkewX    = definition.skewX    || 0,
+                    initialSkewY    = definition.skewY    || 0;
                 
                 this.sprite     = null;
                 
@@ -636,7 +644,7 @@ This component is attached to entities that will appear in the game world. It re
                 if (pinInfo.pinId === this.pinTo) {
                     this.stage = pinInfo.container;
                     this.stage.addChild(this.container);
-                    this.addInputs();                
+                    this.addInputs();
                     this.pinnedTo = pinInfo;
                 }
             },
@@ -685,15 +693,17 @@ This component is attached to entities that will appear in the game world. It re
                 };
                 
                 return function (resp) {
-                    var i    = 0,
-                    x        = 0,
-                    y        = 0,
-                    rotation = 0,
-                    testCase = false,
-                    mirrored = 1,
-                    flipped  = 1,
-                    angle    = null,
-                    matrix   = this.container.transformMatrix;
+                    var i = 0,
+                        x = 0,
+                        y = 0,
+                        o = null,
+                        rotation = 0,
+                        testCase = false,
+                        mirrored = 1,
+                        flipped  = 1,
+                        angle    = null,
+                        matrix   = this.container.transformMatrix,
+                        m        = matrix.copy(this.affine);
                     
                     if (this.pinnedTo) {
                         if (this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]) {
@@ -757,12 +767,12 @@ This component is attached to entities that will appear in the game world. It re
                     }
                     
                     if (this.stateBased && this.stateChange) {
-                        if (this.state['hidden'] !== undefined) {
-                            this.container.hidden = this.state['hidden'];
+                        if (this.state.hidden !== undefined) {
+                            this.container.hidden = this.state.hidden;
                         }
 
                         if (this.checkStates) {
-                            for (; i < this.checkStates.length; i++) {
+                            for (i = 0; i < this.checkStates.length; i++) {
                                 testCase = this.checkStates[i](this.state);
                                 if (testCase) {
                                     if (this.currentAnimation !== testCase) {
@@ -785,10 +795,6 @@ This component is attached to entities that will appear in the game world. It re
                         this.stateChange = false;
                     }
                     
-                    
-                    var m = matrix.copy(this.affine),
-                    o = null;
-                    
                     if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
                         o = this.owner.orientationMatrix;
                         m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
@@ -798,7 +804,7 @@ This component is attached to entities that will appear in the game world. It re
                     
                     // Handle rotation
                     if (rotation) {
-                        m.appendTransform(0,0,1,1, rotation);
+                        m.appendTransform(0, 0, 1, 1, rotation);
                     }
                 };
             }()),
@@ -818,60 +824,60 @@ This component is attached to entities that will appear in the game world. It re
                 
                 return function () {
                     var self = this,
-                    mousedown = null,
-                    mouseover = null,
-                    mouseout  = null,
-                    rollover  = null,
-                    rollout   = null,
-                    pressmove = null,
-                    pressup   = null,
-                    click     = null,
-                    dblclick  = null;
+                        mousedown = null,
+                        mouseover = null,
+                        mouseout  = null,
+                        rollover  = null,
+                        rollout   = null,
+                        pressmove = null,
+                        pressup   = null,
+                        click     = null,
+                        dblclick  = null;
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click || this.touch) {
-                        if (this.touch && !this.stage.__touch) { //__touch check due to this being overridden if we do this multiple times. - DDD
+                        if (this.touch) {
                             createjs.Touch.enable(this.stage);
                         }
                         
                         mousedown = createHandler(this, 'mousedown');
                         pressmove = createHandler(this, 'pressmove');
-                        pressup   = createHandler(this, 'pressup'  );
-                        click     = createHandler(this, 'click'    );
-                        dblclick  = createHandler(this, 'dblclick' );
+                        pressup   = createHandler(this, 'pressup');
+                        click     = createHandler(this, 'click');
+                        dblclick  = createHandler(this, 'dblclick');
                         
                         this.sprite.addEventListener('mousedown', mousedown);
                         this.sprite.addEventListener('pressmove', pressmove);
-                        this.sprite.addEventListener('pressup',   pressup  );
-                        this.sprite.addEventListener('click',     click    );
-                        this.sprite.addEventListener('dblclick',  dblclick );
+                        this.sprite.addEventListener('pressup',   pressup);
+                        this.sprite.addEventListener('click',     click);
+                        this.sprite.addEventListener('dblclick',  dblclick);
                     }
                     if (this.hover) {
                         this.stage.enableMouseOver();
                         mouseover = createHandler(this, 'mouseover');
-                        mouseout  = createHandler(this, 'mouseout' );
-                        rollover  = createHandler(this, 'rollover' );
-                        rollout   = createHandler(this, 'rollout'  );
+                        mouseout  = createHandler(this, 'mouseout');
+                        rollover  = createHandler(this, 'rollover');
+                        rollout   = createHandler(this, 'rollout');
 
                         this.sprite.addEventListener('mouseover', mouseover);
-                        this.sprite.addEventListener('mouseout',  mouseout );
-                        this.container.addEventListener('rollover',  rollover );
-                        this.container.addEventListener('rollout',   rollout  );
+                        this.sprite.addEventListener('mouseout',  mouseout);
+                        this.container.addEventListener('rollover',  rollover);
+                        this.container.addEventListener('rollout',   rollout);
                     }
 
                     this.removeInputListeners = function () {
                         if (this.click || this.touch) {
                             this.sprite.removeEventListener('mousedown', mousedown);
                             this.sprite.removeEventListener('pressmove', pressmove);
-                            this.sprite.removeEventListener('pressup',   pressup  );
-                            this.sprite.removeEventListener('click',     click    );
-                            this.sprite.removeEventListener('dblclick',  dblclick );
+                            this.sprite.removeEventListener('pressup',   pressup);
+                            this.sprite.removeEventListener('click',     click);
+                            this.sprite.removeEventListener('dblclick',  dblclick);
                         }
                         if (this.hover) {
                             this.sprite.removeEventListener('mouseover', mouseover);
-                            this.sprite.removeEventListener('mouseout',  mouseout );
-                            this.container.removeEventListener('rollover',  rollover );
-                            this.container.removeEventListener('rollout',   rollout  );
+                            this.sprite.removeEventListener('mouseout',  mouseout);
+                            this.container.removeEventListener('rollover',  rollover);
+                            this.container.removeEventListener('rollout',   rollout);
                         }
                         this.removeInputListeners = null;
                     };
@@ -880,17 +886,17 @@ This component is attached to entities that will appear in the game world. It re
             
             addPins: function (pins, frames) {
                 var i = 0,
-                j     = 0,
-                pin   = null,
-                regX  = frames.regX || 0,
-                regY  = frames.regY || 0,
-                isArray = Array.isArray(frames);
+                    j = 0,
+                    pin   = null,
+                    regX  = frames.regX || 0,
+                    regY  = frames.regY || 0,
+                    isArray = Array.isArray(frames);
                 
                 this.pinsToRemove = this.pinsToRemove || [];
                 
                 this.pins = {};
                 
-                for (; i < pins.length; i++) {
+                for (i = 0; i < pins.length; i++) {
                     this.pinsToRemove.push(pins[i].pinId);
 
                     if (isArray) {
@@ -924,8 +930,8 @@ This component is attached to entities that will appear in the game world. It re
                                     pin.frames.push({
                                         x: (pins[i].frames[j].x - regX),
                                         y: (pins[i].frames[j].y - regY),
-                                        z: pins[i].frames[j].z || (pin.defaultPin?pin.defaultPin.z:0.00000001),
-                                        angle: pins[i].frames[j].angle || (pin.defaultPin?pin.defaultPin.angle:0)
+                                        z: pins[i].frames[j].z || (pin.defaultPin ? pin.defaultPin.z : 0.00000001),
+                                        angle: pins[i].frames[j].angle || (pin.defaultPin ? pin.defaultPin.angle : 0)
                                     });
                                 } else if (pin.defaultPin) {
                                     if (typeof pins[i].frames[j].x === 'number') {
@@ -944,10 +950,10 @@ This component is attached to entities that will appear in the game world. It re
                                         });
                                     } else {
                                         pin.frames.push(null);
-                                    } 
+                                    }
                                 } else {
                                     pin.frames.push(null);
-                                 }
+                                }
                             } else {
                                 pin.frames.push(null);
                             }
@@ -961,7 +967,7 @@ This component is attached to entities that will appear in the game world. It re
                 var i = 0;
                 
                 if (this.pins && this.pinsToRemove) {
-                    for (; i < this.pinsToRemove.length; i++) {
+                    for (i = 0; i < this.pinsToRemove.length; i++) {
                         this.owner.trigger('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
                         delete this.pins[this.pinsToRemove[i]];
                     }
@@ -971,7 +977,7 @@ This component is attached to entities that will appear in the game world. It re
             
             setMask: function (shape) {
                 var mask = new createjs.Shape(),
-                gfx      = mask.graphics;
+                    gfx  = mask.graphics;
                 
                 mask.x   = 0;
                 mask.y   = 0;
@@ -993,9 +999,9 @@ This component is attached to entities that will appear in the game world. It re
                 var savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
                 
                 return function (shape) {
-                    var ha = null,
-                    gfx    = null,
-                    sav    = '';
+                    var ha  = null,
+                        gfx = null,
+                        sav = '';
                     
                     if (typeof shape === 'string') {
                         sav = shape;

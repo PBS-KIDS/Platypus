@@ -67,59 +67,60 @@
 /*
  * Requires: ["messenger.js"]
  */
-
+/*global console, platformer */
+/*jslint plusplus:true */
 platformer.Entity = (function () {
     "use strict";
     
     var entityIds = {},
-    entity = function (definition, instanceDefinition) {
-        var self             = this,
-        index                = undefined,
-        componentDefinition  = undefined,
-        def                  = definition || {},
-        componentDefinitions = def.components || [],
-        defaultProperties    = def.properties || {},
-        instance             = instanceDefinition || {},
-        instanceProperties   = instance.properties || {};
-        
-        // Set properties of messenger on this entity.
-        platformer.Messenger.call(self);
-        
-        self.components  = [];
-        self.type = def.id || 'none';
-        
-        self.id = instanceDefinition.id || instanceProperties.id;
-        if (!self.id) {
-            if (!entityIds[self.type]) {
-                entityIds[self.type] = 0;
-            }
-            self.id = self.type + '-' + entityIds[self.type];
-            entityIds[self.type] += 1;
-        }
+        entity = function (definition, instanceDefinition) {
+            var self                 = this,
+                i                    = 0,
+                componentDefinition  = null,
+                def                  = definition || {},
+                componentDefinitions = def.components || [],
+                defaultProperties    = def.properties || {},
+                instance             = instanceDefinition || {},
+                instanceProperties   = instance.properties || {};
 
-        this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
-        this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
-        this.bind('set-property', function (keyValuePairs) {
-            self.setProperty(keyValuePairs);
-        });
-        
-        if (!self.state) {
-            self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
-        }
-        self.lastState = {}; //This is used to determine if the state of the entity has changed.
-        
-        for (index in componentDefinitions) {
-            componentDefinition = componentDefinitions[index];
-            if (platformer.components[componentDefinition.type]) {
-                self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
-            } else {
-                console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
+            // Set properties of messenger on this entity.
+            platformer.Messenger.call(self);
+
+            self.components  = [];
+            self.type = def.id || 'none';
+
+            self.id = instanceDefinition.id || instanceProperties.id;
+            if (!self.id) {
+                if (!entityIds[self.type]) {
+                    entityIds[self.type] = 0;
+                }
+                self.id = self.type + '-' + entityIds[self.type];
+                entityIds[self.type] += 1;
             }
-        }
-        
-        self.triggerEvent('load');
-    };
-    var proto = entity.prototype = new platformer.Messenger();
+
+            this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
+            this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
+            this.bind('set-property', function (keyValuePairs) {
+                self.setProperty(keyValuePairs);
+            });
+
+            if (!self.state) {
+                self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
+            }
+            self.lastState = {}; //This is used to determine if the state of the entity has changed.
+
+            for (i = 0; i < componentDefinitions.length; i++) {
+                componentDefinition = componentDefinitions[i];
+                if (platformer.components[componentDefinition.type]) {
+                    self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
+                } else {
+                    console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
+                }
+            }
+
+            self.triggerEvent('load');
+        },
+        proto = entity.prototype = new platformer.Messenger();
     
 /**
  * Returns a string describing the entity.
@@ -152,23 +153,23 @@ platformer.Entity = (function () {
  * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
  **/
     proto.removeComponent = function (component) {
-        var index = '';
+        var i = 0;
         
         if (typeof component === 'string') {
-            for (index in this.components) {
-                if (this.components[index].type === component) {
-                    component = this.components[index];
-                    this.components.splice(index, 1);
-                    this.triggerEvent('component-removed', this.components[index]);
+            for (i = 0; i < this.components.length; i++) {
+                if (this.components[i].type === component) {
+                    component = this.components[i];
+                    this.components.splice(i, 1);
+                    this.triggerEvent('component-removed', this.components[i]);
                     component.destroy();
                     return component;
                 }
             }
         } else {
-            for (index in this.components) {
-                if (this.components[index] === component) {
-                    this.components.splice(index, 1);
-                    this.triggerEvent('component-removed', this.components[index]);
+            for (i = 0; i < this.components.length; i++) {
+                if (this.components[i] === component) {
+                    this.components.splice(i, 1);
+                    this.triggerEvent('component-removed', this.components[i]);
                     component.destroy();
                     return component;
                 }
@@ -188,7 +189,9 @@ platformer.Entity = (function () {
         var index = '';
         
         for (index in properties) { // This takes a list of properties and appends them directly to the object.
-            this[index] = properties[index];
+            if (properties.hasOwnProperty(index)) {
+                this[index] = properties[index];
+            }
         }
     };
     
@@ -198,8 +201,10 @@ platformer.Entity = (function () {
  * @method destroy
  **/
     proto.destroy = function () {
-        for (var x in this.components) {
-            this.components[x].destroy();
+        var i = 0;
+        
+        for (i = 0; i < this.components.length; i++) {
+            this.components[i].destroy();
         }
         this.components.length = 0;
     };

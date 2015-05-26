@@ -1,98 +1,98 @@
-/* global platformer */
 /**
  * This component works in tandem with the [`mover`]("mover"%20Component.html) component by adding a vector of motion to the entity. This component is typically created by `mover` and doesn't need to be added separately.
  * 
  * @class "motion" Component
  * @uses Component
  */
+/*global platformer */
 (function () {
     "use strict";
     
     var tempVector = new platformer.Vector(),
-    prepUpdate = function (func) {
-        return function (velocity, position, delta, grounded) {
-            if (this.accelerator) {
-                this.resultant = velocity;
-            } else {
-                this.resultant = position;
-            }
-            this.update = func;
-            this.update(velocity, position, delta, grounded);
-        };
-    },
-    isTrue = function () {
-        return true;
-    },
-    createController = function (self, definition) {
-        var active = self.active,
-        enact = true,
-        ready = true,
-        getActiveState = isTrue,
-        getInstantState = isTrue,
-        state = self.owner.state,
-        controlState = definition.controlState,
-        instantState = definition.instantState;
-        
-        if (controlState) {
-            getActiveState = function () {
-                return state[controlState];
+        prepUpdate = function (func) {
+            return function (velocity, position, delta, grounded) {
+                if (this.accelerator) {
+                    this.resultant = velocity;
+                } else {
+                    this.resultant = position;
+                }
+                this.update = func;
+                this.update(velocity, position, delta, grounded);
             };
-        }
-        
-        if (definition.event) {
-            /**
-             * This event controls whether this motion is active or inactive.
-             * 
-             * @method '[defined by event property]'
-             * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-             */
-            self.addEventListener(definition.event, function (control) {
-                active = (control && (control.pressed !== false));
-            });
-        }
-        
-        if (definition.instantEvent || instantState) {
-            if (instantState) {
-                getInstantState = function () {
-                    return state[instantState];
+        },
+        isTrue = function () {
+            return true;
+        },
+        createController = function (self, definition) {
+            var active = self.active,
+                enact  = true,
+                ready  = true,
+                getActiveState = isTrue,
+                getInstantState = isTrue,
+                state = self.owner.state,
+                controlState = definition.controlState,
+                instantState = definition.instantState;
+
+            if (controlState) {
+                getActiveState = function () {
+                    return state[controlState];
                 };
             }
-        
-            if (definition.instantEvent) {
-                enact = false;
+
+            if (definition.event) {
                 /**
-                 * This event triggers an instant motion.
+                 * This event controls whether this motion is active or inactive.
                  * 
-                 * @method '[defined by instantEvent property]'
+                 * @method '[defined by event property]'
                  * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
                  */
-                self.addEventListener(definition.instantEvent, function (control) {
-                    enact = (control && (control.pressed !== false));
+                self.addEventListener(definition.event, function (control) {
+                    active = (control && (control.pressed !== false));
                 });
             }
-            
-            self.update = prepUpdate(function (velocity, position, delta, grounded) {
-                var state = getInstantState();
-                
-                this.active = active && getActiveState();
-                
-                if (ready && enact && this.active && state) {
-                    ready = false; // to insure a single instance until things are reset
-                    this.move(1);
-                } else if (!ready && !(enact && state)) {
-                    ready = true;
-                    this.decay();
+
+            if (definition.instantEvent || instantState) {
+                if (instantState) {
+                    getInstantState = function () {
+                        return state[instantState];
+                    };
                 }
-            });
-        } else {
-            self.update = prepUpdate(function (velocity, position, delta, grounded) {
-                this.active = active && getActiveState();                
-                if (this.active) {
-                    this.move(delta);
+
+                if (definition.instantEvent) {
+                    enact = false;
+                    /**
+                     * This event triggers an instant motion.
+                     * 
+                     * @method '[defined by instantEvent property]'
+                     * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                     */
+                    self.addEventListener(definition.instantEvent, function (control) {
+                        enact = (control && (control.pressed !== false));
+                    });
                 }
-            });
-        }
-    };
+
+                self.update = prepUpdate(function (velocity, position, delta, grounded) {
+                    var state = getInstantState();
+
+                    this.active = active && getActiveState();
+
+                    if (ready && enact && this.active && state) {
+                        ready = false; // to insure a single instance until things are reset
+                        this.move(1);
+                    } else if (!ready && !(enact && state)) {
+                        ready = true;
+                        this.decay();
+                    }
+                });
+            } else {
+                self.update = prepUpdate(function (velocity, position, delta, grounded) {
+                    this.active = active && getActiveState();
+                    if (this.active) {
+                        this.move(delta);
+                    }
+                });
+            }
+        };
     
     return platformer.createComponentClass({
         
@@ -105,7 +105,7 @@
              * @property orient
              * @type boolean
              * @default true
-             */            
+             */
             orient: true,
             
             /**

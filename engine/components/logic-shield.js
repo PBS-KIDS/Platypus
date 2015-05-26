@@ -28,6 +28,7 @@ This component creates an entity and connects it with the current entity. This i
       // Optional. Location relative to the entity where the shield should be located once created. Defaults to (0, 0).
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -43,14 +44,15 @@ This component creates an entity and connects it with the current entity. This i
             this.entityClass = platformer.game.settings.entities[definition.shield];
 
             if (!this.owner.linkId) {
-                this.owner.linkId = 'shield-link-' + linkId++;
+                this.owner.linkId = 'shield-link-' + linkId;
+                linkId += 1;
             }
             
             this.state[this.stateName] = false;
             this.shieldPosition = {
-                x:0,
-                y:0,
-                z:0,
+                x:  0,
+                y:  0,
+                z:  0,
                 dx: 0,
                 dy: 0,
                 linkId: this.owner.linkId
@@ -66,20 +68,12 @@ This component creates an entity and connects it with the current entity. This i
             
             this.shield = null;
             this.wieldShield = false;
-            
-            // Notes definition changes from older versions of this component.
-            if (definition.message) {
-                console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "wield-shield"} instead.');
-            }
-            if (definition.message) {
-                console.warn('"' + this.type + '" components no longer accept "stopMessage": "' + definition.stopMessage + '" as a definition parameter. Use "aliases": {"' + definition.stopMessage + '": "drop-shield"} instead.');
-            }
         },
 
         events: {// These are messages that this component listens for
             "handle-logic": function () {
                 var offset = 0,
-                state = this.state;
+                    state  = this.state;
                 
                 if (this.wieldShield) {
                     if (!this.shield) {
@@ -136,7 +130,7 @@ This component creates an entity and connects it with the current entity. This i
             }
         },
         
-        methods:{
+        methods: {
             destroy: function () {
                 this.state[this.stateName] = false;
                 if (this.shield) {
@@ -144,7 +138,7 @@ This component creates an entity and connects it with the current entity. This i
                     this.shield = null;
                 }
                 this.wieldShield = false;
-            }            
+            }
         }
     });
 }());

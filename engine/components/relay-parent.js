@@ -30,6 +30,7 @@ This component listens for specified local entity messages and re-broadcasts the
       }
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -45,10 +46,14 @@ This component listens for specified local entity messages and re-broadcasts the
         id: 'relay-parent',
         
         constructor: function (definition) {
+            var event = '';
+            
             // Messages that this component listens for and then broadcasts to parent.
             if (definition.events) {
-                for (var event in definition.events) {
-                    this.addEventListener(event, broadcast(definition.events[event]));
+                for (event in definition.events) {
+                    if (definition.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, broadcast(definition.events[event]));
+                    }
                 }
             }
         }

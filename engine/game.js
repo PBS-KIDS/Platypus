@@ -1,4 +1,3 @@
-/* global platformer */
 /**
  * This class is used to create the `platformer.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
  * 
@@ -11,131 +10,138 @@
  */
  
  // Requires: ["scene.js"]
-
+/*global console, createjs, platformer */
+/*jslint plusplus:true */
 platformer.Game = (function () {
     "use strict";
     
-    var bindEvent = function (eventId, callback) {return function (event) {callback(eventId, event);};};
-    var game      = function (definition, onFinishedLoading) {
-        var innerRootElement = document.createElement('div'),
-        outerRootElement = null;
+    var bindEvent = function (eventId, callback) {
+            return function (event) {
+                callback(eventId, event);
+            };
+        },
+        game      = function (definition, onFinishedLoading) {
+            var key = '',
+                self = this,
+                callback = null,
+                innerRootElement = document.createElement('div'),
+                outerRootElement = null;
 
-        platformer.game = this; //Make this instance the only Game instance.
-        
-        this.currentScene = null;
-        this.loaded    = null;
-        this.settings = definition;
+            platformer.game = this; //Make this instance the only Game instance.
 
-        // platform-specific settings should apply if not explicitly changed.
-        if (!definition.aspects)    definition.aspects    = platformer.settings.aspects;
-        if (!definition.supports)   definition.supports   = platformer.settings.supports;
-        if (!definition.classes)    definition.classes    = platformer.settings.classes;
-        if (!definition.components) definition.components = platformer.settings.components;
-        
-        if (document.getElementById(definition.global.rootElement || "root")) {
-            outerRootElement = document.getElementById(definition.global.rootElement || "root");
-        } else {
-            outerRootElement = document.createElement('div');
-            outerRootElement.id = definition.global.rootElement || "root";
-            document.getElementsByTagName('body')[0].appendChild(outerRootElement);
-        }
-        for (var i in definition.supports) {
-            if (definition.supports[i]) {
-                outerRootElement.className += ' supports-' + i;
+            this.currentScene = null;
+            this.loaded    = null;
+            this.settings = definition;
+
+            // platform-specific settings should apply if not explicitly changed.
+            definition.aspects    = definition.aspects    || platformer.settings.aspects;
+            definition.supports   = definition.supports   || platformer.settings.supports;
+            definition.classes    = definition.classes    || platformer.settings.classes;
+            definition.components = definition.components || platformer.settings.components;
+
+            if (document.getElementById(definition.global.rootElement || "root")) {
+                outerRootElement = document.getElementById(definition.global.rootElement || "root");
+            } else {
+                outerRootElement = document.createElement('div');
+                outerRootElement.id = definition.global.rootElement || "root";
+                document.getElementsByTagName('body')[0].appendChild(outerRootElement);
             }
-        }
-        
-        innerRootElement.id = 'inner-' + outerRootElement.id;
-        outerRootElement.appendChild(innerRootElement);
-        this.rootElement = innerRootElement;
-        this.containerElement = outerRootElement;
-        
-        this.loadScene(definition.global.initialScene);
-
-        // Send the following events along to the scene to handle as necessary:
-        var self = this,
-        callback = null;
-        
-        if (definition.debug) { //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-            callback = function (eventId, event) {
-                self.currentScene.trigger(eventId, event);
-            };
-        } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
-            callback = function (eventId, event) {
-                self.currentScene.trigger(eventId, event);
-                event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-            };
-        }
-        
-        this.bindings = [];
-        this.addEventListener(window, 'keydown', callback);
-        this.addEventListener(window, 'keyup',   callback);
-
-        // If aspect ratio of game area should be maintained on resizing, create new callback to handle it
-        if (definition.global.aspectRatio) {
-            
-            callback = function (eventId, event) {
-                var element = innerRootElement;
-                var ratio   = definition.global.aspectRatio;
-                var newW    = outerRootElement.offsetWidth;
-                var newH    = outerRootElement.offsetHeight;
-                if (definition.global.maxWidth && (definition.global.maxWidth < newW)) {
-                    newW = definition.global.maxWidth;
+            for (key in definition.supports) {
+                if (definition.supports.hasOwnProperty(key) && definition.supports[key]) {
+                    outerRootElement.className += ' supports-' + key;
                 }
-                var bodyRatio = newW / newH;
-                if (bodyRatio > ratio)
-                {  //Width is too wide
-                    element.style.height = newH + 'px';
-                    newW = newH * ratio;
-                    element.style.width = newW + 'px';
-                } else {  //Height is too tall
-                    element.style.width = newW + 'px';
-                    newH = newW / ratio;
-                    element.style.height = newH + 'px';
-                }
-                if (definition.global.resizeFont) {
-                    outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
-                }
-                element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
-                element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
-                element.style.top = '50%';
-                element.style.left = '50%';
-                self.currentScene.trigger(eventId, event);
-            };
-            callback('resize');
-        } else if (definition.global.resizeFont) {
-            callback = function (eventId, event) {
-                outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
-                self.currentScene.trigger(eventId, event);
-            };
-            callback('resize');
-        }
-        this.addEventListener(window, 'orientationchange', callback);
-        this.addEventListener(window, 'resize',            callback);
-        
-        if (onFinishedLoading) {
-            onFinishedLoading(this);
-        }
+            }
 
-        createjs.Ticker.timingMode = 'raf';
-        createjs.Ticker.setFPS(definition.global.fps || 60);
-        this.tickWrapper = function (e) {
-            self.tick(e);
-        };
-        createjs.Ticker.addEventListener("tick", this.tickWrapper);
-        
-        //Add entity-finder for debugging
-        if (window) {
-            window.getEntityById = function (id) {
-                return self.getEntityById(id);
-            };
+            innerRootElement.id = 'inner-' + outerRootElement.id;
+            outerRootElement.appendChild(innerRootElement);
+            this.rootElement = innerRootElement;
+            this.containerElement = outerRootElement;
 
-            window.getEntitiesByType = function (type) {
-                return self.getEntitiesByType(type);
+            this.loadScene(definition.global.initialScene);
+
+            // Send the following events along to the scene to handle as necessary:
+            if (definition.debug) { //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
+                callback = function (eventId, event) {
+                    self.currentScene.trigger(eventId, event);
+                };
+            } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
+                callback = function (eventId, event) {
+                    self.currentScene.trigger(eventId, event);
+                    event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+                };
+            }
+
+            this.bindings = [];
+            this.addEventListener(window, 'keydown', callback);
+            this.addEventListener(window, 'keyup',   callback);
+
+            // If aspect ratio of game area should be maintained on resizing, create new callback to handle it
+            if (definition.global.aspectRatio) {
+
+                callback = function (eventId, event) {
+                    var element   = innerRootElement,
+                        ratio     = definition.global.aspectRatio,
+                        newW      = outerRootElement.offsetWidth,
+                        newH      = outerRootElement.offsetHeight,
+                        bodyRatio = 1;
+                    
+                    if (definition.global.maxWidth && (definition.global.maxWidth < newW)) {
+                        newW = definition.global.maxWidth;
+                    }
+                    
+                    bodyRatio = newW / newH;
+                    if (bodyRatio > ratio) {  //Width is too wide
+                        element.style.height = newH + 'px';
+                        newW = newH * ratio;
+                        element.style.width = newW + 'px';
+                    } else {  //Height is too tall
+                        element.style.width = newW + 'px';
+                        newH = newW / ratio;
+                        element.style.height = newH + 'px';
+                    }
+                    if (definition.global.resizeFont) {
+                        outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
+                    }
+                    element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
+                    element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
+                    element.style.top = '50%';
+                    element.style.left = '50%';
+                    self.currentScene.trigger(eventId, event);
+                };
+                callback('resize');
+            } else if (definition.global.resizeFont) {
+                callback = function (eventId, event) {
+                    outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
+                    self.currentScene.trigger(eventId, event);
+                };
+                callback('resize');
+            }
+            this.addEventListener(window, 'orientationchange', callback);
+            this.addEventListener(window, 'resize',            callback);
+
+            if (onFinishedLoading) {
+                onFinishedLoading(this);
+            }
+
+            createjs.Ticker.timingMode = 'raf';
+            createjs.Ticker.setFPS(definition.global.fps || 60);
+            this.tickWrapper = function (e) {
+                self.tick(e);
             };
-        }
-    };
-    var proto = game.prototype;
+            createjs.Ticker.addEventListener("tick", this.tickWrapper);
+
+            //Add entity-finder for debugging
+            if (window) {
+                window.getEntityById = function (id) {
+                    return self.getEntityById(id);
+                };
+
+                window.getEntitiesByType = function (type) {
+                    return self.getEntitiesByType(type);
+                };
+            }
+        },
+        proto = game.prototype;
     
 /**
  * Called by the CreateJS ticker. This calls tick on the scene.
@@ -159,9 +165,17 @@ platformer.Game = (function () {
  * @param sceneId {String} The scene to load.
  * @param transition {String} What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
  **/
-     proto.loadScene = function (sceneId, transition, persistantData, preloading) {
-        var self = this,
-        element  = null;
+    proto.loadScene = function (sceneId, transition, persistantData, preloading) {
+        var i = 0,
+            self    = this,
+            element = null,
+            root    = null,
+            loaded  = this.loaded,
+            callSet = function (t) {
+                if (loaded === self.loaded) {
+                    self.completeSceneTransition(persistantData);
+                }
+            };
 
         if (this.leavingScene) {
             this.leavingScene.destroy();
@@ -178,7 +192,7 @@ platformer.Game = (function () {
             this.loadedScene = null;
         }
         
-        switch(transition) {
+        switch (transition) {
         case 'fade-to-black':
             element = document.createElement('div');
             this.rootElement.appendChild(element);
@@ -188,39 +202,31 @@ platformer.Game = (function () {
             element.style.zIndex = '12';
             element.style.opacity = '0';
             element.style.background = '#000';
-            new createjs.Tween(element.style).to({opacity:0}, 500).to({opacity:1}, 500).call(function (t) {
+            new createjs.Tween(element.style).to({opacity: 0}, 500).to({opacity: 1}, 500).call(function (t) {
                 if (!self.loaded) {
                     self.loadNextScene(sceneId, persistantData);
                 }
                 self.completeSceneTransition(persistantData);
-            }).wait(500).to({opacity:0}, 500).call(function (t) {
+            }).wait(500).to({opacity: 0}, 500).call(function (t) {
                 self.rootElement.removeChild(element);
                 element = null;
             });
             break;
         case 'crossfade':
-            var root = null,
-            callSet  = function (t) {
-                if (loaded === self.loaded) {
-                    self.completeSceneTransition(persistantData);
-                }
-            },
-            loaded   = this.loaded; // This variable is a sanity check to cause an abort if another scene load is started during the crossfade.
-            
             if (!this.loaded) {
                 self.loadNextScene(sceneId, persistantData);
                 loaded = this.loaded;
             }
             root = this.loadedScene.layers;
-            for (var i = 0; i < root.length; i++) {
+            for (i = 0; i < root.length; i++) {
                 if (root[i].element) {
                     element = root[i].element.style;
                     element.opacity = '0';
                     if (callSet) {                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-                        new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000).call(callSet);
+                        new createjs.Tween.get(element).to({opacity: 0}, 5).to({opacity: 1}, 1000).call(callSet);
                         callSet = null;
                     } else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-                        new createjs.Tween.get(element).to({opacity:0}, 5).to({opacity:1}, 1000);
+                        new createjs.Tween.get(element).to({opacity: 0}, 5).to({opacity: 1}, 1000);
                     }
                 }
             }
@@ -228,7 +234,6 @@ platformer.Game = (function () {
                 self.completeSceneTransition(persistantData);
             }
             break;
-        case 'instant':
         default:
             if (!this.loaded) {
                 self.loadNextScene(sceneId, persistantData);
@@ -244,7 +249,7 @@ platformer.Game = (function () {
  * @param {String} sceneId The scene to load.
  * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
  **/
-     proto.loadNextScene = function (sceneId, persistantData) {
+    proto.loadNextScene = function (sceneId, persistantData) {
         var scene = null;
         
         if (typeof sceneId === 'string') {
@@ -333,11 +338,12 @@ platformer.Game = (function () {
  * 
  * @method destroy
  **/
-    proto.destroy = function ()
-    {
+    proto.destroy = function () {
+        var i = 0;
+        
         createjs.Ticker.removeEventListener("tick", this.tickWrapper);
-        for (var binding in this.bindings) {
-            this.bindings[binding].element.removeEventListener(this.bindings[binding].event, this.bindings[binding].callback);
+        for (i = 0; i < this.bindings.length; i++) {
+            this.bindings[i].element.removeEventListener(this.bindings[i].event, this.bindings[i].callback);
         }
         this.bindings.length = 0;
     };

@@ -32,6 +32,8 @@ This component will cause the entity to move in a certain direction on colliding
     }
 
 */
+/*global console */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -42,8 +44,8 @@ This component will cause the entity to move in a certain direction on colliding
             
             this.aX = this.owner.accelerationX || definition.accelerationX || -0.2;
             this.aY = this.owner.accelerationY || definition.accelerationY || -0.6;
-            this.flipX = ((this.owner.flipX === false) || ((this.owner.flipX !== true) && (definition.flipX === false)))?1:-1;
-            this.flipY = (this.owner.flipY || definition.flipY)?-1:1;
+            this.flipX = ((this.owner.flipX === false) || ((this.owner.flipX !== true) && (definition.flipX === false))) ? 1 : -1;
+            this.flipY = (this.owner.flipY || definition.flipY) ? -1 : 1;
             this.mX = 1;
             this.mY = 1;
             
@@ -67,7 +69,7 @@ This component will cause the entity to move in a certain direction on colliding
             }
         },
         
-        events:{
+        events: {
             "handle-logic": function () {
                 if (this.state.impact !== this.justJumped) {
                     this.state.impact = this.justJumped;
@@ -86,7 +88,7 @@ This component will cause the entity to move in a certain direction on colliding
             
             "impact-launch": function (collisionInfo) {
                 var dx = collisionInfo.x,
-                dy     = collisionInfo.y;
+                    dy = collisionInfo.y;
                 
                 if (collisionInfo.entity) {
                     dx = collisionInfo.entity.x - this.owner.x;

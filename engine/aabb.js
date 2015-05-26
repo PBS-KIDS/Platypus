@@ -9,15 +9,15 @@
  * @param height {number} The height of the AABB.
  * @return {AABB} Returns the new aabb object.
  */
-
+/*global platformer */
 platformer.AABB = (function () {
     "use strict";
     
-    var aABB = function (x, y, width, height) {
-        this.empty = true;
-        this.setAll(x, y, width, height);
-    };
-    var proto = aABB.prototype;
+    var AABB = function (x, y, width, height) {
+            this.empty = true;
+            this.setAll(x, y, width, height);
+        },
+        proto = AABB.prototype;
     
     /**
      * Sets all of the properties of the AABB.
@@ -269,7 +269,7 @@ platformer.AABB = (function () {
      * @return {AABB} Returns the new AABB object.
      */
     proto.getCopy = function () {
-        return new aABB(this.x, this.y, this.width, this.height);
+        return new AABB(this.x, this.y, this.width, this.height);
     };
 
     /**
@@ -319,5 +319,5 @@ platformer.AABB = (function () {
         return !((aabb.bottom < this.top) || (aabb.top > this.bottom) || (aabb.right < this.left) || (aabb.left > this.right));
     };
     
-    return aABB;
+    return AABB;
 }());

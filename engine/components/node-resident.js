@@ -53,63 +53,65 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
       // Optional. Determines whether the entity's orientation is updated by movement across the node-map. Default is false.
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var createGateway = function (node, map, gateway) {
-        return function (resp) {
-            this.gotoNode(map.getNode(node), gateway); // ensure it's a node if one is available at this gateway
-        };
-    },
-    distance = function (origin, destination) {
-        var x = destination.x - origin.x,
-        y = destination.y - origin.y,
-        z = destination.z - origin.z;
-        
-        return Math.sqrt(x*x + y*y + z*z);
-    },
-    angle = function (origin, destination, distance) {
-        var x = destination.x - origin.x,
-        y     = destination.y - origin.y,
-        a     = 0;
-        
-        if (!distance) {
-            return a;
-        }
+            return function (resp) {
+                this.gotoNode(map.getNode(node), gateway); // ensure it's a node if one is available at this gateway
+            };
+        },
+        distance = function (origin, destination) {         //TODO: Use vectors for these calculations. -DDD 5-26-2015
+            var x = destination.x - origin.x,
+                y = destination.y - origin.y,
+                z = destination.z - origin.z;
 
-        a = Math.acos(x/distance);
-        if (y < 0) {
-            a = (Math.PI * 2) - a;
-        }
-        return a;
-    },
-    axisProgress = function (r, o, d) {
-        return o * (1 - r) + d * r;
-    },
-    isFriendly = function (entities, kinds) {
-        var x = 0,
-        y     = 0,
-        found = false;
-        
-        if (!kinds) {
-            return false;
-        }
-        
-        for (; x < entities.length; x++) {
-            for (y = 0; y < kinds.length; y++) {
-                if (entities[x].type === kinds[y]) {
-                    found = true;
+            return Math.sqrt((x * x) + (y * y) + (z * z));
+        },
+        angle = function (origin, destination, distance) {
+            var x = destination.x - origin.x,
+                y = destination.y - origin.y,
+                a = 0;
+
+            if (!distance) {
+                return a;
+            }
+
+            a = Math.acos(x / distance);
+            if (y < 0) {
+                a = (Math.PI * 2) - a;
+            }
+            return a;
+        },
+        axisProgress = function (r, o, d) {
+            return o * (1 - r) + d * r;
+        },
+        isFriendly = function (entities, kinds) {
+            var x = 0,
+                y = 0,
+                found = false;
+
+            if (!kinds) {
+                return false;
+            }
+
+            for (x = 0; x < entities.length; x++) {
+                for (y = 0; y < kinds.length; y++) {
+                    if (entities[x].type === kinds[y]) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    return false;
+                } else {
+                    found = false;
                 }
             }
-            if (!found) {
-                return false;
-            } else {
-                found = false;
-            }
-        }
-        
-        return true;
-    };
+
+            return true;
+        };
     
     return platformer.createComponentClass({
         
@@ -132,7 +134,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
         events: {
             "handle-logic": function (resp) {
                 var ratio = 0,
-                node = null;
+                    node  = null;
                 
                 if (this.destinationNode) {
                     this.state.moving = true;
@@ -151,7 +153,6 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                             this.owner.triggerEvent('on-node', this.destinationNode);
                             this.destinationNode = null;
                         } else {
-                            //console.log('Onward ' + this.lastNode.id + ' to ' + this.destinationNode.id);
                             this.owner.x = axisProgress(ratio, this.lastNode.x, this.destinationNode.x);
                             this.owner.y = axisProgress(ratio, this.lastNode.y, this.destinationNode.y);
                             this.owner.z = axisProgress(ratio, this.lastNode.z, this.destinationNode.z);
@@ -160,7 +161,6 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                 } else {
                     if (this.followEntity) {
                         node = this.followEntity.node || this.followEntity;
-                        console.log('Following (' + (node && node.isNode && (node !== this.node)) + ')', node);
                         if (node && node.isNode && (node !== this.node)) {
                             this.state.moving = this.attemptGotoNode(node);
                         } else {
@@ -173,8 +173,8 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
             },
             "on-node": function (node) {
                 var i = '',
-                j     = 0,
-                entities = null;
+                    j = 0,
+                    entities = null;
                 
                 this.owner.node = this.node = node; //TODO: not sure if this needs to be accessible outside this component.
                 this.node.add(this.owner);
@@ -187,13 +187,15 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                 
                 //add listeners for directions
                 for (i in node.neighbors) {
-                    this.addEventListener(i, createGateway(node.neighbors[i], node.map, i));
-                    
-                    //trigger "next-to" events
-                    entities = node.map.getNode(node.neighbors[i]).contains;
-                    for (j = 0; j < entities.length; j++) {
-                        entities[j].triggerEvent("next-to-" + this.owner.type, this.owner);
-                        this.owner.triggerEvent("next-to-" + entities[j].type, entities[j]);
+                    if (node.neighbors.hasOwnProperty(i)) {
+                        this.addEventListener(i, createGateway(node.neighbors[i], node.map, i));
+
+                        //trigger "next-to" events
+                        entities = node.map.getNode(node.neighbors[i]).contains;
+                        for (j = 0; j < entities.length; j++) {
+                            entities[j].triggerEvent("next-to-" + this.owner.type, this.owner);
+                            this.owner.triggerEvent("next-to-" + entities[j].type, entities[j]);
+                        }
                     }
                 }
                 
@@ -212,12 +214,16 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                 }
             },
             "leave-node": function () {
+                var i = '';
+                
                 if (this.node) {
                     this.node.remove(this.owner);
                     this.owner.triggerEvent('left-node', this.node);
-                    for (var i in this.node.neighbors) {
-                        this.removeEventListener(i);
-                        delete this[i];
+                    for (i in this.node.neighbors) {
+                        if (this.node.neighbors.hasOwnProperty(i)) {
+                            this.removeEventListener(i);
+                            delete this[i];
+                        }
                     }
                 }
                 this.lastNode = this.node;
@@ -231,13 +237,13 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
             }
         },
         
-        methods:{
+        methods: {
             isPassable: function (node) {
                 return node && (this.node !== node) && (!this.friendlyNodes || (typeof this.friendlyNodes[node.type] !== 'undefined')) && (!node.contains.length || isFriendly(node.contains, this.friendlyEntities));
             },
             traverseNode: function (node, goal) {
                 var i = '',
-                nodes = [];
+                    nodes = [];
                 
                 if (node === goal) {
                     return false;
@@ -245,7 +251,9 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
                 
                 if (this.isPassable(node) && !node.checked) {
                     for (i in node.neighbors) {
-                        nodes.push(node.neighbors[i]);
+                        if (node.neighbors.hasOwnProperty(i)) {
+                            nodes.push(node.neighbors[i]);
+                        }
                     }
                     node.checked = true;
                 }
@@ -253,51 +261,55 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
             },
             attemptGotoNode: function (node) {
                 var i = '',
-                j     = 0,
-                k     = 0,
-                directions = {},
-                foundDirection = false,
-                all = [],
-                arr = null,
-                tempArray = null,
-                map = null,
-                count = 0,
-                depth = 20; //TODO: arbitrary limit
+                    j = 0,
+                    k = 0,
+                    directions = {},
+                    foundDirection = false,
+                    all = [],
+                    arr = null,
+                    tempArray = null,
+                    map = null,
+                    count = 0,
+                    depth = 20; //TODO: arbitrary limit
                 
                 if (this.node && node) {
                     this.followEntity = node;
                     map = this.node.map || node.map;
                     for (i in this.node.neighbors) {
-                        directions[i] = this.traverseNode(map.getNode(this.node.neighbors[i]), node);
-                        if (!directions[i]) {
-                            foundDirection = true;
-                            for (k = 0; k < all.length; k++) {
-                                map.getNode(all[k]).checked = false;
+                        if (this.node.neighbors.hasOwnProperty(i)) {
+                            directions[i] = this.traverseNode(map.getNode(this.node.neighbors[i]), node);
+                            if (!directions[i]) {
+                                foundDirection = true;
+                                for (k = 0; k < all.length; k++) {
+                                    map.getNode(all[k]).checked = false;
+                                }
+                                return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
+                            } else {
+                                all = all.concat(directions[i]);
                             }
-                            return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
-                        } else {
-                            all = all.concat(directions[i]);
                         }
                     }
-                    while(!foundDirection && (count <= depth)) {
+                    while (!foundDirection && (count <= depth)) {
                         count += 1;
                         //console.log(count + ': ' + JSON.stringify(directions));
                         for (i in directions) {
-                            tempArray = [];
-                            for (j = 0; j < directions[i].length; j++) {
-                                arr = this.traverseNode(map.getNode(directions[i][j]), node);
-                                if (arr) {
-                                    tempArray = tempArray.concat(arr);
-                                    all = all.concat(arr);
-                                } else {
-                                    foundDirection = true;
-                                    for (k = 0; k < all.length; k++) {
-                                        map.getNode(all[k]).checked = false;
+                            if (directions.hasOwnProperty(i)) {
+                                tempArray = [];
+                                for (j = 0; j < directions[i].length; j++) {
+                                    arr = this.traverseNode(map.getNode(directions[i][j]), node);
+                                    if (arr) {
+                                        tempArray = tempArray.concat(arr);
+                                        all = all.concat(arr);
+                                    } else {
+                                        foundDirection = true;
+                                        for (k = 0; k < all.length; k++) {
+                                            map.getNode(all[k]).checked = false;
+                                        }
+                                        return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
                                     }
-                                    return this.gotoNode(map.getNode(this.node.neighbors[i]), i);
                                 }
+                                directions[i] = tempArray;
                             }
-                            directions[i] = tempArray;
                         }
                     }
                     for (k = 0; k < all.length; k++) {

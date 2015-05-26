@@ -32,6 +32,7 @@ This component listens for redirected collision messages and fires a message on 
     }
 
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -57,7 +58,7 @@ This component listens for redirected collision messages and fires a message on 
             },
     
             "teleport-entity": function (collisionInfo) {
-                switch(this.facing) {
+                switch (this.facing) {
                 case 'up':
                     if (collisionInfo.y < 0) {
                         collisionInfo.entity.trigger('teleport', this.destination);

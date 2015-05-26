@@ -34,6 +34,8 @@ This component works with `collision-basic` to cause entities to bounce away on 
 
 Requires: ["../vector.js"]
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -44,16 +46,16 @@ Requires: ["../vector.js"]
             platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
             this.owner.mass = this.owner.mass || definition.mass || 1;
-            this.elasticity = definition.elasticity || .8;
+            this.elasticity = definition.elasticity || 0.8;
             
-            this.v = new platformer.Vector(0,0,0);
-            this.incidentVector = new platformer.Vector(0,0,0); 
+            this.v = new platformer.Vector(0, 0, 0);
+            this.incidentVector = new platformer.Vector(0, 0, 0);
             
             this.staticCollisionOccurred = false;
             this.nonStaticCollisionOccurred = false;
             
             this.hitThisTick = [];
-            this.otherV = new platformer.Vector(0,0,0);
+            this.otherV = new platformer.Vector(0, 0, 0);
             this.otherVelocityData = [];
         },
 
@@ -69,8 +71,7 @@ Requires: ["../vector.js"]
                 this.incidentVector.set(collData.direction);
                 
                 magnitude = this.v.scalarProjection(this.incidentVector);
-                if (!isNaN(magnitude))
-                {
+                if (!isNaN(magnitude)) {
                     this.incidentVector.scale(magnitude * (1 + this.elasticity));
                     this.v.subtractVector(this.incidentVector);
                 }
@@ -78,22 +79,21 @@ Requires: ["../vector.js"]
                 this.owner.velocity.set(this.v);
             },
             "hit-non-static": function (collData) {
-                var other = collData.entity;
-                var otherVSet = false;
+                var x = 0,
+                    other          = collData.entity,
+                    otherVSet      = false,
+                    relevantV      = 0,
+                    otherRelevantV = 0,
+                    reboundV       = 0;
                 
-                var relevantV = 0;
-                var otherRelevantV = 0;
-                
-                var reboundV = 0;
-                
-                for (var x = 0; x < this.hitThisTick.length; x++) {
+                for (x = 0; x < this.hitThisTick.length; x++) {
                     if (other === this.hitThisTick[x]) {
                         return;
                     }
                 }
                 this.hitThisTick.push(other);
                 
-                for (var x = 0; x < this.otherVelocityData.length; x++) {
+                for (x = 0; x < this.otherVelocityData.length; x++) {
                     if (other === this.otherVelocityData[x].entity) {
                         this.otherV.set(this.otherVelocityData[x].velocity);
                         otherVSet = true;
@@ -133,7 +133,7 @@ Requires: ["../vector.js"]
                 this.otherV = null;
                 this.incidentVector = null;
                 this.hitThisTick = null;
-            }    
+            }
         },
         
         publicMethods: {// These are methods that are available on the entity.

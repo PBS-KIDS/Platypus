@@ -20,6 +20,8 @@ This component will destroy the entity once an animation has finished. This is u
       //This or animationIds Required. Array of Strings identifying the animations that should destroy this entity on their completion.
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -38,11 +40,12 @@ This component will destroy the entity once an animation has finished. This is u
 
         events: {// These are messages that this component listens for
             "animation-ended": function (animation) {
-                var id = animation.name;
+                var id = animation.name,
+                    x  = 0;
                 
                 if (this.animationIds) {
-                    for (var x = 0; x < this.animationIds.length; x++) {
-                        if (this.animationIds[x] == id) {
+                    for (x = 0; x < this.animationIds.length; x++) {
+                        if (this.animationIds[x] === id) {
                             this.owner.parent.removeEntity(this.owner);
                             break;
                         }

@@ -41,6 +41,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
       //Optional - The max value, positive or negative, that the timer will count to. At which it stops counting. Default to 3600000 which equals an hour.
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -57,16 +58,19 @@ A timer that can used to trigger events. The timer can increment and decrement. 
             this.isIncrementing = this.owner.isIncrementing || definition.isIncrementing || true;
             this.maxTime = this.owner.maxTime || definition.maxTime || 3600000; //Max time is 1hr by default.
         },
-        events:{
+        events: {
             "handle-logic": function (data) {
                 if (this.isOn) {
                     this.prevTime = this.time;
-                    this.isIncrementing ? this.time += data.delta : this.time -= data.delta;
-                    if (Math.abs(this.time) > this.maxTime)
-                    {
+                    if (this.isIncrementing) {
+                        this.time += data.delta;
+                    } else {
+                        this.time -= data.delta;
+                    }
+                    
+                    if (Math.abs(this.time) > this.maxTime) {
                         //If the timer hits the max time we turn it off so we don't overflow anything.
-                        if (this.time > 0)
-                        {
+                        if (this.time > 0) {
                             this.time = this.maxTime;
                         } else if (this.time < 0) {
                             this.time = -this.maxTime;
@@ -74,36 +78,28 @@ A timer that can used to trigger events. The timer can increment and decrement. 
                         this['stop-timer']();
                     }
                     
-                    if (typeof this.alarmTime !== 'undefined')
-                    {
-                        if (this.isInterval)
-                        {
-                            if (this.isIncrementing)
-                            {
-                                if ( Math.floor(this.time / this.alarmTime) > Math.floor(this.prevTime / this.alarmTime))
-                                {
+                    if (typeof this.alarmTime !== 'undefined') {
+                        if (this.isInterval) {
+                            if (this.isIncrementing) {
+                                if (Math.floor(this.time / this.alarmTime) > Math.floor(this.prevTime / this.alarmTime)) {
                                     this.owner.trigger(this.alarmMessage);
                                 }
                             } else {
-                                if ( Math.floor(this.time / this.alarmTime) < Math.floor(this.prevTime / this.alarmTime))
-                                {
+                                if (Math.floor(this.time / this.alarmTime) < Math.floor(this.prevTime / this.alarmTime)) {
                                     this.owner.trigger(this.alarmMessage);
                                 }
                             }
                         } else {
-                            if (this.isIncrementing)
-                            {
-                                if (this.time > this.alarmTime && this.prevTime < this.alarmTime)
-                                {
+                            if (this.isIncrementing) {
+                                if (this.time > this.alarmTime && this.prevTime < this.alarmTime) {
                                     this.owner.trigger(this.alarmMessage);
                                 }
                             } else {
-                                if (this.time < this.alarmTime && this.prevTime > this.alarmTime)
-                                {
+                                if (this.time < this.alarmTime && this.prevTime > this.alarmTime) {
                                     this.owner.trigger(this.alarmMessage);
                                 }
                             }
-                         }
+                        }
                     }
                 }
                 this.owner.trigger(this.updateMessage, {time: this.time});

@@ -53,71 +53,77 @@ This component allows certain messages to trigger new messages at a later time. 
       }
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var createMessage = function (event) {
-        var includeMessage = function (event, message) {
-            if (message && !event.message) {
-                return {
-                    event: event.event,
-                    message: message,
-                    delay: event.delay,
-                    repeat: event.repeat
+            var includeMessage = function (event, message) {
+                if (message && !event.message) {
+                    return {
+                        event: event.event,
+                        message: message,
+                        delay: event.delay,
+                        repeat: event.repeat
+                    };
+                } else {
+                    return event;
+                }
+            };
+            if (event.singleInstance) {
+                return function (message) {
+                    var i = 0,
+                        add = true;
+
+                    for (i = 0; i < this.queue.length; i++) {
+                        if (this.queue[i].event === event.event) {
+                            add = false;
+                        }
+                    }
+
+                    if (add) {
+                        this.queue.push(includeMessage(event, message));
+                        this.queueTimes.push(event.delay);
+                    }
                 };
             } else {
-                return event;
-            }
-        };
-        if (event.singleInstance) {
-            return function (message) {
-                var i = 0,
-                add = true;
-                
-                for (; i < this.queue.length; i++) {
-                    if (this.queue[i].event === event.event) {
-                        add = false;
-                    }
-                }
-                
-                if (add) {
+                return function (message) {
                     this.queue.push(includeMessage(event, message));
                     this.queueTimes.push(event.delay);
-                }
-            };
-        } else {
-            return function (message) {
-                this.queue.push(includeMessage(event, message));
-                this.queueTimes.push(event.delay);
-            };
-        }
-    },
-    createCancellation = function (cancelEvent) {
-        return function () {
-            var i = this.queue.length - 1;
-            
-            for (; i > -1; i--) {
-                if (this.queue[i] === cancelEvent) {
-                    this.queueTimes.splice(i,1);
-                    this.queue.splice(i,1);
-                }
+                };
             }
+        },
+        createCancellation = function (cancelEvent) {
+            return function () {
+                var i = 0;
+
+                for (i = this.queue.length - 1; i > -1; i--) {
+                    if (this.queue[i] === cancelEvent) {
+                        this.queueTimes.splice(i, 1);
+                        this.queue.splice(i, 1);
+                    }
+                }
+            };
         };
-    };
 
     return platformer.createComponentClass({
         id: 'logic-delay-message',
         
         constructor: function (definition) {
+            var event = '';
+            
             this.queueTimes = [];
             this.queue = [];
             
             if (definition.events) {
-                for (var event in definition.events) {
-                    this.addEventListener(event, createMessage(definition.events[event]));
-                    
-                    if (definition.events[event].cancelEvent) {
-                        this.addEventListener(definition.events[event].cancelEvent, createCancellation(definition.events[event]));
+                for (event in definition.events) {
+                    if (definition.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, createMessage(definition.events[event]));
+
+                        if (definition.events[event].cancelEvent) {
+                            this.addEventListener(definition.events[event].cancelEvent, createCancellation(definition.events[event]));
+                        }
                     }
                 }
             }
@@ -125,9 +131,9 @@ This component allows certain messages to trigger new messages at a later time. 
 
         events: {// These are messages that this component listens for
             "handle-logic":  function (resp) {
-                var i = this.queue.length - 1;
+                var i = 0;
                 
-                for (; i > -1; i--) {
+                for (i = this.queue.length - 1; i > -1; i--) {
                     this.queueTimes[i] -= resp.delta;
                     
                     if (this.queueTimes[i] <= 0) {
@@ -137,8 +143,8 @@ This component allows certain messages to trigger new messages at a later time. 
                             if (this.queue[i].repeat) {
                                 this.queueTimes[i] += this.queue[i].delay;
                             } else {
-                                this.queueTimes.splice(i,1);
-                                this.queue.splice(i,1);
+                                this.queueTimes.splice(i, 1);
+                                this.queue.splice(i, 1);
                             }
                         }
                     }

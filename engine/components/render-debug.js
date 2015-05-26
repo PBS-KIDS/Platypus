@@ -48,41 +48,42 @@ This component is attached to entities that will appear in the game world. It se
     
 [link1]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-
+/*global console, createjs, platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
     var types = {
-        "aabb":      "255,128,255",
-        "render":    "128,128,128",
-        "collision": "255,0,255",
-        "group":     "0,255,0"
-    },
-    createShape = function (shape, type, width, height, regX, regY, z) {
-        var newShape = null;
-        
-        switch(shape) {
-        case 'rectangle':
-            newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
-            regX += width/2;
-            regY += height/2;
-            break;
-        case 'circle':
-            regX += width/2;
-            regY += width/2;
-            newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").drawCircle(width/2, width/2, width));
-            break;
-        }
-        newShape.regX  = regX;
-        newShape.regY  = regY;
-        newShape.z = z;
-        
-        return newShape;
-    };
+            "aabb":      "255,128,255",
+            "render":    "128,128,128",
+            "collision": "255,0,255",
+            "group":     "0,255,0"
+        },
+        createShape = function (shape, type, width, height, regX, regY, z) {
+            var newShape = null;
+
+            switch (shape) {
+            case 'rectangle':
+                newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
+                regX += width  / 2;
+                regY += height / 2;
+                break;
+            case 'circle':
+                regX += width / 2;
+                regY += width / 2;
+                newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").drawCircle(width / 2, width / 2, width));
+                break;
+            }
+            newShape.regX  = regX;
+            newShape.regY  = regY;
+            newShape.z = z;
+
+            return newShape;
+        };
     
     return platformer.createComponentClass({
         
-        id: 'render-debug', 
+        id: 'render-debug',
         
         constructor: function (definition) {
             if (definition.acceptInput) {
@@ -111,7 +112,8 @@ This component is attached to entities that will appear in the game world. It se
             },
             
             "handle-render": function () {
-                var i = 0;
+                var i = 0,
+                    aabb = null;
                 
                 if (this.isOutdated) {
                     this.updateSprites();
@@ -124,14 +126,13 @@ This component is attached to entities that will appear in the game world. It se
                 }
                 
                 if (this.owner.getCollisionGroupAABB) {
-                    var aabb = this.owner.getCollisionGroupAABB();
+                    aabb = this.owner.getCollisionGroupAABB();
                     if (!this.groupShape) {
                         this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
                         this.groupShape.regX  = 0.5;
                         this.groupShape.regY  = 0.5;
                         this.groupShape.z     = (this.owner.z || 0) + 10000;
                         this.stage.addChild(this.groupShape);
-                        console.log(aabb);
                     }
                     this.groupShape.scaleX = aabb.width;
                     this.groupShape.scaleY = aabb.height;
@@ -146,16 +147,16 @@ This component is attached to entities that will appear in the game world. It se
             
         },
         
-        methods:{
+        methods: {
             updateSprites: function () {
-                var z    = (this.owner.z || 0) + 10000,
-                i        = 0,
-                j        = 0,
-                width    = this.owner.width  = this.owner.width  || 300,
-                height   = this.owner.height = this.owner.height || 100,
-                shapes   = null,
-                aabb     = null,
-                shape    = null;
+                var z        = (this.owner.z || 0) + 10000,
+                    i        = 0,
+                    j        = 0,
+                    width    = this.owner.width  = this.owner.width  || 300,
+                    height   = this.owner.height = this.owner.height || 100,
+                    shapes   = null,
+                    aabb     = null,
+                    shape    = null;
 
                 for (i = 0; i < this.shapes.length; i++) {
                     this.stage.removeChild(this.shapes[i]);
@@ -182,7 +183,7 @@ This component is attached to entities that will appear in the game world. It se
                         }
                     }
                 } else {
-                    shape = createShape('rectangle', 'render', width, height, width/2, height/2, z--);
+                    shape = createShape('rectangle', 'render', width, height, width / 2, height / 2, z--);
                     this.shapes.push(shape);
                     this.stage.addChild(shape);
                     this.addInput(shape);
@@ -191,16 +192,16 @@ This component is attached to entities that will appear in the game world. It se
             
             addInput: (function () {
                 var lastEntityLog = null,
-                createHandler = function (self, eventName) {
-                    return function (event) {
-                        if ((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)) {
-                            lastEntityLog = self.owner;
-                            console.log('This Entity:', lastEntityLog);
-                        }
-                        
-                        return false;
+                    createHandler = function (self, eventName) {
+                        return function (event) {
+                            if ((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)) {
+                                lastEntityLog = self.owner;
+                                console.log('Entity "' + lastEntityLog.type + '":', lastEntityLog);
+                            }
+
+                            return false;
+                        };
                     };
-                };
                 
                 return function (sprite) {
                     sprite.addEventListener('mousedown', createHandler(this, 'mousedown'));

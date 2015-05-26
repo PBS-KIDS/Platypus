@@ -18,63 +18,64 @@
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
+/*global platformer */
 platformer.CollisionShape = (function () {
     "use strict";
     
     var collisionShape = function (owner, definition, collisionType) {
-        var regX = definition.regX,
-        regY     = definition.regY;
-        
-        this.owner = owner;
-        this.collisionType = collisionType;
-        
-        this.width  = definition.width  || definition.radius || 0;
-        this.height = definition.height || definition.radius || 0;
-        this.radius = definition.radius || 0;
-        
-        if (typeof regX !== 'number') {
-            regX = this.width / 2;
-        }
-        if (typeof regY !== 'number') {
-            regY = this.height / 2;
-        }
-        
-        platformer.Vector.assign(this, 'offset', 'offsetX', 'offsetY');
-        this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
-        this.offsetY = definition.offsetY || ((this.height / 2) - regY);
-        
-        platformer.Vector.assign(this, 'position', 'x', 'y');
-        if (owner) {
-            this.x = owner.x + this.offsetX;
-            this.y = owner.y + this.offsetY;
-        } else {
-            this.x = definition.x + this.offsetX;
-            this.y = definition.y + this.offsetY;
-        }
+            var regX = definition.regX,
+                regY = definition.regY,
+                width = 0,
+                height = 0;
 
-        this.type = definition.type || 'rectangle';
-        this.subType = '';
-        this.aABB = undefined;
-        
-        var width = 0;
-        var height = 0; 
-        switch (this.type) {
-        case 'circle': //need TL and BR points
-            width = height = this.radius * 2;
-            break;
-        case 'rectangle': //need TL and BR points
-            width = this.width;
-            height = this.height;
-            break;
-        }
-        
-        platformer.Vector.assign(this, 'size', 'width', 'height');
-        this.width  = width;
-        this.height = height;
-        
-        this.aABB     = new platformer.AABB(this.x, this.y, width, height);
-    };
-    var proto = collisionShape.prototype;
+            this.owner = owner;
+            this.collisionType = collisionType;
+
+            this.width  = definition.width  || definition.radius || 0;
+            this.height = definition.height || definition.radius || 0;
+            this.radius = definition.radius || 0;
+
+            if (typeof regX !== 'number') {
+                regX = this.width / 2;
+            }
+            if (typeof regY !== 'number') {
+                regY = this.height / 2;
+            }
+
+            platformer.Vector.assign(this, 'offset', 'offsetX', 'offsetY');
+            this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
+            this.offsetY = definition.offsetY || ((this.height / 2) - regY);
+
+            platformer.Vector.assign(this, 'position', 'x', 'y');
+            if (owner) {
+                this.x = owner.x + this.offsetX;
+                this.y = owner.y + this.offsetY;
+            } else {
+                this.x = definition.x + this.offsetX;
+                this.y = definition.y + this.offsetY;
+            }
+
+            this.type = definition.type || 'rectangle';
+            this.subType = '';
+            this.aABB = undefined;
+
+            switch (this.type) {
+            case 'circle': //need TL and BR points
+                width = height = this.radius * 2;
+                break;
+            case 'rectangle': //need TL and BR points
+                width = this.width;
+                height = this.height;
+                break;
+            }
+
+            platformer.Vector.assign(this, 'size', 'width', 'height');
+            this.width  = width;
+            this.height = height;
+
+            this.aABB     = new platformer.AABB(this.x, this.y, width, height);
+        },
+        proto = collisionShape.prototype;
     
     /*
 ## Methods

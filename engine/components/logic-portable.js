@@ -29,6 +29,7 @@ This component allows this entity to be carried by other entities with which it 
       // This is an object specifying the directions that this portable entity can be carried on. Default is {down:true}, but "up", "down", "left", and/or "right" can be specified as object properties set to `true`.
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -44,10 +45,10 @@ This component allows this entity to be carried by other entities with which it 
                 entity: this.owner
             };
         },
-        events:{
+        events: {
             "handle-logic": function (resp) {
                 if (this.carrierConnected) {
-                    if (this.carrier != this.lastCarrier) {
+                    if (this.carrier !== this.lastCarrier) {
                         if (this.lastCarrier) {
                             this.lastCarrier.trigger('release-me', this.message);
                         }

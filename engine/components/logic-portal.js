@@ -30,14 +30,16 @@ A component which changes the scene when activated. When the portal receives an 
       //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.
     }
 */
-    
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     return platformer.createComponentClass({
         id: 'logic-portal',
-         constructor: function (definition) {
-             var entrants = definition.entrants || definition.entrant;
+        constructor: function (definition) {
+            var i = 0,
+                entrants = definition.entrants || definition.entrant;
              
             this.destination = this.owner.destination || definition.destination;
             this.used = false;
@@ -46,7 +48,7 @@ A component which changes the scene when activated. When the portal receives an 
             if (entrants) {
                 this.entrants = {};
                 if (Array.isArray(entrants)) {
-                    for (var i = 0; i < entrants.length; i++) {
+                    for (i = 0; i < entrants.length; i++) {
                         this.entrants[entrants[i]] = false;
                     }
                 } else {
@@ -54,8 +56,10 @@ A component which changes the scene when activated. When the portal receives an 
                 }
             }
         },
-        events:{
+        events: {
             "handle-logic": function () {
+                var i = '';
+                
                 if (!this.used && this.activated) {
                     this.owner.trigger("port-" + this.destination);
                     this.used = true;
@@ -71,22 +75,26 @@ A component which changes the scene when activated. When the portal receives an 
                 this.owner.state.ready = true;
                 
                 //Reset portal for next collision run.
-                for (var i in this.entrants) {
-                    if (this.entrants[i]) {
-                        this.owner.state.occupied = true;
-                        this.entrants[i] = false;
-                    } else {
-                        this.owner.state.ready = false;
+                for (i in this.entrants) {
+                    if (this.entrants.hasOwnProperty(i)) {
+                        if (this.entrants[i]) {
+                            this.owner.state.occupied = true;
+                            this.entrants[i] = false;
+                        } else {
+                            this.owner.state.ready = false;
+                        }
                     }
                 }
                 this.ready = false;
             },
             "occupied-portal": function (collision) {
+                var i = '';
+                
                 this.entrants[collision.entity.type] = true;
                 
-                for (var i in this.entrants) {
-                    if (!this.entrants[i]) {
-                        return ;
+                for (i in this.entrants) {
+                    if (this.entrants.hasOwnProperty(i) && !this.entrants[i]) {
+                        return;
                     }
                 }
                 

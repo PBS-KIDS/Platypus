@@ -4,6 +4,7 @@
  * @class "xhr" Component
  * @uses Component
  */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -79,10 +80,10 @@
         
         methods: {// These are methods that are called on the component
             setProperties: function (properties) {
-                var key = null,
-                divider = '',
-                self    = this,
-                props   = properties || this;
+                var key     = '',
+                    divider = '',
+                    self    = this,
+                    props   = properties || this;
                 
                 this.method       = props.method       || this.method       || "GET";
                 this.path         = props.path         || this.path         || null;
@@ -92,8 +93,10 @@
                 if ((props !== this) && props.data) {
                     this.data = '';
                     for (key in props.data) {
-                        this.data += divider + key + '=' + props.data[key];
-                        divider = '&';
+                        if (props.data.hasOwnProperty(key)) {
+                            this.data += divider + key + '=' + props.data[key];
+                            divider = '&';
+                        }
                     }
                 } else {
                     this.data = '';
@@ -112,8 +115,8 @@
                 };
             },
             get: function () {
-                var xhr = new XMLHttpRequest(),
-                path    = this.path;
+                var xhr  = new XMLHttpRequest(),
+                    path = this.path;
                 
                 if (this.data) {
                     path += '?' + this.data;

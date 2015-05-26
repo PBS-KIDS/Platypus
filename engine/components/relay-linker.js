@@ -53,6 +53,8 @@ This component allows an entity to communicate directly with one or more entitie
       }
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
@@ -60,7 +62,7 @@ This component allows an entity to communicate directly with one or more entitie
         return function (value, debug) {
             var i = 0;
             
-            for (; i < this.links.length; i++) {
+            for (i = 0; i < this.links.length; i++) {
                 this.links[i].trigger(event, value, debug);
             }
         };
@@ -69,11 +71,15 @@ This component allows an entity to communicate directly with one or more entitie
     return platformer.createComponentClass({
         id: 'relay-linker',
         constructor: function (definition) {
-            var self = this;
+            var i = 0,
+                self  = this,
+                event = '';
 
             if (definition.events) {
-                for (var event in definition.events) {
-                    this.addEventListener(event, broadcast(definition.events[event]));
+                for (event in definition.events) {
+                    if (definition.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, broadcast(definition.events[event]));
+                    }
                 }
             }
     
@@ -91,8 +97,8 @@ This component allows an entity to communicate directly with one or more entitie
             this.links = [];
             
             if (this.owner.linkEntities) {
-                for (var entity in this.owner.linkEntities) {
-                    this.links.push(this.owner.linkEntities[entity]);
+                for (i = 0; i < this.owner.linkEntities.length; i++) {
+                    this.links.push(this.owner.linkEntities[i]);
                 }
             }
             
@@ -118,12 +124,12 @@ This component allows an entity to communicate directly with one or more entitie
             },
             
             "link-entity": function (resp) {
-                var i   = 0,
-                already = false;
+                var i = 0,
+                    already = false;
                 
                 if ((resp.linkId === this.linkId) && (resp.entity !== this.owner)) {
                     // Make sure this link is not already in place
-                    for (; i < this.links.length; i++) {
+                    for (i = 0; i < this.links.length; i++) {
                         if (this.links[i] === resp.entity) {
                             already = true;
                             break;
@@ -142,7 +148,8 @@ This component allows an entity to communicate directly with one or more entitie
             
             "unlink-entity": function (resp) {
                 var i = 0;
-                for (; i < this.links.length; i++) {
+                
+                for (i = 0; i < this.links.length; i++) {
                     if (resp.entity === this.links[i]) {
                         this.links.splice(i, 1);
                         break;
@@ -154,16 +161,17 @@ This component allows an entity to communicate directly with one or more entitie
         methods: {
             resolveAdoption: function (resp) {
                 var grandparent = this.owner.parent;
-                while(grandparent.parent) {
+                while (grandparent.parent) {
                     grandparent = grandparent.parent;
                 }
-                this.linkMessage.reciprocate = true; 
+                this.linkMessage.reciprocate = true;
                 grandparent.trigger('link-entity', this.linkMessage, true);
             },
             
             destroy: function () {
                 var i = 0;
-                for (; i < this.links.length; i++) {
+                
+                for (i = 0; i < this.links.length; i++) {
                     this.links[i].trigger('unlink-entity', this.linkMessage);
                 }
                 this.links.length = 0;

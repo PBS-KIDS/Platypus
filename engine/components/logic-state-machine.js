@@ -72,29 +72,36 @@ This component is a general purpose state-machine for an entity, taking in vario
       }
     }
 */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
 
     var changeState = function (changes, state) {
-        return function (value) {
-            var i = null;
-            
-            for (i in changes) {
-                state[i] = changes[i];
-            }
-        };
-    },
-    changeSustainedState = function (change, state) {
-        return function (value) {
-            state[change] = true;
-        };
-    },
+            return function (value) {
+                var i = null;
+
+                for (i in changes) {
+                    if (changes.hasOwnProperty(i)) {
+                        state[i] = changes[i];
+                    }
+                }
+            };
+        },
+        changeSustainedState = function (change, state) {
+            return function (value) {
+                state[change] = true;
+            };
+        },
+        handleResult = null,
+        handleOutput = null;
+    
     handleResult = function (title, state, last, checks, changed, self, queue) {
-        var i    = 0,
-        key      = '',
-        resolved = false,
-        message  = checks.message || (checks.message === 0) || (checks.message === false);
-        
+        var i = 0,
+            key      = '',
+            resolved = false,
+            message  = checks.message || (checks.message === 0) || (checks.message === false);
+
         if (changed) {
             if (typeof checks === 'string') {
                 self.trigger(checks);
@@ -115,19 +122,20 @@ This component is a general purpose state-machine for an entity, taking in vario
                 handleResult(title, state, last, checks['true'], changed, self, queue);
             }
         }
-        
+
         if (!resolved) {
             for (key in checks) {
-                if (key !== 'true') {
+                if (checks.hasOwnProperty(key) && (key !== 'true')) {
                     handleOutput(key, state, last, checks[key], changed, self, queue);
                 }
             }
         }
-    },
+    };
+    
     handleOutput = function (title, state, last, checks, changed, self, queue) {
-        var c = changed, 
-        value = false;
-        
+        var c     = changed,
+            value = false;
+
         if (title.charAt(0) === '!') {
             value = (state[title.substring(1)] === false);
             if ((title !== 'outputs') && (last[title.substring(1)] !== state[title.substring(1)])) {
@@ -139,12 +147,12 @@ This component is a general purpose state-machine for an entity, taking in vario
                 c = true;
             }
         }
-        
+
         if (value || (title === 'outputs')) {
             handleResult(title, state, last, checks, c, self, queue);
         }
     };
-    
+
     return platformer.createComponentClass({
         id: 'logic-state-machine',
         
@@ -155,15 +163,19 @@ This component is a general purpose state-machine for an entity, taking in vario
             
             if (definition.inputs) {
                 for (i in definition.inputs) {
-                    this.addEventListener(i, changeState(definition.inputs[i], this.state));
+                    if (definition.inputs.hasOwnProperty(i)) {
+                        this.addEventListener(i, changeState(definition.inputs[i], this.state));
+                    }
                 }
             }
 
             this.sustainedState = {};
             if (definition["sustained-inputs"]) {
                 for (i in definition["sustained-inputs"]) {
-                    this.addEventListener(i, changeSustainedState(definition["sustained-inputs"][i], this.sustainedState));
-                    this.sustainedState[definition["sustained-inputs"][i]] = false;
+                    if (definition["sustained-inputs"].hasOwnProperty(i)) {
+                        this.addEventListener(i, changeSustainedState(definition["sustained-inputs"][i], this.sustainedState));
+                        this.sustainedState[definition["sustained-inputs"][i]] = false;
+                    }
                 }
             }
 
@@ -177,13 +189,15 @@ This component is a general purpose state-machine for an entity, taking in vario
 
         events: {
             "handle-logic":  function (resp) {
-                var i = null;
+                var i = '';
                 
                 for (i in this.sustainedState) {
-                    if (this.owner.state[i] !== this.sustainedState[i]) {
-                        this.owner.state[i] = this.sustainedState[i];
+                    if (this.sustainedState.hasOwnProperty(i)) {
+                        if (this.owner.state[i] !== this.sustainedState[i]) {
+                            this.owner.state[i] = this.sustainedState[i];
+                        }
+                        this.sustainedState[i] = false;
                     }
-                    this.sustainedState[i] = false;
                 }
                 
                 for (i = this.queue.length - 1; i > -1; i--) {
@@ -191,17 +205,19 @@ This component is a general purpose state-machine for an entity, taking in vario
                     
                     if (this.queueTimes[i] <= 0) {
                         this.owner.trigger(this.queue[i].event, this.queue[i].message);
-                        this.queueTimes.splice(i,1);
-                        this.queue.splice(i,1);
+                        this.queueTimes.splice(i, 1);
+                        this.queue.splice(i, 1);
                     }
                 }
             },
             
             "update-state": function (state) {
-                var i = null;
+                var i = '';
                 
                 for (i in state) {
-                    this.state[i] = state[i];
+                    if (state.hasOwnProperty(i)) {
+                        this.state[i] = state[i];
+                    }
                 }
             },
             
@@ -227,6 +243,6 @@ This component is a general purpose state-machine for an entity, taking in vario
                     }
                 }
             }
-        }        
+        }
     });
 }());

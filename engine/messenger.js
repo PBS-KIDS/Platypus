@@ -33,22 +33,26 @@ The Messenger object facilitates communication between components and other game
 - **getMessageIds** - This method returns all the messages that this entity is concerned about.
   - @return Array - An array of strings listing all the messages for which this messenger has handlers.
 */
+/*global console, platformer */
+/*jslint plusplus:true */
 platformer.Messenger = (function () {
     "use strict";
 
     var messenger = function () {
-        this.messages    = {};
-        this.loopCheck   = [];
-        this.unbindLater = [];
-    },
-    proto = messenger.prototype;
+            this.messages    = {};
+            this.loopCheck   = [];
+            this.unbindLater = [];
+        },
+        proto = messenger.prototype;
     
     proto.toString = function () {
         return "[messenger Object]";
     };
     
     proto.bind = function (event, callback, scope) {
-        if (!this.messages[event]) this.messages[event] = [];
+        if (!this.messages[event]) {
+            this.messages[event] = [];
+        }
         this.messages[event].push({callback: callback, scope: scope});
     };
     
@@ -72,10 +76,14 @@ platformer.Messenger = (function () {
     };
 
     proto.safelyUnbind = function (event, callback, scope) {
-        if (!this.messages[event]) this.messages[event] = [];
-        for (var x in this.messages[event]) {
-            if ((this.messages[event][x].callback === callback) && (this.messages[event][x].scope === scope)) {
-                this.messages[event].splice(x,1);
+        var i = 0;
+        
+        if (!this.messages[event]) {
+            this.messages[event] = [];
+        }
+        for (i = 0; i < this.messages[event].length; i++) {
+            if ((this.messages[event][i].callback === callback) && (this.messages[event][i].scope === scope)) {
+                this.messages[event].splice(i, 1);
                 break;
             }
         }
@@ -83,12 +91,13 @@ platformer.Messenger = (function () {
     
     // This handles multiple event structures: "", [], and {}
     proto.trigger = function (events, message, debug) {
-        var i = 0, count = 0;
+        var i = 0,
+            count = 0;
         
         if (typeof events === 'string') {
             return this.triggerEvent(events, message, debug);
         } else if (Array.isArray(events)) {
-            for (; i < events.length; i++) {
+            for (i = 0; i < events.length; i++) {
                 count += this.trigger(events[i], message, debug);
             }
             return count;
@@ -107,7 +116,7 @@ platformer.Messenger = (function () {
         // Debug logging.
         if (this.debug || debug || (value && value.debug)) {
             if (this.messages[event] && this.messages[event].length) {
-                console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length>1)?'s':'') + '.', value);
+                console.log('Entity "' + this.type + '": Event "' + event + '" has ' + this.messages[event].length + ' subscriber' + ((this.messages[event].length > 1) ? 's' : '') + '.', value);
             } else {
                 console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
             }
@@ -144,11 +153,7 @@ platformer.Messenger = (function () {
     };
     
     proto.getMessageIds = function () {
-        var events = [];
-        for (var event in this.messages) {
-            events.push(event);
-        }
-        return events;
+        return Object.keys(this.messages);
     };
     
     proto.copyEventHandlers = function (event) {

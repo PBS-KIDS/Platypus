@@ -3,7 +3,7 @@
  *  Requires: ["https://code.createjs.com/createjs-2014.12.12.min.js", "browser.js","game.js","factory.js"]
  * 
 **/
-
+/*global platformer */
 (function (window) {
     "use strict";
 
@@ -21,14 +21,13 @@
                 return (arr instanceof Array);
             };
         }
-    }
-})(window);
 
-window.addEventListener('load', function () {
-    
-    // This creates the game once the page is loaded. If the game should not appear on page load, global setting "autoLoad" needs to be set to `false` and game must be created independently.
-    if (platformer.settings && platformer.settings.global && (platformer.settings.global.autoLoad !== false)) {
-        new platformer.Game(platformer.settings);
+        window.addEventListener('load', function () {
+            // This creates the game once the page is loaded. If the game should not appear on page load, global setting "autoLoad" needs to be set to `false` and game must be created independently.
+            if (platformer.settings && platformer.settings.global && (platformer.settings.global.autoLoad !== false)) {
+                window.game = new platformer.Game(platformer.settings);
+            }
+        }, false);
     }
-}, false);
+}(window));
 

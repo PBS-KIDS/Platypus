@@ -4,10 +4,11 @@
  * @class "logic-destroy-me" Component
  * @uses Component
  */
+/*global platformer */
 (function () {
     "use strict";
     
-    return platformer.createComponentClass({    
+    return platformer.createComponentClass({
         id: 'logic-destroy-me',
         
         properties: {
@@ -42,8 +43,7 @@
              */
             "handle-logic": function (tick) {
                 var dT = tick.delta;
-                if (this.destroyed && !this.owner.state.paused)
-                {
+                if (this.destroyed && !this.owner.state.paused) {
                     this.delay -= dT;
                     if (this.delay <= 0) {
                         this.owner.parent.removeEntity(this.owner);

@@ -33,23 +33,24 @@ This component changes the (x, y) position of an object according to its current
       // Optional: Unit in radian that the angle should change per millisecond.
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
-    var pi = Math.PI,
-    cos = Math.cos,
-    sin = Math.sin,
-    polarToCartesianX = function (m, a) {
-        return m * cos(a);
-    },
-    polarToCartesianY = function (m, a) {
-        return m * sin(a);
-    };
+    var pi  = Math.PI,
+        cos = Math.cos,
+        sin = Math.sin,
+        polarToCartesianX = function (m, a) {
+            return m * cos(a);
+        },
+        polarToCartesianY = function (m, a) {
+            return m * sin(a);
+        };
     
     return platformer.createComponentClass({
         id: 'logic-rotational-movement',
         constructor: function (definition) {
-            this.speed = definition.speed || .3;
+            this.speed = definition.speed || 0.3;
             this.magnitude = 0;
             this.degree = (definition.degree || 1) * pi / 180;
             this.angle = definition.angle || 0;
@@ -65,10 +66,10 @@ This component changes the (x, y) position of an object according to its current
             this.turningRight = false;
             this.turningLeft = false;
         },
-        events:{
+        events: {
             "handle-logic": function (resp) {
-                var vX    = 0,
-                vY        = 0;
+                var vX = 0,
+                    vY = 0;
                 
                 if (this.turningRight) {
                     this.angle += this.degree * resp.delta / 15;

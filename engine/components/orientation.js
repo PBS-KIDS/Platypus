@@ -20,82 +20,84 @@
  * @class "orientation" Component
  * @uses Component
  */
+/*global platformer */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
     var matrices = {
-        'horizontal':              [[-1, 0, 0],
-                                    [ 0, 1, 0],
-                                    [ 0, 0,-1]],
-        'vertical':                [[ 1, 0, 0],
-                                    [ 0,-1, 0],
-                                    [ 0, 0,-1]],
-        'diagonal':                [[ 0, 1, 0],
-                                    [ 1, 0, 0],
-                                    [ 0, 0,-1]],
-        'diagonal-inverse':        [[ 0,-1, 0],
-                                    [-1, 0, 0],
-                                    [ 0, 0,-1]],
-        'rotate-90':               [[ 0,-1, 0],
-                                    [ 1, 0, 0],
-                                    [ 0, 0, 1]],
-        'rotate-180':              [[-1, 0, 0],
-                                    [ 0,-1, 0],
-                                    [ 0, 0, 1]],
-        'rotate-270':              [[ 0, 1, 0],
-                                    [-1, 0, 0],
-                                    [ 0, 0, 1]]
-    },
-    multiply = (function () {
-        var cell = function (row, column, m) {
+            'horizontal':              [[ -1,  0,  0],
+                                        [  0,  1,  0],
+                                        [  0,  0, -1]],
+            'vertical':                [[  1,  0,  0],
+                                        [  0, -1,  0],
+                                        [  0,  0, -1]],
+            'diagonal':                [[  0,  1,  0],
+                                        [  1,  0,  0],
+                                        [  0,  0, -1]],
+            'diagonal-inverse':        [[  0, -1,  0],
+                                        [ -1,  0,  0],
+                                        [  0,  0, -1]],
+            'rotate-90':               [[  0, -1,  0],
+                                        [  1,  0,  0],
+                                        [  0,  0,  1]],
+            'rotate-180':              [[ -1,  0,  0],
+                                        [  0, -1,  0],
+                                        [  0,  0,  1]],
+            'rotate-270':              [[  0,  1,  0],
+                                        [ -1,  0,  0],
+                                        [  0,  0,  1]]
+        },
+        multiply = (function () {
+            var cell = function (row, column, m) {
+                var i = 0,
+                    sum = 0;
+
+                for (i = 0; i < row.length; i++) {
+                    sum += row[i] * m[i][column];
+                }
+
+                return sum;
+            };
+
+            return function (a, b, dest) {
+                var i   = 0,
+                    j   = 0,
+                    arr = [];
+
+                for (i = 0; i < a.length; i++) {
+                    for (j = 0; j < a[0].length; j++) {
+                        arr.push(cell(a[i], j, b));
+                    }
+                }
+
+                for (i = 0; i < a.length; i++) {
+                    for (j = 0; j < a[0].length; j++) {
+                        dest[i][j] = arr.splice(0, 1)[0];
+                    }
+                }
+            };
+        }()),
+        identitize = function (m) {
             var i = 0,
-            sum = 0;
-            
-            for (i = 0; i < row.length; i++) {
-                sum += row[i] * m[i][column];
-            }
-            
-            return sum;
-        };
-        
-        return function (a, b, dest) {
-            var i  = 0,
-            j      = 0,
-            arr    = [];
-            
-            for (i = 0; i < a.length; i++) {
-                for (j = 0; j < a[0].length; j++) {
-                    arr.push(cell(a[i], j, b)); 
+                j = 0;
+
+            for (i = 0; i < 3; i++) {
+                for (j = 0; j < 3; j++) {
+                    if (i === j) {
+                        m[i][j] = 1;
+                    } else {
+                        m[i][j] = 0;
+                    }
                 }
             }
 
-            for (i = 0; i < a.length; i++) {
-                for (j = 0; j < a[0].length; j++) {
-                    dest[i][j] = arr.splice(0,1)[0]; 
-                }
-            }
+            return m;
         };
-    }()),
-    identitize = function (m) {
-        var i = 0,
-        j     = 0;
-        
-        for (i = 0; i < 3; i++) {
-            for (j = 0; j < 3; j++) {
-                if (i === j) {
-                    m[i][j] = 1;
-                } else {
-                    m[i][j] = 0;
-                }
-            }
-        }
-        
-        return m;
-    };
     
     return platformer.createComponentClass({
-        id: 'orientation', 
-        publicProperties:{
+        id: 'orientation',
+        publicProperties: {
             /**
              * The Entity's scale along the X-axis will mirror the entity's initial orientation if it is negative. This value is available via `entity.scaleX`, but is not manipulated by this component after instantiation.
              * 
@@ -144,10 +146,10 @@
         constructor: (function () {
             var setupOrientation = function (self, orientation) {
                 var normal = new platformer.Vector([0, 0, 1]),
-                origin     = new platformer.Vector([1, 0, 0]),
-                vector     = new platformer.Vector([1, 0, 0]),
-                owner      = self.owner,
-                matrix     = [[1, 0, 0],
+                    origin = new platformer.Vector([1, 0, 0]),
+                    vector = new platformer.Vector([1, 0, 0]),
+                    owner  = self.owner,
+                    matrix = [[1, 0, 0],
                               [0, 1, 0],
                               [0, 0, 1]];
                 
@@ -181,10 +183,10 @@
                 this.loadedOrientationMatrix = this.orientationMatrix;
                 
                 // This is the stationary transform
-                this.matrix   = [[1,0,0],[0,1,0],[0,0,1]];
+                this.matrix   = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
                 
                 // This is the tweening transform
-                this.matrixTween = [[1,0,0],[0,1,0],[0,0,1]];
+                this.matrixTween = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
                 
                 this.vectors  = [];
                 this.inverses = [];
@@ -213,13 +215,13 @@
                         this.transform('vertical');
                     }
                     if (this.rotation) {
-                        if (!((this.rotation + 270) % 360)) {
+                        if (((this.rotation + 270) % 360) === 0) {
                             this.rotation = 0;
                             this.transform('rotate-90');
-                        } else if (!((this.rotation + 180) % 360)) {
+                        } else if (((this.rotation + 180) % 360) === 0) {
                             this.rotation = 0;
                             this.transform('rotate-180');
-                        } else if (!((this.rotation + 90) % 360)) {
+                        } else if (((this.rotation + 90) % 360) === 0) {
                             this.rotation = 0;
                             this.transform('rotate-270');
                         }
@@ -236,9 +238,9 @@
              */
             "handle-logic": function (tick) {
                 var i = 0,
-                delta = tick.delta,
-                state = this.owner.state,
-                finishedTweening = [];
+                    delta = tick.delta,
+                    state = this.owner.state,
+                    finishedTweening = [];
                 
                 if (this.tweens.length) {
                     state.reorienting = true;
@@ -246,7 +248,7 @@
                     
                     for (i = this.tweens.length - 1; i >= 0; i--) {
                         if (this.updateTween(this.tweens[i], delta)) { // finished tweening
-                            finishedTweening.push(this.tweens.splice(i,1)[0]);
+                            finishedTweening.push(this.tweens.splice(i, 1)[0]);
                         }
                     }
                     for (i = 0; i < this.vectors.length; i++) {
@@ -268,8 +270,10 @@
              * @method 'drop-tweens'
              */
             "drop-tweens": function () {
+                var i = 0;
+                
                 this.tweens.length = 0;
-                for (var i = 0; i < this.vectors.length; i++) {
+                for (i = 0; i < this.vectors.length; i++) {
                     this.updateVector(this.vectors[i], this.inverses[i]);
                 }
             },
@@ -282,8 +286,8 @@
              */
             "orient-vector": function (vector) {
                 var i = 0,
-                found = false,
-                aligned = vector.aligned || false;
+                    found = false,
+                    aligned = vector.aligned || false;
                 
                 if (vector.vector) {
                     vector = vector.vector;
@@ -316,8 +320,8 @@
                 
                 for (i = 0; i < this.vectors.length; i++) {
                     if (vector === this.vectors[i]) {
-                        this.vectors.splice(i,1);
-                        this.inverses.splice(i,1);
+                        this.vectors.splice(i, 1);
+                        this.inverses.splice(i, 1);
                         break;
                     }
                 }
@@ -335,29 +339,35 @@
              * @param [options.tween] {Function} A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
              * @param [options.onTick] {Function} A function that should be processed on each tick as the tween occurs.
              * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
-             */            
+             */
             "tween-transform": (function () {
                 var doNothing = function () {
-                    // Doing nothing!
-                },
-                linearEase = function (t) {
-                    return t;
-                };
+                        // Doing nothing!
+                    },
+                    linearEase = function (t) {
+                        return t;
+                    };
 
                 return function (props) {
-                    var angle = props.angle || 0,
-                    matrix    = props.matrix;
+                    var angle  = props.angle || 0,
+                        matrix = props.matrix;
                     
                     if (!matrix) {
                         matrix = matrices[props.transform];
                     }
                     
                     if (!angle && (props.transform.indexOf('rotate') === 0)) {
-                        switch(props.transform) {
-                        case 'rotate-90':  angle = Math.PI / 2;  break;
-                        case 'rotate-180': angle = Math.PI;      break;
-                        case 'rotate-270': angle = -Math.PI / 2; break;
-                        default: 
+                        switch (props.transform) {
+                        case 'rotate-90':
+                            angle = Math.PI / 2;
+                            break;
+                        case 'rotate-180':
+                            angle = Math.PI;
+                            break;
+                        case 'rotate-270':
+                            angle = -Math.PI / 2;
+                            break;
+                        default:
                             angle = (props.transform.split('-')[1] / 180) * Math.PI;
                             break;
                         }
@@ -455,34 +465,34 @@
 
             replace: (function () {
                 var det2 = function (a, b, c, d) {
-                    return a * d - b * c;
-                },
-                det3 = function (a) {
-                    var i  = 0,
-                    sum    = 0;
-                    
-                    for (i = 0; i < 3; i++) {
-                        sum += a[i][0] * a[(i + 1) % 3][1] * a[(i + 2) % 3][2];
-                        sum -= a[i][2] * a[(i + 1) % 3][1] * a[(i + 2) % 3][0];
-                    }
-                    return sum;
-                },
-                invert = function (a) {
-                    var arr    = [[],[],[]],
-                    inv        = 1 / det3(a);
-                    
-                    arr[0].push(det2(a[1][1], a[1][2], a[2][1], a[2][2]) * inv);
-                    arr[0].push(det2(a[0][2], a[0][1], a[2][2], a[2][1]) * inv);
-                    arr[0].push(det2(a[0][1], a[0][2], a[1][1], a[1][2]) * inv);
-                    arr[1].push(det2(a[1][2], a[1][0], a[2][2], a[2][0]) * inv);
-                    arr[1].push(det2(a[0][0], a[0][2], a[2][0], a[2][2]) * inv);
-                    arr[1].push(det2(a[0][2], a[0][0], a[1][2], a[1][0]) * inv);
-                    arr[2].push(det2(a[1][0], a[1][1], a[2][0], a[2][1]) * inv);
-                    arr[2].push(det2(a[0][1], a[0][0], a[2][1], a[2][0]) * inv);
-                    arr[2].push(det2(a[0][0], a[0][1], a[1][0], a[1][1]) * inv);
-                    
-                    return arr;
-                };
+                        return a * d - b * c;
+                    },
+                    det3 = function (a) {
+                        var i = 0,
+                            sum = 0;
+
+                        for (i = 0; i < 3; i++) {
+                            sum += a[i][0] * a[(i + 1) % 3][1] * a[(i + 2) % 3][2];
+                            sum -= a[i][2] * a[(i + 1) % 3][1] * a[(i + 2) % 3][0];
+                        }
+                        return sum;
+                    },
+                    invert = function (a) {
+                        var arr = [[], [], []],
+                            inv = 1 / det3(a);
+
+                        arr[0].push(det2(a[1][1], a[1][2], a[2][1], a[2][2]) * inv);
+                        arr[0].push(det2(a[0][2], a[0][1], a[2][2], a[2][1]) * inv);
+                        arr[0].push(det2(a[0][1], a[0][2], a[1][1], a[1][2]) * inv);
+                        arr[1].push(det2(a[1][2], a[1][0], a[2][2], a[2][0]) * inv);
+                        arr[1].push(det2(a[0][0], a[0][2], a[2][0], a[2][2]) * inv);
+                        arr[1].push(det2(a[0][2], a[0][0], a[1][2], a[1][0]) * inv);
+                        arr[2].push(det2(a[1][0], a[1][1], a[2][0], a[2][1]) * inv);
+                        arr[2].push(det2(a[0][1], a[0][0], a[2][1], a[2][0]) * inv);
+                        arr[2].push(det2(a[0][0], a[0][1], a[1][0], a[1][1]) * inv);
+
+                        return arr;
+                    };
                 
                 return function (m) {
                     // We invert the matrix so we can re-orient all vectors for the incoming replacement matrix.
@@ -498,14 +508,14 @@
                 
                 return function (tween, delta) {
                     var t = 0,
-                    a = 1,                //  a c -
-                    b = 0,                //  b d -
-                    c = 0,                //  - - z
-                    d = 1,
-                    z = 1,
-                    angle = 0,
-                    m = tween.endMatrix,
-                    matrix = null;
+                        a = 1,                //  a c -
+                        b = 0,                //  b d -
+                        c = 0,                //  - - z
+                        d = 1,
+                        z = 1,
+                        angle = 0,
+                        m = tween.endMatrix,
+                        matrix = null;
                     
                     tween.time += delta;
                     

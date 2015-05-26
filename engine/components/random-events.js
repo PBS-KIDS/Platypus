@@ -24,6 +24,7 @@ This component listens for certain messages, picks a message from a related list
       }
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -37,9 +38,13 @@ This component listens for certain messages, picks a message from a related list
         id: 'random-events',
         
         constructor: function (definition) {
+            var event = '';
+            
             if (definition.events) {
-                for (var event in definition.events) {
-                    this.addEventListener(event, createTrigger(definition.events[event]));
+                for (event in definition.events) {
+                    if (definition.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, createTrigger(definition.events[event]));
+                    }
                 }
             }
         }

@@ -24,6 +24,7 @@ This component serves as a switch in the game world, typically tied to collision
       // Optional. Whether a pressed switch should stay pressed once collision messages cease. Defaults to `false`.
     }
 */
+/*global platformer */
 (function () {
     "use strict";
 
@@ -49,8 +50,8 @@ This component serves as a switch in the game world, typically tied to collision
                         this.owner.trigger('switch-on');
                     }
                 } else {
-                    if (this.pressed != this.wasPressed) {
-                        if (this.pressed) {    
+                    if (this.pressed !== this.wasPressed) {
+                        if (this.pressed) {
                             this.state.pressed = true;
                             this.owner.trigger('switch-on');
                         } else {
@@ -63,12 +64,12 @@ This component serves as a switch in the game world, typically tied to collision
                 }
             },
             'switch-pressed': function () {
-                this.pressed = true; 
+                this.pressed = true;
                 if (this.initialPress) {
                     this.owner.trigger('initial-press');
                     this.initialPress = false;
                 }
             }
-        }        
+        }
     });
 }());
