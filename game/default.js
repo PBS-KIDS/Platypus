@@ -7,7 +7,7 @@
  *    assets such as images may load fine when directly loading template.html if not referenced in
  *    config.json, but all assets must be listed in config.json to be included in the compiled build. 
  */
-
+/*global loadJS, loadJSs */
 (function () {
     window.loadJS = loadJS = ['../tools/js/compile-game.js'];
     window.loadJSs = function () {
