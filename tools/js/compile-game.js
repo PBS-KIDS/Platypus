@@ -182,6 +182,7 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
                 "logic-wind-up-racer",
                 "motion",
                 "mover",
+                "node",
                 "node-map",
                 "node-resident",
                 "orientation",

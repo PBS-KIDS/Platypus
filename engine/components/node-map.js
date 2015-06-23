@@ -9,7 +9,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 
 ### Listens for:
 - **add-node** - Expects a node definition to create a node in the node-map.
-  - @param definition.id (string or array) - This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
+  - @param definition.nodeId (string or array) - This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
   - @param definition.type (string) - This determines the type of the node.
   - @param definition.x (number) - Sets the x axis position of the node.
   - @param definition.y (number) - Sets the y axis position of the node.
@@ -26,7 +26,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
       // Optional. An array of node definitions to create the node-map.
         
         {
-          "id": "node1",
+          "nodeId": "node1",
           // A string or array that becomes the id of the Node. Arrays are joined using "|" to create the id string.
           
           "type": "path",
@@ -55,7 +55,8 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 /*jslint plusplus:true */
 (function () {
     "use strict";
-
+    
+    // This is a basic node object, but can be replaced by entities having a `node` component if more functionality is needed.
     var Node = function (definition, map) {
             if (definition.id) {
                 if (typeof definition.id === 'string') {
@@ -80,7 +81,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
             this.neighbors = definition.neighbors || {};
         },
         proto = Node.prototype;
-    
+	
     proto.getNode = function (desc) {
         var neighbor = null;
         
@@ -129,14 +130,16 @@ This component sets up a node-map to be used by the [[node-resident]] component 
         }
         return false;
     };
-    
-    return platformer.createComponentClass({
-        id: 'node-map',
-        
+	
+	return platformer.createComponentClass({
+		id: 'node-map',
+		
         constructor: function (definition) {
             var i = 0;
             
-            this.map = [];
+            this.owner.map = this.map = [];
+            
+            this.residentsAwaitingNode = [];
             
             if (definition.map) {
                 for (i = 0; i < definition.map.length; i++) {
@@ -147,29 +150,57 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 
         events: {
             "add-node": function (nodeDefinition) {
-                this.map.push(new Node(nodeDefinition, this));
-            },
-            "child-entity-added": function (entity) {
-                if (entity.nodeId) {
-                    entity.node = this.getNode(entity.nodeId);
-                    entity.trigger('on-node', entity.node);
+                var i = 0,
+                    entity = null,
+                    node   = null;
+                
+				if(nodeDefinition.isNode){// if it's already a node, put it on the map.
+					node = nodeDefinition;
+                    nodeDefinition.map = this;
+				} else {
+                    node = new Node(nodeDefinition, this);
+				}
+
+				this.map.push(node);
+                
+                for (i = this.residentsAwaitingNode.length - 1; i >= 0; i--) {
+                    entity = this.residentsAwaitingNode[i];
+                    if (node.id === entity.nodeId) {
+                        this.residentsAwaitingNode.splice(i, 1);
+        				entity.node = this.getNode(entity.nodeId);
+       					entity.triggerEvent('on-node', entity.node);
+                    }
                 }
-            }
-        },
-        
-        methods: {
-            getNode: function () {
+			},
+			"child-entity-added": function (entity) {
+				if(entity.isNode){        // a node
+					this.owner.triggerEvent('add-node', entity);
+				} else if(entity.nodeId){ // a node-resident
+					entity.node = this.getNode(entity.nodeId);
+                    if(!entity.node){
+                        this.residentsAwaitingNode.push(entity);
+                    } else {
+    					entity.triggerEvent('on-node', entity.node);
+                    }
+				}
+			}
+		},
+		
+		publicMethods: {
+			getNode: function () {
                 var i       = 0,
                     id      = '',
                     divider = '',
                     args    = arguments;
                 
                 if (args.length === 1) {
-                    if ((typeof args[0] !== 'string') && args[0].length) {
-                        args = args[0];
-                    }
-                }
-                
+                    if (args[0].isNode) {
+						return args[0];
+					} else if (Array.isArray(args[0])) {
+						args = args[0];
+					}
+				}
+				
                 for (i = 0; i < args.length; i++) {
                     id += divider + args[i];
                     divider = '|';
@@ -180,7 +211,50 @@ This component sets up a node-map to be used by the [[node-resident]] component 
                     }
                 }
                 return null;
-            }
+            },
+            
+            /**
+             * Finds the closest node to a given point, with respect to any inclusion or exclusion lists.
+             */
+            getClosestNode: (function(){
+                var v1 = new platformer.Vector(0, 0, 0),
+                    v2 = new platformer.Vector(0, 0, 0);
+
+                return function (point, including, excluding) {
+                    var i = 0,
+                        j = 0,
+                        p1 = v1.set(point),
+                        p2 = v2,
+                        m = 0,
+                        list = including || this.map,
+                        closest = null,
+                        exclude = false,
+                        d = Infinity;
+                    
+                    for (i = 0; i < list.length; i++) {
+                        m = p2.set(p1).subtractVector(list[i].position).magnitude();
+                        if (m < d) {
+                            if (excluding) {
+                                exclude = false;
+                                for (j = 0; j < excluding.length; j++) {
+                                    if (excluding[j] === list[i]) {
+                                        exclude = true;
+                                        break;
+                                    }
+                                }
+                                if (exclude) {
+                                    break;
+                                }
+                            }
+                            
+                            d = m;
+                            closest = list[i];
+                        }
+                    }
+                    
+                    return closest;
+                };
+            }())
         }
     });
 }());
