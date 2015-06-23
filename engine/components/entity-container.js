@@ -320,7 +320,7 @@ This component allows the entity to contain child entities. It will add several 
                 var x = 0;
                 
                 entity.parent = this.owner;
-                entity.trigger('adopted');
+                entity.trigger('adopted', entity);
                 
                 for (x = 0; x < this.entities.length; x++) {
                     if (!entity.triggerEvent('peer-entity-added', this.entities[x])) {
