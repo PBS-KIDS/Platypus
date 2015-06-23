@@ -202,9 +202,7 @@
                 }
                 
                 if (!this.paused) {
-                    if (!this.message.tick) {
-                        this.message.tick = resp;
-                    }
+                    this.message.tick = resp;
                     
                     //if (this.updateNeeded) {//causes blocks to fall through dirt - not sure the connection here, so leaving out this optimization for now. - DDD
                     if (this.activeEntities === this.entities) {
@@ -214,7 +212,9 @@
                     this.activeEntities.length = 0;
                     for (j = this.entities.length - 1; j > -1; j--) {
                         child = this.entities[j];
-                        if (child.alwaysOn || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
+                        if (child.alwaysOn
+                            || (typeof child.x === 'undefined')
+                            || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
                             this.activeEntities.push(child);
                         }
                     }
@@ -224,7 +224,9 @@
                     cycles = Math.min(cycles, this.maxStepsPerTick);
                     
                     for (i = 0; i < cycles; i++) {
-                        
+                        if (this.owner.triggerEventOnChildren) {
+                            this.owner.triggerEventOnChildren('handle-ai', this.message);
+                        }
                         /**
                          * This event is triggered on children entities to run their logic.
                          * 

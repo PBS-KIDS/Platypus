@@ -148,7 +148,6 @@ if (typeof window === 'undefined') { // Outside the browser, use Rhino or Active
                 "entity-container",
                 "entity-controller",
                 "fullscreen",
-                "handler-ai",
                 "handler-box2d",
                 "handler-collision",
                 "handler-controller",
