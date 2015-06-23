@@ -199,13 +199,13 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
 
     return platformer.createComponentClass({
         id: 'level-builder',
+        
+        properties: {
+            useUniques: true
+        },
+        
         constructor: function (definition) {
             this.levelTemplate = this.owner.levelTemplate || definition.levelTemplate;
-            if ((this.owner.useUniques || definition.useUniques) === false) {
-                this.useUniques = false;
-            } else {
-                this.useUniques = true;
-            }
             this.levelPieces = this.owner.levelPieces || definition.levelPieces;
             this.levelMessage = {level: null, persistentData: null};
         },
