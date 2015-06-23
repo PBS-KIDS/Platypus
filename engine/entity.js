@@ -160,7 +160,7 @@ platformer.Entity = (function () {
                 if (this.components[i].type === component) {
                     component = this.components[i];
                     this.components.splice(i, 1);
-                    this.triggerEvent('component-removed', this.components[i]);
+                    this.triggerEvent('component-removed', component);
                     component.destroy();
                     return component;
                 }
@@ -169,7 +169,7 @@ platformer.Entity = (function () {
             for (i = 0; i < this.components.length; i++) {
                 if (this.components[i] === component) {
                     this.components.splice(i, 1);
-                    this.triggerEvent('component-removed', this.components[i]);
+                    this.triggerEvent('component-removed', component);
                     component.destroy();
                     return component;
                 }
