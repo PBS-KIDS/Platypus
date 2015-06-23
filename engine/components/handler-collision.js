@@ -237,8 +237,8 @@
                         }
                         if (!entity.immobile) {
                             this.allEntities[this.allEntities.length] = entity;
+                            this.updateLiveList = true;
                         }
-                        this.updateLiveList = true;
                     }
                 }
             },
@@ -266,8 +266,8 @@
                                 break;
                             }
                         }
+                        this.updateLiveList = true;
                     }
-                    this.updateLiveList = true;
                 }
             },
             
