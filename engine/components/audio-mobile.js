@@ -111,11 +111,12 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
         
         constructor: function (definition) {
             this.audioId = definition.audioId;
+            this.iOSaudioAPIfix = platformer.game.settings.supports.iOS && platformer.game.settings.supports.audioAPI;
         },
 
         events: {// These are messages that this component listens for
             "load": function () {
-                if (platformer.game.settings.supports.mobile) {
+                if (platformer.game.settings.supports.mobile && !this.iOSaudioAPIfix) {
                     this.owner.state.mobile = true;
                     if ((platformer.game.settings.supports.android || platformer.game.settings.supports.iOS) && !platformer.game.settings.supports.audioAPI) {
                         this.owner.triggerEvent('low-quality-audio');
@@ -128,22 +129,39 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
                 var audio    = platformer.game.settings.assets[this.audioId],
                     instance = null;
                 
-                if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
-                    delete platformer.game.settings.assets[this.audioId];
+                if (!this.iOSaudioAPIfix) {
+                    if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
+                        delete platformer.game.settings.assets[this.audioId];
+                        
+                        audio.data.channels = 1;
+                        audio.src = audio.src.replace('ogg', 'm4a');
+                        createjs.Sound.registerSounds([audio]);
+                        
+                        instance = createjs.Sound.play(this.audioId);
+                        console.log('Initializing iOS fallback audio.');
+                        if (instance.playState === 'playSucceeded') {
+                            instance.stop();
+                        }
+                    }
                     
-                    audio.data.channels = 1;
-                    audio.src = audio.src.replace('ogg', 'm4a');
-                    createjs.Sound.registerSounds([audio]);
-                    
+                    this.owner.state.mobile = false;
+                    this.owner.triggerEvent('load-assets');
+                    this.firstTime = false;
+                } else {
                     instance = createjs.Sound.play(this.audioId);
-                    console.log('Initializing iOS fallback audio.');
+                    console.log('Initializing iOS audio.');
                     if (instance.playState === 'playSucceeded') {
                         instance.stop();
                     }
+                    this.owner.triggerEvent('new-scene');
                 }
-                
-                this.owner.state.mobile = false;
-                this.owner.triggerEvent('load-assets');
+            },
+            "complete": function () {
+                if (this.iOSaudioAPIfix) {
+                    this.owner.state.mobile = true;
+                } else {
+                    this.owner.triggerEvent('new-scene');
+                }
             }
         }
     });

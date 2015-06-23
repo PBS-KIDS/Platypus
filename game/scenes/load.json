@@ -35,8 +35,7 @@
                             "parent": "progress-bar-container"
                         },{
                             "type": "change-scene",
-                            "scene": "menu",
-                            "aliases": {"complete": "new-scene"}
+                            "scene": "menu"
                         }]
                     }],
                     "childEvents": ["link-entity"]
