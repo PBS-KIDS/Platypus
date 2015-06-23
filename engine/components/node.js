@@ -53,7 +53,11 @@ This component causes an entity to be a position on a [[node-map]]. This compone
       // Optional. Determines whether the entity's orientation is updated by movement across the node-map. Default is false.
     }
 */
-(function(){
+/*global platformer */
+/*jslint plusplus:true */
+(function () {
+    "use strict";
+    
 	return platformer.createComponentClass({
 		
 		id: 'node',
@@ -64,10 +68,10 @@ This component causes an entity to be a position on a [[node-map]]. This compone
 			z: 0
 		},
 		
-		constructor: function(definition){
-			this.nodeId = definition.nodeId || this.owner.nodeId || this.owner.id || '' + Math.random();
+		constructor: function (definition) {
+			this.nodeId = definition.nodeId || this.owner.nodeId || this.owner.id || String(Math.random());
 			
-			if((typeof this.nodeId !== 'string') && (this.nodeId.length)){
+			if ((typeof this.nodeId !== 'string') && (this.nodeId.length)) {
 				this.nodeId = definition.nodeId.join('|');
 			}
 			
@@ -84,64 +88,68 @@ This component causes an entity to be a position on a [[node-map]]. This compone
 		},
 		
 		events: {
-			"add-neighbors": function(neighbors){
-				var i     = 0,
-				direction = null;
+			"add-neighbors": function (neighbors) {
+				var i = 0,
+				    direction = null;
 				
-				for(direction in neighbors){
-					this.neighbors[direction] = neighbors[direction];
+				for (direction in neighbors) {
+                    if (neighbors.hasOwnProperty(direction)) {
+                        this.neighbors[direction] = neighbors[direction];
+                    }
 				}
 				
-				for(; i < this.contains.length; i++){
+				for (i = 0; i < this.contains.length; i++) {
 					this.contains[i].triggerEvent('set-directions');
 				}
 			},
-			"remove-neighbor": function(nodeOrNodeId){
-				var i = null,
-				id    = nodeOrNodeId;
+			"remove-neighbor": function (nodeOrNodeId) {
+				var i  = null,
+				    id = nodeOrNodeId;
 				
-				if(typeof id !== 'string'){
+				if (typeof id !== 'string') {
 					id = id.nodeId;
 				}
 
-				for(i in this.neighbors){
-					if(typeof this.neighbors[i] === 'string'){
-						if(this.neighbors[i] === id){
-							delete this.neighbors[i];
-							break;
-						}
-					} else {
-						if(this.neighbors[i].nodeId === id){
-							delete this.neighbors[i];
-							break;
-						}
-					}
+				for (i in this.neighbors) {
+                    if (this.neighbors.hasOwnProperty(i)) {
+                        if (typeof this.neighbors[i] === 'string') {
+                            if (this.neighbors[i] === id) {
+                                delete this.neighbors[i];
+                                break;
+                            }
+                        } else {
+                            if (this.neighbors[i].nodeId === id) {
+                                delete this.neighbors[i];
+                                break;
+                            }
+                        }
+                    }
 				}
 			}
 		},
 		
-		publicMethods:{
-			getNode: function(desc){
+		publicMethods: {
+			getNode: function (desc) {
 				var neighbor = null;
 				
 				//map check
-				if(!this.map && this.owner.map){
+				if (!this.map && this.owner.map) {
 					this.map = this.owner.map;
 				}
 				
-				if(this.neighbors[desc]){
+				if (this.neighbors[desc]) {
 					neighbor = this.neighbors[desc];
-					if(neighbor.isNode){
+					if (neighbor.isNode) {
 						return neighbor;
-					} else if(typeof neighbor === 'string'){
+					} else if (typeof neighbor === 'string') {
 						neighbor = this.map.getNode(neighbor);
-						if(neighbor){
+						if (neighbor) {
 							this.neighbors[desc] = neighbor;
 							return neighbor;
 						}
 					} else if (neighbor.length) {
 						neighbor = this.map.getNode(neighbor.join('|'));
-						if(neighbor){
+						if (neighbor) {
 							this.neighbors[desc] = neighbor;
 							return neighbor;
 						}
@@ -151,40 +159,48 @@ This component causes an entity to be a position on a [[node-map]]. This compone
 					return null;
 				}
 			},
-			addToNode: function(entity){
-				for(var i = 0; i < this.contains.length; i++){
-					if(this.contains[i] === entity){
+			addToNode: function (entity) {
+                var i = 0;
+                
+				for (i = 0; i < this.contains.length; i++) {
+					if (this.contains[i] === entity) {
 						return false;
 					}
 				}
 				this.contains.push(entity);
 				return entity;
 			},
-			removeFromNode: function(entity){
-				for(var i = 0; i < this.contains.length; i++){
-					if(this.contains[i] === entity){
-						return this.contains.splice(i,1)[0];
+			removeFromNode: function (entity) {
+                var i = 0;
+                
+				for (i = 0; i < this.contains.length; i++) {
+					if (this.contains[i] === entity) {
+						return this.contains.splice(i, 1)[0];
 					}
 				}
 				return false;
 			},
-			addToEdge: function(entity){
-				for(var i = 0; i < this.edgesContain.length; i++){
-					if(this.edgesContain[i] === entity){
+			addToEdge: function (entity) {
+                var i = 0;
+                
+				for (i = 0; i < this.edgesContain.length; i++) {
+					if (this.edgesContain[i] === entity) {
 						return false;
 					}
 				}
 				this.edgesContain.push(entity);
 				return entity;
 			},
-			removeFromEdge: function(entity){
-				for(var i = 0; i < this.edgesContain.length; i++){
-					if(this.edgesContain[i] === entity){
-						return this.edgesContain.splice(i,1)[0];
+			removeFromEdge: function (entity) {
+                var i = 0;
+                
+				for (i = 0; i < this.edgesContain.length; i++) {
+					if (this.edgesContain[i] === entity) {
+						return this.edgesContain.splice(i, 1)[0];
 					}
 				}
 				return false;
 			}
 		}
 	});
-})();
+}());

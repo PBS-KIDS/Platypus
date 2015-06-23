@@ -1,20 +1,15 @@
-/*
- * config.json
- * 
- */
 {
-    "global": { // Settings for the entire game (Entities and component settings are generally found in their respective files.)
-        "autoLoad": true,                        // Optional. Whether to immediately begin the game once the page is finished loading. Default is `true`.
-        "initialScene": "load",                  // Required. Once the game is ready, this scene is automatically loaded.
-        "fps": 60,                               // Optional. Target FPS to be used by the game engine. Default is 60 FPS.
-        "rootElement": "root",                   // Optional. Defines the id of the root DOM element used by the game. The default is "root" and this element is created if it does not already exist.
-        "aspectRatio": 1.333,                    // Optional. Whether the rootElement should be automatically resized to maintain aspect ratio. Leave this off if the rootElement is to be strictly styled using CSS.
-        "nativeAssetResolution": 960,            // Optional. Screen width in pixels that the source images were originally designed for.
-        "resizeFont": true,                      // Optional. Whether to adjust the body element's fontSize to proportionally match current window size. Useful for cascading the value of em's across all game DOM elements.
-        "plugins": ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/scripts-plugin.js", "js/language-plugin.js", "js/assets-plugin.js", "js/compression-plugin.js", "js/write-plugin.js"] // Optional. Plugins to handle various aspects of compilation.
+    "global": {
+        "autoLoad": true,
+        "initialScene": "load",
+        "fps": 60,
+        "rootElement": "root",
+        "aspectRatio": 1.333,
+        "nativeAssetResolution": 960,
+        "resizeFont": true,
+        "plugins": ["js/pngquant-plugin.js", "js/manifest-plugin.js", "js/scripts-plugin.js", "js/language-plugin.js", "js/assets-plugin.js", "js/compression-plugin.js", "js/write-plugin.js"]
     },
-    "builds": [                                  // Builds and their respective settings
-        {
+    "builds": [{
             "id": "production",                  // This is the id of the build and is matched to a folder name in the "builds/" folder. Build tools create this folder if needed.
             "namespace": "PBS.KIDS.platformer",  // Optional namespace for the game - defaults to "platypus"
             "template": "template.html",         // Optional. HTML file describing the HTML template in which to place the game on compilation. Default is "template.html".
