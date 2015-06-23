@@ -92,13 +92,18 @@ This component listens for messages and, according to its preset settings, will 
     
     return platformer.createComponentClass({
         id: 'component-switcher',
+        
+        properties: {
+            componentMap: null
+        },
+        
         constructor: function (definition) {
             var event = '';
             
-            if (definition.componentMap) {
-                for (event in definition.componentMap) {
-                    if (definition.componentMap.hasOwnProperty(event)) {
-                        this.addEventListener(event, addRemoveComponents(definition.componentMap[event], this.owner));
+            if (this.componentMap) {
+                for (event in this.componentMap) {
+                    if (this.componentMap.hasOwnProperty(event)) {
+                        this.addEventListener(event, addRemoveComponents(this.componentMap[event], this.owner));
                     }
                 }
             }
