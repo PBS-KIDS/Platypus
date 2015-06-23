@@ -56,7 +56,10 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 (function () {
     "use strict";
 
-    var initializeCanvasConservation = function (displayObject) { //To make CreateJS Display Object have better canvas conservation.
+    var sort = function (a, b) {
+            return a.z - b.z;
+        },
+        initializeCanvasConservation = function (displayObject) { //To make CreateJS Display Object have better canvas conservation.
             var canvas  = [document.createElement("canvas"), document.createElement("canvas")],
                 current = 0;
 
@@ -246,11 +249,11 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                     }
 
                     // Determine range:
-                    bounds = object.getBounds();
-                    top    = Math.max(0, Math.floor((entity.y - object.y) / this.tileHeight));
-                    bottom = Math.min(imgMap[0].length, Math.ceil((entity.y - bounds.y + bounds.height) / this.tileHeight));
-                    left   = Math.max(0, Math.floor((entity.x - object.x) / this.tileWidth));
-                    right  = Math.min(imgMap.length, Math.ceil((entity.x - bounds.x + bounds.width) / this.tileWidth));
+                    bounds = object.getTransformedBounds();
+                    top    = Math.max(0, Math.floor(bounds.y / this.tileHeight));
+                    bottom = Math.min(imgMap[0].length, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
+                    left   = Math.max(0, Math.floor(bounds.x / this.tileWidth));
+                    right  = Math.min(imgMap.length, Math.ceil((bounds.x + bounds.width) / this.tileWidth));
                     
                     // Find tiles that should include this display object
                     for (x = left; x < right; x++) {
@@ -261,7 +264,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                             if (!this.doMap[x][y]) {
                                 this.doMap[x][y] = [];
                             }
-                            this.doMap[x][y].push(object); //TODO: may want to properly handle z-order here at some point?
+                            this.doMap[x][y].push(object);
                         }
                     }
                     
@@ -323,7 +326,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                 
                 this.tilesToRender.x = camera.viewportLeft - camL;
                 this.tilesToRender.y = camera.viewportTop  - camT;
-                        
+                
                 if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
                     this.camera.x = vpL;
                     this.camera.y = vpT;
@@ -367,9 +370,10 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                                 }
                             }
                         }
-                        
+        
                         // Draw cached entities
                         if (ents.length) {
+                            ents.sort(sort);
                             for (z = 0; z < ents.length; z++) {
                                 delete ents[z].drawn;
                                 this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
@@ -377,7 +381,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                                 this.tilesToRender.updateCache('source-over');
                             }
                         }
-        
+
                         if (canvas) {
                             context = this.tilesToRender.cacheCanvas.getContext('2d');
                             width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
