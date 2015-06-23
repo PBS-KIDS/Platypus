@@ -4,7 +4,7 @@
  * @class "mover" Component
  * @uses Component
  */
-// Requires: ["motion"]
+// Requires: ["motion", "../vector.js"]
 /*global platformer */
 /*jslint plusplus:true */
 (function () {
@@ -53,6 +53,15 @@
              * @default: 0
              */
             jump: 0,
+            
+            /**
+             * If specified, the property adds velocity to the entity.
+             * 
+             * @property speed
+             * @type number|Array|Vector
+             * @default: 0
+             */
+            speed: 0,
             
             /**
              * This property determines how quickly velocity is dampened when the entity is not in a "grounded" state. This should be a value between 0 (no motion) and 1 (no drag).
@@ -119,8 +128,8 @@
                 var i = 0;
                 
                 if (component.type === 'motion') {
-                    for (i = 0; i < this.motions.length; i++) {
-                        if (component === this.motions[i]) {
+                    for (i = 0; i < this.movers.length; i++) {
+                        if (component === this.movers[i]) {
                             this.movers.splice(i, 1);
                             break;
                         }
