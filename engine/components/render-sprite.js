@@ -542,6 +542,7 @@ This component is attached to entities that will appear in the game world. It re
                 // add pins to sprite and setup this.container if needed.
                 if (definition.pins) {
                     this.container = new createjs.Container();
+                    this.container.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
                     this.container.addChild(this.sprite);
                     this.sprite.z = 0;
 
@@ -566,8 +567,8 @@ This component is attached to entities that will appear in the game world. It re
                 }
                 
                 //handle mask
-                if (definition.mask) {
-                    this.container.mask = this.setMask(definition.mask);
+                if (definition.mask || this.owner.mask) {
+                    this.container.mask = this.setMask(definition.mask || this.owner.mask);
                 }
     
                 // pin to another render-sprite
@@ -670,6 +671,14 @@ This component is attached to entities that will appear in the game world. It re
             "input-off": function () {
                 if (this.removeInputListeners) {
                     this.removeInputListeners();
+                }
+            },
+            
+            "set-mask": function(mask) {
+                if (mask) {
+                    this.container.mask = this.setMask(mask);
+                } else {
+                    this.container.mask = null;
                 }
             }
         },
