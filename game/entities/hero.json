@@ -1,0 +1,62 @@
+{
+    "id": "hero",
+    "components":[
+        {
+            "type": "entity-controller",
+            "controlMap":{
+                "button-jump":      "jump",
+                "key:z":            "jump",
+                "key:space":           "jump",
+                "key:up-arrow":        "jump",
+                "key:w":            "jump",
+                "key:left-arrow":   "go-left",
+                "key:a":               "go-left",
+                "button-left":      "go-left",
+                "key:right-arrow":     "go-right",
+                "key:d":             "go-right",
+                "button-right":     "go-right"
+            }
+        },{ 
+            "type": "mover",
+            "gravity" : 0.003,
+            "jump": -1.6
+        },{
+            "type": "logic-hero"
+        },{
+            "type": "orientation"
+        },{
+            "type": "logic-directional-movement",
+            "speed": 0.6
+        },{
+            "type": "collision-basic",
+            "collisionType": "hero",
+            "solidCollisions": {
+                "block": "hit-solid",
+                "dirt": "hit-solid",
+                "tiles": "hit-solid"
+            }
+        },{
+            "type": "render-sprite",
+            "animationMap":{
+                "moving,grounded":  "walking",
+                "default": "jumping"
+            },
+            "image": "mookie"
+        },{
+            "type": "audio",
+            "audioMap": {
+                "grounded,moving": {"sound": "walk", "loop": 5000},
+                "just-jumped": "jump"
+            }
+//        },{
+//            "type": "render-debug"
+        }
+    ],
+    "properties":{
+        "alwaysOn": true,
+        "z": 200,
+        "width": 24,
+        "height": 72,
+        "camera": "forward"
+    }
+}

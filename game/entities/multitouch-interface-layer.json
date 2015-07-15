@@ -1,0 +1,22 @@
+{
+    "id": "multitouch-interface-layer",
+    "filter": {
+        "includes": ["mobile", "multitouch"]
+    },
+    "components": [
+        {"type": "handler-logic"},
+        {"type": "handler-render-dom"},
+        {"type": "entity-container", 
+            "entities": [
+            {"type": "button-fullscreen"},
+            {"type": "button-jump"},
+            {"type": "button-pickaxe"},
+            {"type": "button-left"},
+            {"type": "button-right"},
+            {"type": "gui"},
+            {"type": "fps-counter"}
+            ],
+            "childEvents": ['gui-gem-collected', 'time-elapsed']
+        }
+    ]
+}

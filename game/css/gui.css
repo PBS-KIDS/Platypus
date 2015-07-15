@@ -1,0 +1,29 @@
+/*
+ *  The in-game GUI (apart from buttons, defined in button.css)
+ */
+
+/* The top-right notification area during game-play */
+.gem-bar {
+position: absolute;
+right: 0;
+top: 0;
+width: 3.2em;
+height: 2em;
+background: url('../images/gem-bar.png') no-repeat;
+background-size: 100%;
+}
+
+/* The active counter in the notification area above */
+.gem-counter {
+position: absolute;
+right: 0;
+top: 0;
+width: 0.4em;
+text-align: center;
+font-size: 1em;
+color: white;
+font-family: arial;
+font-weight: bold;
+line-height: 0.32em;
+height: 0.32em;
+}
