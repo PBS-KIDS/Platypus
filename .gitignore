@@ -7,3 +7,5 @@
 .project
 builds
 compressed
+node_modules
+output

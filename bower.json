@@ -9,7 +9,8 @@
 	"description": "The Platypus Engine allows rapid development of 2D orthogonal tile based games for deployment in HTML5 compatible browsers.",
 	"main": "lib/platypus-0.3.0.combined.js",
 	"keywords": [
-		"platypus", "platformer"
+		"platypus",
+		"platformer"
 	],
 	"license": "MIT",
 	"ignore": [
