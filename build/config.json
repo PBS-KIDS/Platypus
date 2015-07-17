@@ -9,7 +9,6 @@
 		"../src/entity.js",
 		"../src/factory.js",
 		"../src/game.js",
-		"../src/main.js",
 		"../src/messenger.js",
 		"../src/components/change-scene.js",
 		"../src/components/collision-basic.js",
