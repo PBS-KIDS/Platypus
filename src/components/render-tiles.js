@@ -130,8 +130,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
             if (images[0] && (typeof images[0] === 'string')) {
                 images = images.slice(); //so we do not overwrite settings array
                 for (x = 0; x < images.length; x++) {
-                    if (platypus.assets[images[x]]) {
-                        images[x] = platypus.assets[images[x]];
+                    if (platypus.assets[images[x]] && platypus.assets[images[x]].asset) {
+                        images[x] = platypus.assets[images[x]].asset;
                     }
                 }
             }

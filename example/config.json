@@ -14,9 +14,9 @@
             {"id": "jump", "startTime": 1600,  "duration": 250}
         ]}},
         {"id": "buttons",        "src": "images/buttons.png"},
-        {"id": "mookie",         "src": "images/mookie.png",       "data": {"spritesheet": "images/mookie.json", "rows": 4, "columns": 4}},
-        {"id": "game-sprites",   "src": "images/game-sprites.png", "data": {"rows": 4, "columns": 4}},
-        {"id": "title-screen",   "src": "images/title-screen.png", "compression": 64}
+        {"id": "mookie",         "src": "images/mookie.png",       "data": {"spritesheet": "images/mookie.json"}},
+        {"id": "game-sprites",   "src": "images/game-sprites.png"},
+        {"id": "title-screen",   "src": "images/title-screen.png"}
     ],
     "entities": {
         "action-layer": "entities/action-layer.json",
@@ -44,7 +44,7 @@
         "menu": "scenes/menu.json",
         "scene-level-1": "scenes/scene-level-1.json"
     },
-    "levels": [
-        {"id": "level-1", "src": "levels/level-1.json"}
-    ]
+    "levels": {
+        "level-1": "levels/level-1.json"
+    }
 }

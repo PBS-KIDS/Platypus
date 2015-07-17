@@ -135,7 +135,10 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                             }
                         }
 
-                        platypus.assets[event.item.id] = result;
+                        platypus.assets[event.item.id] = {
+                            data:  data,
+                            asset: result
+                        };
 
                         self.message.progress += 1;
                         self.message.fraction = self.message.progress / self.message.total;
@@ -171,7 +174,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                 }
                 self.message.total = loadAssets.length;
                 loader.loadManifest(loadAssets);
-                platypus.assets = [];
+                platypus.assets = {};
             },
 
             "fileload": function (resp) {

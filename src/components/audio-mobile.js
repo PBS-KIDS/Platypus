@@ -126,12 +126,12 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
                 }
             },
             "activate-audio": function () {
-                var audio    = platypus.game.settings.assets[this.audioId],
+                var audio    = platypus.assets[this.audioId].asset,
                     instance = null;
                 
                 if (!this.iOSaudioAPIfix) {
                     if (audio && platypus.supports.iOS && !platypus.supports.audioAPI) {
-                        delete platypus.game.settings.assets[this.audioId];
+                        delete platypus.assets[this.audioId];
                         
                         audio.data.channels = 1;
                         audio.src = audio.src.replace('ogg', 'm4a');

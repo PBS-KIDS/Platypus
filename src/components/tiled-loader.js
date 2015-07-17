@@ -287,8 +287,8 @@
                             tileLayer.data.push(1);
                         }
 
-                        if (platypus.assets[imageLayer.name]) { // Prefer to have name in tiled match image id in game
-                            tileLayer.image = platypus.assets[imageLayer.name];
+                        if (platypus.assets[imageLayer.name] && platypus.assets[imageLayer.name].asset) { // Prefer to have name in tiled match image id in game
+                            tileLayer.image = platypus.assets[imageLayer.name].asset;
                             tileLayer.tileheight = tileLayer.image.height;
                             tileLayer.tilewidth = tileLayer.image.width;
                         } else {
@@ -438,8 +438,8 @@
 
                 if (images.length === 0) {
                     for (x = 0; x < tilesets.length; x++) {
-                        if (platypus.assets[tilesets[x].name]) { // Prefer to have name in tiled match image id in game
-                            images.push(platypus.assets[tilesets[x].name]);
+                        if (platypus.assets[tilesets[x].name] && platypus.assets[tilesets[x].name].asset) { // Prefer to have name in tiled match image id in game
+                            images.push(platypus.assets[tilesets[x].name].asset);
                         } else {
                             console.warn('Component tiled-loader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
                             images.push(tilesets[x].image);
@@ -448,8 +448,8 @@
                 } else {
                     images = images.slice(); //so we do not overwrite settings array
                     for (x = 0; x < images.length; x++) {
-                        if (platypus.assets[images[x]]) {
-                            images[x] = platypus.assets[images[x]];
+                        if (platypus.assets[images[x]] && platypus.assets[images[x]].asset) {
+                            images[x] = platypus.assets[images[x]].asset;
                         }
                     }
                 }

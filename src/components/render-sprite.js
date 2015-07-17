@@ -280,9 +280,10 @@ This component is attached to entities that will appear in the game world. It re
                         //check cache and bail if it's available
                         if (ssCache[def.image]) {
                             return ssCache[def.image];
-                        } else if (platypus.game.settings.assets[def.image] && platypus.game.settings.assets[def.image].data && platypus.game.settings.assets[def.image].data.spritesheet) {
+                        } else if (platypus.assets[def.image] && platypus.assets[def.image].data && platypus.assets[def.image].data.spritesheet) {
                             ssCache[def.image] = cache;
-                            srcSS = platypus.game.settings.assets[def.image].data.spritesheet;
+                            srcSS = platypus.assets[def.image].data.spritesheet;
+                            srcSS.images = [platypus.assets[def.image].asset];
                         }
                     }
 
@@ -315,8 +316,8 @@ This component is attached to entities that will appear in the game world. It re
                     // Convert image names into Image resources
                     for (i = 0; i < ss.images.length; i++) {
                         if (typeof ss.images[i] === 'string') {
-                            if (platypus.assets[ss.images[i]]) {
-                                ss.images[i] = platypus.assets[ss.images[i]];
+                            if (platypus.assets[ss.images[i]] && platypus.assets[ss.images[i]].asset) {
+                                ss.images[i] = platypus.assets[ss.images[i]].asset;
 
                                 // Check here whether to scale coordinates in the frame setup section.
                                 if (!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))) {
