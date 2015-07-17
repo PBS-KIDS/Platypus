@@ -10,7 +10,7 @@
  * @class "tiled-loader" Component
  * @uses Component
  */
-/*global console, platformer */
+/*global console, platypus */
 /*jslint bitwise: true, plusplus: true */
 (function () {
     "use strict";
@@ -56,7 +56,7 @@
             return resp;
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'tiled-loader',
 
         properties: {
@@ -187,7 +187,7 @@
 
                 //format level appropriately
                 if (typeof level === 'string') {
-                    level = platformer.game.settings.levels[level];
+                    level = platypus.game.settings.levels[level];
                 }
 
                 for (actionLayer = 0; actionLayer < level.layers.length; actionLayer++) {
@@ -287,8 +287,8 @@
                             tileLayer.data.push(1);
                         }
 
-                        if (platformer.assets[imageLayer.name]) { // Prefer to have name in tiled match image id in game
-                            tileLayer.image = platformer.assets[imageLayer.name];
+                        if (platypus.assets[imageLayer.name]) { // Prefer to have name in tiled match image id in game
+                            tileLayer.image = platypus.assets[imageLayer.name];
                             tileLayer.tileheight = tileLayer.image.height;
                             tileLayer.tilewidth = tileLayer.image.width;
                         } else {
@@ -345,7 +345,7 @@
                         }
 
                         //TODO: a bit of a hack to copy an object instead of overwrite values
-                        tileDefinition = JSON.parse(JSON.stringify(platformer.game.settings.entities[entityKind]));
+                        tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind]));
 
                         importAnimation = {};
                         importCollision = [];
@@ -428,7 +428,7 @@
                             combineRenderLayer.trigger('add-tiles', renderTiles);
                             return combineRenderLayer;
                         } else {
-                            return self.owner.addEntity(new platformer.Entity(tileDefinition, {
+                            return self.owner.addEntity(new platypus.Entity(tileDefinition, {
                                 properties: {
 
                                 }
@@ -438,8 +438,8 @@
 
                 if (images.length === 0) {
                     for (x = 0; x < tilesets.length; x++) {
-                        if (platformer.assets[tilesets[x].name]) { // Prefer to have name in tiled match image id in game
-                            images.push(platformer.assets[tilesets[x].name]);
+                        if (platypus.assets[tilesets[x].name]) { // Prefer to have name in tiled match image id in game
+                            images.push(platypus.assets[tilesets[x].name]);
                         } else {
                             console.warn('Component tiled-loader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
                             images.push(tilesets[x].image);
@@ -448,8 +448,8 @@
                 } else {
                     images = images.slice(); //so we do not overwrite settings array
                     for (x = 0; x < images.length; x++) {
-                        if (platformer.assets[images[x]]) {
-                            images[x] = platformer.assets[images[x]];
+                        if (platypus.assets[images[x]]) {
+                            images[x] = platypus.assets[images[x]];
                         }
                     }
                 }
@@ -661,13 +661,13 @@
                                 properties.width = (entity.width || 0) * this.unitsPerPixel;
                                 properties.height = (entity.height || 0) * this.unitsPerPixel;
 
-                                if (entityType && platformer.game.settings.entities[entityType] && platformer.game.settings.entities[entityType].properties) {
+                                if (entityType && platypus.game.settings.entities[entityType] && platypus.game.settings.entities[entityType].properties) {
                                     if (!properties.width) {
-                                        properties.width = platformer.game.settings.entities[entityType].properties.width || 0;
+                                        properties.width = platypus.game.settings.entities[entityType].properties.width || 0;
                                         widthOffset = fallbackWidth;
                                     }
                                     if (!properties.height) {
-                                        properties.height = platformer.game.settings.entities[entityType].properties.height || 0;
+                                        properties.height = platypus.game.settings.entities[entityType].properties.height || 0;
                                         heightOffset = fallbackHeight;
                                     }
                                 }
@@ -688,7 +688,7 @@
                                     w = (entity.width || fallbackWidth) / 2;
                                     h = (entity.height || fallbackHeight) / 2;
                                     a = ((entity.rotation / 180) % 2) * Math.PI;
-                                    v = new platformer.Vector(w, -h).rotate(a);
+                                    v = new platypus.Vector(w, -h).rotate(a);
                                     properties.rotation = entity.rotation;
                                     properties.x = Math.round((properties.x + v.x - w) * 1000) / 1000;
                                     properties.y = Math.round((properties.y + v.y + h) * 1000) / 1000;
@@ -730,9 +730,9 @@
                                 }
                             }
 
-                            if (platformer.game.settings.entities[entityType].properties) {
-                                properties.scaleX *= this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleX || 1); //this.unitsPerPixel;
-                                properties.scaleY *= this.imagesScale * (platformer.game.settings.entities[entityType].properties.scaleY || 1); //this.unitsPerPixel;
+                            if (platypus.game.settings.entities[entityType].properties) {
+                                properties.scaleX *= this.imagesScale * (platypus.game.settings.entities[entityType].properties.scaleX || 1); //this.unitsPerPixel;
+                                properties.scaleY *= this.imagesScale * (platypus.game.settings.entities[entityType].properties.scaleY || 1); //this.unitsPerPixel;
                             } else {
                                 properties.scaleX *= this.imagesScale;
                                 properties.scaleY *= this.imagesScale;
@@ -742,14 +742,14 @@
                             //Setting the z value. All values are getting added to the layerZ value.
                             if (properties.z) {
                                 properties.z += this.layerZ;
-                            } else if (entityType && platformer.game.settings.entities[entityType] && platformer.game.settings.entities[entityType].properties && platformer.game.settings.entities[entityType].properties.z) {
-                                properties.z = this.layerZ + platformer.game.settings.entities[entityType].properties.z;
+                            } else if (entityType && platypus.game.settings.entities[entityType] && platypus.game.settings.entities[entityType].properties && platypus.game.settings.entities[entityType].properties.z) {
+                                properties.z = this.layerZ + platypus.game.settings.entities[entityType].properties.z;
                             } else {
                                 properties.z = this.layerZ;
                             }
 
                             properties.parent = this.owner;
-                            entity = this.owner.addEntity(new platformer.Entity(platformer.game.settings.entities[entityType], {
+                            entity = this.owner.addEntity(new platypus.Entity(platypus.game.settings.entities[entityType], {
                                 properties: properties
                             }));
                             if (entity) {

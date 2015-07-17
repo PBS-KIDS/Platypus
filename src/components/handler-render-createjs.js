@@ -62,7 +62,7 @@ A component that handles updating rendering for components that are rendering vi
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
 /*global createjs */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -71,7 +71,7 @@ A component that handles updating rendering for components that are rendering vi
         android4 = (uagent.indexOf('android 4.1') > -1) || (uagent.indexOf('android 4.2') > -1) || false, // This is used to detect and fix the duplicate rendering issue on certain native Android browsers.
         dpr      = window.devicePixelRatio || 1;
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
 
         id: "handler-render-createjs",
         
@@ -254,7 +254,7 @@ A component that handles updating rendering for components that are rendering vi
                         
                         this.timeElapsed.name = 'Render-Prep';
                         this.timeElapsed.time = new Date().getTime() - time;
-                        platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                        platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                         time += this.timeElapsed.time;
 
                         this.stage.update(resp);
@@ -270,7 +270,7 @@ A component that handles updating rendering for components that are rendering vi
                         
                         this.timeElapsed.name = 'Render';
                         this.timeElapsed.time = new Date().getTime() - time;
-                        platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                        platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                     }
                 };
             }()),

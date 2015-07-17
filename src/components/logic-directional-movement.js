@@ -33,7 +33,7 @@ This component changes the (x, y) position of an object according to its current
 */
 // Requires: ["mover"]
 /*global console */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -66,7 +66,7 @@ This component changes the (x, y) position of an object according to its current
             }
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-directional-movement',
         
         properties: {
@@ -81,7 +81,7 @@ This component changes the (x, y) position of an object according to its current
             if (!isNaN(this.speed)) {
                 this.speed = [this.speed, 0, 0];
             }
-            this.initialVector = new platformer.Vector(this.speed);
+            this.initialVector = new platypus.Vector(this.speed);
             this.reorient = rotate[this.axis];
             if (!this.reorient) {
                 this.reorient = doNothing;

@@ -30,11 +30,11 @@ This component handles the pressed/released state of a button according to input
       // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-button',
         constructor: function (definition) {
             this.state = this.owner.state;

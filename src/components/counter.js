@@ -20,11 +20,11 @@ A simple component that keeps count of something and sends messages each time th
       "type": "counter"
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'counter',
         constructor: function (definition) {
             this.count = 0;

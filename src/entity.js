@@ -1,5 +1,5 @@
 /**
- * The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the Platformer engine.
+ * The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.
  * 
  * ## JSON Definition Example
      {
@@ -67,9 +67,9 @@
 /*
  * Requires: ["messenger.js"]
  */
-/*global console, platformer */
+/*global console, platypus */
 /*jslint plusplus:true */
-platformer.Entity = (function () {
+platypus.Entity = (function () {
     "use strict";
     
     var entityIds = {},
@@ -84,7 +84,7 @@ platformer.Entity = (function () {
                 instanceProperties   = instance.properties || {};
 
             // Set properties of messenger on this entity.
-            platformer.Messenger.call(self);
+            platypus.Messenger.call(self);
 
             self.components  = [];
             self.type = def.id || 'none';
@@ -111,8 +111,8 @@ platformer.Entity = (function () {
 
             for (i = 0; i < componentDefinitions.length; i++) {
                 componentDefinition = componentDefinitions[i];
-                if (platformer.components[componentDefinition.type]) {
-                    self.addComponent(new platformer.components[componentDefinition.type](self, componentDefinition));
+                if (platypus.components[componentDefinition.type]) {
+                    self.addComponent(new platypus.components[componentDefinition.type](self, componentDefinition));
                 } else {
                     console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
                 }
@@ -120,7 +120,7 @@ platformer.Entity = (function () {
 
             self.triggerEvent('load');
         },
-        proto = entity.prototype = new platformer.Messenger();
+        proto = entity.prototype = new platypus.Messenger();
     
 /**
  * Returns a string describing the entity.

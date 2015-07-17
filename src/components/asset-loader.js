@@ -48,18 +48,17 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 [link1]: http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html
 
 */
-/*global createjs */
-/*global platformer */
+/*global createjs, platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'asset-loader',
 
         constructor: function (definition) {
             this.useXHR = (definition.useXHR !== false);
 
-            this.assets = definition.assets || platformer.game.settings.assets;
+            this.assets = definition.assets || platypus.game.settings.assets;
 
             this.crossOrigin = definition.crossOrigin || "";
 
@@ -86,12 +85,12 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                 var i         = '',
                     self      = this,
                     checkPush = function (asset, list) {
-                        var i     = 0,
+                        var key   = '',
                             found = false;
 
-                        for (i in list) {
-                            if (list.hasOwnProperty(i)) {
-                                if (list[i].id === asset.id) {
+                        for (key in list) {
+                            if (list.hasOwnProperty(key)) {
+                                if (list[key].id === asset.id) {
                                     found = true;
                                     break;
                                 }
@@ -103,9 +102,9 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                     },
                     loader     = new createjs.LoadQueue(this.useXHR, "", this.crossOrigin),
                     loadAssets = [],
-                    optimizeImages = platformer.game.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
-                    scale = platformer.game.settings.scale = optimizeImages ? Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages) : 1,
-    //                scale = platformer.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
+                    optimizeImages = platypus.game.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
+                    scale = platypus.game.settings.scale = optimizeImages ? Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages) : 1,
+    //                scale = platypus.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
                     scaleImage = function (img, columns, rows) {
                         var r          = rows    || 1,
                             c          = columns || 1,
@@ -136,7 +135,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                             }
                         }
 
-                        platformer.assets[event.item.id] = result;
+                        platypus.assets[event.item.id] = result;
 
                         self.message.progress += 1;
                         self.message.fraction = self.message.progress / self.message.total;
@@ -144,21 +143,6 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                             self.message.complete = true;
                         }
                         self.owner.trigger('fileload', self.message);
-                    },
-                    forceTypeForManifest = function (asset) {
-                        var ext      = '',
-                            newSrc   = null,
-                            manifest = platformer.game.settings.manifest;
-
-                        if (manifest) {
-                            newSrc = asset.src.split('.');
-                            ext    = newSrc[newSrc.length - 1];
-                            if (manifest[ext] && (manifest[ext] !== ext)) {
-                                newSrc[newSrc.length - 1] = manifest[ext];
-                                asset.src = newSrc.join('.');
-                            }
-                        }
-                        return asset;
                     };
 
                 loader.addEventListener('fileload', fileloadfunc);
@@ -178,7 +162,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 
                 for (i in this.assets) {
                     if (this.assets.hasOwnProperty(i) && (typeof this.assets[i].src === 'string')) {
-                        checkPush(forceTypeForManifest(this.assets[i]), loadAssets);
+                        checkPush(this.assets[i], loadAssets);
                     }
                 }
 
@@ -187,7 +171,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                 }
                 self.message.total = loadAssets.length;
                 loader.loadManifest(loadAssets);
-                platformer.assets = [];
+                platypus.assets = [];
             },
 
             "fileload": function (resp) {

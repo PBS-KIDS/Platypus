@@ -20,7 +20,7 @@
  * @class "orientation" Component
  * @uses Component
  */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -95,7 +95,7 @@
             return m;
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'orientation',
         publicProperties: {
             /**
@@ -145,9 +145,9 @@
         },
         constructor: (function () {
             var setupOrientation = function (self, orientation) {
-                var normal = new platformer.Vector([0, 0, 1]),
-                    origin = new platformer.Vector([1, 0, 0]),
-                    vector = new platformer.Vector([1, 0, 0]),
+                var normal = new platypus.Vector([0, 0, 1]),
+                    origin = new platypus.Vector([1, 0, 0]),
+                    vector = new platypus.Vector([1, 0, 0]),
                     owner  = self.owner,
                     matrix = [[1, 0, 0],
                               [0, 1, 0],
@@ -309,7 +309,7 @@
                         vector.multiply(this.matrix);
                     }
                     this.vectors.push(vector);
-                    this.inverses.push(new platformer.Vector());
+                    this.inverses.push(new platypus.Vector());
                 }
             },
             

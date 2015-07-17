@@ -4,7 +4,7 @@
  * @class "handler-logic" Component
  * @uses Component
  **/
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -23,7 +23,7 @@
         return changed;
     };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: "handler-logic",
         publicProperties: {
             /**
@@ -243,7 +243,7 @@
                         
                         this.timeElapsed.name = 'Logic';
                         this.timeElapsed.time = new Date().getTime() - time;
-                        platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                        platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                         time += this.timeElapsed.time;
                         
                         /**
@@ -256,7 +256,7 @@
                         if (this.owner.triggerEvent('check-collision-group', this.message)) { // If a collision group is attached, make sure collision is processed on each logic tick.
                             this.timeElapsed.name = 'Collision';
                             this.timeElapsed.time = new Date().getTime() - time;
-                            platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                            platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                             time += this.timeElapsed.time;
 
                             /**
@@ -283,7 +283,7 @@
 
                             this.timeElapsed.name = 'Collision Logic';
                             this.timeElapsed.time = new Date().getTime() - time;
-                            platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                            platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                             time += this.timeElapsed.time;
                         } else {
                             for (j = this.activeEntities.length - 1; j > -1; j--) {
@@ -299,7 +299,7 @@
                 }
                 
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
             }
         }
     });

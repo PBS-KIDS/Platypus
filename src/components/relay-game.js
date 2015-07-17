@@ -27,17 +27,17 @@ This component listens for specified local entity messages and re-broadcasts the
       }
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
     var broadcast = function (event) {
         return function (value, debug) {
-            platformer.game.currentScene.trigger(event, value, debug);
+            platypus.game.currentScene.trigger(event, value, debug);
         };
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'relay-game',
         
         constructor: function (definition) {

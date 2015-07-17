@@ -55,11 +55,11 @@ This component can request that the camera focus on this entity.
     }
 
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'camera-follow-me',
         
         constructor: function (definition) {

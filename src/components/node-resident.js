@@ -53,7 +53,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
       // Optional. Determines whether the entity's orientation is updated by movement across the node-map. Default is false.
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -136,7 +136,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 		return true;
 	};
 	
-	return platformer.createComponentClass({
+	return platypus.createComponentClass({
 		
 		id: 'node-resident',
 		

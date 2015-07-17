@@ -20,12 +20,12 @@ This component will destroy the entity once an animation has finished. This is u
       //This or animationIds Required. Array of Strings identifying the animations that should destroy this entity on their completion.
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'render-destroy-me',
 
         constructor: function (definition) {

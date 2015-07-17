@@ -4,11 +4,11 @@
  * @class "xhr" Component
  * @uses Component
  */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'xhr',
         
         properties: {

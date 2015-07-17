@@ -30,7 +30,7 @@ A component that enables an entity to be pushed.
     }
 */
 
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -39,7 +39,7 @@ A component that enables an entity to be pushed.
         return (direction / Math.abs(direction)) * magnitude;
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-pushable',
         constructor: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;

@@ -4,11 +4,11 @@
  * @class "logic-destroy-me" Component
  * @uses Component
  */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-destroy-me',
         
         properties: {

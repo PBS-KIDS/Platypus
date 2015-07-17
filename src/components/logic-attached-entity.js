@@ -1,11 +1,11 @@
 /**
 //TODO: This should probably be merged with `logic-shield` since it performs a subset of the `logic-shield` behaviors. - DDD
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-attached-entity',
         constructor: function (definition) {
             var randomizedXRange = this.owner.randomizedXRange || definition.randomizedXRange || 0,
@@ -28,7 +28,7 @@
                 this.entityProperties.y = this.owner.y + this.offsetY;
                 this.entityProperties.z = this.owner.z + 1;
                 this.entityProperties.orientation = this.owner.orientation;
-                this.attachedEntity = this.owner.parent.addEntity(new platformer.Entity(platformer.game.settings.entities[this.entityType], {
+                this.attachedEntity = this.owner.parent.addEntity(new platypus.Entity(platypus.game.settings.entities[this.entityType], {
                     properties: this.entityProperties
                 }));
                 this.owner.triggerEvent('entity-created', this.attachedEntity);

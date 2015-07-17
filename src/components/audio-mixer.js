@@ -77,16 +77,16 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 [link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
 */
 /*global createjs */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'audio-mixer',
             
         constructor: function (definition) {
-            if (!platformer.game.audioMixer) {
-                platformer.game.audioMixer = {
+            if (!platypus.game.audioMixer) {
+                platypus.game.audioMixer = {
                     channels: {},
                     paused: false,
                     getChannel: function (id) {
@@ -105,7 +105,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 };
             }
             
-            this.mixer = platformer.game.audioMixer;
+            this.mixer = platypus.game.audioMixer;
             this.owner.state.muted  = createjs.Sound.getMute();
             this.owner.state.paused = this.mixer.paused;
         },

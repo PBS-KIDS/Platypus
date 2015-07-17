@@ -34,28 +34,28 @@ This component works with `collision-basic` to cause entities to bounce away on 
 
 Requires: ["../vector.js"]
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-rebounder',
         
         constructor: function (definition) {
-            platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
+            platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
             this.owner.mass = this.owner.mass || definition.mass || 1;
             this.elasticity = definition.elasticity || 0.8;
             
-            this.v = new platformer.Vector(0, 0, 0);
-            this.incidentVector = new platformer.Vector(0, 0, 0);
+            this.v = new platypus.Vector(0, 0, 0);
+            this.incidentVector = new platypus.Vector(0, 0, 0);
             
             this.staticCollisionOccurred = false;
             this.nonStaticCollisionOccurred = false;
             
             this.hitThisTick = [];
-            this.otherV = new platformer.Vector(0, 0, 0);
+            this.otherV = new platypus.Vector(0, 0, 0);
             this.otherVelocityData = [];
         },
 
@@ -123,7 +123,7 @@ Requires: ["../vector.js"]
                 
             },
             "share-velocity": function (other) {
-                this.otherVelocityData.push({entity: other, velocity: new platformer.Vector(other.velocity)});
+                this.otherVelocityData.push({entity: other, velocity: new platypus.Vector(other.velocity)});
             }
         },
         

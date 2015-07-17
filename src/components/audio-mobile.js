@@ -101,24 +101,24 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 */
 /*global console */
 /*global createjs */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'audio-mobile',
         
         constructor: function (definition) {
             this.audioId = definition.audioId;
-            this.iOSaudioAPIfix = platformer.game.settings.supports.iOS && platformer.game.settings.supports.audioAPI;
+            this.iOSaudioAPIfix = platypus.supports.iOS && platypus.supports.audioAPI;
         },
 
         events: {// These are messages that this component listens for
             "load": function () {
-                if (platformer.game.settings.supports.mobile && !this.iOSaudioAPIfix) {
+                if (platypus.supports.mobile && !this.iOSaudioAPIfix) {
                     this.owner.state.mobile = true;
-                    if ((platformer.game.settings.supports.android || platformer.game.settings.supports.iOS) && !platformer.game.settings.supports.audioAPI) {
+                    if ((platypus.supports.android || platypus.supports.iOS) && !platypus.supports.audioAPI) {
                         this.owner.triggerEvent('low-quality-audio');
                     }
                 } else {
@@ -126,12 +126,12 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
                 }
             },
             "activate-audio": function () {
-                var audio    = platformer.game.settings.assets[this.audioId],
+                var audio    = platypus.game.settings.assets[this.audioId],
                     instance = null;
                 
                 if (!this.iOSaudioAPIfix) {
-                    if (audio && platformer.game.settings.supports.iOS && !platformer.game.settings.supports.audioAPI) {
-                        delete platformer.game.settings.assets[this.audioId];
+                    if (audio && platypus.supports.iOS && !platypus.supports.audioAPI) {
+                        delete platypus.game.settings.assets[this.audioId];
                         
                         audio.data.channels = 1;
                         audio.src = audio.src.replace('ogg', 'm4a');

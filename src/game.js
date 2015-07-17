@@ -1,5 +1,5 @@
 /**
- * This class is used to create the `platformer.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
+ * This class is used to create the `platypus.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
  * 
  * 
  * @class Game
@@ -8,138 +8,230 @@
  * @param {Function} onFinishedLoading An optional function to run once the game has begun.
  * @return {Game} Returns the instantiated game. 
  */
-/*global console, createjs, platformer */
+/*global console, createjs, platypus */
 /*jslint plusplus:true */
-platformer.Game = (function () {
+platypus.Game = (function () {
     "use strict";
     
-    var bindEvent = function (eventId, callback) {
+    var getJSON = function (path, callback) {
+            var xhr = new XMLHttpRequest();
+            
+            xhr.open('GET', path, true);
+            xhr.responseType = 'text';
+            xhr.onload = function () {
+                var obj = null;
+                
+                if (xhr.status === 200) {
+                    try {
+                        obj = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        console.warn('Error parsing "' + path + '": ' + e.message);
+                    }
+                } else {
+                    console.warn('Error opening "' + path + '": ' + xhr.description);
+                }
+                
+                callback(obj);
+            }
+            xhr.send();
+        },
+        assign = function (obj, i, callback) {
+            loadJSONLinks(obj[i], function (result) {
+                obj[i] = result;
+                callback(result);
+            });
+        },
+        loadJSONLinks = function (obj, callback) {
+            var i = 0,
+                key = '',
+                callbacks = 0,
+                resolve = function (result) {
+                    callbacks -= 1;
+                    if (!callbacks) {
+                        callback(obj);
+                    }
+                };
+            
+            if (!obj) {
+                
+            } else if (Array.isArray(obj)) {
+                callbacks = obj.length;
+                if (callbacks) {
+                    for (i = 0; i < obj.length; i++) {
+                        assign(obj, i, resolve);
+                    }
+                } else {
+                    callback(obj);
+                }
+                return;
+            } else if (typeof obj === 'object') {
+                if (obj.src && (obj.src.length > 5) && (obj.src.substring(obj.src.length - 5).toLowerCase() === '.json')) {
+                    loadJSONLinks(obj.src, function (result) {
+                        if (obj.src !== result) {
+                            obj = result;
+                        }
+                        callback(obj);
+                    });
+                } else {
+                    for (key in obj) {
+                        callbacks += 1;
+                    }
+                    if (callbacks) {
+                        for (key in obj) {
+                            assign(obj, key, resolve);
+                        }
+                    } else {
+                        callback(obj);
+                    }
+                }
+                return;
+            } else if ((typeof obj === 'string') && (obj.length > 5) && (obj.substring(obj.length - 5).toLowerCase() === '.json')) {
+                getJSON(obj, function (result) {
+                    if (typeof result === 'object') {
+                        loadJSONLinks(result, callback);
+                    } else {
+                        callback(result);
+                    }
+                });
+                return;
+            }
+            
+            callback(obj);
+        },
+        bindEvent = function (eventId, callback) {
             return function (event) {
                 callback(eventId, event);
             };
         },
-        game      = function (definition, onFinishedLoading) {
-            var key = '',
-                self = this,
-                callback = null,
-                innerRootElement = document.createElement('div'),
-                outerRootElement = null;
+        game = function (definition, onFinishedLoading) {
+            var self = this;
 
-            platformer.game = this; //Make this instance the only Game instance.
-
-            this.currentScene = null;
-            this.loaded    = null;
-            this.settings = definition;
-
-            // platform-specific settings should apply if not explicitly changed.
-            definition.aspects    = definition.aspects    || platformer.settings.aspects;
-            definition.supports   = definition.supports   || platformer.settings.supports;
-            definition.classes    = definition.classes    || platformer.settings.classes;
-            definition.components = definition.components || platformer.settings.components;
-
-            if (document.getElementById(definition.global.rootElement || "root")) {
-                outerRootElement = document.getElementById(definition.global.rootElement || "root");
-            } else {
-                outerRootElement = document.createElement('div');
-                outerRootElement.id = definition.global.rootElement || "root";
-                document.getElementsByTagName('body')[0].appendChild(outerRootElement);
+            if (!definition) {
+                console.warn('No game definition is supplied. Game not created.');
+                return null;
             }
-            for (key in definition.supports) {
-                if (definition.supports.hasOwnProperty(key) && definition.supports[key]) {
-                    outerRootElement.className += ' supports-' + key;
+            
+            loadJSONLinks(definition, function (result) {
+                var key = '',
+                    callback = null,
+                    innerRootElement = document.createElement('div'),
+                    outerRootElement = null;
+                    
+                definition = result;
+                console.log("Game config loaded.", definition);
+                
+                platypus.game = self; //Make this instance the only Game instance.
+                self.currentScene = null;
+                self.loaded    = null;
+                self.settings = definition;
+    
+                if (document.getElementById(definition.global.rootElement || "root")) {
+                    outerRootElement = document.getElementById(definition.global.rootElement || "root");
+                } else {
+                    outerRootElement = document.createElement('div');
+                    outerRootElement.id = definition.global.rootElement || "root";
+                    document.getElementsByTagName('body')[0].appendChild(outerRootElement);
                 }
-            }
-
-            innerRootElement.id = 'inner-' + outerRootElement.id;
-            outerRootElement.appendChild(innerRootElement);
-            this.rootElement = innerRootElement;
-            this.containerElement = outerRootElement;
-
-            this.loadScene(definition.global.initialScene);
-
-            // Send the following events along to the scene to handle as necessary:
-            if (definition.debug) { //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-                callback = function (eventId, event) {
-                    self.currentScene.trigger(eventId, event);
-                };
-            } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
-                callback = function (eventId, event) {
-                    self.currentScene.trigger(eventId, event);
-                    event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-                };
-            }
-
-            this.bindings = [];
-            this.addEventListener(window, 'keydown', callback);
-            this.addEventListener(window, 'keyup',   callback);
-
-            // If aspect ratio of game area should be maintained on resizing, create new callback to handle it
-            if (definition.global.aspectRatio) {
-
-                callback = function (eventId, event) {
-                    var element   = innerRootElement,
-                        ratio     = definition.global.aspectRatio,
-                        newW      = outerRootElement.offsetWidth,
-                        newH      = outerRootElement.offsetHeight,
-                        bodyRatio = 1;
-                    
-                    if (definition.global.maxWidth && (definition.global.maxWidth < newW)) {
-                        newW = definition.global.maxWidth;
+                for (key in platypus.supports) {
+                    if (platypus.supports.hasOwnProperty(key) && platypus.supports[key]) {
+                        outerRootElement.className += ' supports-' + key;
                     }
-                    
-                    bodyRatio = newW / newH;
-                    if (bodyRatio > ratio) {  //Width is too wide
-                        element.style.height = newH + 'px';
-                        newW = newH * ratio;
-                        element.style.width = newW + 'px';
-                    } else {  //Height is too tall
-                        element.style.width = newW + 'px';
-                        newH = newW / ratio;
-                        element.style.height = newH + 'px';
-                    }
-                    if (definition.global.resizeFont) {
-                        outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
-                    }
-                    element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
-                    element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
-                    element.style.top = '50%';
-                    element.style.left = '50%';
-                    self.currentScene.trigger(eventId, event);
+                }
+    
+                innerRootElement.id = 'inner-' + outerRootElement.id;
+                outerRootElement.appendChild(innerRootElement);
+                self.rootElement = innerRootElement;
+                self.containerElement = outerRootElement;
+    
+                self.loadScene(definition.global.initialScene);
+    
+                // Send the following events along to the scene to handle as necessary:
+                if (definition.debug) { //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
+                    callback = function (eventId, event) {
+                        self.currentScene.trigger(eventId, event);
+                    };
+                } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
+                    callback = function (eventId, event) {
+                        self.currentScene.trigger(eventId, event);
+                        event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+                    };
+                }
+    
+                self.bindings = [];
+                self.addEventListener(window, 'keydown', callback);
+                self.addEventListener(window, 'keyup',   callback);
+    
+                // If aspect ratio of game area should be maintained on resizing, create new callback to handle it
+                if (definition.global.aspectRatio) {
+    
+                    callback = function (eventId, event) {
+                        var element   = innerRootElement,
+                            ratio     = definition.global.aspectRatio,
+                            newW      = outerRootElement.offsetWidth,
+                            newH      = outerRootElement.offsetHeight,
+                            bodyRatio = 1;
+                        
+                        if (definition.global.maxWidth && (definition.global.maxWidth < newW)) {
+                            newW = definition.global.maxWidth;
+                        }
+                        
+                        bodyRatio = newW / newH;
+                        if (bodyRatio > ratio) {  //Width is too wide
+                            element.style.height = newH + 'px';
+                            newW = newH * ratio;
+                            element.style.width = newW + 'px';
+                        } else {  //Height is too tall
+                            element.style.width = newW + 'px';
+                            newH = newW / ratio;
+                            element.style.height = newH + 'px';
+                        }
+                        if (definition.global.resizeFont) {
+                            outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
+                        }
+                        element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
+                        element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
+                        element.style.top = '50%';
+                        element.style.left = '50%';
+                        self.currentScene.trigger(eventId, event);
+                    };
+                    callback('resize');
+                } else if (definition.global.resizeFont) {
+                    callback = function (eventId, event) {
+                        outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
+                        self.currentScene.trigger(eventId, event);
+                    };
+                    callback('resize');
+                }
+                self.addEventListener(window, 'orientationchange', callback);
+                self.addEventListener(window, 'resize',            callback);
+    
+                if (onFinishedLoading) {
+                    onFinishedLoading(self);
+                }
+    
+                createjs.Ticker.timingMode = 'raf';
+                createjs.Ticker.setFPS(definition.global.fps || 60);
+                self.tickWrapper = function (e) {
+                    self.tick(e);
                 };
-                callback('resize');
-            } else if (definition.global.resizeFont) {
-                callback = function (eventId, event) {
-                    outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
-                    self.currentScene.trigger(eventId, event);
-                };
-                callback('resize');
-            }
-            this.addEventListener(window, 'orientationchange', callback);
-            this.addEventListener(window, 'resize',            callback);
+                createjs.Ticker.addEventListener("tick", self.tickWrapper);
+    
+                //Add entity-finder for debugging
+                if (window) {
+                    window.getEntityById = function (id) {
+                        return self.getEntityById(id);
+                    };
+    
+                    window.getEntitiesByType = function (type) {
+                        return self.getEntitiesByType(type);
+                    };
+                }
 
-            if (onFinishedLoading) {
-                onFinishedLoading(this);
-            }
-
-            createjs.Ticker.timingMode = 'raf';
-            createjs.Ticker.setFPS(definition.global.fps || 60);
-            this.tickWrapper = function (e) {
-                self.tick(e);
-            };
-            createjs.Ticker.addEventListener("tick", this.tickWrapper);
-
-            //Add entity-finder for debugging
-            if (window) {
-                window.getEntityById = function (id) {
-                    return self.getEntityById(id);
-                };
-
-                window.getEntitiesByType = function (type) {
-                    return self.getEntitiesByType(type);
-                };
-            }
+            });
         },
         proto = game.prototype;
+        
+    
     
 /**
  * Called by the CreateJS ticker. This calls tick on the scene.
@@ -257,7 +349,7 @@ platformer.Game = (function () {
         }
         
         this.loaded = sceneId;
-        this.loadedScene = new platformer.Scene(scene, this.rootElement);
+        this.loadedScene = new platypus.Scene(scene, this.rootElement);
 
         console.log('Scene loaded: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
         this.loadedScene.trigger('scene-loaded', persistantData);

@@ -6,7 +6,7 @@
  */
  
 // Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-data-container.js"]
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -32,7 +32,7 @@
             hitType: null,
             myType: null
         },
-        entityCollisionDataContainer = new platformer.CollisionDataContainer(),
+        entityCollisionDataContainer = new platypus.CollisionDataContainer(),
         isAABBCollision = function (boxX, boxY) {
             if ((boxX.left       >=  boxY.right)  ||
                     (boxX.right  <=  boxY.left)   ||
@@ -87,7 +87,7 @@
             return false;
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'handler-collision',
         
         constructor: function (definition) {
@@ -101,14 +101,14 @@
             this.nonColliders = [];
             
             this.terrain = undefined;
-            this.aabb     = new platformer.AABB(this.owner.x, this.owner.y);
-            this.prevAABB = new platformer.AABB(this.owner.x, this.owner.y);
+            this.aabb     = new platypus.AABB(this.owner.x, this.owner.y);
+            this.prevAABB = new platypus.AABB(this.owner.x, this.owner.y);
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
             this.updateLiveList = true;
-            this.cameraLogicAABB = new platformer.AABB(0, 0);
-            this.cameraCollisionAABB = new platformer.AABB(0, 0);
+            this.cameraLogicAABB = new platypus.AABB(0, 0);
+            this.cameraCollisionAABB = new platypus.AABB(0, 0);
             
             this.timeElapsed = {
                 name: 'Col',
@@ -178,42 +178,42 @@
 
                 this.timeElapsed.name = 'Col-Cam';
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                 time += this.timeElapsed.time;
 
                 this.prepareCollisions(resp);
 
                 this.timeElapsed.name = 'Col-Prep';
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                 time += this.timeElapsed.time;
 
                 this.checkGroupCollisions();
 
                 this.timeElapsed.name = 'Col-Group';
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                 time += this.timeElapsed.time;
 
                 this.checkSolidCollisions();
 
                 this.timeElapsed.name = 'Col-Solid';
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                 time += this.timeElapsed.time;
 
                 this.resolveNonCollisions(resp);
 
                 this.timeElapsed.name = 'Col-None';
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                 time += this.timeElapsed.time;
 
                 this.checkSoftCollisions(resp);
 
                 this.timeElapsed.name = 'Col-Soft';
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                 time += this.timeElapsed.time;
             }
         },
@@ -398,7 +398,7 @@
                 var x      = 0,
                     entity = null,
                     xy     = {
-                        position: new platformer.Vector(),
+                        position: new platypus.Vector(),
                         relative: false
                     };
                 
@@ -445,7 +445,7 @@
                     var x           = 0,
                         i           = 0,
                         entities    = this.groupsLive,
-                        fmi         = new platformer.Vector(),
+                        fmi         = new platypus.Vector(),
                         messageData = null;
                     
                     for (x = entities.length - 1; x > -1; x--) {
@@ -498,7 +498,7 @@
                         i           = 0,
                         messageData = null,
                         entities    = this.solidEntitiesLive,
-                        fmi         = new platformer.Vector();
+                        fmi         = new platypus.Vector();
                     
                     for (x = entities.length - 1; x > -1; x--) {
                         entityCollisionDataContainer.reset();
@@ -581,7 +581,7 @@
             },
             
             processCollisionStep: (function () {
-                var sweepAABB     = new platformer.AABB(),
+                var sweepAABB     = new platypus.AABB(),
                     includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
                         var i         = 0,
                             otherAABB = otherEntity.getAABB(otherCollisionType);
@@ -678,7 +678,7 @@
             }()),
             
             resolveCollisionPosition: (function () {
-                var collisionData = new platformer.CollisionData();
+                var collisionData = new platypus.CollisionData();
                 
                 return function (ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY) {
                     var j = 0;
@@ -729,7 +729,7 @@
             }()),
             
             findMinAxisMovement: (function () {
-                var shapeCollisionData = new platformer.CollisionData();
+                var shapeCollisionData = new platypus.CollisionData();
                 
                 return function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
                     //Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
@@ -778,7 +778,7 @@
                         collisionData.vector = vector.copy();
                     },
                     findAxisCollisionPosition = (function () {
-                        var v = new platformer.Vector(),
+                        var v = new platypus.Vector(),
                             returnInfo = {
                                 position: 0,
                                 contactVector: v

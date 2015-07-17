@@ -25,9 +25,9 @@
  *     
 Requires: ["entity.js"]
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
-platformer.Scene = (function () {
+platypus.Scene = (function () {
     "use strict";
     
     var scene = function (definition, rootElement) {
@@ -57,7 +57,7 @@ platformer.Scene = (function () {
                 }
 
                 if (layerDefinition.type) { // this layer should be loaded from an entity definition rather than this instance
-                    layerDefinition = platformer.game.settings.entities[layerDefinition.type];
+                    layerDefinition = platypus.game.settings.entities[layerDefinition.type];
                 }
 
                 supportedLayer = true;
@@ -65,21 +65,21 @@ platformer.Scene = (function () {
                     if (layerDefinition.filter.includes) {
                         supportedLayer = false;
                         for (key in layerDefinition.filter.includes) {
-                            if (layerDefinition.filter.includes.hasOwnProperty(key) && platformer.game.settings.supports[layerDefinition.filter.includes[key]]) {
+                            if (layerDefinition.filter.includes.hasOwnProperty(key) && platypus.supports[layerDefinition.filter.includes[key]]) {
                                 supportedLayer = true;
                             }
                         }
                     }
                     if (layerDefinition.filter.excludes) {
                         for (key in layerDefinition.filter.excludes) {
-                            if (layerDefinition.filter.excludes.hasOwnProperty(key) && platformer.game.settings.supports[layerDefinition.filter.excludes[key]]) {
+                            if (layerDefinition.filter.excludes.hasOwnProperty(key) && platypus.supports[layerDefinition.filter.excludes[key]]) {
                                 supportedLayer = false;
                             }
                         }
                     }
                 }
                 if (supportedLayer) {
-                    this.layers.push(new platformer.Entity(layerDefinition, {
+                    this.layers.push(new platypus.Entity(layerDefinition, {
                         properties: properties
                     }));
                 }

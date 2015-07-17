@@ -33,7 +33,7 @@ This component changes the (x, y) position of an object according to its current
       // Optional: Unit in radian that the angle should change per millisecond.
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
@@ -47,7 +47,7 @@ This component changes the (x, y) position of an object according to its current
             return m * sin(a);
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-rotational-movement',
         constructor: function (definition) {
             this.speed = definition.speed || 0.3;

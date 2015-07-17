@@ -24,11 +24,11 @@ This component serves as a switch in the game world, typically tied to collision
       // Optional. Whether a pressed switch should stay pressed once collision messages cease. Defaults to `false`.
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'logic-switch',
         

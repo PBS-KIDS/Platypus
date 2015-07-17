@@ -31,12 +31,12 @@ This component spawns new entities within a given area at set intervals.
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'logic-region-spawner',
         
@@ -83,7 +83,7 @@ This component spawns new entities within a given area at set intervals.
                 }
             }
             
-            this.entityClass = platformer.game.settings.entities[definition.spawn];
+            this.entityClass = platypus.game.settings.entities[definition.spawn];
             
             this.interval = this.owner.interval || definition.interval || 1000;
             this.time = 0;
@@ -115,7 +115,7 @@ This component spawns new entities within a given area at set intervals.
                         this.spawnPosition.y = this.owner.y - (this.owner.regY || 0) + (Math.random() * this.owner.height);
                     }
 
-                    this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.spawnProperties)));
+                    this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new platypus.Entity(this.entityClass, this.spawnProperties)));
                 }
             }
         }

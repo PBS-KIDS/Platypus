@@ -4,13 +4,13 @@
  * @class "ai-chaser" Component
  * @uses Component
  */
-/*global console, platformer */
+/*global console, platypus */
 (function () {
     "use strict";
     
-    var tempVect = new platformer.Vector();
+    var tempVect = new platypus.Vector();
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'ai-chaser',
         
@@ -47,7 +47,7 @@
         
         constructor: function (definition) {
             this.target = this.owner.target || null;
-            this.offset = new platformer.Vector(0, 0);
+            this.offset = new platypus.Vector(0, 0);
         },
 
         events: {// These are messages that this component listens for

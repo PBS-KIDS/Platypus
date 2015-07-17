@@ -184,7 +184,7 @@ This component is attached to entities that will appear in the game world. It re
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
 */
-/*global console, createjs, platformer */
+/*global console, createjs, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -250,7 +250,7 @@ This component is attached to entities that will appear in the game world. It re
             };
         }());
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'render-sprite',
         
@@ -280,9 +280,9 @@ This component is attached to entities that will appear in the game world. It re
                         //check cache and bail if it's available
                         if (ssCache[def.image]) {
                             return ssCache[def.image];
-                        } else if (platformer.game.settings.assets[def.image] && platformer.game.settings.assets[def.image].data && platformer.game.settings.assets[def.image].data.spritesheet) {
+                        } else if (platypus.game.settings.assets[def.image] && platypus.game.settings.assets[def.image].data && platypus.game.settings.assets[def.image].data.spritesheet) {
                             ssCache[def.image] = cache;
-                            srcSS = platformer.game.settings.assets[def.image].data.spritesheet;
+                            srcSS = platypus.game.settings.assets[def.image].data.spritesheet;
                         }
                     }
 
@@ -315,15 +315,15 @@ This component is attached to entities that will appear in the game world. It re
                     // Convert image names into Image resources
                     for (i = 0; i < ss.images.length; i++) {
                         if (typeof ss.images[i] === 'string') {
-                            if (platformer.assets[ss.images[i]]) {
-                                ss.images[i] = platformer.assets[ss.images[i]];
+                            if (platypus.assets[ss.images[i]]) {
+                                ss.images[i] = platypus.assets[ss.images[i]];
 
                                 // Check here whether to scale coordinates in the frame setup section.
                                 if (!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))) {
                                     scaled = true;
                                 }
                             } else {
-                                if (platformer.settings.supports.iOS) {
+                                if (platypus.supports.iOS) {
                                     console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
                                 } else {
                                     console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset.');

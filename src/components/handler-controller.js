@@ -33,7 +33,7 @@ This component handles capturing and relaying input information to the entities 
       "type": "handler-controller",
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -61,7 +61,7 @@ This component handles capturing and relaying input information to the entities 
                 }
             };
         },
-        keyMap = { //Note: if this list is changed, be sure to update https://git.pbs.org/html5-platformer-engine/pages/Handler-Controller-Key-List
+        keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
             kc0:   'unknown',
             kc8:   'backspace',
             kc9:   'tab',
@@ -162,7 +162,7 @@ This component handles capturing and relaying input information to the entities 
             kc222: 'quote'
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'handler-controller',
         constructor: function (definition) {
             this.entities = [];
@@ -197,7 +197,7 @@ This component handles capturing and relaying input information to the entities 
                 }
                 
                 this.timeElapsed.time = new Date().getTime() - time;
-                platformer.game.currentScene.trigger('time-elapsed', this.timeElapsed);
+                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
             },
             "child-entity-added": function (entity) {
                 this.updateEntity(entity);

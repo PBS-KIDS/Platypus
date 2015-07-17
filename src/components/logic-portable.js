@@ -29,11 +29,11 @@ This component allows this entity to be carried by other entities with which it 
       // This is an object specifying the directions that this portable entity can be carried on. Default is {down:true}, but "up", "down", "left", and/or "right" can be specified as object properties set to `true`.
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-portable',
         constructor: function (definition) {
             this.portableDirections = definition.portableDirections || {

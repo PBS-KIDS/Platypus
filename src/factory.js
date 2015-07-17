@@ -3,7 +3,7 @@
  * 
  * To create an extended component class, use the following syntax:
  * 
- *      platformer.createComponentClass(componentDefinition, prototype);
+ *      platypus.createComponentClass(componentDefinition, prototype);
  * 
  *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
  *  * `prototype` is an optional prototype that this component extends.
@@ -12,7 +12,7 @@
  * @class Component
  * @static
  */
-/*global console, platformer */
+/*global console, platypus */
 /*jslint nomen:true, plusplus:true */
 (function () {
     "use strict";
@@ -29,9 +29,9 @@
             });
         };
         
-    platformer.components = {};
+    platypus.components = {};
     
-    platformer.createComponentClass = function (componentDefinition, Prototype) {
+    platypus.createComponentClass = function (componentDefinition, Prototype) {
         var component = function (owner, definition) {
                 var prop  = '',
                     func  = '',
@@ -278,6 +278,6 @@
             delete this.publicMethods[name];
         };
 
-        platformer.components[componentDefinition.id] = component;
+        platypus.components[componentDefinition.id] = component;
     };
 }());

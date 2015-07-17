@@ -30,7 +30,7 @@ This component listens for specified local entity messages and re-broadcasts the
       }
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
@@ -42,7 +42,7 @@ This component listens for specified local entity messages and re-broadcasts the
         };
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'relay-parent',
         
         constructor: function (definition) {

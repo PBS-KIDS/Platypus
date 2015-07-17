@@ -7,9 +7,9 @@
  * @param [y] {number} The y coordinate.
  * @param [z] {number} The z coordinate.
  */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
-platformer.Vector = (function () {
+platypus.Vector = (function () {
     "use strict";
     
     var Vector = function (x, y, z) {
@@ -178,7 +178,7 @@ platformer.Vector = (function () {
      * @return {Vector} A normalized vector in the same direction as this vector.
      */
     proto.getUnit = function () {
-        return new platformer.Vector(this).normalize();
+        return new platypus.Vector(this).normalize();
     };
     
     /**
@@ -188,7 +188,7 @@ platformer.Vector = (function () {
      * @return {Vector}
      */
     proto.getInverse = function () {
-        return new platformer.Vector(this).multiply(-1);
+        return new platypus.Vector(this).multiply(-1);
     };
     
     /**
@@ -240,7 +240,7 @@ platformer.Vector = (function () {
      * @return {Vector} The cross product.
      */
     proto.getCrossProduct = function (v) {
-        return new platformer.Vector(this).cross(v);
+        return new platypus.Vector(this).cross(v);
     };
     
     /**
@@ -456,7 +456,7 @@ platformer.Vector = (function () {
      * @return {Vector} A copy of this vector.
      */
     proto.copy = function () {
-        return new platformer.Vector(this);
+        return new platypus.Vector(this);
     };
     
     /**
@@ -500,7 +500,7 @@ platformer.Vector = (function () {
 
             if (obj && prop) {
                 if (!obj[prop]) {
-                    obj[prop] = new platformer.Vector();
+                    obj[prop] = new platypus.Vector();
                     
                     for (i = 2; i < arguments.length; i++) {
                         if (arguments[i] !== prop) {

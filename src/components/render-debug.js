@@ -48,7 +48,7 @@ This component is attached to entities that will appear in the game world. It se
     
 [link1]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-/*global console, createjs, platformer */
+/*global console, createjs, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -81,7 +81,7 @@ This component is attached to entities that will appear in the game world. It se
             return newShape;
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'render-debug',
         
@@ -104,7 +104,7 @@ This component is attached to entities that will appear in the game world. It se
         
         events: {// These are messages that this component listens for
             "handle-render-load": function (resp) {
-                if (!platformer.game.settings.debug) {
+                if (!platypus.game.settings.debug) {
                     this.owner.removeComponent(this);
                 } else if (!this.stage && resp && resp.stage) {
                     this.stage = resp.stage;

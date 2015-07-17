@@ -72,7 +72,7 @@ This component is a general purpose state-machine for an entity, taking in vario
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -153,7 +153,7 @@ This component is a general purpose state-machine for an entity, taking in vario
         }
     };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-state-machine',
         
         constructor: function (definition) {

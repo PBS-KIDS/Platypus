@@ -34,7 +34,7 @@ A component that handles the rendering of DOM elements. It creates a div element
       //Optional. If specified properties begin with "on", it is assumed that the property is an event handler and the listed value is broadcast as a message on the entity where the message object is the event handler's event object.
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -62,7 +62,7 @@ A component that handles the rendering of DOM elements. It creates a div element
         }
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
     
         id: 'handler-render-dom',
         

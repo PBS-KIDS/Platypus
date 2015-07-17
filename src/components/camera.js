@@ -6,7 +6,7 @@
  * @class "camera" Component
  * @uses Component
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -36,7 +36,7 @@
         self.viewportUpdate = true;
     };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'camera',
         properties: {
             /**

@@ -66,7 +66,7 @@ This component listens for input messages triggered on the entity and updates th
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -207,7 +207,7 @@ This component listens for input messages triggered on the entity and updates th
         return !this.current && this.last;
     };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'entity-controller',
         
         constructor: function (definition) {

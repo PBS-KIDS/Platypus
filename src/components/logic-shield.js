@@ -28,20 +28,20 @@ This component creates an entity and connects it with the current entity. This i
       // Optional. Location relative to the entity where the shield should be located once created. Defaults to (0, 0).
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
     var linkId = 0;
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'logic-shield',
         
         constructor: function (definition) {
             this.state = this.owner.state;
             this.stateName = definition.state || 'shielded';
-            this.entityClass = platformer.game.settings.entities[definition.shield];
+            this.entityClass = platypus.game.settings.entities[definition.shield];
 
             if (!this.owner.linkId) {
                 this.owner.linkId = 'shield-link-' + linkId;
@@ -80,7 +80,7 @@ This component creates an entity and connects it with the current entity. This i
                         this.shieldPosition.x = this.owner.x;
                         this.shieldPosition.y = this.owner.y;
                         this.shieldPosition.z = this.owner.z;
-                        this.shield = this.owner.parent.addEntity(new platformer.Entity(this.entityClass, this.shieldProperties));
+                        this.shield = this.owner.parent.addEntity(new platypus.Entity(this.entityClass, this.shieldProperties));
                         this.owner.triggerEvent('entity-created', this.shield);
                         if (this.onShield) {
                             this.onShield(this.shield);

@@ -3,9 +3,9 @@
  * 
  * @class CollisionData
  */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
-platformer.CollisionData = (function () {
+platypus.CollisionData = (function () {
     "use strict";
     
     var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck) {
@@ -46,12 +46,12 @@ platformer.CollisionData = (function () {
     return collisionData;
 }());
 
-platformer.CollisionDataContainer = (function () {
+platypus.CollisionDataContainer = (function () {
     "use strict";
     
     var collisionDataContainer = function () {
-            this.xData = [new platformer.CollisionData(), new platformer.CollisionData()];
-            this.yData = [new platformer.CollisionData(), new platformer.CollisionData()];
+            this.xData = [new platypus.CollisionData(), new platypus.CollisionData()];
+            this.yData = [new platypus.CollisionData(), new platypus.CollisionData()];
             this.xCount = 0;
             this.yCount = 0;
             this.xDeltaMovement = Infinity;
@@ -103,7 +103,7 @@ platformer.CollisionDataContainer = (function () {
         
         if (this.xData.length <= this.xCount) {
             for (j = this.xData.length; j < goalLength; j++) {
-                this.xData[j] = new platformer.CollisionData();
+                this.xData[j] = new platypus.CollisionData();
             }
         }
     };
@@ -114,7 +114,7 @@ platformer.CollisionDataContainer = (function () {
         
         if (this.yData.length <= this.yCount) {
             for (j = this.yData.length; j < goalLength; j++) {
-                this.yData[j] = new platformer.CollisionData();
+                this.yData[j] = new platypus.CollisionData();
             }
         }
     };

@@ -5,14 +5,14 @@
  * @uses Component
  */
 // Requires: ["motion", "../vector.js"]
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
     
-    var tempVector = new platformer.Vector();
+    var tempVector = new platypus.Vector();
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'mover',
 
@@ -92,8 +92,8 @@
         },
         
         constructor: function (definition) {
-            platformer.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
-            platformer.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
+            platypus.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
+            platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
             this.position = this.owner.position;
             this.velocity = this.owner.velocity;
@@ -102,7 +102,7 @@
             this.moversCopy = this.movers;
             this.movers = [];
 
-            this.ground = new platformer.Vector(this.ground);
+            this.ground = new platypus.Vector(this.ground);
         },
 
         events: {
@@ -271,7 +271,7 @@
              * @return motion {"motion" Component}
              */
             addMover: function (mover) {
-                var m = this.owner.addComponent(new platformer.components.motion(this.owner, mover));
+                var m = this.owner.addComponent(new platypus.components.motion(this.owner, mover));
 
                 return m;
             },

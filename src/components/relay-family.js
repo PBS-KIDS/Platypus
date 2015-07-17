@@ -47,7 +47,7 @@ This component allows an entity to communicate directly with one or more entitie
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -65,7 +65,7 @@ This component allows an entity to communicate directly with one or more entitie
             };
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'relay-family',
         
         constructor: function (definition) {
@@ -97,7 +97,7 @@ This component allows an entity to communicate directly with one or more entitie
             
             "entity-created": function (entity) {
                 if (!entity.triggerEvent('link-family', this.owner.familyLinks)) {
-                    entity.addComponent(new platformer.components['relay-family'](entity, {}));
+                    entity.addComponent(new platypus.components['relay-family'](entity, {}));
                     entity.triggerEvent('link-family', this.owner.familyLinks);
                 }
             }

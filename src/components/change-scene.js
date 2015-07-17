@@ -32,11 +32,11 @@ This component allows the entity to initiate a change from the current scene to 
     }
 */
 /*global console */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'change-scene',
         
         constructor: function (definition) {
@@ -55,7 +55,7 @@ This component allows the entity to initiate a change from the current scene to 
             "scene-live": function () {
                 //Makes sure we're in the current scene before preloading the next one.
                 if (this.preload) {
-                    platformer.game.loadScene(this.scene, this.transition, this.persistentData, true);
+                    platypus.game.loadScene(this.scene, this.transition, this.persistentData, true);
                 }
             },
             "new-scene": function (response) {
@@ -64,7 +64,7 @@ This component allows the entity to initiate a change from the current scene to 
                     transition = resp.transition || this.transition,
                     data       = resp.persistentData || this.persistentData;
             
-                platformer.game.loadScene(scene, transition, data);
+                platypus.game.loadScene(scene, transition, data);
             },
             "set-scene": function (scene) {
                 this.scene = scene;

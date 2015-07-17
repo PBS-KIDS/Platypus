@@ -1,4 +1,3 @@
-/* global platformer */
 /**
  * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
  * 
@@ -8,7 +7,7 @@
  * @uses Component
  */
 // Requires: ["../collision-shape.js", "../aabb.js"]
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -31,7 +30,7 @@
                         position.x = 0;
                         position.y = s;
                     }
-                    owner.stuckWith = new platformer.Vector(data.thatShape.x, data.thatShape.y);
+                    owner.stuckWith = new platypus.Vector(data.thatShape.x, data.thatShape.y);
                 }
             }
         },
@@ -103,7 +102,7 @@
                         key  = '';
 
                     if (!collisionType) {
-                        aabb = entity.aabb = entity.aabb || new platformer.AABB();
+                        aabb = entity.aabb = entity.aabb || new platypus.AABB();
                         aabb.reset();
                         for (key in entity.collisionFunctions) {
                             if (entity.collisionFunctions.hasOwnProperty(key)) {
@@ -156,12 +155,12 @@
                     var v = null;
 
                     if (collisionData.xCount) {
-                        v = new platformer.Vector(0, 0, 0);
+                        v = new platypus.Vector(0, 0, 0);
                         handleStuck(v, collisionData.getXEntry(0), entity);
                     }
 
                     if (collisionData.yCount) {
-                        v = v || new platformer.Vector(0, 0, 0);
+                        v = v || new platypus.Vector(0, 0, 0);
                         handleStuck(v, collisionData.getYEntry(0), entity);
                     }
 
@@ -215,7 +214,7 @@
 
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'collision-basic',
 
@@ -362,13 +361,13 @@
                 regY = this.regY = height / 2;
             }
             
-            platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
-            platformer.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
+            platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+            platypus.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
-            this.aabb     = new platformer.AABB();
-            this.prevAABB = new platformer.AABB();
+            this.aabb     = new platypus.AABB();
+            this.prevAABB = new platypus.AABB();
             
             if (this.shapes) {
                 shapes = this.shapes;
@@ -402,8 +401,8 @@
             this.prevShapes = [];
             this.entities = undefined;
             for (x = 0; x < shapes.length; x++) {
-                this.shapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
-                this.prevShapes.push(new platformer.CollisionShape(this.owner, shapes[x], this.collisionType));
+                this.shapes.push(new platypus.CollisionShape(this.owner, shapes[x], this.collisionType));
+                this.prevShapes.push(new platypus.CollisionShape(this.owner, shapes[x], this.collisionType));
                 this.prevAABB.include(this.prevShapes[x].getAABB());
                 this.aabb.include(this.shapes[x].getAABB());
             }

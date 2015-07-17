@@ -1,5 +1,8 @@
 {
 	"platypus_source": [
+		"../src/version.js",
+		"../src/game.js",
+		"../src/messenger.js",
 		"../src/scene.js",
 		"../src/vector.js",
 		"../src/aabb.js",
@@ -8,8 +11,6 @@
 		"../src/collision-shape.js",
 		"../src/entity.js",
 		"../src/factory.js",
-		"../src/game.js",
-		"../src/messenger.js",
 		"../src/components/change-scene.js",
 		"../src/components/collision-basic.js",
 		"../src/components/collision-filter.js",

@@ -69,7 +69,7 @@ This component uses its definition to load two other components (audio and rende
     
 Requires: ["audio", "render-sprite"]
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -146,7 +146,7 @@ Requires: ["audio", "render-sprite"]
             }
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'voice-over',
         
         constructor: function (definition) {
@@ -181,14 +181,14 @@ Requires: ["audio", "render-sprite"]
                 }
             }
             animationDefinition.animationMap['default'] = definition.animationMap['default'];
-            this.owner.addComponent(new platformer.components['render-sprite'](this.owner, animationDefinition));
+            this.owner.addComponent(new platypus.components['render-sprite'](this.owner, animationDefinition));
 
             for (i in definition.voiceoverMap) {
                 if (definition.voiceoverMap.hasOwnProperty(i)) {
                     audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
                 }
             }
-            this.owner.addComponent(new platformer.components.audio(this.owner, audioDefinition));
+            this.owner.addComponent(new platypus.components.audio(this.owner, audioDefinition));
         },
 
         events: {// These are messages that this component listens for

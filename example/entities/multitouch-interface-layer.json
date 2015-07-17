@@ -16,7 +16,7 @@
             {"type": "gui"},
             {"type": "fps-counter"}
             ],
-            "childEvents": ['gui-gem-collected', 'time-elapsed']
+            "childEvents": ["gui-gem-collected", "time-elapsed"]
         }
     ]
 }

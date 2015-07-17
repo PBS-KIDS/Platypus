@@ -31,12 +31,12 @@ This component creates an entity and propels it away. This is useful for casting
       // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'logic-spawner',
         
@@ -47,7 +47,7 @@ This component creates an entity and propels it away. This is useful for casting
 
             this.state = this.owner.state;
             this.stateName = definition.state || 'spawning';
-            this.entityClass = platformer.game.settings.entities[className];
+            this.entityClass = platypus.game.settings.entities[className];
             this.speed = definition.speed || this.owner.speed || 0;
 
             this.state[this.stateName] = false;
@@ -126,7 +126,7 @@ This component creates an entity and propels it away. This is useful for casting
                     }
                     
                     if (this.parent) {
-                        this.owner.triggerEvent('entity-created', this.parent.addEntity(new platformer.Entity(this.entityClass, this.propertiesContainer)));
+                        this.owner.triggerEvent('entity-created', this.parent.addEntity(new platypus.Entity(this.entityClass, this.propertiesContainer)));
                     }
                 }
                 

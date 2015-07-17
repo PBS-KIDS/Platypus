@@ -9,8 +9,8 @@
  * @param height {number} The height of the AABB.
  * @return {AABB} Returns the new aabb object.
  */
-/*global platformer */
-platformer.AABB = (function () {
+/*global platypus */
+platypus.AABB = (function () {
     "use strict";
     
     var AABB = function (x, y, width, height) {

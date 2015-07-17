@@ -13,7 +13,7 @@
            outside this component.
     *********************************************************************/
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         /*********************************************************************
          "createComponentClass" creates the component class and adds the
          following methods and properties that can be referenced from your

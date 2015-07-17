@@ -27,7 +27,7 @@ This component will listen for a particular collision message and, depending on 
       }
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
@@ -46,7 +46,7 @@ This component will listen for a particular collision message and, depending on 
             };
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'collision-filter',
         constructor: function (definition) {
             var event = null,

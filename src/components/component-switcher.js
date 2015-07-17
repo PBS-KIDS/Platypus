@@ -43,7 +43,7 @@ This component listens for messages and, according to its preset settings, will 
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -75,10 +75,10 @@ This component listens for messages and, according to its preset settings, will 
 
                 if (definition.add) {
                     if (!Array.isArray(definition.add)) {
-                        owner.addComponent(new platformer.components[definition.add.type](owner, definition.add));
+                        owner.addComponent(new platypus.components[definition.add.type](owner, definition.add));
                     } else {
                         for (i = 0; i < definition.add.length; i++) {
-                            owner.addComponent(new platformer.components[definition.add[i].type](owner, definition.add[i]));
+                            owner.addComponent(new platypus.components[definition.add[i].type](owner, definition.add[i]));
                         }
                     }
                 }
@@ -90,7 +90,7 @@ This component listens for messages and, according to its preset settings, will 
         };
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'component-switcher',
         
         properties: {

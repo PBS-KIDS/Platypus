@@ -35,7 +35,7 @@ Tween takes a list of tween definitions and plays them as needed.
         }
     }
 */
-/*global createjs, platformer */
+/*global createjs, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -82,7 +82,7 @@ Tween takes a list of tween definitions and plays them as needed.
             };
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'tween',
         
         constructor: function (definition) {

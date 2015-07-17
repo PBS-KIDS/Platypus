@@ -53,7 +53,7 @@ This component allows certain messages to trigger new messages at a later time. 
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -107,7 +107,7 @@ This component allows certain messages to trigger new messages at a later time. 
             };
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-delay-message',
         
         constructor: function (definition) {

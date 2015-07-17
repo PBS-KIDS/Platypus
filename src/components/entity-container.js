@@ -76,7 +76,7 @@ This component allows the entity to contain child entities. It will add several 
 /*
  * Requires: ["../messenger.js"]
  */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -87,7 +87,7 @@ This component allows the entity to contain child entities. It will add several 
         };
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'entity-container',
         
         constructor: function (definition) {
@@ -151,7 +151,7 @@ This component allows the entity to contain child entities. It will add several 
                             }
                         }
         
-                        this.owner.triggerEvent('entity-created', this.addEntity(new platformer.Entity(entities[i].id ? entities[i] : platformer.game.settings.entities[entities[i].type], definition)));
+                        this.owner.triggerEvent('entity-created', this.addEntity(new platypus.Entity(entities[i].id ? entities[i] : platypus.game.settings.entities[entities[i].type], definition)));
                     }
                 }
             },
@@ -366,5 +366,5 @@ This component allows the entity to contain child entities. It will add several 
                 return this.trigger(event, message, debug);
             }
         }
-    }, platformer.Messenger);
+    }, platypus.Messenger);
 }());

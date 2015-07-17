@@ -29,11 +29,11 @@ This component changes the (x, y) position of an object according to its current
       // Optional. Defines how much to rotate the image in addition to the movement rotation.
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'logic-angular-movement',
         

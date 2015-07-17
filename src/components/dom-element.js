@@ -54,7 +54,7 @@ This component creates a DOM element associated with the entity. In addition to 
       //Optional. In addition to the event syntax above, an Array of strings may be provided, causing multiple messages to be triggered in the order listed.
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -82,7 +82,7 @@ This component creates a DOM element associated with the entity. In addition to 
         }
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'dom-element',
         constructor: function (definition) {
             var key         = '',
@@ -114,7 +114,7 @@ This component creates a DOM element associated with the entity. In addition to 
                         }
                     } else if (((key !== 'type') || (elementType === 'input')) && (key !== 'element') && (key !== 'parent') && (key !== 'updateClassName') && (key !== 'attributes') && (key !== 'messageMap')) {
                         if (key.indexOf('on') === 0) {
-                            if (platformer.game.settings.supports.mobile) {
+                            if (platypus.supports.mobile) {
                                 if (key.indexOf('onmouse') === -1) {
                                     this.element[key] = createFunction(definition[key], this.owner);
                                 }

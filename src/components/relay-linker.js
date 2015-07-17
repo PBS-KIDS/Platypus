@@ -53,7 +53,7 @@ This component allows an entity to communicate directly with one or more entitie
       }
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -68,7 +68,7 @@ This component allows an entity to communicate directly with one or more entitie
         };
     };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'relay-linker',
         constructor: function (definition) {
             var i = 0,

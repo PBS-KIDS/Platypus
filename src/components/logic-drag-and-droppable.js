@@ -28,11 +28,11 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
         "type": "logic-drag-and-droppable"
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         /*********************************************************************
          "createComponentClass" creates the component class and adds the
          following methods and properties that can be referenced from your

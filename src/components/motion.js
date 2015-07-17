@@ -4,11 +4,11 @@
  * @class "motion" Component
  * @uses Component
  */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
     
-    var tempVector = new platformer.Vector(),
+    var tempVector = new platypus.Vector(),
         prepUpdate = function (func) {
             return function (velocity, position, delta, grounded) {
                 if (this.accelerator) {
@@ -94,7 +94,7 @@
             }
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'motion',
 
@@ -190,7 +190,7 @@
         },
         
         constructor: function (definition) {
-            this.vector = new platformer.Vector(this.vector);
+            this.vector = new platypus.Vector(this.vector);
             this.triggered = false;
             
             if (!isNaN(this.instantDecay)) {

@@ -20,7 +20,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
 
 //TODO: Ideally this should be set up to work for any given element, not just the game container. - DDD
 
-/*global platformer */
+/*global platypus */
 /*global Element */
 (function () {
     "use strict";
@@ -30,7 +30,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
         turnOffFullScreen = function () {
             enabled = false;
             element.className = element.className.replace(/ full-screen/g, '');
-            platformer.game.bindings.resize.callback();
+            platypus.game.bindings.resize.callback();
         },
         toggleFullscreen = function () {
             if (enabled) {
@@ -46,7 +46,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
                 enabled = true;
                 element.className += ' full-screen';
                 if (element.webkitRequestFullscreen) {
-                    if (!platformer.game.settings.supports.safari || platformer.game.settings.supports.chrome) { //Safari doesn't allow all keyboard input in fullscreen which breaks game input - DDD 5/27/2013
+                    if (!platypus.supports.safari || platypus.supports.chrome) { //Safari doesn't allow all keyboard input in fullscreen which breaks game input - DDD 5/27/2013
                         element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
                     }
                 } else if (element.mozRequestFullScreen) {
@@ -54,7 +54,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
                 } else if (element.requestFullscreen) {
                     element.requestFullscreen(); // Opera
                 }
-                platformer.game.bindings.resize.callback();
+                platypus.game.bindings.resize.callback();
             }
         };
     
@@ -74,11 +74,11 @@ Note: This component connects to the browser's fullscreen API if available. It a
         }
     });
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'fullscreen',
         constructor: function (definition) {
             if (!element) {
-                element = platformer.game.containerElement;
+                element = platypus.game.containerElement;
             }
         },
         events: {

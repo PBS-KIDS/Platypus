@@ -51,7 +51,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-/*global createjs, platformer */
+/*global createjs, platypus */
 /*jslint nomen:true, bitwise:true, plusplus:true */
 (function () {
     "use strict";
@@ -115,7 +115,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
             return resp;
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'render-tiles',
         
@@ -130,8 +130,8 @@ This component handles rendering tile map backgrounds. When rendering the backgr
             if (images[0] && (typeof images[0] === 'string')) {
                 images = images.slice(); //so we do not overwrite settings array
                 for (x = 0; x < images.length; x++) {
-                    if (platformer.assets[images[x]]) {
-                        images[x] = platformer.assets[images[x]];
+                    if (platypus.assets[images[x]]) {
+                        images[x] = platypus.assets[images[x]];
                     }
                 }
             }

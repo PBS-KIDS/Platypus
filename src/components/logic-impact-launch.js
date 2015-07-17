@@ -33,11 +33,11 @@ This component will cause the entity to move in a certain direction on colliding
 
 */
 /*global console */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-impact-launch',
         constructor: function (definition) {
             this.stunState = definition.state || "stunned";

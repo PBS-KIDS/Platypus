@@ -25,11 +25,11 @@ This component renders the avg FPS and other developer defined debug data to the
     }
 */
 /*global createjs */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-fps-counter',
         constructor: function (definition) {
             this.counter = {
@@ -45,7 +45,7 @@ This component renders the avg FPS and other developer defined debug data to the
                 var text = '',
                     name = '';
                 
-                if (!platformer.game.settings.debug && this.owner.parent) {
+                if (!platypus.game.settings.debug && this.owner.parent) {
                     this.owner.parent.removeEntity(this.owner);
                 }
         

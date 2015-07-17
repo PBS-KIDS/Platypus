@@ -22,7 +22,7 @@ This component groups other entities with this entity for collision checking. Th
     
 Requires: ["../aabb.js"]
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -50,7 +50,7 @@ Requires: ["../aabb.js"]
         return hostArray;
     };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'collision-group',
         
         constructor: function (definition) {
@@ -59,11 +59,11 @@ Requires: ["../aabb.js"]
             this.solidEntities = [];
             
             this.terrain = undefined;
-            this.aabb     = new platformer.AABB(this.owner.x, this.owner.y);
-            this.prevAABB = new platformer.AABB(this.owner.x, this.owner.y);
+            this.aabb     = new platypus.AABB(this.owner.x, this.owner.y);
+            this.prevAABB = new platypus.AABB(this.owner.x, this.owner.y);
 
-            platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
-            platformer.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
+            platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+            platypus.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
@@ -226,7 +226,7 @@ Requires: ["../aabb.js"]
                 if (!collisionType) {
                     return this.aabb;
                 } else {
-                    aabb = new platformer.AABB();
+                    aabb = new platypus.AABB();
                     for (x = 0; x < this.solidEntities.length; x++) {
                         childEntity = this.solidEntities[x];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
@@ -247,7 +247,7 @@ Requires: ["../aabb.js"]
                 if (!collisionType) {
                     return this.prevAABB;
                 } else {
-                    aabb = new platformer.AABB();
+                    aabb = new platypus.AABB();
                     for (x = 0; x < this.solidEntities.length; x++) {
                         childEntity = this.solidEntities[x];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
@@ -368,7 +368,7 @@ Requires: ["../aabb.js"]
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
-                    childEntity.relocateEntity(new platformer.Vector(vector.x - entity.saveOX, vector.y - entity.saveOY), collisionData);
+                    childEntity.relocateEntity(new platypus.Vector(vector.x - entity.saveOX, vector.y - entity.saveOY), collisionData);
                     entity.x += entity.saveDX;
                     entity.y += entity.saveDY;
                     if (entity !== this.owner) {

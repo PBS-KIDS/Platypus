@@ -28,15 +28,15 @@ This component causes an entity to teleport when receiving a teleport message.
 
 Requires: ["../vector.js"]
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-teleportee',
         
         constructor: function (definition) {
-            this.teleportDestination = new platformer.Vector();
+            this.teleportDestination = new platypus.Vector();
             this.teleportNow = false;
             this.DestinationSet = false;
         },

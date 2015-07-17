@@ -78,7 +78,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 */
 /*global console */
 /*global createjs */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -267,7 +267,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
             }
         };
     
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'audio',
             
         constructor: function (definition) {
@@ -311,8 +311,8 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
             this.priority = definition.priority || 0;
             this.priorityTrack = null;
             
-            if (!platformer.game.audioMixer) {
-                platformer.game.audioMixer = {
+            if (!platypus.game.audioMixer) {
+                platypus.game.audioMixer = {
                     channels: {},
                     paused: false,
                     getChannel: function (id) {
@@ -330,7 +330,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                     }
                 };
             }
-            this.mixer           = platformer.game.audioMixer;
+            this.mixer           = platypus.game.audioMixer;
             this.channelSettings = this.mixer.getChannel(this.channel);
             this.channelUpdate   = this.channelSettings.update;
             this.paused          = this.mixer.paused;

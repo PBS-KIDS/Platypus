@@ -1,4 +1,3 @@
-/* global platformer */
 /**
  * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle and circle shapes can be created. Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
  * 
@@ -18,8 +17,8 @@
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
-/*global platformer */
-platformer.CollisionShape = (function () {
+/*global platypus */
+platypus.CollisionShape = (function () {
     "use strict";
     
     var collisionShape = function (owner, definition, collisionType) {
@@ -42,11 +41,11 @@ platformer.CollisionShape = (function () {
                 regY = this.height / 2;
             }
 
-            platformer.Vector.assign(this, 'offset', 'offsetX', 'offsetY');
+            platypus.Vector.assign(this, 'offset', 'offsetX', 'offsetY');
             this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
             this.offsetY = definition.offsetY || ((this.height / 2) - regY);
 
-            platformer.Vector.assign(this, 'position', 'x', 'y');
+            platypus.Vector.assign(this, 'position', 'x', 'y');
             if (owner) {
                 this.x = owner.x + this.offsetX;
                 this.y = owner.y + this.offsetY;
@@ -69,11 +68,11 @@ platformer.CollisionShape = (function () {
                 break;
             }
 
-            platformer.Vector.assign(this, 'size', 'width', 'height');
+            platypus.Vector.assign(this, 'size', 'width', 'height');
             this.width  = width;
             this.height = height;
 
-            this.aABB     = new platformer.AABB(this.x, this.y, width, height);
+            this.aABB     = new platypus.AABB(this.x, this.y, width, height);
         },
         proto = collisionShape.prototype;
     

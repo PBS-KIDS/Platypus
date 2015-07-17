@@ -24,7 +24,7 @@ This component listens for certain messages, picks a message from a related list
       }
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
@@ -34,7 +34,7 @@ This component listens for certain messages, picks a message from a related list
         };
     };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'random-events',
         
         constructor: function (definition) {

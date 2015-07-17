@@ -53,12 +53,12 @@ This component causes an entity to be a position on a [[node-map]]. This compone
       // Optional. Determines whether the entity's orientation is updated by movement across the node-map. Default is false.
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
     
-	return platformer.createComponentClass({
+	return platypus.createComponentClass({
 		
 		id: 'node',
 		
@@ -82,7 +82,7 @@ This component causes an entity to be a position on a [[node-map]]. This compone
 			this.contains = this.owner.contains = [];
 			this.edgesContain = this.owner.edgesContain = [];
 			
-			platformer.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+			platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
 			
 			this.neighbors = this.owner.neighbors = definition.neighbors || this.owner.neighbors || {};
 		},

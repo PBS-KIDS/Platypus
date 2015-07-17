@@ -5,7 +5,7 @@
  * @uses Component
  */
 // Requires: ["../collision-shape.js"]
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -165,7 +165,7 @@
             }
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'collision-tiles',
         
         publicProperties: {
@@ -243,7 +243,7 @@
                     storedTileIndex += 1;
                     shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
                 } else {
-                    storedTiles.push(new platformer.CollisionShape(null, {
+                    storedTiles.push(new platypus.CollisionShape(null, {
                         x:      x * this.tileWidth  + this.tileHalfWidth,
                         y:      y * this.tileHeight + this.tileHalfHeight,
                         type:   'rectangle',

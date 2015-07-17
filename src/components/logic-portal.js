@@ -30,12 +30,12 @@ A component which changes the scene when activated. When the portal receives an 
       //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-portal',
         constructor: function (definition) {
             var i = 0,

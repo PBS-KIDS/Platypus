@@ -51,7 +51,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
       ]
     }
 */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -131,7 +131,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
         return false;
     };
 	
-	return platformer.createComponentClass({
+	return platypus.createComponentClass({
 		id: 'node-map',
 		
         constructor: function (definition) {
@@ -217,8 +217,8 @@ This component sets up a node-map to be used by the [[node-resident]] component 
              * Finds the closest node to a given point, with respect to any inclusion or exclusion lists.
              */
             getClosestNode: (function(){
-                var v1 = new platformer.Vector(0, 0, 0),
-                    v2 = new platformer.Vector(0, 0, 0);
+                var v1 = new platypus.Vector(0, 0, 0),
+                    v2 = new platypus.Vector(0, 0, 0);
 
                 return function (point, including, excluding) {
                     var i = 0,

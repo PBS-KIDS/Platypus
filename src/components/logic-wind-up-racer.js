@@ -38,11 +38,11 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
       // Optional. Velocity at which the entity should travel while racing. Defaults to 0.3.
     }
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         
         id: 'logic-wind-up-racer',
         

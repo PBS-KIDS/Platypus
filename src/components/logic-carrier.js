@@ -29,18 +29,18 @@ This component allows this entity carry other entities with which it collides. E
     
 Requires: ["collision-group"]
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-carrier',
         constructor: function (definition) {},
         events: {
             "load": function (resp) {
                 if (!this.owner.trigger('add-collision-entity', this.owner)) {
                     // This message wasn't handled, so add a collision-group component and try again!
-                    this.owner.addComponent(new platformer.components['collision-group'](this.owner, {}));
+                    this.owner.addComponent(new platypus.components['collision-group'](this.owner, {}));
                     this.owner.trigger('add-collision-entity', this.owner);
                 }
             },

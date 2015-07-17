@@ -1,10 +1,10 @@
 /**
 # Function
 Browser.js is one large function that is used to discover what browser is being used the capabilities of the browser. In addition to browser type, we determine whether it is mobile or desktop, whether it supports multi or single-touch, what type of audio it can play, and whether it supports canvas or not. 
-All of this information is added to platformer.settings.supports and used throughout the code, including when determining which layers to display (e.g. adding a button layer for mobile devices), and in audio so that we load and play the correct sound types.
+All of this information is added to platypus.supports and used throughout the code, including when determining which layers to display (e.g. adding a button layer for mobile devices), and in audio so that we load and play the correct sound types.
 * 
 */
-/*global console, createjs, platformer */
+/*global console, createjs, platypus */
 (function () {
     "use strict";
     
@@ -38,12 +38,7 @@ All of this information is added to platformer.settings.supports and used throug
             ogg:         true,
             m4a:         true,
             mp3:         true
-        },
-        aspects = platformer.settings.manifest,
-        i = 0,
-        j = '',
-        foundAspect = false,
-        listAspects = '';
+        };
     
     supports.iPhone4 = supports.iPhone && (window.screen.height === (960 / 2));
     supports.iPad2   = supports.iPad && (!window.devicePixelRatio || (window.devicePixelRatio === 1));
@@ -79,33 +74,6 @@ All of this information is added to platformer.settings.supports and used throug
     }
     canvas = null;
 
-    //replace settings aspects build array with actual support of aspects
-    platformer.settings.manifest = {};
-    for (i in aspects) {
-        if (aspects.hasOwnProperty(i)) {
-            foundAspect = false;
-            listAspects = '';
-            for (j in aspects[i]) {
-                if (aspects[i].hasOwnProperty(j)) {
-                    listAspects += ' ' + j;
-                    if (uagent.search(j) > -1) {
-                        foundAspect = aspects[i][j];
-                        break;
-                    }
-                }
-            }
-            if (!foundAspect) {
-                console.warn('This browser doesn\'t support any of the following: ' + listAspects);
-            } else {
-                for (j in aspects[i]) {
-                    if (aspects[i].hasOwnProperty(j)) {
-                        platformer.settings.manifest[aspects[i][j]] = foundAspect;
-                    }
-                }
-            }
-        }
-    }
-
     // Handle audio loading on distinct browsers.
     if (window.createjs && createjs.Sound) {
 
@@ -128,6 +96,6 @@ All of this information is added to platformer.settings.supports and used throug
         supports.audioAPI = (createjs.Sound.activePlugin.toString() === "[WebAudioPlugin]");
     }
     
-    platformer.settings.supports = supports;
+    platypus.supports = supports;
 
 }());

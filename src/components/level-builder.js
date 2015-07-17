@@ -41,7 +41,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
     }
 */
 /*global console */
-/*global platformer */
+/*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -161,7 +161,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
         mergeLevels = function (levelSegments) {
             var i = 0,
                 j = 0,
-                levelDefinitions = platformer.game.settings.levels,
+                levelDefinitions = platypus.game.settings.levels,
                 row              = {
                     height: 0,
                     width:  0,
@@ -197,7 +197,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
             return level;
         };
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'level-builder',
         
         properties: {

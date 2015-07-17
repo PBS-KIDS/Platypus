@@ -32,11 +32,11 @@ This component listens for redirected collision messages and fires a message on 
     }
 
 */
-/*global platformer */
+/*global platypus */
 (function () {
     "use strict";
 
-    return platformer.createComponentClass({
+    return platypus.createComponentClass({
         id: 'logic-teleporter',
 
         constructor: function (definition) {
