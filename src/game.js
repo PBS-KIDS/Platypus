@@ -230,7 +230,7 @@ platypus.Game = (function () {
             if (typeof definition === 'string') {
                 loadJSONLinks(definition, load);
             } else {
-                load();
+                load(definition);
             }
         },
         proto = game.prototype;
