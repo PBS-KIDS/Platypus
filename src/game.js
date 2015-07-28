@@ -4,7 +4,9 @@
  * 
  * @class Game
  * @constructor
- * @param {Object} [definition] Collection of settings from config.json.
+ * @param [definition] {Object} Collection of configuration settings, typically from config.json.
+ * @param [definition.global] {Object} Key/value pairs describing global game settings.
+ * @param [definition.global.tickerOn=true] {boolean} Whether the game should automatically tick or only tick on `game.tick()` calls.
  * @param {Function} onFinishedLoading An optional function to run once the game has begun.
  * @return {Game} Returns the instantiated game. 
  */
@@ -13,7 +15,8 @@
 platypus.Game = (function () {
     "use strict";
     
-    var getJSON = function (path, callback) {
+    var ticker = null,
+        getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
             
             xhr.open('GET', path, true);
@@ -202,13 +205,15 @@ platypus.Game = (function () {
                     if (onFinishedLoading) {
                         onFinishedLoading(self);
                     }
-        
-                    createjs.Ticker.timingMode = 'raf';
-                    createjs.Ticker.setFPS(definition.global.fps || 60);
-                    self.tickWrapper = function (e) {
-                        self.tick(e);
-                    };
-                    createjs.Ticker.addEventListener("tick", self.tickWrapper);
+                    
+                    if (ticker && (definition.global.tickerOn !== false)) {
+                        self.tickHandler = function (e) {
+                            self.tick(e);
+                        };
+                        ticker.timingMode = 'raf';
+                        ticker.setFPS(definition.global.fps || 60);
+                        ticker.addEventListener("tick", self.tickHandler);
+                    }
         
                     //Add entity-finder for debugging
                     if (window) {
@@ -235,13 +240,16 @@ platypus.Game = (function () {
         },
         proto = game.prototype;
         
-    
+    if (window.createjs && window.createjs.Ticker) {
+        ticker = window.createjs.Ticker;
+    }
     
 /**
- * Called by the CreateJS ticker. This calls tick on the scene.
+ * This method causes the game to tick once. It's called automatically if the global setting `tickerOn` is `true` (default value). If this setting is `false`, `game.tick()` must be called to enact each tick.
  * 
  * @method tick
- * @param {Object} tickEvent - CreateJS tick message object.
+ * @param tickEvent {Object} Key/value pairs passed on to the current scene.
+ * @param tickEvent.delta {number} The time elapsed since the last tick.
  **/
     proto.tick = function (tickEvent) {
         if (this.loadedScene) {
@@ -435,7 +443,9 @@ platypus.Game = (function () {
     proto.destroy = function () {
         var i = 0;
         
-        createjs.Ticker.removeEventListener("tick", this.tickWrapper);
+        if (this.tickHandler) {
+            ticker.removeEventListener("tick", this.tickHandler);
+        }
         for (i = 0; i < this.bindings.length; i++) {
             this.bindings[i].element.removeEventListener(this.bindings[i].event, this.bindings[i].callback);
         }
