@@ -1,7 +1,6 @@
 /**
  * This class is used to create the `platypus.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
  * 
- * 
  * @class Game
  * @constructor
  * @param [definition] {Object} Collection of configuration settings, typically from config.json.
@@ -16,6 +15,54 @@ platypus.Game = (function () {
     "use strict";
     
     var ticker = null,
+        transitions = {},
+        setupTransitions = function (tween, transitions) {
+            transitions['fade-to-black'] = function (game, load, complete) {
+                var element = document.createElement('div'),
+                    root    = game.rootElement;
+                
+                root.appendChild(element);
+                element.style.width = '100%';
+                element.style.height = '100%';
+                element.style.position = 'absolute';
+                element.style.zIndex = '12';
+                element.style.opacity = '0';
+                element.style.background = '#000';
+
+                tween.get(element.style).to({opacity: 0}, 500).to({opacity: 1}, 500).call(function (t) {
+                    load();
+                    complete();
+                }).wait(500).to({opacity: 0}, 500).call(function (t) {
+                    root.removeChild(element);
+                    element = null;
+                });
+            };
+
+            transitions.crossfade = function (game, load, complete) {
+                var i = 0,
+                    element = null,
+                    instant = true,
+                    root    = null;
+                
+                load();
+                root = game.loadedScene.layers;
+                for (i = 0; i < root.length; i++) {
+                    if (root[i].element) {
+                        element = root[i].element.style;
+                        element.opacity = '0';
+                        if (instant) {                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
+                            tween.get(element).to({opacity: 0}, 5).to({opacity: 1}, 1000).call(complete);
+                            instant = false;
+                        } else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
+                            tween.get(element).to({opacity: 0}, 5).to({opacity: 1}, 1000);
+                        }
+                    }
+                }
+                if (instant) { // nothing to crossfade so we just finish loading the scene.
+                    complete();
+                }
+            };
+        },
         getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
             
@@ -35,14 +82,8 @@ platypus.Game = (function () {
                 }
                 
                 callback(obj);
-            }
+            };
             xhr.send();
-        },
-        assign = function (obj, i, callback) {
-            loadJSONLinks(obj[i], function (result) {
-                obj[i] = result;
-                callback(result);
-            });
         },
         loadJSONLinks = function (obj, callback) {
             var i = 0,
@@ -53,50 +94,60 @@ platypus.Game = (function () {
                     if (!callbacks) {
                         callback(obj);
                     }
+                },
+                assign = function (obj, i, callback) {
+                    loadJSONLinks(obj[i], function (result) {
+                        obj[i] = result;
+                        callback(result);
+                    });
                 };
             
-            if (!obj) {
-                
-            } else if (Array.isArray(obj)) {
-                callbacks = obj.length;
-                if (callbacks) {
-                    for (i = 0; i < obj.length; i++) {
-                        assign(obj, i, resolve);
-                    }
-                } else {
-                    callback(obj);
-                }
-                return;
-            } else if (typeof obj === 'object') {
-                if (obj.src && (obj.src.length > 5) && (obj.src.substring(obj.src.length - 5).toLowerCase() === '.json')) {
-                    loadJSONLinks(obj.src, function (result) {
-                        if (obj.src !== result) {
-                            obj = result;
-                        }
-                        callback(obj);
-                    });
-                } else {
-                    for (key in obj) {
-                        callbacks += 1;
-                    }
+            if (obj) {
+                if (Array.isArray(obj)) {
+                    callbacks = obj.length;
                     if (callbacks) {
-                        for (key in obj) {
-                            assign(obj, key, resolve);
+                        for (i = 0; i < obj.length; i++) {
+                            assign(obj, i, resolve);
                         }
                     } else {
                         callback(obj);
                     }
-                }
-                return;
-            } else if ((typeof obj === 'string') && (obj.length > 5) && (obj.substring(obj.length - 5).toLowerCase() === '.json')) {
-                getJSON(obj, function (result) {
-                    if (typeof result === 'object') {
-                        loadJSONLinks(result, callback);
+                    return;
+                } else if (typeof obj === 'object') {
+                    if (obj.src && (obj.src.length > 5) && (obj.src.substring(obj.src.length - 5).toLowerCase() === '.json')) {
+                        loadJSONLinks(obj.src, function (result) {
+                            if (obj.src !== result) {
+                                obj = result;
+                            }
+                            callback(obj);
+                        });
                     } else {
-                        callback(result);
+                        for (key in obj) {
+                            if (obj.hasOwnProperty(key)) {
+                                callbacks += 1;
+                            }
+                        }
+                        if (callbacks) {
+                            for (key in obj) {
+                                if (obj.hasOwnProperty(key)) {
+                                    assign(obj, key, resolve);
+                                }
+                            }
+                        } else {
+                            callback(obj);
+                        }
                     }
-                });
-                return;
+                    return;
+                } else if ((typeof obj === 'string') && (obj.length > 5) && (obj.substring(obj.length - 5).toLowerCase() === '.json')) {
+                    getJSON(obj, function (result) {
+                        if (typeof result === 'object') {
+                            loadJSONLinks(result, callback);
+                        } else {
+                            callback(result);
+                        }
+                    });
+                    return;
+                }
             }
             
             callback(obj);
@@ -240,8 +291,16 @@ platypus.Game = (function () {
         },
         proto = game.prototype;
         
-    if (window.createjs && window.createjs.Ticker) {
-        ticker = window.createjs.Ticker;
+    if (window.createjs) {
+        // Determine whether auto-ticking is a possibility
+        if (window.createjs.Ticker) {
+            ticker = window.createjs.Ticker;
+        }
+        
+        // Determine whether CreateJS tweening is loaded
+        if (window.createjs.Tween) {
+            setupTransitions(window.createjs.Tween, transitions);
+        }
     }
     
 /**
@@ -261,21 +320,25 @@ platypus.Game = (function () {
     };
     
 /**
- * Loads a scene. If there is a transition, performs the transition from the current scene to the new scene.
+ * Loads a scene. If there is a transition, performs the transition from the current scene to the new scene. Note that the CreateJS Tween library must be included for transitions to work; otherwise scene transitions are always instant.
  * 
  * @method loadScene
  * @param sceneId {String} The scene to load.
- * @param transition {String} What type of transition to make. Currently there are: 'fade-to-black' and 'instant'
+ * @param transition="instant" {String} What type of transition to make. Currently there are: 'fade-to-black', 'crossfade', and 'instant'.
+ * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
+ * @param preloading=false {boolean} Whether the scene should appear immediately or just be loaded and not shown.
  **/
-    proto.loadScene = function (sceneId, transition, persistantData, preloading) {
-        var i = 0,
-            self    = this,
-            element = null,
-            root    = null,
+    proto.loadScene = function (sceneId, transition, data, preloading) {
+        var self    = this,
             loaded  = this.loaded,
-            callSet = function (t) {
-                if (loaded === self.loaded) {
-                    self.completeSceneTransition(persistantData);
+            loadHandler = function () {
+                if (!self.loaded) {
+                    self.loadNextScene(sceneId, data);
+                }
+            },
+            completionHandler = function () {
+                if (!loaded || (loaded === self.loaded)) {
+                    self.completeSceneTransition(data);
                 }
             };
 
@@ -294,53 +357,11 @@ platypus.Game = (function () {
             this.loadedScene = null;
         }
         
-        switch (transition) {
-        case 'fade-to-black':
-            element = document.createElement('div');
-            this.rootElement.appendChild(element);
-            element.style.width = '100%';
-            element.style.height = '100%';
-            element.style.position = 'absolute';
-            element.style.zIndex = '12';
-            element.style.opacity = '0';
-            element.style.background = '#000';
-            new createjs.Tween(element.style).to({opacity: 0}, 500).to({opacity: 1}, 500).call(function (t) {
-                if (!self.loaded) {
-                    self.loadNextScene(sceneId, persistantData);
-                }
-                self.completeSceneTransition(persistantData);
-            }).wait(500).to({opacity: 0}, 500).call(function (t) {
-                self.rootElement.removeChild(element);
-                element = null;
-            });
-            break;
-        case 'crossfade':
-            if (!this.loaded) {
-                self.loadNextScene(sceneId, persistantData);
-                loaded = this.loaded;
-            }
-            root = this.loadedScene.layers;
-            for (i = 0; i < root.length; i++) {
-                if (root[i].element) {
-                    element = root[i].element.style;
-                    element.opacity = '0';
-                    if (callSet) {                       // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-                        new createjs.Tween.get(element).to({opacity: 0}, 5).to({opacity: 1}, 1000).call(callSet);
-                        callSet = null;
-                    } else {                           // v-- This extra "to" is to bypass a createJS bug - DDD 1-6-2015
-                        new createjs.Tween.get(element).to({opacity: 0}, 5).to({opacity: 1}, 1000);
-                    }
-                }
-            }
-            if (callSet) { // nothing to crossfade so we just finish loading the scene.
-                self.completeSceneTransition(persistantData);
-            }
-            break;
-        default:
-            if (!this.loaded) {
-                self.loadNextScene(sceneId, persistantData);
-            }
-            this.completeSceneTransition(persistantData);
+        if (transitions[transition]) {
+            transitions[transition](this, loadHandler, completionHandler);
+        } else {
+            loadHandler();
+            completionHandler();
         }
     };
     
@@ -348,10 +369,10 @@ platypus.Game = (function () {
  * Sets the currentScene to the specified scene. Called by loadScene: shouldn't be called on its own.
  * 
  * @method loadNextScene
- * @param {String} sceneId The scene to load.
- * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
+ * @param sceneId {String} The scene to load.
+ * @param [data] {Object} Data sent into the new scene from the calling scene.
  **/
-    proto.loadNextScene = function (sceneId, persistantData) {
+    proto.loadNextScene = function (sceneId, data) {
         var scene = null;
         
         if (typeof sceneId === 'string') {
@@ -364,16 +385,16 @@ platypus.Game = (function () {
         this.loadedScene = new platypus.Scene(scene, this.rootElement);
 
         console.log('Scene loaded: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
-        this.loadedScene.trigger('scene-loaded', persistantData);
+        this.loadedScene.trigger('scene-loaded', data);
     };
     
 /**
- * Ends the transition and destroys the old scene. Called when the scene effect is finished.
+ * Ends the transition and destroys the old scene. Called when the scene transition is finished.
  * 
  * @method completeSceneTransition
- * @param {Object} [persistantData] Data sent into the new scene from the calling scene.
+ * @param [data] {Object} Data sent into the new scene from the calling scene.
  **/
-    proto.completeSceneTransition = function (persistantData) {
+    proto.completeSceneTransition = function (data) {
         var sceneId = this.loaded;
         
         if (this.loadedScene) {
@@ -388,7 +409,7 @@ platypus.Game = (function () {
             }
 
             console.log('Scene live: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
-            this.currentScene.trigger('scene-live', persistantData);
+            this.currentScene.trigger('scene-live', data);
         }
     };
     
