@@ -6,7 +6,7 @@
  * @class "CollisionBasic" Component
  * @uses Component
  */
-// Requires: ["../collision-shape.js", "../aabb.js"]
+// Requires: ["../CollisionShape.js", "../AABB.js"]
 /*global platypus */
 /*jslint plusplus:true */
 (function () {

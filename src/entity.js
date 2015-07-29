@@ -66,7 +66,7 @@
  **/
 
 /*
- * Requires: ["messenger.js"]
+ * Requires: ["Messenger.js"]
  */
 /*global console, platypus */
 /*jslint plusplus:true */

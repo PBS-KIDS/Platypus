@@ -5,7 +5,7 @@
  * @uses Component
  */
  
-// Requires: ["../collision-shape.js", "../aabb.js", "../vector.js", "../collision-data-container.js"]
+// Requires: ["../CollisionShape.js", "../AABB.js", "../Vector.js", "../CollisionDataContainer.js"]
 /*global platypus */
 /*jslint plusplus:true */
 (function () {

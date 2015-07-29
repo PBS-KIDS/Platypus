@@ -20,7 +20,7 @@ This component groups other entities with this entity for collision checking. Th
       // This component has no customizable properties.
     }
     
-Requires: ["../aabb.js"]
+Requires: ["../AABB.js"]
 */
 /*global platypus */
 /*jslint plusplus:true */

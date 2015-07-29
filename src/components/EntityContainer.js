@@ -3,7 +3,7 @@
 This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
 
 ## Dependencies
-- **[[Messenger]] - Entity uses `messenger` in its prototypal chain to enable event handling.
+- **[[Messenger]] - Entity uses `Messenger` in its prototypal chain to enable event handling.
 
 ## Messages
 
@@ -74,7 +74,7 @@ This component allows the entity to contain child entities. It will add several 
 */
 
 /*
- * Requires: ["../messenger.js"]
+ * Requires: ["../Messenger.js"]
  */
 /*global platypus */
 /*jslint plusplus:true */

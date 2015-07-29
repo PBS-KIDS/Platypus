@@ -32,7 +32,7 @@ This component works with `CollisionBasic` to cause entities to bounce away on s
       // Optional. Bounciness of the entity. Defaults to 0.8.
     }
 
-Requires: ["../vector.js"]
+Requires: ["../Vector.js"]
 */
 /*global platypus */
 /*jslint plusplus:true */

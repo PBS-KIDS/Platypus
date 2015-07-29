@@ -24,7 +24,7 @@
  * @return {Scene} Returns the new scene made up of the provided layers. 
  * 
  *     
-Requires: ["entity.js"]
+Requires: ["Entity.js"]
 */
 /*global platypus */
 /*jslint plusplus:true */

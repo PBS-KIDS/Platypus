@@ -4,7 +4,7 @@
  * @class "CollisionTiles" Component
  * @uses Component
  */
-// Requires: ["../collision-shape.js"]
+// Requires: ["../CollisionShape.js"]
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
