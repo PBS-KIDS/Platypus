@@ -1,8 +1,7 @@
 /**
-# COMPONENT **AudioMobile**
-Activates audio on mobile devices by handling asset loading after a user interaction. This component should be included on the same entity as the asset loader and have a DOMElement component to capture the user interaction.
-
-Example "progress-bar" entity that could use this component:
+ * Activates audio on mobile devices by handling asset loading after a user interaction. This component should be included on the same entity as the asset loader and have a DOMElement component to capture the user interaction.
+ * 
+ * Example "progress-bar" entity that could use this component:
 
     {
         "id": "progress-bar",
@@ -76,32 +75,12 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
       background: #fff;
     }
 
-## Dependencies:
-- [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
-
-## Messages
-
-### Listens for:
-- **load** - On hearing this event, this component will trigger "load-assets" on non-mobile devices.
-- **activate-audio** - On hearing this event, this component will play audio on iOS devices to force audio file download and then trigger "load-assets".
-
-### Local Broadcasts:
-- **low-quality-audio** - This message is triggered if the mobile device does not support the Web Audio API. This is useful if audio behavior should be augmented in some way when this is the case.
-- **load-assets** - This message is triggered automatically when not on a mobile device. Otherwise it triggers when "activate-audio" has been triggered.
-
-## JSON Definition
-    {
-      "type": "AudioMobile"
-
-      "audioId": "audio-sprite"
-      // Required. The SoundJS audio id for the audio clip to be enabled for future play-back.
-    }
-
-[link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
-*/
-/*global console */
-/*global createjs */
-/*global platypus */
+ * 
+ * @namespace platypus.components
+ * @class AudioMobile
+ * @uses Component
+ */
+/*global console, createjs, platypus */
 (function () {
     "use strict";
 
@@ -109,22 +88,53 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
         
         id: 'AudioMobile',
         
+        properties: {
+            /**
+             * The SoundJS audio id for the audio clip to be enabled for future play-back.
+             * 
+             * @property audioId
+             * @type String
+             * @default "audio-sprite"
+             */
+            audioId: "audio-sprite"
+        },
+        
         constructor: function (definition) {
-            this.audioId = definition.audioId;
             this.iOSaudioAPIfix = platypus.supports.iOS && platypus.supports.audioAPI;
         },
 
-        events: {// These are messages that this component listens for
+        events: {
+            /**
+             * On hearing this event, this component will trigger "load-assets" on non-mobile devices.
+             * 
+             * @method 'load'
+             */
             "load": function () {
                 if (platypus.supports.mobile && !this.iOSaudioAPIfix) {
                     this.owner.state.mobile = true;
                     if ((platypus.supports.android || platypus.supports.iOS) && !platypus.supports.audioAPI) {
+                        /**
+                         * This event is triggered if the mobile device does not support the Web Audio API. This is useful if audio behavior should be augmented in some way when this is the case.
+                         * 
+                         * @event 'low-quality-audio'
+                         */
                         this.owner.triggerEvent('low-quality-audio');
                     }
                 } else {
+                    /**
+                     * This message is triggered automatically when not on a mobile device. Otherwise it triggers when "activate-audio" has been triggered.
+                     * 
+                     * @event 'load-assets'
+                     */
                     this.owner.triggerEvent('load-assets');
                 }
             },
+            
+            /**
+             * On hearing this event, this component will play audio on iOS devices to force audio file download and then trigger "load-assets".
+             * 
+             * @method 'activate-audio'
+             */
             "activate-audio": function () {
                 var audio    = platypus.assets[this.audioId].asset,
                     instance = null;
@@ -153,9 +163,20 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
                     if (instance.playState === 'playSucceeded') {
                         instance.stop();
                     }
+                    /**
+                     * This message is triggered once everything is loaded to go to the next scene.
+                     * 
+                     * @event 'new-scene'
+                     */
                     this.owner.triggerEvent('new-scene');
                 }
             },
+            
+            /**
+             * On hearing this event, this component will load the next scene.
+             * 
+             * @method 'complete'
+             */
             "complete": function () {
                 if (this.iOSaudioAPIfix) {
                     this.owner.state.mobile = true;
