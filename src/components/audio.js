@@ -415,8 +415,8 @@
             /**
              * On receiving this message, the audio will mute if unmuted, and unmute if muted.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
              * @method 'toggle-mute'
+             * @param audioId {String} If an audioId is provided, that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
              */
             "toggle-mute": function (audioId) {
                 var self = this;
@@ -432,8 +432,8 @@
             /**
              * On receiving this message, audio will stop playing.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance is stopped. Otherwise all audio is stopped.
              * @method 'stop-audio'
+             * @param audioId {String} If an audioId is provided, that particular sound instance is stopped. Otherwise all audio is stopped.
              */
             "stop-audio": function (audioId) {
                 if (!audioId) {
@@ -448,8 +448,8 @@
             /**
              * On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance will mute. Otherwise all audio is muted.
              * @method 'mute-audio'
+             * @param audioId {String} If an audioId is provided, that particular sound instance will mute. Otherwise all audio is muted.
              */
             "mute-audio": function (audioId) {
                 var self = this;
@@ -465,8 +465,8 @@
             /**
              * On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance will unmute. Otherwise all audio is unmuted.
              * @method 'unmute-audio'
+             * @param audioId {String} If an audioId is provided, that particular sound instance will unmute. Otherwise all audio is unmuted.
              */
             "unmute-audio": function (audioId) {
                 var self = this;
@@ -482,8 +482,8 @@
             /**
              * On receiving this message all audio will pause, or a particular sound instance will pause if an id is specified.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance will pause. Otherwise all audio is paused.
              * @method 'pause-audio'
+             * @param audioId {String} If an audioId is provided, that particular sound instance will pause. Otherwise all audio is paused.
              */
             "pause-audio": function (audioId) {
                 var self = this;
@@ -499,8 +499,8 @@
             /**
              * On receiving this message all audio will unpause, or a particular sound instance will unpause if an id is specified.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance will unpause. Otherwise all audio is unpaused.
              * @method 'unpause-audio'
+             * @param audioId {String} If an audioId is provided, that particular sound instance will unpause. Otherwise all audio is unpaused.
              */
             "unpause-audio": function (audioId) {
                 var self = this;
@@ -516,8 +516,8 @@
             /**
              * This message sets the volume of playing audio.
              * 
-             * @param audioId {String} If an audioId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.
              * @method 'set-volume'
+             * @param audioId {String} If an audioId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.
              */
             "set-volume": function (volume) {
                 var self    = this,
