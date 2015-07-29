@@ -1,71 +1,76 @@
 /**
-# COMPONENT **AssetLoader**
-This component loads a list of assets, wrapping PreloadJS functionality into a game engine component. Settings and files are pulled from the information provided in config.js, with the expectation that this component will exist on the initial loading screen.
-
-## Dependencies
-- [createjs.PreloadJS][link1] - Requires the PreloadJS library to load a list of assets.
-
-## Messages
-
-### Listens for:
-- **load** - On receiving this event, the asset loader begins downloading the list of assets if the "automatic" property is not set to `false`.
-- **load-assets** - On receiving this event, the asset loader begins downloading the list of assets.
-- **fileload** - This message used to update a progress bar if one has been defined by JSON.
-  - @param fraction (Number) - Value of (progress / total) is used to set the width of the progress bar element.
-
-### Local Broadcasts:
-- **fileload** - This message is broadcast when an asset has been loaded.
-  - @param complete (Boolean) - Whether this is the final asset to be loaded.
-  - @param total (Number) - The total number of assets being loaded.
-  - @param progress (Number) - The number of assets finished loading.
-  - @param fraction (Number) - Value of (progress / total) provided for convenience.
-- **complete** - This message is triggered when the asset loader is finished loading assets.
-
-## JSON Definition
-    {
-      "type": "AssetLoader",
-      
-      "assets": [
-      // Optional. A list of assets to load; typically the asset list is pulled directly from the config.json file.
-        {"id": "item-1",         "src": "images/item-1.png"},
-        {"id": "item-2",         "src": "images/item-2.png"},
-        {"id": "item-3",         "src": "images/item-3.png"}
-      ]
-      
-      "progressBar": "progress-bar",
-      // Optional. A DOM element id for an element that should be updated as assets are loaded.
-      
-      "useXHR": true,
-      // Whether to use XHR for asset downloading. The default is `true`.
-      
-      "automatic": false,
-      // Whether to automatically load assets when this component loads. The default is `true`.
-      
-      "crossOrigin": true
-      // Whether images are loaded from a CORS-enabled domain. The default is `false`.
-    }
-
-[link1]: http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html
-
-*/
+ * This component loads a list of assets, wrapping [PreloadJS](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) functionality into a game engine component.
+ *
+ * @namespace platypus.components
+ * @class AssetLoader
+ * @uses Component
+ */
 /*global createjs, platypus */
 (function () {
     "use strict";
 
     return platypus.createComponentClass({
         id: 'AssetLoader',
+        
+        properties: {
+            /**
+             * Determines whether to automatically load assets when this component loads.
+             * 
+             * @property automatic
+             * @type boolean
+             * @default true
+             */
+            automatic: true,
+            
+            /**
+             * A list of assets to load. If not provided, the asset list is pulled directly from the game configuration file's asset list.
+             * 
+             * The list of assets should use PreloadJS syntax such as:
+             *       [
+             *           {"id": "item-1",         "src": "images/item-1.png"},
+             *           {"id": "item-2",         "src": "images/item-2.png"},
+             *           {"id": "item-3",         "src": "images/item-3.png"}
+             *       ]
+             * 
+             * @property assets
+             * @type Array
+             * @default null
+             */
+            assets: null,
+            
+            /**
+             * Whether images are loaded from a CORS-enabled domain.
+             * 
+             * @property crossOrigin
+             * @type String
+             * @default ""
+             */
+            crossOrigin: '',
+            
+            /**
+             * A DOM element id for an element that should be updated as assets are loaded.
+             * 
+             * @property progressBar
+             * @type String
+             * @default ""
+             */
+            progressBar: '',
+            
+            /**
+             * Whether to use XHR for asset downloading.
+             * 
+             * @property useXHR
+             * @type boolean
+             * @default true
+             */
+            useXHR: true            
+        },
 
         constructor: function (definition) {
-            this.useXHR = (definition.useXHR !== false);
-
-            this.assets = definition.assets || platypus.game.settings.assets;
-
-            this.crossOrigin = definition.crossOrigin || "";
-
-            this.progressBar = definition.progressBar || false;
-
-            this.automatic = (definition.automatic !== false);
-
+            if (!this.assets) {
+                this.assets = platypus.game.settings.assets;
+            }
+            
             this.message = {
                 complete: false,
                 total: 0,
@@ -74,13 +79,28 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
             };
         },
 
-        events: {// These are messages that this component listens for
+        events: {
+            /**
+             * On receiving this event, the asset loader begins downloading the list of assets if the "automatic" property is not set to `false`.
+             * 
+             * @method 'load'
+             */
             "load": function () {
                 if (this.automatic) {
+                    /**
+                     * This event is triggered as soon as the entity loads if the "automatic" property is not set to `false`.
+                     * 
+                     * @event 'load-assets'
+                     */
                     this.owner.triggerEvent('load-assets');
                 }
             },
 
+            /**
+             * On receiving this event, the asset loader begins downloading the list of assets.
+             * 
+             * @method 'load-assets'
+             */
             "load-assets": function () {
                 var i         = '',
                     self      = this,
@@ -145,6 +165,16 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                         if (self.message.progress === self.message.total) {
                             self.message.complete = true;
                         }
+
+                        /**
+                         * This message is broadcast when an asset has been loaded.
+                         * 
+                         * @event 'fileload'
+                         * @param complete {boolean} Whether this is the final asset to be loaded.
+                         * @param total {number} The total number of assets being loaded.
+                         * @param progress {number} The number of assets finished loading.
+                         * @param fraction {number} Value of (progress / total) provided for convenience.
+                         */
                         self.owner.trigger('fileload', self.message);
                     };
 
@@ -159,6 +189,12 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 
                 loader.addEventListener('complete', function (event) {
                     setTimeout(function () { // Allow current process to finish before firing completion.
+
+                        /**
+                         * This message is triggered when the asset loader is finished loading assets.
+                         * 
+                         * @event 'complete'
+                         */
                         self.owner.triggerEvent('complete');
                     }, 10);
                 });
@@ -177,7 +213,14 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                 platypus.assets = {};
             },
 
-            "fileload": function (resp) {
+            /**
+             * This message used to update a progress bar if one has been defined by the component's constructor.
+             * 
+             * @method 'fileload'
+             * @param progress {Object} Key/value pairs describing asset-loading progress.
+             * @param progress.fraction {number} Value of (progress / total) is used to set the width of the progress bar element.
+             */
+            "fileload": function (progress) {
                 var pb = null;
 
                 if (this.progressBar) {
@@ -185,12 +228,11 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
                     if (pb) {
                         pb = pb.style;
 
-                        pb.width = (resp.fraction * 100) + '%';
-                        pb.backgroundSize = ((1 / resp.fraction) * 100) + '%';
+                        pb.width = (progress.fraction * 100) + '%';
+                        pb.backgroundSize = ((1 / progress.fraction) * 100) + '%';
                     }
                 }
             }
         }
-
     });
 }());
