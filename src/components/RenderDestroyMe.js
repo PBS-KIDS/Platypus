@@ -1,9 +1,9 @@
 /**
-# COMPONENT **render-destroy-me**
+# COMPONENT **RenderDestroyMe**
 This component will destroy the entity once an animation has finished. This is useful for explosions or similar animations where the entity is no longer needed once the animation completes.
 
 ## Dependencies:
-- [[render-sprite]] (component on entity) - This component listens for the "animation-complete" event triggered by render-sprite.
+- [[RenderSprite]] (component on entity) - This component listens for the "animation-complete" event triggered by RenderSprite.
 
 ### Listens for:
 - **animation-complete** - On receiving this message, the component match the animation id with its animation id setting and destroy the entity if they match.
@@ -11,7 +11,7 @@ This component will destroy the entity once an animation has finished. This is u
 
 ## JSON Definition:
     {
-      "type": "render-destroy-me",
+      "type": "RenderDestroyMe",
       
       "animationId": "bigExplosion"
       //This or animationIds Required. String identifying the animation that should destroy this entity on its completion.
@@ -26,7 +26,7 @@ This component will destroy the entity once an animation has finished. This is u
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'render-destroy-me',
+        id: 'RenderDestroyMe',
 
         constructor: function (definition) {
             this.animationIds = null;

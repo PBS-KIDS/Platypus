@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-timer**
+# COMPONENT **LogicTimer**
 A timer that can used to trigger events. The timer can increment and decrement. It can be an interval timer, going off over and over. Has a max time which it will not exceed by default this is 1 hour.
 
 ## Dependencies
@@ -22,7 +22,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 
 ## JSON Definition
     {
-      "type": "logic-timer",
+      "type": "LogicTimer",
       "time" : 0,
       //Optional - The starting time for the timer. Defaults to 0.
       "alarmTime" : 10000,
@@ -46,7 +46,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-timer',
+        id: 'LogicTimer',
         constructor: function (definition) {
             this.time = this.owner.time || definition.time ||  0;
             this.prevTime = this.time;

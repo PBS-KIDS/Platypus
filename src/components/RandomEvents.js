@@ -1,5 +1,5 @@
 /**
-# COMPONENT **random-events**
+# COMPONENT **RandomEvents**
 This component listens for certain messages, picks a message from a related list of events, and triggers it. This is useful for adding random behaviors to an entity, such as having an entity say one thing from a list of audio clips.
 
 ## Messages
@@ -14,7 +14,7 @@ This component listens for certain messages, picks a message from a related list
 
 ## JSON Definition
     {
-      "type": "random-events"
+      "type": "RandomEvents"
       
       "events"{
       // This is a key/value list of events to listen for, with each event mapping to an array of events to pick from.
@@ -35,7 +35,7 @@ This component listens for certain messages, picks a message from a related list
     };
 
     return platypus.createComponentClass({
-        id: 'random-events',
+        id: 'RandomEvents',
         
         constructor: function (definition) {
             var event = '';

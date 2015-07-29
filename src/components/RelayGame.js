@@ -1,5 +1,5 @@
 /**
-# COMPONENT **relay-game**
+# COMPONENT **RelayGame**
 This component listens for specified local entity messages and re-broadcasts them at the top game level.
 
 ## Messages
@@ -14,7 +14,7 @@ This component listens for specified local entity messages and re-broadcasts the
 
 ## JSON Definition:
     {
-      "type": "relay-game",
+      "type": "RelayGame",
       
       "events": {
       // Optional: Maps local messages to trigger global game messages. At least one of the following mappings should be included.
@@ -38,7 +38,7 @@ This component listens for specified local entity messages and re-broadcasts the
     };
     
     return platypus.createComponentClass({
-        id: 'relay-game',
+        id: 'RelayGame',
         
         constructor: function (definition) {
             var event = '';

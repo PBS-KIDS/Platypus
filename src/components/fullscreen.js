@@ -1,11 +1,11 @@
 /**
-# COMPONENT **fullscreen**
+# COMPONENT **Fullscreen**
 This component listens for "toggle-fullscreen" messages to toggle the game's container to full-screen and back.
 
 Note: This component connects to the browser's fullscreen API if available. It also sets a "full-screen" class on the game container that should be styled in CSS for proper behavior.
 
 ## Dependencies:
-- [[Render-Animation]] (component on entity) - This component listens for the "animation-complete" event triggered by render-sprite.
+- [[Render-Animation]] (component on entity) - This component listens for the "animation-complete" event triggered by RenderSprite.
 
 ## Messages:
 
@@ -14,7 +14,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
 
 ## JSON Definition:
     {
-      "type": "fullscreen"
+      "type": "Fullscreen"
     }
 */
 
@@ -75,7 +75,7 @@ Note: This component connects to the browser's fullscreen API if available. It a
     });
     
     return platypus.createComponentClass({
-        id: 'fullscreen',
+        id: 'Fullscreen',
         constructor: function (definition) {
             if (!element) {
                 element = platypus.game.containerElement;

@@ -1,9 +1,9 @@
 /**
-# COMPONENT **render-debug**
-This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in grey), if the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a [[Logic-Carrier]] component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The render-debug component also allows the user to click on an object and it will print the object in the debug console. 
+# COMPONENT **RenderDebug**
+This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in grey), if the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a [[Logic-Carrier]] component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the user to click on an object and it will print the object in the debug console. 
 
 ## Dependencies
-- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
 
 ## Messages
 
@@ -34,7 +34,7 @@ This component is attached to entities that will appear in the game world. It se
 
 ## JSON Definition
     {
-      "type": "render-debug",
+      "type": "RenderDebug",
       "acceptInput": {
           //Optional - What types of input the object should take.
           "hover": false;
@@ -83,7 +83,7 @@ This component is attached to entities that will appear in the game world. It se
     
     return platypus.createComponentClass({
         
-        id: 'render-debug',
+        id: 'RenderDebug',
         
         constructor: function (definition) {
             if (definition.acceptInput) {

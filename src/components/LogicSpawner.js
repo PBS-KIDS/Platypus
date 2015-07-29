@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-spawner**
+# COMPONENT **LogicSpawner**
 This component creates an entity and propels it away. This is useful for casting, firing, tossing, and related behaviors.
 
 ## Dependencies:
@@ -14,7 +14,7 @@ This component creates an entity and propels it away. This is useful for casting
 
 ## JSON Definition
     {
-      "type": "logic-spawner"
+      "type": "LogicSpawner"
       // List all additional parameters and their possible values here.
 
       "spawneeClass": "wet-noodle",
@@ -38,7 +38,7 @@ This component creates an entity and propels it away. This is useful for casting
 
     return platypus.createComponentClass({
         
-        id: 'logic-spawner',
+        id: 'LogicSpawner',
         
         constructor: function (definition) {
             var className = this.owner.spawneeClass || definition.spawneeClass,

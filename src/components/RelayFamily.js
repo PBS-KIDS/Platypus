@@ -34,7 +34,7 @@ This component allows an entity to communicate directly with one or more entitie
 
 ## JSON Definition
     {
-      "type": "relay-family",
+      "type": "RelayFamily",
       
       "events":{
       // This is a list of messages that this component should be listening for locally to broadcast to its linked entities.
@@ -66,7 +66,7 @@ This component allows an entity to communicate directly with one or more entitie
         };
 
     return platypus.createComponentClass({
-        id: 'relay-family',
+        id: 'RelayFamily',
         
         constructor: function (definition) {
             var event = '';
@@ -97,7 +97,7 @@ This component allows an entity to communicate directly with one or more entitie
             
             "entity-created": function (entity) {
                 if (!entity.triggerEvent('link-family', this.owner.familyLinks)) {
-                    entity.addComponent(new platypus.components['relay-family'](entity, {}));
+                    entity.addComponent(new platypus.components['RelayFamily'](entity, {}));
                     entity.triggerEvent('link-family', this.owner.familyLinks);
                 }
             }

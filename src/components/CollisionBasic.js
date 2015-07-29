@@ -3,7 +3,7 @@
  * 
  * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance. 
  * 
- * @class "collision-basic" Component
+ * @class "CollisionBasic" Component
  * @uses Component
  */
 // Requires: ["../collision-shape.js", "../aabb.js"]
@@ -216,7 +216,7 @@
 
     return platypus.createComponentClass({
         
-        id: 'collision-basic',
+        id: 'CollisionBasic',
 
         properties: {
             /**
@@ -428,7 +428,7 @@
                 for (key in definition.solidCollisions) {
                     if (definition.solidCollisions.hasOwnProperty(key)) {
                         this.owner.solidCollisions[this.collisionType].push(key);
-                        this.owner.collides = true; //informs handler-collision that this entity should be processed in the list of solid colliders.
+                        this.owner.collides = true; //informs HandlerCollision that this entity should be processed in the list of solid colliders.
                         if (definition.solidCollisions[key]) { // To make sure it's not an empty string.
                             this.addEventListener('hit-by-' + key, entityBroadcast(definition.solidCollisions[key], 'solid', this.collisionType));
                         }

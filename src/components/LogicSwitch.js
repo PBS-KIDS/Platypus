@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-switch**
+# COMPONENT **LogicSwitch**
 This component serves as a switch in the game world, typically tied to collision events such that this entity changes state when another entity collides or passed over.
 
 ## Dependencies:
@@ -18,7 +18,7 @@ This component serves as a switch in the game world, typically tied to collision
 
 ## JSON Definition:
     {
-      "type": "logic-switch",
+      "type": "LogicSwitch",
       
       "sticky": true
       // Optional. Whether a pressed switch should stay pressed once collision messages cease. Defaults to `false`.
@@ -30,7 +30,7 @@ This component serves as a switch in the game world, typically tied to collision
 
     return platypus.createComponentClass({
         
-        id: 'logic-switch',
+        id: 'LogicSwitch',
         
         constructor: function (definition) {
             this.state = this.owner.state;

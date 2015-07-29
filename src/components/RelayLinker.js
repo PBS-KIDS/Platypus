@@ -1,9 +1,9 @@
 /**
-# COMPONENT **relay-linker**
+# COMPONENT **RelayLinker**
 This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to the linked entities as new triggered events.
 
 ## Dependencies
-- [[relay-linker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
+- [[RelayLinker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
 
 ## Messages
 
@@ -37,7 +37,7 @@ This component allows an entity to communicate directly with one or more entitie
 
 ## JSON Definition
     {
-      "type": "relay-linker",
+      "type": "RelayLinker",
       
       "linkId": "hero",
       // A string setting an id that should match across all connected entities. This serves as a sort of radio channel that multiple entities can be listening on.
@@ -69,7 +69,7 @@ This component allows an entity to communicate directly with one or more entitie
     };
 
     return platypus.createComponentClass({
-        id: 'relay-linker',
+        id: 'RelayLinker',
         constructor: function (definition) {
             var i = 0,
                 self  = this,

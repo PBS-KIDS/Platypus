@@ -2,11 +2,11 @@
     "id": "tile-layer",
     "components":[
         {
-            "type": "render-tiles",
+            "type": "RenderTiles",
             "spriteSheet": "import",
             "imageMap":    "import"
         },{
-            "type": "collision-tiles",
+            "type": "CollisionTiles",
             "collisionMap": "import"
         }
     ]

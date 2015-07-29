@@ -1,14 +1,14 @@
 /**
-# COMPONENT **node-map**
-This component sets up a node-map to be used by the [[node-resident]] component on this entity's child entities.
+# COMPONENT **NodeMap**
+This component sets up a NodeMap to be used by the [[NodeResident]] component on this entity's child entities.
 
 ## Dependencies
-- [[entity-container]] - This component expects the entity to have an `entity-container` component so it knows when `node-resident` children are added.
+- [[EntityContainer]] - This component expects the entity to have an `EntityContainer` component so it knows when `NodeResident` children are added.
 
 ## Messages
 
 ### Listens for:
-- **add-node** - Expects a node definition to create a node in the node-map.
+- **add-node** - Expects a node definition to create a node in the NodeMap.
   - @param definition.nodeId (string or array) - This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
   - @param definition.type (string) - This determines the type of the node.
   - @param definition.x (number) - Sets the x axis position of the node.
@@ -20,13 +20,13 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 
 ## JSON Definition
     {
-      "type": "node-map"
+      "type": "NodeMap"
       
       "map": [
-      // Optional. An array of node definitions to create the node-map.
+      // Optional. An array of node definitions to create the NodeMap.
         
         {
-          "nodeId": "node1",
+          "NodeId": "Node1",
           // A string or array that becomes the id of the Node. Arrays are joined using "|" to create the id string.
           
           "type": "path",
@@ -56,7 +56,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 (function () {
     "use strict";
     
-    // This is a basic node object, but can be replaced by entities having a `node` component if more functionality is needed.
+    // This is a basic node object, but can be replaced by entities having a `Node` component if more functionality is needed.
     var Node = function (definition, map) {
             if (definition.id) {
                 if (typeof definition.id === 'string') {
@@ -132,7 +132,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
     };
 	
 	return platypus.createComponentClass({
-		id: 'node-map',
+		id: 'NodeMap',
 		
         constructor: function (definition) {
             var i = 0;
@@ -175,7 +175,7 @@ This component sets up a node-map to be used by the [[node-resident]] component 
 			"child-entity-added": function (entity) {
 				if(entity.isNode){        // a node
 					this.owner.triggerEvent('add-node', entity);
-				} else if(entity.nodeId){ // a node-resident
+				} else if(entity.nodeId){ // a NodeResident
 					entity.node = this.getNode(entity.nodeId);
                     if(!entity.node){
                         this.residentsAwaitingNode.push(entity);

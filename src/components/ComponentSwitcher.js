@@ -1,5 +1,5 @@
 /**
-# COMPONENT **component-switcher**
+# COMPONENT **ComponentSwitcher**
 This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
 
 ## Messages
@@ -13,7 +13,7 @@ This component listens for messages and, according to its preset settings, will 
 
 ## JSON Definition
     {
-      "type": "component-switcher"
+      "type": "ComponentSwitcher"
       
       "componentMap":{
       // This is the list of messages to listen for (as the keys) with the settings as two arrays of components to add and components to remove.
@@ -22,7 +22,7 @@ This component listens for messages and, according to its preset settings, will 
           
           "add":[
           // This is a list of components to add when "found-pogostick" is triggered on the entity. If it's adding a single component, "add" can be a reference to the component definition itself rather than an array of one object.
-            {"type": "mover"},
+            {"type": "Mover"},
             {"type": "head-gear"}
           ]
           
@@ -37,7 +37,7 @@ This component listens for messages and, according to its preset settings, will 
         },
         
         "contemplate":{
-          "add": {"type": "ai-pacer"}
+          "add": {"type": "AIPacer"}
         }
       
       }
@@ -91,7 +91,7 @@ This component listens for messages and, according to its preset settings, will 
     };
     
     return platypus.createComponentClass({
-        id: 'component-switcher',
+        id: 'ComponentSwitcher',
         
         properties: {
             componentMap: null

@@ -1,5 +1,5 @@
 /*
-# COMPONENT **logic-fps-counter**
+# COMPONENT **LogicFPSCounter**
 This component renders the avg FPS and other developer defined debug data to the screen. The developer defined values can be used to keep track of how long portions of code are taking to process on average. To do this, send messages to 'time-elapsed' with a 'name' and 'time' value. The name value is the label that you want displayed. The time value should be the time in ms that was spent performing that operation. These values are averaged over a number of ticks. 
 
 ## Dependencies:
@@ -19,7 +19,7 @@ This component renders the avg FPS and other developer defined debug data to the
 
 ## JSON Definition:
     {
-        "type": "logic-fps-counter",
+        "type": "LogicFPSCounter",
         "ticks": 45
         //Optional - The number of ticks across which we average the values. Defaults to 30.
     }
@@ -30,7 +30,7 @@ This component renders the avg FPS and other developer defined debug data to the
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-fps-counter',
+        id: 'LogicFPSCounter',
         constructor: function (definition) {
             this.counter = {
                 text: ''

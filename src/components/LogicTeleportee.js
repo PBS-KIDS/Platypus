@@ -1,10 +1,10 @@
 /**
-# COMPONENT **logic-teleportee**
+# COMPONENT **LogicTeleportee**
 This component causes an entity to teleport when receiving a teleport message.
 
 ## Dependencies:
-- [[collision-basic]] (on entity) - This component triggers "relocate-entity" to perform teleport, for which "collision-basic" listens.
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[CollisionBasic]] (on entity) - This component triggers "relocate-entity" to perform teleport, for which "CollisionBasic" listens.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 
@@ -23,7 +23,7 @@ This component causes an entity to teleport when receiving a teleport message.
 
 ## JSON Definition
     {
-      "type": "logic-teleportee"
+      "type": "LogicTeleportee"
     }
 
 Requires: ["../vector.js"]
@@ -33,7 +33,7 @@ Requires: ["../vector.js"]
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-teleportee',
+        id: 'LogicTeleportee',
         
         constructor: function (definition) {
             this.teleportDestination = new platypus.Vector();

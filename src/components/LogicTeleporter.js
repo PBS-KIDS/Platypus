@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-teleporter**
+# COMPONENT **LogicTeleporter**
 This component listens for redirected collision messages and fires a message on the colliding entity to specify where the colliding entity should relocate itself.
 
 ## Dependencies:
@@ -22,7 +22,7 @@ This component listens for redirected collision messages and fires a message on 
 
 ## JSON Definition:
     {
-      "type": "logic-teleporter",
+      "type": "LogicTeleporter",
       
       "facing": "up",
       // Optional: "up", "down", "left", or "right". Will only trigger "teleport" if colliding entity collides on the facing side of this entity. If nothing is specified, all collisions fire a "teleport" message on the colliding entity.
@@ -37,7 +37,7 @@ This component listens for redirected collision messages and fires a message on 
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-teleporter',
+        id: 'LogicTeleporter',
 
         constructor: function (definition) {
             

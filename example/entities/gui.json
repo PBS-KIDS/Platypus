@@ -7,7 +7,7 @@
         {
             "type": "logic-gui"
         },{
-            "type": "entity-container", 
+            "type": "EntityContainer", 
                 "entities": [{}],
                 "childEvents": ['handle-logic', 'handle-render', 'handle-render-load']
         }

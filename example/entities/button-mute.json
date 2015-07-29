@@ -2,18 +2,18 @@
     "id": "button-mute",
     "components":[
         {
-            "type":   "logic-button",
+            "type":   "LogicButton",
             "toggle": true,
             "state":  "pressed"
         },{
-            "type": "dom-element",
+            "type": "DOMElement",
             "element": "div",
             "className": "game-button mute-button",
             "updateClassName": true,
             "onmouseup": ["audio-mute-toggle", "mouseup"],
             "ontouchend": ["audio-mute-toggle", "mouseup"]
         },{
-            "type": "audio"
+            "type": "Audio"
         }
     ],
     "properties":{

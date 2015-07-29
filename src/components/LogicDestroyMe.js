@@ -1,7 +1,7 @@
 /**
  * This component allows an entity to be removed from the stage when "destroy-me" is triggered.
  * 
- * @class "logic-destroy-me" Component
+ * @class "LogicDestroyMe" Component
  * @uses Component
  */
 /*global platypus */
@@ -9,7 +9,7 @@
     "use strict";
     
     return platypus.createComponentClass({
-        id: 'logic-destroy-me',
+        id: 'LogicDestroyMe',
         
         properties: {
             /**

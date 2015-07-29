@@ -2,9 +2,9 @@
     "id": "fps-counter",
     "components":[
         {
-            "type": "logic-fps-counter"
+            "type": "LogicFPSCounter"
         },{
-            "type": "dom-element",
+            "type": "DOMElement",
             "className": "fps-counter",
             "style": {
                 "position": "absolute",

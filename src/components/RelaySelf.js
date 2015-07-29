@@ -1,5 +1,5 @@
 /**
-# COMPONENT **relay-self**
+# COMPONENT **RelaySelf**
 This component listens for specified local entity messages and re-broadcasts them on itself as other messages.
 
 **Note:** Make sure that this component is never set up to receive and broadcast identical messages or an infinite loop will result, since it will receive the same message it sent.
@@ -16,7 +16,7 @@ This component listens for specified local entity messages and re-broadcasts the
 
 ## JSON Definition:
     {
-      "type": "relay-self",
+      "type": "RelaySelf",
       
       "events": {
       // Required: Maps local messages to trigger alternative messages on the entity itself. This can be useful as a basic fill-in for a logic component to translate an outgoing message from one component into an incoming message for another. At least one of the following mappings should be included.
@@ -40,7 +40,7 @@ This component listens for specified local entity messages and re-broadcasts the
     };
     
     return platypus.createComponentClass({
-        id: 'relay-self',
+        id: 'RelaySelf',
         
         constructor: function (definition) {
             var event = '';

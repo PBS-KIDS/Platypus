@@ -17,7 +17,7 @@
  *     - **scaleY**: absorb -1 if described
  *     - **rotation**: absorb 90 degree rotations
  * 
- * @class "orientation" Component
+ * @class "Orientation" Component
  * @uses Component
  */
 /*global platypus */
@@ -96,7 +96,7 @@
         };
     
     return platypus.createComponentClass({
-        id: 'orientation',
+        id: 'Orientation',
         publicProperties: {
             /**
              * The Entity's scale along the X-axis will mirror the entity's initial orientation if it is negative. This value is available via `entity.scaleX`, but is not manipulated by this component after instantiation.

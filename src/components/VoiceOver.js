@@ -1,5 +1,5 @@
 /**
-# COMPONENT **voice-over**
+# COMPONENT **VoiceOver**
 This component uses its definition to load two other components (Audio and RenderSprite) who work in an interconnected way to render animations corresponding to one or more audio tracks.
 
 ## Dependencies
@@ -13,13 +13,13 @@ This component uses its definition to load two other components (Audio and Rende
 
 ## JSON Definition
     {
-      "type": "voice-over"
+      "type": "VoiceOver"
       
       "frameLength": 200,
       // Optional. Specifies how long a described voice-over frame should last. Default is 100 milliseconds.
       
       "messagePrefix": "i-say",
-      // Optional. Specifies the prefix that messages between the render and Audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the RenderSprite uses to show the proper frame. Defaults to "voice-over".
+      // Optional. Specifies the prefix that messages between the render and Audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the RenderSprite uses to show the proper frame. Defaults to "VoiceOver".
       
       "animationMap": {
         "default": "mouth-closed"
@@ -147,7 +147,7 @@ Requires: ["Audio", "RenderSprite"]
         };
 
     return platypus.createComponentClass({
-        id: 'voice-over',
+        id: 'VoiceOver',
         
         constructor: function (definition) {
             var i = '',
@@ -173,7 +173,7 @@ Requires: ["Audio", "RenderSprite"]
                     aliases:       definition.aliases
                 };
             
-            this.message = (definition.messagePrefix || 'voice-over') + '-';
+            this.message = (definition.messagePrefix || 'VoiceOver') + '-';
             
             for (i in definition.animationMap) {
                 if (definition.animationMap.hasOwnProperty(i)) {

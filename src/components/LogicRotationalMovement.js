@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-rotational-movement**
+# COMPONENT **LogicRotationalMovement**
 This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
 
 ## Dependencies:
@@ -21,7 +21,7 @@ This component changes the (x, y) position of an object according to its current
 
 ## JSON Definition:
     {
-      "type": "logic-rotational-movement",
+      "type": "LogicRotationalMovement",
       
       "speed": 4.5,
       // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
@@ -48,7 +48,7 @@ This component changes the (x, y) position of an object according to its current
         };
     
     return platypus.createComponentClass({
-        id: 'logic-rotational-movement',
+        id: 'LogicRotationalMovement',
         constructor: function (definition) {
             this.speed = definition.speed || 0.3;
             this.magnitude = 0;

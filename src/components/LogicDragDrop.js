@@ -1,11 +1,11 @@
 /**
-# COMPONENT **logic-drag-and-droppable**
+# COMPONENT **LogicDragDrop**
 A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
-NOTE: handler-render-createjs and the render-sprite used by this entity need to have their 'touch' or 'click' inputs set to true.
+NOTE: HandlerRenderCreateJS and the RenderSprite used by this entity need to have their 'touch' or 'click' inputs set to true.
 
 ## Dependencies
 - [[HandlerLogic]] - Listens for the handle-logic and handle-post-collision-logic calls.
-- [[render-sprite]] - Listens for 'mouseup', 'mousedown', and 'pressmove' calls.
+- [[RenderSprite]] - Listens for 'mouseup', 'mousedown', and 'pressmove' calls.
 
 ## Messages
 
@@ -25,7 +25,7 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
   
 ## JSON Definition
     {
-        "type": "logic-drag-and-droppable"
+        "type": "LogicDragDrop"
     }
 */
 /*global platypus */
@@ -42,7 +42,7 @@ NOTE: handler-render-createjs and the render-sprite used by this entity need to 
          Property this.type  - identical to the id provided below
         *********************************************************************/
         
-        id: 'logic-drag-and-droppable',
+        id: 'LogicDragDrop',
         
         constructor: function (definition) {
             this.nextX = this.owner.x;

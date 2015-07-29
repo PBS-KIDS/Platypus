@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-angular-movement**
+# COMPONENT **LogicAngularMovement**
 This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]].
 
 ## Dependencies:
@@ -17,7 +17,7 @@ This component changes the (x, y) position of an object according to its current
 
 ## JSON Definition:
     {
-      "type": "logic-angular-movement",
+      "type": "LogicAngularMovement",
       
       "maxVelocity": 4.5,
       // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 3.
@@ -35,7 +35,7 @@ This component changes the (x, y) position of an object according to its current
 
     return platypus.createComponentClass({
         
-        id: 'logic-angular-movement',
+        id: 'LogicAngularMovement',
         
         constructor: function (definition) {
             this.angle     = 0;

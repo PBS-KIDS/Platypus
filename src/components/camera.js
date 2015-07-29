@@ -3,7 +3,7 @@
  * 
  * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
  * 
- * @class "camera" Component
+ * @class "Camera" Component
  * @uses Component
 */
 /*global platypus */
@@ -37,7 +37,7 @@
     };
 
     return platypus.createComponentClass({
-        id: 'camera',
+        id: 'Camera',
         properties: {
             /**
              * Number specifying top of viewport in world coordinates.

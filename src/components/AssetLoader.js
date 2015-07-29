@@ -1,5 +1,5 @@
 /**
-# COMPONENT **asset-loader**
+# COMPONENT **AssetLoader**
 This component loads a list of assets, wrapping PreloadJS functionality into a game engine component. Settings and files are pulled from the information provided in config.js, with the expectation that this component will exist on the initial loading screen.
 
 ## Dependencies
@@ -23,7 +23,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
 
 ## JSON Definition
     {
-      "type": "asset-loader",
+      "type": "AssetLoader",
       
       "assets": [
       // Optional. A list of assets to load; typically the asset list is pulled directly from the config.json file.
@@ -53,7 +53,7 @@ This component loads a list of assets, wrapping PreloadJS functionality into a g
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'asset-loader',
+        id: 'AssetLoader',
 
         constructor: function (definition) {
             this.useXHR = (definition.useXHR !== false);

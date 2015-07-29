@@ -1,10 +1,10 @@
 /**
-# COMPONENT **logic-portable**
+# COMPONENT **LogicPortable**
 This component allows this entity to be carried by other entities with which it collides. Entities that should carry this entity need to have a [[Logic-Carrier]] component attached.
 
 ## Dependencies:
 - [[HandlerLogic]] (on parent entity) - This component listens for 'handle-logic' messages to determine whether it should be carried or released each game step.
-- [[logic-carrier]] (on peer entity) - This component triggers 'carry-me' and 'release-me' message, listened for by [[Logic-Carrier]] to handle carrying this entity.
+- [[LogicCarrier]] (on peer entity) - This component triggers 'carry-me' and 'release-me' message, listened for by [[Logic-Carrier]] to handle carrying this entity.
 
 ## Messages
 
@@ -23,7 +23,7 @@ This component allows this entity to be carried by other entities with which it 
 
 ## JSON Definition:
     {
-      "type": "logic-portable",
+      "type": "LogicPortable",
 
       "portableDirections": {down: true}
       // This is an object specifying the directions that this portable entity can be carried on. Default is {down:true}, but "up", "down", "left", and/or "right" can be specified as object properties set to `true`.
@@ -34,7 +34,7 @@ This component allows this entity to be carried by other entities with which it 
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-portable',
+        id: 'LogicPortable',
         constructor: function (definition) {
             this.portableDirections = definition.portableDirections || {
                 down: true //default is false, 'true' means as soon as carrier is connected downward

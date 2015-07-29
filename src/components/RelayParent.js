@@ -1,5 +1,5 @@
 /**
-# COMPONENT **relay-parent**
+# COMPONENT **RelayParent**
 This component listens for specified local entity messages and re-broadcasts them on its parent entity.
 
 ## Dependencies:
@@ -17,7 +17,7 @@ This component listens for specified local entity messages and re-broadcasts the
 
 ## JSON Definition:
     {
-      "type": "relay-parent",
+      "type": "RelayParent",
       
       "events": {
       // Required: Maps local messages to trigger messages on the entity's parent. At least one of the following mappings should be included.
@@ -43,7 +43,7 @@ This component listens for specified local entity messages and re-broadcasts the
     };
     
     return platypus.createComponentClass({
-        id: 'relay-parent',
+        id: 'RelayParent',
         
         constructor: function (definition) {
             var event = '';

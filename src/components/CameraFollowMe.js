@@ -1,5 +1,5 @@
 /**
-# COMPONENT **camera-follow-me**
+# COMPONENT **CameraFollowMe**
 This component can request that the camera focus on this entity.
 
 ## Dependencies:
@@ -24,7 +24,7 @@ This component can request that the camera focus on this entity.
 
 ## JSON Definition:
     {
-      "type": "camera-follow-me",
+      "type": "CameraFollowMe",
       
       "pause": true,
       // Optional. Whether to pause the game while the camera is focused. Defaults to false. 
@@ -60,7 +60,7 @@ This component can request that the camera focus on this entity.
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'camera-follow-me',
+        id: 'CameraFollowMe',
         
         constructor: function (definition) {
             this.pauseGame = definition.pause ? {

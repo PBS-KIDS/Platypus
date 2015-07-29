@@ -1,12 +1,12 @@
 /**
-//TODO: This should probably be merged with `logic-shield` since it performs a subset of the `logic-shield` behaviors. - DDD
+//TODO: This should probably be merged with `LogicShield` since it performs a subset of the `LogicShield` behaviors. - DDD
 */
 /*global platypus */
 (function () {
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-attached-entity',
+        id: 'LogicAttachedEntity',
         constructor: function (definition) {
             var randomizedXRange = this.owner.randomizedXRange || definition.randomizedXRange || 0,
                 randomizedYRange = this.owner.randomizedYRange || definition.randomizedYRange || 0;

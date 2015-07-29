@@ -59,7 +59,7 @@
              */
             "load": function () {
                 if (!this.owner.addMover) {
-                    console.warn('The "AIChaser" component requires a "mover" component to function correctly.');
+                    console.warn('The "AIChaser" component requires a "Mover" component to function correctly.');
                     return;
                 }
                 

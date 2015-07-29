@@ -1,9 +1,9 @@
 /**
-# COMPONENT **node-resident**
-This component connects an entity to its parent's [[node-map]]. It manages navigating the node-map and triggering events on the entity related to its position.
+# COMPONENT **NodeResident**
+This component connects an entity to its parent's [[NodeMap]]. It manages navigating the NodeMap and triggering events on the entity related to its position.
 
 ## Dependencies
-- [[node-map]] (on entity's parent) - This component uses the `node-map` to determine its location and navigate to other nodes.
+- [[NodeMap]] (on entity's parent) - This component uses the `NodeMap` to determine its location and navigate to other nodes.
 - [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
@@ -16,7 +16,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 - **leave-node** - Removes the entity from its current node if it's on one.
 - **goto-node** - Begins moving the entity along edges to get to sent node.
   - @param node (Node) - The node that this entity should move to.
-- **follow** - Causes this entity to follow another entity. The leading entity must also have a `node-resident` component and exist in the node-map.
+- **follow** - Causes this entity to follow another entity. The leading entity must also have a `NodeResident` component and exist in the NodeMap.
   - @param entity (Entity) - The entity that this entity should follow.
 
 ### Local Broadcasts:
@@ -31,11 +31,11 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 ## States
 - **on-node** - This state is true when the entity is on a node.
 - **moving** - This state is true when the entity is moving from one node to another.
-- **going-[direction]** - This state is true when the entity is moving (or has just moved) in a direction (determined by the node-map) from one node to another.
+- **going-[direction]** - This state is true when the entity is moving (or has just moved) in a direction (determined by the NodeMap) from one node to another.
   
 ## JSON Definition
     {
-      "type": "node-resident",
+      "type": "NodeResident",
       
       "nodeId": "city-hall",
       // Optional. The id of the node that this entity should start on. Uses the entity's nodeId property if not set here.
@@ -50,7 +50,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
       // Optional. Sets the speed with which the entity moves along an edge to an adjacent node. Default is 0 (instantaneous movement).
       
       "updateOrientation": true
-      // Optional. Determines whether the entity's orientation is updated by movement across the node-map. Default is false.
+      // Optional. Determines whether the entity's orientation is updated by movement across the NodeMap. Default is false.
     }
 */
 /*global platypus */
@@ -138,7 +138,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 	
 	return platypus.createComponentClass({
 		
-		id: 'node-resident',
+		id: 'NodeResident',
 		
 		constructor: function(definition){
 			var offset = definition.offset || this.owner.nodeOffset || {};

@@ -1,10 +1,10 @@
 /**
-# COMPONENT **render-tiles**
+# COMPONENT **RenderTiles**
 This component handles rendering tile map backgrounds. When rendering the background, this component figures out what tiles are being displayed as caches them so they are rendered as one image rather than individually. As the camera moves, the cache is updated by blitting the relevant part of the old cached image into the new cached image and then rendering the tiles that have shifted into the camera's view into the cache.
 
 ## Dependencies:
 - [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas functionality.
-- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render-load" message to setup and display the content. This component is removed from the Handler-Render-Createjs list after the first tick because it doesn't possess a handle-render function. Instead it uses the camera-update function to update itself.
+- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "handle-render-load" message to setup and display the content. This component is removed from the Handler-Render-Createjs list after the first tick because it doesn't possess a handle-render function. Instead it uses the camera-update function to update itself.
 
 ## Messages
 
@@ -21,7 +21,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 
 ## JSON Definition
     {
-      "type": "render-tiles",
+      "type": "RenderTiles",
       
       "spritesheet": 
       //Required - The spritesheet for all the tile images.
@@ -117,7 +117,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
 
     return platypus.createComponentClass({
         
-        id: 'render-tiles',
+        id: 'RenderTiles',
         
         constructor: function (definition) {
             var x = 0,
@@ -269,7 +269,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                     }
                     
                     // Prevent subsequent draws
-                    entity.removeComponent('render-sprite');
+                    entity.removeComponent('RenderSprite');
                 }
             },
             

@@ -1,34 +1,34 @@
 /**
-# COMPONENT **audio-mobile**
-Activates audio on mobile devices by handling asset loading after a user interaction. This component should be included on the same entity as the asset loader and have a dom-element component to capture the user interaction.
+# COMPONENT **AudioMobile**
+Activates audio on mobile devices by handling asset loading after a user interaction. This component should be included on the same entity as the asset loader and have a DOMElement component to capture the user interaction.
 
 Example "progress-bar" entity that could use this component:
 
     {
         "id": "progress-bar",
         "components":[{
-            "type": "audio-mobile"
+            "type": "AudioMobile"
         },{
             "type": "asset-loader",
             "progressBar": "progress-bar",
             "automatic": false
         },{
-            "type": "dom-element",
+            "type": "DOMElement",
             "id": "mobile-start",
             "innerHTML": "Play",
             "className": "mobile-start",
             "updateClassName": true,
             "ontouchstart": "activate-audio"
         },{
-            "type": "dom-element",
+            "type": "DOMElement",
             "id": "progress-bar-container",
             "updateClassName": true
         },{
-            "type": "dom-element",
+            "type": "DOMElement",
             "id": "progress-bar",
             "parent": "progress-bar-container"
         },{
-            "type": "change-scene",
+            "type": "SceneChanger",
             "scene": "menu",
             "aliases": {"complete": "new-scene"}
         }]
@@ -91,7 +91,7 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 
 ## JSON Definition
     {
-      "type": "audio-mobile"
+      "type": "AudioMobile"
 
       "audioId": "audio-sprite"
       // Required. The SoundJS audio id for the audio clip to be enabled for future play-back.
@@ -107,7 +107,7 @@ To make the mobile-start button appear on mobile devices, the CSS might look som
 
     return platypus.createComponentClass({
         
-        id: 'audio-mobile',
+        id: 'AudioMobile',
         
         constructor: function (definition) {
             this.audioId = definition.audioId;

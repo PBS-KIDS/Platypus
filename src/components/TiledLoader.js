@@ -2,12 +2,12 @@
  * This component is attached to a top-level entity (loaded by the [Scene](Scene.html)) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
  * 
  * ## Dependencies:
- *  - Component [[entity-container]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `entity-container`.
+ *  - Component [[EntityContainer]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `EntityContainer`.
  *  - Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
  *  - Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
  *  - Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
  * 
- * @class "tiled-loader" Component
+ * @class "TiledLoader" Component
  * @uses Component
  */
 /*global console, platypus */
@@ -57,7 +57,7 @@
         };
 
     return platypus.createComponentClass({
-        id: 'tiled-loader',
+        id: 'TiledLoader',
 
         properties: {
             /**
@@ -292,7 +292,7 @@
                             tileLayer.tileheight = tileLayer.image.height;
                             tileLayer.tilewidth = tileLayer.image.width;
                         } else {
-                            console.warn('Component tiled-loader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
+                            console.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
                             tileLayer.image = imageLayer.image;
                         }
 
@@ -400,7 +400,7 @@
                             }
                         }
                         for (x = 0; x < tileDefinition.components.length; x++) {
-                            if (tileDefinition.components[x].type === 'render-tiles') {
+                            if (tileDefinition.components[x].type === 'RenderTiles') {
                                 renderTiles = tileDefinition.components[x];
                             }
                             if (tileDefinition.components[x].spriteSheet === 'import') {
@@ -441,7 +441,7 @@
                         if (platypus.assets[tilesets[x].name] && platypus.assets[tilesets[x].name].asset) { // Prefer to have name in tiled match image id in game
                             images.push(platypus.assets[tilesets[x].name].asset);
                         } else {
-                            console.warn('Component tiled-loader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
+                            console.warn('Component TiledLoader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
                             images.push(tilesets[x].image);
                         }
                     }

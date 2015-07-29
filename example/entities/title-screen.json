@@ -2,7 +2,7 @@
     "id": "title-screen",
     "components":[
         {
-            "type": "dom-element",
+            "type": "DOMElement",
             "element": "div",
             "className": "title-screen"
         }

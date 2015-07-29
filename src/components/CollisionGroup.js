@@ -1,9 +1,9 @@
 /**
-# COMPONENT **collision-group**
-This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
+# COMPONENT **CollisionGroup**
+This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
 
 ## Dependencies:
-- [[handler-collision]] (on entity's parent) - The collision handler uses the methods this component exposes to perform collision for this entity as a group before performing collision on each entity in the group.
+- [[HandlerCollision]] (on entity's parent) - The collision handler uses the methods this component exposes to perform collision for this entity as a group before performing collision on each entity in the group.
 
 ## Messages
 
@@ -16,7 +16,7 @@ This component groups other entities with this entity for collision checking. Th
 
 ## JSON Definition:
     {
-      "type": "collision-group"
+      "type": "CollisionGroup"
       // This component has no customizable properties.
     }
     
@@ -51,7 +51,7 @@ Requires: ["../aabb.js"]
     };
     
     return platypus.createComponentClass({
-        id: 'collision-group',
+        id: 'CollisionGroup',
         
         constructor: function (definition) {
             var self = this;

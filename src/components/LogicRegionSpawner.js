@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-region-spawner**
+# COMPONENT **LogicRegionSpawner**
 This component spawns new entities within a given area at set intervals.
 
 ## Dependencies
@@ -13,7 +13,7 @@ This component spawns new entities within a given area at set intervals.
 
 ## JSON Definition
     {
-      "type": "logic-spawner",
+      "type": "LogicSpawner",
       // List all additional parameters and their possible values here.
       
       "spawn": "teddy-bear",
@@ -38,7 +38,7 @@ This component spawns new entities within a given area at set intervals.
 
     return platypus.createComponentClass({
         
-        id: 'logic-region-spawner',
+        id: 'LogicRegionSpawner',
         
         constructor: function (definition) {
             var x       = 0,

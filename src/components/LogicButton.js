@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-button**
+# COMPONENT **LogicButton**
 This component handles the pressed/released state of a button according to input. It can be set as a toggle button or a simple press-and-release button.
 
 ## Dependencies:
@@ -21,7 +21,7 @@ This component handles the pressed/released state of a button according to input
 
 ## JSON Definition:
     {
-      "type": "logic-button",
+      "type": "LogicButton",
       
       "toggle": true,
       // Optional. Determines whether this button should behave as a toggle. Defaults to "false".
@@ -35,7 +35,7 @@ This component handles the pressed/released state of a button according to input
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-button',
+        id: 'LogicButton',
         constructor: function (definition) {
             this.state = this.owner.state;
             this.state.released = true;

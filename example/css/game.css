@@ -26,7 +26,7 @@
     position:    absolute;
 }
 
-/* This is the canvas used by the handler-render-createjs component */
+/* This is the canvas used by the HandlerRenderCreateJS component */
 #inner-root canvas {
     position: absolute;
     width: 100%;
@@ -39,7 +39,7 @@
     height: 77%;
 }
 
-/* This is the opening screen div used by the handler-render-dom component */
+/* This is the opening screen div used by the HandlerRenderDOM component */
 .title-screen {
     position: absolute;
     width: 100%;

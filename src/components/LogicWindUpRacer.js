@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-wind-up-racer**
+# COMPONENT **LogicWindUpRacer**
 Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
 
 ## Dependencies:
@@ -26,7 +26,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 
 ## JSON Definition
     {
-      "type": "logic-wind-up-racer",
+      "type": "LogicWindUpRacer",
 
       "windTime": 1000,
       // Optional. Time in milliseconds that entity needs to receive wind-up calls before racing can begin. Defaults to 500.
@@ -44,7 +44,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
 
     return platypus.createComponentClass({
         
-        id: 'logic-wind-up-racer',
+        id: 'LogicWindUpRacer',
         
         constructor: function (definition) {
             this.windTime = definition.windTime || 500;

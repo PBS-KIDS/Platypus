@@ -1,5 +1,5 @@
 /**
-# COMPONENT **tween**
+# COMPONENT **Tween**
 Tween takes a list of tween definitions and plays them as needed.
 
 ## Dependencies
@@ -15,7 +15,7 @@ Tween takes a list of tween definitions and plays them as needed.
 
 ## JSON Definition
     {
-      "type": "tween",
+      "type": "Tween",
 
       "events": {
       // Required. A key/value list of events and an array representing the tween they should trigger.
@@ -83,7 +83,7 @@ Tween takes a list of tween definitions and plays them as needed.
         };
 
     return platypus.createComponentClass({
-        id: 'tween',
+        id: 'Tween',
         
         constructor: function (definition) {
             var event = '';

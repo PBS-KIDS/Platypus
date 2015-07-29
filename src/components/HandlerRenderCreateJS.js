@@ -1,5 +1,5 @@
 /**
-# COMPONENT **handler-render-createjs**
+# COMPONENT **HandlerRenderCreateJS**
 A component that handles updating rendering for components that are rendering via createjs. Each tick it calls all the entities that accept 'handle-render' messages.
 
 ## Dependencies
@@ -45,7 +45,7 @@ A component that handles updating rendering for components that are rendering vi
 
 ## JSON Definition
     {
-      "type": "handler-render-createjs",
+      "type": "HandlerRenderCreateJS",
       
       "acceptInput": {
           //Optional - What types of input the object should take. This component defaults to not accept any input.
@@ -73,7 +73,7 @@ A component that handles updating rendering for components that are rendering vi
     
     return platypus.createComponentClass({
 
-        id: "handler-render-createjs",
+        id: "HandlerRenderCreateJS",
         
         constructor: function (definition) {
             var self = this;

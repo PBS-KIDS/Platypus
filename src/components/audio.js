@@ -1,10 +1,10 @@
 /**
-# COMPONENT **audio**
-This component plays audio. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like render-sprite).
+# COMPONENT **Audio**
+This component plays audio. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like RenderSprite).
 
 ## Dependencies:
 - [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
-- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "tick" message in order to stop audio clips that have a play length set.
+- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "tick" message in order to stop audio clips that have a play length set.
 
 ## Messages
 
@@ -32,7 +32,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
 
 ## JSON Definition:
     {
-      "type": "audio",
+      "type": "Audio",
       
       "audioMap":{
       // Required. Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play.
@@ -478,12 +478,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 }
             },
 
-            "audio-stop":        function () {console.warn(this.owner.type + " - audio component: The 'audio-stop' event has been deprecated. Use 'stop-audio' instead."); },
-            "audio-mute-toggle": function () {console.warn(this.owner.type + " - audio component: The 'audio-mute-toggle' event has been deprecated. Use 'toggle-mute' instead."); },
-            "audio-mute":        function () {console.warn(this.owner.type + " - audio component: The 'audio-mute' event has been deprecated. Use 'mute-audio' instead."); },
-            "audio-unmute":      function () {console.warn(this.owner.type + " - audio component: The 'audio-unmute' event has been deprecated. Use 'unmute-audio' instead."); },
-            "audio-pause":       function () {console.warn(this.owner.type + " - audio component: The 'audio-pause' event has been deprecated. Use 'pause-audio' instead."); },
-            "audio-unpause":     function () {console.warn(this.owner.type + " - audio component: The 'audio-unpause' event has been deprecated. Use 'unpause-audio' instead."); }
+            "audio-stop":        function () {console.warn(this.owner.type + " - Audio component: The 'audio-stop' event has been deprecated. Use 'stop-audio' instead."); },
+            "audio-mute-toggle": function () {console.warn(this.owner.type + " - Audio component: The 'audio-mute-toggle' event has been deprecated. Use 'toggle-mute' instead."); },
+            "audio-mute":        function () {console.warn(this.owner.type + " - Audio component: The 'audio-mute' event has been deprecated. Use 'mute-audio' instead."); },
+            "audio-unmute":      function () {console.warn(this.owner.type + " - Audio component: The 'audio-unmute' event has been deprecated. Use 'unmute-audio' instead."); },
+            "audio-pause":       function () {console.warn(this.owner.type + " - Audio component: The 'audio-pause' event has been deprecated. Use 'pause-audio' instead."); },
+            "audio-unpause":     function () {console.warn(this.owner.type + " - Audio component: The 'audio-unpause' event has been deprecated. Use 'unpause-audio' instead."); }
         },
         
         methods: {

@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-directional-movement**
+# COMPONENT **LogicDirectionalMovement**
 This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
 
 ## Dependencies:
@@ -25,13 +25,13 @@ This component changes the (x, y) position of an object according to its current
 
 ## JSON Definition:
     {
-      "type": "logic-directional-movement",
+      "type": "LogicDirectionalMovement",
       
       "speed": 4.5
       // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
     }
 */
-// Requires: ["mover"]
+// Requires: ["Mover"]
 /*global console */
 /*global platypus */
 /*jslint plusplus:true */
@@ -67,7 +67,7 @@ This component changes the (x, y) position of an object according to its current
         };
     
     return platypus.createComponentClass({
-        id: 'logic-directional-movement',
+        id: 'LogicDirectionalMovement',
         
         properties: {
             axis: 'y',
@@ -131,7 +131,7 @@ This component changes the (x, y) position of an object according to its current
         events: {
             "load": function () {
                 if (!this.owner.addMover) {
-                    console.warn('The "logic-directional-movement" component requires a "mover" component to function correctly.');
+                    console.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
                     return;
                 }
                 

@@ -2,7 +2,7 @@
     "id": "collision-layer",
     "components":[
         {
-            "type": "collision-tiles",
+            "type": "CollisionTiles",
             "collisionMap": "import"
         }
     ]

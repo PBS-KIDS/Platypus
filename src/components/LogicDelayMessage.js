@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-delay-message**
+# COMPONENT **LogicDelayMessage**
 This component allows certain messages to trigger new messages at a later time. This is useful for any sort of delayed reaction to events.
 
 ## Dependencies
@@ -17,7 +17,7 @@ This component allows certain messages to trigger new messages at a later time. 
 
 ## JSON Definition
     {
-      "type": "logic-delay-message",
+      "type": "LogicDelayMessage",
       
       "events": {
       // Required: This is a list of event objects that should be listened for, and the messages that they should trigger at some time in the future.
@@ -108,7 +108,7 @@ This component allows certain messages to trigger new messages at a later time. 
         };
 
     return platypus.createComponentClass({
-        id: 'logic-delay-message',
+        id: 'LogicDelayMessage',
         
         constructor: function (definition) {
             var event = '';

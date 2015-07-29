@@ -1,7 +1,7 @@
 /**
- * This component works in tandem with the [`mover`]("mover"%20Component.html) component by adding a vector of motion to the entity. This component is typically created by `mover` and doesn't need to be added separately.
+ * This component works in tandem with the [`Mover`]("Mover"%20Component.html) component by adding a vector of motion to the entity. This component is typically created by `Mover` and doesn't need to be added separately.
  * 
- * @class "motion" Component
+ * @class "Motion" Component
  * @uses Component
  */
 /*global platypus */
@@ -96,7 +96,7 @@
     
     return platypus.createComponentClass({
         
-        id: 'motion',
+        id: 'Motion',
 
         properties: {
             /**

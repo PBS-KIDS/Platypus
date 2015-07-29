@@ -1,6 +1,6 @@
 /**
 # CLASS messenger
-The Messenger object facilitates communication between components and other game objects. Messenger is currently used by [[Entity]] and [[entity-container]].
+The Messenger object facilitates communication between components and other game objects. Messenger is currently used by [[Entity]] and [[EntityContainer]].
 
 ## Messages
 

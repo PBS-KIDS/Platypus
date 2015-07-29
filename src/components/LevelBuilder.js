@@ -1,26 +1,26 @@
 /**
-# COMPONENT **level-builder**
-This component works in tandem with [[tiled-loader]] by taking several Tiled maps and combining them before `tiled-loader` processes them. Tiled maps must use the same tilesets for this to function correctly.
+# COMPONENT **LevelBuilder**
+This component works in tandem with [[TiledLoader]] by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
 
-Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definition so that it will wait for this component's "load-level" call.
+Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
 
 ## Dependencies
-- [[tiled-loader]] - Feeds information into `tiled-loader` to load a combined map.
+- [[TiledLoader]] - Feeds information into `TiledLoader` to load a combined map.
 
 ## Messages
 
 ### Listens for:
-- **scene-loaded** - On receiving this message, `level-builder` uses its JSON definition to create a combined map.
+- **scene-loaded** - On receiving this message, `LevelBuilder` uses its JSON definition to create a combined map.
   - @param message (object) - Optional. Data passed into this scene from the last scene.
 
 ### Local Broadcasts:
-- **load-level** - Once the combined level is ready, this message is triggered so `tiled-loader` will handle it.
+- **load-level** - Once the combined level is ready, this message is triggered so `TiledLoader` will handle it.
   - @param message.persistentData (obj) - Data received from the initiating "scene-loaded" call is passed on here.
   - @param message.level (obj) - This is a JSON structure representing the combined map.
 
 ## JSON Definition
     {
-      "type": "level-builder"
+      "type": "LevelBuilder"
       
       "levelPieces": {
       // Optional. This is a list of key/value pairs listing the pieces the level template (below) will use to compose a larger map. If not specified, labels map directly to level names.
@@ -198,7 +198,7 @@ Note: Set "manuallyLoad" to `true` in the `tiled-loader` component JSON definiti
         };
 
     return platypus.createComponentClass({
-        id: 'level-builder',
+        id: 'LevelBuilder',
         
         properties: {
             useUniques: true

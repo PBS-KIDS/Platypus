@@ -2,7 +2,7 @@
     "id": "button-jump-right",
     "components":[
         {
-            "type": "dom-element",
+            "type": "DOMElement",
             "element": "div",
             "className": "game-button jump-right-button",
             "onmousedown": "start-jump",
@@ -11,7 +11,7 @@
             "ontouchend": "stop-jump",
             "ontouchcancel": "stop-jump"
         },{
-            "type": "relay-game",
+            "type": "RelayGame",
             "events":{
                 "start-jump": ["button-jump:down", "button-right:down"],
                 "stop-jump":  ["button-jump:up",   "button-right:up"]

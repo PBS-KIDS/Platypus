@@ -4,10 +4,10 @@
         {
             "id": "menu-layer",
             "components": [
-                {"type": "handler-logic"},
-                {"type": "handler-render-dom"},
-                {"type": "handler-controller"},
-                {"type": "entity-container",
+                {"type": "HandlerLogic"},
+                {"type": "HandlerRenderDOM"},
+                {"type": "HandlerController"},
+                {"type": "EntityContainer",
                     "entities": [
                         {"type": "title-screen"},
                         {"type": "button-play-game"}

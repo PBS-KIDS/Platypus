@@ -1,7 +1,7 @@
 /**
  * This component provides component-based XHR communication with a server.
  * 
- * @class "xhr" Component
+ * @class "XHR" Component
  * @uses Component
  */
 /*global platypus */
@@ -9,7 +9,7 @@
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'xhr',
+        id: 'XHR',
         
         properties: {
             /**

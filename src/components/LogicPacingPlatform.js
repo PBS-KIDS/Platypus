@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-pacing-platform**
+# COMPONENT **LogicPacingPlatform**
 This component changes the (x, y) position of an object according to its speed and heading and alternates back and forth. This is useful for in-place moving platforms.
 
 ## Dependencies:
@@ -13,7 +13,7 @@ This component changes the (x, y) position of an object according to its speed a
 
 ## JSON Definition:
     {
-      "type": "logic-directional-movement",
+      "type": "LogicDirectionalMovement",
       
       "angle": 3.14,
       // Optional. Defines the angle of movement in radians. Defaults to 0 (horizontal, starts moving right).
@@ -34,7 +34,7 @@ This component changes the (x, y) position of an object according to its speed a
 
     return platypus.createComponentClass({
         
-        id: 'logic-pacing-platform',
+        id: 'LogicPacingPlatform',
         
         constructor: function (definition) {
             this.ang              = this.owner.angle      || definition.angle     || 0; //PI/2 makes it go down first

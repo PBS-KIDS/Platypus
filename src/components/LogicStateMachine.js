@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-state-machine**
+# COMPONENT **LogicStateMachine**
 This component is a general purpose state-machine for an entity, taking in various message inputs to determine the entity's state and triggering messages as necessary when a certain state occurs or several state combinations are in place.
 
 ## Dependencies:
@@ -20,7 +20,7 @@ This component is a general purpose state-machine for an entity, taking in vario
 
 ## JSON Definition
     {
-      "type": "logic-state-machine",
+      "type": "LogicStateMachine",
       
       "inputs":{
       // This is a list of messages that this component should listen for to change states.
@@ -61,7 +61,7 @@ This component is a general purpose state-machine for an entity, taking in vario
         "!smelling-nothing":{
           "!smelling-trash":{
             "!at-store": "go-to-store",
-            // Note that the "go-to-store" message will change this entity's state to "at-store" according to "inputs" above, but logic-state-machine uses a cache of states when broadcasting output messages, so the next section will not be processed until the next state check.
+            // Note that the "go-to-store" message will change this entity's state to "at-store" according to "inputs" above, but LogicStateMachine uses a cache of states when broadcasting output messages, so the next section will not be processed until the next state check.
             
             "at-store":{
               "have-money": "buy-more-food",
@@ -154,7 +154,7 @@ This component is a general purpose state-machine for an entity, taking in vario
     };
 
     return platypus.createComponentClass({
-        id: 'logic-state-machine',
+        id: 'LogicStateMachine',
         
         constructor: function (definition) {
             var i = null;

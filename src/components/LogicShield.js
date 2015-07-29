@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-shield**
+# COMPONENT **LogicShield**
 This component creates an entity and connects it with the current entity. This is useful for entities that have a one-to-one relationship with a given entity and must move as if connected to the host entity.
 
 ## Dependencies:
@@ -15,7 +15,7 @@ This component creates an entity and connects it with the current entity. This i
 
 ## JSON Definition
     {
-      "type": "logic-shield",
+      "type": "LogicShield",
 
       "shield": "cardboard-box",
       // Required: string identifying the type of entity to create as a shield.
@@ -36,7 +36,7 @@ This component creates an entity and connects it with the current entity. This i
     
     return platypus.createComponentClass({
         
-        id: 'logic-shield',
+        id: 'LogicShield',
         
         constructor: function (definition) {
             this.state = this.owner.state;

@@ -4,37 +4,37 @@
         {
             "id": "load-layer",
             "components": [
-                {"type": "handler-logic"},
-                {"type": "handler-render-dom"},
-                {"type": "entity-container", 
+                {"type": "HandlerLogic"},
+                {"type": "HandlerRenderDOM"},
+                {"type": "EntityContainer", 
                     "entities": [{
                         "type": "title-screen"
                     },{
                         "id": "progress-bar",
                         "components":[{
-                            "type": "audio-mobile",
+                            "type": "AudioMobile",
                             "audioId": "audio-sprite"
                         },{
-                            "type": "asset-loader",
+                            "type": "AssetLoader",
                             "progressBar": "progress-bar",
                             "automatic": false
                         },{
-                            "type": "dom-element",
+                            "type": "DOMElement",
                             "id": "mobile-start",
                             "innerHTML": "Play",
                             "className": "mobile-start",
                             "updateClassName": true,
                             "ontouchstart": "activate-audio"
                         },{
-                            "type": "dom-element",
+                            "type": "DOMElement",
                             "id": "progress-bar-container",
                             "updateClassName": true
                         },{
-                            "type": "dom-element",
+                            "type": "DOMElement",
                             "id": "progress-bar",
                             "parent": "progress-bar-container"
                         },{
-                            "type": "change-scene",
+                            "type": "SceneChanger",
                             "scene": "menu"
                         }]
                     }],

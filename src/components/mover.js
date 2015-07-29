@@ -1,10 +1,10 @@
 /**
  * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
  * 
- * @class "mover" Component
+ * @class "Mover" Component
  * @uses Component
  */
-// Requires: ["motion", "../vector.js"]
+// Requires: ["Motion", "../vector.js"]
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
@@ -14,7 +14,7 @@
     
     return platypus.createComponentClass({
         
-        id: 'mover',
+        id: 'Mover',
 
         properties: {
             /** This is a normalized vector describing the direction the ground should face away from the entity.
@@ -28,7 +28,7 @@
         
         publicProperties: {
             /**
-             * A list of key/value pairs describing vectors or vector-like objects describing acceleration and velocity on the entity. See the ["motion"]("motion"%20Component.html) component for properties.
+             * A list of key/value pairs describing vectors or vector-like objects describing acceleration and velocity on the entity. See the ["Motion"]("Motion"%20Component.html) component for properties.
              * 
              * @property movers
              * @type Array
@@ -107,27 +107,27 @@
 
         events: {
             /**
-             * When a ["motion"]("motion"%20Component.html) component is added, this component adds it to its list of movers.
+             * When a ["Motion"]("Motion"%20Component.html) component is added, this component adds it to its list of movers.
              * 
              * @method 'component-added'
-             * @param component {"motion" Component} The motion to add as a mover on this entity.
+             * @param component {"Motion" Component} The motion to add as a mover on this entity.
              */
             "component-added": function (component) {
-                if (component.type === 'motion') {
+                if (component.type === 'Motion') {
                     this.movers.push(component);
                 }
             },
             
             /**
-             * When a ["motion"]("motion"%20Component.html) component is removed, this component removes it from its list of movers.
+             * When a ["Motion"]("Motion"%20Component.html) component is removed, this component removes it from its list of movers.
              * 
              * @method 'component-removed'
-             * @param component {"motion" Component} The motion to remove as a mover from this entity.
+             * @param component {"Motion" Component} The motion to remove as a mover from this entity.
              */
             "component-removed": function (component) {
                 var i = 0;
                 
-                if (component.type === 'motion') {
+                if (component.type === 'Motion') {
                     for (i = 0; i < this.movers.length; i++) {
                         if (component === this.movers[i]) {
                             this.movers.splice(i, 1);
@@ -264,14 +264,14 @@
         
         publicMethods: {
             /**
-             * This method adds a mover to the entity in the form of a ["motion"]("motion"%20Component.html) component definition.
+             * This method adds a mover to the entity in the form of a ["Motion"]("Motion"%20Component.html) component definition.
              * 
              * @method addMover
-             * @param mover {Object} For motion definition properties, see the ["motion"]("motion"%20Component.html) component.
-             * @return motion {"motion" Component}
+             * @param mover {Object} For motion definition properties, see the ["Motion"]("Motion"%20Component.html) component.
+             * @return motion {"Motion" Component}
              */
             addMover: function (mover) {
-                var m = this.owner.addComponent(new platypus.components.motion(this.owner, mover));
+                var m = this.owner.addComponent(new platypus.components.Motion(this.owner, mover));
 
                 return m;
             },
@@ -280,7 +280,7 @@
              * This method removes a mover from the entity.
              * 
              * @method removeMover
-             * @param motion {"motion" Component}
+             * @param motion {"Motion" Component}
              */
             removeMover: function (m) {
                 this.owner.removeComponent(m);

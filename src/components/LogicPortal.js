@@ -1,11 +1,11 @@
 /**
-# COMPONENT **logic-portal**
+# COMPONENT **LogicPortal**
 A component which changes the scene when activated. When the portal receives an occupied message it sends the entity in that message notifying it. This message is meant to give the entity a chance to activate the portal in the manner it wants. The portal can also be activated by simply telling it to activate.
 
 ## Dependencies
-- [[handler-logic]] (on entity's parent) - This component listens for a "handle-logic" message it then checks to see if it should change the scene if the portal is activated.
-- [[change-scene]] (on entity) - This component listens for the "new-scene" message that the logic-portal sends and actually handles the scene changing.
-- [[collision-basic]] (on entity) - Not required, but if we want the 'occupied-portal' call to fire on collision you'll need to have a collision-basic component on the portal.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a "handle-logic" message it then checks to see if it should change the scene if the portal is activated.
+- [[SceneChanger]] (on entity) - This component listens for the "new-scene" message that the LogicPortal sends and actually handles the scene changing.
+- [[CollisionBasic]] (on entity) - Not required, but if we want the 'occupied-portal' call to fire on collision you'll need to have a CollisionBasic component on the portal.
 
 ## Messages
 
@@ -16,7 +16,7 @@ A component which changes the scene when activated. When the portal receives an 
 - **activate-portal** - This message turns the portal on. The next 'handle-logic' call will cause a change of scene.
 
 ### Local Broadcasts:
-- **new-scene** - Calls the 'change-scene' component to tell it to change scenes.
+- **new-scene** - Calls the 'SceneChanger' component to tell it to change scenes.
   - @param object.destination (string) - The id of the scene that we want to go to.
 
 ### Peer Broadcasts:
@@ -36,7 +36,7 @@ A component which changes the scene when activated. When the portal receives an 
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-portal',
+        id: 'LogicPortal',
         constructor: function (definition) {
             var i = 0,
                 entrants = definition.entrants || definition.entrant;

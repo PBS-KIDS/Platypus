@@ -1,9 +1,9 @@
 /**
-# COMPONENT **dom-element**
+# COMPONENT **DOMElement**
 This component creates a DOM element associated with the entity. In addition to allowing for CSS styling, the element can also perform as a controller accepting click and touch inputs and triggering associated messages on the entity.
 
 ## Dependencies:
-- [[handler-render-dom]] (on entity's parent) - This component listens for a render "handle-render-load" message with a DOM element to setup and display the element.
+- [[HandlerRenderDOM]] (on entity's parent) - This component listens for a render "handle-render-load" message with a DOM element to setup and display the element.
 
 ## Messages
 
@@ -33,7 +33,7 @@ This component creates a DOM element associated with the entity. In addition to 
 
 ## JSON Definition
     {
-      "type": "dom-element",
+      "type": "DOMElement",
 
       "element": "div",
       //Required. Sets what type of DOM element should be created.
@@ -83,7 +83,7 @@ This component creates a DOM element associated with the entity. In addition to 
     };
     
     return platypus.createComponentClass({
-        id: 'dom-element',
+        id: 'DOMElement',
         constructor: function (definition) {
             var key         = '',
                 style       = '',

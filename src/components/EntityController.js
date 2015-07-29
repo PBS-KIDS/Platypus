@@ -1,5 +1,5 @@
 /**
-# COMPONENT **entity-controller**
+# COMPONENT **EntityController**
 This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
 
 ## Dependencies:
@@ -34,7 +34,7 @@ This component listens for input messages triggered on the entity and updates th
 
 ## JSON Definition:
     {
-      "type": "entity-controller",
+      "type": "EntityController",
       
       "paused": true,
       // Optional. Whether input controls should start deactivated. Default is false.
@@ -43,13 +43,13 @@ This component listens for input messages triggered on the entity and updates th
       // Required. Use the controlMap property object to map inputs to messages that should be triggered. At least one control mapping should be included. The following are a few examples:
       
         "key:x": "run-left",
-        // This causes an "x" keypress to fire "run-left" on the entity. For a full listing of key names, check out the `handler-controller` component.
+        // This causes an "x" keypress to fire "run-left" on the entity. For a full listing of key names, check out the `HandlerController` component.
         
         "button-pressed": "throw-block",
         // custom input messages can be fired on this entity from other entities, allowing for on-screen input buttons to run through the same controller channel as other inputs.
         
         "mouse:left-button"
-        // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `render-sprite` component).
+        // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `RenderSprite` component).
       },
       
       "joystick":{
@@ -208,7 +208,7 @@ This component listens for input messages triggered on the entity and updates th
     };
 
     return platypus.createComponentClass({
-        id: 'entity-controller',
+        id: 'EntityController',
         
         constructor: function (definition) {
             var i           = 0,
@@ -226,7 +226,7 @@ This component listens for input messages triggered on the entity and updates th
             this.paused = definition.paused || false;
             
             if (definition && definition.controlMap) {
-                this.owner.controlMap = definition.controlMap; // this is used and expected by the handler-controller to handle messages not covered by key and mouse inputs.
+                this.owner.controlMap = definition.controlMap; // this is used and expected by the HandlerController to handle messages not covered by key and mouse inputs.
                 this.actions  = {};
                 for (key in definition.controlMap) {
                     if (definition.controlMap.hasOwnProperty(key)) {

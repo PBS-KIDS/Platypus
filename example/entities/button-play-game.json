@@ -2,14 +2,14 @@
     "id": "button-play-game",
     "components":[
         {
-            "type": "dom-element",
+            "type": "DOMElement",
             "element": "div",
             "innerHTML": "Play Game",
             "className": "menu-button",
             "onmouseup": "new-scene",
             "ontouchend": "new-scene"
         },{
-            "type": "change-scene",
+            "type": "SceneChanger",
             "scene": "scene-level-1",
             "transition": "fade-to-black"
         }

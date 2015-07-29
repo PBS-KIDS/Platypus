@@ -1,5 +1,5 @@
 /**
-# COMPONENT **handler-render-dom**
+# COMPONENT **HandlerRenderDOM**
 A component that handles the rendering of DOM elements. It creates a div element that it then shares with entities to add themselves too. It then alerts these entities when they should load and update their rendering.
 
 ## Dependencies
@@ -25,7 +25,7 @@ A component that handles the rendering of DOM elements. It creates a div element
 
 ## JSON Definition
     {
-      "type": "handler-render-dom",
+      "type": "HandlerRenderDOM",
 
       "className": "top-band",
       //Optional. Any standard properties of the element can be set by listing property names and their values. "className" is one example, but other element properties can be specified in the same way.
@@ -64,7 +64,7 @@ A component that handles the rendering of DOM elements. It creates a div element
     
     return platypus.createComponentClass({
     
-        id: 'handler-render-dom',
+        id: 'HandlerRenderDOM',
         
         constructor: function (definition) {
             var i = '',

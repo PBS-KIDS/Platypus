@@ -1,20 +1,20 @@
 /**
-# COMPONENT **logic-rebounder**
-This component works with `collision-basic` to cause entities to bounce away on solid collisions.
+# COMPONENT **LogicRebounder**
+This component works with `CollisionBasic` to cause entities to bounce away on solid collisions.
 
 ## Dependencies
-- [[collision-basic]] - Relies on collision messages to perform rebounding movement.
+- [[CollisionBasic]] - Relies on collision messages to perform rebounding movement.
 
 ## Messages
 
 ### Listens for:
-- **handle-logic** - On receiving this message, `logic-rebounder` clears its stored collision information.
-- **hit-static** - On receiving this message, `logic-rebounder` rebounds.
+- **handle-logic** - On receiving this message, `LogicRebounder` clears its stored collision information.
+- **hit-static** - On receiving this message, `LogicRebounder` rebounds.
   - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
-- **hit-non-static** - On receiving this message, `logic-rebounder` rebounds.
+- **hit-non-static** - On receiving this message, `LogicRebounder` rebounds.
   - @param message.direction (2d vector) - This is the direction in which the collision occurred, tangental to the impact interface.
   - @param message.entity ([[entity]]) - This is the entity with which this entity is colliding.
-- **share-velocity** - On receiving this message, `logic-rebounder` stores collision information.
+- **share-velocity** - On receiving this message, `LogicRebounder` stores collision information.
   - @param entity ([[entity]]) - This is the entity with which this entity is colliding.
 
 ### Peer Broadcasts:
@@ -23,7 +23,7 @@ This component works with `collision-basic` to cause entities to bounce away on 
 
 ## JSON Definition
     {
-      "type": "logic-rebounder",
+      "type": "LogicRebounder",
       
       "mass": 12,
       // Optional. Relative size of the entity. Defaults to 1.
@@ -40,7 +40,7 @@ Requires: ["../vector.js"]
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-rebounder',
+        id: 'LogicRebounder',
         
         constructor: function (definition) {
             platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');

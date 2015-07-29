@@ -1,7 +1,7 @@
 /**
- * This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `entity-container` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `entity-container` component).
+ * This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
  * 
- * @class "handler-collision" Component
+ * @class "HandlerCollision" Component
  * @uses Component
  */
  
@@ -88,7 +88,7 @@
         };
     
     return platypus.createComponentClass({
-        id: 'handler-collision',
+        id: 'HandlerCollision',
         
         constructor: function (definition) {
             this.entitiesByType = {};
@@ -1028,7 +1028,7 @@
              * This method returns an entity representing the collision map of the world.
              * 
              * @method getWorldTerrain
-             * @return {Entity} - An entity describing the collision map of the world. This entity typically includes a `collision-tiles` component.
+             * @return {Entity} - An entity describing the collision map of the world. This entity typically includes a `CollisionTiles` component.
              */
             getWorldTerrain: function () {
                 return this.terrain;

@@ -1,5 +1,5 @@
 /**
-# COMPONENT **counter**
+# COMPONENT **Counter**
 A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.
 
 ## Messages
@@ -17,7 +17,7 @@ A simple component that keeps count of something and sends messages each time th
   
 ## JSON Definition
     {
-      "type": "counter"
+      "type": "Counter"
     }
 */
 /*global platypus */
@@ -25,7 +25,7 @@ A simple component that keeps count of something and sends messages each time th
     "use strict";
     
     return platypus.createComponentClass({
-        id: 'counter',
+        id: 'Counter',
         constructor: function (definition) {
             this.count = 0;
             this.total = 0;

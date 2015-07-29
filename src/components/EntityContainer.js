@@ -1,5 +1,5 @@
 /**
-# COMPONENT **entity-container**
+# COMPONENT **EntityContainer**
 This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
 
 ## Dependencies
@@ -56,7 +56,7 @@ This component allows the entity to contain child entities. It will add several 
 
 ## JSON Definition:
     {
-      "type": "entity-container",
+      "type": "EntityContainer",
       
       "entities": [{"type": "hero"}, {"type": "tile"}],
       // Optional. "entities" is an Array listing entity definitions to specify entities that should be added as children when this component loads.
@@ -88,7 +88,7 @@ This component allows the entity to contain child entities. It will add several 
     };
     
     return platypus.createComponentClass({
-        id: 'entity-container',
+        id: 'EntityContainer',
         
         constructor: function (definition) {
             var self  = this,

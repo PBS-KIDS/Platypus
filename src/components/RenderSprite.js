@@ -177,7 +177,7 @@ This component is attached to entities that will appear in the game world. It re
       // Optional - Specifies whether this component should listen to changes in the entity's state that match the animationMap to animate. Set this to false if the component should animate for events only. Default is true.
       
       "cache": false
-      //Optional - Whether this sprite should be cached into an entity with a `render-tiles` component (like "render-layer"). The `render-tiles` component must have its "entityCache" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
+      //Optional - Whether this sprite should be cached into an entity with a `RenderTiles` component (like "render-layer"). The `RenderTiles` component must have its "entityCache" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
     }
     
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html

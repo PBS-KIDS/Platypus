@@ -1,5 +1,5 @@
 /**
-# COMPONENT **logic-impact-launch**
+# COMPONENT **LogicImpactLaunch**
 This component will cause the entity to move in a certain direction on colliding with another entity.
 
 ## Dependencies:
@@ -17,7 +17,7 @@ This component will cause the entity to move in a certain direction on colliding
 
 ## JSON Definition:
     {
-      "type": "logic-impact-launch",
+      "type": "LogicImpactLaunch",
       
       "state": "launching",
       // Optional: This sets the state of the entity while it's being launched. Defaults to "stunned".
@@ -38,7 +38,7 @@ This component will cause the entity to move in a certain direction on colliding
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-impact-launch',
+        id: 'LogicImpactLaunch',
         constructor: function (definition) {
             this.stunState = definition.state || "stunned";
             

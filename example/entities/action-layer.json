@@ -1,12 +1,12 @@
 {
     "id": "action-layer",
     "components": [
-        {"type": "handler-controller"},
-        {"type": "handler-logic"},
-        {"type": "handler-collision"},
-        {"type": "camera", "width": 960},
-        {"type": "handler-render-createjs"},
-        {"type": "entity-container"},
-        {"type": "tiled-loader"}
+        {"type": "HandlerController"},
+        {"type": "HandlerLogic"},
+        {"type": "HandlerCollision"},
+        {"type": "Camera", "width": 960},
+        {"type": "HandlerRenderCreateJS"},
+        {"type": "EntityContainer"},
+        {"type": "TiledLoader"}
     ]
 }

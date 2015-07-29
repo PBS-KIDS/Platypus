@@ -2,7 +2,7 @@
     "id": "hero",
     "components":[
         {
-            "type": "entity-controller",
+            "type": "EntityController",
             "controlMap":{
                 "button-jump":      "jump",
                 "key:z":            "jump",
@@ -17,18 +17,18 @@
                 "button-right":     "go-right"
             }
         },{ 
-            "type": "mover",
+            "type": "Mover",
             "gravity" : 0.003,
             "jump": -1.6
         },{
             "type": "logic-hero"
         },{
-            "type": "orientation"
+            "type": "Orientation"
         },{
-            "type": "logic-directional-movement",
+            "type": "LogicDirectionalMovement",
             "speed": 0.6
         },{
-            "type": "collision-basic",
+            "type": "CollisionBasic",
             "collisionType": "hero",
             "solidCollisions": {
                 "block": "hit-solid",
@@ -36,14 +36,14 @@
                 "tiles": "hit-solid"
             }
         },{
-            "type": "render-sprite",
+            "type": "RenderSprite",
             "animationMap":{
                 "moving,grounded":  "walking",
                 "default": "jumping"
             },
             "image": "mookie"
         },{
-            "type": "audio",
+            "type": "Audio",
             "audioMap": {
                 "grounded,moving": {"sound": "walk", "loop": 5000},
                 "just-jumped": "jump"

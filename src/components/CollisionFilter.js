@@ -1,9 +1,9 @@
 /**
-# COMPONENT **collision-filter**
+# COMPONENT **CollisionFilter**
 This component will listen for a particular collision message and, depending on a given entity.state attribute, retrigger the collision as another collision message.
 
 ## Dependencies:
-- [[Collision-Basic]] (on entity) - This component listens for a particular collision event triggered by the collision-basic component.
+- [[Collision-Basic]] (on entity) - This component listens for a particular collision event triggered by the CollisionBasic component.
 
 ### Listens for:
 - **animation-complete** - On receiving this message, the component match the animation id with its animation id setting and destroy the entity if they match.
@@ -47,7 +47,7 @@ This component will listen for a particular collision message and, depending on 
         };
     
     return platypus.createComponentClass({
-        id: 'collision-filter',
+        id: 'CollisionFilter',
         constructor: function (definition) {
             var event = null,
                 state = definition.state;

@@ -1,5 +1,5 @@
 /**
-# COMPONENT **change-scene**
+# COMPONENT **SceneChanger**
 This component allows the entity to initiate a change from the current scene to another scene.
 
 ## Messages
@@ -16,10 +16,10 @@ This component allows the entity to initiate a change from the current scene to 
 
 ## JSON Definition:
     {
-      "type": "change-scene",
+      "type": "SceneChanger",
       
       "scene": "scene-menu",
-      // Optional (but must be provided by a "change-scene" parameter if not defined here). This causes the "new-scene" trigger to load this scene.
+      // Optional (but must be provided by a "SceneChanger" parameter if not defined here). This causes the "new-scene" trigger to load this scene.
       
       "transition": "fade-to-black",
       // Optional. This can be "instant" or "fade-to-black". Defaults to an "instant" transition.
@@ -37,7 +37,7 @@ This component allows the entity to initiate a change from the current scene to 
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'change-scene',
+        id: 'SceneChanger',
         
         constructor: function (definition) {
             this.scene = this.owner.scene || definition.scene;

@@ -1,6 +1,6 @@
 /**
-# COMPONENT **handler-controller**
-This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'handler-controller' message is sent to demarcate ticks.
+# COMPONENT **HandlerController**
+This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'HandlerController' message is sent to demarcate ticks.
 
 ## Dependencies
 - **Needs a 'tick' or 'check-inputs' call** - This component doesn't need a specific component, but it does require a 'tick' or 'check-inputs' call to function. It's usually used as a component of an action-layer.
@@ -8,7 +8,7 @@ This component handles capturing and relaying input information to the entities 
 ## Messages
 
 ### Listens for:
-- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-controller' message id it's added to the list of entities. Once an entity is added to the handler-controller 'controller-load' is called on the entity. If an entity has a control map that includes non-keyboard inputs, we add listeners for those and update functions to alert the entity when they happen. 
+- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-controller' message id it's added to the list of entities. Once an entity is added to the HandlerController 'controller-load' is called on the entity. If an entity has a control map that includes non-keyboard inputs, we add listeners for those and update functions to alert the entity when they happen. 
   - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick** - Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
   - @param resp (object) - An object containing delta which is the time passed since the last tick. 
@@ -20,7 +20,7 @@ This component handles capturing and relaying input information to the entities 
 ### Child Broadcasts:
 - **handle-controller** - Sent to entities on each tick to handle whatever they need to regarding controls.
   - @param resp (object) - An object containing a delta variable that is the time that's passed since the last tick.
-- **controller-load** - Sent to entities when they are added to the handler-controller.
+- **controller-load** - Sent to entities when they are added to the HandlerController.
 - **key:keyid:up** - Message sent to an entity when a key goes from down to up.
   - @param event (DOM event) - The DOM event that triggered the keyup event. 
 - **key:keyid:down** - Message sent to an entity when a key goes from up to down.
@@ -30,7 +30,7 @@ This component handles capturing and relaying input information to the entities 
 
 ## JSON Definition
     {
-      "type": "handler-controller",
+      "type": "HandlerController",
     }
 */
 /*global platypus */
@@ -163,7 +163,7 @@ This component handles capturing and relaying input information to the entities 
         };
 
     return platypus.createComponentClass({
-        id: 'handler-controller',
+        id: 'HandlerController',
         constructor: function (definition) {
             this.entities = [];
             this.timeElapsed = {

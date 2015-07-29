@@ -2,16 +2,16 @@
     "id": "level-portal",
     "components":[
         {
-            "type": "logic-portal"
+            "type": "LogicPortal"
         },{
-            "type": "collision-basic",
+            "type": "CollisionBasic",
             "collisionType": "portal",
             "immobile": true,
             "softCollisions": {
                 "hero": "occupied-portal"
             }
         },{
-            "type": "change-scene",
+            "type": "SceneChanger",
                 "transition": "fade-to-black"
         }
     ],

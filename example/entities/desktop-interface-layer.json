@@ -4,9 +4,9 @@
         "excludes": ["mobile"]
     },
     "components": [
-        {"type": "handler-logic"},
-        {"type": "handler-render-dom"},
-        {"type": "entity-container", 
+        {"type": "HandlerLogic"},
+        {"type": "HandlerRenderDOM"},
+        {"type": "EntityContainer", 
             "entities": [
                 {"type": "button-mute"},
                 {"type": "button-fullscreen"},

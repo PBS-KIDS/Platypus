@@ -1,10 +1,10 @@
 /**
-# COMPONENT **logic-pushable**
+# COMPONENT **LogicPushable**
 A component that enables an entity to be pushed.
 
 ## Dependencies
-- [[handler-logic]] (on entity's parent) - This component listens for a "handle-logic" message. It then moves the entity if it's being pushed.
-- [[collision-basic]] (on entity) - This component listens for messages from the collision-basic component. In particular 'hit-solid' and 'push-entity' are coming from collision. 
+- [[HandlerLogic]] (on entity's parent) - This component listens for a "handle-logic" message. It then moves the entity if it's being pushed.
+- [[CollisionBasic]] (on entity) - This component listens for messages from the CollisionBasic component. In particular 'hit-solid' and 'push-entity' are coming from collision. 
 
 ## Messages
 
@@ -20,7 +20,7 @@ A component that enables an entity to be pushed.
 
 ## JSON Definition
     {
-      "type": "logic-pushable",
+      "type": "LogicPushable",
        "xPush" : .01,
       //Optional - The distance per millisecond this object can be pushed in x. Defaults to .01.
       "yPush" : .01,
@@ -40,7 +40,7 @@ A component that enables an entity to be pushed.
     };
     
     return platypus.createComponentClass({
-        id: 'logic-pushable',
+        id: 'LogicPushable',
         constructor: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;
             this.xPush = definition.push || definition.xPush || 0.1;
