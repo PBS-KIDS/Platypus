@@ -1,84 +1,11 @@
 /**
-# COMPONENT **Audio**
-This component plays audio. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like RenderSprite).
-
-## Dependencies:
-- [createjs.SoundJS] [link1] - This component requires the SoundJS library to be included for audio functionality.
-- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "tick" message in order to stop audio clips that have a play length set.
-
-## Messages
-
-### Listens for:
-- **handle-render** - On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
-  - @param message.delta (number) - uses the value of delta (time since last `handle-render`) to track progess of the audio clip and stop clip if play length has been reached.
-- **audio-mute-toggle** - On receiving this message, the audio will mute if unmuted, and unmute if muted.
-  - @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
-- **audio-mute** - On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.
-  - @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is muted.
-- **audio-unmute** - On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
-  - @param message (string) - If a message is included, a string is expected that specifies an audio id, and that particular sound instance is unmuted.
-- **audio-stop** - On receiving this message all audio will stop playing.
-- **logical-state** - This component listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
-  - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages.
-- **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with [SoundJS play parameters] [link2].
-  - @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
-  - @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
-  - @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
-  - @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
-  - @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
-  - @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
-  - @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-  - @param message.next (string) - Optional. Used to specify the next audio clip to play once this one is complete.
-
-## JSON Definition:
-    {
-      "type": "Audio",
-      
-      "audioMap":{
-      // Required. Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play.
-      
-        "message-triggered": "audio-id",
-        // This simple form is useful to listen for "message-triggered" and play "audio-id" using default audio properties.
-        
-        "another-message": {
-        // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to [SoundJS play parameters] (http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play).
-        
-          "sound": "another-audio-id",
-          // Required. This is the audio clip to play when "another-message" is triggered.
-          
-          "interrupt": "none",
-          // Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
-          
-          "delay": 500,
-          // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
-          
-          "offset": 1500,
-          // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
-          
-          "length": 2500,
-          // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
-
-          "loop": 4,
-          // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
-          
-          "volume": 0.75,
-          // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
-          
-          "pan": -0.25,
-          // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-
-          "next": ["audio-id"]
-          // Optional. Used to specify a list of audio clips to play once this one is finished.
-        }
-      }
-    }
-
-[link1]: http://www.createjs.com/Docs/SoundJS/module_SoundJS.html
-[link2]: http://www.createjs.com/Docs/SoundJS/SoundJS.html#method_play
-*/
-/*global console */
-/*global createjs */
-/*global platypus */
+ * This component plays audio using [SoundJS](http://www.createjs.com/Docs/SoundJS/module_SoundJS.html). Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like [[RenderSprite]]).
+ * 
+ * @namespace platypus.components
+ * @class Audio
+ * @uses Component
+ */
+/*global console, createjs, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -269,46 +196,132 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
     
     return platypus.createComponentClass({
         id: 'audio',
+        
+        properties: {
+            /**
+             * Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play. Here is an example audioMap object:
+             * 
+             *       {
+             *           "message-triggered": "audio-id",
+             *           // This simple form is useful to listen for "message-triggered" and play "audio-id" using default audio properties.
+             * 
+             *           "another-message": {
+             *           // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to SoundJS play parameters.
+             * 
+             *               "sound": "another-audio-id",
+             *               // Required. This is the audio clip to play when "another-message" is triggered.
+             * 
+             *               "interrupt": "none",
+             *               // Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
+             *           
+             *               "delay": 500,
+             *               // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
+             * 
+             *               "offset": 1500,
+             *               // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+             * 
+             *               "length": 2500,
+             *               // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
+             * 
+             *               "loop": 4,
+             *               // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
+             * 
+             *               "volume": 0.75,
+             *               // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+             * 
+             *               "pan": -0.25,
+             *               // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+             * 
+             *               "next": ["audio-id"]
+             *               // Optional. Used to specify a list of audio clips to play once this one is finished.
+             *           }
+             *       }
+             * 
+             * @property audioMap
+             * @type Object
+             * @default null
+             */
+            audioMap: null,
+            
+            /**
+             * Sets what channel this audio component should play on. This is useful when coupled with the [[AudioMixer]] component to handle sounds in bulk.
+             * 
+             * @property channel
+             * @type String
+             * @default "default"
+             */
+            channel: 'default',
+            
+            /**
+             * Determines whether a sound that's started should play through completely regardless of entity state changes.
+             * 
+             * @property forcePlayThrough
+             * @type boolean
+             * @default true
+             */
+            forcePlayThrough: true,
+            
+            /**
+             * Determines whether and how a playing sound can be interrupted by higher priority sounds on the same channel.
+             * 
+             * @property preventOverlaps
+             * @type String
+             * @default ""
+             */
+            preventOverlaps: '',
+            
+            /**
+             * Sets the priority of this component's audio. Priority determines what plays and what's interrupted when multiple sounds are triggered.
+             * 
+             * @property priority
+             * @type number
+             * @default 0
+             */
+            priority: 0
+        },
             
         constructor: function (definition) {
             var key      = '',
                 playClip = null;
             
-            this.channel = definition.channel || 'default';
-
             this.activeAudioClips = [];
     
-            this.state = {};
+            this.state = this.owner.state;
             this.stateChange = false;
             this.currentState = false;
     
-            this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough;
-            if (typeof this.forcePlaythrough !== 'boolean') {
-                this.forcePlaythrough = true;
-            }
-            
             if (definition.audioMap) {
                 this.checkStates = [];
                 for (key in definition.audioMap) {
                     if (definition.audioMap.hasOwnProperty(key)) {
                         playClip = playSound(definition.audioMap[key]);
+                        
+                        /**
+                         * Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with SoundJS play parameters.
+                         * 
+                         * @method '*'
+                         * @param message.interrupt (string) - Optional. Can be "any", "early", "late", or "none". Determines how to handle the audio when it's already playing but a new play request is received. Default is "any".
+                         * @param message.delay (integer) - Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.
+                         * @param message.offset (integer) - Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.
+                         * @param message.length (integer) - Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.
+                         * @param message.loop (integer) - Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.
+                         * @param message.volume (float) - Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
+                         * @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
+                         * @param message.next (string) - Optional. Used to specify the next audio clip to play once this one is complete.
+                         */
                         this.addEventListener(key, playClip);
                         this.checkStates.push(createTest(key, definition.audioMap[key], playClip));
                     }
                 }
             }
             
-            if (definition.preventOverlaps) {
-                this.preventOverlaps = definition.preventOverlaps;
-                if (this.preventOverlaps !== 'ignore') {
-                    if (!channels[this.channel]) {
-                        channels[this.channel] = [];
-                    }
-                    channels[this.channel].push(this);
+            if (this.preventOverlaps && (this.preventOverlaps !== 'ignore')) {
+                if (!channels[this.channel]) {
+                    channels[this.channel] = [];
                 }
+                channels[this.channel].push(this);
             }
             
-            this.priority = definition.priority || 0;
             this.priorityTrack = null;
             
             if (!platypus.game.audioMixer) {
@@ -336,8 +349,13 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
             this.paused          = this.mixer.paused;
         },
 
-        events: {// These are messages that this component listens for
-            "handle-render": function (resp) {
+        events: {
+            /**
+             * On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
+             * 
+             * @method 'handle-render'
+             */
+            "handle-render": function () {
                 var self      = this,
                     i         = 0,
                     audioClip = null;
@@ -385,17 +403,21 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 }
             },
              
-            "logical-state": function (state) {
-                var i = '';
-
-                for (i in state) {
-                    if (state.hasOwnProperty(i) && (this.state[i] !== state[i])) {
-                        this.stateChange = true;
-                        this.state[i] = state[i];
-                    }
-                }
+            /**
+             * This component listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+             * 
+             * @method 'logical-state'
+             */
+            "logical-state": function () {
+                this.stateChange = true;
             },
 
+            /**
+             * On receiving this message, the audio will mute if unmuted, and unmute if muted.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance is toggled. Otherwise all audio is toggled from mute to unmute or vice versa.
+             * @method 'toggle-mute'
+             */
             "toggle-mute": function (audioId) {
                 var self = this;
 
@@ -407,6 +429,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 });
             },
 
+            /**
+             * On receiving this message, audio will stop playing.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance is stopped. Otherwise all audio is stopped.
+             * @method 'stop-audio'
+             */
             "stop-audio": function (audioId) {
                 if (!audioId) {
                     this.stopAudio();
@@ -417,6 +445,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 }
             },
 
+            /**
+             * On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance will mute. Otherwise all audio is muted.
+             * @method 'mute-audio'
+             */
             "mute-audio": function (audioId) {
                 var self = this;
 
@@ -428,6 +462,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 });
             },
 
+            /**
+             * On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance will unmute. Otherwise all audio is unmuted.
+             * @method 'unmute-audio'
+             */
             "unmute-audio": function (audioId) {
                 var self = this;
 
@@ -439,6 +479,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 });
             },
 
+            /**
+             * On receiving this message all audio will pause, or a particular sound instance will pause if an id is specified.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance will pause. Otherwise all audio is paused.
+             * @method 'pause-audio'
+             */
             "pause-audio": function (audioId) {
                 var self = this;
 
@@ -450,6 +496,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 });
             },
 
+            /**
+             * On receiving this message all audio will unpause, or a particular sound instance will unpause if an id is specified.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance will unpause. Otherwise all audio is unpaused.
+             * @method 'unpause-audio'
+             */
             "unpause-audio": function (audioId) {
                 var self = this;
 
@@ -461,6 +513,12 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 });
             },
              
+            /**
+             * This message sets the volume of playing audio.
+             * 
+             * @param audioId {String} If an audioId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.
+             * @method 'set-volume'
+             */
             "set-volume": function (volume) {
                 var self    = this,
                     vol     = 0,
@@ -476,14 +534,7 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                     vol = volume.volume;
                     this.handleClip(volume.soundId, handler);
                 }
-            },
-
-            "audio-stop":        function () {console.warn(this.owner.type + " - Audio component: The 'audio-stop' event has been deprecated. Use 'stop-audio' instead."); },
-            "audio-mute-toggle": function () {console.warn(this.owner.type + " - Audio component: The 'audio-mute-toggle' event has been deprecated. Use 'toggle-mute' instead."); },
-            "audio-mute":        function () {console.warn(this.owner.type + " - Audio component: The 'audio-mute' event has been deprecated. Use 'mute-audio' instead."); },
-            "audio-unmute":      function () {console.warn(this.owner.type + " - Audio component: The 'audio-unmute' event has been deprecated. Use 'unmute-audio' instead."); },
-            "audio-pause":       function () {console.warn(this.owner.type + " - Audio component: The 'audio-pause' event has been deprecated. Use 'pause-audio' instead."); },
-            "audio-unpause":     function () {console.warn(this.owner.type + " - Audio component: The 'audio-unpause' event has been deprecated. Use 'unpause-audio' instead."); }
+            }
         },
         
         methods: {
@@ -619,6 +670,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                 
                 this.checkTimeEvents(audioClip, true);
                 
+                /**
+                 * When a single audio clip is finished playing, this event is triggered.
+                 * 
+                 * @event clip-complete
+                 */
                 this.owner.triggerEvent('clip-complete');
                 
                 if (this.priorityTrack && (audioClip === this.priorityTrack.audio)) {
@@ -639,6 +695,11 @@ This component plays audio. Audio is played in one of two ways, by triggering sp
                         }
                     }
                 } else {
+                    /**
+                     * When an audio sequence is finished playing, this event is triggered.
+                     * 
+                     * @event sequence-complete
+                     */
                     this.owner.triggerEvent('sequence-complete');
                 }
             },

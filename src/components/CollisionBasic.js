@@ -34,6 +34,7 @@
                 }
             }
         },
+
         /**
          * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
          * 

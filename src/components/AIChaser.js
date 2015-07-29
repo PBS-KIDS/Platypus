@@ -51,7 +51,7 @@
             this.offset = new platypus.Vector(0, 0);
         },
 
-        events: {// These are messages that this component listens for
+        events: {
             /**
              * This component listens for this event to initialize movement.
              * 
