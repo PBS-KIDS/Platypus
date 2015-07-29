@@ -3,7 +3,7 @@
 This component serves as a switch in the game world, typically tied to collision events such that this entity changes state when another entity collides or passed over.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
 
 ## Messages
 

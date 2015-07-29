@@ -1,7 +1,7 @@
 /**
  * A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages. This component is usually used on an "action-layer".
  * 
- * @class "handler-logic" Component
+ * @class "HandlerLogic" Component
  * @uses Component
  **/
 /*global platypus */
@@ -24,7 +24,7 @@
     };
 
     return platypus.createComponentClass({
-        id: "handler-logic",
+        id: "HandlerLogic",
         publicProperties: {
             /**
              * The buffer area around the camera in which entity logic is active. This property is available on the Entity as `entity.buffer`.
@@ -212,9 +212,7 @@
                     this.activeEntities.length = 0;
                     for (j = this.entities.length - 1; j > -1; j--) {
                         child = this.entities[j];
-                        if (child.alwaysOn
-                            || (typeof child.x === 'undefined')
-                            || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
+                        if (child.alwaysOn  || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
                             this.activeEntities.push(child);
                         }
                     }

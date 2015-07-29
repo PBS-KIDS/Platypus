@@ -3,7 +3,7 @@
 Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 

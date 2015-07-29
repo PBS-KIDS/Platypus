@@ -1,7 +1,8 @@
 /**
  * This component acts as a simple AI that will chase another entity.
- *
- * @class "ai-chaser" Component
+ * 
+ * @namespace platypus.components
+ * @class AIChaser
  * @uses Component
  */
 /*global console, platypus */
@@ -12,7 +13,7 @@
 
     return platypus.createComponentClass({
         
-        id: 'ai-chaser',
+        id: 'AIChaser',
         
         properties: {
             /**
@@ -58,7 +59,7 @@
              */
             "load": function () {
                 if (!this.owner.addMover) {
-                    console.warn('The "ai-chaser" component requires a "mover" component to function correctly.');
+                    console.warn('The "AIChaser" component requires a "mover" component to function correctly.');
                     return;
                 }
                 

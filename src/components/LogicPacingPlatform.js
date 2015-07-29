@@ -3,7 +3,7 @@
 This component changes the (x, y) position of an object according to its speed and heading and alternates back and forth. This is useful for in-place moving platforms.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 

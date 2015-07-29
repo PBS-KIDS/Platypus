@@ -1,6 +1,7 @@
 /**
  * This class is used to create the `platypus.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
  * 
+ * @namespace platypus
  * @class Game
  * @constructor
  * @param [definition] {Object} Collection of configuration settings, typically from config.json.

@@ -14,6 +14,7 @@
  *             }
  *         ]
  *     }
+ * @namespace platypus
  * @class Scene
  * @constructor
  * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties, filters, and components as shown above under "JSON Definition Example".

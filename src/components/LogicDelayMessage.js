@@ -3,7 +3,7 @@
 This component allows certain messages to trigger new messages at a later time. This is useful for any sort of delayed reaction to events.
 
 ## Dependencies
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 

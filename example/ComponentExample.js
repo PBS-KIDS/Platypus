@@ -1,7 +1,7 @@
 /**
  * This component is an example template from which a developer can create their own components. Summarize the purpose of this component here.
  * 
- * @class "component-template" Component
+ * @class ComponentExample
  * @uses Component
  */
 (function () {
@@ -29,7 +29,7 @@
          Method this.removeMethod(name) - removes a method from the entity.
         *********************************************************************/
         
-        id: 'name-of-component', //TODO: Change the name of the component!
+        id: 'NameOfComponent', //TODO: Change the name of the component!
         
         /********************************************************************
          Properties are local to the component and are available as

@@ -31,6 +31,7 @@
          }
      }
  * 
+ * @namespace platypus
  * @class Entity
  * @constructor
  * @extends Messenger

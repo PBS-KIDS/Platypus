@@ -4,7 +4,7 @@ This component connects an entity to its parent's [[node-map]]. It manages navig
 
 ## Dependencies
 - [[node-map]] (on entity's parent) - This component uses the `node-map` to determine its location and navigate to other nodes.
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 

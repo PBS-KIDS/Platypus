@@ -1,5 +1,6 @@
 /**
  * @module Platypus
+ * @namespace platypus
  */
 this.platypus = this.platypus || {};
 

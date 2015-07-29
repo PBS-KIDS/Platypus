@@ -1,9 +1,9 @@
 /**
-# COMPONENT **logic-carrier**
+# COMPONENT **LogicCarrier**
 This component allows this entity carry other entities with which it collides. Entities that this component should carry need to have a [[Logic-Portable]] component attached to notify this entity that they are portable.
 
 ## Dependencies:
-- [[Collision-Group]] - This component will attach a [[Collision-Group]] to this entity if it does not already have this component. `logic-carrier` uses a collision group to resolve its portable peers' collisions with itself before other world collisions are handled.
+- [[Collision-Group]] - This component will attach a [[Collision-Group]] to this entity if it does not already have this component. `LogicCarrier` uses a collision group to resolve its portable peers' collisions with itself before other world collisions are handled.
 - [[Logic-Portable]] (on portable peer entity) - This component listens for 'carry-me' and 'release-me', commonly triggered by [[Logic-Portable]] on a colliding peer entity.
 
 ## Messages
@@ -23,24 +23,24 @@ This component allows this entity carry other entities with which it collides. E
 
 ## JSON Definition:
     {
-      "type": "logic-carrier"
+      "type": "LogicCarrier"
       // This component has no customizable properties.
     }
     
-Requires: ["collision-group"]
+Requires: ["CollisionGroup"]
 */
 /*global platypus */
 (function () {
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'logic-carrier',
+        id: 'LogicCarrier',
         constructor: function (definition) {},
         events: {
             "load": function (resp) {
                 if (!this.owner.trigger('add-collision-entity', this.owner)) {
-                    // This message wasn't handled, so add a collision-group component and try again!
-                    this.owner.addComponent(new platypus.components['collision-group'](this.owner, {}));
+                    // This message wasn't handled, so add a CollisionGroup component and try again!
+                    this.owner.addComponent(new platypus.components.CollisionGroup(this.owner, {}));
                     this.owner.trigger('add-collision-entity', this.owner);
                 }
             },

@@ -3,7 +3,7 @@
 This component will cause the entity to move in a certain direction on colliding with another entity.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 

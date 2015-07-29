@@ -4,7 +4,7 @@ A component that allows an object to be dragged and dropped. Can use collision t
 NOTE: handler-render-createjs and the render-sprite used by this entity need to have their 'touch' or 'click' inputs set to true.
 
 ## Dependencies
-- [[handler-logic]] - Listens for the handle-logic and handle-post-collision-logic calls.
+- [[HandlerLogic]] - Listens for the handle-logic and handle-post-collision-logic calls.
 - [[render-sprite]] - Listens for 'mouseup', 'mousedown', and 'pressmove' calls.
 
 ## Messages

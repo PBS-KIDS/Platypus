@@ -173,7 +173,7 @@
                 });
 
                 if (orientation) {
-                    if(isNaN(orientation)){
+                    if (isNaN(orientation)) {
                         vector.set(orientation);
                     } else {
                         vector.rotate(orientation);

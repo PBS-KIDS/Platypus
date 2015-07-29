@@ -3,7 +3,7 @@
 This component creates an entity and connects it with the current entity. This is useful for entities that have a one-to-one relationship with a given entity and must move as if connected to the host entity.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
 
 ## Messages
 

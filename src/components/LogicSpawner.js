@@ -3,7 +3,7 @@
 This component creates an entity and propels it away. This is useful for casting, firing, tossing, and related behaviors.
 
 ## Dependencies:
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to determine whether it should be spawning or not.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to determine whether it should be spawning or not.
 
 ## Messages
 

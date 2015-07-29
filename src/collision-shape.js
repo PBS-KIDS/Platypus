@@ -1,6 +1,7 @@
 /**
  * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle and circle shapes can be created. Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
  * 
+ * @namespace platypus
  * @class CollisionShape
  * @constructor
  * @param owner {Entity} The entity that uses this shape.

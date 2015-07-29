@@ -3,7 +3,7 @@
 This component allows this entity to be carried by other entities with which it collides. Entities that should carry this entity need to have a [[Logic-Carrier]] component attached.
 
 ## Dependencies:
-- [[handler-logic]] (on parent entity) - This component listens for 'handle-logic' messages to determine whether it should be carried or released each game step.
+- [[HandlerLogic]] (on parent entity) - This component listens for 'handle-logic' messages to determine whether it should be carried or released each game step.
 - [[logic-carrier]] (on peer entity) - This component triggers 'carry-me' and 'release-me' message, listened for by [[Logic-Carrier]] to handle carrying this entity.
 
 ## Messages

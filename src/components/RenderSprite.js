@@ -1,10 +1,10 @@
 /**
-# COMPONENT **render-sprite**
+# COMPONENT **RenderSprite**
 This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
 
 ## Dependencies:
 - [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas animation functionality.
-- [[handler-render-createjs]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
 
 ## Messages
 
@@ -15,10 +15,10 @@ This component is attached to entities that will appear in the game world. It re
 - **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
   - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the sprite is rendered.
 - **pin-me** - If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
-  - @param pinId (string) - Required. A string identifying the id of a pin location that the render-sprite wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that the RenderSprite wants to be pinned to.
 - **attach-pin** - On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
   - @param pinId (string) - Pin Id of the received pin location.
-  - @param container ([createjs.Container][link3]) - Container that render-sprite should be added to.
+  - @param container ([createjs.Container][link3]) - Container that RenderSprite should be added to.
 - **remove-pin** - On receiving this message, the component checks whether it is pinned, and if so, removes itself from the container.
   - @param pinId (string) - Pin Id of the pin location to remove itself from.
 - **hide-sprite** - Makes the sprite invisible.
@@ -51,16 +51,16 @@ This component is attached to entities that will appear in the game world. It re
   - @param y (number) - The y-location of the mouse in stage coordinates.
   - @param entity ([[Entity]]) - The entity clicked on.  
 - **pin-me** - If this component should be pinned to another sprite, it will trigger this event in an attempt to initiate the pinning.
-  - @param pinId (string) - Required. A string identifying the id of a pin location that this render-sprite wants to be pinned to.
+  - @param pinId (string) - Required. A string identifying the id of a pin location that this RenderSprite wants to be pinned to.
 - **attach-pin** - This component broadcasts this message if it has a list of pins available for other sprites on the entity to attach to.
   - @param pinId (string) - Pin Id of an available pin location.
-  - @param container ([createjs.Container][link3]) - Container that the render-sprite should be added to.
-- **remove-pin** - When preparing to remove itself from an entity, render-sprite broadcasts this to all attached sprites.
+  - @param container ([createjs.Container][link3]) - Container that the RenderSprite should be added to.
+- **remove-pin** - When preparing to remove itself from an entity, RenderSprite broadcasts this to all attached sprites.
   - @param pinId (string) - Pin Id of the pin location to be removed.
 
 ## JSON Definition
     {
-      "type": "render-sprite",
+      "type": "RenderSprite",
 
       "animationMap":{
       //Optional. This defines a mapping from either triggered messages or one or more states for which to choose a new animation to play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition.
@@ -252,7 +252,7 @@ This component is attached to entities that will appear in the game world. It re
     
     return platypus.createComponentClass({
         
-        id: 'render-sprite',
+        id: 'RenderSprite',
         
         constructor: (function () {
             var defaultAnimations = {"default": 0},
@@ -572,7 +572,7 @@ This component is attached to entities that will appear in the game world. It re
                     this.container.mask = this.setMask(definition.mask || this.owner.mask);
                 }
     
-                // pin to another render-sprite
+                // pin to another RenderSprite
                 this.pinTo = definition.pinTo || false;
                 if (this.pinTo) {
                     this.owner.triggerEvent('pin-me', this.pinTo);
@@ -675,7 +675,7 @@ This component is attached to entities that will appear in the game world. It re
                 }
             },
             
-            "set-mask": function(mask) {
+            "set-mask": function (mask) {
                 if (mask) {
                     this.container.mask = this.setMask(mask);
                 } else {

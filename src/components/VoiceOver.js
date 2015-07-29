@@ -1,15 +1,15 @@
 /**
 # COMPONENT **voice-over**
-This component uses its definition to load two other components (audio and render-sprite) who work in an interconnected way to render animations corresponding to one or more audio tracks.
+This component uses its definition to load two other components (Audio and RenderSprite) who work in an interconnected way to render animations corresponding to one or more audio tracks.
 
 ## Dependencies
-- [[render-sprite]] - This component creates a `render-sprite` component to handle facial movements corresponding to an audio track.
-- [[audio]] - This component creates an `audio` component to handle playing a voice-over track and trigger events to update the facial rendering.
+- [[RenderSprite]] - This component creates a `RenderSprite` component to handle facial movements corresponding to an audio track.
+- [[Audio]] - This component creates an `Audio` component to handle playing a voice-over track and trigger events to update the facial rendering.
 
 ## Messages
 
 ### Listens for:
-- **load** - On receiving this message, this component removes itself from the entity. (It creates the [[render-sprite]] and [[audio]] components in its constructor.)
+- **load** - On receiving this message, this component removes itself from the entity. (It creates the [[RenderSprite]] and [[Audio]] components in its constructor.)
 
 ## JSON Definition
     {
@@ -19,7 +19,7 @@ This component uses its definition to load two other components (audio and rende
       // Optional. Specifies how long a described voice-over frame should last. Default is 100 milliseconds.
       
       "messagePrefix": "i-say",
-      // Optional. Specifies the prefix that messages between the render and audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the render-sprite uses to show the proper frame. Defaults to "voice-over".
+      // Optional. Specifies the prefix that messages between the render and Audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the RenderSprite uses to show the proper frame. Defaults to "voice-over".
       
       "animationMap": {
         "default": "mouth-closed"
@@ -64,10 +64,10 @@ This component uses its definition to load two other components (audio and rende
           }
       }
       
-      //This component also accepts all parameters accepted by either [[render-sprite]] or [[audio]] and passes them along when it creates those components.
+      //This component also accepts all parameters accepted by either [[RenderSprite]] or [[Audio]] and passes them along when it creates those components.
     }
     
-Requires: ["audio", "render-sprite"]
+Requires: ["Audio", "RenderSprite"]
 */
 /*global platypus */
 /*jslint plusplus:true */
@@ -181,14 +181,14 @@ Requires: ["audio", "render-sprite"]
                 }
             }
             animationDefinition.animationMap['default'] = definition.animationMap['default'];
-            this.owner.addComponent(new platypus.components['render-sprite'](this.owner, animationDefinition));
+            this.owner.addComponent(new platypus.components.RenderSprite(this.owner, animationDefinition));
 
             for (i in definition.voiceoverMap) {
                 if (definition.voiceoverMap.hasOwnProperty(i)) {
                     audioDefinition.audioMap[i] = createVO(definition.voiceoverMap[i], definition.animationMap, this.message, definition.frameLength || 100);
                 }
             }
-            this.owner.addComponent(new platypus.components.audio(this.owner, audioDefinition));
+            this.owner.addComponent(new platypus.components.Audio(this.owner, audioDefinition));
         },
 
         events: {// These are messages that this component listens for

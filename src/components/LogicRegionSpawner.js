@@ -3,7 +3,7 @@
 This component spawns new entities within a given area at set intervals.
 
 ## Dependencies
-- [[handler-logic]] (on entity's parent) - This component listens for a logic tick message to determine whether to spawn another entity.
+- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to determine whether to spawn another entity.
 
 ## Messages
 

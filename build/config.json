@@ -11,6 +11,14 @@
 		"../src/collision-shape.js",
 		"../src/entity.js",
 		"../src/factory.js",
+		"../src/components/AIChaser.js",
+		"../src/components/AIPacer.js",
+		"../src/components/asset-loader.js",
+		"../src/components/audio.js",
+		"../src/components/audio-mixer.js",
+		"../src/components/audio-mobile.js",
+		"../src/components/camera.js",
+		"../src/components/camera-follow-me.js",
 		"../src/components/change-scene.js",
 		"../src/components/collision-basic.js",
 		"../src/components/collision-filter.js",
@@ -72,15 +80,7 @@
 		"../src/components/tiled-loader.js",
 		"../src/components/tween.js",
 		"../src/components/voice-over.js",
-		"../src/components/xhr.js",
-		"../src/components/ai-chaser.js",
-		"../src/components/ai-pacer.js",
-		"../src/components/asset-loader.js",
-		"../src/components/audio.js",
-		"../src/components/audio-mixer.js",
-		"../src/components/audio-mobile.js",
-		"../src/components/camera.js",
-		"../src/components/camera-follow-me.js"
+		"../src/components/xhr.js"
 	],
 
 	"docs_out_path":"./output/docs/"
