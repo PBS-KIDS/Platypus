@@ -3,7 +3,8 @@
  * 
  * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
  * 
- * @class "Camera" Component
+ * @namespace platypus.components
+ * @class Camera
  * @uses Component
 */
 /*global platypus */

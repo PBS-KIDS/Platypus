@@ -1,60 +1,10 @@
 /**
-# COMPONENT **CameraFollowMe**
-This component can request that the camera focus on this entity.
-
-## Dependencies:
-- [[Camera]] (on entity's parent) - This component sends a request to have the camera follow this component's entity.
-
-### Listens for:
-- **follow-me** - On receiving this message, the component will trigger a message requesting that the parent camera begin following this entity.
-
-### Parent Broadcasts:
-- **follow** - This component fires this message so the camera will begin following this entity.
-  - @param message.mode (string) - Sends camera following mode according to this component's settings.
-  - @param message.entity ([[Entity]]) - sends this.owner: the entity that the camera should commence following.
-  - @param message.top (number) - The top of a bounding box according to this component's settings.
-  - @param message.left (number) - The left of a bounding box according to this component's settings.
-  - @param message.width (number) - The width of a bounding box according to this component's settings.
-  - @param message.height (number) - The height of a bounding box according to this component's settings.
-  - @param message.offsetX (number) - How far to offset the camera from the entity horizontally according to this component's settings.
-  - @param message.offsetY (number) - How far to offset the camera from the entity vertically according to this component's settings.
-  - @param message.time: (number) - How many milliseconds to follow the entity according to this component's settings.
-- **pause-logic** - This component fires this message to pause logic if required.
-- **pause-render** - This component fires this message to pause rendering if required.
-
-## JSON Definition:
-    {
-      "type": "CameraFollowMe",
-      
-      "pause": true,
-      // Optional. Whether to pause the game while the camera is focused. Defaults to false. 
-      
-      "time": 500,
-      // Optional. Time in milliseconds that the camera should focus before returning to the original focus.
-      
-      "mode": "forward",
-      // Optional. Camera mode that the camera should use.
-      
-      "top": 100,
-      // Optional number specifying top of viewport in world coordinates
-      
-      "left": 100,
-      // Optional number specifying left of viewport in world coordinates
-      
-      "width": 100,
-      // Optional number specifying width of viewport in world coordinates
-      
-      "height": 100,
-      // Optional number specifying height of viewport in world coordinates
-      
-      "offsetX": 20,
-      // Optional number setting how far to offset the camera from the entity horizontally.
-      
-      "offsetY": 40
-      // Optional number setting how far to offset the camera from the entity vertically.
-    }
-
-*/
+ * This component can request that the camera focus on this entity.
+ * 
+ * @namespace platypus.components
+ * @class CameraFollowMe
+ * @uses Component
+ */
 /*global platypus */
 (function () {
     "use strict";
@@ -62,31 +12,148 @@ This component can request that the camera focus on this entity.
     return platypus.createComponentClass({
         id: 'CameraFollowMe',
         
+        properties: {
+            /**
+             * Sets initial camera settings when the entity is being followed. This can be over-written by the "follow-me" call itself. If any of these attributes are not provided, the following are used by default:
+             * 
+                  {
+                      "time": 500,
+                      // Optional. Time in milliseconds that the camera should focus before returning to the original focus.
+                      
+                      "mode": "forward",
+                      // Optional. Camera mode that the camera should use.
+                      
+                      "top": 100,
+                      // Optional number specifying top of viewport in world coordinates
+                      
+                      "left": 100,
+                      // Optional number specifying left of viewport in world coordinates
+                      
+                      "width": 100,
+                      // Optional number specifying width of viewport in world coordinates
+                      
+                      "height": 100,
+                      // Optional number specifying height of viewport in world coordinates
+                      
+                      "offsetX": 20,
+                      // Optional number setting how far to offset the camera from the entity horizontally.
+                      
+                      "offsetY": 40
+                      // Optional number setting how far to offset the camera from the entity vertically.
+                  }
+             * 
+             * @property camera
+             * @type Object
+             * @default {}
+             */
+            camera: {},
+            
+            /**
+             * Camera mode that the camera should use.
+             * 
+             * @property mode
+             * @type String
+             * @default "forward"
+             */
+            mode: "forward",
+
+            /**
+             * Whether to pause the game while the camera is focused.
+             * 
+             * @property accelerate
+             * @type boolean
+             * @default false
+             */
+            pause: false
+        },
+        
         constructor: function (definition) {
             this.pauseGame = definition.pause ? {
                 time: definition.time
             } : null;
             
-            this.followMeMessage = {
-                mode: this.owner.cameraMode || definition.mode || 'forward',
+            this.camera = {
                 entity: this.owner,
-                top: definition.top || undefined,
-                left: definition.left || undefined,
-                offsetX: definition.offsetX || undefined,
-                offsetY: definition.offsetY || undefined,
-                width: definition.width || undefined,
-                height: definition.height || undefined,
-                time: definition.time || 0
+                mode: this.camera.mode || this.mode,
+                top: this.camera.top,
+                left: this.camera.left,
+                offsetX: this.camera.offsetX,
+                offsetY: this.camera.offsetY,
+                width: this.camera.width,
+                height: this.camera.height,
+                time: this.camera.time
             };
         },
         
-        "events": {
-            'follow-me': function () {
+        events: {
+            /**
+             * On receiving this message, the component will trigger a message requesting that the parent camera begin following this entity.
+             * 
+             * @method 'follow-me'
+             * @param [options] {Object} A list of key/value paris describing camera options to set.
+             * @param [options.mode] {String} Camera following mode.
+             * @param [options.top] {number} The top of a bounding box.
+             * @param [options.left] {number} The left of a bounding box.
+             * @param [options.width] {number} The width of a bounding box.
+             * @param [options.height] {number} The height of a bounding box.
+             * @param [options.offsetX] {number} How far to offset the camera from the entity horizontally.
+             * @param [options.offsetY] {number} How far to offset the camera from the entity vertically.
+             * @param [options.time] {number} How many milliseconds to follow the entity.
+             */
+            "follow-me": function (options) {
+                var msg = this.camera;
+                
+                if (options) {
+                    msg = {
+                        entity:  this.owner,
+                        mode:    options.mode    || this.camera.mode,
+                        top:     options.top     || this.camera.top,
+                        left:    options.left    || this.camera.left,
+                        offsetX: options.offsetX || this.camera.offsetX,
+                        offsetY: options.offsetY || this.camera.offsetY,
+                        width:   options.width   || this.camera.width,
+                        height:  options.height  || this.camera.height,
+                        time:    options.time    || this.camera.time
+                    };
+                }
+
                 if (this.pauseGame) {
+
+                    /**
+                     * This component fires this message on the parent entity to pause logic if required.
+                     * 
+                     * @event 'pause-logic'
+                     * @param options {Object}
+                     * @param options.time {number} The amount of time to pause before re-enabling logic.
+                     */
                     this.owner.parent.trigger('pause-logic',  this.pauseGame);
+                    
+                    /**
+                     * This component fires this message on the parent entity to pause rendering if required.
+                     * 
+                     * @event 'pause-render'
+                     * @param options {Object}
+                     * @param options.time {number} The amount of time to pause before re-enabling render updates.
+                     */
                     this.owner.parent.trigger('pause-render', this.pauseGame);
                 }
-                this.owner.parent.trigger('follow', this.followMeMessage);
+                
+                /**
+                 * This component fires this message on this entity's parent so the camera will begin following this entity.
+                 * 
+                 * @event 'follow'
+                 * @param options {Object} A list of key/value paris describing camera options to set.
+                 * @param options.entity {[[Entity]]} Sends this entity for the camera to follow.
+                 * @param options.mode {String} Camera following mode.
+                 * @param options.top {number} The top of a bounding box.
+                 * @param options.left {number} The left of a bounding box.
+                 * @param options.width {number} The width of a bounding box.
+                 * @param options.height {number} The height of a bounding box.
+                 * @param options.offsetX {number} How far to offset the camera from the entity horizontally.
+                 * @param options.offsetY {number} How far to offset the camera from the entity vertically.
+                 * @param options.time {number} How many milliseconds to follow the entity.
+                 */
+                this.owner.parent.trigger('follow', msg);
             }
         }
     });
