@@ -1,32 +1,10 @@
 /**
-# COMPONENT **CollisionFilter**
-This component will listen for a particular collision message and, depending on a given entity.state attribute, retrigger the collision as another collision message.
-
-## Dependencies:
-- [[Collision-Basic]] (on entity) - This component listens for a particular collision event triggered by the CollisionBasic component.
-
-### Listens for:
-- **animation-complete** - On receiving this message, the component match the animation id with its animation id setting and destroy the entity if they match.
-  - @param animationId (string) - animation id for the animation that just finished.
-
-## JSON Definition:
-    {
-      "type": "chaff",
-      
-      "state": "allergic",
-      // The entity state that should cause the following list of collisions to trigger events. If this state is not true, no events are triggered.
-      
-      "collisions": {
-      // One or more collision events for which to listen.
-        
-        "hitting-flowers": "sneeze",
-        // Listen for "hitting-flowers", and if the entity is "allergic", trigger a "sneeze" event.
-        
-        "in-the-weeds": "cough"
-        // Another collision event that triggers "cough" if the entity is "allergic".
-      }
-    }
-*/
+ * This component will listen for a particular collision message and, depending on a given entity.state attribute, retrigger the collision as another collision message.
+ * 
+ * @namespace platypus.components
+ * @class CollisionFilter
+ * @uses Component
+ */
 /*global platypus */
 (function () {
     "use strict";
@@ -48,22 +26,52 @@ This component will listen for a particular collision message and, depending on 
     
     return platypus.createComponentClass({
         id: 'CollisionFilter',
-        constructor: function (definition) {
-            var event = null,
-                state = definition.state;
+        
+        properties: {
+            /**
+             * One or more collision events for which to listen. For example, if the state property is set to "allergic":
+             * 
+                   {
+                       "hitting-flowers": "sneeze",
+                       // Listen for "hitting-flowers", and if the entity is "allergic", trigger a "sneeze" event.
+                    
+                       "in-the-weeds": "cough"
+                       // Another collision event that triggers "cough" if the entity is "allergic".
+                   }
+             * 
+             * @property collisions
+             * @type Object
+             * @default {}
+             */
+            collisions: {},
             
-            if (definition.collisions) {
+            /**
+             * The entity state that should cause the following list of collisions to trigger events. If this state is not true, no events are triggered. To trigger events on the inverse of a state, place "!" before the state such as "!allergic".
+             * 
+             * @property state
+             * @type String
+             * @default ""
+             */
+            state: ""
+        },
+        
+        constructor: function (definition) {
+            var event      = "",
+                collisions = this.collisions,
+                state      = this.state;
+            
+            if (collisions) {
                 if (state[0] === '!') {
                     state = state.substring(1);
-                    for (event in definition.collisions) {
-                        if (definition.collisions.hasOwnProperty(event)) {
-                            this.addEventListener(event, collideNeg(this.owner, state, definition.collisions[event]));
+                    for (event in collisions) {
+                        if (collisions.hasOwnProperty(event)) {
+                            this.addEventListener(event, collideNeg(this.owner, state, collisions[event]));
                         }
                     }
                 } else {
-                    for (event in definition.collisions) {
-                        if (definition.collisions.hasOwnProperty(event)) {
-                            this.addEventListener(event, collidePos(this.owner, state, definition.collisions[event]));
+                    for (event in collisions) {
+                        if (collisions.hasOwnProperty(event)) {
+                            this.addEventListener(event, collidePos(this.owner, state, collisions[event]));
                         }
                     }
                 }

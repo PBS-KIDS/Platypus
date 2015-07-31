@@ -303,11 +303,11 @@
  * @param entity {Entity} Expects an entity as the message object to determine the entity to remove from its list.
  **/
             "child-entity-removed": function (entity) {
-                var x = 0;
-
-                for (x in this.entities) {
-                    if (this.entities[x] === entity) {
-                        this.entities.splice(x, 1);
+                var i = 0;
+                
+                for (i = 0; i < this.entities.length; i++) {
+                    if (this.entities[i] === entity) {
+                        this.entities.splice(i, 1);
                         break;
                     }
                 }
@@ -323,7 +323,7 @@
  * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
  **/
             "world-loaded": function (values) {
-                var x = 0;
+                var i = 0;
                 
                 this.worldIsLoaded = true;
                 this.worldWidth    = values.width;
@@ -331,8 +331,8 @@
                 if (values.camera) {
                     this.follow(values.camera);
                 }
-                for (x = this.entities.length - 1; x > -1; x--) {
-                    this.entities[x].trigger('camera-loaded', values);
+                for (i = this.entities.length - 1; i > -1; i--) {
+                    this.entities[i].trigger('camera-loaded', values);
                 }
             },
             
@@ -741,11 +741,11 @@
                     newTop = entity.y - this.bBBorderY;
                 }
                 
-                if (typeof newLeft !== 'null') {
+                if (newLeft !== null) {
                     newLeft = this.moveLeft(ratioX * newLeft + iratioX * this.world.viewportLeft);
                 }
                 
-                if (typeof newTop !== 'null') {
+                if (newTop !== null) {
                     newTop = this.moveTop(ratioY * newTop + iratioY * this.world.viewportTop);
                 }
                 
