@@ -1,27 +1,10 @@
 /**
-# COMPONENT **CollisionGroup**
-This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
-
-## Dependencies:
-- [[HandlerCollision]] (on entity's parent) - The collision handler uses the methods this component exposes to perform collision for this entity as a group before performing collision on each entity in the group.
-
-## Messages
-
-### Listens for:
-- **child-entity-added, add-collision-entity** - On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-  - @param message ([[Entity]] object) - The entity to be added.
-- **child-entity-removed, remove-collision-entity** - On receiving this message, the component looks for the entity in its collision group and removes it.
-  - @param message ([[Entity]] object) - The entity to be removed.
-- **relocate-entity** - When this message is triggered, the collision group updates its record of the owner's last (x, y) coordinate.
-
-## JSON Definition:
-    {
-      "type": "CollisionGroup"
-      // This component has no customizable properties.
-    }
-    
-Requires: ["../AABB.js"]
-*/
+ * This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
+ * 
+ * @namespace platypus.components
+ * @class CollisionGroup
+ * @uses Component
+ */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
@@ -122,22 +105,51 @@ Requires: ["../AABB.js"]
         },
         
         events: {
+            /**
+             * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
+             * 
+             * @method 'child-entity-added'
+             * @param entity {Entity} The entity to be added.
+             */
             "child-entity-added": function (entity) {
                 this.addCollisionEntity(entity);
             },
             
+            /**
+             * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
+             * 
+             * @method 'add-collision-entity'
+             * @param entity {Entity} The entity to be added.
+             */
             "add-collision-entity": function (entity) {
                 this.addCollisionEntity(entity);
             },
             
+            /**
+             * On receiving this message, the component looks for the entity in its collision group and removes it.
+             * 
+             * @method 'child-entity-removed'
+             * @param entity {Entity} The entity to be removed.
+             */
             "child-entity-removed": function (entity) {
                 this.removeCollisionEntity(entity);
             },
             
+            /**
+             * On receiving this message, the component looks for the entity in its collision group and removes it.
+             * 
+             * @method 'remove-collision-entity'
+             * @param entity {Entity} The entity to be removed.
+             */
             "remove-collision-entity": function (entity) {
                 this.removeCollisionEntity(entity);
             },
             
+            /**
+             * When this message is triggered, the collision group updates its record of the owner's last (x, y) coordinate.
+             * 
+             * @method 'relocate-entity'
+             */
             "relocate-entity": function () {
                 this.owner.previousPosition.set(this.owner.position);
                 this.updateAABB();
@@ -384,14 +396,32 @@ Requires: ["../AABB.js"]
         },
         
         publicMethods: {
+            /**
+             * Gets the bounding box of the group of entities.
+             * 
+             * @method getCollisionGroupAABB
+             * @return platformer.AABB
+             */
             getCollisionGroupAABB: function () {
                 return this.getAABB();
             },
             
+            /**
+             * Gets a list of all the entities in the world.
+             * 
+             * @method getWorldEntities
+             * @return Array
+             */
             getWorldEntities: function () {
                 return this.owner.parent.getWorldEntities();
             },
             
+            /**
+             * Gets the collision entity representing the world's terrain.
+             * 
+             * @method getWorldTerrain
+             * @return platformer.Entity
+             */
             getWorldTerrain: function () {
                 return this.owner.parent.getWorldTerrain();
             }

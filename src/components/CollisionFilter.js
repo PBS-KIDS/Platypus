@@ -61,6 +61,12 @@
                 state      = this.state;
             
             if (collisions) {
+                /**
+                 * Events defined by the `collisions` property trigger whenever collisions happen while in the defined state.
+                 * 
+                 * @event *
+                 * @param collisionData {CollisionData} Information regarding the collision that occurred.
+                 */
                 if (state[0] === '!') {
                     state = state.substring(1);
                     for (event in collisions) {
