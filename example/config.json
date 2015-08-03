@@ -5,7 +5,6 @@
         "fps": 60,
         "rootElement": "root",
         "aspectRatio": 1.333,
-        "nativeAssetResolution": 960,
         "resizeFont": true
     },
     "assets": [

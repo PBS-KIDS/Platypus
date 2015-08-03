@@ -122,38 +122,10 @@
                     },
                     loader     = new createjs.LoadQueue(this.useXHR, "", this.crossOrigin),
                     loadAssets = [],
-                    optimizeImages = platypus.game.settings.global.nativeAssetResolution || 0, //assets designed for this resolution
-                    scale = platypus.game.settings.scale = optimizeImages ? Math.min(1, Math.max(window.screen.width, window.screen.height) * (window.devicePixelRatio || 1) / optimizeImages) : 1,
-    //                scale = platypus.game.settings.scale = optimizeImages?Math.min(1, Math.max(window.innerWidth, window.innerHeight) * window.devicePixelRatio / optimizeImages):1,
-                    scaleImage = function (img, columns, rows) {
-                        var r          = rows    || 1,
-                            c          = columns || 1,
-                            imgWidth   = Math.ceil((img.width  / c) * scale) * c,
-                            imgHeight  = Math.ceil((img.height / r) * scale) * r,
-                            element    = document.createElement('canvas'),
-                            ctx        = element.getContext('2d');
-
-                        element.width  = imgWidth;
-                        element.height = imgHeight;
-                        element.scaleX = imgWidth  / img.width;
-                        element.scaleY = imgHeight / img.height;
-                        ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, imgWidth, imgHeight);
-                        return element;
-                    },
                     fileloadfunc = function (event) {
                         var item   = event.item,
                             data   = item.data,
                             result = event.result;
-
-                        if (event.item.type === "image") {
-                            if (optimizeImages && (scale !== 1)) {
-                                if (data) {
-                                    result = scaleImage(result, data.columns, data.rows);
-                                } else {
-                                    result = scaleImage(result);
-                                }
-                            }
-                        }
 
                         platypus.assets[event.item.id] = {
                             data:  data,
