@@ -12,12 +12,6 @@
 		"platypus",
 		"platformer"
 	],
-	"dependencies": {
-		"easeljs": "https://github.com/CreateJS/EaselJS.git#0.8.1",
-		"preloadjs": "https://github.com/CreateJS/PreloadJS.git#0.6.1",
-		"soundjs": "https://github.com/CreateJS/SoundJS.git#0.6.1",
-		"tweenjs": "https://github.com/CreateJS/TweenJS.git#0.6.1"
-	},
 	"license": "MIT",
 	"ignore": [
 		"**/.*",
