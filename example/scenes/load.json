@@ -15,7 +15,7 @@
                             "type": "AudioMobile",
                             "audioId": "audio-sprite"
                         },{
-                            "type": "AssetLoader",
+                            "type": "AssetLoaderCreateJS",
                             "progressBar": "progress-bar",
                             "automatic": false
                         },{

@@ -1,8 +1,8 @@
 /**
- * This component loads a list of assets, wrapping [PreloadJS](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) functionality into a game engine component.
+ * This component loads a list of assets, wrapping [PreloadJS](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) loading functionality into a game engine component.
  *
  * @namespace platypus.components
- * @class AssetLoader
+ * @class AssetLoaderCreateJS
  * @uses Component
  */
 /*global createjs, platypus */
@@ -10,7 +10,7 @@
     "use strict";
 
     return platypus.createComponentClass({
-        id: 'AssetLoader',
+        id: 'AssetLoaderCreateJS',
         
         properties: {
             /**
@@ -37,6 +37,15 @@
              * @default null
              */
             assets: null,
+            
+            /**
+             * Determines whether to store the loaded assets automatically in platypus.assets for later retrieval.
+             * 
+             * @property cache
+             * @type boolean
+             * @default true
+             */
+            cache: true,
             
             /**
              * Whether images are loaded from a CORS-enabled domain.
@@ -71,12 +80,9 @@
                 this.assets = platypus.game.settings.assets;
             }
             
-            this.message = {
-                complete: false,
-                total: 0,
-                progress: 0,
-                fraction: 0
-            };
+            this.owner.assets = {};
+            this.progress = 0;
+            this.total = 0;
         },
 
         events: {
@@ -102,77 +108,72 @@
              * @method 'load-assets'
              */
             "load-assets": function () {
-                var i         = '',
-                    self      = this,
-                    checkPush = function (asset, list) {
-                        var key   = '',
+                var i          = 0,
+                    self       = this,
+                    loader     = new createjs.LoadQueue(this.useXHR, "", this.crossOrigin),
+                    loadAssets = [],
+                    checkPush  = function (asset, list) {
+                        var i = 0,
                             found = false;
 
-                        for (key in list) {
-                            if (list.hasOwnProperty(key)) {
-                                if (list[key].id === asset.id) {
-                                    found = true;
-                                    break;
-                                }
+                        for (i = 0; i < list.length; i++) {
+                            if (list[i].id === asset.id) {
+                                found = true;
+                                break;
                             }
                         }
                         if (!found) {
                             list.push(asset);
                         }
                     },
-                    loader     = new createjs.LoadQueue(this.useXHR, "", this.crossOrigin),
-                    loadAssets = [],
                     fileloadfunc = function (event) {
-                        var item   = event.item,
-                            data   = item.data,
-                            result = event.result;
-
-                        platypus.assets[event.item.id] = {
-                            data:  data,
-                            asset: result
+                        var asset = self.owner.assets[event.item.id] = {
+                            data:  event.item.data,
+                            asset: event.result
                         };
-
-                        self.message.progress += 1;
-                        self.message.fraction = self.message.progress / self.message.total;
-                        if (self.message.progress === self.message.total) {
-                            self.message.complete = true;
+                        
+                        if (self.cache) {
+                            platypus.assets[event.item.id] = asset;
                         }
 
                         /**
                          * This message is broadcast when an asset has been loaded.
                          * 
                          * @event 'fileload'
-                         * @param complete {boolean} Whether this is the final asset to be loaded.
-                         * @param total {number} The total number of assets being loaded.
-                         * @param progress {number} The number of assets finished loading.
-                         * @param fraction {number} Value of (progress / total) provided for convenience.
+                         * @param load {Object} 
+                         * @param load.asset {Object} Loaded asset.
+                         * @param load.data {Object} Key/value pairs containing asset data. 
+                         * @param load.complete {boolean} Whether this is the final asset to be loaded.
+                         * @param load.total {number} The total number of assets being loaded.
+                         * @param load.progress {number} The number of assets finished loading.
+                         * @param load.fraction {number} Value of (progress / total) provided for convenience.
                          */
-                        self.owner.trigger('fileload', self.message);
+                        self.owner.trigger('fileload', {
+                            asset:    event.result,
+                            complete: (self.progress === self.total),
+                            data:     event.item.data,
+                            fraction: self.progress / self.total,
+                            progress: self.progress,
+                            total:    self.total
+                        });
+                    },
+                    complete = function (event) {
+                        setTimeout(function () { // Allow current process to finish before firing completion.
+    
+                            /**
+                             * This message is triggered when the asset loader is finished loading assets.
+                             * 
+                             * @event 'complete'
+                             */
+                            self.owner.triggerEvent('complete');
+                        }, 10);
                     };
 
                 loader.addEventListener('fileload', fileloadfunc);
+                loader.addEventListener('complete', complete);
 
-                loader.addEventListener('error', function (event) {
-                    if (event.item && !event.error) { //Handles this PreloadJS bug: https://github.com/CreateJS/PreloadJS/issues/46
-                        event.item.tag.src = event.item.src;
-                        fileloadfunc(event);
-                    }
-                });
-
-                loader.addEventListener('complete', function (event) {
-                    setTimeout(function () { // Allow current process to finish before firing completion.
-
-                        /**
-                         * This message is triggered when the asset loader is finished loading assets.
-                         * 
-                         * @event 'complete'
-                         */
-                        self.owner.triggerEvent('complete');
-                    }, 10);
-                });
-
-                for (i in this.assets) {
-                    if (this.assets.hasOwnProperty(i) && (typeof this.assets[i].src === 'string')) {
+                for (i = 0; i < this.assets.length; i++) {
+                    if (typeof this.assets[i].src === 'string') {
                         checkPush(this.assets[i], loadAssets);
                     }
                 }
@@ -180,9 +181,9 @@
                 if (createjs.Sound) {
                     loader.installPlugin(createjs.Sound);
                 }
-                self.message.total = loadAssets.length;
+                platypus.assets = platypus.assets || {};
+                this.total = loadAssets.length;
                 loader.loadManifest(loadAssets);
-                platypus.assets = {};
             },
 
             /**
@@ -204,6 +205,12 @@
                         pb.backgroundSize = ((1 / progress.fraction) * 100) + '%';
                     }
                 }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                delete this.owner.assets;
             }
         }
     });
