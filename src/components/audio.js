@@ -195,7 +195,7 @@
         };
     
     return platypus.createComponentClass({
-        id: 'audio',
+        id: 'Audio',
         
         properties: {
             /**

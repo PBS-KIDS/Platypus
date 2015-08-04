@@ -1,16 +1,45 @@
 /**
- * This component loads a list of assets, wrapping [SpringRoll](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) loading functionality into a game engine component.
+ * This component loads a list of assets, wrapping [PreloadJS](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) or [SpringRoll](http://springroll.github.io/SpringRoll/classes/springroll.Loader.html)loading functionality into a game engine component.
  *
  * @namespace platypus.components
- * @class AssetLoaderSpringRoll
+ * @class AssetLoader
  * @uses Component
  */
-/*global springroll, platypus */
+/*global platypus */
 (function () {
     "use strict";
-
+    
+    var checkPush  = function (asset, list) {
+            var i = 0,
+                found = false;
+    
+            for (i = 0; i < list.length; i++) {
+                if (list[i].id === asset.id) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                list.push(asset);
+            }
+        },
+        createJSInterface = function (resp) {
+            return {
+                id:    resp.item.id,
+                data:  resp.item.data,
+                asset: resp.result
+            };
+        },
+        springRollInterface = function (resp) {
+            return {
+                id:    resp.manifestData.id,
+                data:  resp.manifestData.data,
+                asset: resp.content
+            };
+        };
+    
     return platypus.createComponentClass({
-        id: 'AssetLoaderSpringRoll',
+        id: 'AssetLoader',
         
         properties: {
             /**
@@ -83,6 +112,7 @@
             this.owner.assets = {};
             this.progress = 0;
             this.total = 0;
+            this.interface = null;
         },
 
         events: {
@@ -108,32 +138,16 @@
              * @method 'load-assets'
              */
             "load-assets": function () {
-                var i          = 0,
-                    self       = this,
-                    loader     = null,
-                    loadAssets = [],
-                    checkPush  = function (asset, list) {
-                        var i = 0,
-                            found = false;
-
-                        for (i = 0; i < list.length; i++) {
-                            if (list[i].id === asset.id) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            list.push(asset);
-                        }
-                    },
-                    fileloadfunc = function (item) {
-                        var asset = self.owner.assets[item.manifestData.id] = {
-                            data:  item.manifestData.data,
-                            asset: item.content
+                var self = this,
+                    onFileLoad = function (resp) {
+                        var item = self.interface(resp),
+                        asset = self.owner.assets[item.id] = {
+                            data:  item.data,
+                            asset: item.asset
                         };
                         
                         if (self.cache) {
-                            platypus.assets[item.manifestData.id] = asset;
+                            platypus.assets[item.id] = asset;
                         }
                         
                         self.progress += 1;
@@ -151,9 +165,9 @@
                          * @param load.fraction {number} Value of (progress / total) provided for convenience.
                          */
                         self.owner.trigger('fileload', {
-                            asset:    item.content,
+                            asset:    item.asset,
                             complete: (self.progress === self.total),
-                            data:     item.manifestData.data,
+                            data:     item.data,
                             fraction: self.progress / self.total,
                             progress: self.progress,
                             total:    self.total
@@ -169,20 +183,12 @@
                         }
                     };
                 
-                if (springroll && springroll.Application && springroll.Application.instance) {
-                    loader = springroll.Application.instance.loader;
-
-                    for (i = 0; i < this.assets.length; i++) {
-                        if (typeof this.assets[i].src === 'string') {
-                            checkPush(this.assets[i], loadAssets);
-                        }
-                    }
-    
-                    platypus.assets = platypus.assets || {};
-                    this.total = loadAssets.length;
-                    for (i = 0; i < loadAssets.length; i++) {
-                        loader.load(loadAssets[i].src, fileloadfunc, null, 0, loadAssets[i]);
-                    }
+                if (window.springroll && window.springroll.Application && window.springroll.Application.instance) {
+                    this.springRollLoad(onFileLoad);
+                } else if (window.createjs && window.createjs.LoadQueue) {
+                    this.createJSLoad(onFileLoad);
+                } else {
+                    console.warn('AssetLoader: Must have SpringRoll or PreloadJS loaded to load assets.')
                 }
             },
 
@@ -204,6 +210,55 @@
                         pb.width = (progress.fraction * 100) + '%';
                         pb.backgroundSize = ((1 / progress.fraction) * 100) + '%';
                     }
+                }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                delete this.owner.assets;
+            },
+            
+            createJSLoad: function (onFileLoad) {
+                var i = 0,
+                    loadAssets = [],
+                    loader = new window.createjs.LoadQueue(this.useXHR, "", this.crossOrigin)
+
+                this.interface = createJSInterface;
+                
+                loader.addEventListener('fileload', onFileLoad);
+
+                for (i = 0; i < this.assets.length; i++) {
+                    if (typeof this.assets[i].src === 'string') {
+                        checkPush(this.assets[i], loadAssets);
+                    }
+                }
+
+                if (window.createjs.Sound) {
+                    loader.installPlugin(window.createjs.Sound);
+                }
+                platypus.assets = platypus.assets || {};
+                this.total = loadAssets.length;
+                loader.loadManifest(loadAssets);
+            },
+            
+            springRollLoad: function (onFileLoad) {
+                var i = 0,
+                    loadAssets = [],
+                    loader = window.springroll.Application.instance.loader;
+
+                this.interface = springRollInterface;
+                
+                for (i = 0; i < this.assets.length; i++) {
+                    if (typeof this.assets[i].src === 'string') {
+                        checkPush(this.assets[i], loadAssets);
+                    }
+                }
+
+                platypus.assets = platypus.assets || {};
+                this.total = loadAssets.length;
+                for (i = 0; i < loadAssets.length; i++) {
+                    loader.load(loadAssets[i].src, onFileLoad, null, 0, loadAssets[i]);
                 }
             }
         }
