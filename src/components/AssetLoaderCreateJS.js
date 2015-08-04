@@ -135,7 +135,9 @@
                         if (self.cache) {
                             platypus.assets[event.item.id] = asset;
                         }
-
+                        
+                        self.progress += 1;
+                        
                         /**
                          * This message is broadcast when an asset has been loaded.
                          * 
