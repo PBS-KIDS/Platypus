@@ -1,24 +1,22 @@
 {
     "id": "touch-interface-layer",
     "filter": {
-        "includes": ["mobile", "touch"],
-        "excludes": ["multitouch"]
+        "includes": ["mobile"]
     },
     "components": [
         {"type": "HandlerLogic"},
         {"type": "HandlerRenderDOM"},
         {"type": "EntityContainer", 
             "entities": [
-                {"type": "button-fullscreen"},
-                {"type": "button-jump-left"},
-                {"type": "button-jump-right"},
-                {"type": "button-jump", "properties": {"className": "game-button jump-center-button"}},
-                {"type": "button-left"},
-                {"type": "button-right"},
-                {"type": "gui"},
-                {"type": "fps-counter"}
+            {"type": "button-fullscreen"},
+            {"type": "button-jump"},
+            {"type": "button-pickaxe"},
+            {"type": "button-left"},
+            {"type": "button-right"},
+            {"type": "gui"},
+            {"type": "fps-counter"}
             ],
-            "childEvents": ["time-elapsed"]
-         }
+            "childEvents": ["gui-gem-collected", "time-elapsed"]
+        }
     ]
 }

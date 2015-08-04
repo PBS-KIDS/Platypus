@@ -61,8 +61,7 @@ A component that handles updating rendering for components that are rendering vi
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-/*global createjs */
-/*global platypus */
+/*global createjs, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";

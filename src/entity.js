@@ -26,8 +26,8 @@
              "includes": ["touch"],
              // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.
 
-             "excludes": ["multitouch"]
-             // Optional. This filter specifies that this entity should not be loaded on browsers/devices that do not support a multitouch interface. More than one setting can be added to the array.
+             "excludes": ["mobile"]
+             // Optional. This filter specifies that this entity should not be loaded on mobile browsers/devices that. More than one setting can be added to the array.
          }
      }
  * 

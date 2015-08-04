@@ -20,7 +20,6 @@
     "entities": {
         "action-layer": "entities/action-layer.json",
         "desktop-interface-layer": "entities/desktop-interface-layer.json",
-        "multitouch-interface-layer": "entities/multitouch-interface-layer.json",
         "touch-interface-layer": "entities/touch-interface-layer.json",
         "tile-layer": "entities/tile-layer.json",
         "render-layer": "entities/render-layer.json",

@@ -7,7 +7,6 @@
                 "level": "level-1"
             }
         },
-        {"type": "multitouch-interface-layer"},
         {"type": "touch-interface-layer"},
         {"type": "desktop-interface-layer"}
     ]

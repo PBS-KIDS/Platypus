@@ -11,9 +11,7 @@ All of this information is added to platypus.supports and used throughout the co
     var uagent   = navigator.userAgent.toLowerCase(),
         
         myAudio  = document.createElement('audio'),
-        canvas   = document.createElement('canvas'),
         supports = {
-            canvas:      false, // determined below
             touch:       (window.ontouchstart !== 'undefined'),
 
             // specific browsers as determined above
@@ -31,7 +29,6 @@ All of this information is added to platypus.supports and used throughout the co
             iOS:         false, //determined below
             mobile:      false, //determined below
             desktop:     false, //determined below
-            multitouch:  false, //determined below
             audioAPI:    false, //determined below
             
             // audio support as determined below
@@ -47,17 +44,6 @@ All of this information is added to platypus.supports and used throughout the co
     supports.desktop = !supports.mobile;
     supports.audioAPI = !supports.iOS || (!supports.iPad2 && !supports.iPhone4);
     
-    //Determine multitouch:
-    if (supports.touch) {
-        if (supports.android) {
-            if (parseInt(uagent.slice(uagent.indexOf("android") + 8), 10) > 2) {
-                supports.multitouch = true;
-            }
-        } else {
-            supports.multitouch = true;
-        }
-    }
-    
     // Determine audio support
     if ((myAudio.canPlayType) && !(!!myAudio.canPlayType && "" !== myAudio.canPlayType('audio/ogg; codecs="vorbis"'))) {
         supports.ogg = false;
@@ -65,14 +51,6 @@ All of this information is added to platypus.supports and used throughout the co
             supports.m4a = false; //make IE use mp3's since it doesn't like the version of m4a made for mobiles
         }
     }
-
-    // Does the browser support canvas?
-    try {
-        supports.canvas = !!(canvas.getContext('2d')); // S60
-    } catch (e) {
-        supports.canvas = !!(canvas.getContext); // IE
-    }
-    canvas = null;
 
     // Handle audio loading on distinct browsers.
     if (window.createjs && createjs.Sound) {
