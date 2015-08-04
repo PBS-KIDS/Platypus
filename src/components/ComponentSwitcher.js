@@ -1,48 +1,10 @@
 /**
-# COMPONENT **ComponentSwitcher**
-This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
-
-## Messages
-
-### Listens for:
-- **[message(s) listed in the JSON definition componentMap]** - These messages will add or remove components.
-
-### Parent Broadcasts:
-- **child-entity-updated** - This message is triggered on the parent when the entity's components change.
-  - @param entity ([[Entity]]) - This is the entity itself.
-
-## JSON Definition
-    {
-      "type": "ComponentSwitcher"
-      
-      "componentMap":{
-      // This is the list of messages to listen for (as the keys) with the settings as two arrays of components to add and components to remove.
-      
-        "found-pogostick":{
-          
-          "add":[
-          // This is a list of components to add when "found-pogostick" is triggered on the entity. If it's adding a single component, "add" can be a reference to the component definition itself rather than an array of one object.
-            {"type": "Mover"},
-            {"type": "head-gear"}
-          ]
-          
-          "remove": ["carseat"]
-          // This is a string list of component ids to remove when "found-pogostick" is triggered on the entity. It will ignore listed components that are not connected to the entity.
-        
-        },
-        
-        // Multiple events can cause unique components to be added or removed
-        "walking-indoors":{
-          "remove": ["head-gear"]
-        },
-        
-        "contemplate":{
-          "add": {"type": "AIPacer"}
-        }
-      
-      }
-    }
-*/
+ * This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
+ * 
+ * @namespace platypus.components
+ * @class ComponentSwitcher
+ * @uses Component 
+ */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
@@ -84,6 +46,12 @@ This component listens for messages and, according to its preset settings, will 
                 }
                 
                 if (owner.parent) {
+                    /**
+                     * This message is triggered on the parent when the entity's components change.
+                     * 
+                     * @event 'child-entity-updated'
+                     * @param entity {platformer.Entity} This is the entity itself.
+                     */
                     owner.parent.triggerEvent('child-entity-updated', owner);
                 }
             }, 1);
@@ -94,6 +62,36 @@ This component listens for messages and, according to its preset settings, will 
         id: 'ComponentSwitcher',
         
         properties: {
+            /**
+             * This is the list of messages to listen for (as the keys) with the settings as two arrays of components to add and components to remove.
+             * 
+                {
+                    "found-pogostick":{
+                      "add":[
+                      // This is a list of components to add when "found-pogostick" is triggered on the entity. If it's adding a single component, "add" can be a reference to the component definition itself rather than an array of one object.
+                        {"type": "Mover"},
+                        {"type": "HeadGear"}
+                      ]
+                      
+                      "remove": ["CarSeat"]
+                      // This is a string list of component ids to remove when "found-pogostick" is triggered on the entity. It will ignore listed components that are not connected to the entity.
+                    },
+                    
+                    // Multiple events can cause unique components to be added or removed
+                    "walking-indoors":{
+                      "remove": ["HeadGear"]
+                    },
+                    
+                    "contemplate":{
+                      "add": {"type": "AIPacer"}
+                    }
+                  }
+                }
+             * 
+             * @property componentMap
+             * @type Object
+             * @default null
+             */
             componentMap: null
         },
         
@@ -103,6 +101,11 @@ This component listens for messages and, according to its preset settings, will 
             if (this.componentMap) {
                 for (event in this.componentMap) {
                     if (this.componentMap.hasOwnProperty(event)) {
+                        /**
+                         * Message(s) listed by `componentMap` will add or remove components.
+                         * 
+                         * @event *
+                         */
                         this.addEventListener(event, addRemoveComponents(this.componentMap[event], this.owner));
                     }
                 }
