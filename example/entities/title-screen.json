@@ -1,10 +1,7 @@
 {
     "id": "title-screen",
-    "components":[
-        {
-            "type": "DOMElement",
-            "element": "div",
-            "className": "title-screen"
-        }
-    ]
+    "components":[{
+        "type": "RenderSprite",
+        "image": "title-screen"
+    }]
 }

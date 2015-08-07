@@ -7,7 +7,7 @@
  * @param [definition] {Object} Collection of configuration settings, typically from config.json.
  * @param [definition.global] {Object} Key/value pairs describing global game settings.
  * @param [definition.global.tickerOn=true] {boolean} Whether the game should automatically tick or only tick on `game.tick()` calls.
- * @param {Function} onFinishedLoading An optional function to run once the game has begun.
+ * @param onFinishedLoading {Function} An optional function to run once the game has begun.
  * @return {Game} Returns the instantiated game. 
  */
 /*global console, createjs, platypus */
@@ -16,11 +16,12 @@ platypus.Game = (function () {
     "use strict";
     
     var ticker = null,
+        Stage = null,
         transitions = {},
-        setupTransitions = function (tween, transitions) {
+        setupTransitions = function (tween, transitions) { //TODO: fix transitions
             transitions['fade-to-black'] = function (game, load, complete) {
                 var element = document.createElement('div'),
-                    root    = game.rootElement;
+                    root    = game.canvas;
                 
                 root.appendChild(element);
                 element.style.width = '100%';
@@ -153,19 +154,11 @@ platypus.Game = (function () {
             
             callback(obj);
         },
-        bindEvent = function (eventId, callback) {
-            return function (event) {
-                callback(eventId, event);
-            };
-        },
-        game = function (definition, onFinishedLoading) {
+        game = function (definition, stage, onFinishedLoading) {
             var self = this,
                 load = function (result) {
-                    var key = '',
-                        callback = null,
-                        innerRootElement = document.createElement('div'),
-                        outerRootElement = null;
-                        
+                    var canvas = null;
+                    
                     definition = result;
                     console.log("Game config loaded.", definition);
                     
@@ -173,86 +166,21 @@ platypus.Game = (function () {
                     self.currentScene = null;
                     self.loaded    = null;
                     self.settings = definition;
-        
-                    if (document.getElementById(definition.global.rootElement || "root")) {
-                        outerRootElement = document.getElementById(definition.global.rootElement || "root");
-                    } else {
-                        outerRootElement = document.createElement('div');
-                        outerRootElement.id = definition.global.rootElement || "root";
-                        document.getElementsByTagName('body')[0].appendChild(outerRootElement);
-                    }
-                    for (key in platypus.supports) {
-                        if (platypus.supports.hasOwnProperty(key) && platypus.supports[key]) {
-                            outerRootElement.className += ' supports-' + key;
+                    
+                    if (stage) {
+                        self.stage = stage;
+                    } else if (Stage) {
+                        try {
+                            canvas = document.getElementById(definition.global.canvas);
+                        } catch (e) {
+                            console.warn('Stage not provided and canvas ID "' + definition.global.canvas + '" not found in HTML wrapper.');
                         }
+                        self.stage = new Stage(canvas);
+                    } else {
+                        console.warn('Platypus requires a CreateJS Stage for rendering.');
                     }
-        
-                    innerRootElement.id = 'inner-' + outerRootElement.id;
-                    outerRootElement.appendChild(innerRootElement);
-                    self.rootElement = innerRootElement;
-                    self.containerElement = outerRootElement;
         
                     self.loadScene(definition.global.initialScene);
-        
-                    // Send the following events along to the scene to handle as necessary:
-                    if (definition.debug) { //If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
-                        callback = function (eventId, event) {
-                            self.currentScene.trigger(eventId, event);
-                        };
-                    } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
-                        callback = function (eventId, event) {
-                            self.currentScene.trigger(eventId, event);
-                            event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-                        };
-                    }
-        
-                    self.bindings = [];
-                    self.addEventListener(window, 'keydown', callback);
-                    self.addEventListener(window, 'keyup',   callback);
-        
-                    // If aspect ratio of game area should be maintained on resizing, create new callback to handle it
-                    if (definition.global.aspectRatio) {
-        
-                        callback = function (eventId, event) {
-                            var element   = innerRootElement,
-                                ratio     = definition.global.aspectRatio,
-                                newW      = outerRootElement.offsetWidth,
-                                newH      = outerRootElement.offsetHeight,
-                                bodyRatio = 1;
-                            
-                            if (definition.global.maxWidth && (definition.global.maxWidth < newW)) {
-                                newW = definition.global.maxWidth;
-                            }
-                            
-                            bodyRatio = newW / newH;
-                            if (bodyRatio > ratio) {  //Width is too wide
-                                element.style.height = newH + 'px';
-                                newW = newH * ratio;
-                                element.style.width = newW + 'px';
-                            } else {  //Height is too tall
-                                element.style.width = newW + 'px';
-                                newH = newW / ratio;
-                                element.style.height = newH + 'px';
-                            }
-                            if (definition.global.resizeFont) {
-                                outerRootElement.style.fontSize = Math.round(newW / 20) + 'px';
-                            }
-                            element.style.marginTop = '-' + Math.round(newH / 2) + 'px';
-                            element.style.marginLeft = '-' + Math.round(newW / 2) + 'px';
-                            element.style.top = '50%';
-                            element.style.left = '50%';
-                            self.currentScene.trigger(eventId, event);
-                        };
-                        callback('resize');
-                    } else if (definition.global.resizeFont) {
-                        callback = function (eventId, event) {
-                            outerRootElement.style.fontSize = Math.round(self.rootElement.offsetWidth / 20) + 'px';
-                            self.currentScene.trigger(eventId, event);
-                        };
-                        callback('resize');
-                    }
-                    self.addEventListener(window, 'orientationchange', callback);
-                    self.addEventListener(window, 'resize',            callback);
         
                     if (onFinishedLoading) {
                         onFinishedLoading(self);
@@ -302,6 +230,10 @@ platypus.Game = (function () {
         if (window.createjs.Tween) {
             setupTransitions(window.createjs.Tween, transitions);
         }
+        
+        if (window.createjs.Stage) {
+            Stage = window.createjs.Stage;
+        }
     }
     
 /**
@@ -317,6 +249,7 @@ platypus.Game = (function () {
         }
         if (this.currentScene) {
             this.currentScene.trigger('tick', tickEvent);
+            this.stage.update(tickEvent);
         }
     };
     
@@ -383,7 +316,7 @@ platypus.Game = (function () {
         }
         
         this.loaded = sceneId;
-        this.loadedScene = new platypus.Scene(scene, this.rootElement);
+        this.loadedScene = new platypus.Scene(scene, this.stage);
 
         console.log('Scene loaded: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
         this.loadedScene.trigger('scene-loaded', data);
@@ -412,19 +345,6 @@ platypus.Game = (function () {
             console.log('Scene live: ' + sceneId); //putting a console log here, because Android seems to hang if I do not. Need to test more Android devices.
             this.currentScene.trigger('scene-live', data);
         }
-    };
-    
-/**
- * Adding event listeners to the specified element and assigning callback functions.
- * 
- * @method addEventListener
- * @param element {DOMElement} The element to add the eventListener to.
- * @param event {DOMEvent} The event to listen for.
- * @param callback {Function} - The function to call when the event occurs.
- **/
-    proto.addEventListener = function (element, event, callback) {
-        this.bindings[event] = {element: element, event: event, callback: bindEvent(event, callback)};
-        element.addEventListener(event, this.bindings[event].callback, true);
     };
 
 /**
@@ -463,15 +383,9 @@ platypus.Game = (function () {
  * @method destroy
  **/
     proto.destroy = function () {
-        var i = 0;
-        
         if (this.tickHandler) {
             ticker.removeEventListener("tick", this.tickHandler);
         }
-        for (i = 0; i < this.bindings.length; i++) {
-            this.bindings[i].element.removeEventListener(this.bindings[i].event, this.bindings[i].callback);
-        }
-        this.bindings.length = 0;
     };
     
     return game;

@@ -73,23 +73,8 @@ A component that handles updating rendering for components that are rendering vi
         id: "HandlerRenderCreateJS",
         
         constructor: function (definition) {
-            this.canvas = this.owner.canvas = document.createElement('canvas');
-            this.canvas.id = definition.canvasId || '';
-            this.owner.canvasParent = null;
-            if (this.owner.element) {
-                this.owner.canvasParent = this.owner.element;
-                this.owner.element.appendChild(this.canvas);
-            } else {
-                this.owner.canvasParent = this.owner.rootElement;
-                this.owner.rootElement.appendChild(this.canvas);
-                this.owner.element = this.canvas;
-            }
+            this.container = new createjs.Container();
             
-            this.stage = new createjs.Stage(this.canvas);
-            
-            if (definition.autoClear !== true) {
-                this.stage.autoClear = false; //since most tile maps are re-painted every time, the canvas does not require clearing.
-            }
             
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
             if (definition.acceptInput) {
@@ -105,58 +90,21 @@ A component that handles updating rendering for components that are rendering vi
                 height: 0
             };
             
-            this.timeElapsed = {
-                name: 'Render',
-                time: 0
-            };
-            
             this.renderMessage = {
                 delta: 0,
-                stage:  this.stage
+                container: this.container
             };
-            
-            this.handleChildren = true;
-            this.extraContent = false;
         },
         
         events: {
             "load": function () {
-                var i = 0,
-                    last = null;
-                
-                // Check for parallel render handlers. A bit gross, but viable until we find a better way - DDD
-                for (i = 0; i < this.owner.components.length; i++) {
-                    if ((this.owner.components[i] === this) || (this.owner.components[i].type.substring(0, 14) === 'handler-render')) {
-                        last = this.owner.components[i];
-                    }
-                }
-                
-                if (last !== this) {
-                    this.handleChildren = false;
-                } else {
-                    this.addEventListener("handle-render-addition", function (addition) {
-                        var i = '';
-                        
-                        if (!this.extraContent) {
-                            this.extraContent = {};
-                        }
-
-                        for (i in addition) {
-                            if (addition.hasOwnProperty(i)) {
-                                this.extraContent[i] = addition[i];
-                            }
-                        }
-                    });
-                }
+                this.owner.triggerEvent('render-world', {
+                    world: this.container
+                });
             },
             
             "child-entity-added": function (entity) {
-                var self = this;
-                
-                entity.triggerEvent('handle-render-load', {
-                    stage: self.stage,
-                    parentElement: self.owner.rootElement
-                });
+                entity.triggerEvent('handle-render-load', this.renderMessage);
             },
             "pause-render": function (resp) {
                 if (resp && resp.time) {
@@ -174,12 +122,9 @@ A component that handles updating rendering for components that are rendering vi
                 };
                 
                 return function (resp) {
-                    var i = '',
-                        x = 0,
+                    var x = 0,
                         child   = null,
-                        time    = new Date().getTime(),
-                        message = this.renderMessage,
-                        bounds  = null;
+                        message = this.renderMessage;
                     
                     message.delta = resp.delta;
 
@@ -190,48 +135,13 @@ A component that handles updating rendering for components that are rendering vi
                         }
                     }
 
-                    if (this.handleChildren) {
-                        if (this.extraContent) {
-                            for (i in this.extraContent) {
-                                if (this.extraContent.hasOwnProperty(i)) {
-                                    message[i] = this.extraContent[i];
-                                }
-                            }
-                        }
-                        if (this.owner.triggerEventOnChildren) {
-                            this.owner.triggerEventOnChildren('handle-render', message);
-                        }
-                        if (this.extraContent) {
-                            for (i in this.extraContent) {
-                                if (this.extraContent.hasOwnProperty(i)) {
-                                    delete this.extraContent[i];
-                                    delete message[i];
-                                }
-                            }
-                        }
-                    } else {
-                        this.owner.triggerEvent('handle-render-addition', message);
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('handle-render', message);
                     }
                     
-                    if (this.stage) {
-                        for (x = this.stage.children.length - 1; x > -1; x--) {
-                            child = this.stage.children[x];
-                            if (child.hidden) {
-                                if (child.visible) {
-                                    child.visible = false;
-                                }
-                            } else if (child.name !== 'entity-managed') {
-                                bounds = child.getTransformedBounds();
-                                if (!bounds || ((bounds.x + bounds.width >= this.camera.x) && (bounds.x <= this.camera.x + this.camera.width) && (bounds.y + bounds.height >= this.camera.y) && (bounds.y <= this.camera.y + this.camera.height))) {
-                                    if (!child.visible) {
-                                        child.visible = true;
-                                    }
-                                } else {
-                                    if (child.visible) {
-                                        child.visible = false;
-                                    }
-                                }
-                            }
+                    if (this.container) {
+                        for (x = this.container.children.length - 1; x > -1; x--) {
+                            child = this.container.children[x];
                             
                             if (child.visible) {
                                 if (child.paused && !this.paused) {
@@ -242,26 +152,17 @@ A component that handles updating rendering for components that are rendering vi
                             }
                         }
 
-                        if (this.stage.reorder) {
-                            this.stage.reorder = false;
-                            this.stage.sortChildren(sort);
+                        if (this.container.reorder) {
+                            this.container.reorder = false;
+                            this.container.sortChildren(sort);
                         }
                         
-                        this.timeElapsed.name = 'Render-Prep';
-                        this.timeElapsed.time = new Date().getTime() - time;
-                        platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                        time += this.timeElapsed.time;
-
-                        this.stage.update(resp);
-                        
-                        this.timeElapsed.name = 'Render';
-                        this.timeElapsed.time = new Date().getTime() - time;
-                        platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
                     }
                 };
             }()),
+            //TODO: Move this to camera
             "camera-update": function (cameraInfo) {
-                var dpr             = (window.devicePixelRatio || 1),
+/*                var dpr             = (window.devicePixelRatio || 1),
                     viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
                     viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2;
                 
@@ -270,18 +171,17 @@ A component that handles updating rendering for components that are rendering vi
                 this.camera.width = cameraInfo.viewportWidth;
                 this.camera.height = cameraInfo.viewportHeight;
                 
-                this.canvas.width  = this.canvas.offsetWidth * dpr;
-                this.canvas.height = this.canvas.offsetHeight * dpr;
                 this.stage.setTransform((cameraInfo.viewportWidth / 2) * cameraInfo.scaleX * dpr, (cameraInfo.viewportHeight / 2) * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr, (cameraInfo.orientation || 0) * 180 / Math.PI, 0, 0, viewportCenterX, viewportCenterY);
 
                 if (this.moveMouse) {
                     this.moveMouse(cameraInfo);
-                }
+                }*/
             }
         },
         methods: {
             setupInput: (function () {
                 return function (enableTouch, triggerOnAllMovement, cameraMovementMovesMouse) {
+                    /*
                     var self = this,
                         originalEvent   = null,
                         x        = 0,
@@ -350,6 +250,7 @@ A component that handles updating rendering for components that are rendering vi
                         this.stage.removeEventListener('stagemouseup', mouseup);
                         this.stage.removeEventListener('stagemousemove', mousemove);
                     };
+                    */
                 };
             }()),
             
@@ -357,15 +258,12 @@ A component that handles updating rendering for components that are rendering vi
                 if (this.removeStageListeners) {
                     this.removeStageListeners();
                 }
-                this.stage = undefined;
-                this.owner.canvasParent.removeChild(this.canvas);
-                this.owner.canvasParent = null;
-                this.owner.element = null;
-                this.canvas = undefined;
+                this.stage = null;
             }
         },
         
         publicMethods: {
+            // TODO: Move this to camera
             getWorldPointFromScreen: function (sp) {
                 //document.title = ((sp.y * dpr) / this.stage.scaleY + this.camera.y) + ', ' + ((sp.y / dpr) * this.stage.scaleY + this.camera.y) + ', ' + ((sp.y * dpr) * this.stage.scaleY + this.camera.y) + ', ';
                 

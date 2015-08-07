@@ -1,46 +1,44 @@
 {
     "id": "load",
-    "layers":[
-        {
-            "id": "load-layer",
-            "components": [
-                {"type": "HandlerLogic"},
-                {"type": "HandlerRenderDOM"},
-                {"type": "EntityContainer", 
-                    "entities": [{
-                        "type": "title-screen"
-                    },{
-                        "id": "progress-bar",
-                        "components":[{
-                            "type": "AudioMobile",
-                            "audioId": "audio-sprite"
-                        },{
-                            "type": "AssetLoader",
-                            "progressBar": "progress-bar",
-                            "automatic": false
-                        },{
-                            "type": "DOMElement",
-                            "id": "mobile-start",
-                            "innerHTML": "Play",
-                            "className": "mobile-start",
-                            "updateClassName": true,
-                            "ontouchstart": "activate-audio"
-                        },{
-                            "type": "DOMElement",
-                            "id": "progress-bar-container",
-                            "updateClassName": true
-                        },{
-                            "type": "DOMElement",
-                            "id": "progress-bar",
-                            "parent": "progress-bar-container"
-                        },{
-                            "type": "SceneChanger",
-                            "scene": "menu"
-                        }]
-                    }],
-                    "childEvents": ["link-entity"]
-                }
-            ]
-        }
-    ]
+    "layers":[{
+        "id": "load-layer",
+        "components": [{
+            "type": "HandlerLogic"
+        },{
+            "type": "AssetLoader",
+            "assets": [{
+                "id": "title-screen",
+                "src": "images/title-screen.png"
+            }] 
+        },{
+            "type": "HandlerRenderCreateJS"
+        },{
+            "type": "Camera",
+            "width": 1200
+        },{
+            "type": "RelaySelf",
+            "events": {
+                "complete": {"event": "add-entities", "message": [{
+                    "type": "title-screen"
+                }]}
+            }
+        },{
+            "type": "EntityContainer", 
+            "entities": [{
+                "id": "progress-bar",
+                "components":[{
+                    "type": "AudioMobile",
+                    "audioId": "audio-sprite"
+                },{
+                    "type": "AssetLoader",
+                    "progressBar": "progress-bar",
+                    "automatic": false
+                },{
+                    "type": "SceneChanger",
+                    "scene": "menu"
+                }]
+            }],
+            "childEvents": ["link-entity"]
+        }]
+    }]
 }

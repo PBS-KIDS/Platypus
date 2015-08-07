@@ -20,7 +20,7 @@
  * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties, filters, and components as shown above under "JSON Definition Example".
  * @param {String} [definition.id] This declares the id of the scene.
  * @param {Array} [definition.layers] This lists the layers that comprise the scene.
- * @param {DOMElement} [rootElement]  DOM element where scene displays layers.
+ * @param Stage {createjs.Stage} Object where the scene displays layers.
  * @return {Scene} Returns the new scene made up of the provided layers. 
  * 
  *     
@@ -31,7 +31,7 @@ Requires: ["Entity.js"]
 platypus.Scene = (function () {
     "use strict";
     
-    var scene = function (definition, rootElement) {
+    var scene = function (definition, stage) {
             var i = 0,
                 key = '',
                 layers = definition.layers,
@@ -44,11 +44,11 @@ platypus.Scene = (function () {
 
             this.storedMessages = [];
 
-            this.rootElement = rootElement;
+            this.stage = stage;
             this.layers = [];
             for (i = 0; i < layers.length; i++) {
                 layerDefinition = layers[i];
-                properties = {rootElement: this.rootElement, parent: this};
+                properties = {stage: this.stage, parent: this};
                 if (layerDefinition.properties) {
                     for (key in layerDefinition.properties) {
                         if (layerDefinition.properties.hasOwnProperty(key)) {

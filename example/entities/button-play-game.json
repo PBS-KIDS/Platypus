@@ -1,17 +1,26 @@
 {
     "id": "button-play-game",
-    "components":[
-        {
-            "type": "DOMElement",
-            "element": "div",
-            "innerHTML": "Play Game",
-            "className": "menu-button",
-            "onmouseup": "new-scene",
-            "ontouchend": "new-scene"
-        },{
-            "type": "SceneChanger",
-            "scene": "scene-level-1",
-            "transition": "fade-to-black"
+    "components":[{
+        "type": "RenderSprite",
+        "image": "buttons",
+        "acceptInput": {
+            "click": true,
+            "touch": true
         }
-    ]
+    },{
+        "type": "LogicButton"
+    },{
+        "type": "SceneChanger",
+        "scene": "scene-level-1",
+        "aliases": {
+            "released": "new-scene"
+        }
+    }],
+    "properties": {
+        "state": {
+            "menu": true
+        },
+        "x": 800,
+        "y": 900
+    }
 }

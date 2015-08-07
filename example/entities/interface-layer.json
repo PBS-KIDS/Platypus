@@ -1,0 +1,12 @@
+{
+    "id": "interface-layer",
+    "components": [
+        {"type": "HandlerLogic"},
+        {"type": "HandlerRenderCreateJS"},
+        {"type": "EntityContainer", 
+            "entities": [
+                
+            ]
+        }
+    ]
+}

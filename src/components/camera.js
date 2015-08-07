@@ -12,31 +12,6 @@
 (function () {
     "use strict";
     
-    var resize = function (self) {
-        var element = self.canvas;
-        
-        //The dimensions of the camera in the window
-        self.window.viewportTop = element.offsetTop;
-        self.window.viewportLeft = element.offsetLeft;
-        self.window.viewportWidth = element.offsetWidth || self.worldWidth;
-        self.window.viewportHeight = element.offsetHeight || self.worldHeight;
-
-        if (self.zoomSnap) {
-            self.world.viewportWidth = self.window.viewportWidth / Math.ceil(self.window.viewportWidth / self.zoomSnap);
-        }
-        
-        if (!self.stretch || self.zoomSnap) {
-            self.world.viewportHeight = self.window.viewportHeight * self.world.viewportWidth / self.window.viewportWidth;
-        }
-        
-        self.worldPerWindowUnitWidth  = self.world.viewportWidth   / self.window.viewportWidth;
-        self.worldPerWindowUnitHeight = self.world.viewportHeight  / self.window.viewportHeight;
-        self.windowPerWorldUnitWidth  = self.window.viewportWidth  / self.world.viewportWidth;
-        self.windowPerWorldUnitHeight = self.window.viewportHeight / self.world.viewportHeight;
-        
-        self.viewportUpdate = true;
-    };
-
     return platypus.createComponentClass({
         id: 'Camera',
         properties: {
@@ -84,15 +59,6 @@
              * @default: false
              */
             "stretch": false,
-            
-            /**
-             * Sets the size in window coordinates at which the world zoom should snap to a larger multiple of pixel size (1,2, 3, etc). This is useful for maintaining a specific game pixel viewport width on pixel art games so pixels use multiples rather than smooth scaling. Default is 0 which causes smooth scaling of the game world in a resizing viewport.
-             * 
-             * @property zoomSnap
-             * @type number
-             * @default 0
-             **/
-            "zoomSnap": 0,
             
             /**
              * Sets how quickly the camera should pan to a new position in the horizontal direction.
@@ -167,8 +133,6 @@
             "worldHeight": 0
         },
         constructor: function (definition) {
-            this.entities = [];
-
             //The dimensions of the camera in the window
             this.window = {
                 viewportTop:    0,
@@ -178,7 +142,7 @@
             };
             
             //The dimensions of the camera in the game world
-            this.world = {
+            this.worldWindow = {
                 viewportWidth:       this.width,
                 viewportHeight:      this.height,
                 viewportLeft:        definition.left        || 0,
@@ -213,9 +177,9 @@
             this.setBoundingArea();
             
             //Forward Follow
-            this.lastLeft = this.world.viewportLeft;
-            this.lastTop = this.world.viewportTop;
-            this.lastOrientation = this.world.viewportOrientation;
+            this.lastLeft = this.worldWindow.viewportLeft;
+            this.lastTop = this.worldWindow.viewportTop;
+            this.lastOrientation = this.worldWindow.viewportOrientation;
             this.forwardX = 0;
             this.forwardY = 0;
             this.forwardAngle = 0;
@@ -255,64 +219,45 @@
             this.stationary = false;
             
             this.viewportUpdate = false;
+            
+            this.parentContainer = this.owner.container || this.owner.stage;
+            this.container = new createjs.Container();
+            this.parentContainer.addChild(this.container);
         },
         events: {
             "load": function () {
-                resize(this);
+                this.resize();
             },
             
-/**
- * If children entities are listening for a `camera-update` message, they are added to an internal list.
- * 
- * @method 'child-entity-added'
- * @param entity {Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
-  **/
+            "render-world": function (data) {
+                this.world = data.world;
+            },
+            
+            /**
+             * If children entities are listening for a `camera-update` message, they are added to an internal list.
+             * 
+             * @method 'child-entity-added'
+             * @param entity {Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+              **/
             "child-entity-added": function (entity) {
-                var x          = 0,
-                    messageIds = entity.getMessageIds();
+                this.viewportUpdate = true;
                 
-                for (x = 0; x < messageIds.length; x++) {
-                    if (messageIds[x] === 'camera-update') {
-                        this.entities.push(entity);
-                        this.viewportUpdate = true;
-                        
-                        if (this.worldIsLoaded) {
-/**
- * On receiving a "world-loaded" message, the camera broadcasts the world size to all children in the world.
- * 
- * @event 'camera-loaded'
- * @param message
- * @param message.width {number} The width of the loaded world.
- * @param message.height {number} The height of the loaded world.
- **/
-                            entity.trigger('camera-loaded', {
-                                width: this.worldWidth,
-                                height: this.worldHeight
-                            });
-                        }
-
-                        break;
-                    }
+                if (this.worldIsLoaded) {
+                    /**
+                     * On receiving a "world-loaded" message, the camera broadcasts the world size to all children in the world.
+                     * 
+                     * @event 'camera-loaded'
+                     * @param message
+                     * @param message.width {number} The width of the loaded world.
+                     * @param message.height {number} The height of the loaded world.
+                     **/
+                    entity.triggerEvent('camera-loaded', {
+                        width: this.worldWidth,
+                        height: this.worldHeight
+                    });
                 }
             },
 
-/**
- * If children are removed from the entity, they are also removed from this component.
- * 
- * @method 'child-entity-removed'
- * @param entity {Entity} Expects an entity as the message object to determine the entity to remove from its list.
- **/
-            "child-entity-removed": function (entity) {
-                var i = 0;
-                
-                for (i = 0; i < this.entities.length; i++) {
-                    if (this.entities[i] === entity) {
-                        this.entities.splice(i, 1);
-                        break;
-                    }
-                }
-            },
-            
 /**
  * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
  * 
@@ -323,16 +268,14 @@
  * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
  **/
             "world-loaded": function (values) {
-                var i = 0;
-                
                 this.worldIsLoaded = true;
                 this.worldWidth    = values.width;
                 this.worldHeight   = values.height;
                 if (values.camera) {
                     this.follow(values.camera);
                 }
-                for (i = this.entities.length - 1; i > -1; i--) {
-                    this.entities[i].trigger('camera-loaded', values);
+                if (this.owner.triggerEventOnChildren) {
+                    this.owner.triggerEventOnChildren('camera-loaded', values);
                 }
             },
             
@@ -344,10 +287,19 @@
  * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
  **/
             "tick": function (resp) {
-                var x = 0;
+                var cvs = this.owner.stage.canvas;
                 
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
                     this.viewportUpdate = true;
+                }
+                
+                if ((cvs.width !== cvs.offsetWidth) || (cvs.height !== cvs.offsetHeight)) {
+                    cvs.width  = cvs.offsetWidth;
+                    cvs.height = cvs.offsetHeight;
+                }
+                
+                if ((cvs.offsetWidth !== this.window.viewportWidth) || (cvs.offsetHeight !== this.window.viewportHeight)) {
+                    this.resize();
                 }
                 
                 if (this.viewportUpdate) {
@@ -373,33 +325,65 @@
                     }
                     
                     
-/**
- * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
- * 
- * @event 'camera-update'
- * @param message {Object}
- * @param message.viewportTop {number} The top of the camera viewport in world coordinates.
- * @param message.viewportLeft {number} The left of the camera viewport in world coordinates.
- * @param message.viewportWidth {number} The width of the camera viewport in world coordinates.
- * @param message.viewportHeight {number} The height of the camera viewport in world coordinates.
- * @param message.scaleX {number} Number of window pixels that comprise a single world coordinate on the x-axis.
- * @param message.scaleY {number} Number of window pixels that comprise a single world coordinate on the y-axis.
- **/
-
-                    this.message.viewportLeft   = this.world.viewportLeft + this.shakeOffsetX;
-                    this.message.viewportTop    = this.world.viewportTop + this.shakeOffsetY;
-                    this.message.viewportWidth  = this.world.viewportWidth;
-                    this.message.viewportHeight = this.world.viewportHeight;
+                    this.message.viewportLeft   = this.worldWindow.viewportLeft + this.shakeOffsetX;
+                    this.message.viewportTop    = this.worldWindow.viewportTop + this.shakeOffsetY;
+                    this.message.viewportWidth  = this.worldWindow.viewportWidth;
+                    this.message.viewportHeight = this.worldWindow.viewportHeight;
                     this.message.scaleX         = this.windowPerWorldUnitWidth;
                     this.message.scaleY         = this.windowPerWorldUnitHeight;
-                    this.message.orientation    = this.world.viewportOrientation;
+                    this.message.orientation    = this.worldWindow.viewportOrientation;
+                    
+                    this.container.addChild(this.world);
+
+                    var i = 0,
+                        child           = null,
+                        bounds          = null,
+                        dpr             = (window.devicePixelRatio || 1),
+                        cameraInfo      = this.message,
+                        viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
+                        viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2,
+                        resets          = [];
+                    
+                    // Transform the world to appear within camera
+                    this.world.setTransform((cameraInfo.viewportWidth / 2) * cameraInfo.scaleX * dpr, (cameraInfo.viewportHeight / 2) * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr, (cameraInfo.orientation || 0) * 180 / Math.PI, 0, 0, viewportCenterX, viewportCenterY);
+                    
+                    // Make sure entities outside of the camera are not drawn (optimization)
+                    for (i = 0; i < this.world.children.length; i++) {
+                        child = this.world.children[i];
+                        if (child.visible && (child.name !== 'entity-managed')) {
+                            bounds = child.getTransformedBounds();
+                            if (bounds && ((bounds.x + bounds.width < this.message.viewportLeft) || (bounds.x > this.message.viewportLeft + this.message.viewportWidth) || (bounds.y + bounds.height < this.message.viewportTop) || (bounds.y > this.message.viewportTop + this.message.viewportHeight))) {
+                                child.visible = false;
+                                resets.push(child);
+                            }
+                        }
+                    }
+                    
+                    // Update the camera's snapshot
+                    this.container.updateCache('source-over');
+                    
+                    // Reset visibility of hidden children
+                    for (i = 0; i < resets.length; i++) {
+                        resets[i].visible = true;
+                    }
+                    
+                    
+                    /**
+                     * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
+                     * 
+                     * @event 'camera-update'
+                     * @param message {Object}
+                     * @param message.viewportTop {number} The top of the camera viewport in world coordinates.
+                     * @param message.viewportLeft {number} The left of the camera viewport in world coordinates.
+                     * @param message.viewportWidth {number} The width of the camera viewport in world coordinates.
+                     * @param message.viewportHeight {number} The height of the camera viewport in world coordinates.
+                     * @param message.scaleX {number} Number of window pixels that comprise a single world coordinate on the x-axis.
+                     * @param message.scaleY {number} Number of window pixels that comprise a single world coordinate on the y-axis.
+                     **/
                     this.owner.trigger('camera-update', this.message);
 
-                    
-                    for (x = this.entities.length - 1; x > -1; x--) {
-                        if (!this.entities[x].trigger('camera-update', this.message)) {
-                            this.entities.splice(x, 1);
-                        }
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('camera-update', this.message);
                     }
                     
                 } else if (!this.stationary) {
@@ -427,14 +411,13 @@
  * @method 'resize'
  **/
             "resize": function () {
-                resize(this);
+                this.resize();
             },
             
             "relocate": function (loc) {
                 if (this.move(loc.x, loc.y)) {
                     this.viewportUpdate = true;
                 }
-                
             },
 
 /**
@@ -443,7 +426,7 @@
  * @method 'orientationchange'
  **/
             "orientationchange": function () {
-                resize(this);
+                this.resize();
             },
             
 /**
@@ -595,15 +578,15 @@
             },
             
             moveLeft: function (newLeft) {
-                if (Math.abs(this.world.viewportLeft - newLeft) > this.threshold) {
-                    if (this.worldWidth && this.worldWidth !== 0 && this.worldWidth < this.world.viewportWidth) {
-                        this.world.viewportLeft = (this.worldWidth - this.world.viewportWidth) / 2;
-                    } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft + this.world.viewportWidth > this.worldWidth)) {
-                        this.world.viewportLeft = this.worldWidth - this.world.viewportWidth;
+                if (Math.abs(this.worldWindow.viewportLeft - newLeft) > this.threshold) {
+                    if (this.worldWidth && this.worldWidth !== 0 && this.worldWidth < this.worldWindow.viewportWidth) {
+                        this.worldWindow.viewportLeft = (this.worldWidth - this.worldWindow.viewportWidth) / 2;
+                    } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft + this.worldWindow.viewportWidth > this.worldWidth)) {
+                        this.worldWindow.viewportLeft = this.worldWidth - this.worldWindow.viewportWidth;
                     } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft < 0)) {
-                        this.world.viewportLeft = 0;
+                        this.worldWindow.viewportLeft = 0;
                     } else {
-                        this.world.viewportLeft = newLeft;
+                        this.worldWindow.viewportLeft = newLeft;
                     }
                     return true;
                 }
@@ -611,16 +594,16 @@
             },
             
             moveTop: function (newTop) {
-                if (Math.abs(this.world.viewportTop - newTop) > this.threshold) {
-                    if (this.worldHeight && this.worldHeight !== 0 && this.worldHeight < this.world.viewportHeight) {
-                        this.world.viewportTop = (this.worldHeight - this.world.viewportHeight) / 2;
-                    } else if (this.worldHeight && this.worldHeight !== 0 && (newTop + this.world.viewportHeight > this.worldHeight)) {
-                        this.world.viewportTop = this.worldHeight - this.world.viewportHeight;
+                if (Math.abs(this.worldWindow.viewportTop - newTop) > this.threshold) {
+                    if (this.worldHeight && this.worldHeight !== 0 && this.worldHeight < this.worldWindow.viewportHeight) {
+                        this.worldWindow.viewportTop = (this.worldHeight - this.worldWindow.viewportHeight) / 2;
+                    } else if (this.worldHeight && this.worldHeight !== 0 && (newTop + this.worldWindow.viewportHeight > this.worldHeight)) {
+                        this.worldWindow.viewportTop = this.worldHeight - this.worldWindow.viewportHeight;
                     } else if (this.worldHeight && this.worldHeight !== 0 && (newTop < 0)) {
-                        this.world.viewportTop = 0;
+                        this.worldWindow.viewportTop = 0;
                     } else {
-                        this.world.viewportTop = newTop;
-//                        console.log(newTop + ',' + this.world.viewportHeight + ',' + this.worldHeight);
+                        this.worldWindow.viewportTop = newTop;
+//                        console.log(newTop + ',' + this.worldWindow.viewportHeight + ',' + this.worldHeight);
                     }
                     return true;
                 }
@@ -628,8 +611,8 @@
             },
             
             reorient: function (newOrientation) {
-                if (Math.abs(this.world.viewportOrientation - newOrientation) > 0.0001) {
-                    this.world.viewportOrientation = newOrientation;
+                if (Math.abs(this.worldWindow.viewportOrientation - newOrientation) > 0.0001) {
+                    this.worldWindow.viewportOrientation = newOrientation;
                     return true;
                 }
                 return false;
@@ -651,11 +634,11 @@
                     };
                 
                 return function (entity, time, slowdown) {
-                    var x = getTransitionalPoint(this.world.viewportLeft, entity.x - (this.world.viewportWidth / 2),  getRatio(this.transitionX,     time)),
-                        y = getTransitionalPoint(this.world.viewportTop,  entity.y - (this.world.viewportHeight / 2), getRatio(this.transitionY,     time));
+                    var x = getTransitionalPoint(this.worldWindow.viewportLeft, entity.x - (this.worldWindow.viewportWidth / 2),  getRatio(this.transitionX,     time)),
+                        y = getTransitionalPoint(this.worldWindow.viewportTop,  entity.y - (this.worldWindow.viewportHeight / 2), getRatio(this.transitionY,     time));
 
                     if (this.rotate) { // Only run the orientation calculations if we need them.
-                        return this.move(x, y, getTransitionalPoint(this.world.viewportOrientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
+                        return this.move(x, y, getTransitionalPoint(this.worldWindow.viewportOrientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
                     } else {
                         return this.move(x, y, 0);
                     }
@@ -679,17 +662,17 @@
                     this.averageOffsetX += 0.1 * (x - this.lastLeft) * standardizeTimeDistance;
                     this.averageOffsetY += 0.1 * (y - this.lastTop)  * standardizeTimeDistance;
 
-                    if (Math.abs(this.averageOffsetX) > (this.world.viewportWidth / (this.forwardX * 2))) {
+                    if (Math.abs(this.averageOffsetX) > (this.worldWindow.viewportWidth / (this.forwardX * 2))) {
                         this.averageOffsetX = 0;
                     }
-                    if (Math.abs(this.averageOffsetY) > (this.world.viewportHeight / (this.forwardY * 2))) {
+                    if (Math.abs(this.averageOffsetY) > (this.worldWindow.viewportHeight / (this.forwardY * 2))) {
                         this.averageOffsetY = 0;
                     }
                     
                     if (this.rotate) {
                         this.averageOffsetAngle *= 0.9;
                         this.averageOffsetAngle += 0.1 * (a - this.lastOrientation) * standardizeTimeDistance;
-                        if (Math.abs(this.averageOffsetAngle) > (this.world.viewportOrientation / (this.forwardAngle * 2))) {
+                        if (Math.abs(this.averageOffsetAngle) > (this.worldWindow.viewportOrientation / (this.forwardAngle * 2))) {
                             this.averageOffsetAngle = 0;
                         }
                     }
@@ -715,10 +698,10 @@
             },
             
             setBoundingArea: function (top, left, width, height) {
-                this.bBBorderY = (typeof top !== 'undefined') ? top : this.world.viewportHeight  * 0.25;
-                this.bBBorderX = (typeof left !== 'undefined') ? left : this.world.viewportWidth * 0.4;
-                this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.world.viewportWidth - (2 * this.bBBorderX);
-                this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.world.viewportHeight - (2 * this.bBBorderY);
+                this.bBBorderY = (typeof top !== 'undefined') ? top : this.worldWindow.viewportHeight  * 0.25;
+                this.bBBorderX = (typeof left !== 'undefined') ? left : this.worldWindow.viewportWidth * 0.4;
+                this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.worldWindow.viewportWidth - (2 * this.bBBorderX);
+                this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.worldWindow.viewportHeight - (2 * this.bBBorderY);
             },
             
             boundingFollow: function (entity, time) {
@@ -729,27 +712,50 @@
                     ratioY  = (this.transitionY ? Math.min(time / this.transitionY, 1) : 1),
                     iratioY = 1 - ratioY;
                 
-                if (entity.x > this.world.viewportLeft + this.bBBorderX + this.bBInnerWidth) {
+                if (entity.x > this.worldWindow.viewportLeft + this.bBBorderX + this.bBInnerWidth) {
                     newLeft = entity.x - (this.bBBorderX + this.bBInnerWidth);
-                } else if (entity.x < this.world.viewportLeft + this.bBBorderX) {
+                } else if (entity.x < this.worldWindow.viewportLeft + this.bBBorderX) {
                     newLeft = entity.x - this.bBBorderX;
                 }
                 
-                if (entity.y > this.world.viewportTop + this.bBBorderY + this.bBInnerHeight) {
+                if (entity.y > this.worldWindow.viewportTop + this.bBBorderY + this.bBInnerHeight) {
                     newTop = entity.y - (this.bBBorderY + this.bBInnerHeight);
-                } else if (entity.y < this.world.viewportTop + this.bBBorderY) {
+                } else if (entity.y < this.worldWindow.viewportTop + this.bBBorderY) {
                     newTop = entity.y - this.bBBorderY;
                 }
                 
                 if (newLeft !== null) {
-                    newLeft = this.moveLeft(ratioX * newLeft + iratioX * this.world.viewportLeft);
+                    newLeft = this.moveLeft(ratioX * newLeft + iratioX * this.worldWindow.viewportLeft);
                 }
                 
                 if (newTop !== null) {
-                    newTop = this.moveTop(ratioY * newTop + iratioY * this.world.viewportTop);
+                    newTop = this.moveTop(ratioY * newTop + iratioY * this.worldWindow.viewportTop);
                 }
                 
                 return newLeft || newTop;
+            },
+            
+            resize: function () {
+                var element = this.owner.stage.canvas;
+                
+                //The dimensions of the camera in the window
+                this.window.viewportTop = element.offsetTop;
+                this.window.viewportLeft = element.offsetLeft;
+                this.window.viewportWidth = element.offsetWidth || this.worldWidth;
+                this.window.viewportHeight = element.offsetHeight || this.worldHeight;
+                
+                if (!this.stretch) {
+                    this.worldWindow.viewportHeight = this.window.viewportHeight * this.worldWindow.viewportWidth / this.window.viewportWidth;
+                }
+                
+                this.worldPerWindowUnitWidth  = this.worldWindow.viewportWidth   / this.window.viewportWidth;
+                this.worldPerWindowUnitHeight = this.worldWindow.viewportHeight  / this.window.viewportHeight;
+                this.windowPerWorldUnitWidth  = this.window.viewportWidth  / this.worldWindow.viewportWidth;
+                this.windowPerWorldUnitHeight = this.window.viewportHeight / this.worldWindow.viewportHeight;
+                
+                this.container.cache(0, 0, this.window.viewportWidth, this.window.viewportHeight, 1);
+                
+                this.viewportUpdate = true;
             },
             
             windowToWorld: function (sCoords) {
@@ -767,7 +773,9 @@
             },
             
             destroy: function () {
-                this.entities.length = 0;
+                this.parentContainer.removeChild(this.container);
+                this.parentContainer = null;
+                this.container = null;
             }
         }
     });

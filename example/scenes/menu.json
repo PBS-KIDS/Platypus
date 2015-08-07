@@ -1,19 +1,22 @@
 {
     "id": "menu",
-    "layers":[
-        {
-            "id": "menu-layer",
-            "components": [
-                {"type": "HandlerLogic"},
-                {"type": "HandlerRenderDOM"},
-                {"type": "HandlerController"},
-                {"type": "EntityContainer",
-                    "entities": [
-                        {"type": "title-screen"},
-                        {"type": "button-play-game"}
-                    ]
-                }
+    "layers":[{
+        "id": "menu-layer",
+        "components": [{
+            "type": "HandlerLogic"
+        },{
+            "type": "HandlerRenderCreateJS"
+        },{
+            "type": "Camera",
+            "width": 1600
+        },{
+            "type": "HandlerController"
+        },{
+            "type": "EntityContainer",
+            "entities": [
+                {"type": "title-screen"},
+                {"type": "button-play-game"}
             ]
-        }
-    ]
+        }]
+    }]
 }

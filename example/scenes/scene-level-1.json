@@ -1,13 +1,11 @@
 {
     "id": "scene-level-1",
-    "layers":[
-        {
-            "type": "action-layer",
-            "properties": {
-                "level": "level-1"
-            }
-        },
-        {"type": "touch-interface-layer"},
-        {"type": "desktop-interface-layer"}
-    ]
+    "layers":[{
+        "type": "action-layer",
+        "properties": {
+            "level": "level-1"
+        }
+    },{
+        "type": "interface-layer"
+    }]
 }

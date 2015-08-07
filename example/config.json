@@ -3,24 +3,21 @@
         "autoLoad": true,
         "initialScene": "load",
         "fps": 60,
-        "rootElement": "root",
-        "aspectRatio": 1.333,
-        "resizeFont": true
+        "canvas": "stage"
     },
     "assets": [
         {"id": "audio-sprite", "src": "audio/combined.m4a", "data": { "audioSprite": [
             {"id": "walk", "startTime": 3200,  "duration": 330},
             {"id": "jump", "startTime": 1600,  "duration": 250}
         ]}},
-        {"id": "buttons",        "src": "images/buttons.png"},
-        {"id": "mookie",         "src": "images/mookie.png",       "data": {"spritesheet": "images/mookie.json"}},
+        {"id": "buttons",        "src": "images/buttons.png", "data": {"spritesheet": "images/buttons.json"}},
+        {"id": "mookie",         "src": "images/mookie.png", "data": {"spritesheet": "images/mookie.json"}},
         {"id": "game-sprites",   "src": "images/game-sprites.png"},
         {"id": "title-screen",   "src": "images/title-screen.png"}
     ],
     "entities": {
         "action-layer": "entities/action-layer.json",
-        "desktop-interface-layer": "entities/desktop-interface-layer.json",
-        "touch-interface-layer": "entities/touch-interface-layer.json",
+        "interface-layer": "entities/interface-layer.json",
         "tile-layer": "entities/tile-layer.json",
         "render-layer": "entities/render-layer.json",
         "collision-layer": "entities/collision-layer.json",

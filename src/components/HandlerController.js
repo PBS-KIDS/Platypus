@@ -1,67 +1,16 @@
 /**
-# COMPONENT **HandlerController**
-This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'HandlerController' message is sent to demarcate ticks.
-
-## Dependencies
-- **Needs a 'tick' or 'check-inputs' call** - This component doesn't need a specific component, but it does require a 'tick' or 'check-inputs' call to function. It's usually used as a component of an action-layer.
-
-## Messages
-
-### Listens for:
-- **child-entity-added** - Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-controller' message id it's added to the list of entities. Once an entity is added to the HandlerController 'controller-load' is called on the entity. If an entity has a control map that includes non-keyboard inputs, we add listeners for those and update functions to alert the entity when they happen. 
-  - @param entity (Object) - The entity that is being considered for addition to the handler.
-- **tick** - Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-  - @param resp (object) - An object containing delta which is the time passed since the last tick. 
-- **keydown** - Sends a message to the handled entities 'key:' + the key id + ":down". 
-  - @param event (DOM event) - The DOM event that triggered the keydown event. 
- - **keyup** - Sends a message to the handled entities 'key:' + the key id + ":up".
-  - @param event (DOM event) - The DOM event that triggered the keyup event. 
-
-### Child Broadcasts:
-- **handle-controller** - Sent to entities on each tick to handle whatever they need to regarding controls.
-  - @param resp (object) - An object containing a delta variable that is the time that's passed since the last tick.
-- **controller-load** - Sent to entities when they are added to the HandlerController.
-- **key:keyid:up** - Message sent to an entity when a key goes from down to up.
-  - @param event (DOM event) - The DOM event that triggered the keyup event. 
-- **key:keyid:down** - Message sent to an entity when a key goes from up to down.
-  - @param event (DOM event) - The DOM event that triggered the keydown event. 
-- **custom:up and custom:down messages** - Messages created when an entity has a control map with non-keyboard input. The handler creates these message when it adds the entity and then fires them on the entity when the input is received.
-  - @param value (object) - A message object sent by the custom message.
-
-## JSON Definition
-    {
-      "type": "HandlerController",
-    }
-*/
+ * This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'HandlerController' message is sent to demarcate ticks.
+ * 
+ * @namespace platypus.components
+ * @class HandlerController
+ * @uses Component
+ */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    var relayUpDown = function (event, self) {
-            return function (value) {
-                var x = 0;
-
-                if (value.released) {
-                    event += ':up';
-                } else if (value.pressed) {
-                    event += ':down';
-                }
-                for (x = 0; x < self.entities.length; x++) {
-                    self.entities[x].trigger(event, value);
-                }
-            };
-        },
-        relay = function (event, self) {
-            return function (value) {
-                var x = 0;
-                
-                for (x = 0; x < self.entities.length; x++) {
-                    self.entities[x].trigger(event, value);
-                }
-            };
-        },
-        keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
+    var keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
             kc0:   'unknown',
             kc8:   'backspace',
             kc9:   'tab',
@@ -163,89 +112,84 @@ This component handles capturing and relaying input information to the entities 
         };
 
     return platypus.createComponentClass({
+        
         id: 'HandlerController',
+        
         constructor: function (definition) {
-            this.entities = [];
-            this.timeElapsed = {
-                name: 'Controller',
-                time: 0
-            };
+            var self = this;
+            
+            this.callbackKeyUp   = null;
+            this.callbackKeyDown = null;
+            
+            if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
+                this.callbackKeyDown = function (event) {
+                    self.keyDown(event);
+                };
+                this.callbackKeyUp = function (event) {
+                    self.keyUp(event);
+                };
+            } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
+                this.callbackKeyDown = function (event) {
+                    self.keyDown(event);
+                    event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+                };
+                this.callbackKeyUp = function (event) {
+                    self.keyUp(event);
+                    event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
+                };
+            }
+            
+            window.addEventListener('keydown', this.callbackKeyDown, true);
+            window.addEventListener('keyup',   this.callbackKeyUp,   true);
         },
         events: {
-            "keydown": function (event) {
-                var x = 0;
-                
-                for (x = 0; x < this.entities.length; x++) {
-                    this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
+            /**
+             * Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
+             * 
+             * @method 'tick'
+             * @param tick {Object} An object containing tick data.
+             */
+            "tick": function (tick) {
+
+                /**
+                 * Sent to entities on each tick to handle whatever they need to regarding controls.
+                 * 
+                 * @event 'handle-controller'
+                 * @param tick {Object} An object containing tick data.
+                 */
+                if (this.owner.triggerEventOnChildren) {
+                    this.owner.triggerEventOnChildren('handle-controller', tick);
                 }
-            },
-            "keyup": function (event) {
-                var x = 0;
-                
-                for (x = 0; x < this.entities.length; x++) {
-                    this.entities[x].trigger('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
-                }
-            },
-            "tick": function (resp) {
-                var x    = 0,
-                    time = new Date().getTime();
-        
-                for (x = this.entities.length - 1; x > -1; x--) {
-                    if (!this.entities[x].trigger('handle-controller', resp)) {
-                        this.entities.splice(x, 1);
-                    }
-                }
-                
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-            },
-            "child-entity-added": function (entity) {
-                this.updateEntity(entity);
-            },
-            "child-entity-updated": function (entity) {
-                this.updateEntity(entity);
             }
         },
         methods: {
-            updateEntity: function (entity) {
-                var x = 0,
-                    j = 0,
-                    y = '',
-                    messageIds  = entity.getMessageIds(),
-                    alreadyHere = false;
-                
-                for (x = 0; x < messageIds.length; x++) {
-                    if (messageIds[x] === 'handle-controller') {
-                        for (j = 0; j < this.entities.length; j++) {
-                            if (this.entities[j] === entity) {
-                                alreadyHere = true;
-                                break;
-                            }
-                        }
-                        
-                        if (!alreadyHere) {
-                            // Check for custom input messages that should be relayed from scene.
-                            if (entity.controlMap) {
-                                for (y in entity.controlMap) {
-                                    if (entity.controlMap.hasOwnProperty(y) && (y.indexOf('key:') < 0) && (y.indexOf('mouse:') < 0)) {
-                                        if (!this[y]) {
-                                            this.addEventListener(y,           relayUpDown(y,     this));
-                                            this.addEventListener(y + ':up',   relay(y + ':up',   this));
-                                            this.addEventListener(y + ':down', relay(y + ':down', this));
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            this.entities.push(entity);
-                            entity.trigger('controller-load');
-                        }
-                        break;
-                    }
+            keyDown: function (event) {
+
+                /**
+                 *  Message sent to an entity when a key goes from up to down.
+                 * 
+                 * @event 'key:[keyId]:down'
+                 * @param event {DOMEvent} The DOM event that triggered the keydown event.
+                 */
+                if (this.owner.triggerEventOnChildren) {
+                    this.owner.triggerEventOnChildren('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':down', event);
+                }
+            },
+            keyUp: function (event) {
+
+                /**
+                 * Message sent to child entities when a key goes from down to up.
+                 * 
+                 * @event 'key:[keyId]:up'
+                 * @param event {DOMEvent} The DOM event that triggered the keyup event.
+                 */
+                if (this.owner.triggerEventOnChildren) {
+                    this.owner.triggerEventOnChildren('key:' + (keyMap['kc' + event.keyCode] || ('key-code-' + event.keyCode)) + ':up', event);
                 }
             },
             destroy: function () {
-                this.entities.length = 0;
+                window.removeEventListener('keydown', this.callbackKeyDown);
+                window.removeEventListener('keyup',   this.callbackKeyUp);
             }
         }
     });

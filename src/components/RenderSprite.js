@@ -254,6 +254,14 @@ This component is attached to entities that will appear in the game world. It re
         
         id: 'RenderSprite',
         
+        publicProperties: {
+            x: 0,
+            
+            y: 0,
+            
+            z: 0
+        },
+        
         constructor: (function () {
             var defaultAnimations = {"default": 0},
                 createSpriteSheet = function (def, entity) {
@@ -475,7 +483,7 @@ This component is attached to entities that will appear in the game world. It re
                 
                 this.sprite     = null;
                 
-                this.stage      = null;
+                this.parentContainer      = null;
                 this.rotate     = definition.rotate || false;
                 this.mirror     = definition.mirror || false;
                 this.flip       = definition.flip   || false;
@@ -603,15 +611,15 @@ This component is attached to entities that will appear in the game world. It re
         
         events: {
             "handle-render-load": function (resp) {
-                if (!this.stage && resp && resp.stage) {
-                    this.addStage(resp.stage);
+                if (!this.parentContainer && resp && resp.container) {
+                    this.addStage(resp.container);
                 }
             },
             
             "handle-render": function (resp) {
-                if (!this.stage) {
+                if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
-                        if (!this.addStage(resp.stage)) {
+                        if (!this.addStage(resp.container)) {
                             console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
                             this.owner.removeComponent(this);
                             return;
@@ -644,8 +652,8 @@ This component is attached to entities that will appear in the game world. It re
             
             "attach-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
-                    this.stage = pinInfo.container;
-                    this.stage.addChild(this.container);
+                    this.parentContainer = pinInfo.container;
+                    this.parentContainer.addChild(this.container);
                     this.addInputs();
                     this.pinnedTo = pinInfo;
                 }
@@ -653,8 +661,8 @@ This component is attached to entities that will appear in the game world. It re
             
             "remove-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
-                    this.stage.removeChild(this.container);
-                    this.stage = null;
+                    this.parentContainer.removeChild(this.container);
+                    this.parentContainer = null;
                     this.pinnedTo = null;
                 }
             },
@@ -687,9 +695,9 @@ This component is attached to entities that will appear in the game world. It re
         methods: {
             addStage: function (stage) {
                 if (stage && !this.pinTo) {
-                    this.stage = stage;
-                    this.stage.addChild(this.container);
-//                    if (this.container.mask) this.stage.addChild(this.container.mask);
+                    this.parentContainer = stage;
+                    this.parentContainer.addChild(this.container);
+//                    if (this.container.mask) this.parentContainer.addChild(this.container.mask);
                     this.addInputs();
                     return stage;
                 } else {
@@ -720,8 +728,8 @@ This component is attached to entities that will appear in the game world. It re
                             x = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].x;
                             y = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].y;
                             if (this.container.z !== this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z) {
-                                if (this.stage) {
-                                    this.stage.reorder = true;
+                                if (this.parentContainer) {
+                                    this.parentContainer.reorder = true;
                                 }
                                 this.container.z = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z;
                             }
@@ -731,8 +739,8 @@ This component is attached to entities that will appear in the game world. It re
                             x = this.pinnedTo.defaultPin.x;
                             y = this.pinnedTo.defaultPin.y;
                             if (this.container.z !== this.pinnedTo.defaultPin.z) {
-                                if (this.stage) {
-                                    this.stage.reorder = true;
+                                if (this.parentContainer) {
+                                    this.parentContainer.reorder = true;
                                 }
                                 this.container.z = this.pinnedTo.defaultPin.z;
                             }
@@ -748,8 +756,8 @@ This component is attached to entities that will appear in the game world. It re
                             rotation = this.owner.rotation;
                         }
                         if (this.container.z !== (this.owner.z + this.offsetZ)) {
-                            if (this.stage) {
-                                this.stage.reorder = true;
+                            if (this.parentContainer) {
+                                this.parentContainer.reorder = true;
                             }
                             this.container.z = (this.owner.z + this.offsetZ);
                         }
@@ -825,16 +833,15 @@ This component is attached to entities that will appear in the game world. It re
                         self.owner.trigger(eventName, {
                             event: event.nativeEvent,
                             cjsEvent: event,
-                            x: (event.stageX * dpr) / self.stage.scaleX + self.camera.x,
-                            y: (event.stageY * dpr) / self.stage.scaleY + self.camera.y,
+                            x: (event.stageX * dpr) / self.parentContainer.scaleX + self.camera.x,
+                            y: (event.stageY * dpr) / self.parentContainer.scaleY + self.camera.y,
                             entity: self.owner
                         });
                     };
                 };
                 
                 return function () {
-                    var self = this,
-                        mousedown = null,
+                    var mousedown = null,
                         mouseover = null,
                         mouseout  = null,
                         rollover  = null,
@@ -846,10 +853,6 @@ This component is attached to entities that will appear in the game world. It re
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click || this.touch) {
-                        if (this.touch) {
-                            createjs.Touch.enable(this.stage);
-                        }
-                        
                         mousedown = createHandler(this, 'mousedown');
                         pressmove = createHandler(this, 'pressmove');
                         pressup   = createHandler(this, 'pressup');
@@ -863,7 +866,7 @@ This component is attached to entities that will appear in the game world. It re
                         this.sprite.addEventListener('dblclick',  dblclick);
                     }
                     if (this.hover) {
-                        this.stage.enableMouseOver();
+//                        this.stage.enableMouseOver();
                         mouseover = createHandler(this, 'mouseover');
                         mouseout  = createHandler(this, 'mouseout');
                         rollover  = createHandler(this, 'rollover');
@@ -1048,14 +1051,14 @@ This component is attached to entities that will appear in the game world. It re
                 if (this.removeInputListeners) {
                     this.removeInputListeners();
                 }
-                if (this.stage) {
-                    this.stage.removeChild(this.container);
-                    this.stage = undefined;
+                if (this.parentContainer) {
+                    this.parentContainer.removeChild(this.container);
+                    this.parentContainer = null;
                 }
                 this.removePins();
                 this.followThroughs = null;
-                this.sprite = undefined;
-                this.container = undefined;
+                this.sprite = null;
+                this.container = null;
             }
         }
     });

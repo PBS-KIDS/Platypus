@@ -193,16 +193,16 @@ This component handles rendering tile map backgrounds. When rendering the backgr
             "handle-render-load": function (resp) {
                 var x = 0,
                     y = 0,
-                    stage = null,
+                    parentContainer = null,
                     index = '',
                     imgMapDefinition = this.imageMap,
                     newImgMap = [];
 
-                if (resp && resp.stage) {
-                    stage = this.stage = resp.stage;
+                if (resp && resp.container) {
+                    parentContainer = this.parentContainer = resp.container;
                     
-                    if (stage && !this.reorderedStage) {
-                        stage.reorder = true;
+                    if (parentContainer && !this.reorderedStage) {
+                        parentContainer.reorder = true;
                         this.reorderedStage = true;
                     }
                     
@@ -227,7 +227,7 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                     this.tilesToRender.scaleY = this.scaleY;
                     this.tilesToRender.z = this.owner.z;
             
-                    stage.addChild(this.tilesToRender);
+                    parentContainer.addChild(this.tilesToRender);
                 }
             },
             
@@ -453,11 +453,11 @@ This component handles rendering tile map backgrounds. When rendering the backgr
             
             destroy: function () {
                 this.tilesToRender.removeAllChildren();
-                this.stage.removeChild(this.tilesToRender);
+                this.parentContainer.removeChild(this.tilesToRender);
                 this.imageMap.length = 0;
                 this.tiles = undefined;
                 this.camera = undefined;
-                this.stage = undefined;
+                this.parentContainer = undefined;
                 this.tilesToRender = undefined;
             }
         }

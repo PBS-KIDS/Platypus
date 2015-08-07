@@ -92,6 +92,7 @@
                 
                 if (c !== this.owner.state.chasing) {
                     this.owner.state.chasing = c;
+                    
                     /**
                      * This event is triggered whenever the entity begins chasing another entity or stops chasing another entity.
                      * 
