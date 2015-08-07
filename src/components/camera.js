@@ -225,10 +225,22 @@
             this.parentContainer.addChild(this.container);
         },
         events: {
+            /**
+             * Sets up the camera window size on load.
+             * 
+             * @method 'load'
+             */
             "load": function () {
                 this.resize();
             },
             
+            /**
+             * On receiving this message, the camera begins viewing the world.
+             * 
+             * @method 'render-world'
+             * @param data {Object} Information about the world.
+             * @param data.world {createjs.Container} The container containing world entities.
+             */
             "render-world": function (data) {
                 this.world = data.world;
             },
@@ -258,15 +270,15 @@
                 }
             },
 
-/**
- * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
- * 
- * @method 'world-loaded'
- * @param message {Object}
- * @param [message.width] {number} The width of the loaded world.
- * @param [message.height] {number} The height of the loaded world.
- * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
- **/
+            /**
+             * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
+             * 
+             * @method 'world-loaded'
+             * @param message {Object}
+             * @param [message.width] {number} The width of the loaded world.
+             * @param [message.height] {number} The height of the loaded world.
+             * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
+             **/
             "world-loaded": function (values) {
                 this.worldIsLoaded = true;
                 this.worldWidth    = values.width;
@@ -279,13 +291,13 @@
                 }
             },
             
-/**
- * On a "tick" step event, the camera updates its location according to its current state.
- * 
- * @method 'tick'
- * @param message {Object}
- * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
- **/
+            /**
+             * On a "tick" step event, the camera updates its location according to its current state.
+             * 
+             * @method 'tick'
+             * @param message {Object}
+             * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
+             **/
             "tick": function (resp) {
                 var cvs = this.owner.stage.canvas;
                 

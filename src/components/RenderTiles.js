@@ -1,56 +1,10 @@
 /**
-# COMPONENT **RenderTiles**
-This component handles rendering tile map backgrounds. When rendering the background, this component figures out what tiles are being displayed as caches them so they are rendered as one image rather than individually. As the camera moves, the cache is updated by blitting the relevant part of the old cached image into the new cached image and then rendering the tiles that have shifted into the camera's view into the cache.
-
-## Dependencies:
-- [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas functionality.
-- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "handle-render-load" message to setup and display the content. This component is removed from the Handler-Render-Createjs list after the first tick because it doesn't possess a handle-render function. Instead it uses the camera-update function to update itself.
-
-## Messages
-
-### Listens for:
-- **add-tiles** - This event adds a layer of tiles to render on top of the existing layer of rendered tiles.
-  - @param message.imageMap (2d array) - Required. This lists a mapping of tile indexes to be rendered.
-- **camera-loaded** - Provides the width and height of the world.
-- **camera-update** - Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.
-  - @param camera (object) - Required. Provides information about the camera.
-- **handle-render-load** - This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
-  - @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
-- **peer-entity-added** - If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
-  - @param entity ([[Entity]]) - This is the peer entity to be checked for a renderCache.
-
-## JSON Definition
-    {
-      "type": "RenderTiles",
-      
-      "spritesheet": 
-      //Required - The spritesheet for all the tile images.
-      
-      "imageMap" : [],
-      //Required - This is a two dimensional array of the spritesheet indexes that describe the map that you're rendering.
-      
-      "scaleX" : 1,
-      //Optional - The x-scale the tilemap is being displayed at. Defaults to 1.
-      
-      "scaleY"  : 1,
-      //Optional - The y-scale the tilemap is being displayed at. Defaults to 1.
-      
-      "tileWidth"  : 32,
-      //Optional - The the width in pixels of a tile. Defaults to 10.
-      
-      "tileHeight"  : 32,
-      //Optional - The the height in pixels of a tile. Defaults to 10.
-      
-      "buffer"  : 32,
-      //Optional - The amount of space in pixels around the edge of the camera that we include in the buffered image. Is multiplied by the scaleX to get the actual buffersize. Defaults to the tileWidth.
-      
-      "entityCache": false
-      //Optional - Whether to cache entities on this layer if the entity's render component requests caching. Defaults to `false`.
-    }
-    
-[link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
-[link2]: http://createjs.com/Docs/EaselJS/Stage.html
-*/
+ * This component handles rendering tile map backgrounds. When rendering the background, this component figures out what tiles are being displayed as caches them so they are rendered as one image rather than individually. As the camera moves, the cache is updated by blitting the relevant part of the old cached image into the new cached image and then rendering the tiles that have shifted into the camera's view into the cache.
+ * 
+ * @namespace platypus.components
+ * @class RenderTiles
+ * @uses Component
+ */
 /*global createjs, platypus */
 /*jslint nomen:true, bitwise:true, plusplus:true */
 (function () {
@@ -119,12 +73,84 @@ This component handles rendering tile map backgrounds. When rendering the backgr
         
         id: 'RenderTiles',
         
+        properties: {
+            /**
+             * The amount of space in pixels around the edge of the camera that we include in the buffered image. Is multiplied by the scaleX to get the actual buffersize. Defaults to the tileWidth.
+             * 
+             * @property buffer
+             * @type number
+             * @default 0
+             */
+            buffer: 0,
+    
+            /**
+             * Whether to cache entities on this layer if the entity's render component requests caching.
+             * 
+             * @property entityCache
+             * @type boolean
+             * @default false
+             */
+            entityCache: false,
+    
+            /**
+             * This is a two dimensional array of the spritesheet indexes that describe the map that you're rendering.
+             * 
+             * @property imageMap
+             * @type Array
+             * @default []
+             */
+            imageMap: [],
+            
+            /**
+             * The x-scale the tilemap is being displayed at.
+             * 
+             * @property scaleX
+             * @type number
+             * @default 1
+             */
+            scaleX: 1,
+            
+            /**
+             * The y-scale the tilemap is being displayed at.
+             * 
+             * @property scaleY
+             * @type number
+             * @default 1
+             */
+            scaleY: 1,
+            
+            /**
+             * EaselJS SpriteSheet describing all the tile images.
+             * 
+             * @property spritesheet
+             * @type SpriteSheet
+             * @default null
+             */
+            spritesheet: null,
+            
+            /**
+             * This is the height in pixels of individual tiles.
+             * 
+             * @property tileHeight
+             * @type number
+             * @default 10
+             */
+            tileHeight: 10,
+             
+            /**
+             * This is the width in pixels of individual tiles.
+             * 
+             * @property tileWidth
+             * @type number
+             * @default 10
+             */
+            tileWidth: 10
+        },
+
         constructor: function (definition) {
             var x = 0,
-                images = definition.spriteSheet.images.slice(),
+                images = this.spriteSheet.images.slice(),
                 spriteSheet = null,
-                scaleX = 1,
-                scaleY = 1,
                 buffer = 0;
             
             if (images[0] && (typeof images[0] === 'string')) {
@@ -138,39 +164,22 @@ This component handles rendering tile map backgrounds. When rendering the backgr
     
             spriteSheet = {
                 images: images,
-                frames: definition.spriteSheet.frames,
-                animations: definition.spriteSheet.animations
+                frames: this.spriteSheet.frames,
+                animations: this.spriteSheet.animations
             };
-            scaleX = spriteSheet.images[0].scaleX || 1;
-            scaleY = spriteSheet.images[0].scaleY || 1;
-    
-            if ((scaleX !== 1) || (scaleY !== 1)) {
-                spriteSheet.frames = {
-                    width: spriteSheet.frames.width * scaleX,
-                    height: spriteSheet.frames.height * scaleY,
-                    regX: spriteSheet.frames.regX * scaleX,
-                    regY: spriteSheet.frames.regY * scaleY
-                };
-            }
     
             this.controllerEvents = undefined;
             this.spriteSheet   = new createjs.SpriteSheet(spriteSheet);
-            this.imageMap      = definition.imageMap   || [];
             this.doMap         = null; //list of display objects that should overlay tile map.
             this.tiles         = {};
             this.tilesToRender = undefined;
-            this.scaleX        = ((definition.scaleX || 1) * (this.owner.scaleX || 1)) / scaleX;
-            this.scaleY        = ((definition.scaleY || 1) * (this.owner.scaleY || 1)) / scaleY;
-            this.tileWidth     = definition.tileWidth  || (this.owner.tileWidth / this.scaleX)  || 10;
-            this.tileHeight    = definition.tileHeight || (this.owner.tileHeight / this.scaleY) || 10;
-            this.entityCache   = definition.entityCache || false;
             
             // temp values
             this.worldWidth    = this.tilesWidth    = this.tileWidth;
             this.worldHeight   = this.tilesHeight   = this.tileHeight;
             
             
-            buffer = (definition.buffer || (this.tileWidth * 3 / 4)) * this.scaleX;
+            buffer = (this.buffer || (this.tileWidth * 3 / 4)) * this.scaleX;
             this.camera = {
                 x: -buffer - 1, //to force camera update
                 y: -buffer - 1,
@@ -183,13 +192,16 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                 maxY: -1
             };
             
-            this.doubleBuffer = [null, null];
-            this.currentBuffer = 0;
-            
             this.reorderedStage = false;
         },
 
-        events: {// These are messages that this component listens for
+        events: {
+            /**
+             * This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
+             * 
+             * @method 'handle-render-load'
+             * @param data.container {createjs.Container} Container to contain this tile-rendering.
+             */
             "handle-render-load": function (resp) {
                 var x = 0,
                     y = 0,
@@ -231,6 +243,12 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                 }
             },
             
+            /**
+             * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
+             * 
+             * @method 'peer-entity-added'
+             * @param entity {Entity} This is the peer entity to be checked for a renderCache.
+             */
             "peer-entity-added": function (entity) {
                 var x = 0,
                     y = 0,
@@ -273,6 +291,12 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                 }
             },
             
+            /**
+             * This event adds a layer of tiles to render on top of the existing layer of rendered tiles.
+             * 
+             * @method 'add-tiles'
+             * @param message.imageMap {Array} This is a 2D mapping of tile indexes to be rendered.
+             */
             "add-tiles": function (definition) {
                 var x = 0,
                     y = 0,
@@ -297,11 +321,29 @@ This component handles rendering tile map backgrounds. When rendering the backgr
                 }
             },
 
+            /**
+             * Provides the width and height of the world.
+             * 
+             * @method 'camera-loaded'
+             * @param dimensions {Object}
+             * @param dimensions.width {number} The width of the world.
+             * @param dimensions.height {number} The height of the world.
+             */
             "camera-loaded": function (dimensions) {
                 this.worldWidth  = dimensions.width;
                 this.worldHeight = dimensions.height;
             },
 
+            /**
+             * Triggered when the camera moves, this function updates which tiles need to be rendered and caches the image.
+             * 
+             * @method 'camera-update'
+             * @param camera {Object} Provides information about the camera.
+             * @param camera.viewportLeft {number} Left position of camera viewport.
+             * @param camera.viewportHeight {number} Height of camera viewport.
+             * @param camera.viewportTop {number} Top position of camera viewport.
+             * @param camera.viewportWidth {number} Width of camera viewport.
+             */
             "camera-update": function (camera) {
                 var x = 0,
                     y = 0,

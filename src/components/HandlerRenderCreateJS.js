@@ -97,7 +97,19 @@ A component that handles updating rendering for components that are rendering vi
         },
         
         events: {
+            /**
+             * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.
+             * 
+             * @method 'load'
+             */
             "load": function () {
+                /**
+                 * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.
+                 * 
+                 * @event 'render-world'
+                 * @param data {Object}
+                 * @param data.world {createjs.Container} Contains entities to be rendered.
+                 */
                 this.owner.triggerEvent('render-world', {
                     world: this.container
                 });
