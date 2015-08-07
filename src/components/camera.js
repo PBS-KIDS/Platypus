@@ -305,12 +305,7 @@
                     this.viewportUpdate = true;
                 }
                 
-                if ((cvs.width !== cvs.offsetWidth) || (cvs.height !== cvs.offsetHeight)) {
-                    cvs.width  = cvs.offsetWidth;
-                    cvs.height = cvs.offsetHeight;
-                }
-                
-                if ((cvs.offsetWidth !== this.window.viewportWidth) || (cvs.offsetHeight !== this.window.viewportHeight)) {
+                if ((cvs.width !== this.window.viewportWidth) || (cvs.height !== this.window.viewportHeight)) {
                     this.resize();
                 }
                 
