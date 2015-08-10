@@ -172,6 +172,7 @@ A component that handles updating rendering for components that are rendering vi
                     }
                 };
             }()),
+            
             //TODO: Move this to camera
             "camera-update": function (cameraInfo) {
 /*                var dpr             = (window.devicePixelRatio || 1),
