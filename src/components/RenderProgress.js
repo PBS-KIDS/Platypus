@@ -68,8 +68,6 @@
                         this.owner.removeComponent(this);
                     }
                 }
-                
-                this.updateSprite();
             },
             
             "update-progress": function (progress) {
