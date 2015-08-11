@@ -83,9 +83,9 @@
              * 
              * @property threshold
              * @type number
-             * @default 1
+             * @default 0.001
              **/
-            "threshold": 1,
+            "threshold": 0.001,
             
             /**
              * Whether, when following an entity, the camera should rotate to match the entity's orientation.
