@@ -198,9 +198,6 @@
                 begin: 0
             };
             
-            this.shakeOffsetX = 0;
-            this.shakeOffsetY = 0;
-            
             this.xMagnitude = 0;
             this.yMagnitude = 0;
             this.xWaveLength = 0;
@@ -323,27 +320,23 @@
                     this.viewportUpdate = false;
                     this.stationary = false;
                     
+                    viewport.set(this.worldCamera.viewport);
+
                     if (this.shakeIncrementor < this.shakeTime) {
                         this.viewportUpdate = true;
                         this.shakeIncrementor += resp.delta;
                         this.shakeIncrementor = Math.min(this.shakeIncrementor, this.shakeTime);
                         
                         if (this.shakeIncrementor < this.xShakeTime) {
-                            this.shakeOffsetX = Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude;
-                        } else {
-                            this.shakeOffsetX = 0;
+                            viewport.moveX(viewport.x + Math.sin((this.shakeIncrementor / this.xWaveLength) * (Math.PI * 2)) * this.xMagnitude);
                         }
                         
                         if (this.shakeIncrementor < this.yShakeTime) {
-                            this.shakeOffsetY = Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude;
-                        } else {
-                            this.shakeOffsetY = 0;
+                            viewport.moveY(viewport.y + Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude);
                         }
                     }
                     
-                    // Set up camera message:
-                    viewport.set(this.worldCamera.viewport);
-                    viewport.move(this.shakeOffsetX, this.shakeOffsetY);
+                    // Set up the rest of the camera message:
                     msg.scaleX         = this.windowPerWorldUnitWidth;
                     msg.scaleY         = this.windowPerWorldUnitHeight;
                     msg.orientation    = this.worldCamera.orientation;
@@ -475,8 +468,6 @@
                 
                 this.viewportUpdate = true;
                 
-                this.shakeOffsetX = 0;
-                this.shakeOffsetY = 0;
                 this.shakeIncrementor = 0;
                 
                 this.xMagnitude = xMag;
