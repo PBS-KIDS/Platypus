@@ -40,57 +40,42 @@ This component handles the pressed/released state of a button according to input
             this.state = this.owner.state;
             this.state.released = true;
             this.state.pressed  = false;
-            this.stateChange = '';
             this.toggle = !!definition.toggle;
 
             if (definition.state === 'pressed') {
-                this.stateChange = 'pressed';
+                this.state.released = false;
+                this.state.pressed  = true;
             }
         },
         events: {
             "mousedown": function () {
                 if (!this.toggle) {
-                    this.stateChange = 'pressed';
+                    this.updateState('pressed');
                 }
-            },
-            "pressed": function () {
-                this.stateChange = 'pressed';
             },
             "pressup": function () {
                 if (this.toggle) {
                     if (this.state.pressed) {
-                        this.owner.triggerEvent('released');
+                        this.updateState('released');
                     } else {
-                        this.owner.triggerEvent('pressed');
+                        this.updateState('pressed');
                     }
                 } else {
-                    this.owner.triggerEvent('released');
+                    this.updateState('released');
                 }
-            },
-            "mouseup": function () {
-                if (this.toggle) {
-                    if (this.state.pressed) {
-                        this.owner.triggerEvent('released');
-                    } else {
-                        this.owner.triggerEvent('pressed');
-                    }
-                } else {
-                    this.owner.triggerEvent('released');
-                }
-            },
-            "released": function () {
-                this.stateChange = 'released';
-            },
-            "handle-logic": function (resp) {
-                if (this.state.released && (this.stateChange === 'pressed')) {
-                    this.stateChange = '';
+            }
+        },
+        
+        methods: {
+            updateState: function (state) {
+                if (this.state.released && (state === 'pressed')) {
                     this.state.pressed = true;
                     this.state.released = false;
-                }
-                if (this.state.pressed && (this.stateChange === 'released')) {
-                    this.stateChange = '';
+                    this.triggerEvent(state, this.state);
+                } else if (this.state.pressed && (state === 'released')) {
                     this.state.pressed = false;
                     this.state.released = true;
+                    this.triggerEvent(state, this.state);
                 }
             }
         }

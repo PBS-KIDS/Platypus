@@ -40,7 +40,7 @@ This component changes the (x, y) position of an object according to its current
     
     var processDirection = function (direction) {
             return function (state) {
-                this[direction] = state && (state.pressed !== false);
+                this[direction] = (typeof state === 'undefined') || (state && (state.pressed !== false));
             };
         },
         doNothing = function () {},
