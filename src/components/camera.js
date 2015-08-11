@@ -753,7 +753,8 @@
             },
             
             resize: function () {
-                var element = this.owner.stage.canvas;
+                var element = this.owner.stage.canvas,
+                    aspectRatio = this.width / this.height;
                 
                 //The dimensions of the camera in the window
                 this.window.viewportTop = element.offsetTop;
@@ -762,19 +763,19 @@
                 this.window.viewportHeight = element.offsetHeight || this.worldHeight;
                 
                 if (!this.stretch) {
-                    if ((this.window.viewportWidth / this.window.viewportHeight) > (this.width / this.height)) {
+                    if ((this.window.viewportWidth / this.window.viewportHeight) > aspectRatio) {
                         if (this.overflow) {
                             this.worldWindow.viewportWidth *= this.window.viewportHeight / this.worldWindow.viewportHeight;
                             this.worldWindow.viewportHeight = this.height;
                         } else {
-                            this.window.viewportWidth *= this.worldWindow.viewportHeight / this.window.viewportHeight;
+                            this.window.viewportWidth = this.window.viewportHeight * aspectRatio;
                         }
                     } else {
                         if (this.overflow) {
                             this.worldWindow.viewportHeight *= this.window.viewportWidth / this.worldWindow.viewportWidth;
                             this.worldWindow.viewportWidth = this.width;
                         } else {
-                            this.window.viewportHeight *= this.worldWindow.viewportWidth / this.window.viewportWidth;
+                            this.window.viewportHeight = this.window.viewportWidth / aspectRatio;
                         }
                     }
                 }
