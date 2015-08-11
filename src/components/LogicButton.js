@@ -63,6 +63,9 @@ This component handles the pressed/released state of a button according to input
                 } else {
                     this.updateState('released');
                 }
+            },
+            "handle-logic": function () {
+                //TODO: This is only here so that the "logical-state" message is triggered by the Entity for other components needing it.
             }
         },
         
