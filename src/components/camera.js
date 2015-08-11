@@ -16,24 +16,6 @@
         id: 'Camera',
         properties: {
             /**
-             * Number specifying top of viewport in world coordinates.
-             * 
-             * @property top
-             * @type number
-             * @default 0
-             **/
-            "top": 0,
-            
-            /**
-             * Number specifying left of viewport in world coordinates.
-             * 
-             * @property left
-             * @type number
-             * @default 0
-             **/
-            "left": 0,
-             
-            /**
              * Number specifying width of viewport in world coordinates.
              * 
              * @property width
@@ -112,7 +94,25 @@
              * @type boolean
              * @default false
              **/
-            "rotate": false
+            "rotate": false,
+
+            /**
+             * Number specifying the horizontal center of viewport in world coordinates.
+             * 
+             * @property x
+             * @type number
+             * @default 0
+             **/
+            "x": 0,
+             
+            /**
+             * Number specifying the vertical center of viewport in world coordinates.
+             * 
+             * @property y
+             * @type number
+             * @default 0
+             **/
+            "y": 0
         },
         publicProperties: {
             /**
@@ -144,28 +144,17 @@
         },
         constructor: function (definition) {
             //The dimensions of the camera in the window
-            this.window = {
-                viewportTop:    0,
-                viewportLeft:   0,
-                viewportWidth:  0,
-                viewportHeight: 0
-            };
+            this.viewport = new platypus.AABB(0, 0, 0, 0);
             
             //The dimensions of the camera in the game world
-            this.worldWindow = {
-                viewportWidth:       this.width,
-                viewportHeight:      this.height,
-                viewportLeft:        definition.left        || 0,
-                viewportTop:         definition.top         || 0,
-                viewportOrientation: definition.orientation || 0
+            this.worldCamera = {
+                viewport: new platypus.AABB(this.x, this.y, this.width, this.height),
+                orientation: definition.orientation || 0
             };
             
             //Message object defined here so it's reusable
             this.message = {
-                viewportWidth:  0,
-                viewportHeight: 0,
-                viewportLeft:   0,
-                viewportTop:    0,
+                viewport: new platypus.AABB(),
                 scaleX: 0,
                 scaleY: 0,
                 orientation: 0
@@ -180,16 +169,12 @@
             //FOLLOW MODE VARIABLES
             
             //--Bounding
-            this.bBBorderX = 0;
-            this.bBBorderY = 0;
-            this.bBInnerWidth = 0;
-            this.bBInnerHeight = 0;
-            this.setBoundingArea();
+            this.boundingBox = new platypus.AABB(this.worldCamera.viewport.x, this.worldCamera.viewport.y, this.worldCamera.viewport.width / 2, this.worldCamera.viewport.height / 2);
             
             //Forward Follow
-            this.lastLeft = this.worldWindow.viewportLeft;
-            this.lastTop = this.worldWindow.viewportTop;
-            this.lastOrientation = this.worldWindow.viewportOrientation;
+            this.lastX = this.worldCamera.viewport.x;
+            this.lastY = this.worldCamera.viewport.y;
+            this.lastOrientation = this.worldCamera.orientation;
             this.forwardX = 0;
             this.forwardY = 0;
             this.forwardAngle = 0;
@@ -200,8 +185,8 @@
             this.offsetY = 0;
             this.offsetAngle = 0;
             this.forwardFollower = {
-                x: this.lastLeft,
-                y: this.lastTop,
+                x: this.lastX,
+                y: this.lastY,
                 orientation: this.lastOrientation
             };
             
@@ -309,13 +294,20 @@
              * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
              **/
             "tick": function (resp) {
-                var cvs = this.owner.stage.canvas;
+                var i = 0,
+                    child           = null,
+                    bounds          = null,
+                    dpr             = (window.devicePixelRatio || 1),
+                    resets          = [],
+                    cvs = this.owner.stage.canvas,
+                    msg = this.message,
+                    viewport = msg.viewport;
                 
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
                     this.viewportUpdate = true;
                 }
                 
-                if ((cvs.width !== this.window.viewportWidth) || (cvs.height !== this.window.viewportHeight)) {
+                if ((cvs.width !== this.viewport.width) || (cvs.height !== this.viewport.height)) {
                     this.resize();
                 }
                 
@@ -341,35 +333,24 @@
                         }
                     }
                     
-                    
-                    this.message.viewportLeft   = this.worldWindow.viewportLeft + this.shakeOffsetX;
-                    this.message.viewportTop    = this.worldWindow.viewportTop + this.shakeOffsetY;
-                    this.message.viewportWidth  = this.worldWindow.viewportWidth;
-                    this.message.viewportHeight = this.worldWindow.viewportHeight;
-                    this.message.scaleX         = this.windowPerWorldUnitWidth;
-                    this.message.scaleY         = this.windowPerWorldUnitHeight;
-                    this.message.orientation    = this.worldWindow.viewportOrientation;
+                    // Set up camera message:
+                    viewport.set(this.worldCamera.viewport);
+                    viewport.move(this.shakeOffsetX, this.shakeOffsetY);
+                    msg.scaleX         = this.windowPerWorldUnitWidth;
+                    msg.scaleY         = this.windowPerWorldUnitHeight;
+                    msg.orientation    = this.worldCamera.orientation;
                     
                     this.container.addChild(this.world);
 
-                    var i = 0,
-                        child           = null,
-                        bounds          = null,
-                        dpr             = (window.devicePixelRatio || 1),
-                        cameraInfo      = this.message,
-                        viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
-                        viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2,
-                        resets          = [];
-                    
                     // Transform the world to appear within camera
-                    this.world.setTransform((cameraInfo.viewportWidth / 2) * cameraInfo.scaleX * dpr, (cameraInfo.viewportHeight / 2) * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr, (cameraInfo.orientation || 0) * 180 / Math.PI, 0, 0, viewportCenterX, viewportCenterY);
+                    this.world.setTransform(viewport.halfWidth * msg.scaleX * dpr, viewport.halfHeight * msg.scaleY * dpr, msg.scaleX * dpr, msg.scaleY * dpr, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
                     
                     // Make sure entities outside of the camera are not drawn (optimization)
                     for (i = 0; i < this.world.children.length; i++) {
                         child = this.world.children[i];
                         if (child.visible && (child.name !== 'entity-managed')) {
                             bounds = child.getTransformedBounds();
-                            if (bounds && ((bounds.x + bounds.width < this.message.viewportLeft) || (bounds.x > this.message.viewportLeft + this.message.viewportWidth) || (bounds.y + bounds.height < this.message.viewportTop) || (bounds.y > this.message.viewportTop + this.message.viewportHeight))) {
+                            if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
                                 child.visible = false;
                                 resets.push(child);
                             }
@@ -390,17 +371,15 @@
                      * 
                      * @event 'camera-update'
                      * @param message {Object}
-                     * @param message.viewportTop {number} The top of the camera viewport in world coordinates.
-                     * @param message.viewportLeft {number} The left of the camera viewport in world coordinates.
-                     * @param message.viewportWidth {number} The width of the camera viewport in world coordinates.
-                     * @param message.viewportHeight {number} The height of the camera viewport in world coordinates.
+                     * @param message.orientation {number} Number describing the orientation of the camera.
                      * @param message.scaleX {number} Number of window pixels that comprise a single world coordinate on the x-axis.
                      * @param message.scaleY {number} Number of window pixels that comprise a single world coordinate on the y-axis.
+                     * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
                      **/
-                    this.owner.trigger('camera-update', this.message);
+                    this.owner.trigger('camera-update', msg);
 
                     if (this.owner.triggerEventOnChildren) {
-                        this.owner.triggerEventOnChildren('camera-update', this.message);
+                        this.owner.triggerEventOnChildren('camera-update', msg);
                     }
                     
                 } else if (!this.stationary) {
@@ -410,7 +389,7 @@
  * 
  * @event 'camera-stationary'
  **/
-                    this.owner.trigger('camera-stationary', this.message);
+                    this.owner.trigger('camera-stationary', msg);
                     this.stationary = true;
                     
                 }
@@ -544,11 +523,11 @@
                     break;
                 case 'forward':
                     this.state = 'following';
-                    this.followFocused = false;
-                    this.following = def.entity;
-                    this.lastLeft  = def.entity.x || 0;
-                    this.lastTop   = def.entity.y || 0;
-                    this.lastorientation = def.entity.orientation || 0;
+                    this.followFocused   = false;
+                    this.following       = def.entity;
+                    this.lastX           = def.entity.x || 0;
+                    this.lastY           = def.entity.y || 0;
+                    this.lastOrientation = def.entity.orientation || 0;
                     this.forwardX  = def.movementX || (this.transitionX / 10);
                     this.forwardY  = def.movementY || (this.transitionY / 10);
                     this.averageOffsetX = 0;
@@ -565,15 +544,15 @@
                     this.offsetX = def.offsetX || 0;
                     this.offsetY = def.offsetY || 0;
                     this.offsetAngle = def.offsetAngle || 0;
-                    this.setBoundingArea(def.top, def.left, def.width, def.height);
+                    this.boundingBox.setAll(def.x, def.y, def.width, def.height);
                     this.followingFunction = this.boundingFollow;
                     break;
                 default:
                     this.state = 'static';
                     this.following = undefined;
                     this.followingFunction = undefined;
-                    if (def && (typeof def.top === 'number') && (typeof def.left === 'number')) {
-                        this.move(def.left, def.top, def.orientation || 0);
+                    if (def && (typeof def.x === 'number') && (typeof def.y === 'number')) {
+                        this.move(def.x, def.y, def.orientation || 0);
                         this.viewportUpdate = true;
                     }
                     break;
@@ -585,42 +564,45 @@
 
             },
             
-            move: function (newLeft, newTop, newOrientation) {
-                var moved = this.moveLeft(newLeft);
-                moved = this.moveTop(newTop) || moved;
+            move: function (x, y, newOrientation) {
+                var moved = this.moveX(x);
+                moved = this.moveY(y) || moved;
                 if (this.rotate) {
                     moved = this.reorient(newOrientation || 0) || moved;
                 }
                 return moved;
             },
             
-            moveLeft: function (newLeft) {
-                if (Math.abs(this.worldWindow.viewportLeft - newLeft) > this.threshold) {
-                    if (this.worldWidth && this.worldWidth !== 0 && this.worldWidth < this.worldWindow.viewportWidth) {
-                        this.worldWindow.viewportLeft = (this.worldWidth - this.worldWindow.viewportWidth) / 2;
-                    } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft + this.worldWindow.viewportWidth > this.worldWidth)) {
-                        this.worldWindow.viewportLeft = this.worldWidth - this.worldWindow.viewportWidth;
-                    } else if (this.worldWidth && this.worldWidth !== 0 && (newLeft < 0)) {
-                        this.worldWindow.viewportLeft = 0;
+            moveX: function (x) {
+                var aabb = this.worldCamera.viewport;
+                
+                if (Math.abs(aabb.x - x) > this.threshold) {
+                    if (this.worldWidth && this.worldWidth !== 0 && this.worldWidth < aabb.width) {
+                        aabb.moveX(this.worldWidth / 2);
+                    } else if (this.worldWidth && this.worldWidth !== 0 && (x + aabb.halfWidth > this.worldWidth)) {
+                        aabb.moveX(this.worldWidth - aabb.halfWidth);
+                    } else if (this.worldWidth && this.worldWidth !== 0 && (x < 0)) {
+                        aabb.moveX(aabb.halfWidth);
                     } else {
-                        this.worldWindow.viewportLeft = newLeft;
+                        aabb.moveX(x);
                     }
                     return true;
                 }
                 return false;
             },
             
-            moveTop: function (newTop) {
-                if (Math.abs(this.worldWindow.viewportTop - newTop) > this.threshold) {
-                    if (this.worldHeight && this.worldHeight !== 0 && this.worldHeight < this.worldWindow.viewportHeight) {
-                        this.worldWindow.viewportTop = (this.worldHeight - this.worldWindow.viewportHeight) / 2;
-                    } else if (this.worldHeight && this.worldHeight !== 0 && (newTop + this.worldWindow.viewportHeight > this.worldHeight)) {
-                        this.worldWindow.viewportTop = this.worldHeight - this.worldWindow.viewportHeight;
-                    } else if (this.worldHeight && this.worldHeight !== 0 && (newTop < 0)) {
-                        this.worldWindow.viewportTop = 0;
+            moveY: function (y) {
+                var aabb = this.worldCamera.viewport;
+                
+                if (Math.abs(aabb.y - y) > this.threshold) {
+                    if (this.worldHeight && this.worldHeight !== 0 && this.worldHeight < aabb.height) {
+                        aabb.moveY(this.worldHeight / 2);
+                    } else if (this.worldHeight && this.worldHeight !== 0 && (y + aabb.halfHeight > this.worldHeight)) {
+                        aabb.moveY(this.worldHeight - aabb.halfHeight);
+                    } else if (this.worldHeight && this.worldHeight !== 0 && (y < 0)) {
+                        aabb.moveY(aabb.halfHeight);
                     } else {
-                        this.worldWindow.viewportTop = newTop;
-//                        console.log(newTop + ',' + this.worldWindow.viewportHeight + ',' + this.worldHeight);
+                        aabb.moveY(y);
                     }
                     return true;
                 }
@@ -628,8 +610,8 @@
             },
             
             reorient: function (newOrientation) {
-                if (Math.abs(this.worldWindow.viewportOrientation - newOrientation) > 0.0001) {
-                    this.worldWindow.viewportOrientation = newOrientation;
+                if (Math.abs(this.worldCamera.orientation - newOrientation) > 0.0001) {
+                    this.worldCamera.orientation = newOrientation;
                     return true;
                 }
                 return false;
@@ -651,11 +633,11 @@
                     };
                 
                 return function (entity, time, slowdown) {
-                    var x = getTransitionalPoint(this.worldWindow.viewportLeft, entity.x - (this.worldWindow.viewportWidth / 2),  getRatio(this.transitionX,     time)),
-                        y = getTransitionalPoint(this.worldWindow.viewportTop,  entity.y - (this.worldWindow.viewportHeight / 2), getRatio(this.transitionY,     time));
+                    var x = getTransitionalPoint(this.worldCamera.viewport.x, entity.x, getRatio(this.transitionX, time)),
+                        y = getTransitionalPoint(this.worldCamera.viewport.y, entity.y, getRatio(this.transitionY, time));
 
                     if (this.rotate) { // Only run the orientation calculations if we need them.
-                        return this.move(x, y, getTransitionalPoint(this.worldWindow.viewportOrientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
+                        return this.move(x, y, getTransitionalPoint(this.worldCamera.orientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
                     } else {
                         return this.move(x, y, 0);
                     }
@@ -670,26 +652,26 @@
                     y = entity.y + this.offsetY,
                     a = (entity.orientation || 0) + this.offsetAngle;
                 
-                if (this.followFocused && (this.lastLeft === x) && (this.lastTop === y)) {
+                if (this.followFocused && (this.lastX === x) && (this.lastY === y)) {
                     return this.lockedFollow(ff, time);
                 } else {
                     // span over last 10 ticks to prevent jerkiness
                     this.averageOffsetX *= 0.9;
                     this.averageOffsetY *= 0.9;
-                    this.averageOffsetX += 0.1 * (x - this.lastLeft) * standardizeTimeDistance;
-                    this.averageOffsetY += 0.1 * (y - this.lastTop)  * standardizeTimeDistance;
+                    this.averageOffsetX += 0.1 * (x - this.lastX) * standardizeTimeDistance;
+                    this.averageOffsetY += 0.1 * (y - this.lastY) * standardizeTimeDistance;
 
-                    if (Math.abs(this.averageOffsetX) > (this.worldWindow.viewportWidth / (this.forwardX * 2))) {
+                    if (Math.abs(this.averageOffsetX) > (this.worldCamera.viewport.width / (this.forwardX * 2))) {
                         this.averageOffsetX = 0;
                     }
-                    if (Math.abs(this.averageOffsetY) > (this.worldWindow.viewportHeight / (this.forwardY * 2))) {
+                    if (Math.abs(this.averageOffsetY) > (this.worldCamera.viewport.height / (this.forwardY * 2))) {
                         this.averageOffsetY = 0;
                     }
                     
                     if (this.rotate) {
                         this.averageOffsetAngle *= 0.9;
                         this.averageOffsetAngle += 0.1 * (a - this.lastOrientation) * standardizeTimeDistance;
-                        if (Math.abs(this.averageOffsetAngle) > (this.worldWindow.viewportOrientation / (this.forwardAngle * 2))) {
+                        if (Math.abs(this.averageOffsetAngle) > (this.worldCamera.orientation / (this.forwardAngle * 2))) {
                             this.averageOffsetAngle = 0;
                         }
                     }
@@ -698,8 +680,8 @@
                     ff.y = this.averageOffsetY * this.forwardY + y;
                     ff.orientation = this.averageOffsetAngle * this.forwardAngle + a;
                     
-                    this.lastLeft = x;
-                    this.lastTop  = y;
+                    this.lastX = x;
+                    this.lastY = y;
                     this.lastOrientation = a;
                     
                     moved = this.lockedFollow(ff, time);
@@ -714,93 +696,88 @@
                 
             },
             
-            setBoundingArea: function (top, left, width, height) {
-                this.bBBorderY = (typeof top !== 'undefined') ? top : this.worldWindow.viewportHeight  * 0.25;
-                this.bBBorderX = (typeof left !== 'undefined') ? left : this.worldWindow.viewportWidth * 0.4;
-                this.bBInnerWidth = (typeof width !== 'undefined') ? width : this.worldWindow.viewportWidth - (2 * this.bBBorderX);
-                this.bBInnerHeight = (typeof height !== 'undefined') ? height : this.worldWindow.viewportHeight - (2 * this.bBBorderY);
-            },
-            
             boundingFollow: function (entity, time) {
-                var newLeft = null,
-                    newTop  = null,
+                var x = 0,
+                    y = 0,
                     ratioX  = (this.transitionX ? Math.min(time / this.transitionX, 1) : 1),
                     iratioX = 1 - ratioX,
                     ratioY  = (this.transitionY ? Math.min(time / this.transitionY, 1) : 1),
                     iratioY = 1 - ratioY;
                 
-                if (entity.x > this.worldWindow.viewportLeft + this.bBBorderX + this.bBInnerWidth) {
-                    newLeft = entity.x - (this.bBBorderX + this.bBInnerWidth);
-                } else if (entity.x < this.worldWindow.viewportLeft + this.bBBorderX) {
-                    newLeft = entity.x - this.bBBorderX;
+                this.boundingBox.move(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
+                
+                if (entity.x > this.boundingBox.right) {
+                    x = entity.x - this.boundingBox.halfWidth;
+                } else if (entity.x < this.boundingBox.left) {
+                    x = entity.x + this.boundingBox.halfWidth;
                 }
                 
-                if (entity.y > this.worldWindow.viewportTop + this.bBBorderY + this.bBInnerHeight) {
-                    newTop = entity.y - (this.bBBorderY + this.bBInnerHeight);
-                } else if (entity.y < this.worldWindow.viewportTop + this.bBBorderY) {
-                    newTop = entity.y - this.bBBorderY;
+                if (entity.y > this.boundingBox.bottom) {
+                    y = entity.y - this.boundingBox.halfHeight;
+                } else if (entity.y < this.boundingBox.top) {
+                    y = entity.y + this.boundingBox.halfHeight;
                 }
                 
-                if (newLeft !== null) {
-                    newLeft = this.moveLeft(ratioX * newLeft + iratioX * this.worldWindow.viewportLeft);
+                if (x !== 0) {
+                    x = this.moveX(ratioX * x + iratioX * this.worldCamera.viewport.x);
                 }
                 
-                if (newTop !== null) {
-                    newTop = this.moveTop(ratioY * newTop + iratioY * this.worldWindow.viewportTop);
+                if (y !== 0) {
+                    y = this.moveY(ratioY * y + iratioY * this.worldCamera.viewport.y);
                 }
                 
-                return newLeft || newTop;
+                return x || y;
             },
             
             resize: function () {
                 var element = this.owner.stage.canvas,
-                    aspectRatio = this.width / this.height;
+                    worldAspectRatio = this.width / this.height,
+                    windowAspectRatio = 0;
                 
                 //The dimensions of the camera in the window
-                this.window.viewportTop = element.offsetTop;
-                this.window.viewportLeft = element.offsetLeft;
-                this.window.viewportWidth = element.offsetWidth || this.worldWidth;
-                this.window.viewportHeight = element.offsetHeight || this.worldHeight;
+                this.viewport.setAll(element.offsetTop + element.offsetWidth / 2, element.offsetLeft + element.offsetHeight / 2, element.offsetWidth, element.offsetHeight);
                 
                 if (!this.stretch) {
-                    if ((this.window.viewportWidth / this.window.viewportHeight) > aspectRatio) {
+                    windowAspectRatio = this.viewport.width / this.viewport.height;
+                    
+                    if (windowAspectRatio > worldAspectRatio) {
                         if (this.overflow) {
-                            this.worldWindow.viewportWidth *= this.window.viewportHeight / this.worldWindow.viewportHeight;
-                            this.worldWindow.viewportHeight = this.height;
+                            this.worldCamera.viewport.width  = this.height * windowAspectRatio;
+                            this.worldCamera.viewport.height = this.height;
                         } else {
-                            this.window.viewportWidth = this.window.viewportHeight * aspectRatio;
+                            this.viewport.width = this.viewport.height * worldAspectRatio;
                         }
                     } else {
                         if (this.overflow) {
-                            this.worldWindow.viewportHeight *= this.window.viewportWidth / this.worldWindow.viewportWidth;
-                            this.worldWindow.viewportWidth = this.width;
+                            this.worldCamera.viewport.width  = this.width;
+                            this.worldCamera.viewport.height = this.width / windowAspectRatio;
                         } else {
-                            this.window.viewportHeight = this.window.viewportWidth / aspectRatio;
+                            this.viewport.height = this.viewport.width / worldAspectRatio;
                         }
                     }
                 }
                 
-                this.worldPerWindowUnitWidth  = this.worldWindow.viewportWidth   / this.window.viewportWidth;
-                this.worldPerWindowUnitHeight = this.worldWindow.viewportHeight  / this.window.viewportHeight;
-                this.windowPerWorldUnitWidth  = this.window.viewportWidth  / this.worldWindow.viewportWidth;
-                this.windowPerWorldUnitHeight = this.window.viewportHeight / this.worldWindow.viewportHeight;
+                this.worldPerWindowUnitWidth  = this.worldCamera.viewport.width  / this.viewport.width;
+                this.worldPerWindowUnitHeight = this.worldCamera.viewport.height / this.viewport.height;
+                this.windowPerWorldUnitWidth  = this.viewport.width  / this.worldCamera.viewport.width;
+                this.windowPerWorldUnitHeight = this.viewport.height / this.worldCamera.viewport.height;
                 
-                this.container.cache(0, 0, this.window.viewportWidth, this.window.viewportHeight, 1);
+                this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
                 
                 this.viewportUpdate = true;
             },
             
             windowToWorld: function (sCoords) {
                 var wCoords = [];
-                wCoords[0] = Math.round((sCoords[0] - this.window.viewportLeft) * this.worldPerWindowUnitWidth);
-                wCoords[1] = Math.round((sCoords[1] - this.window.viewportTop)  * this.worldPerWindowUnitHeight);
+                wCoords[0] = Math.round((sCoords[0] - this.viewport.x) * this.worldPerWindowUnitWidth);
+                wCoords[1] = Math.round((sCoords[1] - this.viewport.y) * this.worldPerWindowUnitHeight);
                 return wCoords;
             },
             
             worldToWindow: function (wCoords) {
                 var sCoords = [];
-                sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.window.viewportLeft);
-                sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.window.viewportTop);
+                sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.viewport.x);
+                sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.viewport.y);
                 return sCoords;
             },
             

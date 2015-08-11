@@ -512,8 +512,8 @@ This component is attached to entities that will appear in the game world. It re
                         y: 0
                     };
                     this.addEventListener('camera-update', function (camera) {
-                        self.camera.x = camera.viewportLeft;
-                        self.camera.y = camera.viewportTop;
+                        self.camera.x = camera.viewport.left;
+                        self.camera.y = camera.viewport.top;
                     });
                 }
                 

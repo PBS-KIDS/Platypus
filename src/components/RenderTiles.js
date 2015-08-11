@@ -339,10 +339,7 @@
              * 
              * @method 'camera-update'
              * @param camera {Object} Provides information about the camera.
-             * @param camera.viewportLeft {number} Left position of camera viewport.
-             * @param camera.viewportHeight {number} Height of camera viewport.
-             * @param camera.viewportTop {number} Top position of camera viewport.
-             * @param camera.viewportWidth {number} Width of camera viewport.
+             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
                 var x = 0,
@@ -358,25 +355,25 @@
                     maxY    = 0,
                     minX    = 0,
                     minY    = 0,
-                    camL    = this.convertCamera(camera.viewportLeft, this.worldWidth, this.tilesWidth, camera.viewportWidth),
-                    camT    = this.convertCamera(camera.viewportTop, this.worldHeight, this.tilesHeight, camera.viewportHeight),
+                    camL    = this.convertCamera(camera.viewport.left, this.worldWidth, this.tilesWidth, camera.viewport.width),
+                    camT    = this.convertCamera(camera.viewport.top, this.worldHeight, this.tilesHeight, camera.viewport.height),
                     vpL     = Math.floor(camL / this.tileWidth)  * this.tileWidth,
                     vpT     = Math.floor(camT / this.tileHeight) * this.tileHeight,
                     tile    = null,
                     ents    = [],
                     oList   = null;
                 
-                this.tilesToRender.x = camera.viewportLeft - camL;
-                this.tilesToRender.y = camera.viewportTop  - camT;
+                this.tilesToRender.x = camera.viewport.left - camL;
+                this.tilesToRender.y = camera.viewport.top  - camT;
                 
                 if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
                     this.camera.x = vpL;
                     this.camera.y = vpT;
                     
                     //only attempt to draw children that are relevant
-                    maxX = Math.min(Math.ceil((vpL + camera.viewportWidth + buffer) / (this.tileWidth * this.scaleX)), this.imageMap.length) - 1;
+                    maxX = Math.min(Math.ceil((vpL + camera.viewport.width + buffer) / (this.tileWidth * this.scaleX)), this.imageMap.length) - 1;
                     minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
-                    maxY = Math.min(Math.ceil((vpT + camera.viewportHeight + buffer) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
+                    maxY = Math.min(Math.ceil((vpT + camera.viewport.height + buffer) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
                     minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
         
                     if ((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)) {

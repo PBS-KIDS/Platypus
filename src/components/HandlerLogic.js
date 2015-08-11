@@ -145,16 +145,13 @@
              * 
              * @method 'camera-update'
              * @param camera {Object}
-             * @param camera.viewportLeft {number} The left side of the camera viewport in world units.
-             * @param camera.viewportTop {number} The top side of the camera viewport in world units.
-             * @param camera.viewportWidth {number} The width of the camera viewport in world units.
-             * @param camera.viewportHeight {number} The height of the camera viewport in world units.
+             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                this.camera.left = camera.viewportLeft;
-                this.camera.top = camera.viewportTop;
-                this.camera.width = camera.viewportWidth;
-                this.camera.height = camera.viewportHeight;
+                this.camera.left   = camera.viewport.left;
+                this.camera.top    = camera.viewport.top;
+                this.camera.width  = camera.viewport.width;
+                this.camera.height = camera.viewport.height;
                 
                 if (this.camera.buffer === -1) {
                     this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
