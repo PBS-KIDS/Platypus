@@ -335,37 +335,14 @@
                             viewport.moveY(viewport.y + Math.sin((this.shakeIncrementor / this.yWaveLength) * (Math.PI * 2)) * this.yMagnitude);
                         }
                     }
-                    
+
                     // Set up the rest of the camera message:
                     msg.scaleX         = this.windowPerWorldUnitWidth;
                     msg.scaleY         = this.windowPerWorldUnitHeight;
                     msg.orientation    = this.worldCamera.orientation;
                     
-                    this.container.addChild(this.world);
-
                     // Transform the world to appear within camera
                     this.world.setTransform(viewport.halfWidth * msg.scaleX * dpr, viewport.halfHeight * msg.scaleY * dpr, msg.scaleX * dpr, msg.scaleY * dpr, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
-                    
-                    // Make sure entities outside of the camera are not drawn (optimization)
-                    for (i = 0; i < this.world.children.length; i++) {
-                        child = this.world.children[i];
-                        if (child.visible && (child.name !== 'entity-managed')) {
-                            bounds = child.getTransformedBounds();
-                            if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
-                                child.visible = false;
-                                resets.push(child);
-                            }
-                        }
-                    }
-                    
-                    // Update the camera's snapshot
-                    this.container.updateCache('source-over');
-                    
-                    // Reset visibility of hidden children
-                    for (i = 0; i < resets.length; i++) {
-                        resets[i].visible = true;
-                    }
-                    
                     
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
@@ -395,6 +372,28 @@
                     
                 }
                 
+                this.container.addChild(this.world);
+
+                // Make sure entities outside of the camera are not drawn (optimization)
+                for (i = 0; i < this.world.children.length; i++) {
+                    child = this.world.children[i];
+                    if (child.visible && (child.name !== 'entity-managed')) {
+                        bounds = child.getTransformedBounds();
+                        if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
+                            child.visible = false;
+                            resets.push(child);
+                        }
+                    }
+                }
+                
+                // Update the camera's snapshot
+                this.container.updateCache('source-over');
+                
+                // Reset visibility of hidden children
+                for (i = 0; i < resets.length; i++) {
+                    resets[i].visible = true;
+                }
+
                 if (this.lastFollow.begin) {
                     if (this.lastFollow.begin < new Date().getTime()) {
                         this.follow(this.lastFollow);
