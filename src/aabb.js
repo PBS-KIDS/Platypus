@@ -34,22 +34,7 @@ platypus.AABB = (function () {
         this.empty = false;
         this.x = x;
         this.y = y;
-        this.width  = width || 0;
-        this.height = height || 0;
-        this.halfWidth = this.width / 2;
-        this.halfHeight = this.height / 2;
-        if (isNaN(x)) {
-            this.empty = true;
-        } else {
-            this.left = -this.halfWidth + this.x;
-            this.right = this.halfWidth + this.x;
-        }
-        if (isNaN(y)) {
-            this.empty = true;
-        } else {
-            this.top = -this.halfHeight + this.y;
-            this.bottom = this.halfHeight + this.y;
-        }
+        this.resize(width, height);
         return this;
     };
     
@@ -154,6 +139,33 @@ platypus.AABB = (function () {
     proto.reset = function () {
         this.empty = true;
         return this;
+    };
+    
+    /**
+     * Resizes the AABB.
+     * 
+     * @method reset
+     * @param width {number} The new width of the AABB
+     * @param height {number} The new height of the AABB
+     * @chainable
+     */
+    proto.resize = function (width, height) {
+        this.width  = width || 0;
+        this.height = height || 0;
+        this.halfWidth = this.width / 2;
+        this.halfHeight = this.height / 2;
+        if (isNaN(this.x)) {
+            this.empty = true;
+        } else {
+            this.left = -this.halfWidth + this.x;
+            this.right = this.halfWidth + this.x;
+        }
+        if (isNaN(this.y)) {
+            this.empty = true;
+        } else {
+            this.top = -this.halfHeight + this.y;
+            this.bottom = this.halfHeight + this.y;
+        }
     };
     
     /**

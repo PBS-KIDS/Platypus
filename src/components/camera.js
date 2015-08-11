@@ -742,17 +742,15 @@
                     
                     if (windowAspectRatio > worldAspectRatio) {
                         if (this.overflow) {
-                            this.worldCamera.viewport.width  = this.height * windowAspectRatio;
-                            this.worldCamera.viewport.height = this.height;
+                            this.worldCamera.viewport.resize(this.height * windowAspectRatio, this.height);
                         } else {
-                            this.viewport.width = this.viewport.height * worldAspectRatio;
+                            this.viewport.resize(this.viewport.height * worldAspectRatio, this.viewport.height);
                         }
                     } else {
                         if (this.overflow) {
-                            this.worldCamera.viewport.width  = this.width;
-                            this.worldCamera.viewport.height = this.width / windowAspectRatio;
+                            this.worldCamera.viewport.resize(this.width, this.width / windowAspectRatio);
                         } else {
-                            this.viewport.height = this.viewport.width / worldAspectRatio;
+                            this.viewport.resize(this.viewport.width, this.viewport.width / worldAspectRatio);
                         }
                     }
                 }
