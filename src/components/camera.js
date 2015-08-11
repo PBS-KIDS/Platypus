@@ -7,7 +7,7 @@
  * @class Camera
  * @uses Component
 */
-/*global platypus */
+/*global createjs, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -299,7 +299,6 @@
                     bounds          = null,
                     dpr             = (window.devicePixelRatio || 1),
                     resets          = [],
-                    cvs = this.owner.stage.canvas,
                     msg = this.message,
                     viewport = msg.viewport;
                 
@@ -307,8 +306,17 @@
                     this.viewportUpdate = true;
                 }
                 
-                if ((cvs.width !== this.viewport.width) || (cvs.height !== this.viewport.height)) {
+                // Need to update owner's size information for changes to canvas size
+                if (this.parentContainer === this.owner.stage) {
+                    this.owner.width  = this.parentContainer.canvas.width;
+                    this.owner.height = this.parentContainer.canvas.height;
+                }
+                
+                // Check for owner resizing
+                if ((this.owner.width !== this.lastWidth) || (this.owner.height !== this.lastHeight)) {
                     this.resize();
+                    this.lastWidth = this.owner.width;
+                    this.lastHeight = this.owner.height;
                 }
                 
                 if (this.viewportUpdate) {
@@ -730,16 +738,13 @@
             },
             
             resize: function () {
-                var element = this.owner.stage.canvas,
-                    worldAspectRatio = this.width / this.height,
-                    windowAspectRatio = 0;
+                var worldAspectRatio = this.width / this.height,
+                    windowAspectRatio = this.owner.width / this.owner.height;
                 
                 //The dimensions of the camera in the window
-                this.viewport.setAll(element.offsetTop + element.offsetWidth / 2, element.offsetLeft + element.offsetHeight / 2, element.offsetWidth, element.offsetHeight);
+                this.viewport.setAll(this.owner.width / 2, this.owner.height / 2, this.owner.width, this.owner.height);
                 
                 if (!this.stretch) {
-                    windowAspectRatio = this.viewport.width / this.viewport.height;
-                    
                     if (windowAspectRatio > worldAspectRatio) {
                         if (this.overflow) {
                             this.worldCamera.viewport.resize(this.height * windowAspectRatio, this.height);
@@ -761,6 +766,10 @@
                 this.windowPerWorldUnitHeight = this.viewport.height / this.worldCamera.viewport.height;
                 
                 this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
+                this.container.x = this.viewport.x,
+                this.container.y = this.viewport.y,
+                this.container.regX = this.viewport.halfWidth;
+                this.container.regY = this.viewport.halfHeight;
                 
                 this.viewportUpdate = true;
             },
