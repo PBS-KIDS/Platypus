@@ -1,4 +1,4 @@
-/*global platypus */
+/*global createjs, platypus */
 (function () {
     "use strict";
     
@@ -68,6 +68,10 @@
                         this.owner.removeComponent(this);
                     }
                 }
+                
+                this.container.x = this.x;
+                this.container.y = this.y;
+                this.container.z = this.z;
             },
             
             "update-progress": function (progress) {
