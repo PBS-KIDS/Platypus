@@ -271,7 +271,7 @@ This component is attached to entities that will appear in the game world. It re
                         scaleX = 1,
                         scaleY = 1,
                         scaled = false,
-                        srcSS  = def.spritesheet || def.spriteSheet, // To prevent silly bugs.
+                        srcSS  = def.spriteSheet,
                         ss     = {
                             framerate:     0,
                             images:     null,
@@ -280,7 +280,7 @@ This component is attached to entities that will appear in the game world. It re
                         },
                         cache  = {
                             definition: ss,
-                            spritesheet: null
+                            spriteSheet: null
                         };
 
                     // Find SS definition in image data if it has not otherwise been provided.
@@ -288,9 +288,9 @@ This component is attached to entities that will appear in the game world. It re
                         //check cache and bail if it's available
                         if (ssCache[def.image]) {
                             return ssCache[def.image];
-                        } else if (platypus.assets[def.image] && platypus.assets[def.image].data && platypus.assets[def.image].data.spritesheet) {
+                        } else if (platypus.assets[def.image] && platypus.assets[def.image].data && platypus.assets[def.image].data.spriteSheet) {
                             ssCache[def.image] = cache;
-                            srcSS = platypus.assets[def.image].data.spritesheet;
+                            srcSS = platypus.assets[def.image].data.spriteSheet;
                             srcSS.images = [platypus.assets[def.image].asset];
                         }
                     }
@@ -419,7 +419,7 @@ This component is attached to entities that will appear in the game world. It re
                         ss.animations = defaultAnimations;
                     }
 
-                    cache.spritesheet = new createjs.SpriteSheet(cache.definition);
+                    cache.spriteSheet = new createjs.SpriteSheet(cache.definition);
 
                     return cache;
                 },
@@ -525,7 +525,7 @@ This component is attached to entities that will appear in the game world. It re
                 /*
                  * CreateJS Sprite created here:
                  */
-                this.sprite = new createjs.Sprite(ss.spritesheet, this.currentAnimation || 0);
+                this.sprite = new createjs.Sprite(ss.spriteSheet, this.currentAnimation || 0);
                 this.sprite.addEventListener('animationend', function (animationInstance) {
                     self.owner.trigger('animation-ended', animationInstance);
                     if (self.waitingAnimation) {

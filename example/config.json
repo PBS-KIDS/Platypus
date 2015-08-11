@@ -10,8 +10,8 @@
             {"id": "walk", "startTime": 3200,  "duration": 330},
             {"id": "jump", "startTime": 1600,  "duration": 250}
         ]}},
-        {"id": "buttons",        "src": "images/buttons.png", "data": {"spritesheet": "images/buttons.json"}},
-        {"id": "mookie",         "src": "images/mookie.png", "data": {"spritesheet": "images/mookie.json"}},
+        {"id": "buttons",        "src": "images/buttons.png", "data": {"spriteSheet": "images/buttons.json"}},
+        {"id": "mookie",         "src": "images/mookie.png", "data": {"spriteSheet": "images/mookie.json"}},
         {"id": "game-sprites",   "src": "images/game-sprites.png"},
         {"id": "title-screen",   "src": "images/title-screen.png"}
     ],

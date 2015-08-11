@@ -122,11 +122,11 @@
             /**
              * EaselJS SpriteSheet describing all the tile images.
              * 
-             * @property spritesheet
+             * @property spriteSheet
              * @type SpriteSheet
              * @default null
              */
-            spritesheet: null,
+            spriteSheet: null,
             
             /**
              * This is the height in pixels of individual tiles.
