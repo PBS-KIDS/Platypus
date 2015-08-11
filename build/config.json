@@ -72,6 +72,7 @@
 		"../src/components/RelaySelf.js",
 		"../src/components/RenderDebug.js",
 		"../src/components/RenderDestroyMe.js",
+		"../src/components/RenderProgress.js",
 		"../src/components/RenderSprite.js",
 		"../src/components/RenderTiles.js",
 		"../src/components/SceneChanger.js",

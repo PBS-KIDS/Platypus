@@ -155,7 +155,7 @@
                         /**
                          * This message is broadcast when an asset has been loaded.
                          * 
-                         * @event 'fileload'
+                         * @event 'file-load'
                          * @param load {Object} 
                          * @param load.asset {Object} Loaded asset.
                          * @param load.data {Object} Key/value pairs containing asset data. 
@@ -164,7 +164,7 @@
                          * @param load.progress {number} The number of assets finished loading.
                          * @param load.fraction {number} Value of (progress / total) provided for convenience.
                          */
-                        self.owner.trigger('fileload', {
+                        self.owner.trigger('file-load', {
                             asset:    item.asset,
                             complete: (self.progress === self.total),
                             data:     item.data,
@@ -189,27 +189,6 @@
                     this.createJSLoad(onFileLoad);
                 } else {
                     console.warn('AssetLoader: Must have SpringRoll or PreloadJS loaded to load assets.')
-                }
-            },
-
-            /**
-             * This message used to update a progress bar if one has been defined by the component's constructor.
-             * 
-             * @method 'fileload'
-             * @param progress {Object} Key/value pairs describing asset-loading progress.
-             * @param progress.fraction {number} Value of (progress / total) is used to set the width of the progress bar element.
-             */
-            "fileload": function (progress) {
-                var pb = null;
-
-                if (this.progressBar) {
-                    pb = document.getElementById(this.progressBar);
-                    if (pb) {
-                        pb = pb.style;
-
-                        pb.width = (progress.fraction * 100) + '%';
-                        pb.backgroundSize = ((1 / progress.fraction) * 100) + '%';
-                    }
                 }
             }
         },
