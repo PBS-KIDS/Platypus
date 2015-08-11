@@ -71,11 +71,11 @@ This component handles the pressed/released state of a button according to input
                 if (this.state.released && (state === 'pressed')) {
                     this.state.pressed = true;
                     this.state.released = false;
-                    this.triggerEvent(state, this.state);
+                    this.owner.triggerEvent(state, this.state);
                 } else if (this.state.pressed && (state === 'released')) {
                     this.state.pressed = false;
                     this.state.released = true;
-                    this.triggerEvent(state, this.state);
+                    this.owner.triggerEvent(state, this.state);
                 }
             }
         }
