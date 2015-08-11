@@ -580,7 +580,7 @@
                         aabb.moveX(this.worldWidth / 2);
                     } else if (this.worldWidth && this.worldWidth !== 0 && (x + aabb.halfWidth > this.worldWidth)) {
                         aabb.moveX(this.worldWidth - aabb.halfWidth);
-                    } else if (this.worldWidth && this.worldWidth !== 0 && (x < 0)) {
+                    } else if (this.worldWidth && this.worldWidth !== 0 && (x < aabb.halfWidth)) {
                         aabb.moveX(aabb.halfWidth);
                     } else {
                         aabb.moveX(x);
@@ -598,7 +598,7 @@
                         aabb.moveY(this.worldHeight / 2);
                     } else if (this.worldHeight && this.worldHeight !== 0 && (y + aabb.halfHeight > this.worldHeight)) {
                         aabb.moveY(this.worldHeight - aabb.halfHeight);
-                    } else if (this.worldHeight && this.worldHeight !== 0 && (y < 0)) {
+                    } else if (this.worldHeight && this.worldHeight !== 0 && (y < aabb.halfHeight)) {
                         aabb.moveY(aabb.halfHeight);
                     } else {
                         aabb.moveY(y);
