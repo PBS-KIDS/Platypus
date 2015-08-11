@@ -387,7 +387,7 @@
                 }
                 
                 // Update the camera's snapshot
-                this.container.updateCache('source-over');
+                this.container.updateCache();
                 
                 // Reset visibility of hidden children
                 for (i = 0; i < resets.length; i++) {
