@@ -52,6 +52,15 @@
             "height": 0,
             
             /**
+             * Whether camera overflows to cover the whole canvas or remains contained within its aspect ratio's boundary.
+             * 
+             * @property overflow
+             * @type boolean
+             * @default false
+             */
+            "overflow": false,
+            
+            /**
              * Boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
              * 
              * @property stretch
@@ -111,6 +120,7 @@
              * 
              * @property canvas
              * @type DOMElement Canvas
+             * @default null
              */
             "canvas": null,
             
@@ -752,7 +762,21 @@
                 this.window.viewportHeight = element.offsetHeight || this.worldHeight;
                 
                 if (!this.stretch) {
-                    this.worldWindow.viewportHeight = this.window.viewportHeight * this.worldWindow.viewportWidth / this.window.viewportWidth;
+                    if ((this.window.viewportWidth / this.window.viewportHeight) > (this.width / this.height)) {
+                        if (this.overflow) {
+                            this.worldWindow.viewportWidth *= this.window.viewportHeight / this.worldWindow.viewportHeight;
+                            this.worldWindow.viewportHeight = this.height;
+                        } else {
+                            this.window.viewportWidth *= this.worldWindow.viewportHeight / this.window.viewportHeight;
+                        }
+                    } else {
+                        if (this.overflow) {
+                            this.worldWindow.viewportHeight *= this.window.viewportWidth / this.worldWindow.viewportWidth;
+                            this.worldWindow.viewportWidth = this.width;
+                        } else {
+                            this.window.viewportHeight *= this.worldWindow.viewportWidth / this.window.viewportWidth;
+                        }
+                    }
                 }
                 
                 this.worldPerWindowUnitWidth  = this.worldWindow.viewportWidth   / this.window.viewportWidth;
