@@ -11,6 +11,7 @@
 		"../src/CollisionShape.js",
 		"../src/Entity.js",
 		"../src/factory.js",
+		"../src/PlatypusPlugin.js",
 		"../src/components/AIChaser.js",
 		"../src/components/AIPacer.js",
 		"../src/components/AssetLoader.js",
