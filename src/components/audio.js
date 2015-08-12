@@ -127,24 +127,28 @@
                         mute:       value.mute      || attributes.mute   || defaultSettings.mute,
                         paused:     value.paused    || attributes.paused || defaultSettings.paused,
                         complete: function () {
-                            self.onComplete(audio, next);
+                            if (audio) {
+                                self.onComplete(audio, next);
+                            }
                         }
                     });
-
-                    if (events) {
-                        audio.sequenceEvents = [];
-                        for (i = 0; i < events.length; i++) {
-                            audio.sequenceEvents.push({
-                                event: events[i].event,
-                                time: events[i].time || 0,
-                                message: events[i].message
-                            });
+                    
+                    if (audio) {
+                        if (events) {
+                            audio.sequenceEvents = [];
+                            for (i = 0; i < events.length; i++) {
+                                audio.sequenceEvents.push({
+                                    event: events[i].event,
+                                    time: events[i].time || 0,
+                                    message: events[i].message
+                                });
+                            }
+                            audio.sequenceEvents.sort(sortByTime);
                         }
-                        audio.sequenceEvents.sort(sortByTime);
+    
+                        audio.soundId = sound;
+                        this.activeAudioClips.push(audio);
                     }
-
-                    audio.soundId = sound;
-                    this.activeAudioClips.push(audio);
                 }
             };
         },
