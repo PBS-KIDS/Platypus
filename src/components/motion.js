@@ -1,7 +1,8 @@
 /**
  * This component works in tandem with the [`Mover`]("Mover"%20Component.html) component by adding a vector of motion to the entity. This component is typically created by `Mover` and doesn't need to be added separately.
  * 
- * @class "Motion" Component
+ * @namespace platypus.components
+ * @class Motion
  * @uses Component
  */
 /*global platypus */
@@ -31,7 +32,8 @@
                 getInstantState = isTrue,
                 state = self.owner.state,
                 controlState = definition.controlState,
-                instantState = definition.instantState;
+                instantState = definition.instantState,
+                instantSuccess = definition.instantSuccess;
 
             if (controlState) {
                 getActiveState = function () {
@@ -79,6 +81,9 @@
                     if (ready && enact && this.active && state) {
                         ready = false; // to insure a single instance until things are reset
                         this.move(1);
+                        if (instantSuccess) {
+                            this.owner.triggerEvent(instantSuccess);
+                        }
                     } else if (!ready && !(enact && state)) {
                         ready = true;
                         this.decay();
@@ -155,13 +160,30 @@
             
             /**
              * If instantEvent or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. Sending `true` or `{pressed: true}` makes the motion active.
+             * 
+             * @property instantEvent
+             * @type String
+             * @default ""
              */
             instantEvent: "",
             
             /**
              * If instantEvent or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instantEvent" property is also set on this component, both the event and the state must be true for the motion to be active. If "event" or "controlState" are also defined, they must also be `true` to trigger an instant motion on the entity.
+             * 
+             * @property instantState
+             * @type String
+             * @default ""
              */
             instantState: "",
+            
+            /**
+             * If instantEvent or instantState are set, this event is triggered when the intance of motion occurs on the entity.
+             * 
+             * @property instantSuccess
+             * @type String
+             * @default ""
+             */
+            instantSuccess: "",
             
             /**
              * This determines if setting active to `false` (via the control event or state) should dampen velocity. This is a ratio applied to the vector magnitude between 0 and 1. This is useful for events like jumping where a longer keypress should jump farther than a shorter keypress. Here's an example for a variable-height jump motion:
@@ -173,6 +195,10 @@
              *          instantEvent: "jump",
              *          instantDecay: 0.2
              *      }
+             * 
+             * @property instantDecay
+             * @type number
+             * @default null
              */
             instantDecay: null,
             
@@ -184,9 +210,6 @@
              * @default Vector(0, 0, 0)
              */
             vector: 0
-        },
-        
-        publicProperties: {
         },
         
         constructor: function (definition) {
@@ -206,9 +229,6 @@
             }
         },
 
-        events: {
-        },
-        
         methods: {
             move: function (delta) {
                 if (this.vector.magnitude() > this.maxMagnitude) {

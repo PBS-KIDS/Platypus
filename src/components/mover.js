@@ -1,7 +1,8 @@
 /**
  * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
  * 
- * @class "Mover" Component
+ * @namespace platypus.components
+ * @class Mover
  * @uses Component
  */
 // Requires: ["Motion", "../Vector.js"]
@@ -186,6 +187,7 @@
                         controlState: "grounded",
                         state: "jumping",
                         instantEvent: "jump",
+                        instantSuccess: "just-jumped",
                         instantDecay: 0.2
                     }).vector;
                 }
