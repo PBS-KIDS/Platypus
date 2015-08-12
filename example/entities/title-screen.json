@@ -1,7 +1,0 @@
-{
-    "id": "title-screen",
-    "components":[{
-        "type": "RenderSprite",
-        "image": "title-screen"
-    }]
-}
