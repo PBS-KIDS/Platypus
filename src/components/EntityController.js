@@ -291,7 +291,7 @@ This component listens for input messages triggered on the entity and updates th
                 }
             },
             
-            'mouseup': function (value) {
+            'pressup': function (value) {
                 this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
                 if (this.joystick) {
                     this.owner.trigger('joystick:up', value.event);
@@ -299,7 +299,7 @@ This component listens for input messages triggered on the entity and updates th
                 }
             },
             
-            'mousemove': function (value) {
+            'pressmove': function (value) {
                 if (this.actions['mouse:left-button']   && (this.actions['mouse:left-button'].over !== value.over)) {
                     this.actions['mouse:left-button'].over = value.over;
                 }
