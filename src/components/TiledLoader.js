@@ -54,6 +54,44 @@
                 resp.x = -1;
             }
             return resp;
+        },
+        // These are provided but can be overwritten by entities of the same name in the configuration.
+        standardEntityLayers = {
+            "render-layer": {
+                "id": "render-layer",
+                "components":[{
+                    "type": "RenderTiles",
+                    "spriteSheet": "import",
+                    "imageMap":    "import",
+                    "entityCache": true
+                }]
+            },
+            "collision-layer": {
+                "id": "collision-layer",
+                "components":[{
+                    "type": "CollisionTiles",
+                    "collisionMap": "import"
+                }]
+            },
+            "image-layer": {
+                "id": "image-layer",
+                "components":[{
+                    "type": "RenderTiles",
+                    "spriteSheet": "import",
+                    "imageMap":    "import"
+                }]
+            },
+            "tile-layer": {
+                "id": "tile-layer",
+                "components":[{
+                    "type": "RenderTiles",
+                    "spriteSheet": "import",
+                    "imageMap":    "import"
+                },{
+                    "type": "CollisionTiles",
+                    "collisionMap": "import"
+                }]
+            }
         };
 
     return platypus.createComponentClass({
@@ -345,7 +383,7 @@
                         }
 
                         //TODO: a bit of a hack to copy an object instead of overwrite values
-                        tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind]));
+                        tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind] || standardEntityLayers[entityKind]));
 
                         importAnimation = {};
                         importCollision = [];
@@ -488,7 +526,7 @@
                     }
                 } else if (layer.type === 'imagelayer') {
                     // set up temp tile layer to pass in image layer as if it's tiled.
-                    return createLayer('render-layer', convertImageLayer(layer));
+                    return createLayer('image-layer', convertImageLayer(layer));
                 } else if (layer.type === 'objectgroup') {
                     entityPositionX = this.entityPositionX;
                     entityPositionY = this.entityPositionY;

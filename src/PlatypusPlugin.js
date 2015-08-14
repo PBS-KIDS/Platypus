@@ -13,7 +13,13 @@
     // before the application is init. Make sure that done() is called
     // when this is complete. The display and options are available here.
     plugin.preload = function(done) {
-		var game = this.game = new platypus.Game(this.config, this.display.stage);
+		var game = null;
+        
+        if (this.options.debug) { // Set debug property on game configuration.
+            this.config.debug = true;
+        }
+        
+        game = this.game = new platypus.Game(this.config, this.display.stage);
 		
 		updateFunction = function (elapsed) {
 	        game.tick({
