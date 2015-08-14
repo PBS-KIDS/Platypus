@@ -179,6 +179,14 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				
 				if (!this.owner.node) {
 					this.owner.triggerEvent('on-node', this.owner.parent.getClosestNode([this.owner.x, this.owner.y]));
+					
+					/**
+					 * This event is triggered if the entity is placed on the map but not assigned a node. It is moved to the nearest node and "in-location" is triggered.
+					 * 
+					 * @event 'in-location'
+					 * @param entity {platypus.Entity} The entity that is in location.
+					 */
+					this.owner.triggerEvent('in-location', this.owner);
 				}
 
 				if (typeof this.owner.speed === 'number') {
