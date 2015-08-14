@@ -44,7 +44,11 @@
             
             Object.defineProperty(this, 'position', {
                 get: function () {
-                    return player.getElapsed();
+                    if (player.playing) {
+                        return player.getElapsed();
+                    } else {
+                        return 0;
+                    }
                 }
             });
         },
