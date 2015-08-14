@@ -153,9 +153,7 @@ Requires: ["Audio", "RenderSprite"]
             var i = '',
                 audioDefinition     = {
                     audioMap: {},
-                    preventOverlaps: definition.preventOverlaps,
-                    channel: definition.channel,
-                    priority: definition.priority,
+                    voiceOver: definition.voiceOver,
                     aliases:  definition.aliases
                 },
                 animationDefinition = {
