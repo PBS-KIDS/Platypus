@@ -249,7 +249,7 @@ platypus.Game = (function () {
         }
         if (this.currentScene) {
             this.currentScene.trigger('tick', tickEvent);
-            this.stage.update(tickEvent);
+            //this.stage.update(tickEvent);
         }
     };
     
