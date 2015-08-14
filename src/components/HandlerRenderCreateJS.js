@@ -201,8 +201,8 @@ A component that handles updating rendering for components that are rendering vi
                         y        = 0,
                         setXY   = function (event) {
                             originalEvent = event;
-                            x  = (event.stageX / dpr) / self.stage.scaleX + self.camera.x;
-                            y  = (event.stageY / dpr) / self.stage.scaleY + self.camera.y;
+                            x  = (event.stageX) / self.stage.scaleX + self.camera.x;
+                            y  = (event.stageY) / self.stage.scaleY + self.camera.y;
                         },
                         mousedown = function (event) {
                             setXY(event);
@@ -217,7 +217,7 @@ A component that handles updating rendering for components that are rendering vi
                             if (cameraMovementMovesMouse) {
                                 self.moveMouse = function () {
                                     setXY(originalEvent);
-                                    self.owner.trigger('mousemove', {
+                                    self.owner.trigger('pressmove', {
                                         event: event.nativeEvent,
                                         x: x,
                                         y: y,
@@ -228,7 +228,7 @@ A component that handles updating rendering for components that are rendering vi
                         },
                         mouseup = function (event) {
                             setXY(event);
-                            self.owner.trigger('mouseup', {
+                            self.owner.trigger('pressup', {
                                 event: event.nativeEvent,
                                 x: x,
                                 y: y,
@@ -241,7 +241,7 @@ A component that handles updating rendering for components that are rendering vi
                         mousemove = function (event) {
                             setXY(event);
                             if (triggerOnAllMovement || event.nativeEvent.which || event.nativeEvent.touches) {
-                                self.owner.trigger('mousemove', {
+                                self.owner.trigger('pressmove', {
                                     event: event.nativeEvent,
                                     x: x,
                                     y: y,
