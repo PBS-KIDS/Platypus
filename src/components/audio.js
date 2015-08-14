@@ -29,6 +29,7 @@
             var player   = window.springroll.Application.instance.voPlayer;
             
             this.play = function (sound, options) {
+                player.stop();
                 player.play(sound, options.complete, options.complete);
                 return this;
             };
