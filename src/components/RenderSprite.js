@@ -813,13 +813,17 @@ This component is attached to entities that will appear in the game world. It re
                         this.stateChange = false;
                     }
                     
-                    if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
-                        o = this.owner.orientationMatrix;
-                        m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
+                    if (this.pinnedTo) {
+                        
+                    } else {
+                        if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
+                            o = this.owner.orientationMatrix;
+                            m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
+                        }
+                        
+                        m.prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
                     }
-                    
-                    m.prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
-                    
+
                     // Handle rotation
                     if (rotation) {
                         m.appendTransform(0, 0, 1, 1, rotation);

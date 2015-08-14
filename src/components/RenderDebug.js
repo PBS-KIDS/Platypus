@@ -96,7 +96,7 @@ This component is attached to entities that will appear in the game world. It se
             
             this.regX = definition.regX || 0;
             this.regY = definition.regY || 0;
-            this.stage = null;
+            this.parentContainer = null;
             this.shapes = [];
             
             this.isOutdated = true;
@@ -106,8 +106,8 @@ This component is attached to entities that will appear in the game world. It se
             "handle-render-load": function (resp) {
                 if (!platypus.game.settings.debug) {
                     this.owner.removeComponent(this);
-                } else if (!this.stage && resp && resp.stage) {
-                    this.stage = resp.stage;
+                } else if (!this.parentContainer && resp && resp.container) {
+                    this.parentContainer = resp.container;
                 }
             },
             
@@ -132,7 +132,7 @@ This component is attached to entities that will appear in the game world. It se
                         this.groupShape.regX  = 0.5;
                         this.groupShape.regY  = 0.5;
                         this.groupShape.z     = (this.owner.z || 0) + 10000;
-                        this.stage.addChild(this.groupShape);
+                        this.parentContainer.addChild(this.groupShape);
                     }
                     this.groupShape.scaleX = aabb.width;
                     this.groupShape.scaleY = aabb.height;
@@ -159,7 +159,7 @@ This component is attached to entities that will appear in the game world. It se
                     shape    = null;
 
                 for (i = 0; i < this.shapes.length; i++) {
-                    this.stage.removeChild(this.shapes[i]);
+                    this.parentContainer.removeChild(this.shapes[i]);
                 }
                 this.shapes.length = 0;
 
@@ -172,20 +172,20 @@ This component is attached to entities that will appear in the game world. It se
                         
                         shape  = createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--);
                         this.shapes.push(shape);
-                        this.stage.addChild(shape);
+                        this.parentContainer.addChild(shape);
                         this.addInput(shape);
                         
                         for (i = 0; i < shapes.length; i++) {
                             shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
                             this.shapes.push(shape);
-                            this.stage.addChild(shape);
+                            this.parentContainer.addChild(shape);
                             this.addInput(shape);
                         }
                     }
                 } else {
                     shape = createShape('rectangle', 'render', width, height, width / 2, height / 2, z--);
                     this.shapes.push(shape);
-                    this.stage.addChild(shape);
+                    this.parentContainer.addChild(shape);
                     this.addInput(shape);
                 }
             },
@@ -212,10 +212,10 @@ This component is attached to entities that will appear in the game world. It se
                 var i = 0;
                 
                 for (i = 0; i < this.shapes.length; i++) {
-                    this.stage.removeChild(this.shapes[i]);
+                    this.parentContainer.removeChild(this.shapes[i]);
                 }
                 this.shapes.length = 0;
-                this.stage = undefined;
+                this.parentContainer = undefined;
             }
         }
     });
