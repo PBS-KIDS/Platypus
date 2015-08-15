@@ -1,4 +1,13 @@
+/**
+ * This plugin instantiates a Platypus game using the configuration file.
+ * 
+ * @namespace platypus
+ * @class PlatypusPlugin
+ */
+/*global platypus */
 (function(){
+    "use strict";
+    
     var plugin = new window.springroll.ApplicationPlugin(),
 	    updateFunction = null;
 
