@@ -29,8 +29,13 @@
             var player   = window.springroll.Application.instance.voPlayer;
             
             this.play = function (sound, options) {
-                player.stop();
-                player.play(sound, options.complete, options.complete);
+                var complete = options.complete;
+                
+                player.play(sound, function () {
+                    complete(false);
+                }, function () {
+                    complete(true);
+                });
                 return this;
             };
             
@@ -131,9 +136,13 @@
                         pan:        value.pan       || attributes.pan    || defaultSettings.pan,
                         mute:       value.mute      || attributes.mute   || defaultSettings.mute,
                         paused:     value.paused    || attributes.paused || defaultSettings.paused,
-                        complete: function () {
+                        complete: function (cancelled) {
                             if (audio) {
-                                self.onComplete(audio, next);
+                                if (cancelled) {
+                                    self.onComplete(audio);
+                                } else {
+                                    self.onComplete(audio, next);
+                                }
                             }
                         }
                     });
