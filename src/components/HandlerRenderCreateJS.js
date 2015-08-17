@@ -83,14 +83,11 @@ A component that handles updating rendering for components that are rendering vi
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
             if (definition.acceptInput) {
                 this.click = definition.acceptInput.click;
-                this.cameraInput = definition.acceptInput.camera;
+                this.cameraMovementMovesMouse = definition.acceptInput.camera;
                 this.hover = definition.acceptInput.hover;
                 if (this.click || this.hover) {
                     this.addInputs();
-                    this.addEventListener('camera-update', function (camera) {
-                        self.camera.x = camera.viewport.left;
-                        self.camera.y = camera.viewport.top;
-                    });
+                    this.addEventListener();
                 }
             }
 
@@ -175,7 +172,17 @@ A component that handles updating rendering for components that are rendering vi
                         
                     }
                 };
-            }())
+            }()),
+
+            "camera-update": function (camera) {
+                this.camera.x = camera.viewport.left;
+                this.camera.y = camera.viewport.top;
+
+                if (this.moveMouse) {
+                    this.moveMouse();
+                }
+            }
+
             
 /*
             "camera-update": function (cameraInfo) {
@@ -200,6 +207,7 @@ A component that handles updating rendering for components that are rendering vi
             addInputs: (function () {
                 var createHandler = function (self, eventName) {
                     return function (event) {
+
                         self.owner.trigger(eventName, {
                             event: event.nativeEvent,
                             cjsEvent: event,
@@ -207,6 +215,24 @@ A component that handles updating rendering for components that are rendering vi
                             y: (event.stageY * dpr) / self.container.scaleY + self.camera.y,
                             entity: self.owner
                         });
+
+                        if (self.cameraMovementMovesMouse) {
+                            if (eventName === 'mousedown') {
+                                // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
+                                self.moveMouse = function () {
+                                    var x = (event.stageX * dpr) / self.container.scaleX + self.camera.x,
+                                        y = (event.stageY * dpr) / self.container.scaleY + self.camera.y;
+                                    self.owner.trigger('pressmove', {
+                                        event: event.nativeEvent,
+                                        x: x,
+                                        y: y,
+                                        entity: self.owner
+                                    });
+                                };
+                            } else if (eventName === 'mouseup') {
+                                self.moveMouse = null;
+                            }
+                        }
                     };
                 };
 
@@ -347,7 +373,8 @@ A component that handles updating rendering for components that are rendering vi
                 if (this.removeStageListeners) {
                     this.removeStageListeners();
                 }
-                this.stage = null;
+
+                this.container = null;
             }
         },
         
@@ -357,8 +384,8 @@ A component that handles updating rendering for components that are rendering vi
                 //document.title = ((sp.y * dpr) / this.stage.scaleY + this.camera.y) + ', ' + ((sp.y / dpr) * this.stage.scaleY + this.camera.y) + ', ' + ((sp.y * dpr) * this.stage.scaleY + this.camera.y) + ', ';
                 
                 return {
-                    x: (sp.x * dpr) / this.stage.scaleX + this.camera.x,
-                    y: (sp.y * dpr) / this.stage.scaleY + this.camera.y
+                    x: (sp.x * dpr) / this.container.scaleX + this.camera.x,
+                    y: (sp.y * dpr) / this.container.scaleY + this.camera.y
                 };
             }
         }
