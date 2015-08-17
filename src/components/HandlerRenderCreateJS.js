@@ -72,8 +72,13 @@ A component that handles updating rendering for components that are rendering vi
         id: "HandlerRenderCreateJS",
         
         constructor: function (definition) {
+            var self = this;
             this.container = new createjs.Container();
             
+            this.camera = {
+                x: 0,
+                y: 0
+            };
             
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
             if (definition.acceptInput) {
@@ -82,16 +87,13 @@ A component that handles updating rendering for components that are rendering vi
                 this.hover = definition.acceptInput.hover;
                 if (this.click || this.hover) {
                     this.addInputs();
+                    this.addEventListener('camera-update', function (camera) {
+                        self.camera.x = camera.viewport.left;
+                        self.camera.y = camera.viewport.top;
+                    });
                 }
             }
-            
-            this.camera = {
-                left: 0,
-                top: 0,
-                width: 0,
-                height: 0
-            };
-            
+
             this.renderMessage = {
                 delta: 0,
                 container: this.container
@@ -173,11 +175,11 @@ A component that handles updating rendering for components that are rendering vi
                         
                     }
                 };
-            }()),
+            }())
             
-            //TODO: Move this to camera
+/*
             "camera-update": function (cameraInfo) {
-/*                var dpr             = (window.devicePixelRatio || 1),
+                var dpr             = (window.devicePixelRatio || 1),
                     viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
                     viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2;
                 
@@ -190,8 +192,9 @@ A component that handles updating rendering for components that are rendering vi
 
                 if (this.moveMouse) {
                     this.moveMouse(cameraInfo);
-                }*/
+                }
             }
+*/
         },
         methods: {
             addInputs: (function () {
