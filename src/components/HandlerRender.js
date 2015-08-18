@@ -183,57 +183,44 @@ A component that handles updating rendering for components that are rendering vi
                 }
             }
 
-            
-/*
-            "camera-update": function (cameraInfo) {
-                var dpr             = (window.devicePixelRatio || 1),
-                    viewportCenterX = cameraInfo.viewportLeft + cameraInfo.viewportWidth / 2,
-                    viewportCenterY = cameraInfo.viewportTop + cameraInfo.viewportHeight / 2;
-                
-                this.camera.x = cameraInfo.viewportLeft;
-                this.camera.y = cameraInfo.viewportTop;
-                this.camera.width = cameraInfo.viewportWidth;
-                this.camera.height = cameraInfo.viewportHeight;
-                
-                this.stage.setTransform((cameraInfo.viewportWidth / 2) * cameraInfo.scaleX * dpr, (cameraInfo.viewportHeight / 2) * cameraInfo.scaleY * dpr, cameraInfo.scaleX * dpr, cameraInfo.scaleY * dpr, (cameraInfo.orientation || 0) * 180 / Math.PI, 0, 0, viewportCenterX, viewportCenterY);
-
-                if (this.moveMouse) {
-                    this.moveMouse(cameraInfo);
-                }
-            }
-*/
         },
         methods: {
             addInputs: (function () {
                 var createHandler = function (self, eventName) {
                     return function (event) {
+                        var stageX = event.stageX,
+                            stageY = event.stageY,
+                            nativeEvent = event.nativeEvent,
+                            x = (stageX * dpr) / self.container.scaleX + self.camera.x,
+                            y = (stageY * dpr) / self.container.scaleY + self.camera.y;
+
+                        event.target.mouseTarget = true;
 
                         self.owner.trigger(eventName, {
-                            event: event.nativeEvent,
+                            event: nativeEvent,
                             cjsEvent: event,
-                            x: (event.stageX * dpr) / self.container.scaleX + self.camera.x,
-                            y: (event.stageY * dpr) / self.container.scaleY + self.camera.y,
+                            x: x,
+                            y: y,
                             entity: self.owner
                         });
 
                         if (self.cameraMovementMovesMouse) {
-                            if (eventName === 'mousedown') {
+                            if (eventName === 'pressup') {
+                                event.target.mouseTarget = false;
+                                self.moveMouse = null;
+                                if (event.target.removeDisplayObject) {
+                                    event.target.removeDisplayObject();
+                                }
+                            } else {
                                 // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
                                 self.moveMouse = function () {
-                                    var x = (event.stageX * dpr) / self.container.scaleX + self.camera.x,
-                                        y = (event.stageY * dpr) / self.container.scaleY + self.camera.y;
                                     self.owner.trigger('pressmove', {
-                                        event: event.nativeEvent,
-                                        x: x,
-                                        y: y,
+                                        event: nativeEvent,
+                                        x: (stageX * dpr) / self.container.scaleX + self.camera.x,
+                                        y: (stageY * dpr) / self.container.scaleY + self.camera.y,
                                         entity: self.owner
                                     });
-                                    console.log('mousemove: ' + x + ', ' + y);
                                 };
-
-                            } else if (eventName === 'pressup') {
-                                self.moveMouse = null;
-                                console.log('mouseup');
                             }
                         }
                     };
@@ -294,90 +281,17 @@ A component that handles updating rendering for components that are rendering vi
                     };
                 };
             }()),
-
-            /*
-            setupInput: (function () {
-                return function (enableTouch, triggerOnAllMovement, cameraMovementMovesMouse) {
-
-                    var self = this,
-                        originalEvent   = null,
-                        x        = 0,
-                        y        = 0,
-                        setXY   = function (event) {
-                            originalEvent = event;
-                            x  = (event.stageX) / self.stage.scaleX + self.camera.x;
-                            y  = (event.stageY) / self.stage.scaleY + self.camera.y;
-                        },
-                        mousedown = function (event) {
-                            setXY(event);
-                            self.owner.trigger('mousedown', {
-                                event: event.nativeEvent,
-                                x: x,
-                                y: y,
-                                entity: self.owner
-                            });
-
-                            // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
-                            if (cameraMovementMovesMouse) {
-                                self.moveMouse = function () {
-                                    setXY(originalEvent);
-                                    self.owner.trigger('pressmove', {
-                                        event: event.nativeEvent,
-                                        x: x,
-                                        y: y,
-                                        entity: self.owner
-                                    });
-                                };
-                            }
-                        },
-                        mouseup = function (event) {
-                            setXY(event);
-                            self.owner.trigger('pressup', {
-                                event: event.nativeEvent,
-                                x: x,
-                                y: y,
-                                entity: self.owner
-                            });
-                            if (cameraMovementMovesMouse) {
-                                self.moveMouse = null;
-                            }
-                        },
-                        mousemove = function (event) {
-                            setXY(event);
-                            if (triggerOnAllMovement || event.nativeEvent.which || event.nativeEvent.touches) {
-                                self.owner.trigger('pressmove', {
-                                    event: event.nativeEvent,
-                                    x: x,
-                                    y: y,
-                                    entity: self.owner
-                                });
-                            }
-                        };
-                    
-                    if (enableTouch) {
-                        createjs.Touch.enable(this.stage);
-                    }
-
-                    this.stage.addEventListener('stagemousedown', mousedown);
-                    this.stage.addEventListener('stagemouseup', mouseup);
-                    this.stage.addEventListener('stagemousemove', mousemove);
-                    
-                    this.removeStageListeners = function () {
-                        this.stage.removeEventListener('stagemousedown', mousedown);
-                        this.stage.removeEventListener('stagemouseup', mouseup);
-                        this.stage.removeEventListener('stagemousemove', mousemove);
-                    };
-
-                };
-            }()),
-            */
             
             destroy: function () {
-                if (this.removeStageListeners) {
-                    this.removeStageListeners();
+                var self = this;
+                if (this.container.mouseTarget) {
+                    this.container.visible = false;
+                    this.container.removeDisplayObject = function () {
+                        self.container = null;
+                    };
+                } else {
+                    this.container = null;
                 }
-
-                this.container = null;
             }
         },
         

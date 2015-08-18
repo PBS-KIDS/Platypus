@@ -841,6 +841,15 @@ This component is attached to entities that will appear in the game world. It re
                             y: (event.stageY * dpr) / self.parentContainer.scaleY + self.camera.y,
                             entity: self.owner
                         });
+
+                        if (eventName === 'pressup') {
+                            event.target.mouseTarget = false;
+                            if (event.target.removeDisplayObject) {
+                                event.target.removeDisplayObject();
+                            }
+                        } else {
+                            event.target.mouseTarget = true;
+                        }
                     };
                 };
                 
@@ -1052,17 +1061,28 @@ This component is attached to entities that will appear in the game world. It re
             }()),
             
             destroy: function () {
+                var self = this;
+
                 if (this.removeInputListeners) {
                     this.removeInputListeners();
                 }
                 if (this.parentContainer) {
-                    this.parentContainer.removeChild(this.container);
-                    this.parentContainer = null;
+                    if (this.container.mouseTarget) {
+                        this.container.visible = false;
+                        this.container.removeDisplayObject = function () {
+                            self.parentContainer.removeChild(self.container);
+                            self.parentContainer = null;
+                            self.container = null;
+                        };
+                    } else {
+                        this.parentContainer.removeChild(this.container);
+                        this.parentContainer = null;
+                        this.container = null;
+                    }
                 }
                 this.removePins();
                 this.followThroughs = null;
                 this.sprite = null;
-                this.container = null;
             }
         }
     });
