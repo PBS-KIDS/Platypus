@@ -27,6 +27,15 @@
                 };
             }
 
+            //Overriding EaselJS function to allow the tilemap to catch all clicks.
+            displayObject._getObjectsUnderPoint = function (x, y, arr, mouse, activeListener, currentDepth) {
+                if (arr) {
+                    arr.push(this);
+                } else {
+                    return this;
+                }
+                return null;
+            };
             return displayObject;
         },
         transform = {
