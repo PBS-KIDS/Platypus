@@ -834,7 +834,7 @@ This component is attached to entities that will appear in the game world. It re
             addInputs: (function () {
                 var createHandler = function (self, eventName) {
                     return function (event) {
-                       self.owner.trigger(eventName, {
+                        self.owner.trigger(eventName, {
                             event: event.nativeEvent,
                             cjsEvent: event,
                             x: (event.stageX * dpr) / self.parentContainer.scaleX + self.camera.x,
@@ -1069,7 +1069,7 @@ This component is attached to entities that will appear in the game world. It re
                 if (this.parentContainer) {
                     if (this.container.mouseTarget) {
                         this.container.visible = false;
-                        this.container.removeDisplayObject = function() {
+                        this.container.removeDisplayObject = function () {
                             self.parentContainer.removeChild(self.container);
                             self.parentContainer = null;
                             self.container = null;

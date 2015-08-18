@@ -230,7 +230,6 @@ A component that handles updating rendering for components that are rendering vi
                                 if (event.target.removeDisplayObject) {
                                     event.target.removeDisplayObject();
                                 }
-                                console.log('mouseup');
                             } else {
                                 // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
                                 self.moveMouse = function () {
@@ -240,11 +239,7 @@ A component that handles updating rendering for components that are rendering vi
                                         y: (stageY * dpr) / self.container.scaleY + self.camera.y,
                                         entity: self.owner
                                     });
-                                    console.log('c-pressmove: ' + x + ', ' + y);
                                 };
-                                if (eventName === 'pressmove') {
-                                    console.log('mousemove: ' + x + ', ' + y);
-                                }
                             }
                         }
                     };
@@ -384,9 +379,10 @@ A component that handles updating rendering for components that are rendering vi
             */
             
             destroy: function () {
+                var self = this;
                 if (this.container.mouseTarget) {
                     this.container.visible = false;
-                    this.container.removeDisplayObject = function() {
+                    this.container.removeDisplayObject = function () {
                         self.container = null;
                     };
                 } else {
