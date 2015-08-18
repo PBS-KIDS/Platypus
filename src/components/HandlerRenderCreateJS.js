@@ -217,7 +217,7 @@ A component that handles updating rendering for components that are rendering vi
                             entity: self.owner
                         });
 
-                        if (eventName === 'mousemove') {
+                        if (eventName === 'pressmove') {
                             console.log('mousemove: ' + x + ', ' + y);
                         }
 
@@ -231,7 +231,7 @@ A component that handles updating rendering for components that are rendering vi
                                         y: y,
                                         entity: self.owner
                                     });
-                                    console.log('c-mousemove: ' + x + ', ' + y);
+                                    console.log('c-pressmove: ' + x + ', ' + y);
                                 };
                             } else if (eventName === 'pressup') {
                                 self.moveMouse = null;
