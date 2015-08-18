@@ -228,9 +228,12 @@ A component that handles updating rendering for components that are rendering vi
                                         y: y,
                                         entity: self.owner
                                     });
+                                    console.log('mousemove: ' + x + ', ' + y);
                                 };
+
                             } else if (eventName === 'pressup') {
                                 self.moveMouse = null;
+                                console.log('mouseup');
                             }
                         }
                     };
