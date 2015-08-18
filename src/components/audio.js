@@ -25,7 +25,7 @@
         sortByTime = function (a, b) {
             return a.time - b.time;
         },
-        voInterface = function () {
+        VOInterface = function () {
             var player   = window.springroll.Application.instance.voPlayer;
             
             this.play = function (sound, options) {
@@ -58,7 +58,7 @@
                 }
             });
         },
-        soundInterface = function () {
+        SoundInterface = function () {
             var player = window.springroll.Application.instance.sound;
             
             this.play = function (sound, options) {
@@ -253,16 +253,7 @@
              * @type boolean
              * @default false
              */
-            voiceOver: false,
-            
-            /**
-             * Sets the priority of this component's audio. Priority determines what plays and what's interrupted when multiple sounds are triggered.
-             * 
-             * @property priority
-             * @type number
-             * @default 0
-             */
-            priority: 0
+            voiceOver: false
         },
             
         constructor: function (definition) {
@@ -276,9 +267,9 @@
             this.currentState = false;
             
             if (this.voiceOver) {
-                this.player = new voInterface();
+                this.player = new VOInterface();
             } else {
-                this.player = new soundInterface();
+                this.player = new SoundInterface();
             }
     
             if (definition.audioMap) {
@@ -364,7 +355,13 @@
             "toggle-mute": function (audioId) {
                 this.handleClip(audioId, function (clip) {
                     if (clip) {
-                        clip.options.mute = !clip.options.mute;
+                        if (clip.unmuted) {
+                            clip.volume = clip.unmuted;
+                            delete clip.unmuted;
+                        } else {
+                            clip.unmuted = clip.volume;
+                            clip.volume = 0;
+                        }
                     }
                 });
             },
