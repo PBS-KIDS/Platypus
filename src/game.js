@@ -38,10 +38,10 @@ platypus.Game = (function () {
                     
                     // Commence tween here to accommodate any delay from loading above.
                     /*window.springroll.*/setTimeout(function () {
-                        tween.get(black).wait(250).to({alpha: 0}, 500).call(function (t) {
+                        tween.get(black).to({alpha: 0}, 500).call(function (t) {
                             stage.removeChild(black);
                         });
-                    }, 1);
+                    }, 250);
                 });
             };
 

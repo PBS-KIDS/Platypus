@@ -43,31 +43,6 @@
  * @return {Entity} Returns the new entity made up of the provided components. 
 **/
 
-/** 
- * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
- * 
- * @event load
- */
-
-/**
- * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
- * 
- * @event component-added
- * @param {Component} component The added component.
- * @param {String} component.type The type of component.
- **/
-
-/**
- * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
- * 
- * @event component-removed
- * @param {Component} component The removed component.
- * @param {String} component.type The type of component. * 
- **/
-
-/*
- * Requires: ["Messenger.js"]
- */
 /*global console, platypus */
 /*jslint plusplus:true */
 platypus.Entity = (function () {
@@ -119,43 +94,63 @@ platypus.Entity = (function () {
                 }
             }
 
+            /** 
+             * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
+             * 
+             * @event load
+             */
             self.triggerEvent('load');
         },
         proto = entity.prototype = new platypus.Messenger();
     
-/**
- * Returns a string describing the entity.
- * 
- * @method toString
- * @return {String} Returns the entity type as a string of the form "[entity entity-type]".
- **/
+    /**
+    * Returns a string describing the entity.
+    * 
+    * @method toString
+    * @return {String} Returns the entity type as a string of the form "[entity entity-type]".
+    **/
     proto.toString = function () {
         return "[entity " + this.type + "]";
     };
     
-/**
- * Attaches the provided component to the entity.
- * 
- * @method addComponent
- * @param {Component} component Must be an object that functions as a [[Component]].
- * @return {Component} Returns the same object that was submitted.
- **/
+    /**
+    * Attaches the provided component to the entity.
+    * 
+    * @method addComponent
+    * @param {Component} component Must be an object that functions as a [[Component]].
+    * @return {Component} Returns the same object that was submitted.
+    **/
     proto.addComponent = function (component) {
         this.components.push(component);
+
+        /**
+         * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
+         * 
+         * @event component-added
+         * @param {Component} component The added component.
+         * @param {String} component.type The type of component.
+         **/
         this.triggerEvent('component-added', component);
         return component;
     };
     
-/**
- * Removes the mentioned component from the entity.
- * 
- * @method removeComponent
- * @param {Component} component Must be a [[Component]] attached to the entity.
- * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
- **/
+    /**
+    * Removes the mentioned component from the entity.
+    * 
+    * @method removeComponent
+    * @param {Component} component Must be a [[Component]] attached to the entity.
+    * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
+    **/
     proto.removeComponent = function (component) {
         var i = 0;
         
+        /**
+         * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
+         * 
+         * @event component-removed
+         * @param {Component} component The removed component.
+         * @param {String} component.type The type of component. * 
+         **/
         if (typeof component === 'string') {
             for (i = 0; i < this.components.length; i++) {
                 if (this.components[i].type === component) {
@@ -180,12 +175,12 @@ platypus.Entity = (function () {
         return false;
     };
     
-/**
- * This method sets one or more properties on the entity.
- * 
- * @param {Object} properties A list of key/value pairs to set as properties on the entity.
- * @method setProperty
- **/
+    /**
+    * This method sets one or more properties on the entity.
+    * 
+    * @param {Object} properties A list of key/value pairs to set as properties on the entity.
+    * @method setProperty
+    **/
     proto.setProperty = function (properties) {
         var index = '';
         
@@ -196,11 +191,11 @@ platypus.Entity = (function () {
         }
     };
     
-/**
- * This method removes all components from the entity.
- * 
- * @method destroy
- **/
+    /**
+    * This method removes all components from the entity.
+    * 
+    * @method destroy
+    **/
     proto.destroy = function () {
         var i = 0;
         

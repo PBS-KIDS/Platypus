@@ -197,10 +197,10 @@ A component that handles updating rendering for components that are rendering vi
                         //TML - This is in case we do a scene change using an event and the container is destroyed.
                         if (!self.container) {
                             return;
-                        } else {
-                            x = (stageX * dpr) / self.container.scaleX + self.camera.x,
-                            y = (stageY * dpr) / self.container.scaleY + self.camera.y;
                         }
+
+                        x = (stageX * dpr) / self.container.scaleX + self.camera.x;
+                        y = (stageY * dpr) / self.container.scaleY + self.camera.y;
 
                         event.target.mouseTarget = true;
 
