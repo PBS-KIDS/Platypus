@@ -834,6 +834,11 @@ This component is attached to entities that will appear in the game world. It re
             addInputs: (function () {
                 var createHandler = function (self, eventName) {
                     return function (event) {
+                        //TML - This is in case we do a scene change using an event and the container is destroyed.
+                        if (!self.container) {
+                            return;
+                        }
+
                         self.owner.trigger(eventName, {
                             event: event.nativeEvent,
                             cjsEvent: event,
