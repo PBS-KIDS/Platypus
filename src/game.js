@@ -35,8 +35,11 @@ platypus.Game = (function () {
                     // Make sure shape is on top:
                     stage.removeChild(black);
                     stage.addChild(black);
-                }).wait(250).to({alpha: 0}, 500).call(function (t) {
-                    stage.removeChild(black);
+                    
+                    // Commence tween here to accommodate any delay from loading above.
+                    tween.get(black).wait(250).to({alpha: 0}, 500).call(function (t) {
+                        stage.removeChild(black);
+                    });
                 });
             };
 
