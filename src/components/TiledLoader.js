@@ -1,13 +1,50 @@
 /**
  * This component is attached to a top-level entity (loaded by the [Scene](Scene.html)) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
  * 
- * ## Dependencies:
- *  - Component [[EntityContainer]] (on entity's parent) - This component uses `entity.addEntity()` on the entity, provided by `EntityContainer`.
- *  - Entity **collision-layer** - Used to create map entities corresponding with Tiled collision layers.
- *  - Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
- *  - Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
+ * This component requires an [[EntityContainer]] since it calls `entity.addEntity()` on the entity, provided by `EntityContainer`.
  * 
- * @class "TiledLoader" Component
+ * This component looks for the following entities, and if not found will load default versions:
+
+        {
+            "render-layer": {
+                "id": "render-layer",
+                "components":[{
+                    "type": "RenderTiles",
+                    "spriteSheet": "import",
+                    "imageMap":    "import",
+                    "entityCache": true
+                }]
+            },
+            "collision-layer": {
+                "id": "collision-layer",
+                "components":[{
+                    "type": "CollisionTiles",
+                    "collisionMap": "import"
+                }]
+            },
+            "image-layer": {
+                "id": "image-layer",
+                "components":[{
+                    "type": "RenderTiles",
+                    "spriteSheet": "import",
+                    "imageMap":    "import"
+                }]
+            },
+            "tile-layer": {
+                "id": "tile-layer",
+                "components":[{
+                    "type": "RenderTiles",
+                    "spriteSheet": "import",
+                    "imageMap":    "import"
+                },{
+                    "type": "CollisionTiles",
+                    "collisionMap": "import"
+                }]
+            }
+        }
+
+ * @namespace platypus.components
+ * @class TiledLoader
  * @uses Component
  */
 /*global console, platypus */
@@ -275,8 +312,8 @@
                     v = null,
                     obj = 0,
                     entity = null,
-                    entityPositionX = 0,
-                    entityPositionY = 0,
+                    entityPositionX = "",
+                    entityPositionY = "",
                     property = null,
                     entityType = '',
                     gid = -1,
