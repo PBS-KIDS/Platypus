@@ -23,7 +23,7 @@ platypus.Game = (function () {
                 var stage  = game.stage,
                     canvas = stage.canvas,
                     black  = new createjs.Shape();
-                    
+
                 black.graphics.f('#000').r(0, 0, canvas.width, canvas.height);
                 black.alpha = 0;
                 stage.addChild(black);
@@ -31,7 +31,7 @@ platypus.Game = (function () {
                 tween.get(black).to({alpha: 1}, 500).wait(250).call(function (t) {
                     load();
                     complete();
-                    
+
                     // Make sure shape is on top:
                     stage.removeChild(black);
                     stage.addChild(black);
@@ -242,7 +242,7 @@ platypus.Game = (function () {
     
     /**
     * This method causes the game to tick once. It's called automatically if the global setting `tickerOn` is `true` (default value). If this setting is `false`, `game.tick()` must be called to enact each tick.
-    * 
+    *
     * @method tick
     * @param tickEvent {Object} Key/value pairs passed on to the current scene.
     * @param tickEvent.delta {number} The time elapsed since the last tick.
@@ -259,7 +259,7 @@ platypus.Game = (function () {
     
     /**
     * Loads a scene. If there is a transition, performs the transition from the current scene to the new scene. Note that the CreateJS Tween library must be included for transitions to work; otherwise scene transitions are always instant.
-    * 
+    *
     * @method loadScene
     * @param sceneId {String} The scene to load.
     * @param transition="instant" {String} What type of transition to make. Currently there are: 'fade-to-black', 'crossfade', and 'instant'.
@@ -305,7 +305,7 @@ platypus.Game = (function () {
     
     /**
     * Sets the currentScene to the specified scene. Called by loadScene: shouldn't be called on its own.
-    * 
+    *
     * @method loadNextScene
     * @param sceneId {String} The scene to load.
     * @param [data] {Object} Data sent into the new scene from the calling scene.
@@ -328,7 +328,7 @@ platypus.Game = (function () {
     
     /**
     * Ends the transition and destroys the old scene. Called when the scene transition is finished.
-    * 
+    *
     * @method completeSceneTransition
     * @param [data] {Object} Data sent into the new scene from the calling scene.
     **/
@@ -353,7 +353,7 @@ platypus.Game = (function () {
 
     /**
     * This method will return the first entity it finds with a matching id.
-    * 
+    *
     * @method getEntityById
     * @param {string} id The entity id to find.
     * @return {Entity} Returns the entity that matches the specified entity id.
@@ -368,7 +368,7 @@ platypus.Game = (function () {
 
     /**
     * This method will return all game entities that match the provided type.
-    * 
+    *
     * @method getEntitiesByType
     * @param {String} type The entity type to find.
     * @return entities {Array} Returns the entities that match the specified entity type.
@@ -383,7 +383,7 @@ platypus.Game = (function () {
     
     /**
     * This method destroys the game.
-    * 
+    *
     * @method destroy
     **/
     proto.destroy = function () {

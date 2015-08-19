@@ -9,12 +9,12 @@ A component that handles updating rendering for components that are rendering vi
 ## Messages
 
 ### Listens for:
-- **child-entity-added** - Called when a new entity has been added to the parent and should be considered for addition to the handler. If the entity has a 'handle-render' or 'handle-render-load' message id it's added to the list of entities. Entities are sent a reference to the stage that we're rendering to, so they can add their display objects to it. 
+- **child-entity-added** - Called when a new entity has been added to the parent and should be considered for addition to the handler. If the entity has a 'handle-render' or 'handle-render-load' message id it's added to the list of entities. Entities are sent a reference to the stage that we're rendering to, so they can add their display objects to it.
   - @param entity (Object) - The entity that is being considered for addition to the handler.
 - **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list. This function also sorts the display objects in the stage according to their z value. We detect when new objects are added by keeping track of the first element. If it changes the list gets resorted. Finally the whole stage is updated by CreateJS.
-  - @param resp (object) - An object containing delta which is the time passed since the last tick. 
+  - @param resp (object) - An object containing delta which is the time passed since the last tick.
 - **camera-update** - Called when the camera moves in the world, or if the window is resized. This function sets the canvas size and the stage transform.
-  - @param cameraInfo (object) - An object containing the camera information. 
+  - @param cameraInfo (object) - An object containing the camera information.
 
 ### Local Broadcasts:
 - **mousedown** - This component captures this event on the canvas and triggers it on the entity.
@@ -22,31 +22,31 @@ A component that handles updating rendering for components that are rendering vi
   - @param over (boolean) - Whether the mouse is over the object or not.
   - @param x (number) - The x-location of the mouse in stage coordinates.
   - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
+  - @param entity ([[Entity]]) - The entity clicked on.
 - **mouseup** - This component captures this event on the canvas and triggers it on the entity.
   - @param event (event object) - The event from Javascript.
   - @param over (boolean) - Whether the mouse is over the object or not.
   - @param x (number) - The x-location of the mouse in stage coordinates.
   - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
+  - @param entity ([[Entity]]) - The entity clicked on.
 - **mousemove** - This component captures this event on the canvas and triggers it on the entity.
   - @param event (event object) - The event from Javascript.
   - @param over (boolean) - Whether the mouse is over the object or not.
   - @param x (number) - The x-location of the mouse in stage coordinates.
   - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
+  - @param entity ([[Entity]]) - The entity clicked on.
 
 ### Child Broadcasts:
 - **handle-render** - Sent to entities to run their render for the tick.
   - @param object (object) - An object containing a delta variable that is the time that's passed since the last tick.
 - **handle-render-load** - Sent to entities when they are added to the handler. Sends along the stage object so the entity can add its display objects. It also sends the parent DOM element of the canvas.
   - @param object.stage ([createjs.Stage][link2]) - The createjs stage object.
-  - @param object.parentElement (object) - The DOM parent element of the canvas. 
+  - @param object.parentElement (object) - The DOM parent element of the canvas.
 
 ## JSON Definition
     {
       "type": "HandlerRender",
-      
+
       "acceptInput": {
           //Optional - What types of input the object should take. This component defaults to not accept any input.
           "click": false, // Whether to listen for mouse events
@@ -56,7 +56,7 @@ A component that handles updating rendering for components that are rendering vi
       "autoClear": false, //By default this is set to false. If true the canvas will be cleared each tick.
       "canvasId": "bob"   //Sets the id of the canvas. The canvas defaults to having no id.
     }
-    
+
 [link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 */
@@ -66,20 +66,20 @@ A component that handles updating rendering for components that are rendering vi
     "use strict";
 
     var dpr = window.devicePixelRatio || 1;
-    
+
     return platypus.createComponentClass({
 
         id: "HandlerRender",
-        
+
         constructor: function (definition) {
             var self = this;
             this.container = new createjs.Container();
-            
+
             this.camera = {
                 x: 0,
                 y: 0
             };
-            
+
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
             if (definition.acceptInput) {
                 this.click = definition.acceptInput.click;
@@ -96,17 +96,17 @@ A component that handles updating rendering for components that are rendering vi
                 container: this.container
             };
         },
-        
+
         events: {
             /**
              * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
                 /**
                  * Once the entity is loaded, this component triggers "render-world" to notify other components about the entities' display container.
-                 * 
+                 *
                  * @event 'render-world'
                  * @param data {Object}
                  * @param data.world {createjs.Container} Contains entities to be rendered.
@@ -115,7 +115,7 @@ A component that handles updating rendering for components that are rendering vi
                     world: this.container
                 });
             },
-            
+
             "child-entity-added": function (entity) {
                 entity.triggerEvent('handle-render-load', this.renderMessage);
             },
@@ -133,12 +133,12 @@ A component that handles updating rendering for components that are rendering vi
                 var sort = function (a, b) {
                     return a.z - b.z;
                 };
-                
+
                 return function (resp) {
                     var x = 0,
                         child   = null,
                         message = this.renderMessage;
-                    
+
                     message.delta = resp.delta;
 
                     if (this.paused > 0) {
@@ -151,11 +151,11 @@ A component that handles updating rendering for components that are rendering vi
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
-                    
+
                     if (this.container) {
                         for (x = this.container.children.length - 1; x > -1; x--) {
                             child = this.container.children[x];
-                            
+
                             if (child.visible) {
                                 if (child.paused && !this.paused) {
                                     child.paused = false;
@@ -169,7 +169,7 @@ A component that handles updating rendering for components that are rendering vi
                             this.container.reorder = false;
                             this.container.sortChildren(sort);
                         }
-                        
+
                     }
                 };
             }()),
@@ -191,8 +191,16 @@ A component that handles updating rendering for components that are rendering vi
                         var stageX = event.stageX,
                             stageY = event.stageY,
                             nativeEvent = event.nativeEvent,
+                            x = 0,
+                            y = 0;
+
+                        //TML - This is in case we do a scene change using an event and the container is destroyed.
+                        if (!self.container) {
+                            return;
+                        } else {
                             x = (stageX * dpr) / self.container.scaleX + self.camera.x,
                             y = (stageY * dpr) / self.container.scaleY + self.camera.y;
+                        }
 
                         event.target.mouseTarget = true;
 
@@ -281,7 +289,7 @@ A component that handles updating rendering for components that are rendering vi
                     };
                 };
             }()),
-            
+
             destroy: function () {
                 var self = this;
                 if (this.container.mouseTarget) {
@@ -294,12 +302,12 @@ A component that handles updating rendering for components that are rendering vi
                 }
             }
         },
-        
+
         publicMethods: {
             // TODO: Move this to camera
             getWorldPointFromScreen: function (sp) {
                 //document.title = ((sp.y * dpr) / this.stage.scaleY + this.camera.y) + ', ' + ((sp.y / dpr) * this.stage.scaleY + this.camera.y) + ', ' + ((sp.y * dpr) * this.stage.scaleY + this.camera.y) + ', ';
-                
+
                 return {
                     x: (sp.x * dpr) / this.container.scaleX + this.camera.x,
                     y: (sp.y * dpr) / this.container.scaleY + this.camera.y

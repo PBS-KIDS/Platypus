@@ -1,8 +1,8 @@
 /**
  * This component uses its definition to load Audio and RenderSprite components who work in an interconnected way to render animations corresponding to one or more audio tracks.
- * 
+ *
  * In addition to its own properties, this component also accepts all properties accepted by either [[RenderSprite]] or [[Audio]] and passes them along when it creates those components.
- * 
+ *
  * @namespace platypus.components
  * @class VoiceOver
  * @uses Component
@@ -90,44 +90,44 @@
         properties: {
             /**
              * Sets the pairing between letters in the voice-over strings and the animation frame to play.
-             * 
+             *
              *       "animationMap": {
              *         "default": "mouth-closed"
              *         // Required. Specifies animation of default position.
-             *         
+             *
              *         "w": "mouth-o",
              *         "a": "mouth-aah",
              *         "t": "mouth-t"
              *         // Optional. Also list single characters that should map to a given voice-over animation frame.
              *       }
-             * 
+             *
              * @property animationMap
              * @type Object
              * @default: {"default": "default"}
              */
             animationMap: {"default": "default"},
-            
+
             /**
              * Specifies how long a described voice-over frame should last in milliseconds.
-             * 
+             *
              * @property frameLength
              * @type Number
              * @default 100
              */
             frameLength: 100,
-            
+
             /**
              * Specifies the prefix that messages between the render and Audio components should use. This will cause the audio to trigger events like "i-say-w" and "i-say-a" (characters listed in the animationMap), that the RenderSprite uses to show the proper frame.
-             * 
+             *
              * @property messagePrefix
              * @type String
              * @default "VoiceOver"
              */
             messagePrefix: "VoiceOver",
-            
+
             /**
              * This maps events to audio clips and voice over strings.
-             * 
+             *
              *      "voiceOverMap": {
              *          "message-triggered": [{
              *              "sound": "audio-id",
@@ -136,14 +136,14 @@
              *              // Optional. This string defines the voice-over sequence according to the frames defined by animationMap. Each character lasts the length specified by "frameLength" above. If not specified, voice will be the default frame.
              *          }]
              *      }
-             * 
+             *
              * @property voiceOverMap
              * @type Object
              * @default {}
              */
             voiceOverMap: {}
         },
-        
+
         constructor: function (definition) {
             var i = '',
                 audioDefinition     = {
@@ -187,7 +187,7 @@
         events: {
             /**
              * On receiving this message, this component removes itself from the entity. (It creates the [[RenderSprite]] and [[Audio]] components in its constructor.)
-             * 
+             *
              * @method 'load'
              */
             "load": function () {

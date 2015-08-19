@@ -363,7 +363,7 @@
                     
                     /**
                     * This component triggers "camera-stationary" on the entity when the camera stops moving.
-                    * 
+                    *
                     * @event 'camera-stationary'
                     **/
                     this.owner.trigger('camera-stationary', msg);
@@ -402,7 +402,7 @@
             
             /**
             * The camera listens for this event to change its world viewport size.
-            * 
+            *
             * @method 'resize'
             * @param dimensions {Object} List of key/value pairs describing new viewport size
             * @param dimensions.width {number} Width of the camera viewport
@@ -415,7 +415,7 @@
             
             /**
              * The camera listens for this event to change its position in the world.
-             * 
+             *
              * @method 'relocate'
              * @param location {Vector|Object} List of key/value pairs describing new location
              * @param location.x {number} New position along the x-axis.
@@ -429,7 +429,7 @@
             
             /**
             * On receiving this message, the camera begins following the requested object.
-            * 
+            *
             * @method 'follow'
             * @param message {Object}
             * @param message.mode {String} Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
@@ -450,7 +450,7 @@
             
             /**
             * On receiving this message, the camera will shake around its target location.
-            * 
+            *
             * @method 'shake'
             * @param shake {Object}
             * @param [shake.xMagnitude] {number} How much to move along the x axis.
