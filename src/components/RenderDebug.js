@@ -3,7 +3,7 @@
 This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in grey), if the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a [[Logic-Carrier]] component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the user to click on an object and it will print the object in the debug console. 
 
 ## Dependencies
-- [[HandlerRenderCreateJS]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
+- [[HandlerRender]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
 
 ## Messages
 

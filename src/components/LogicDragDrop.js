@@ -1,7 +1,7 @@
 /**
 # COMPONENT **LogicDragDrop**
 A component that allows an object to be dragged and dropped. Can use collision to prevent dropping the objects in certain locations.
-NOTE: HandlerRenderCreateJS and the RenderSprite used by this entity need to have their 'touch' or 'click' inputs set to true.
+NOTE: HandlerRender and the RenderSprite used by this entity need to have their 'touch' or 'click' inputs set to true.
 
 ## Dependencies
 - [[HandlerLogic]] - Listens for the handle-logic and handle-post-collision-logic calls.

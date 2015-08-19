@@ -294,7 +294,6 @@
                 var i = 0,
                     child           = null,
                     bounds          = null,
-                    dpr             = (window.devicePixelRatio || 1),
                     resets          = [],
                     msg = this.message,
                     viewport = msg.viewport;
@@ -342,7 +341,7 @@
                     msg.orientation    = this.worldCamera.orientation;
                     
                     // Transform the world to appear within camera
-                    this.world.setTransform(viewport.halfWidth * msg.scaleX * dpr, viewport.halfHeight * msg.scaleY * dpr, msg.scaleX * dpr, msg.scaleY * dpr, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
+                    this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
                     
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
@@ -362,11 +361,11 @@
                     
                 } else if (!this.stationary) {
                     
-/**
- * This component triggers "camera-stationary" on the entity when the camera stops moving.
- * 
- * @event 'camera-stationary'
- **/
+                    /**
+                    * This component triggers "camera-stationary" on the entity when the camera stops moving.
+                    *
+                    * @event 'camera-stationary'
+                    **/
                     this.owner.trigger('camera-stationary', msg);
                     this.stationary = true;
                     
@@ -401,62 +400,65 @@
                 }
             },
             
-/**
- * The camera listens for this event passed along from [[Game]] (who receives it from `window`). It adjusts the camera viewport according to the new size and position of the window.
- * 
- * @method 'resize'
- **/
-            "resize": function () {
+            /**
+            * The camera listens for this event to change its world viewport size.
+            *
+            * @method 'resize'
+            * @param dimensions {Object} List of key/value pairs describing new viewport size
+            * @param dimensions.width {number} Width of the camera viewport
+            * @param dimensions.height {number} Height of the camera viewport
+            **/
+            "resize": function (dimensions) {
+                this.worldCamera.viewport.resize(dimensions.width, dimensions.height);
                 this.resize();
             },
             
-            "relocate": function (loc) {
-                if (this.move(loc.x, loc.y)) {
+            /**
+             * The camera listens for this event to change its position in the world.
+             *
+             * @method 'relocate'
+             * @param location {Vector|Object} List of key/value pairs describing new location
+             * @param location.x {number} New position along the x-axis.
+             * @param location.y {number} New position along the y-axis.
+             */
+            "relocate": function (location) {
+                if (this.move(location.x, location.y)) {
                     this.viewportUpdate = true;
                 }
             },
-
-/**
- * The camera listens for this event passed along from [[Game]] (who receives it from `window`). It adjusts the camera viewport according to the new size and position of the window.
- * 
- * @method 'orientationchange'
- **/
-            "orientationchange": function () {
-                this.resize();
-            },
             
-/**
- * On receiving this message, the camera begins following the requested object.
- * 
- * @method 'follow'
- * @param message {Object}
- * @param message.mode {String} Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
- * @param [message.entity] {Entity} The entity that the camera should commence following.
- * @param [message.top] {number} The top of a bounding box following an entity.
- * @param [message.left] {number} The left of a bounding box following an entity.
- * @param [message.width] {number} The width of a bounding box following an entity.
- * @param [message.height] {number} The height of a bounding box following an entity.
- * @param [message.movementX] {number} Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
- * @param [message.movementY] {number} Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
- * @param [message.offsetX] {number} How far to offset the camera from the entity horizontally.
- * @param [message.offsetY] {number} How far to offset the camera from the entity vertically.
- * @param [message.time] {number} How many milliseconds to follow the entity.
- **/
+            /**
+            * On receiving this message, the camera begins following the requested object.
+            *
+            * @method 'follow'
+            * @param message {Object}
+            * @param message.mode {String} Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
+            * @param [message.entity] {Entity} The entity that the camera should commence following.
+            * @param [message.top] {number} The top of a bounding box following an entity.
+            * @param [message.left] {number} The left of a bounding box following an entity.
+            * @param [message.width] {number} The width of a bounding box following an entity.
+            * @param [message.height] {number} The height of a bounding box following an entity.
+            * @param [message.movementX] {number} Movement multiplier for focusing the camera ahead of a moving entity in the horizontal direction.
+            * @param [message.movementY] {number} Movement multiplier for focusing the camera ahead of a moving entity in the vertical direction.
+            * @param [message.offsetX] {number} How far to offset the camera from the entity horizontally.
+            * @param [message.offsetY] {number} How far to offset the camera from the entity vertically.
+            * @param [message.time] {number} How many milliseconds to follow the entity.
+            **/
             "follow": function (def) {
                 this.follow(def);
             },
             
-/**
- * On receiving this message, the camera will shake around its target location.
- * 
- * @method 'shake'
- * @param shake {Object}
- * @param [shake.xMagnitude] {number} How much to move along the x axis.
- * @param [shake.yMagnitude] {number} How much to move along the y axis.
- * @param [shake.xFrequency] {number} How quickly to shake along the x axis.
- * @param [shake.yFrequency] {number} How quickly to shake along the y axis.
- * @param [shake.time] {number} How long the camera should shake.
- **/
+            /**
+            * On receiving this message, the camera will shake around its target location.
+            *
+            * @method 'shake'
+            * @param shake {Object}
+            * @param [shake.xMagnitude] {number} How much to move along the x axis.
+            * @param [shake.yMagnitude] {number} How much to move along the y axis.
+            * @param [shake.xFrequency] {number} How quickly to shake along the x axis.
+            * @param [shake.yFrequency] {number} How quickly to shake along the y axis.
+            * @param [shake.time] {number} How long the camera should shake.
+            **/
             "shake": function (shakeDef) {
                 var def = shakeDef || {},
                     xMag    = def.xMagnitude || 0,
