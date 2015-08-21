@@ -85,6 +85,15 @@ platypus.Entity = (function () {
             }
             self.lastState = {}; //This is used to determine if the state of the entity has changed.
 
+            /**
+             * Whether this entity is no longer in use. This is useful for cleaning up connections with removed entities.
+             * 
+             * @property destroyed
+             * @type Boolean
+             * @default false
+             */
+            this.destroyed = false;
+            
             for (i = 0; i < componentDefinitions.length; i++) {
                 componentDefinition = componentDefinitions[i];
                 if (platypus.components[componentDefinition.type]) {
@@ -203,6 +212,8 @@ platypus.Entity = (function () {
             this.components[i].destroy();
         }
         this.components.length = 0;
+        
+        this.destroyed = true;
     };
     
     return entity;

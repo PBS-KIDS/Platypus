@@ -88,28 +88,33 @@ This component creates an entity and connects it with the current entity. This i
                         }
                     }
                     
-                    this.shield.x = this.owner.x;
-                    offset = this.offsetX;
-                    if (state.left) {
-                        offset *= -1;
-                        this.shield.orientation = Math.PI;
-                    } else if (state.right) {
-                        this.shield.orientation = 0;
-                    }
-                    this.shield.x += offset;
-                    
-                    this.shield.y = this.owner.y;
-                    offset = this.offsetY;
-                    if (state.top) {
-                        offset *= -1;
-                        this.shield.orientation = Math.PI / 2;
-                    } else if (state.bottom) {
-                        this.shield.orientation = -Math.PI / 2;
-                    }
-                    this.shield.y += offset;
+                    if (this.shield.destroyed) {
+                        this.owner.parent.removeEntity(this.shield);
+                        this.shield = null;
+                        this.wieldShield = false;
+                    } else {
+                        this.shield.x = this.owner.x;
+                        offset = this.offsetX;
+                        if (state.left) {
+                            offset *= -1;
+                            this.shield.orientation = Math.PI;
+                        } else if (state.right) {
+                            this.shield.orientation = 0;
+                        }
+                        this.shield.x += offset;
 
-                    this.shield.z = this.owner.z;
-                    this.shield.z += this.offsetZ;
+                        this.shield.y = this.owner.y;
+                        offset = this.offsetY;
+                        if (state.top) {
+                            offset *= -1;
+                            this.shield.orientation = Math.PI / 2;
+                        } else if (state.bottom) {
+                            this.shield.orientation = -Math.PI / 2;
+                        }
+                        this.shield.y += offset;
+
+                        this.shield.z = this.owner.z + this.offsetZ;
+                    }
                 } else if (this.shield) {
                     this.owner.parent.removeEntity(this.shield);
                     this.shield = null;
