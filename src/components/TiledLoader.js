@@ -7,7 +7,8 @@
  *  - Entity **render-layer** - Used to create map entities corresponding with Tiled render layers.
  *  - Entity **tile-layer** - Used to create map entities corresponding with Tiled collision and render layers.
  * 
- * @class "TiledLoader" Component
+ * @namespace platypus.components
+ * @class TiledLoader
  * @uses Component
  */
 /*global console, platypus */

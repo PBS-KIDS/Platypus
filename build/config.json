@@ -26,7 +26,6 @@
 		"../src/components/Counter.js",
 		"../src/components/EntityContainer.js",
 		"../src/components/EntityController.js",
-		"../src/components/Fullscreen.js",
 		"../src/components/HandlerCollision.js",
 		"../src/components/HandlerController.js",
 		"../src/components/HandlerLogic.js",
