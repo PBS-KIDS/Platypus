@@ -649,6 +649,8 @@ This component is attached to entities that will appear in the game world. It re
                     } else {
                         return;
                     }
+                } else if (!this.container) { // If this component's removal is pending
+                    return;
                 }
                 
                 this.updateSprite();
