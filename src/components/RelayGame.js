@@ -1,32 +1,10 @@
 /**
-# COMPONENT **RelayGame**
-This component listens for specified local entity messages and re-broadcasts them at the top game level.
-
-## Messages
-
-### Listens for:
-- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages.
-  - @param message (object) - accepts a message object that it will include in the new message to be triggered.
-
-### Game Broadcasts:
-- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them as new messages at the top game level.
-  - @param message (object) - sends the message object received by the original message.
-
-## JSON Definition:
-    {
-      "type": "RelayGame",
-      
-      "events": {
-      // Optional: Maps local messages to trigger global game messages. At least one of the following mappings should be included.
-        
-        "local-message-1": "global-game-message",
-        // On receiving "local-message-1", triggers "global-game-message" at the game level.
-        
-        "local-message-2": ["multiple", "messages", "to-trigger"]
-        // On receiving "local-message-2", triggers each message in the array in sequence at the game level.
-      }
-    }
-*/
+ * This component listens for specified local entity messages and re-broadcasts them at the scene level.
+ *
+ * @namespace platypus.components
+ * @class RelayGame
+ * @uses Component
+ */
 /*global platypus */
 (function () {
     "use strict";
@@ -40,14 +18,34 @@ This component listens for specified local entity messages and re-broadcasts the
     return platypus.createComponentClass({
         id: 'RelayGame',
         
+        properties: {
+            /**
+             * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event to be broadcast to the scene. The value can also be an array of events to be fired on the scene.
+             *
+             *      "events": {
+             *          "sleeping": "good-night",
+             *          "awake": ["alarm", "get-up"]
+             *      }
+             *
+             * @property events
+             * @type Object
+             * @default null
+             */
+            events: null
+        },
+
+        publicProperties: {
+
+        },
+
         constructor: function (definition) {
             var event = '';
             
             // Messages that this component listens for and then broadcasts to all layers.
-            if (definition.events) {
-                for (event in definition.events) {
-                    if (definition.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, broadcast(definition.events[event]));
+            if (this.events) {
+                for (event in this.events) {
+                    if (this.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, broadcast(this.events[event]));
                     }
                 }
             }

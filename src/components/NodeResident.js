@@ -53,6 +53,14 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
       // Optional. Determines whether the entity's orientation is updated by movement across the NodeMap. Default is false.
     }
 */
+
+/**
+ * This component connects an entity to its parent's [[NodeMap]]. It manages navigating the NodeMap and triggering events on the entity related to its position.
+ *
+ * @namespace platypus.components
+ * @class NodeResident
+ * @uses Component
+ */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {

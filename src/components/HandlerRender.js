@@ -1,65 +1,10 @@
 /**
-# COMPONENT **HandlerRender**
-A component that handles updating rendering for components that are rendering via createjs. Each tick it calls all the entities that accept 'handle-render' messages.
-
-## Dependencies
-- **Needs a 'tick' or 'render' call** - This component doesn't need a specific component, but it does require a 'tick' or 'render' call to function. It's usually used as a component of an action-layer.
-- [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas functionality.
-
-## Messages
-
-### Listens for:
-- **child-entity-added** - Called when a new entity has been added to the parent and should be considered for addition to the handler. If the entity has a 'handle-render' or 'handle-render-load' message id it's added to the list of entities. Entities are sent a reference to the stage that we're rendering to, so they can add their display objects to it.
-  - @param entity (Object) - The entity that is being considered for addition to the handler.
-- **tick, render** - Sends a 'handle-render' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list. This function also sorts the display objects in the stage according to their z value. We detect when new objects are added by keeping track of the first element. If it changes the list gets resorted. Finally the whole stage is updated by CreateJS.
-  - @param resp (object) - An object containing delta which is the time passed since the last tick.
-- **camera-update** - Called when the camera moves in the world, or if the window is resized. This function sets the canvas size and the stage transform.
-  - @param cameraInfo (object) - An object containing the camera information.
-
-### Local Broadcasts:
-- **mousedown** - This component captures this event on the canvas and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.
-- **mouseup** - This component captures this event on the canvas and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.
-- **mousemove** - This component captures this event on the canvas and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.
-
-### Child Broadcasts:
-- **handle-render** - Sent to entities to run their render for the tick.
-  - @param object (object) - An object containing a delta variable that is the time that's passed since the last tick.
-- **handle-render-load** - Sent to entities when they are added to the handler. Sends along the stage object so the entity can add its display objects. It also sends the parent DOM element of the canvas.
-  - @param object.stage ([createjs.Stage][link2]) - The createjs stage object.
-  - @param object.parentElement (object) - The DOM parent element of the canvas.
-
-## JSON Definition
-    {
-      "type": "HandlerRender",
-
-      "acceptInput": {
-          //Optional - What types of input the object should take. This component defaults to not accept any input.
-          "click": false, // Whether to listen for mouse events
-          "camera": false, // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
-          "hover": false // Whether to capture mouse movement even when there is no mouse-down.
-      },
-      "autoClear": false, //By default this is set to false. If true the canvas will be cleared each tick.
-      "canvasId": "bob"   //Sets the id of the canvas. The canvas defaults to having no id.
-    }
-
-[link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
-[link2]: http://createjs.com/Docs/EaselJS/Stage.html
-*/
+ * A component that handles updating the render components on entities that are rendering via CreateJS. Calls 'handle-render on children entities every tick. Also initializes handlers for mouse events on the layer level.
+ *
+ * @namespace platypus.components
+ * @class HandlerRender
+ * @uses Component
+ */
 /*global createjs, platypus */
 /*jslint plusplus:true */
 (function () {
@@ -71,6 +16,29 @@ A component that handles updating rendering for components that are rendering vi
 
         id: "HandlerRender",
 
+        properties: {
+            /**
+             * Indicates the types of input the Container will listen for. Defaults to none.
+             *
+             *      "acceptInput": {
+             *          "click": false, // Whether to listen for mouse/touch events
+             *          "camera": false, // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
+             *          "hover": false // Whether to capture mouse movement even when there is no mouse-down.
+             *      }
+             *
+             * @property acceptInput
+             * @type Object
+             * @default null
+             */
+            acceptInput: null
+
+        },
+
+        publicProperties: {
+
+        },
+
+
         constructor: function (definition) {
             var self = this;
             this.container = new createjs.Container();
@@ -81,10 +49,10 @@ A component that handles updating rendering for components that are rendering vi
             };
 
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-            if (definition.acceptInput) {
-                this.click = definition.acceptInput.click;
-                this.cameraMovementMovesMouse = definition.acceptInput.camera;
-                this.hover = definition.acceptInput.hover;
+            if (this.acceptInput) {
+                this.click = this.acceptInput.click;
+                this.cameraMovementMovesMouse = this.acceptInput.camera;
+                this.hover = this.acceptInput.hover;
                 if (this.click || this.hover) {
                     this.addInputs();
                     this.addEventListener();
@@ -116,39 +84,82 @@ A component that handles updating rendering for components that are rendering vi
                 });
             },
 
+            /**
+             * Called when a new entity has been added to the parent and should be considered for addition to the handler. Entities are sent a reference the Container that we're rendering to, so they can add their display objects to it and the delta from the lastest tick.
+             *
+             * @method 'child-entity-added'
+             * @param entity {Entity} The entity added to the parent.
+             */
             "child-entity-added": function (entity) {
+                /**
+                 * Triggered on an entity added to the parent.
+                 *
+                 * @event 'handle-render-load'
+                 * @param data {Object}
+                 * @param data.delta {Number} The delta time for this tick.
+                 * @param data.container {createjs.Container} The display Container the entities display objects should be added to.
+                 */
                 entity.triggerEvent('handle-render-load', this.renderMessage);
             },
-            "pause-render": function (resp) {
-                if (resp && resp.time) {
-                    this.paused = resp.time;
+
+            /**
+             * Pauses the children of this render Container. If a pause time is not provided. It remains paused until 'unpause-render' is called.
+             *
+             * @method 'pause-render'
+             * @param [data] {Object}
+             * @param data.time {Number} How long to pause.
+             */
+            "pause-render": function (timeData) {
+                if (timeData && timeData.time) {
+                    this.paused = timeData.time;
                 } else {
                     this.paused = -1;
                 }
             },
+
+            /**
+             * Unpauses the children of this render Container.
+             *
+             * @method 'pause-render'
+             */
             "unpause-render": function () {
                 this.paused = 0;
             },
+
+            /**
+             * Sends a 'handle-render' message to all the children in the Container. The children in the Container are also paused/unpaused if needed and sorted according to their z value.
+             *
+             * @method 'tick'
+             * @param tick {Object} An object containing CreateJS tick data.
+             */
             "tick": (function () {
                 var sort = function (a, b) {
                     return a.z - b.z;
                 };
 
-                return function (resp) {
+                return function (tick) {
                     var x = 0,
                         child   = null,
                         message = this.renderMessage;
 
-                    message.delta = resp.delta;
+                    message.delta = tick.delta;
 
                     if (this.paused > 0) {
-                        this.paused -= resp.delta;
+                        this.paused -= tick.delta;
                         if (this.paused < 0) {
                             this.paused = 0;
                         }
                     }
 
                     if (this.owner.triggerEventOnChildren) {
+                        /**
+                         * Triggered every tick on the children entities.
+                         *
+                         * @event 'handle-render'
+                         * @param data {Object}
+                         * @param data.delta {Number} The delta time for this tick.
+                         * @param data.container {createjs.Container} The display Container the entities display objects should be added to.
+                         */
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
 
@@ -174,9 +185,16 @@ A component that handles updating rendering for components that are rendering vi
                 };
             }()),
 
-            "camera-update": function (camera) {
-                this.camera.x = camera.viewport.left;
-                this.camera.y = camera.viewport.top;
+            /**
+             * Triggered every time the camera position or scale updates. This event triggers the 'mousemove' event if camera movement is set to trigger it. It also updates the internal record of the camera position.
+             *
+             * @method 'camera-update'
+             * @param cameraData {Object} A camera data object
+             * @param cameraData.viewport {Object | AABB} An AABB describing the location and size of the camera.
+             */
+            "camera-update": function (cameraData) {
+                this.camera.x = cameraData.viewport.left;
+                this.camera.y = cameraData.viewport.top;
 
                 if (this.moveMouse) {
                     this.moveMouse();
@@ -247,10 +265,65 @@ A component that handles updating rendering for components that are rendering vi
 
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click) {
+                        /**
+                         * Dispatched when the 'mousedown' event occurs on the container.
+                         *
+                         * @event 'mousedown'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         mousedown = createHandler(this, 'mousedown');
+                        /**
+                         * Dispatched when the 'pressmove' event occurs on the container.
+                         *
+                         * @event 'pressmove'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         pressmove = createHandler(this, 'pressmove');
+                        /**
+                         * Dispatched when the 'pressup' event occurs on the container.
+                         *
+                         * @event 'pressup'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         pressup   = createHandler(this, 'pressup');
+                        /**
+                         * Dispatched when the 'click' event occurs on the container.
+                         *
+                         * @event 'click'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         click     = createHandler(this, 'click');
+                        /**
+                         * Dispatched when the 'dblclick' event occurs on the container.
+                         *
+                         * @event 'dblclick'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         dblclick  = createHandler(this, 'dblclick');
 
                         this.container.addEventListener('mousedown', mousedown);
@@ -260,9 +333,53 @@ A component that handles updating rendering for components that are rendering vi
                         this.container.addEventListener('dblclick',  dblclick);
                     }
                     if (this.hover) {
+                        /**
+                         * Dispatched when the 'mouseover' event occurs on the container.
+                         *
+                         * @event 'mouseover'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         mouseover = createHandler(this, 'mouseover');
+                        /**
+                         * Dispatched when the 'mouseout' event occurs on the container.
+                         *
+                         * @event 'mouseout'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         mouseout  = createHandler(this, 'mouseout');
+                        /**
+                         * Dispatched when the EaselJS 'rollover' event occurs on the container.
+                         *
+                         * @event 'rollover'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The related native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         rollover  = createHandler(this, 'rollover');
+                        /**
+                         * Dispatched when the EaselJS 'rollout' event occurs on the container.
+                         *
+                         * @event 'rollout'
+                         * @param eventData {Object}
+                         * @param eventData.event {Object | DOM Event} The related native DOM event from the canvas.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.x {Number} The x location of the mouse.
+                         * @param eventData.y {Number} The y location of the mouse.
+                         * @param eventData.entity {Object} The entity that contains this component.
+                         */
                         rollout   = createHandler(this, 'rollout');
 
                         this.container.addEventListener('mouseover', mouseover);
@@ -304,15 +421,7 @@ A component that handles updating rendering for components that are rendering vi
         },
 
         publicMethods: {
-            // TODO: Move this to camera
-            getWorldPointFromScreen: function (sp) {
-                //document.title = ((sp.y * dpr) / this.stage.scaleY + this.camera.y) + ', ' + ((sp.y / dpr) * this.stage.scaleY + this.camera.y) + ', ' + ((sp.y * dpr) * this.stage.scaleY + this.camera.y) + ', ';
 
-                return {
-                    x: (sp.x * dpr) / this.container.scaleX + this.camera.x,
-                    y: (sp.y * dpr) / this.container.scaleY + this.camera.y
-                };
-            }
         }
     });
 }());

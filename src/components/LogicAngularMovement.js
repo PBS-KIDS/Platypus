@@ -1,34 +1,11 @@
 /**
-# COMPONENT **LogicAngularMovement**
-This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]].
+ * This component moves the entity in the direction of an internally stored angle value. When moving, the entity constantly accelerates the entity in a direction up to a max velocity.
+ *
+ * @namespace platypus.components
+ * @class LogicAngularMovement
+ * @uses Component
+ */
 
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
-- **set-angle** - On receiving this message, the entity adjusts its movement orientation.
-  - @param angle (number) - Number in radians to set the orientation of the entity.
-- **stop** - Stops motion until a `move` message is received.
-- **move** - Begins motion until a `stop` message is received.
-
-## JSON Definition:
-    {
-      "type": "LogicAngularMovement",
-      
-      "maxVelocity": 4.5,
-      // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 3.
-      
-      "acceleration": .04
-      // Optional. Defines how quickly the entity should accelerate. Defaults to 0.01.
-      
-      "visualOrientationOffset": 1.57
-      // Optional. Defines how much to rotate the image in addition to the movement rotation.
-    }
-*/
 /*global platypus */
 (function () {
     "use strict";
@@ -37,25 +14,71 @@ This component changes the (x, y) position of an object according to its current
         
         id: 'LogicAngularMovement',
         
+        properties: {
+            /**
+             * The max velocity.
+             *
+             * @property maxVelocity
+             * @type Number
+             * @default 3
+             */
+            maxVelocity : 3,
+
+            /**
+             * The rate of acceleration.
+             *
+             * @property acceleration
+             * @type Number
+             * @default 0.01
+             */
+            acceleration : 0.01,
+
+            /**
+             * The offset between the rotation value of the entity and the rotation of the art.
+             *
+             * @property visualOffset
+             * @type Number
+             * @default 0
+             */
+            visualOffset : 0,
+
+            /**
+             * The starting heading at which the entity will accelerate. In radians.
+             *
+             * @property startAngle
+             * @type Number
+             * @default 0
+             */
+            startAngle : 0
+        },
+
+        publicProperties: {
+
+        },
+
         constructor: function (definition) {
-            this.angle     = 0;
+            this.angle     = this.startAngle;
             this.v         = [0, 0];
-            this.maxV      = this.owner.maxVelocity  || definition.maxVelocity  || 3;
-            this.a         = this.owner.acceleration || definition.acceleration || 0.01;
             this.moving    = false;
             this.piOverTwo = Math.PI / 2;
-            this.visualOffset = definition.visualOrientationOffset || 0;
             this.owner.orientation = this.owner.orientation || this.visualOffset;
         },
 
-        events: {// These are messages that this component listens for
-            "handle-logic": function (update) {
-                var delta        = update.delta,
+        events: {
+
+            /**
+             * Updates the position, velocity, and rotation of the entity
+             *
+             * @method 'handle-logic'
+             * @param tick {Object} The CreateJS tick data.
+             */
+            "handle-logic": function (tick) {
+                var delta        = tick.delta,
                     currentAngle = 0;
                 
                 if (this.moving) {
-                    this.v[0] += this.a * Math.cos(this.angle) * delta;
-                    this.v[1] += this.a * Math.sin(this.angle) * delta;
+                    this.v[0] += this.acceleration * Math.cos(this.angle) * delta;
+                    this.v[1] += this.acceleration * Math.sin(this.angle) * delta;
                     if (this.v[0] === 0) {
                         if (this.v[1] > 0) {
                             currentAngle = this.piOverTwo;
@@ -71,32 +94,57 @@ This component changes the (x, y) position of an object according to its current
                         }
                     }
                     if (this.v[0] >= 0) {
-                        this.v[0] = Math.min(this.v[0], this.maxV * Math.cos(currentAngle));
+                        this.v[0] = Math.min(this.v[0], this.maxVelocity * Math.cos(currentAngle));
                     } else {
-                        this.v[0] = Math.max(this.v[0], this.maxV * Math.cos(currentAngle));
+                        this.v[0] = Math.max(this.v[0], this.maxVelocity * Math.cos(currentAngle));
                     }
                     if (this.v[1] >= 0) {
-                        this.v[1] = Math.min(this.v[1], this.maxV * Math.sin(currentAngle));
+                        this.v[1] = Math.min(this.v[1], this.maxVelocity * Math.sin(currentAngle));
                     } else {
-                        this.v[1] = Math.max(this.v[1], this.maxV * Math.sin(currentAngle));
+                        this.v[1] = Math.max(this.v[1], this.maxVelocity * Math.sin(currentAngle));
                     }
                     
                     this.owner.x += this.v[0];
                     this.owner.y += this.v[1];
-                    this.owner.orientation = currentAngle + this.visualOffset;
+
+                    this.owner.rotation = (currentAngle + this.visualOffset) * 180 / Math.PI;
                 }
             },
+            /**
+             * Sets the internal heading angle in the component.
+             *
+             * @method 'set-angle'
+             * @param angle {Number} The value you want to set the angle to.
+             */
             "set-angle": function (angle) {
                 this.angle = angle;
             },
+            /**
+             * Start the entity accelerating toward the heading angle.
+             *
+             * @method 'move'
+             */
             "move": function () {
                 this.moving = true;
             },
+            /**
+             * Stops the movement toward the heading angle.
+             *
+             * @method 'stop'
+             */
             "stop": function () {
                 this.moving = false;
+                this.v[0] = 0;
+                this.v[1] = 0;
             },
+            /**
+             * Set the max velocity.
+             *
+             * @method 'set-max-velocity'
+             * @param newMaxV {Number} The max velocity value.
+             */
             "set-max-velocity": function (newMaxV) {
-                this.maxV = newMaxV;
+                this.maxVelocity = newMaxV;
             }
         }
     });

@@ -1,58 +1,10 @@
 /**
-# COMPONENT **RelayLinker**
-This component allows an entity to communicate directly with one or more entities via the message model, by passing local messages directly to the linked entities as new triggered events.
-
-## Dependencies
-- [[RelayLinker]] - This component must also be on the other entities to which this entity should link, and use the same linkId.
-
-## Messages
-
-### Listens for:
-- **adopted** - On receiving this message, this component triggers an `link-entity` message to connect to any peers with a matching `linkId`.
-- **link-entity** - On receiving this message, this component checks the linkId and adds it to its list of connections if it matches.
-  - @param entity ([[Entity]]) - The entity requesting a link.
-  - @param linkId (string) - The linkId of the requesting entity. If it matches this component's linkId, the link is made.
-  - @param reciprocate (boolean) - If true, "link-entity" is in-turn called on the sending entity to make the connection both ways.
-- **unlink-entity** - This message will remove the requesting entity from this component's list of linked entities and no farther messages will be transmitted.
-  - @param entity ([[Entity]]) - The entity requesting an unlink.
-- **to-[linkId]-entities** - On receiving this message from the local entity, it is broadcast as "from-[linkId]-entities" to all linked entities.
-  - @param message (string) - The message to be triggered on connected entities.
-  - @param value (object) - The value to accompany the triggered message.
-- **from-[linkId]-entities** - A message received from connected entities: the packaged message and values are triggered on this entity.
-  - @param message (string) - The message to be triggered on this entity.
-  - @param value (object) - The value to accompany the triggered message.
-- **[events listed in JSON definition]** - on receiving these events from linked entities, the messages are re-triggered on this entity according to the JSON mapping.
-
-### Local Broadcasts:
-- **from-[linkId]-entities** - This message is broadcast on receiving "to-[linkId]-entities" from the local entity.
-  - @param message (string) - The message to be triggered on connected entities.
-  - @param value (object) - The value to accompany the triggered message.
-- **[events listed in JSON definition]** - on receiving events from linked entities, the messages are re-triggered on this entity according to the JSON mapping.
-
-### Parent Broadcasts:
-- **link-entity** - On receiving an "adopted" message, this message is triggered to connect with any peers.
-  - @param entity ([[Entity]]) - This entity.
-  - @param linkId (string) - The linkId of this component.
-  - @param reciprocate (boolean) - Set to true so that peer entities will make a two-way connection.
-
-## JSON Definition
-    {
-      "type": "RelayLinker",
-      
-      "linkId": "hero",
-      // A string setting an id that should match across all connected entities. This serves as a sort of radio channel that multiple entities can be listening on.
-      
-      "events":{
-      // This is a list of messages that this component should be listening for locally to broadcast to its linked entities.
-      
-        "sleeping": "good-night",
-        // When another component on this entity triggers "sleeping", this mapping will broadcast "good-night" to all connected entities.
-        
-        "awake": ["alarm", "get-up"]
-        // This mapping will take a local "awake" message and broadcast "alarm" and then "get-up" messages on all connected entities.
-      }
-    }
-*/
+ * Allows an entity to communicate directly with one or more entities via the message model by passing local events directly to the linked entities as new triggered events.
+ *
+ * @namespace platypus.components
+ * @class RelayLinker
+ * @uses Component
+ */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
@@ -70,20 +22,47 @@ This component allows an entity to communicate directly with one or more entitie
 
     return platypus.createComponentClass({
         id: 'RelayLinker',
+
+        properties: {
+            /**
+             * The id that defines the 'channel' the linkers are talking on. This should be matched on the entity/entities you want to talk between.
+             *
+             * @property linkId
+             * @type String
+             * @default 'linked'
+             */
+            linkId: 'linked',
+            /**
+             * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event to be broadcast to its linked entities. The value can also be an array of events to be fired on linked entities.
+             *
+             *      "events": {
+             *          "sleeping": "good-night",
+             *          "awake": ["alarm", "get-up"]
+             *      }
+             *
+             * @property events
+             * @type Object
+             * @default null
+             */
+            events: null
+        },
+
+        publicProperties: {
+
+        },
+
         constructor: function (definition) {
             var i = 0,
                 self  = this,
                 event = '';
 
-            if (definition.events) {
-                for (event in definition.events) {
-                    if (definition.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, broadcast(definition.events[event]));
+            if (this.events) {
+                for (event in this.events) {
+                    if (this.events.hasOwnProperty(event)) {
+                        this.addEventListener(event, broadcast(this.events[event]));
                     }
                 }
             }
-    
-            this.linkId = definition.linkId || this.owner.linkId || 'linked';
             
             if (!this.owner.linkId) {
                 this.owner.linkId = this.linkId;
@@ -119,38 +98,57 @@ This component allows an entity to communicate directly with one or more entitie
         },
         
         events: {
-            "adopted": function (resp) {
-                this.resolveAdoption(resp);
+
+            /**
+             * Called when the object is added to its parent, on receiving this message, the component tries to link itself with objects with the same link id.
+             *
+             * @method 'adopted'
+             * @param owner {Entity} The owner of this component.
+             */
+            "adopted": function (owner) {
+                this.resolveAdoption(owner);
             },
             
-            "link-entity": function (resp) {
+            /**
+             * On receiving this message, this component checks the linkId of the requesting entity and adds it to its list of connections if it matches.
+             *
+             * @method 'link-entity'
+             * @param toLink {Entity} The enquiring entity.
+             */
+            "link-entity": function (toLink) {
                 var i = 0,
                     already = false;
                 
-                if ((resp.linkId === this.linkId) && (resp.entity !== this.owner)) {
+                if ((toLink.linkId === this.linkId) && (toLink.entity !== this.owner)) {
                     // Make sure this link is not already in place
                     for (i = 0; i < this.links.length; i++) {
-                        if (this.links[i] === resp.entity) {
+                        if (this.links[i] === toLink.entity) {
                             already = true;
                             break;
                         }
                     }
                     
                     if (!already) {
-                        this.links.push(resp.entity);
-                        if (resp.reciprocate) {
+                        this.links.push(toLink.entity);
+                        if (toLink.reciprocate) {
                             this.linkMessage.reciprocate = false;
-                            resp.entity.trigger('link-entity', this.linkMessage);
+                            toLink.entity.trigger('link-entity', this.linkMessage);
                         }
                     }
                 }
             },
             
-            "unlink-entity": function (resp) {
+            /**
+             * Removes the requesting entity from this component's list of linked entities and no farther messages will be transmitted.
+             *
+             * @method 'unlink-entity'
+             * @param toUnlink {Entity} The enquiring entity.
+             */
+            "unlink-entity": function (toUnlink) {
                 var i = 0;
                 
                 for (i = 0; i < this.links.length; i++) {
-                    if (resp.entity === this.links[i]) {
+                    if (toUnlink.entity === this.links[i]) {
                         this.links.splice(i, 1);
                         break;
                     }
@@ -159,7 +157,7 @@ This component allows an entity to communicate directly with one or more entitie
         },
         
         methods: {
-            resolveAdoption: function (resp) {
+            resolveAdoption: function (owner) {
                 var grandparent = this.owner.parent;
                 while (grandparent.parent) {
                     grandparent = grandparent.parent;
@@ -175,6 +173,7 @@ This component allows an entity to communicate directly with one or more entitie
                     this.links[i].trigger('unlink-entity', this.linkMessage);
                 }
                 this.links.length = 0;
+                this.events = null;
             }
         }
     });
