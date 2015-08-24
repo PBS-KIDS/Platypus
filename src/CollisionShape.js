@@ -76,17 +76,6 @@ platypus.CollisionShape = (function () {
             this.aABB     = new platypus.AABB(this.x, this.y, width, height);
         },
         proto = collisionShape.prototype;
-    
-    /*
-## Methods
-- **reset** - Resets the location of the shape and AABBs so that the current and previous position are the same. The position you send should be that of the owner, the offset of the shape is added inside the function.
-  - @param ownerX (number) - The x position of the owner.
-  - @param ownerY (number) - The y position of the owner.
-- **getXOffset** - Returns the x offset of the shape.
-  - @return number - The x offset.
-- **getYOffset** - Returns the y offset of the shape.
-  - @return number - The y offset.
-*/
 
     /**
      * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.

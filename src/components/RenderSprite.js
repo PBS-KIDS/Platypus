@@ -610,6 +610,28 @@ This component is attached to entities that will appear in the game world. It re
         }()),
         
         events: {
+            /**
+             * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
+             *
+             * @method 'cache'
+             */
+            "cache": function () {
+                this.updateSprite();
+                this.owner.cacheRender = this.container;
+                if (this.owner.parent && this.owner.parent.triggerEventOnChildren) {
+
+                    /**
+                     * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
+                     *
+                     * @event 'cache-sprite'
+                     * @param entity {platypus.Entity} This component's owner.
+                     */
+                    this.owner.parent.triggerEventOnChildren('cache-sprite', this.owner);
+                } else {
+                    console.warn('Unable to cache sprite for ' + this.owner.type);
+                }
+            },
+
             "handle-render-load": function (resp) {
                 if (!this.parentContainer && resp && resp.container) {
                     this.addStage(resp.container);
