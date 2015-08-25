@@ -433,7 +433,7 @@
                     v = null;
                 
                 if (location.time && window.createjs && createjs.Tween) {
-                    v = new platypus.Vector(this.x, this.y);
+                    v = new platypus.Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
                     createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move);
                 } else {
                     if (this.move(location.x, location.y)) {
