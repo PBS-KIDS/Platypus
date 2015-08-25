@@ -639,6 +639,10 @@ This component is attached to entities that will appear in the game world. It re
             },
             
             "handle-render": function (resp) {
+                if (!this.container) { // If this component's removal is pending
+                    return;
+                }
+                
                 if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
                         if (!this.addStage(resp.container)) {
@@ -649,8 +653,6 @@ This component is attached to entities that will appear in the game world. It re
                     } else {
                         return;
                     }
-                } else if (!this.container) { // If this component's removal is pending
-                    return;
                 }
                 
                 this.updateSprite();
