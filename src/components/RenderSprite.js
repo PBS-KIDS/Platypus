@@ -393,6 +393,7 @@
         
         constructor: (function () {
             var defaultAnimations = {"default": 0},
+                self = this,
                 createSpriteSheet = function (ssDef, srcImage, entity) {
                     var i  = 0,
                         j  = null,
@@ -517,8 +518,8 @@
                                 ss.images[0].width  || entity.width || 1,
                                 ss.images[0].height || entity.height || 1,
                                 0,
-                                entity.regX         || 0,
-                                entity.regY         || 0
+                                self.regX || entity.regX || 0,
+                                self.regX || entity.regY || 0
                             ]];
                         }
                     }
