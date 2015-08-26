@@ -38,6 +38,14 @@
              * 
              * Set `button.image` to set an image or `button.spriteSheet` to set the sprite sheet.
              * 
+             * May also set a position for the button:
+             * 
+             *     {
+             *         "spriteSheet": "buttons",
+             *         "x": 0,
+             *         "y": 200
+             *     }
+             * 
              * @property button
              * @type Object
              * @default {}
@@ -72,11 +80,22 @@
                         spriteSheet: this.button.spriteSheet,
                         acceptInput: {click: true, touch: true}
                     }));
+                    if (!isNaN(this.button.x)) {
+                        this.owner.x = this.button.x;
+                    }
+                    if (!isNaN(this.button.y)) {
+                        this.owner.y = this.button.y;
+                    }
                     this.addEventListener('pressup', function () {
                         self.owner.triggerEvent('audio-ready');
                     });
                     
-                    // Let the parent know about the changes!
+                    /**
+                     * This event notifies the parent entity that this child has been updated.
+                     * 
+                     * @event 'child-entity-updated'
+                     * @param entity {platypus.Entity} This component's owner.
+                     */
                     this.owner.parent.triggerEvent("child-entity-updated", this.owner);
                 } else {
                     this.owner.triggerEvent('audio-ready');
