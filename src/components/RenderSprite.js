@@ -1,191 +1,4 @@
 /**
-# COMPONENT **RenderSprite**
-This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
-
-## Dependencies:
-- [createjs.EaselJS][link1] - This component requires the EaselJS library to be included for canvas animation functionality.
-- [[HandlerRender]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
-
-## Messages
-
-### Listens for:
-- **handle-render-load** - This event is triggered when the entity is added to the render handler before 'handle-render' is called. It adds the sprite to the Stage and sets up the mouse input if necessary.
-  - @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
-- **handle-render** - On each `handle-render` message, this component checks to see if there has been a change in the state of the entity. If so, it updates its animation play-back accordingly.
-- **state-changed** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
-  - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `state-changed` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the sprite is rendered.
-- **pin-me** - If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
-  - @param pinId (string) - Required. A string identifying the id of a pin location that the RenderSprite wants to be pinned to.
-- **attach-pin** - On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
-  - @param pinId (string) - Pin Id of the received pin location.
-  - @param container ([createjs.Container][link3]) - Container that RenderSprite should be added to.
-- **remove-pin** - On receiving this message, the component checks whether it is pinned, and if so, removes itself from the container.
-  - @param pinId (string) - Pin Id of the pin location to remove itself from.
-- **hide-sprite** - Makes the sprite invisible.
-- **show-sprite** - Makes the sprite visible.
-- **[Messages specified in definition]** - Listens for additional messages and on receiving them, begins playing the corresponding animations.
-
-### Local Broadcasts:
-- **mousedown** - This component captures this event from CreateJS and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-- **mouseup** - This component captures this event from CreateJS and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-- **mousemove** - This component captures this event from CreateJS and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-- **pressmove** - This component captures this event from CreateJS and triggers it on the entity.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-- **pin-me** - If this component should be pinned to another sprite, it will trigger this event in an attempt to initiate the pinning.
-  - @param pinId (string) - Required. A string identifying the id of a pin location that this RenderSprite wants to be pinned to.
-- **attach-pin** - This component broadcasts this message if it has a list of pins available for other sprites on the entity to attach to.
-  - @param pinId (string) - Pin Id of an available pin location.
-  - @param container ([createjs.Container][link3]) - Container that the RenderSprite should be added to.
-- **remove-pin** - When preparing to remove itself from an entity, RenderSprite broadcasts this to all attached sprites.
-  - @param pinId (string) - Pin Id of the pin location to be removed.
-
-## JSON Definition
-    {
-      "type": "RenderSprite",
-
-      "animationMap":{
-      //Optional. This defines a mapping from either triggered messages or one or more states for which to choose a new animation to play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition.
-      
-          "standing": "default-animation"
-          // On receiving a "standing" message, or a "state-changed" where message.standing == true, the "default" animation will begin playing.
-          
-          "ground,moving": "walking",
-          // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
-          
-          "ground,striking": "swing!",
-          // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
-
-          "default": "default-animation",
-          // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
-      }  
-
-      "spriteSheet": {
-      //Required for animations but optional for static sprites (where only a single frame is necessary). Defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
-
-          "images": ["example0", "example1"],
-          //Required: An array of ids of the images from the asset list in config.js.
-          
-          "frames": {
-          //Required: The dimensions of the frames on the image and how to offset them around the entity position. The image is automatically cut up into pieces based on the dimensions. 
-              "width":  100,
-            "height": 100,
-            "regY":   100,
-            "regX":   50
-          },
-          
-          "animations":{
-          //Required: The list of animation ids and the frames that make up that animation. The speed determines how long each frame plays. There are other possible parameters. Additional parameters and formatting info can be found in createJS.
-            "default-animation":[2],
-            "walking": {"frames": [0, 1, 2], "speed": 4},
-            "swing": {"frames": [3, 4, 5], "speed": 4}
-          }
-      },
-      
-      // If a sprite sheet definition is not set like shown above, this component will assume that the sprite is a static image and will use the following properties to set the source image and source size information. 
-      "image": "example0", //An image id from the asset list in config.js.
-      "x": 10,              //These set the source rectangle in the dimensions of the above image source. 
-      "y": 10,
-      "width":  100,
-      "height": 100,
-      "regY":   100,        //These specify the sprite offset from the entity's location.
-      "regX":   50,
-      
-      "mask": {
-      // Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the CreateJS graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
-          "x": 10,
-          "y": 10,
-          "width": 40,
-          "height": 40
-      },
-
-      "acceptInput": {
-      //Optional - What types of input the object should take. This component defaults to not accept any input.
-      
-          "hover": false,
-          "click": false,
-          
-          "hitArea": {
-          // Optional. A hitArea definition that determines where the image should be clickable. Defines the shape of the hitArea. A string can also be used to create more complex shapes via the CreateJS graphics API like: "hitArea": "r(10,20,40,40).dc(30,10,12)". Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
-              "x": 10,
-              "y": 10,
-              "width": 40,
-              "height": 40
-          }
-      },
-      
-      "pins": [{
-      //Optional. Specifies whether other sprites can pin themselves to this sprite. This is useful for puppet-like dynamics
-      
-        "pinId": "head",
-        //Required. How this pin location should be referred to by other sprites in order to link up.
-        
-        "x": 15,
-        "y": -30,
-        //These two values are required unless "frames" is provided below. Defines where the other sprite's regX and regY should be pinned to this sprite.
-        
-        "frames": [{"x": 12, "y": -32}, null, {"x": 12}]
-        //Alternatively, pin locations can be specified for every frame in the sprite animation by providing an array. If a given index is null or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is hidden.
-      }],
-
-      "pinTo": "body",
-      //Optional. Pin id of another sprite on this entity to pin this sprite to.
-      
-      "scaleX": 1,
-      //Optional - The X scaling factor for the image. Will default to 1.
-      
-      "scaleY": 1,
-      //Optional - The Y scaling factor for the image. Will default to 1.
-
-      "offsetZ": -1,
-      //Optional - How much the z-index of the sprite should be relative to the entity's z-index. Will default to 0.
-
-      "rotate": false,
-      //Optional - Whether this object can be rotated. It's rotational angle is set by setting an orientation value on the entity.
-      
-      "mirror": true,
-      //Optional - Whether this object can be mirrored over X. To mirror it over X set the orientation value in the logical state to be great than 90 but less than 270.
-      
-      "flip": false,
-      //Optional - Whether this object can be flipped over Y. To flip it over Y set the orientation value in the logical state to be great than 180.
-      
-      "hidden": false,
-      //Optional - Whether this object is visible or not. To change the hidden value dynamically add a 'hidden' property to the logical state object and set it to true or false.
-      
-      "eventBased": true,
-      // Optional - Specifies whether this component should listen to events matching the animationMap to animate. Set this to false if the component should animate for state changes only. Default is true.
-      
-      "stateBased": true,
-      // Optional - Specifies whether this component should listen to changes in the entity's state that match the animationMap to animate. Set this to false if the component should animate for events only. Default is true.
-      
-      "cache": false
-      //Optional - Whether this sprite should be cached into an entity with a `RenderTiles` component (like "render-layer"). The `RenderTiles` component must have its "entityCache" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
-    }
-    
-[link1]: http://www.createjs.com/Docs/EaselJS/module_EaselJS.html
-[link2]: http://createjs.com/Docs/EaselJS/Stage.html
-[link3]: http://createjs.com/Docs/EaselJS/Container.html
-*/
-
-/**
  * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
  *
  * @namespace platypus.components
@@ -523,10 +336,31 @@ This component is attached to entities that will appear in the game world. It re
              */
             rotation: 0,
 
+            /**
+             * Optional. The x position of the entity. Defaults to 0.
+             *
+             * @property x
+             * @type Number
+             * @default 0
+             */
             x: 0,
             
+            /**
+             * Optional. The y position of the entity. Defaults to 0.
+             *
+             * @property y
+             * @type Number
+             * @default 0
+             */
             y: 0,
             
+            /**
+             * Optional. The z position of the entity. Defaults to 0.
+             *
+             * @property z
+             * @type Number
+             * @default 0
+             */
             z: 0
         },
         
