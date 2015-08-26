@@ -12,8 +12,8 @@ This component is attached to entities that will appear in the game world. It re
 - **handle-render-load** - This event is triggered when the entity is added to the render handler before 'handle-render' is called. It adds the sprite to the Stage and sets up the mouse input if necessary.
   - @param message.stage ([createjs.Stage][link2]) - Required. Provides the render component with the CreateJS drawing [Stage][link2].
 - **handle-render** - On each `handle-render` message, this component checks to see if there has been a change in the state of the entity. If so, it updates its animation play-back accordingly.
-- **logical-state** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
-  - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `logical-state` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the sprite is rendered.
+- **state-changed** - This component listens for logical state changes and tests the current state of the entity against the animation map. If a match is found, the matching animation is played. Has some reserved values used for special functionality.
+  - @param message (object) - Required. Lists various states of the entity as boolean values. For example: {jumping: false, walking: true}. This component retains its own list of states and updates them as `state-changed` messages are received, allowing multiple logical components to broadcast state messages. Reserved values: 'orientation' and 'hidden'. Orientation is used to set the angle value in the object, the angle value will be interpreted differently based on what the 'rotate', 'mirror', and 'flip' properties are set to. Hidden determines whether the sprite is rendered.
 - **pin-me** - If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
   - @param pinId (string) - Required. A string identifying the id of a pin location that the RenderSprite wants to be pinned to.
 - **attach-pin** - On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
@@ -66,10 +66,10 @@ This component is attached to entities that will appear in the game world. It re
       //Optional. This defines a mapping from either triggered messages or one or more states for which to choose a new animation to play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition.
       
           "standing": "default-animation"
-          // On receiving a "standing" message, or a "logical-state" where message.standing == true, the "default" animation will begin playing.
+          // On receiving a "standing" message, or a "state-changed" where message.standing == true, the "default" animation will begin playing.
           
           "ground,moving": "walking",
-          // Comma separated values have a special meaning when evaluating "logical-state" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+          // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
           
           "ground,striking": "swing!",
           // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
@@ -184,6 +184,14 @@ This component is attached to entities that will appear in the game world. It re
 [link2]: http://createjs.com/Docs/EaselJS/Stage.html
 [link3]: http://createjs.com/Docs/EaselJS/Container.html
 */
+
+/**
+ * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
+ *
+ * @namespace platypus.components
+ * @class RenderSprite
+ * @uses Component
+ */
 /*global console, createjs, platypus */
 /*jslint plusplus:true */
 (function () {
@@ -254,7 +262,267 @@ This component is attached to entities that will appear in the game world. It re
         
         id: 'RenderSprite',
         
+        properties: {
+
+           /**
+             * spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
+             *
+             *  "spriteSheet": 'hero-image'
+             *
+             *  -OR-
+             *
+             *  "spriteSheet": {
+             *
+             *      "images": ["example0", "example1"], //Can also define 'image' and give the
+             *      "frames": {
+             *          "width":  100,
+             *          "height": 100,
+             *          "regY":   100,
+             *          "regX":   50
+             *      },
+             *      "animations":{
+             *          "default-animation":[2],
+             *          "walking": {"frames": [0, 1, 2], "speed": 4},
+             *          "swing": {"frames": [3, 4, 5], "speed": 4}
+             *      }
+             *  }
+             * @property spriteSheet
+             * @type String or Object
+             * @default null
+             */
+            spriteSheet: null,
+
+            /**
+             * Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
+             *
+             *  "animationMap":{
+             *      "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
+             *      "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+             *      "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+             *      "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+             *  }
+             *
+             *
+             * @property animationMap
+             * @type Object
+             * @default null
+             */
+            animationMap: null,
+
+            /**
+             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the CreateJS graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
+             *
+             *  "mask": {
+             *      "x": 10,
+             *      "y": 10,
+             *      "width": 40,
+             *      "height": 40
+             *  },
+             *
+             *  -OR-
+             *
+             *  "mask": "r(10,20,40,40).dc(30,10,12)"
+             *
+             * @property mask
+             * @type Object
+             * @default null
+             */
+            mask: null,
+
+            /**
+             * Optional. Defines what types of input the entity will take. Defaults to no input. A hitArea can be defined that determines where on the image should be clickable. A string can also be used to create more complex shapes via the CreateJS graphics API like: "hitArea": "r(10,20,40,40).dc(30,10,12)". Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
+             *
+             *
+             *  "acceptInput": {
+             *      "hover": false,
+             *      "click": false,
+             *      "hitArea": {
+             *          "x": 10,
+             *          "y": 10,
+             *          "width": 40,
+             *          "height": 40
+             *      }
+             *
+             *      -OR-
+             *
+             *      "hitArea": "r(10,20,40,40).dc(30,10,12)"
+             *  }
+             *
+             * @property acceptInput
+             * @type Object
+             * @default null
+             */
+            acceptInput: null,
+
+            /**
+             * Optional. Defines locations where other sprites on this entity can pin themselves to this sprite. This is useful for puppet-like dynamics. Each pin location has an id, which is used in the 'pinTo' property of another sprite to define where it connects. A pin location is defined as a set of (x,y,z) coordinates or, for moving pins, as a collection of (x,y,z) coordinates cooresponding to frames in the spritesheet. These coordinates are relative to the top-left corner of the sprite.
+             *
+             *  "pinLocations": [{
+             *      "pinId": "head",
+             *      "x": 15,
+             *      "y": -30,
+             *      "z": 1,
+             *
+             *      -AND/OR one of the following two-
+             *
+             *      "frames": {"0": {"x": 12, "y": -32}, "3": {"x": 12}}  //The keys specify the the frame to match the pin to. If a frame doesn't have coordinates or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is hidden.
+             *
+             *      "frames": [{"x": 12, "y": -32}, null, {"x": 12}]  //In this format, we assume the indexes of the array match those of the frames. If a given index is null or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is hidden.
+             *
+             *  }],
+             *
+             * @property pinLocations
+             * @type Object
+             * @default null
+             */
+            pinLocations: null,
+
+            /**
+             * Optional. Pin id of another sprite on this entity to pin this sprite to.
+             *
+             * @property pinTo
+             * @type String
+             * @default null
+             */
+            pinTo: null,
+
+            /**
+             * Optional. The offset of the z-index of the sprite from the entity's z-index. Will default to 0.
+             *
+             * @property scaleY
+             * @type Number
+             * @default 0
+             */
+            offsetZ: 0,
+
+            /**
+             * Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.
+             *
+             * @property rotate
+             * @type Boolean
+             * @default false
+             */
+            rotate: false,
+
+            /**
+             * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.
+             *
+             * @property mirror
+             * @type Boolean
+             * @default false
+             */
+            mirror: false,
+
+            /**
+             * Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.
+             *
+             * @property flip
+             * @type Boolean
+             * @default false
+             */
+            flip: false,
+
+            /**
+             * Optional. Whether this object is visible or not. To change the hidden value dynamically set this.owner.state.hidden to true or false.
+             *
+             * @property hidden
+             * @type Boolean
+             * @default false
+             */
+            hidden: false,
+
+            /**
+             * Optional. Specifies whether this component should listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is false.
+             *
+             * @property eventBased
+             * @type Boolean
+             * @default false
+             */
+            eventBased: false,
+
+            /**
+             * Optional. Specifies whether this component should listen to changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on this.owner.state. Default is true.
+             *
+             * @property stateBased
+             * @type Boolean
+             * @default true
+             */
+            stateBased: true,
+
+            /**
+             * Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like "render-layer"). The `RenderTiles` component must have its "entityCache" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
+             *
+             * @property cache
+             * @type Boolean
+             * @default false
+             */
+            cache: false,
+
+            /**
+             * Optional. When using stateBased animations, forces animations to complete before starting a new animation. Defaults to false.
+             *
+             * @property forcePlayThrough
+             * @type Boolean
+             * @default false
+             */
+            forcePlayThrough: false,
+
+            /**
+             * Optional. Ignores the opacity of the owner. Used when multiple RenderSprite components are on the same entity.
+             *
+             * @property ignoreOpacity
+             * @type Boolean
+             * @default false
+             */
+            ignoreOpacity: false
+        },
+
         publicProperties: {
+            /**
+             * Optional. The X scaling factor for the image. Defaults to 1.
+             *
+             * @property scaleX
+             * @type Number
+             * @default 1
+             */
+            scaleX: 1,
+
+            /**
+             * Optional. The Y scaling factor for the image. Defaults to 1.
+             *
+             * @property scaleY
+             * @type Number
+             * @default 1
+             */
+            scaleY: 1,
+
+            /**
+             * Optional. The X swek factor of the sprite. Defaults to 0.
+             *
+             * @property skewX
+             * @type Number
+             * @default 0
+             */
+            skewX: 0,
+
+            /**
+             * Optional. The Y skew factor for the image. Defaults to 0.
+             *
+             * @property skewY
+             * @type Number
+             * @default 0
+             */
+            skewY: 0,
+
+            /**
+             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount except when pinned or if they ignore the rotation value by setting 'rotate' to false.
+             *
+             * @property rotation
+             * @type Number
+             * @default 1
+             */
+            rotation: 0,
+
             x: 0,
             
             y: 0,
@@ -264,14 +532,15 @@ This component is attached to entities that will appear in the game world. It re
         
         constructor: (function () {
             var defaultAnimations = {"default": 0},
-                createSpriteSheet = function (def, entity) {
+                createSpriteSheet = function (ssDef, entity) {
                     var i  = 0,
+                        j  = null,
                         arr    = null,
                         image  = null,
-                        scaleX = 1,
-                        scaleY = 1,
+                        //scaleX = 1,
+                        //scaleY = 1,
                         scaled = false,
-                        srcSS  = def.spriteSheet,
+                        //srcSS  = def.spriteSheet,
                         ss     = {
                             framerate:     0,
                             images:     null,
@@ -283,6 +552,21 @@ This component is attached to entities that will appear in the game world. It re
                             spriteSheet: null
                         };
 
+                    //If spriteSheet is a string, we look it up the spritesheet data, otherwise we use the object provided.
+                    if (ssDef && typeof ssDef === 'string' && platypus.game.settings.spriteSheets[ssDef]) {
+                        ssDef = platypus.game.settings.spriteSheets[ssDef];
+                    } else if (ssDef && typeof ssDef === 'object') {
+                        //We're fine.
+                    } else {
+                        console.warn(entity.type + ' - RenderSprite : Spritesheet not defined.');
+                    }
+
+                    //If we've already created an object with this spriteSheet, used the cached version.
+                    if (typeof ssDef === 'string' && ssCache[ssDef]) {
+                        return ssCache[ssDef];
+                    }
+
+                    /*
                     // Find SS definition in image data if it has not otherwise been provided.
                     if (!srcSS && (typeof def.image === 'string')) {
                         //check cache and bail if it's available
@@ -294,7 +578,13 @@ This component is attached to entities that will appear in the game world. It re
                             srcSS.images = [platypus.assets[def.image].asset];
                         }
                     }
+                    */
 
+                    if (ssDef.framerate) {
+                        ss.framerate = ssDef.framerate;
+                    }
+
+                    /*
                     // Set framerate.
                     if (srcSS && !isNaN(srcSS.framerate)) {
                         ss.framerate = srcSS.framerate;
@@ -304,6 +594,15 @@ This component is attached to entities that will appear in the game world. It re
                         ss.framerate = entity.framerate;
                     }
 
+                    */
+
+                    if (ssDef.images && Array.isArray(ssDef.images)) {
+                        ss.images = ssDef.images.slice();
+                    } else {
+                        console.warn(entity.type + ' - RenderSprite : No source image(s) defined.');
+                    }
+
+                    /*
                     // Set source image(s)
                     if (srcSS && Array.isArray(srcSS.images)) {
                         ss.images = srcSS.images.slice();
@@ -320,6 +619,8 @@ This component is attached to entities that will appear in the game world. It re
                     } else {
                         console.warn('"' + entity.type + '" render component: No source image defined.');
                     }
+                    */
+
 
                     // Convert image names into Image resources
                     for (i = 0; i < ss.images.length; i++) {
@@ -333,14 +634,33 @@ This component is attached to entities that will appear in the game world. It re
                                 }
                             } else {
                                 if (platypus.supports.iOS) {
-                                    console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
+                                    console.warn(entity.type + ' - RenderSprite : ' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
                                 } else {
-                                    console.warn('"' + entity.type + '" render component: "' + ss.images[i] + '" is not a loaded asset.');
+                                    console.warn(entity.type + ' - RenderSprite : ' + ss.images[i] + '" is not a loaded asset.');
                                 }
                             }
                         }
                     }
 
+                    if (ssDef && ssDef.frames) {
+                        ss.frames = ssDef.frames;
+                    } else {
+                        // Assume this is a single frame image and define accordingly.
+                        image = ss.images[0];
+                        if (image) {
+                            ss.frames = [[
+                                0,
+                                0,
+                                ss.images[0].width  || entity.width,
+                                ss.images[0].height || entity.height,
+                                0,
+                                entity.regX         || 0,
+                                entity.regY         || 0
+                            ]];
+                        }
+                    }
+
+                    /*
                     // Set frames.
                     if (srcSS && srcSS.frames) {
                         ss.frames = srcSS.frames;
@@ -375,7 +695,9 @@ This component is attached to entities that will appear in the game world. It re
                             ]];
                         }
                     }
+                    */
 
+                    /*
                     // Process frames if the image size has been scaled from the original definition image. (This is sent as data on the image itself, usually due to dynamically reducing the size of source images for smaller devices.)
                     if (scaled) {
                         if (Array.isArray(ss.frames)) { //frames are an array
@@ -406,7 +728,16 @@ This component is attached to entities that will appear in the game world. It re
                             };
                         }
                     }
+                    */
 
+                    if (ssDef && ssDef.animations) {
+                        ss.animations = ssDef.animations;
+                    } else {
+                        // Assume this is a single frame image and define accordingly.
+                        ss.animations = defaultAnimations;
+                    }
+
+                    /*
                     // Set animations.
                     if (srcSS && srcSS.animations) {
                         ss.animations = srcSS.animations;
@@ -418,21 +749,22 @@ This component is attached to entities that will appear in the game world. It re
                         // assume this is a single frame image and define accordingly.
                         ss.animations = defaultAnimations;
                     }
-
+                    */
                     cache.spriteSheet = new createjs.SpriteSheet(cache.definition);
 
                     return cache;
                 },
-                createAnimationMap = function (def, ss) {
+                createAnimationMap = function (animationMap, ss) {
                     var map  = null,
                         anim = '';
 
-                    if (def.animationMap) {
-                        return def.animationMap;
+                    if (animationMap) {
+                        return animationMap;
                     } else if (Array.isArray(ss.frames) && (ss.frames.length === 1)) {
                         // This is a single frame animation, so no mapping is necessary
                         return null;
-                    } else { // create 1-to-1 animation map since none was defined
+                    } else {
+                        // Create 1-to-1 animation map since none was defined
                         map = {};
                         for (anim in ss.animations) {
                             if (ss.animations.hasOwnProperty(anim)) {
@@ -473,39 +805,20 @@ This component is attached to entities that will appear in the game world. It re
             
             return function (definition) {
                 var self = this,
-                    ss       = createSpriteSheet(definition, this.owner),
-                    map      = createAnimationMap(definition, ss.definition),
-                    initialScaleX   = definition.scaleX   || 1,
-                    initialScaleY   = definition.scaleY   || 1,
-                    initialRotation = definition.rotation || 0,
-                    initialSkewX    = definition.skewX    || 0,
-                    initialSkewY    = definition.skewY    || 0;
+                    ss       = createSpriteSheet(this.spriteSheet, this.owner),
+                    map      = createAnimationMap(this.animationMap, ss.definition);
                 
                 this.sprite     = null;
                 
                 this.parentContainer      = null;
-                this.rotate     = definition.rotate || false;
-                this.mirror     = definition.mirror || false;
-                this.flip       = definition.flip   || false;
-                this.scale      = (definition.scale !== false);
-                this.stateBased = map && (definition.stateBased !== false);
-                this.eventBased = map && (definition.eventBased !== false);
+                this.stateBased = map && this.stateBased;
+                this.eventBased = map && this.eventBased;
                 this.hover      = false;
                 this.click      = false;
-                this.touch      = false;
-
-                this.forcePlaythrough = this.owner.forcePlaythrough || definition.forcePlaythrough || false;
                 
-                if (definition.facing === 'left') {
-                    initialScaleX = -initialScaleX;
-                }
-                this.imageScaleX     = ss.definition.images[0].scaleX || 1;
-                this.imageScaleY     = ss.definition.images[0].scaleY || 1;
-                
-                if (definition.acceptInput) {
-                    this.hover = definition.acceptInput.hover || false;
-                    this.click = definition.acceptInput.click || false;
-                    this.touch = definition.acceptInput.touch || false;
+                if (this.acceptInput) {
+                    this.hover = this.acceptInput.hover || false;
+                    this.click = this.acceptInput.click || false;
                     
                     this.camera = {
                         x: 0,
@@ -540,56 +853,45 @@ This component is attached to entities that will appear in the game world. It re
                     }
                 });
                 
-                this.affine = new createjs.Matrix2D(1, 0, 0, 1).appendTransform(0, 0, initialScaleX, initialScaleY, initialRotation, initialSkewX, initialSkewY);
-
-                this.owner.scaleX   = this.owner.scaleX || this.owner.scale || 1;
-                this.owner.scaleY   = this.owner.scaleY || this.owner.scale || 1;
-                this.owner.rotation = this.owner.rotation || 0;
-                this.owner.skewX    = this.owner.skewX  || this.owner.skew  || 0;
-                this.owner.skewY    = this.owner.skewY  || this.owner.skew  || 0;
+                this.affine = new createjs.Matrix2D(1, 0, 0, 1);
                 
                 // add pins to sprite and setup this.container if needed.
-                if (definition.pins) {
+                if (this.pinLocations) {
                     this.container = new createjs.Container();
                     this.container.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
                     this.container.addChild(this.sprite);
                     this.sprite.z = 0;
 
-                    this.addPins(definition.pins, ss.definition.frames);
-                    this.sprite.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1).appendTransform(0, 0, 1 / this.imageScaleX, 1 / this.imageScaleY, 0);
+                    this.addPins(this.pinLocations, ss.definition.frames);
+                    this.sprite.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
                 } else {
                     this.container = this.sprite;
                     this.container.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
-                    this.affine.appendTransform(0, 0, 1 / this.imageScaleX, 1 / this.imageScaleY, 0);
                 }
     
                 
                 /* These next few need this.container set up */
                 
                 //handle hitArea
-                if (definition.acceptInput && definition.acceptInput.hitArea) {
-                    if (typeof definition.acceptInput.hitArea === 'string') {
-                        this.container.hitArea = this.setHitArea(definition.acceptInput.hitArea);
+                if (this.acceptInput && this.acceptInput.hitArea) {
+                    if (typeof this.acceptInput.hitArea === 'string') {
+                        this.container.hitArea = this.setHitArea(this.acceptInput.hitArea);
                     } else {
                         this.container.hitArea = this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
                     }
                 }
                 
-                //handle mask
-                if (definition.mask || this.owner.mask) {
-                    this.container.mask = this.setMask(definition.mask || this.owner.mask);
+                //Handle mask
+                if (this.mask) {
+                    this.container.mask = this.setMask(this.mask);
                 }
     
                 // pin to another RenderSprite
-                this.pinTo = definition.pinTo || false;
                 if (this.pinTo) {
                     this.owner.triggerEvent('pin-me', this.pinTo);
                 }
-                
-                this.offsetZ = definition.offsetZ || 0;
 
-                this.container.hidden = definition.hidden || false;
-                this.ignoreOpacity = definition.ignoreOpacity || false;
+                this.container.hidden = this.hidden;
                 this.state = this.owner.state;
                 this.stateChange = false;
                 this.lastState = -1;
@@ -602,7 +904,7 @@ This component is attached to entities that will appear in the game world. It re
                 //Check state against entity's prior state to update animation if necessary on instantiation.
                 this.stateChange = true;
                 
-                if (definition.cache) {
+                if (this.cache) {
                     this.updateSprite();
                     this.owner.cacheRender = this.container;
                 }
@@ -632,16 +934,30 @@ This component is attached to entities that will appear in the game world. It re
                 }
             },
 
-            "handle-render-load": function (resp) {
-                if (!this.parentContainer && resp && resp.container) {
-                    this.addStage(resp.container);
+            /**
+             * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
+             *
+             * @method 'handle-render-load'
+             * @param handlerData {Object} Data from the render handler
+             * @param handlerData.container {createjs.Container} The parent container.
+             */
+            "handle-render-load": function (handlerData) {
+                if (!this.parentContainer && handlerData && handlerData.container) {
+                    this.addStage(handlerData.container);
                 }
             },
             
-            "handle-render": function (resp) {
+            /**
+             * The render update message. This updates the sprite. If a sprite doesn't have a container, it's removed.
+             *
+             * @method 'handle-render'
+             * @param renderData {Object} Data from the render handler
+             * @param renderData.container {createjs.Container} The parent container.
+             */
+            "handle-render": function (renderData) {
                 if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
-                        if (!this.addStage(resp.container)) {
+                        if (!this.addStage(renderData.container)) {
                             console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
                             this.owner.removeComponent(this);
                             return;
@@ -654,24 +970,59 @@ This component is attached to entities that will appear in the game world. It re
                 this.updateSprite();
             },
             
-            "logical-state": function (state) {
+            /**
+             * This event is fired when the entity state changes. This is used to update the currently playing animation when it is state based.
+             *
+             * @method 'state-changed'
+             */
+            "state-changed": function () {
                 this.stateChange = true;
             },
             
+            /**
+             * This event hides the sprite. When multiple sprites are pinned together, the entire group is hidden.
+             *
+             * @method 'hide-sprite'
+             */
             "hide-sprite": function () {
                 this.container.hidden = true;
             },
 
+            /**
+             * This event shows a hidden sprite. When multiple sprites are pinned together, the entire group is shown.
+             *
+             * @method 'show-sprite'
+             */
             "show-sprite": function () {
                 this.container.hidden = false;
             },
             
+            /**
+             * If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
+             *
+             * @method 'pin-me'
+             * @param pinId {String} The id of the pin location we're trying to attach to.
+             */
             "pin-me": function (pinId) {
                 if (this.pins && this.pins[pinId]) {
+                    /**
+                     * Called by "pin-me", this event is responding to the inquiring component with the information about the pin it should attach to.
+                     *
+                     * @event 'attach-pin'
+                     * @param pinInfo {Object} Information about the pin.
+                     */
                     this.owner.trigger("attach-pin", this.pins[pinId]);
                 }
             },
             
+            /**
+             * On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
+             *
+             * @method 'attach-pin'
+             * @param pinInfo {Object} Information about the pin.
+             * @param pinInfo.pinId {String} The pin id.
+             * @param pinInfo.container {createjs.Container} The container to add this sprite to.
+             */
             "attach-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
                     this.parentContainer = pinInfo.container;
@@ -681,6 +1032,14 @@ This component is attached to entities that will appear in the game world. It re
                 }
             },
             
+            /**
+             * On receiving this message, the component checks whether it is pinned to the specified pin. If so, it removes itself from the container.
+             *
+             * @method 'remove-pin'
+             * @param pinInfo {Object} Information about the pin.
+             * @param pinInfo.pinId {String} The pin id.
+             * @param pinInfo.container {createjs.Container} The container to add this sprite to.
+             */
             "remove-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
                     this.parentContainer.removeChild(this.container);
@@ -689,22 +1048,44 @@ This component is attached to entities that will appear in the game world. It re
                 }
             },
             
+            /**
+             * This event dispatches a createjs.Event on this component's createjs.Sprite. Useful for rerouting mouse/keyboard events.
+             *
+             * @method 'dispatch-event'
+             * @param event {Object | createjs.Event} The event to dispatch.
+             */
             "dispatch-event": function (event) {
                 this.sprite.dispatchEvent(event);
             },
             
+            /**
+             * Adds input event listeners to the sprite, enabling input.
+             *
+             * @method 'input-on'
+             */
             "input-on": function () {
                 if (!this.removeInputListeners) {
                     this.addInputs();
                 }
             },
             
+            /**
+             * Removes the input event listeners on the sprite, disabling input.
+             *
+             * @method 'input-off'
+             */
             "input-off": function () {
                 if (this.removeInputListeners) {
                     this.removeInputListeners();
                 }
             },
             
+            /**
+             * Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.
+             *
+             * @method 'set-mask'
+             * @param mask {Object} The mask. This can specified the same way as the 'mask' parameter on the component.
+             */
             "set-mask": function (mask) {
                 if (mask) {
                     this.container.mask = this.setMask(mask);
@@ -775,7 +1156,7 @@ This component is attached to entities that will appear in the game world. It re
                         x = this.owner.x;
                         y = this.owner.y;
                         if (this.rotate) {
-                            rotation = this.owner.rotation;
+                            rotation = this.rotation;
                         }
                         if (this.container.z !== (this.owner.z + this.offsetZ)) {
                             if (this.parentContainer) {
@@ -795,7 +1176,7 @@ This component is attached to entities that will appear in the game world. It re
                     }
                     
                     if (this.mirror || this.flip) {
-                        angle = ((this.owner.orientation * 180) / Math.PI + 360) % 360;
+                        angle = this.rotation % 360;
                         
                         if (this.mirror && (angle > 90) && (angle < 270)) {
                             mirrored = -1;
@@ -843,7 +1224,7 @@ This component is attached to entities that will appear in the game world. It re
                             m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
                         }
                         
-                        m.prependTransform(x, y, this.owner.scaleX * mirrored, this.owner.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
+                        m.prependTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
                     }
 
                     // Handle rotation
@@ -892,7 +1273,7 @@ This component is attached to entities that will appear in the game world. It re
                         dblclick  = null;
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-                    if (this.click || this.touch) {
+                    if (this.click) {
                         mousedown = createHandler(this, 'mousedown');
                         pressmove = createHandler(this, 'pressmove');
                         pressup   = createHandler(this, 'pressup');
@@ -919,7 +1300,7 @@ This component is attached to entities that will appear in the game world. It re
                     }
 
                     this.removeInputListeners = function () {
-                        if (this.click || this.touch) {
+                        if (this.click) {
                             this.sprite.removeEventListener('mousedown', mousedown);
                             this.sprite.removeEventListener('pressmove', pressmove);
                             this.sprite.removeEventListener('pressup',   pressup);
@@ -953,8 +1334,8 @@ This component is attached to entities that will appear in the game world. It re
                     this.pinsToRemove.push(pins[i].pinId);
 
                     if (isArray) {
-                        regX = (frames[0][5] || 0) / this.imageScaleX;
-                        regY = (frames[0][6] || 0) / this.imageScaleY;
+                        regX = frames[0][5] || 0;
+                        regY = frames[0][6] || 0;
                     }
                     
                     this.pins[pins[i].pinId] = pin = {
@@ -962,6 +1343,7 @@ This component is attached to entities that will appear in the game world. It re
                         sprite: this.sprite,
                         container: this.container
                     };
+
                     if ((typeof pins[i].x === 'number') && (typeof pins[i].y === 'number')) {
                         pin.defaultPin = {
                             x: (pins[i].x - regX),
@@ -973,11 +1355,11 @@ This component is attached to entities that will appear in the game world. It re
                     
                     if (pins[i].frames) {
                         pin.frames = [];
-                        for (j = 0; j < pins[i].frames.length; j++) {
+                        for (j in pins[i].frames){
                             if (pins[i].frames[j]) {
                                 if (isArray) {
-                                    regX = (frames[j][5] || 0) / this.imageScaleX;
-                                    regY = (frames[j][6] || 0) / this.imageScaleY;
+                                    regX = frames[j][5] || 0;
+                                    regY = frames[j][6] || 0;
                                 }
                                 if ((typeof pins[i].frames[j].x === 'number') && (typeof pins[i].frames[j].y === 'number')) {
                                     pin.frames.push({
@@ -1012,6 +1394,12 @@ This component is attached to entities that will appear in the game world. It re
                             }
                         }
                     }
+                    /**
+                     * This event is triggered for each pin created. It is intended for other RenderSprite components looking to pin to this pin.
+                     *
+                     * @event 'attach-pin'
+                     * @param pin {Object} The created pin.
+                     */
                     this.owner.trigger('attach-pin', pin);
                 }
             },

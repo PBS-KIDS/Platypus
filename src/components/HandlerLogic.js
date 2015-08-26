@@ -264,16 +264,16 @@
                              */
                              
                             /**
-                             * Triggered on entities when their logical state has been changed.
+                             * Triggered on entities when the entity's state has been changed.
                              * 
-                             * @event 'logical-state'
+                             * @event 'state-changed'
                              * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
                              */
                             for (j = this.activeEntities.length - 1; j > -1; j--) {
                                 child = this.activeEntities[j];
                                 child.triggerEvent('handle-post-collision-logic', this.message);
                                 if (updateState(child)) {
-                                    child.triggerEvent('logical-state', child.state);
+                                    child.triggerEvent('state-changed', child.state);
                                 }
                             }
 
@@ -285,7 +285,7 @@
                             for (j = this.activeEntities.length - 1; j > -1; j--) {
                                 child = this.activeEntities[j];
                                 if (updateState(child)) {
-                                    child.triggerEvent('logical-state', child.state);
+                                    child.triggerEvent('state-changed', child.state);
                                 }
                             }
                         }

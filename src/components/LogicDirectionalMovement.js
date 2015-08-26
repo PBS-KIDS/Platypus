@@ -16,7 +16,7 @@ This component changes the (x, y) position of an object according to its current
   - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
 
 ### Local Broadcasts:
-- **logical-state** - this component will trigger this message when its movement or direction changes. Note that directions are not mutually exclusive: adjacent directions can both be true, establishing that the entity is facing a diagonal direction.
+- **state-changed** - this component will trigger this message when its movement or direction changes. Note that directions are not mutually exclusive: adjacent directions can both be true, establishing that the entity is facing a diagonal direction.
   - @param message.moving (boolean) - whether the entity is in motion.
   - @param message.left (boolean)   - whether the entity is facing left.
   - @param message.right (boolean)  - whether the entity is facing right.
@@ -95,7 +95,7 @@ This component changes the (x, y) position of an object according to its current
                 } else {
                     this.pausers = definition.pause;
                 }
-                this.addEventListener('logical-state', function (state) {
+                this.addEventListener('state-changed', function (state) {
                     var i = 0,
                         paused = false;
                     
