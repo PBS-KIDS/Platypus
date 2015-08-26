@@ -86,6 +86,24 @@
              */
             image: null,
 
+            /**
+             * The x registration point of the image. Used when you don't a spritesheet and are using the image property.
+             *
+             * @property regX
+             * @type Number
+             * @default 0
+             */
+            regX: 0,
+
+            /**
+             * The y registration point of the image. Used when you don't a spritesheet and are using the image property.
+             *
+             * @property regY
+             * @type Number
+             * @default 0
+             */
+            regY: 0,
+
            /**
              * spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
              *
@@ -496,8 +514,8 @@
                             ss.frames = [[
                                 0,
                                 0,
-                                ss.images[0].width  || entity.width,
-                                ss.images[0].height || entity.height,
+                                ss.images[0].width  || entity.width || 1,
+                                ss.images[0].height || entity.height || 1,
                                 0,
                                 entity.regX         || 0,
                                 entity.regY         || 0
