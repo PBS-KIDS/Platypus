@@ -77,6 +77,15 @@
         
         properties: {
 
+            /**
+             * The id of the image. Unless otherwise defined the image id is the the name of the image. image is only used when there is no spritesheet. It is useful for files containing a single image.
+             *
+             * @property image
+             * @type String
+             * @default null
+             */
+            image: null,
+
            /**
              * spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
              *
@@ -366,7 +375,7 @@
         
         constructor: (function () {
             var defaultAnimations = {"default": 0},
-                createSpriteSheet = function (ssDef, entity) {
+                createSpriteSheet = function (ssDef, srcImage, entity) {
                     var i  = 0,
                         j  = null,
                         arr    = null,
@@ -391,8 +400,10 @@
                         ssDef = platypus.game.settings.spriteSheets[ssDef];
                     } else if (ssDef && typeof ssDef === 'object') {
                         //We're fine.
+                    } else if (srcImage) {
+                        ssDef = {"images": [srcImage]};
                     } else {
-                        console.warn(entity.type + ' - RenderSprite : Spritesheet not defined.');
+                        console.warn(entity.type + ' - RenderSprite : Neither spriteSheet nor image defined.');
                     }
 
                     //If we've already created an object with this spriteSheet, used the cached version.
@@ -639,7 +650,7 @@
             
             return function (definition) {
                 var self = this,
-                    ss       = createSpriteSheet(this.spriteSheet, this.owner),
+                    ss       = createSpriteSheet(this.spriteSheet, this.image, this.owner),
                     map      = createAnimationMap(this.animationMap, ss.definition);
                 
                 this.sprite     = null;
