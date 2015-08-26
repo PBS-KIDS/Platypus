@@ -1,4 +1,11 @@
-/*global createjs, platypus */
+/**
+ * This component creates a visual progress bar that can be used for loading assets or showing other types of progress changes.
+ *
+ * @namespace platypus.components
+ * @class RenderProgress
+ * @uses Component
+ */
+/*global console, createjs, platypus */
 (function () {
     "use strict";
     
@@ -7,6 +14,7 @@
         id: 'RenderProgress',
         
         properties: {
+            //TODO: Document!
             backgroundColor: "#000000",
             
             color: "#ffffff",
@@ -46,6 +54,7 @@
             
             b.graphics.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
             f.graphics.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
+            f.scaleX = 0.0001;
             con.addChild(b);
             con.addChild(f);
         },

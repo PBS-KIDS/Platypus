@@ -5,7 +5,8 @@
  * @class AssetLoader
  * @uses Component
  */
-/*global platypus */
+/*global console, platypus */
+/*jslint plusplus:true */
 (function () {
     "use strict";
     
@@ -86,22 +87,13 @@
             crossOrigin: '',
             
             /**
-             * A DOM element id for an element that should be updated as assets are loaded.
-             * 
-             * @property progressBar
-             * @type String
-             * @default ""
-             */
-            progressBar: '',
-            
-            /**
              * Whether to use XHR for asset downloading.
              * 
              * @property useXHR
              * @type boolean
              * @default true
              */
-            useXHR: true            
+            useXHR: true
         },
 
         constructor: function (definition) {
@@ -112,7 +104,7 @@
             this.owner.assets = {};
             this.progress = 0;
             this.total = 0;
-            this.interface = null;
+            this.assetInterface = null;
         },
 
         events: {
@@ -140,11 +132,11 @@
             "load-assets": function () {
                 var self = this,
                     onFileLoad = function (resp) {
-                        var item = self.interface(resp),
-                        asset = self.owner.assets[item.id] = {
-                            data:  item.data,
-                            asset: item.asset
-                        };
+                        var item = self.assetInterface(resp),
+                            asset = self.owner.assets[item.id] = {
+                                data:  item.data,
+                                asset: item.asset
+                            };
                         
                         if (self.cache) {
                             platypus.assets[item.id] = asset;
@@ -188,7 +180,7 @@
                 } else if (window.createjs && window.createjs.LoadQueue) {
                     this.createJSLoad(onFileLoad);
                 } else {
-                    console.warn('AssetLoader: Must have SpringRoll or PreloadJS loaded to load assets.')
+                    console.warn('AssetLoader: Must have SpringRoll or PreloadJS loaded to load assets.');
                 }
             }
         },
@@ -201,9 +193,9 @@
             createJSLoad: function (onFileLoad) {
                 var i = 0,
                     loadAssets = [],
-                    loader = new window.createjs.LoadQueue(this.useXHR, "", this.crossOrigin)
+                    loader = new window.createjs.LoadQueue(this.useXHR, "", this.crossOrigin);
 
-                this.interface = createJSInterface;
+                this.assetInterface = createJSInterface;
                 
                 loader.addEventListener('fileload', onFileLoad);
 
@@ -226,7 +218,7 @@
                     loadAssets = [],
                     loader = window.springroll.Application.instance.loader;
 
-                this.interface = springRollInterface;
+                this.assetInterface = springRollInterface;
                 
                 for (i = 0; i < this.assets.length; i++) {
                     if (typeof this.assets[i].src === 'string') {

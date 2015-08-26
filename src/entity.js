@@ -65,7 +65,7 @@ platypus.Entity = (function () {
             self.components  = [];
             self.type = def.id || 'none';
 
-            self.id = instanceDefinition.id || instanceProperties.id;
+            self.id = instance.id || instanceProperties.id;
             if (!self.id) {
                 if (!entityIds[self.type]) {
                     entityIds[self.type] = 0;
@@ -158,7 +158,7 @@ platypus.Entity = (function () {
          *
          * @event component-removed
          * @param {Component} component The removed component.
-         * @param {String} component.type The type of component. *
+         * @param {String} component.type The type of component.
          **/
         if (typeof component === 'string') {
             for (i = 0; i < this.components.length; i++) {
@@ -212,7 +212,6 @@ platypus.Entity = (function () {
             this.components[i].destroy();
         }
         this.components.length = 0;
-
         this.destroyed = true;
     };
     

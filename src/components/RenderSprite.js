@@ -755,7 +755,6 @@
                 this.updateSprite();
                 this.owner.cacheRender = this.container;
                 if (this.owner.parent && this.owner.parent.triggerEventOnChildren) {
-
                     /**
                      * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
                      *
@@ -789,6 +788,9 @@
              * @param renderData.container {createjs.Container} The parent container.
              */
             "handle-render": function (renderData) {
+                if (!this.container) { // If this component's removal is pending
+                    return;
+                }
                 if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
                         if (!this.addStage(renderData.container)) {

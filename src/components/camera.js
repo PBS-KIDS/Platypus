@@ -418,12 +418,27 @@
              *
              * @method 'relocate'
              * @param location {Vector|Object} List of key/value pairs describing new location
-             * @param location.x {number} New position along the x-axis.
-             * @param location.y {number} New position along the y-axis.
+             * @param location.x {Number} New position along the x-axis.
+             * @param location.y {Number} New position along the y-axis.
+             * @param [location.time] {Number} The time to transition to the new location.
+             * @param [location.ease] {Function} The ease function to use. Defaults to a linear transition.
              */
             "relocate": function (location) {
-                if (this.move(location.x, location.y)) {
-                    this.viewportUpdate = true;
+                var self = this,
+                    move = function () {
+                        if (self.move(v.x, v.y)) {
+                            self.viewportUpdate = true;
+                        }
+                    },
+                    v = null;
+
+                if (location.time && window.createjs && createjs.Tween) {
+                    v = new platypus.Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
+                    createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move);
+                } else {
+                    if (this.move(location.x, location.y)) {
+                        this.viewportUpdate = true;
+                    }
                 }
             },
             
