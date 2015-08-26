@@ -81,9 +81,7 @@
                         acceptInput: {click: true, touch: true}
                     }));
                     this.owner.addComponent(new platypus.components.LogicCanvasButton(this.owner, {
-                        onRelease: function () {
-                            self.owner.triggerEvent('audio-ready');
-                        }
+                        onRelease: "audio-ready"
                     }));
                     if (!isNaN(this.button.x)) {
                         this.owner.x = this.button.x;

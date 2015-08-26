@@ -1,3 +1,10 @@
+/**
+ * Provides button functionality for a RenderSprite component.
+ * 
+ * @namespace platypus.components
+ * @class LogicCanvasButton
+ * @uses Component
+ */
 /*global platypus */
 (function () {
 	"use strict";
@@ -6,9 +13,9 @@
 		id: 'LogicCanvasButton',
 
         properties: {
-            "onPress": null,
-			"onRelease": null,
-            "onCancel": null,
+            "onPress": "",
+			"onRelease": "",
+            "onCancel": "",
             "useOnce": false,
             "disabled": false
 		},
