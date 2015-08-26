@@ -1189,7 +1189,7 @@
                     
                     if (pins[i].frames) {
                         pin.frames = [];
-                        for (j in pins[i].frames){
+                        for (j in pins[i].frames) {
                             if (pins[i].frames[j]) {
                                 if (isArray) {
                                     regX = frames[j][5] || 0;
