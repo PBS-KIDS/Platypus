@@ -17,7 +17,7 @@
 
         properties: {
             /**
-             * An owner state, set to true when the shield is attached. Meant to be read by other components or used in rendering.
+             * An owner state, set to true when the attachment is attached. Meant to be read by other components or used in rendering.
              *
              * @property attachState
              * @type String
