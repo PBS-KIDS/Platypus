@@ -64,6 +64,7 @@
                  * @event 'audio-ready'
                  */
                 if (platypus.supports.mobile) {
+                    // Remove the progress bar and show a button!
                     this.owner.removeComponent('RenderSprite');
                     this.owner.removeComponent('RenderProgress');
                     this.owner.addComponent(new platypus.components.RenderSprite(this.owner, {
@@ -74,6 +75,9 @@
                     this.addEventListener('pressup', function () {
                         self.owner.triggerEvent('audio-ready');
                     });
+                    
+                    // Let the parent know about the changes!
+                    this.owner.parent.triggerEvent("child-entity-updated", this.owner);
                 } else {
                     this.owner.triggerEvent('audio-ready');
                 }
