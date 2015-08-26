@@ -1,8 +1,8 @@
 /**
  * This is used to discover what browser is being used and the capabilities of the browser. In addition to browser type, we determine whether it is mobile or desktop, whether it supports multi or single-touch, what type of audio it can play, and whether it supports canvas or not. All of this information is added to `platypus.supports`.
- * 
+ *
  */
- 
+
 /*global console, createjs, platypus */
 (function () {
     "use strict";

@@ -15,7 +15,7 @@ This component handles the pressed/released state of a button according to input
 - **mouseup** - on receiving this message, the state of the button is set to "released" unless in toggle mode, in which case it toggles between "pressed" and "released".
 
 ### Local Broadcasts:
-- **logical-state** - this component will trigger this message with both "pressed" and "released" properties denoting its state. Both of these work in tandem and never equal each other.
+- **state-changed** - this component will trigger this message with both "pressed" and "released" properties denoting its state. Both of these work in tandem and never equal each other.
   - @param message.pressed (boolean) - whether the button is in a pressed state.
   - @param message.released (boolean) - whether the button is in a released state.
 
@@ -65,7 +65,7 @@ This component handles the pressed/released state of a button according to input
                 }
             },
             "handle-logic": function () {
-                //TODO: This is only here so that the "logical-state" message is triggered by the Entity for other components needing it.
+                //TODO: This is only here so that the "state-changed" message is triggered by the Entity for other components needing it.
             }
         },
         

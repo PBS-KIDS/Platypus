@@ -261,10 +261,10 @@
             "cache-sprite": function (entity) {
                 this.cacheSprite(entity);
             },
-            
+
             /**
              * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
-             * 
+             *
              * @method 'peer-entity-added'
              * @param entity {Entity} This is the peer entity to be checked for a renderCache.
              */
@@ -428,7 +428,7 @@
                     bottom = 0,
                     right = 0,
                     left = 0;
-                
+
                 // Determine whether to merge this image with the background.
                 if (this.entityCache && object) { //TODO: currently only handles a single display object on the cached entity.
                     if (!this.doMap) {
@@ -441,7 +441,7 @@
                     bottom = Math.min(imgMap[0].length, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
                     left   = Math.max(0, Math.floor(bounds.x / this.tileWidth));
                     right  = Math.min(imgMap.length, Math.ceil((bounds.x + bounds.width) / this.tileWidth));
-                    
+
                     // Find tiles that should include this display object
                     for (x = left; x < right; x++) {
                         if (!this.doMap[x]) {
@@ -454,7 +454,7 @@
                             this.doMap[x][y].push(object);
                         }
                     }
-                    
+
                     // Prevent subsequent draws
                     entity.removeComponent('RenderSprite');
                 }

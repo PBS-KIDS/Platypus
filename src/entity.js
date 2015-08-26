@@ -87,13 +87,13 @@ platypus.Entity = (function () {
 
             /**
              * Whether this entity is no longer in use. This is useful for cleaning up connections with removed entities.
-             * 
+             *
              * @property destroyed
              * @type Boolean
              * @default false
              */
             this.destroyed = false;
-            
+
             for (i = 0; i < componentDefinitions.length; i++) {
                 componentDefinition = componentDefinitions[i];
                 if (platypus.components[componentDefinition.type]) {
@@ -103,9 +103,9 @@ platypus.Entity = (function () {
                 }
             }
 
-            /** 
+            /**
              * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
-             * 
+             *
              * @event load
              */
             self.triggerEvent('load');
@@ -114,7 +114,7 @@ platypus.Entity = (function () {
     
     /**
     * Returns a string describing the entity.
-    * 
+    *
     * @method toString
     * @return {String} Returns the entity type as a string of the form "[entity entity-type]".
     **/
@@ -124,7 +124,7 @@ platypus.Entity = (function () {
     
     /**
     * Attaches the provided component to the entity.
-    * 
+    *
     * @method addComponent
     * @param {Component} component Must be an object that functions as a [[Component]].
     * @return {Component} Returns the same object that was submitted.
@@ -134,7 +134,7 @@ platypus.Entity = (function () {
 
         /**
          * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
-         * 
+         *
          * @event component-added
          * @param {Component} component The added component.
          * @param {String} component.type The type of component.
@@ -145,7 +145,7 @@ platypus.Entity = (function () {
     
     /**
     * Removes the mentioned component from the entity.
-    * 
+    *
     * @method removeComponent
     * @param {Component} component Must be a [[Component]] attached to the entity.
     * @return {Component} Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).
@@ -155,10 +155,10 @@ platypus.Entity = (function () {
         
         /**
          * The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.
-         * 
+         *
          * @event component-removed
          * @param {Component} component The removed component.
-         * @param {String} component.type The type of component. * 
+         * @param {String} component.type The type of component.
          **/
         if (typeof component === 'string') {
             for (i = 0; i < this.components.length; i++) {
@@ -186,7 +186,7 @@ platypus.Entity = (function () {
     
     /**
     * This method sets one or more properties on the entity.
-    * 
+    *
     * @param {Object} properties A list of key/value pairs to set as properties on the entity.
     * @method setProperty
     **/
@@ -202,7 +202,7 @@ platypus.Entity = (function () {
     
     /**
     * This method removes all components from the entity.
-    * 
+    *
     * @method destroy
     **/
     proto.destroy = function () {
@@ -212,7 +212,6 @@ platypus.Entity = (function () {
             this.components[i].destroy();
         }
         this.components.length = 0;
-        
         this.destroyed = true;
     };
     

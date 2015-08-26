@@ -1,45 +1,13 @@
 /**
-# COMPONENT **LevelBuilder**
-This component works in tandem with [[TiledLoader]] by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
+ * This component works in tandem with 'TiledLoader by taking several Tiled maps and combining them before `TiledLoader` processes them. Tiled maps must use the same tilesets for this to function correctly.
+ *
+ * Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
+ *
+ * @namespace platypus.components
+ * @class LevelBuilder
+ * @uses Component
+ */
 
-Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definition so that it will wait for this component's "load-level" call.
-
-## Dependencies
-- [[TiledLoader]] - Feeds information into `TiledLoader` to load a combined map.
-
-## Messages
-
-### Listens for:
-- **scene-loaded** - On receiving this message, `LevelBuilder` uses its JSON definition to create a combined map.
-  - @param message (object) - Optional. Data passed into this scene from the last scene.
-
-### Local Broadcasts:
-- **load-level** - Once the combined level is ready, this message is triggered so `TiledLoader` will handle it.
-  - @param message.persistentData (obj) - Data received from the initiating "scene-loaded" call is passed on here.
-  - @param message.level (obj) - This is a JSON structure representing the combined map.
-
-## JSON Definition
-    {
-      "type": "LevelBuilder"
-      
-      "levelPieces": {
-      // Optional. This is a list of key/value pairs listing the pieces the level template (below) will use to compose a larger map. If not specified, labels map directly to level names.
-        
-        "start"  : "start-map",
-        "end"      : "end-map",
-        // Labels include map sections by their map names
-        
-        "forest" : ["forest-1", "forest-2", "forest-3"]
-        // If one section should be chosen from many sections, maps can be listed in an array.
-      },
-
-      "levelTemplate": [ ["start", "forest"], ["forest", "end"] ]
-      // Required. This is a 2d array, laying out the map structure using the labels above to compose the larger map.
-
-      "useUniques": true
-      // Optional. If set, no single map is used twice in the creation of the combined map.
-    }
-*/
 /*global console */
 /*global platypus */
 /*jslint plusplus:true */
@@ -201,16 +169,57 @@ Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definitio
         id: 'LevelBuilder',
         
         properties: {
-            useUniques: true
+            /**
+             * If true, no single map piece is used twice in the creation of the combined map.
+             *
+             * @property useUniques
+             * @type Boolean
+             * @default true
+             */
+            useUniques: true,
+            /**
+             * A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
+             *
+             *      "levelTemplate": [ ["start", "forest"], ["forest", "end"] ]
+             *
+             * @property levelTemplate
+             * @type Array
+             * @default null
+             */
+            levelTemplate: null,
+            /**
+             * This is an object of key/value pairs listing the pieces that map to an id in the level template. The value can be specified as a string or array. A piece will be randomly chosen from an array when that idea is used. If levelPieces is not defined, ids in the template map directly to level names.
+             *
+             *      "levelPieces": {
+             *          "start"  : "start-map",
+             *          "end"      : "end-map",
+             *          "forest" : ["forest-1", "forest-2", "forest-3"]
+             *      }
+             *
+             * @property levelPieces
+             * @type Object
+             * @default null
+             */
+            levelPieces: null
+        },
+
+        publicProperties: {
         },
         
         constructor: function (definition) {
-            this.levelTemplate = this.owner.levelTemplate || definition.levelTemplate;
-            this.levelPieces = this.owner.levelPieces || definition.levelPieces;
+            //this.levelTemplate = this.owner.levelTemplate || definition.levelTemplate;
+            //this.levelPieces = this.owner.levelPieces || definition.levelPieces;
             this.levelMessage = {level: null, persistentData: null};
         },
 
         events: {// These are messages that this component listens for
+
+            /**
+             * When the scene has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.
+             *
+             * @method 'scene-loaded'
+             * @param persistentData {Object} The persistent data from the previous scene.
+             */
             "scene-loaded": function (persistentData) {
                 var templateRow  = null,
                     piecesToCopy = null,
@@ -236,16 +245,14 @@ Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definitio
                                     this.levelPieces[x].push(piecesToCopy[x][y]);
                                 }
                             } else {
-                                console.warn('Level Builder: Level pieces of incorrect type: ' + piecesToCopy[x]);
+                                throw('Level Builder: Level pieces of incorrect type: ' + piecesToCopy[x]);
                             }
                         }
                     }
                 }
 
                 if (this.levelTemplate) {
-                    if (typeof this.levelTemplate === "string") {
-                        this.levelMessage.level = [this.getLevelPiece(this.levelTemplate)];
-                    } else if (this.levelTemplate.length) {
+                    if (this.levelTemplate) {
                         this.levelMessage.level = [];
                         for (i = 0; i < this.levelTemplate.length; i++) {
                             templateRow = this.levelTemplate[i];
@@ -257,18 +264,29 @@ Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definitio
                                     this.levelMessage.level[i][j] = this.getLevelPiece(templateRow[j]);
                                 }
                             } else {
-                                console.warn('Level Builder: Template row is neither a string or array. What is it?');
+                                throw('Level Builder: Template row is neither a string or array. What is it?');
                             }
                         }
                     } else {
-                        console.warn('Level Builder: Template is neither a string or array. What is it?');
+                        throw('Level Builder: Template is not defined');
                     }
                 } else {
-                    console.warn('Level Builder: There is no level template.');
+                    throw('Level Builder: There is no level template.');
                 }
                 
                 if (this.levelMessage.level) {
                     this.levelMessage.level = mergeLevels(this.levelMessage.level);
+                    /**
+                     * Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.
+                     *
+                     * @event 'load-level'
+                     * @param data {Object}
+                     * @param data.level {Object} An object describing the level dimensions, tiles, and entities.
+                     * @param data.persistentData {Object} The persistent data passed from the last scene. We add levelBuilder data to it to pass on.
+                     * @param data.persistentData.levelTemplate {Object} A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
+                     * @param data.persistentData.levelPieces {Object} An object of key/value pairs listing the pieces that map to an id in the level template.
+                     * @param data.persistentData.useUniques {Boolean} If true, no single map piece is used twice in the creation of the combined map.
+                     */
                     this.owner.triggerEvent('load-level', this.levelMessage);
                 }
             }
@@ -297,11 +315,11 @@ Note: Set "manuallyLoad" to `true` in the `TiledLoader` component JSON definitio
                             return pieces[random];
                         }
                     } else {
-                        console.warn('Level Builder: There are no MORE level pieces of type: ' + type);
+                        throw('Level Builder: There are no MORE level pieces of type: ' + type);
                     }
                     
                 } else {
-                    console.warn('Level Builder: There are no level pieces of type: ' + type);
+                    throw('Level Builder: There are no level pieces of type: ' + type);
                 }
                 
                 return null;

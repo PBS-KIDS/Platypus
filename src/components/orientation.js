@@ -17,7 +17,8 @@
  *     - **scaleY**: absorb -1 if described
  *     - **rotation**: absorb 90 degree rotations
  * 
- * @class "Orientation" Component
+ * @namespace platypus.components
+ * @class Orientation
  * @uses Component
  */
 /*global platypus */

@@ -338,11 +338,11 @@
             },
              
             /**
-             * This component listens for logical state changes and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
+             * This component listens for changes to the entity state and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.
              * 
-             * @method 'logical-state'
+             * @method 'state-changed'
              */
-            "logical-state": function () {
+            "state-changed": function () {
                 this.stateChange = true;
             },
 

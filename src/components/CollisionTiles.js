@@ -1,7 +1,8 @@
 /**
  * This component causes the tile-map to collide with other entities. It must be part of a collision group and will cause "hit-by-tile" messages to fire on colliding entities.
  * 
- * @class "CollisionTiles" Component
+ * @namespace platypus.components
+ * @class CollisionTiles
  * @uses Component
  */
 // Requires: ["../CollisionShape.js"]

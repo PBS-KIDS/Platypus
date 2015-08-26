@@ -292,10 +292,10 @@ This component allows the entity to contain child entities. It will add several 
                 }
                 return entities;
             },
-            
+
             /**
              * This method adds an entity to the owner's group. If an entity definition or a reference to an entity definition is provided, the entity is created and then added to the owner's group.
-             * 
+             *
              * @method addEntity
              * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
              * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
