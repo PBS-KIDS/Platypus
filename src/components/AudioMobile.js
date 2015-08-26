@@ -66,12 +66,11 @@
                 if (platypus.supports.mobile) {
                     this.owner.removeComponent('RenderSprite');
                     this.owner.removeComponent('RenderProgress');
-                    this.owner.addComponent({
-                        type: 'RenderSprite',
+                    this.owner.addComponent(new platypus.components.RenderSprite(this.owner, {
                         image: this.button.image,
                         spriteSheet: this.button.spriteSheet,
                         acceptInput: {click: true, touch: true}
-                    });
+                    }));
                     this.addEventListener('pressup', function () {
                         self.owner.triggerEvent('audio-ready');
                     });
