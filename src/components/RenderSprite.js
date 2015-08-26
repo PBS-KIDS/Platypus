@@ -393,14 +393,14 @@
         
         constructor: (function () {
             var defaultAnimations = {"default": 0},
-                createSpriteSheet = function (ssDef, srcImage, entity) {
+                createSpriteSheet = function (ssDef, srcImage, entity, component) {
                     var i  = 0,
                         j  = null,
                         arr    = null,
                         image  = null,
                         //scaleX = 1,
                         //scaleY = 1,
-                        scaled = false,
+                        //scaled = false,
                         //srcSS  = def.spriteSheet,
                         ss     = {
                             framerate:     0,
@@ -413,6 +413,11 @@
                             spriteSheet: null
                         };
 
+                    //If we've already created an object with this spriteSheet, used the cached version.
+                    if (typeof ssDef === 'string' && ssCache[ssDef]) {
+                        return ssCache[ssDef];
+                    }
+
                     //If spriteSheet is a string, we look it up the spritesheet data, otherwise we use the object provided.
                     if (ssDef && typeof ssDef === 'string' && platypus.game.settings.spriteSheets[ssDef]) {
                         ssDef = platypus.game.settings.spriteSheets[ssDef];
@@ -422,11 +427,6 @@
                         ssDef = {"images": [srcImage]};
                     } else {
                         console.warn(entity.type + ' - RenderSprite : Neither spriteSheet nor image defined.');
-                    }
-
-                    //If we've already created an object with this spriteSheet, used the cached version.
-                    if (typeof ssDef === 'string' && ssCache[ssDef]) {
-                        return ssCache[ssDef];
                     }
 
                     /*
@@ -490,11 +490,6 @@
                         if (typeof ss.images[i] === 'string') {
                             if (platypus.assets[ss.images[i]] && platypus.assets[ss.images[i]].asset) {
                                 ss.images[i] = platypus.assets[ss.images[i]].asset;
-
-                                // Check here whether to scale coordinates in the frame setup section.
-                                if (!scaled && ((ss.images[i].scaleX && (ss.images[i].scaleX !== 1)) || (ss.images[i].scaleY && (ss.images[i].scaleY !== 1)))) {
-                                    scaled = true;
-                                }
                             } else {
                                 if (platypus.supports.iOS) {
                                     console.warn(entity.type + ' - RenderSprite : ' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
@@ -517,8 +512,8 @@
                                 ss.images[0].width  || entity.width || 1,
                                 ss.images[0].height || entity.height || 1,
                                 0,
-                                entity.regX         || 0,
-                                entity.regY         || 0
+                                component.regX || entity.regX || 0,
+                                component.regY || entity.regY || 0
                             ]];
                         }
                     }
@@ -668,7 +663,7 @@
             
             return function (definition) {
                 var self = this,
-                    ss       = createSpriteSheet(this.spriteSheet, this.image, this.owner),
+                    ss       = createSpriteSheet(this.spriteSheet, this.image, this.owner, this),
                     map      = createAnimationMap(this.animationMap, ss.definition);
                 
                 this.sprite     = null;
@@ -820,7 +815,7 @@
                 if (!this.container) { // If this component's removal is pending
                     return;
                 }
-                
+
                 if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
                         if (!this.addStage(renderData.container)) {

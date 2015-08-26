@@ -71,7 +71,7 @@
                 if (!this.container) { // If this component's removal is pending
                     return;
                 }
-                
+
                 if (!this.parentContainer) {
                     if (resp && resp.container) {
                         this.parentContainer = resp.container;
