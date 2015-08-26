@@ -80,15 +80,17 @@
                         spriteSheet: this.button.spriteSheet,
                         acceptInput: {click: true, touch: true}
                     }));
+                    this.owner.addComponent(new platypus.components.LogicCanvasButton(this.owner, {
+                        onRelease: function () {
+                            self.owner.triggerEvent('audio-ready');
+                        }
+                    }));
                     if (!isNaN(this.button.x)) {
                         this.owner.x = this.button.x;
                     }
                     if (!isNaN(this.button.y)) {
                         this.owner.y = this.button.y;
                     }
-                    this.addEventListener('pressup', function () {
-                        self.owner.triggerEvent('audio-ready');
-                    });
                     
                     /**
                      * This event notifies the parent entity that this child has been updated.
