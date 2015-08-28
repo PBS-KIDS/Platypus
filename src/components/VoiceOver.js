@@ -163,7 +163,9 @@
                     animationMap:  {},
                     pins:          definition.pins,
                     pinTo:         definition.pinTo,
-                    aliases:       definition.aliases
+                    aliases:       definition.aliases,
+                    eventBased:    true, // VO triggers events for changing lip-sync frames.
+                    stateBased:    definition.stateBased || false
                 };
             
             this.message = this.messagePrefix + '-';

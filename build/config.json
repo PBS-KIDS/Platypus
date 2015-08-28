@@ -35,6 +35,7 @@
 		"../src/components/LogicAngularMovement.js",
 		"../src/components/LogicAttachment.js",
 		"../src/components/LogicButton.js",
+		"../src/components/LogicCanvasButton.js",
 		"../src/components/LogicCarrier.js",
 		"../src/components/LogicDelayMessage.js",
 		"../src/components/LogicDestroyMe.js",

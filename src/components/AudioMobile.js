@@ -38,6 +38,14 @@
              * 
              * Set `button.image` to set an image or `button.spriteSheet` to set the sprite sheet.
              * 
+             * May also set a position for the button:
+             *
+             *     {
+             *         "spriteSheet": "buttons",
+             *         "x": 0,
+             *         "y": 200
+             *     }
+             *
              * @property button
              * @type Object
              * @default {}
@@ -55,15 +63,14 @@
              * @method 'complete'
              */
             "complete": function () {
-                var self   = this,
-                    button = null;
-                
+
                 /**
                  * Triggers this event once the audio is ready to play.
                  * 
                  * @event 'audio-ready'
                  */
                 if (platypus.supports.mobile) {
+                    // Remove the progress bar and show a button!
                     this.owner.removeComponent('RenderSprite');
                     this.owner.removeComponent('RenderProgress');
                     this.owner.addComponent(new platypus.components.RenderSprite(this.owner, {
@@ -71,9 +78,23 @@
                         spriteSheet: this.button.spriteSheet,
                         acceptInput: {click: true, touch: true}
                     }));
-                    this.addEventListener('pressup', function () {
-                        self.owner.triggerEvent('audio-ready');
-                    });
+                    this.owner.addComponent(new platypus.components.LogicCanvasButton(this.owner, {
+                        onRelease: "audio-ready"
+                    }));
+                    if (!isNaN(this.button.x)) {
+                        this.owner.x = this.button.x;
+                    }
+                    if (!isNaN(this.button.y)) {
+                        this.owner.y = this.button.y;
+                    }
+
+                    /**
+                     * This event notifies the parent entity that this child has been updated.
+                     *
+                     * @event 'child-entity-updated'
+                     * @param entity {platypus.Entity} This component's owner.
+                     */
+                    this.owner.parent.triggerEvent("child-entity-updated", this.owner);
                 } else {
                     this.owner.triggerEvent('audio-ready');
                 }
