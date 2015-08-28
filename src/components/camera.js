@@ -212,7 +212,18 @@
             
             this.viewportUpdate = false;
             
-            this.parentContainer = this.owner.container || this.owner.stage;
+            this.isOnStage = false;
+            if (this.owner.container) {
+                this.parentContainer = this.owner.container;
+            } else if (this.owner.stage) {
+                this.isOnStage = true;
+                this.owner.width  = this.owner.width  || this.parentContainer.canvas.width;
+                this.owner.height = this.owner.height || this.parentContainer.canvas.height;
+                this.parentContainer = this.owner.stage;
+            } else {
+                console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
+            }
+            
             this.container = new createjs.Container();
             this.parentContainer.addChild(this.container);
         },
@@ -303,7 +314,7 @@
                 }
                 
                 // Need to update owner's size information for changes to canvas size
-                if (this.parentContainer === this.owner.stage) {
+                if (this.isOnStage) {
                     this.owner.width  = this.parentContainer.canvas.width;
                     this.owner.height = this.parentContainer.canvas.height;
                 }
