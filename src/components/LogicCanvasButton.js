@@ -28,7 +28,6 @@
             this.owner.state.down = false;
             this.cancelled = false;
             this.used = false;
-
             this.last = null;
 		},
 

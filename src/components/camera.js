@@ -223,7 +223,6 @@
             } else {
                 console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
-
             this.container = new createjs.Container();
             this.parentContainer.addChild(this.container);
         },
