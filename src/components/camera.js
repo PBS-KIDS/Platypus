@@ -217,9 +217,9 @@
                 this.parentContainer = this.owner.container;
             } else if (this.owner.stage) {
                 this.isOnStage = true;
-                this.owner.width  = this.owner.width  || this.parentContainer.canvas.width;
-                this.owner.height = this.owner.height || this.parentContainer.canvas.height;
                 this.parentContainer = this.owner.stage;
+                this.owner.width  = this.parentContainer.canvas.width;
+                this.owner.height = this.parentContainer.canvas.height;
             } else {
                 console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
