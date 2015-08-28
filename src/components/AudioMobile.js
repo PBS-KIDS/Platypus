@@ -63,9 +63,7 @@
              * @method 'complete'
              */
             "complete": function () {
-                var self   = this,
-                    button = null;
-                
+
                 /**
                  * Triggers this event once the audio is ready to play.
                  * 
