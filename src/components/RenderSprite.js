@@ -10,8 +10,7 @@
 (function () {
     "use strict";
     
-    var dpr = window.devicePixelRatio || 1,
-        ssCache = {},
+    var ssCache = {},
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -1106,8 +1105,8 @@
                         self.owner.trigger(eventName, {
                             event: event.nativeEvent,
                             cjsEvent: event,
-                            x: (event.stageX * dpr) / self.parentContainer.scaleX + self.camera.x,
-                            y: (event.stageY * dpr) / self.parentContainer.scaleY + self.camera.y,
+                            x: event.stageX / self.parentContainer.scaleX + self.camera.x,
+                            y: event.stageY / self.parentContainer.scaleY + self.camera.y,
                             entity: self.owner
                         });
 

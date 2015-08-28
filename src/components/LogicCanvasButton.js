@@ -1,6 +1,6 @@
 /**
  * Provides button functionality for a RenderSprite component.
- * 
+ *
  * @namespace platypus.components
  * @class LogicCanvasButton
  * @uses Component
@@ -20,7 +20,7 @@
             "disabled": false
 		},
 		publicProperties: {
-            
+
 		},
 
 		constructor: function (definition) {
@@ -28,7 +28,6 @@
             this.owner.state.down = false;
             this.cancelled = false;
             this.used = false;
-            
             this.last = null;
 		},
 

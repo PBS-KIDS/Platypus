@@ -10,8 +10,6 @@
 (function () {
     "use strict";
 
-    var dpr = window.devicePixelRatio || 1;
-
     return platypus.createComponentClass({
 
         id: "HandlerRender",
@@ -217,8 +215,8 @@
                             return;
                         }
 
-                        x = (stageX * dpr) / self.container.scaleX + self.camera.x;
-                        y = (stageY * dpr) / self.container.scaleY + self.camera.y;
+                        x = stageX / self.container.scaleX + self.camera.x;
+                        y = stageY / self.container.scaleY + self.camera.y;
 
                         event.target.mouseTarget = true;
 
@@ -242,8 +240,8 @@
                                 self.moveMouse = function () {
                                     self.owner.trigger('pressmove', {
                                         event: nativeEvent,
-                                        x: (stageX * dpr) / self.container.scaleX + self.camera.x,
-                                        y: (stageY * dpr) / self.container.scaleY + self.camera.y,
+                                        x: stageX / self.container.scaleX + self.camera.x,
+                                        y: stageY / self.container.scaleY + self.camera.y,
                                         entity: self.owner
                                     });
                                 };

@@ -39,13 +39,13 @@
              * Set `button.image` to set an image or `button.spriteSheet` to set the sprite sheet.
              * 
              * May also set a position for the button:
-             * 
+             *
              *     {
              *         "spriteSheet": "buttons",
              *         "x": 0,
              *         "y": 200
              *     }
-             * 
+             *
              * @property button
              * @type Object
              * @default {}
@@ -87,10 +87,10 @@
                     if (!isNaN(this.button.y)) {
                         this.owner.y = this.button.y;
                     }
-                    
+
                     /**
                      * This event notifies the parent entity that this child has been updated.
-                     * 
+                     *
                      * @event 'child-entity-updated'
                      * @param entity {platypus.Entity} This component's owner.
                      */
