@@ -10,6 +10,9 @@
 (function () {
     "use strict";
     
+    // Import SpringRoll classes
+    var Application = include('springroll.Application');
+
     var defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay:     0,
@@ -26,7 +29,7 @@
             return a.time - b.time;
         },
         VOInterface = function () {
-            var player   = window.springroll.Application.instance.voPlayer;
+            var player   = Application.instance.voPlayer;
             
             this.play = function (sound, options) {
                 var complete = options.complete;
@@ -59,7 +62,7 @@
             });
         },
         SoundInterface = function () {
-            var player = window.springroll.Application.instance.sound;
+            var player = Application.instance.sound;
             
             this.play = function (sound, options) {
                 return player.play(sound, options);

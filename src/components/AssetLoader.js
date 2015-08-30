@@ -10,6 +10,9 @@
 (function () {
     "use strict";
     
+    // Import SpringRoll classes
+    var Application = include('springroll.Application');
+
     var createId = function (src) { // returns just the filename (sans extension) as the Id.
             var arr = src.split('/');
             
@@ -98,12 +101,8 @@
                 this.assets = platypus.game.settings.assets;
             }
             
-            if (window && window.springroll && window.springroll.Application && window.springroll.Application.instance) {
-                this.loader      = window.springroll.Application.instance.loader;
-                this.soundLoader = window.springroll.Application.instance.sound;
-            } else {
-                console.warn('AssetLoader: Must have SpringRoll loaded to load assets.');
-            }
+            this.app = Application.instance;
+            this.sound = this.app.sound;
             
             this.owner.assets = {};
             this.progress = 0;
@@ -134,60 +133,59 @@
              * @method 'load-assets'
              */
             "load-assets": function () {
-                var self = this,
-                    onFileLoad = function (resp) {
-                        var asset = null;
-                        
-                        if (resp) {
-                            asset = self.owner.assets[resp.manifestData.id] = {
-                                data:  resp.manifestData.data,
-                                asset: resp.content
-                            };
-                        
-                            if (self.cache) {
-                                platypus.assets[resp.manifestData.id] = asset;
-                            }
-                        } else { // audio files don't return any data from the SpringRoll loader.
-                            resp = {
-                                content: null,
-                                manifestData: {data: null}
-                            };
+                this.load(function (result, data) 
+                {
+                    var asset = null;
+                    
+                    if (result) {
+                        console.log(data);
+                        asset = this.owner.assets[data.id] = {
+                            data:  data,
+                            asset: result
+                        };
+                    
+                        if (this.cache) {
+                            platypus.assets[data.id] = asset;
                         }
-                        
-                        self.progress += 1;
-                        
+                    } else { // audio files don't return any data from the SpringRoll loader.
+                        result = {
+                            content: null,
+                            data: {data: null}
+                        };
+                    }
+                    
+                    this.progress += 1;
+                    
+                    /**
+                     * This message is broadcast when an asset has been loaded.
+                     * 
+                     * @event 'file-load'
+                     * @param load {Object} 
+                     * @param load.asset {Object} Loaded asset. (`null` for audio)
+                     * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio) 
+                     * @param load.complete {boolean} Whether this is the final asset to be loaded.
+                     * @param load.total {number} The total number of assets being loaded.
+                     * @param load.progress {number} The number of assets finished loading.
+                     * @param load.fraction {number} Value of (progress / total) provided for convenience.
+                     */
+                    this.owner.trigger('file-load', {
+                        asset:    result,
+                        complete: (this.progress === this.total),
+                        data:     data,
+                        fraction: this.progress / this.total,
+                        progress: this.progress,
+                        total:    this.total
+                    });
+                    
+                    if (this.progress === this.total) {
                         /**
-                         * This message is broadcast when an asset has been loaded.
+                         * This message is triggered when the asset loader is finished loading assets.
                          * 
-                         * @event 'file-load'
-                         * @param load {Object} 
-                         * @param load.asset {Object} Loaded asset. (`null` for audio)
-                         * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio) 
-                         * @param load.complete {boolean} Whether this is the final asset to be loaded.
-                         * @param load.total {number} The total number of assets being loaded.
-                         * @param load.progress {number} The number of assets finished loading.
-                         * @param load.fraction {number} Value of (progress / total) provided for convenience.
+                         * @event 'complete'
                          */
-                        self.owner.trigger('file-load', {
-                            asset:    resp.content,
-                            complete: (self.progress === self.total),
-                            data:     resp.manifestData.data,
-                            fraction: self.progress / self.total,
-                            progress: self.progress,
-                            total:    self.total
-                        });
-                        
-                        if (self.progress === self.total) {
-                            /**
-                             * This message is triggered when the asset loader is finished loading assets.
-                             * 
-                             * @event 'complete'
-                             */
-                            self.owner.triggerEvent('complete');
-                        }
-                    };
-                
-                this.load(onFileLoad);
+                        this.owner.triggerEvent('complete');
+                    }
+                }.bind(this));
             }
         },
         
@@ -210,12 +208,21 @@
 
                 platypus.assets = platypus.assets || {};
                 this.total = loadAssets.length;
-                for (i = 0; i < loadAssets.length; i++) {
-                    if (this.soundLoader && this.soundLoader.exists(loadAssets[i].id)) {
-                        this.soundLoader.preloadSound(loadAssets[i].id, onFileLoad);
-                    } else {
-                        this.loader.load(loadAssets[i].src, onFileLoad, null, 0, loadAssets[i]);
+                var sound = this.sound;
+
+                loadAssets.forEach(function(asset, i, assets)
+                {
+                    if (sound && sound.exists(asset.id)) {
+                        sound.preload(asset.id, onFileLoad);
+                        assets.splice(i, 1);
                     }
+                });
+
+                if (loadAssets.length)
+                {
+                    this.app.load(loadAssets, {
+                        progress: onFileLoad
+                    });
                 }
             }
         }
