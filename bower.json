@@ -15,9 +15,8 @@
 	"license": "MIT",
 	"ignore": [
 		"**/.*",
-		"builds",
-		"engine",
-		"game",
-		"tools"
+		"build",
+		"src",
+		"example"
 	]
 }
