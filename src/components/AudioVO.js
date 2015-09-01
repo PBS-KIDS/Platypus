@@ -29,15 +29,73 @@
             }
             return toList;
         },
-        playSound = function (soundDefinition) {
-            var sound      = '',
-                eventList  = null;
+        
+        /**
+         * This function merges events from individual sounds into a full list queued to sync with the SpringRoll voPlayer.
+         */
+        setupEvents = function (sounds, fullList) {
+            var i = 0,
+                player = Application.instance.sound,
+                soundList = [];
+            
+            // Adding a function on the beginning of the play list so that time events can be set according to preloaded audio durations, since `getDuration` won't work for audio that has yet to load.
+            soundList.push(function () {
+                var i = 0,
+                    j = 0,
+                    events = null,
+                    sound = null,
+                    time = 0;
                 
-            if ((typeof soundDefinition === 'string') || Array.isArray(soundDefinition)) {
+                for (i = 0; i < sounds.length; i++) {
+                    if (typeof sounds[i] === 'string') {
+                        sound = sounds[i];
+                        time += player.getDuration(sound);
+                    } else if (sounds[i].sound) {
+                        sound  = sounds[i].sound;
+                        events = sounds[i].events;
+                        if (events) {
+                            for (j = 0; j < events.length; j++) {
+                                fullList.push({
+                                    event: events[j].event,
+                                    message: events[i].message,
+                                    time: time + events[i].time
+                                });
+                            }
+                        }
+                        time += player.getDuration(sound);
+                    }
+                }
+                fullList.sort(sortByTime);
+            });
+            
+            // Create alias-only sound list.
+            for (i = 0; i < sounds.length; i++) {
+                if (sounds[i].sound) {
+                    soundList.push(sounds[i].sound);
+                } else {
+                    soundList.push(sounds[i]);
+                }
+            }
+            return soundList;
+        },
+        playSound = function (soundDefinition) {
+            var sound      = null,
+                eventList  = [];
+                
+            if (typeof soundDefinition === 'string') {
                 sound = soundDefinition;
+            } else if (Array.isArray(soundDefinition)) {
+                sound = setupEvents(soundDefinition, eventList);
             } else {
                 sound = soundDefinition.sound;
-                eventList = soundDefinition.events;
+                if (soundDefinition.events) {
+                    eventList = soundDefinition.events.slice();
+                }
+                if (Array.isArray(sound)) {
+                    sound = setupEvents(sound, eventList);
+                } else {
+                    sound = soundDefinition.sound;
+                }
             }
             
             return function (value) {
@@ -49,12 +107,11 @@
                     self.onComplete(false);
                 });
                 
-                if (eventList || value.events) {
-                    this.eventList.length = 0;
-                    addEvents(eventList,    this.eventList);
+                this.eventList = eventList;
+                if (value.events) {
                     addEvents(value.events, this.eventList);
-                    this.eventList.sort(sortByTime);
                 }
+                this.eventList.sort(sortByTime);
             };
         };
     

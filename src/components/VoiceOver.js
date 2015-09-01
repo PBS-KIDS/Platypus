@@ -1,7 +1,7 @@
 /**
- * This component uses its definition to load Audio and RenderSprite components who work in an interconnected way to render animations corresponding to one or more audio tracks.
+ * This component uses its definition to load AudioVO and RenderSprite components who work in an interconnected way to render animations corresponding to one or more audio tracks.
  *
- * In addition to its own properties, this component also accepts all properties accepted by either [[RenderSprite]] or [[Audio]] and passes them along when it creates those components.
+ * In addition to its own properties, this component also accepts all properties accepted by either [[RenderSprite]] or [[AudioVO]] and passes them along when it creates those components.
  *
  * @namespace platypus.components
  * @class VoiceOver
@@ -148,7 +148,6 @@
             var i = '',
                 audioDefinition     = {
                     audioMap: {},
-                    voiceOver: definition.voiceOver,
                     aliases:  definition.aliases
                 },
                 animationDefinition = {
@@ -183,12 +182,12 @@
                     audioDefinition.audioMap[i] = createVO(this.voiceOverMap[i], this.animationMap, this.message, this.frameLength);
                 }
             }
-            this.owner.addComponent(new platypus.components.Audio(this.owner, audioDefinition));
+            this.owner.addComponent(new platypus.components.AudioVO(this.owner, audioDefinition));
         },
 
         events: {
             /**
-             * On receiving this message, this component removes itself from the entity. (It creates the [[RenderSprite]] and [[Audio]] components in its constructor.)
+             * On receiving this message, this component removes itself from the entity. (It creates the [[RenderSprite]] and [[AudioVO]] components in its constructor.)
              *
              * @method 'load'
              */
