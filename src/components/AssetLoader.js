@@ -5,15 +5,14 @@
  * @class AssetLoader
  * @uses Component
  */
-/*global console, platypus */
+/*global console, include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
     
-    // Import SpringRoll classes
-    var Application = include('springroll.Application');
-
-    var createId = function (src) { // returns just the filename (sans extension) as the Id.
+    
+    var Application = include('springroll.Application'), // Import SpringRoll classes
+        createId = function (src) { // returns just the filename (sans extension) as the Id.
             var arr = src.split('/');
             
             arr = arr[arr.length - 1].split('.');
@@ -75,25 +74,7 @@
              * @type boolean
              * @default true
              */
-            cache: true,
-            
-            /**
-             * Whether images are loaded from a CORS-enabled domain.
-             * 
-             * @property crossOrigin
-             * @type String
-             * @default ""
-             */
-            crossOrigin: '',
-            
-            /**
-             * Whether to use XHR for asset downloading.
-             * 
-             * @property useXHR
-             * @type boolean
-             * @default true
-             */
-            useXHR: true
+            cache: true
         },
 
         constructor: function (definition) {
@@ -133,8 +114,7 @@
              * @method 'load-assets'
              */
             "load-assets": function () {
-                this.load(function (result, data) 
-                {
+                this.load(function (result, data) {
                     var asset = null;
                     
                     if (result) {
@@ -196,7 +176,8 @@
             
             load: function (onFileLoad, onSoundLoad) {
                 var i = 0,
-                    loadAssets = [];
+                    loadAssets = [],
+                    sound = this.sound;
 
                 for (i = 0; i < this.assets.length; i++) {
                     if (typeof this.assets[i] === 'string') {
@@ -208,18 +189,17 @@
 
                 platypus.assets = platypus.assets || {};
                 this.total = loadAssets.length;
-                var sound = this.sound;
 
-                loadAssets.forEach(function(asset, i, assets)
-                {
-                    if (sound && sound.exists(asset.id)) {
-                        sound.preload(asset.id, onFileLoad);
-                        assets.splice(i, 1);
+                if (sound) {
+                    for (i = loadAssets.length - 1; i >= 0; i--) {
+                        if (sound.exists(loadAssets.id)) {
+                            sound.preload(loadAssets.id, onFileLoad);
+                            loadAssets.splice(i, 1);
+                        }
                     }
-                });
+                }
 
-                if (loadAssets.length)
-                {
+                if (loadAssets.length) {
                     this.app.load(loadAssets, {
                         progress: onFileLoad
                     });
