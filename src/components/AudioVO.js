@@ -108,7 +108,7 @@
                 });
                 
                 this.eventList = eventList;
-                if (value.events) {
+                if (value && value.events) {
                     addEvents(value.events, this.eventList);
                 }
                 this.eventList.sort(sortByTime);

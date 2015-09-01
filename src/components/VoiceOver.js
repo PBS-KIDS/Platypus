@@ -65,8 +65,7 @@
         },
         createVO = function (sound, events, message, frameLength) {
             var i = 0,
-                definitions = [],
-                definition = null;
+                definitions = [];
 
             if (!events[' ']) {
                 events[' '] = events['default'];
@@ -76,9 +75,7 @@
                 for (i = 0; i < sound.length; i++) {
                     definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
                 }
-                definition = definitions.splice(0, 1)[0];
-                definition.next = definitions;
-                return definition;
+                return definitions;
             } else {
                 return createAudioDefinition(sound, events, message, frameLength);
             }
