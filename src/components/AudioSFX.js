@@ -1,10 +1,10 @@
 /**
- * This component plays audio using [SoundJS](http://www.createjs.com/Docs/SoundJS/module_SoundJS.html). Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like [[RenderSprite]]).
+ * This component plays audio using the SpringRoll Sound instance. Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states.
  * 
  * @namespace platypus.components
- * @class Audio
+ * @class AudioSFX
  * @uses Component
- * @deprecated Use `components.AudioSFX` or `components.AudioVO` instead.
+ * @since tbd
  */
 /*global include, createjs, platypus */
 /*jslint plusplus:true */
@@ -20,83 +20,15 @@
             volume:    1,
             pan:       0,
             mute:      false,
-            paused:    false,
-            next:      false,
-            events:    false
-        },
-        sortByTime = function (a, b) {
-            return a.time - b.time;
-        },
-        VOInterface = function () {
-            var player   = Application.instance.voPlayer;
-            
-            this.play = function (sound, options) {
-                var complete = options.complete;
-                
-                player.play(sound, function () {
-                    complete(false);
-                }, function () {
-                    complete(true);
-                });
-                return this;
-            };
-            
-            // Instance behaviors
-            this.stop = this.pause = function () {
-                player.stop();
-            };
-            
-            this.unpause = function () {
-                // No equivalent for voPlayer
-            };
-            
-            Object.defineProperty(this, 'position', {
-                get: function () {
-                    if (player.playing) {
-                        return player.getElapsed();
-                    } else {
-                        return 0;
-                    }
-                }
-            });
-        },
-        SoundInterface = function () {
-            var player = Application.instance.sound;
-            
-            this.play = function (sound, options) {
-                return player.play(sound, options);
-            };
+            paused:    false
         },
         playSound = function (soundDefinition) {
-            var i          = 0,
-                sound      = '',
-                property   = '',
+            var sound      = '',
                 attributes = null;
             
             if (typeof soundDefinition === 'string') {
                 sound      = soundDefinition;
                 attributes = {};
-            } else if (Array.isArray(soundDefinition)) {
-                if (typeof soundDefinition[0] === 'string') {
-                    sound      = soundDefinition[0];
-                    attributes = {next: []};
-                } else {
-                    sound      = soundDefinition[0].sound;
-                    attributes = {};
-                    for (property in soundDefinition[0]) {
-                        if (soundDefinition[0].hasOwnProperty(property)) {
-                            attributes[property] = soundDefinition[0][property];
-                        }
-                    }
-                    if (attributes.next) {
-                        attributes.next = attributes.next.slice();
-                    } else {
-                        attributes.next = [];
-                    }
-                }
-                for (i = 1; i < soundDefinition.length; i++) {
-                    attributes.next.push(soundDefinition[i]);
-                }
             } else {
                 sound      = soundDefinition.sound;
                 attributes = {
@@ -109,62 +41,35 @@
                     startTime: soundDefinition.startTime,
                     duration:  soundDefinition.duration,
                     mute:      soundDefinition.mute,
-                    paused:    soundDefinition.paused,
-                    next:      soundDefinition.next,
-                    events:    soundDefinition.events
+                    paused:    soundDefinition.paused
                 };
             }
 
             return function (value) {
-                var i           = 0,
-                    self        = this,
-                    audio       = null,
-                    next        = false,
-                    events      = false;
+                var self        = this,
+                    audio       = null;
 
                 value = value || attributes;
-                if (value.stop) {
-                    this.stopAudio(sound, value.playthrough);
-                } else {
-                    next          = value.next      || attributes.next   || defaultSettings.next;
-                    events        = value.events    || attributes.events || defaultSettings.events;
-                    
-                    audio = this.player.play(sound, {
-                        interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
-                        delay:      value.delay     || attributes.delay  || defaultSettings.delay,
-                        loop:       value.loop      || attributes.loop   || defaultSettings.loop,
-                        offset:     value.offset    || attributes.offset || defaultSettings.offset,
-                        volume:     (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
-                        pan:        value.pan       || attributes.pan    || defaultSettings.pan,
-                        mute:       value.mute      || attributes.mute   || defaultSettings.mute,
-                        paused:     value.paused    || attributes.paused || defaultSettings.paused,
-                        complete: function (cancelled) {
-                            if (audio) {
-                                if (cancelled) {
-                                    self.onComplete(audio);
-                                } else {
-                                    self.onComplete(audio, next);
-                                }
-                            }
+
+                audio = this.player.play(sound, {
+                    interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
+                    delay:      value.delay     || attributes.delay  || defaultSettings.delay,
+                    loop:       value.loop      || attributes.loop   || defaultSettings.loop,
+                    offset:     value.offset    || attributes.offset || defaultSettings.offset,
+                    volume:     (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
+                    pan:        value.pan       || attributes.pan    || defaultSettings.pan,
+                    mute:       value.mute      || attributes.mute   || defaultSettings.mute,
+                    paused:     value.paused    || attributes.paused || defaultSettings.paused,
+                    complete: function (cancelled) {
+                        if (audio) {
+                            self.onComplete(audio);
                         }
-                    });
-                    
-                    if (audio) {
-                        if (events) {
-                            audio.sequenceEvents = [];
-                            for (i = 0; i < events.length; i++) {
-                                audio.sequenceEvents.push({
-                                    event: events[i].event,
-                                    time: events[i].time || 0,
-                                    message: events[i].message
-                                });
-                            }
-                            audio.sequenceEvents.sort(sortByTime);
-                        }
-    
-                        audio.soundId = sound;
-                        this.activeAudioClips.push(audio);
                     }
+                });
+                
+                if (audio) {
+                    audio.soundId = sound;
+                    this.activeAudioClips.push(audio);
                 }
             };
         },
@@ -191,7 +96,7 @@
         };
     
     return platypus.createComponentClass({
-        id: 'Audio',
+        id: 'AudioSFX',
         
         properties: {
             /**
@@ -225,11 +130,8 @@
              *               "volume": 0.75,
              *               // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.
              * 
-             *               "pan": -0.25,
+             *               "pan": -0.25
              *               // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
-             * 
-             *               "next": ["audio-id"]
-             *               // Optional. Used to specify a list of audio clips to play once this one is finished.
              *           }
              *       }
              * 
@@ -246,16 +148,7 @@
              * @type boolean
              * @default true
              */
-            forcePlayThrough: true,
-            
-            /**
-             * Determines whether a playing sound is interruptable VO.
-             * 
-             * @property voiceOver
-             * @type boolean
-             * @default false
-             */
-            voiceOver: false
+            forcePlayThrough: true
         },
             
         constructor: function (definition) {
@@ -268,11 +161,7 @@
             this.stateChange = false;
             this.currentState = false;
             
-            if (this.voiceOver) {
-                this.player = new VOInterface();
-            } else {
-                this.player = new SoundInterface();
-            }
+            this.player = Application.instance.sound;
     
             if (definition.audioMap) {
                 this.checkStates = [];
@@ -309,18 +198,13 @@
              * @method 'handle-render'
              */
             "handle-render": function () {
-                var self      = this,
-                    i         = 0,
+                var i         = 0,
                     audioClip = null;
                 
                 if (this.paused) {
                     return;
                 }
                 
-                this.getAllClips(function (clip) {
-                    self.checkTimeEvents(clip);
-                });
-
                 if (this.stateChange) {
                     if (this.checkStates) {
                         if (this.currentState) {
@@ -551,53 +435,16 @@
                 }
             },
             
-            checkTimeEvents: function (audioClip, finished) {
-                var events      = audioClip.sequenceEvents,
-                    currentTime = 0;
-                
-                if (events && events.length) {
-                    currentTime = audioClip.position;
-
-                    while (events.length && (finished || (events[0].time <= currentTime))) {
-                        this.owner.trigger(events[0].event, events[0].message);
-                        events.splice(0, 1);
-                    }
-                }
-            },
-        
-            onComplete: function (audioClip, next) {
+            onComplete: function (audioClip) {
                 //clean up active clips
                 this.removeClip(audioClip);
                 
-                this.checkTimeEvents(audioClip, true);
-                
                 /**
-                 * When a single audio clip is finished playing, this event is triggered.
+                 * When a sound effect is finished playing, this event is triggered.
                  * 
                  * @event clip-complete
                  */
                 this.owner.triggerEvent('clip-complete');
-                
-                if (next && next.length) {
-                    if (typeof next === 'string') {
-                        (playSound(next)).call(this);
-                    } else {
-                        var arr = next.slice();
-                        arr.splice(0, 1);
-                        if (arr.length > 0) {
-                            (playSound(next[0])).call(this, {'next': arr});
-                        } else {
-                            (playSound(next[0])).call(this);
-                        }
-                    }
-                } else {
-                    /**
-                     * When an audio sequence is finished playing, this event is triggered.
-                     * 
-                     * @event sequence-complete
-                     */
-                    this.owner.triggerEvent('sequence-complete');
-                }
             },
             
             removeClip: function (audioClip) {

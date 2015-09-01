@@ -17,6 +17,8 @@
 		"../src/components/AssetLoader.js",
 		"../src/components/Audio.js",
 		"../src/components/AudioMobile.js",
+		"../src/components/AudioSFX.js",
+		"../src/components/AudioVO.js",
 		"../src/components/Camera.js",
 		"../src/components/CameraFollowMe.js",
 		"../src/components/CollisionBasic.js",
