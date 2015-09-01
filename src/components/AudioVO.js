@@ -57,8 +57,8 @@
                             for (j = 0; j < events.length; j++) {
                                 fullList.push({
                                     event: events[j].event,
-                                    message: events[i].message,
-                                    time: time + events[i].time
+                                    message: events[j].message,
+                                    time: time + events[j].time
                                 });
                             }
                         }
