@@ -117,8 +117,7 @@
                 this.load(function (result, data) {
                     var asset = null;
                     
-                    if (result) {
-                        console.log(data);
+                    if (data && data.id) {
                         asset = this.owner.assets[data.id] = {
                             data:  data,
                             asset: result
@@ -128,10 +127,8 @@
                             platypus.assets[data.id] = asset;
                         }
                     } else { // audio files don't return any data from the SpringRoll loader.
-                        result = {
-                            content: null,
-                            data: {data: null}
-                        };
+                        result = null;
+                        data   = null;
                     }
                     
                     this.progress += 1;
@@ -174,7 +171,7 @@
                 delete this.owner.assets;
             },
             
-            load: function (onFileLoad, onSoundLoad) {
+            load: function (onFileLoad) {
                 var i = 0,
                     loadAssets = [],
                     sound = this.sound;
