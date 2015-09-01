@@ -192,8 +192,8 @@
 
                 if (sound) {
                     for (i = loadAssets.length - 1; i >= 0; i--) {
-                        if (sound.exists(loadAssets.id)) {
-                            sound.preload(loadAssets.id, onFileLoad);
+                        if (sound.exists(loadAssets[i].id)) {
+                            sound.preload(loadAssets[i].id, onFileLoad);
                             loadAssets.splice(i, 1);
                         }
                     }
