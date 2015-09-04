@@ -97,6 +97,8 @@
                     anims[key] = formatAnimation(key, def[key], textures);
                 }
             }
+            
+            return anims;
         },
         PIXIAnimation = function (spriteSheet, animation) {
             var i = 0,
