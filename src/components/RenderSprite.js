@@ -5,7 +5,7 @@
  * @class RenderSprite
  * @uses Component
  */
-/*global console, createjs, platypus */
+/*global console, PIXI, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";

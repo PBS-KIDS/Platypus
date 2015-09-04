@@ -5,7 +5,8 @@
  * @extends PIXI.Sprite
  */
 //TODO: Document!
-/*global PIXI */
+/*global console, PIXI, platypus */
+/*jslint plusplus:true, nomen:true */
 (function () {
     "use strict";
     
@@ -32,7 +33,7 @@
                 }
             }
             
-            return frames
+            return frames;
         },
         getBaseTextures = function (images) {
             var i = 0,
@@ -75,7 +76,7 @@
                     frames: frames,
                     next: animation[2] || key,
                     speed: animation[3] || 1
-                }
+                };
             } else {
                 for (i = 0; i < animation.frames.length; i++) {
                     frames.push(textures[animation.frames[i]] || PIXI.Texture.EMPTY);
@@ -84,7 +85,7 @@
                     frames: animation.frames,
                     next: animation.next || key,
                     speed: animation.speed || 1
-                }
+                };
             }
         },
         standardizeAnimations = function (def, textures) {
@@ -132,8 +133,8 @@
             anims = standardizeAnimations(spriteSheet.animations || {}, textures);
 
             // Set up a default animation that plays through all frames
-            if (!anims.default) {
-                anims.default = formatAnimation('default', [0, frames.length - 1]);
+            if (!anims['default']) {
+                anims['default'] = formatAnimation('default', [0, frames.length - 1]);
             }
             
             PIXI.Sprite.call(this, textures[0].texture);
@@ -214,8 +215,7 @@
     * Stops the PIXIAnimation
     *
     */
-    prototype.stop = function ()
-    {
+    prototype.stop = function () {
         if (!this.playing) {
             return;
         }
@@ -242,8 +242,7 @@
     *
     * @param frameNumber {number} frame index to stop at
     */
-    prototype.gotoAndStop = function (animation)
-    {
+    prototype.gotoAndStop = function (animation) {
         this.stop();
     
         this._currentTime = 0;
@@ -279,11 +278,12 @@
     */
     prototype.update = function (deltaTime) {
         var data = null,
-            name = "";
+            name = "",
+            floor = 0;
         
         this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
     
-        var floor = Math.floor(this._currentTime);
+        floor = Math.floor(this._currentTime);
     
         if (floor < 0) {
             floor = 0;
@@ -306,9 +306,8 @@
     * Stops the PIXIAnimation and destroys it
     *
     */
-    prototype.destroy = function ( )
-    {
+    prototype.destroy = function () {
         this.stop();
         PIXI.Sprite.prototype.destroy.call(this);
     };
-} ())
+}());
