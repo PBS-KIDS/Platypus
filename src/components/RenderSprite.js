@@ -601,7 +601,7 @@
                         ss.animations = defaultAnimations;
                     }
                     */
-                    cache.spriteSheet = new createjs.SpriteSheet(cache.definition);
+                    cache.spriteSheet = cache.definition; //TODO: definition and actual can be stored together now
 
                     return cache;
                 },
@@ -690,7 +690,7 @@
                  * CreateJS Sprite created here:
                  */
                 this.sprite = new platypus.PIXIAnimation(ss.spriteSheet, this.currentAnimation || 0);
-                this.sprite.addEventListener('animationend', function (animationInstance) {
+                this.sprite.onComplete = function (animationInstance) {
                     self.owner.trigger('animation-ended', animationInstance);
                     if (self.waitingAnimation) {
                         self.currentAnimation = self.waitingAnimation;
@@ -702,22 +702,19 @@
                     } else {
                         self.animationFinished = true;
                     }
-                });
+                };
                 
-                this.affine = new createjs.Matrix2D(1, 0, 0, 1);
+                this.affine = new PIXI.Matrix();
                 
                 // add pins to sprite and setup this.container if needed.
                 if (this.pinLocations) {
-                    this.container = new createjs.Container();
-                    this.container.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
+                    this.container = new PIXI.Container();
                     this.container.addChild(this.sprite);
                     this.sprite.z = 0;
 
                     this.addPins(this.pinLocations, ss.definition.frames);
-                    this.sprite.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
                 } else {
                     this.container = this.sprite;
-                    this.container.transformMatrix = new createjs.Matrix2D(1, 0, 0, 1);
                 }
     
                 
@@ -977,8 +974,9 @@
                         mirrored = 1,
                         flipped  = 1,
                         angle    = null,
-                        matrix   = this.container.transformMatrix,
-                        m        = matrix.copy(this.affine);
+                        matrix   = this.container.worldTransform,
+                        m        = matrix.copy(this.affine),
+                        temp     = PIXI.Matrix.TEMP_MATRIX;
                     
                     if (this.pinnedTo) {
                         if (this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]) {
@@ -1026,7 +1024,7 @@
                     
                     if (this.container.reorder) {
                         this.container.reorder = false;
-                        this.container.sortChildren(sort);
+                        this.container.children.sort(sort);
                     }
                     
                     if (this.mirror || this.flip) {
@@ -1071,19 +1069,37 @@
                     }
                     
                     if (this.pinnedTo) {
-                        m.prependTransform(x, y, mirrored, flipped, 0, 0, 0);
+                        temp.tx = x;
+                        temp.ty = y;
+                        temp.a = mirrored;
+                        temp.b = 0;
+                        temp.c = 0;
+                        temp.d = flipped;
+                        m.prepend(temp);
                     } else {
                         if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
                             o = this.owner.orientationMatrix;
-                            m.prepend(o[0][0], o[1][0], o[0][1], o[1][1], o[0][2], o[1][2]);
+                            temp.tx = o[0][2];
+                            temp.ty = o[1][2];
+                            temp.a = o[0][0];
+                            temp.b = o[1][0];
+                            temp.c = o[0][1];
+                            temp.d = o[1][1];
+                            m.prepend(temp);
                         }
                         
-                        m.prependTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, 0, this.owner.skewX, this.owner.skewY);
+                        temp.tx = x;
+                        temp.ty = y;
+                        temp.a = this.scaleX * mirrored;
+                        temp.b = this.owner.skewX;
+                        temp.c = this.owner.skewY;
+                        temp.d = this.scaleY * flipped;
+                        m.prepend(temp);
                     }
 
                     // Handle rotation
                     if (rotation) {
-                        m.appendTransform(0, 0, 1, 1, rotation);
+                        m.rotate((rotation / 180) * Math.PI);
                     }
                 };
             }()),
@@ -1099,8 +1115,8 @@
                         self.owner.trigger(eventName, {
                             event: event.nativeEvent,
                             cjsEvent: event,
-                            x: event.stageX / self.parentContainer.scaleX + self.camera.x,
-                            y: event.stageY / self.parentContainer.scaleY + self.camera.y,
+                            x: event.stageX / self.parentContainer.scale.x + self.camera.x,
+                            y: event.stageY / self.parentContainer.scale.y + self.camera.y,
                             entity: self.owner
                         });
 

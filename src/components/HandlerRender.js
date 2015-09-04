@@ -174,7 +174,7 @@
 
                         if (this.container.reorder) {
                             this.container.reorder = false;
-                            this.container.sortChildren(sort);
+                            this.container.children.sort(sort);
                         }
 
                     }
@@ -213,8 +213,8 @@
                             return;
                         }
 
-                        x = stageX / self.container.scaleX + self.camera.x;
-                        y = stageY / self.container.scaleY + self.camera.y;
+                        x = stageX / self.container.scale.x + self.camera.x;
+                        y = stageY / self.container.scale.y + self.camera.y;
 
                         event.target.mouseTarget = true;
 
@@ -238,8 +238,8 @@
                                 self.moveMouse = function () {
                                     self.owner.trigger('pressmove', {
                                         event: nativeEvent,
-                                        x: stageX / self.container.scaleX + self.camera.x,
-                                        y: stageY / self.container.scaleY + self.camera.y,
+                                        x: stageX / self.container.scale.x + self.camera.x,
+                                        y: stageY / self.container.scale.y + self.camera.y,
                                         entity: self.owner
                                     });
                                 };

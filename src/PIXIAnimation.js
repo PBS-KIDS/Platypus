@@ -149,7 +149,7 @@
             }
         
             /**
-            * The speed that the MovieClip will play at. Higher is faster, lower is slower
+            * The speed that the PIXIAnimation will play at. Higher is faster, lower is slower
             *
             * @member {number}
             * @default 1
@@ -165,10 +165,10 @@
             this.loop = true; //TODO: get rid of loop and use "next"
         
             /**
-            * Function to call when a MovieClip finishes playing
+            * Function to call when a PIXIAnimation finishes playing
             *
             * @method
-            * @memberof MovieClip#
+            * @memberof PIXIAnimation#
             */
             this.onComplete = null;
         
@@ -181,7 +181,7 @@
             this._currentTime = 0;
         
             /**
-            * Indicates if the MovieClip is currently playing
+            * Indicates if the PIXIAnimation is currently playing
             *
             * @member {boolean}
             * @readonly
@@ -195,23 +195,23 @@
     
     Object.defineProperties(prototype, {
         /**
-        * The MovieClips current frame index
+        * The PIXIAnimations current frame index
         *
         * @member {number}
-        * @memberof PIXI.MovieClip#
+        * @memberof platypus.PIXIAnimation#
         * @readonly
         */
         currentFrame: {
-            get: function ()
-            {
-                return Math.floor(this._currentTime) % this._animation.frames.length;
+            get: function () {
+                var frames = this._animation.frames;
+                return frames[Math.floor(this._currentTime) % frames.length];
             }
         }
     
     });
     
     /**
-    * Stops the MovieClip
+    * Stops the PIXIAnimation
     *
     */
     prototype.stop = function ()
@@ -225,7 +225,7 @@
     };
     
     /**
-    * Plays the MovieClip
+    * Plays the PIXIAnimation
     *
     */
     prototype.play = function () {
@@ -238,7 +238,7 @@
     };
     
     /**
-    * Stops the MovieClip and goes to a specific frame
+    * Stops the PIXIAnimation and goes to a specific frame
     *
     * @param frameNumber {number} frame index to stop at
     */
@@ -256,7 +256,7 @@
     };
     
     /**
-    * Goes to a specific frame and begins playing the MovieClip
+    * Goes to a specific frame and begins playing the PIXIAnimation
     * 
     * @method gotoAndPlay
     * @param animation {string} The animation to begin playing.
@@ -278,7 +278,8 @@
     * @private
     */
     prototype.update = function (deltaTime) {
-        var data = null;
+        var data = null,
+            name = "";
         
         this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
     
@@ -293,12 +294,16 @@
             this._texture = data.texture;
             this.anchor = data.anchor;
         } else if (floor >= this._animation.frames.length) {
+            name = this._animation.id;
             this.gotoAndPlay(this._animation.next);
+            if (this.onComplete) {
+                this.onComplete(name);
+            }
         }
     };
     
     /*
-    * Stops the MovieClip and destroys it
+    * Stops the PIXIAnimation and destroys it
     *
     */
     prototype.destroy = function ( )
@@ -306,46 +311,4 @@
         this.stop();
         PIXI.Sprite.prototype.destroy.call(this);
     };
-    
-    
-    
-    
-    //TODO: Are these two functions necessary? - DDD 9/3/2015
-    
-    
-    /**
-    * A short hand way of creating a movieclip from an array of frame ids
-    *
-    * @static
-    * @param frames {string[]} the array of frames ids the movieclip will use as its texture frames
-    */
-    PIXIAnimation.fromFrames = function (frames)
-    {
-        var textures = [];
-    
-        for (var i = 0; i < frames.length; ++i)
-        {
-            textures.push(new PIXI.Texture.fromFrame(frames[i]));
-        }
-    
-        return new PIXIAnimation(textures);
-    };
-    
-    /**
-    * A short hand way of creating a movieclip from an array of image ids
-    *
-    * @static
-    * @param images {string[]} the array of image urls the movieclip will use as its texture frames
-    */
-    PIXIAnimation.fromImages = function (images)
-    {
-        var textures = [];
-    
-        for (var i = 0; i < images.length; ++i)
-        {
-            textures.push(new PIXI.Texture.fromImage(images[i]));
-        }
-    
-        return new PIXIAnimation(textures);
-    };    
 } ())
