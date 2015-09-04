@@ -43,7 +43,6 @@
 		"../src/components/LogicDestroyMe.js",
 		"../src/components/LogicDirectionalMovement.js",
 		"../src/components/LogicDragDrop.js",
-		"../src/components/LogicFPSCounter.js",
 		"../src/components/LogicImpactLaunch.js",
 		"../src/components/LogicPacingPlatform.js",
 		"../src/components/LogicPortable.js",
