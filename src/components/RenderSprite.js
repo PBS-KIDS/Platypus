@@ -761,7 +761,7 @@
              * @param event {Object | createjs.Event} The event to dispatch.
              */
             "dispatch-event": function (event) {
-                this.sprite.dispatchEvent(event);
+                this.sprite.dispatchEvent(this.sprite, event.event, event.data);
             },
             
             /**
@@ -987,56 +987,60 @@
                 };
                 
                 return function () {
-                    var mousedown = null,
+                    var sprite    = this.container,
+                        mousedown = null,
                         mouseover = null,
                         mouseout  = null,
-                        rollover  = null,
-                        rollout   = null,
                         pressmove = null,
                         pressup   = null,
-                        click     = null,
-                        dblclick  = null;
+                        click     = null;
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click) {
+                        sprite.interactive = true;
+                        
                         mousedown = createHandler(this, 'mousedown');
                         pressmove = createHandler(this, 'pressmove');
                         pressup   = createHandler(this, 'pressup');
                         click     = createHandler(this, 'click');
-                        dblclick  = createHandler(this, 'dblclick');
                         
-                        this.sprite.addEventListener('mousedown', mousedown);
-                        this.sprite.addEventListener('pressmove', pressmove);
-                        this.sprite.addEventListener('pressup',   pressup);
-                        this.sprite.addEventListener('click',     click);
-                        this.sprite.addEventListener('dblclick',  dblclick);
+                        sprite.addListener('mousedown',       mousedown);
+                        sprite.addListener('touchstart',      mousedown);
+                        sprite.addListener('mouseup',         pressup);
+                        sprite.addListener('touchend',        pressup);
+                        sprite.addListener('mouseupoutside',  pressup);
+                        sprite.addListener('touchendoutside', pressup);
+                        sprite.addListener('mousemove',       pressmove);
+                        sprite.addListener('touchmove',       pressmove);
+                        sprite.addListener('click',           click);
+                        sprite.addListener('tap',             click);
                     }
                     if (this.hover) {
-//                        this.stage.enableMouseOver();
+                        sprite.interactive = true;
+                        
                         mouseover = createHandler(this, 'mouseover');
                         mouseout  = createHandler(this, 'mouseout');
-                        rollover  = createHandler(this, 'rollover');
-                        rollout   = createHandler(this, 'rollout');
 
-                        this.sprite.addEventListener('mouseover', mouseover);
-                        this.sprite.addEventListener('mouseout',  mouseout);
-                        this.container.addEventListener('rollover',  rollover);
-                        this.container.addEventListener('rollout',   rollout);
+                        sprite.addListener('mouseover', mouseover);
+                        sprite.addListener('mouseout',  mouseout);
                     }
 
                     this.removeInputListeners = function () {
                         if (this.click) {
-                            this.sprite.removeEventListener('mousedown', mousedown);
-                            this.sprite.removeEventListener('pressmove', pressmove);
-                            this.sprite.removeEventListener('pressup',   pressup);
-                            this.sprite.removeEventListener('click',     click);
-                            this.sprite.removeEventListener('dblclick',  dblclick);
+                            sprite.removeListener('mousedown',       mousedown);
+                            sprite.removeListener('touchstart',      mousedown);
+                            sprite.removeListener('mouseup',         pressup);
+                            sprite.removeListener('touchend',        pressup);
+                            sprite.removeListener('mouseupoutside',  pressup);
+                            sprite.removeListener('touchendoutside', pressup);
+                            sprite.removeListener('mousemove',       pressmove);
+                            sprite.removeListener('touchmove',       pressmove);
+                            sprite.removeListener('click',           click);
+                            sprite.removeListener('tap',             click);
                         }
                         if (this.hover) {
-                            this.sprite.removeEventListener('mouseover', mouseover);
-                            this.sprite.removeEventListener('mouseout',  mouseout);
-                            this.container.removeEventListener('rollover',  rollover);
-                            this.container.removeEventListener('rollout',   rollout);
+                            sprite.removeListener('mouseover', mouseover);
+                            sprite.removeListener('mouseout',  mouseout);
                         }
                         this.removeInputListeners = null;
                     };

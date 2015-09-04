@@ -192,9 +192,9 @@ This component is attached to entities that will appear in the game world. It se
             
             addInput: (function () {
                 var lastEntityLog = null,
-                    createHandler = function (self, eventName) {
+                    createHandler = function (self) {
                         return function (event) {
-                            if ((lastEntityLog !== self.owner) && (event.nativeEvent.button === 2)) {
+                            if (lastEntityLog !== self.owner) {
                                 lastEntityLog = self.owner;
                                 console.log('Entity "' + lastEntityLog.type + '":', lastEntityLog);
                             }
@@ -204,7 +204,7 @@ This component is attached to entities that will appear in the game world. It se
                     };
                 
                 return function (sprite) {
-                    sprite.addEventListener('mousedown', createHandler(this, 'mousedown'));
+                    sprite.addListener('rightdown', createHandler(this));
                 };
             }()),
             

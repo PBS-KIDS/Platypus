@@ -249,18 +249,18 @@
                 };
 
                 return function () {
-                    var mousedown = null,
+                    var sprite    = this.container,
+                        mousedown = null,
                         mouseover = null,
                         mouseout  = null,
-                        rollover  = null,
-                        rollout   = null,
                         pressmove = null,
                         pressup   = null,
-                        click     = null,
-                        dblclick  = null;
+                        click     = null;
 
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click) {
+                        sprite.interactive = true;
+                        
                         /**
                          * Dispatched when the 'mousedown' event occurs on the container.
                          *
@@ -309,26 +309,21 @@
                          * @param eventData.entity {Object} The entity that contains this component.
                          */
                         click     = createHandler(this, 'click');
-                        /**
-                         * Dispatched when the 'dblclick' event occurs on the container.
-                         *
-                         * @event 'dblclick'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        dblclick  = createHandler(this, 'dblclick');
 
-                        this.container.addEventListener('mousedown', mousedown);
-                        this.container.addEventListener('pressmove', pressmove);
-                        this.container.addEventListener('pressup',   pressup);
-                        this.container.addEventListener('click',     click);
-                        this.container.addEventListener('dblclick',  dblclick);
+                        sprite.addListener('mousedown',       mousedown);
+                        sprite.addListener('touchstart',      mousedown);
+                        sprite.addListener('mouseup',         pressup);
+                        sprite.addListener('touchend',        pressup);
+                        sprite.addListener('mouseupoutside',  pressup);
+                        sprite.addListener('touchendoutside', pressup);
+                        sprite.addListener('mousemove',       pressmove);
+                        sprite.addListener('touchmove',       pressmove);
+                        sprite.addListener('click',           click);
+                        sprite.addListener('tap',             click);
                     }
                     if (this.hover) {
+                        sprite.interactive = true;
+                        
                         /**
                          * Dispatched when the 'mouseover' event occurs on the container.
                          *
@@ -353,50 +348,27 @@
                          * @param eventData.entity {Object} The entity that contains this component.
                          */
                         mouseout  = createHandler(this, 'mouseout');
-                        /**
-                         * Dispatched when the EaselJS 'rollover' event occurs on the container.
-                         *
-                         * @event 'rollover'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The related native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        rollover  = createHandler(this, 'rollover');
-                        /**
-                         * Dispatched when the EaselJS 'rollout' event occurs on the container.
-                         *
-                         * @event 'rollout'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The related native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        rollout   = createHandler(this, 'rollout');
 
-                        this.container.addEventListener('mouseover', mouseover);
-                        this.container.addEventListener('mouseout',  mouseout);
-                        this.container.addEventListener('rollover',  rollover);
-                        this.container.addEventListener('rollout',   rollout);
+                        sprite.addListener('mouseover', mouseover);
+                        sprite.addListener('mouseout',  mouseout);
                     }
 
                     this.removeInputListeners = function () {
                         if (this.click) {
-                            this.container.removeEventListener('mousedown', mousedown);
-                            this.container.removeEventListener('pressmove', pressmove);
-                            this.container.removeEventListener('pressup',   pressup);
-                            this.container.removeEventListener('click',     click);
-                            this.container.removeEventListener('dblclick',  dblclick);
+                            sprite.removeListener('mousedown',       mousedown);
+                            sprite.removeListener('touchstart',      mousedown);
+                            sprite.removeListener('mouseup',         pressup);
+                            sprite.removeListener('touchend',        pressup);
+                            sprite.removeListener('mouseupoutside',  pressup);
+                            sprite.removeListener('touchendoutside', pressup);
+                            sprite.removeListener('mousemove',       pressmove);
+                            sprite.removeListener('touchmove',       pressmove);
+                            sprite.removeListener('click',           click);
+                            sprite.removeListener('tap',             click);
                         }
                         if (this.hover) {
-                            this.container.removeEventListener('mouseover', mouseover);
-                            this.container.removeEventListener('mouseout',  mouseout);
-                            this.container.removeEventListener('rollover',  rollover);
-                            this.container.removeEventListener('rollout',   rollout);
+                            sprite.removeListener('mouseover', mouseover);
+                            sprite.removeListener('mouseout',  mouseout);
                         }
                         this.removeInputListeners = null;
                     };
