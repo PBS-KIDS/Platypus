@@ -301,11 +301,12 @@
              **/
             "tick": function (resp) {
                 var i = 0,
-                    child           = null,
-                    bounds          = null,
-                    resets          = [],
-                    msg = this.message,
-                    viewport = msg.viewport;
+                    child     = null,
+                    bounds    = null,
+                    resets    = [],
+                    msg       = this.message,
+                    viewport  = msg.viewport,
+                    transform = null;
                 
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
                     this.viewportUpdate = true;
@@ -350,7 +351,17 @@
                     msg.orientation    = this.worldCamera.orientation;
                     
                     // Transform the world to appear within camera
-                    this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
+                    //this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
+                    transform = this.world.worldTransform;
+                    transform.tx = viewport.halfWidth * msg.scaleX - viewport.x;
+                    transform.ty = viewport.halfHeight * msg.scaleY - viewport.y;
+                    transform.a = msg.scaleX;
+                    transform.b = 0;
+                    transform.c = 0;
+                    transform.d = msg.scaleY;
+                    if (msg.orientation) {
+                        transform.rotate(msg.orientation);
+                    }
                     
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
