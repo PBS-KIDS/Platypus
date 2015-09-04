@@ -393,8 +393,7 @@
         constructor: (function () {
             var defaultAnimations = {"default": 0},
                 createSpriteSheet = function (ssDef, srcImage, entity, component) {
-                    var i  = 0,
-                        image  = null,
+                    var image  = null,
                         ss     = {
                             framerate:     0,
                             images:     null,
@@ -422,75 +421,14 @@
                         console.warn(entity.type + ' - RenderSprite : Neither spriteSheet nor image defined.');
                     }
 
-                    /*
-                    // Find SS definition in image data if it has not otherwise been provided.
-                    if (!srcSS && (typeof def.image === 'string')) {
-                        //check cache and bail if it's available
-                        if (ssCache[def.image]) {
-                            return ssCache[def.image];
-                        } else if (platypus.assets[def.image] && platypus.assets[def.image].data && platypus.assets[def.image].data.spriteSheet) {
-                            ssCache[def.image] = cache;
-                            srcSS = platypus.assets[def.image].data.spriteSheet;
-                            srcSS.images = [platypus.assets[def.image].asset];
-                        }
-                    }
-                    */
-
                     if (ssDef.framerate) {
                         ss.framerate = ssDef.framerate;
                     }
-
-                    /*
-                    // Set framerate.
-                    if (srcSS && !isNaN(srcSS.framerate)) {
-                        ss.framerate = srcSS.framerate;
-                    } else if (!isNaN(def.framerate)) {
-                        ss.framerate = def.framerate;
-                    } else if (!isNaN(entity.framerate)) {
-                        ss.framerate = entity.framerate;
-                    }
-
-                    */
 
                     if (ssDef.images && Array.isArray(ssDef.images)) {
                         ss.images = ssDef.images.slice();
                     } else {
                         console.warn(entity.type + ' - RenderSprite : No source image(s) defined.');
-                    }
-
-                    /*
-                    // Set source image(s)
-                    if (srcSS && Array.isArray(srcSS.images)) {
-                        ss.images = srcSS.images.slice();
-                    } else if (srcSS && srcSS.image) {
-                        ss.images = [srcSS.image];
-                    } else if (def.images) {
-                        ss.images = def.images.slice();
-                    } else if (def.image) {
-                        ss.images = [def.image];
-                    } else if (entity.images) {
-                        ss.images = entity.images.slice();
-                    } else if (entity.image) {
-                        ss.images = [entity.image];
-                    } else {
-                        console.warn('"' + entity.type + '" render component: No source image defined.');
-                    }
-                    */
-
-
-                    // Convert image names into Image resources
-                    for (i = 0; i < ss.images.length; i++) {
-                        if (typeof ss.images[i] === 'string') {
-                            if (platypus.assets[ss.images[i]] && platypus.assets[ss.images[i]].asset) {
-                                ss.images[i] = platypus.assets[ss.images[i]].asset;
-                            } else {
-                                if (platypus.supports.iOS) {
-                                    console.warn(entity.type + ' - RenderSprite : ' + ss.images[i] + '" is not a loaded asset. Make sure the image is not too large for iOS Safari.'); //Convenient check here: http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
-                                } else {
-                                    console.warn(entity.type + ' - RenderSprite : ' + ss.images[i] + '" is not a loaded asset.');
-                                }
-                            }
-                        }
                     }
 
                     if (ssDef && ssDef.frames) {
@@ -511,76 +449,6 @@
                         }
                     }
 
-                    /*
-                    // Set frames.
-                    if (srcSS && srcSS.frames) {
-                        ss.frames = srcSS.frames;
-                    } else if (def.frames) {
-                        ss.frames = def.frames;
-                    } else if (entity.frames) {
-                        ss.frames = entity.frames;
-                    } else if (def.source) {
-                        //TODO: Remove this option at some point once "render-image" notation is no longer in common use. - DDD 5/1/2014
-                        ss.frames = [[
-                            def.source.x      || def.x      || 0,
-                            def.source.y      || def.y      || 0,
-                            def.source.width  || def.width  || ss.images[0].width  || entity.width,
-                            def.source.height || def.height || ss.images[0].height || entity.height,
-                            0,
-                            def.regX          || entity.regX         || 0,
-                            def.regY          || entity.regY         || 0
-                        ]];
-                        console.warn('"' + entity.type + '" render component: The original render-image "source" parameter will soon be deprecated in favor of placing source information as individual parameters directly on the render component.');
-                    } else {
-                        // assume this is a single frame image and define accordingly.
-                        image = ss.images[0];
-                        if (image) {
-                            ss.frames = [[
-                                def.x      || 0,
-                                def.y      || 0,
-                                def.width  || ss.images[0].width  || entity.width,
-                                def.height || ss.images[0].height || entity.height,
-                                0,
-                                def.regX   || entity.regX         || 0,
-                                def.regY   || entity.regY         || 0
-                            ]];
-                        }
-                    }
-                    */
-
-                    /*
-                    // Process frames if the image size has been scaled from the original definition image. (This is sent as data on the image itself, usually due to dynamically reducing the size of source images for smaller devices.)
-                    if (scaled) {
-                        if (Array.isArray(ss.frames)) { //frames are an array
-                            arr = ss.frames;
-                            ss.frames = [];
-                            for (i = 0; i < arr.length; i++) {
-                                scaleX = ss.images[arr[i][4]].scaleX || 1;
-                                scaleY = ss.images[arr[i][4]].scaleY || 1;
-
-                                ss.frames.push([
-                                    arr[i][0] * scaleX,
-                                    arr[i][1] * scaleY,
-                                    arr[i][2] * scaleX,
-                                    arr[i][3] * scaleY,
-                                    arr[i][4],
-                                    arr[i][5] * scaleX,
-                                    arr[i][6] * scaleY
-                                ]);
-                            }
-                        } else {
-                            scaleX = ss.images[0].scaleX || 1;
-                            scaleY = ss.images[0].scaleY || 1;
-                            ss.frames = {
-                                width: ss.frames.width * scaleX,
-                                height: ss.frames.height * scaleY,
-                                regX: ss.frames.regX * scaleX,
-                                regY: ss.frames.regY * scaleY
-                            };
-                        }
-                    }
-                    */
-
                     if (ssDef && ssDef.animations) {
                         ss.animations = ssDef.animations;
                     } else {
@@ -588,19 +456,6 @@
                         ss.animations = defaultAnimations;
                     }
 
-                    /*
-                    // Set animations.
-                    if (srcSS && srcSS.animations) {
-                        ss.animations = srcSS.animations;
-                    } else if (def.animations) {
-                        ss.animations = def.animations;
-                    } else if (entity.animations) {
-                        ss.animations = entity.animations;
-                    } else {
-                        // assume this is a single frame image and define accordingly.
-                        ss.animations = defaultAnimations;
-                    }
-                    */
                     cache.spriteSheet = cache.definition; //TODO: definition and actual can be stored together now
 
                     return cache;
