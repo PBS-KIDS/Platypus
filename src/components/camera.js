@@ -352,7 +352,7 @@
                     
                     // Transform the world to appear within camera
                     //this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
-                    transform = this.world.worldTransform;
+                    transform = this.world.transformMatrix;
                     transform.tx = viewport.halfWidth * msg.scaleX - viewport.x;
                     transform.ty = viewport.halfHeight * msg.scaleY - viewport.y;
                     transform.a = msg.scaleX;

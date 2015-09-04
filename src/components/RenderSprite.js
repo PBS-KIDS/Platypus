@@ -829,7 +829,7 @@
                         mirrored = 1,
                         flipped  = 1,
                         angle    = null,
-                        matrix   = this.container.worldTransform,
+                        matrix   = this.container.transformMatrix,
                         m        = matrix.copy(this.affine),
                         temp     = PIXI.Matrix.TEMP_MATRIX;
                     
