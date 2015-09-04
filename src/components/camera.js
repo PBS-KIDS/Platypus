@@ -781,11 +781,11 @@
                 this.windowPerWorldUnitWidth  = this.viewport.width  / this.worldCamera.viewport.width;
                 this.windowPerWorldUnitHeight = this.viewport.height / this.worldCamera.viewport.height;
                 
-                this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
+                //this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
                 this.container.x = this.viewport.x,
                 this.container.y = this.viewport.y,
-                this.container.regX = this.viewport.halfWidth;
-                this.container.regY = this.viewport.halfHeight;
+                //this.container.regX = this.viewport.halfWidth;
+                //this.container.regY = this.viewport.halfHeight;
                 
                 this.viewportUpdate = true;
             },
