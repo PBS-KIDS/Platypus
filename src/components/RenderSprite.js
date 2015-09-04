@@ -564,12 +564,15 @@
                 // add pins to sprite and setup this.container if needed.
                 if (this.pinLocations) {
                     this.container = new PIXI.Container();
+                    this.container.transformMatrix = new PIXI.Matrix();
                     this.container.addChild(this.sprite);
                     this.sprite.z = 0;
 
                     this.addPins(this.pinLocations, ss.definition.frames);
+                    this.sprite.transformMatrix = new PIXI.Matrix();
                 } else {
                     this.container = this.sprite;
+                    this.sprite.transformMatrix = new PIXI.Matrix();
                 }
     
                 

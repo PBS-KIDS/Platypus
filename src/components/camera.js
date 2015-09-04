@@ -244,6 +244,7 @@
              */
             "render-world": function (data) {
                 this.world = data.world;
+                this.world.transformMatrix = this.world.transformMatrix || new PIXI.Matrix();
             },
             
             /**
