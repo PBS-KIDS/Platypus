@@ -95,7 +95,7 @@
              * On receiving this message, updates the attached entity's position.
              *
              * @method 'handle-logic'
-             * @param tick {Object} The CreateJS tick data.
+             * @param tick {Object} The tick data.
              */
             "handle-logic": function (tick) {
                 var offset = 0,

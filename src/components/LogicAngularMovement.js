@@ -70,7 +70,7 @@
              * Updates the position, velocity, and rotation of the entity
              *
              * @method 'handle-logic'
-             * @param tick {Object} The CreateJS tick data.
+             * @param tick {Object} The tick data.
              */
             "handle-logic": function (tick) {
                 var delta        = tick.delta,

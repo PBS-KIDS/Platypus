@@ -24,7 +24,7 @@
  * @class AudioMobile
  * @uses Component
  */
-/*global console, createjs, platypus */
+/*global console, platypus */
 (function () {
     "use strict";
 

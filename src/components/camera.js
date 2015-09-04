@@ -7,7 +7,7 @@
  * @class Camera
  * @uses Component
 */
-/*global createjs, platypus */
+/*global createjs, PIXI, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -223,7 +223,7 @@
             } else {
                 console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
-            this.container = new createjs.Container();
+            this.container = new PIXI.Container();
             this.parentContainer.addChild(this.container);
         },
         events: {
@@ -241,7 +241,7 @@
              * 
              * @method 'render-world'
              * @param data {Object} Information about the world.
-             * @param data.world {createjs.Container} The container containing world entities.
+             * @param data.world {PIXI.Container} The container containing world entities.
              */
             "render-world": function (data) {
                 this.world = data.world;

@@ -394,13 +394,7 @@
             var defaultAnimations = {"default": 0},
                 createSpriteSheet = function (ssDef, srcImage, entity, component) {
                     var i  = 0,
-                        j  = null,
-                        arr    = null,
                         image  = null,
-                        //scaleX = 1,
-                        //scaleY = 1,
-                        //scaled = false,
-                        //srcSS  = def.spriteSheet,
                         ss     = {
                             framerate:     0,
                             images:     null,
@@ -695,7 +689,7 @@
                 /*
                  * CreateJS Sprite created here:
                  */
-                this.sprite = new createjs.Sprite(ss.spriteSheet, this.currentAnimation || 0);
+                this.sprite = new platypus.PIXIAnimation(ss.spriteSheet, this.currentAnimation || 0);
                 this.sprite.addEventListener('animationend', function (animationInstance) {
                     self.owner.trigger('animation-ended', animationInstance);
                     if (self.waitingAnimation) {

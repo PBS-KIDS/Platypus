@@ -325,7 +325,7 @@ This component listens for input messages triggered on the entity and updates th
         
         methods: {
             handleJoy: function (event) {
-                // The following translate CreateJS mouse and touch events into messages that this controller can handle in a systematic way
+                // The following translate mouse and touch events into messages that this controller can handle in a systematic way
                 var segment     = Math.PI / (this.joystick.directions / 2),
                     dist        = distance(this.owner, event),
                     orientation = 0,

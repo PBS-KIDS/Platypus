@@ -1,11 +1,11 @@
 /**
- * A component that handles updating the render components on entities that are rendering via CreateJS. Calls 'handle-render on children entities every tick. Also initializes handlers for mouse events on the layer level.
+ * A component that handles updating the render components on entities that are rendering via PIXI. Calls 'handle-render on children entities every tick. Also initializes handlers for mouse events on the layer level.
  *
  * @namespace platypus.components
  * @class HandlerRender
  * @uses Component
  */
-/*global createjs, platypus */
+/*global PIXI, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -36,10 +36,8 @@
 
         },
 
-
         constructor: function (definition) {
-            var self = this;
-            this.container = new createjs.Container();
+            this.container = new PIXI.Container();
 
             this.camera = {
                 x: 0,
@@ -75,7 +73,7 @@
                  *
                  * @event 'render-world'
                  * @param data {Object}
-                 * @param data.world {createjs.Container} Contains entities to be rendered.
+                 * @param data.world {PIXI.Container} Contains entities to be rendered.
                  */
                 this.owner.triggerEvent('render-world', {
                     world: this.container
@@ -95,7 +93,7 @@
                  * @event 'handle-render-load'
                  * @param data {Object}
                  * @param data.delta {Number} The delta time for this tick.
-                 * @param data.container {createjs.Container} The display Container the entities display objects should be added to.
+                 * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
                  */
                 entity.triggerEvent('handle-render-load', this.renderMessage);
             },
@@ -128,7 +126,7 @@
              * Sends a 'handle-render' message to all the children in the Container. The children in the Container are also paused/unpaused if needed and sorted according to their z value.
              *
              * @method 'tick'
-             * @param tick {Object} An object containing CreateJS tick data.
+             * @param tick {Object} An object containing tick data.
              */
             "tick": (function () {
                 var sort = function (a, b) {
@@ -156,7 +154,7 @@
                          * @event 'handle-render'
                          * @param data {Object}
                          * @param data.delta {Number} The delta time for this tick.
-                         * @param data.container {createjs.Container} The display Container the entities display objects should be added to.
+                         * @param data.container {PIXI.Container} The display Container the entities display objects should be added to.
                          */
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
@@ -269,7 +267,7 @@
                          * @event 'mousedown'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -281,7 +279,7 @@
                          * @event 'pressmove'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -293,7 +291,7 @@
                          * @event 'pressup'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -305,7 +303,7 @@
                          * @event 'click'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -317,7 +315,7 @@
                          * @event 'dblclick'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -337,7 +335,7 @@
                          * @event 'mouseover'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -349,7 +347,7 @@
                          * @event 'mouseout'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -361,7 +359,7 @@
                          * @event 'rollover'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The related native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -373,7 +371,7 @@
                          * @event 'rollout'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The related native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by CreateJS.
+                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.

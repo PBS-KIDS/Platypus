@@ -9,9 +9,8 @@
     "use strict";
     
     var ApplicationPlugin = include('springroll.ApplicationPlugin'),
-	    updateFunction = null;
-
-    var plugin = new ApplicationPlugin();
+	    updateFunction = null,
+        plugin = new ApplicationPlugin();
 
     // Preload is an optional asynchronous call for doing any loading
     // before the application is init. Make sure that done() is called
