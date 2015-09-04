@@ -1,11 +1,13 @@
 (function () {
 	"use strict";
 	
-	var prototype = PIXI.DisplayObject.prototype;
-	
-	prototype.__updateTransform = prototype.updateTransform;
+	var prototype = PIXI.Container.prototype;
 	
 	prototype.updateTransform = function () {
+		if (!this.visible) {
+			return;
+		}
+	
 		if (this.transformMatrix) {
 			// Just copy the current matrix instead of working with properties.
 			this.worldTransform.copy(this.transformMatrix).prepend(this.parent.worldTransform);
@@ -16,7 +18,13 @@
 			// reset the bounds each time this is called!
 			this._currentBounds = null;
 		} else {
-			this.__updateTransform();
+			this.displayObjectUpdateTransform();
+		}
+	
+		for (var i = 0, j = this.children.length; i < j; ++i) {
+			this.children[i].updateTransform();
 		}
 	};
+	
+	prototype.containerUpdateTransform = prototype.updateTransform;
 } ());
