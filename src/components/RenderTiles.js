@@ -436,7 +436,7 @@
                     }
 
                     // Determine range:
-                    bounds = object.getTransformedBounds();
+                    bounds = object.getBounds();
                     top    = Math.max(0, Math.floor(bounds.y / this.tileHeight));
                     bottom = Math.min(imgMap[0].length, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
                     left   = Math.max(0, Math.floor(bounds.x / this.tileWidth));

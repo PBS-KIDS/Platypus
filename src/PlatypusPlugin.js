@@ -4,7 +4,7 @@
  * @namespace platypus
  * @class PlatypusPlugin
  */
-/*global platypus */
+/*global include, platypus */
 (function(){
     "use strict";
     

@@ -212,14 +212,13 @@
             
             this.viewportUpdate = false;
             
-            this.isOnStage = false;
             if (this.owner.container) {
                 this.parentContainer = this.owner.container;
             } else if (this.owner.stage) {
-                this.isOnStage = true;
+                this.canvas = this.canvas || springroll.Application.instance.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
                 this.parentContainer = this.owner.stage;
-                this.owner.width  = this.parentContainer.canvas.width;
-                this.owner.height = this.parentContainer.canvas.height;
+                this.owner.width  = this.canvas.width;
+                this.owner.height = this.canvas.height;
             } else {
                 console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
@@ -313,9 +312,9 @@
                 }
                 
                 // Need to update owner's size information for changes to canvas size
-                if (this.isOnStage) {
-                    this.owner.width  = this.parentContainer.canvas.width;
-                    this.owner.height = this.parentContainer.canvas.height;
+                if (this.canvas) {
+                    this.owner.width  = this.canvas.width;
+                    this.owner.height = this.canvas.height;
                 }
                 
                 // Check for owner resizing
@@ -387,7 +386,7 @@
                 for (i = 0; i < this.world.children.length; i++) {
                     child = this.world.children[i];
                     if (child.visible && (child.name !== 'entity-managed')) {
-                        bounds = child.getTransformedBounds();
+                        bounds = child.getBounds();
                         if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
                             child.visible = false;
                             resets.push(child);
@@ -396,7 +395,7 @@
                 }
                 
                 // Update the camera's snapshot
-                this.container.updateCache();
+                //this.container.updateCache(); //TODO: This is not really supported in pixi - need to figure out a better way to handle multiple cameras. - DDD 10/4/2015
                 
                 // Reset visibility of hidden children
                 for (i = 0; i < resets.length; i++) {
