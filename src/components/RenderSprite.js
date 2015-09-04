@@ -832,8 +832,7 @@
                         mirrored = 1,
                         flipped  = 1,
                         angle    = null,
-                        matrix   = this.container.transformMatrix,
-                        m        = matrix.copy(this.affine),
+                        m        = this.affine.copy(this.container.transformMatrix),
                         temp     = PIXI.Matrix.TEMP_MATRIX;
                     
                     if (this.pinnedTo) {

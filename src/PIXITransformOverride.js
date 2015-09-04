@@ -10,7 +10,7 @@
 	
 		if (this.transformMatrix) {
 			// Just copy the current matrix instead of working with properties.
-			this.worldTransform.copy(this.transformMatrix).prepend(this.parent.worldTransform);
+			this.transformMatrix.copy(this.worldTransform).prepend(this.parent.worldTransform);
 			
 			// multiply the alphas..
 			this.worldAlpha = this.alpha * this.parent.worldAlpha;
