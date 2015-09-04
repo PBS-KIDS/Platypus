@@ -85,7 +85,7 @@
                     frames.push(textures[animation.frames[i]] || PIXI.Texture.EMPTY);
                 }
                 return {
-                    frames: animation.frames,
+                    frames: frames,
                     next: animation.next || key,
                     speed: animation.speed || 1
                 };
@@ -139,7 +139,7 @@
 
             // Set up a default animation that plays through all frames
             if (!anims['default']) {
-                anims['default'] = formatAnimation('default', [0, frames.length - 1], textures);
+                anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
             PIXI.Sprite.call(this, textures[0].texture);
