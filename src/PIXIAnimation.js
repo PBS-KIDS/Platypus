@@ -136,7 +136,7 @@
 
             // Set up a default animation that plays through all frames
             if (!anims['default']) {
-                anims['default'] = formatAnimation('default', [0, frames.length - 1]);
+                anims['default'] = formatAnimation('default', [0, frames.length - 1], textures);
             }
             
             PIXI.Sprite.call(this, textures[0].texture);
