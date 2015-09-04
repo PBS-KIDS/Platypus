@@ -24,10 +24,13 @@
                 frames = [];
             
             for (i = 0; i < bases.length; i++) {
-                w = bases[i].realWidth;
-                h = bases[i].realHeight;
-                for (y = 0; y < h; y += fh) {
-                    for (x = 0; x < w; x += fw) {
+                
+                // Subtract the size of a frame so that margin slivers aren't returned as frames.
+                w = bases[i].realWidth - fw;
+                h = bases[i].realHeight - fh;
+                
+                for (y = 0; y <= h; y += fh) {
+                    for (x = 0; x <= w; x += fw) {
                         frames.push([x, y, fw, fh, i, rx, ry]);
                     }
                 }
