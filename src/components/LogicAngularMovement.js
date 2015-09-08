@@ -61,7 +61,7 @@
             this.v         = [0, 0];
             this.moving    = false;
             this.piOverTwo = Math.PI / 2;
-            this.owner.orientation = this.owner.orientation || this.visualOffset;
+            this.owner.rotation = this.owner.rotation || this.visualOffset;
         },
 
         events: {
@@ -107,7 +107,7 @@
                     this.owner.x += this.v[0];
                     this.owner.y += this.v[1];
 
-                    this.owner.rotation = (currentAngle + this.visualOffset) * 180 / Math.PI;
+                    this.owner.rotation = (currentAngle * (180 / Math.PI)) + this.visualOffset;
                 }
             },
             /**
