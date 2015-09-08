@@ -149,9 +149,7 @@
             */
             this._animations = anims;
             
-            // Set up initial playthrough.
             this._animation = null;
-            this.gotoAndPlay(animation);
         
             /**
             * The speed that the PIXIAnimation will play at. Higher is faster, lower is slower
@@ -184,6 +182,13 @@
             * @readonly
             */
             this.playing = false;
+
+            // Set up initial playthrough.
+            if (textures.length < 2) {
+                this.gotoAndStop(animation);
+            } else {
+                this.gotoAndPlay(animation);
+            }
         },
         prototype = PIXIAnimation.prototype = Object.create(PIXI.Sprite.prototype);
     
@@ -272,23 +277,12 @@
     * Updates the object transform for rendering
     * @private
     */
-    var test = 0;
-    
     prototype.update = function (deltaTime) {
         var data = null,
             name = "",
             floor = 0;
         
         this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
-        
-        if (!this.test) { this.test = 0; this.test2 = 0; this.oTest = Date.now(); }
-        var now = Date.now();
-        this.test += deltaTime * 60;
-        this.test2 = now - this.oTest;
-        if (now !== test) {
-            test = now;
-            console.log(this.test + ' / ' + this.test2 + ' = ' + (this.test / this.test2));
-        }
         
         floor = Math.floor(this._currentTime);
     
