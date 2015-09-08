@@ -10,7 +10,7 @@
  * @param onFinishedLoading {Function} An optional function to run once the game has begun.
  * @return {Game} Returns the instantiated game. 
  */
-/*global console, createjs, platypus */
+/*global console, createjs, PIXI, platypus */
 /*jslint plusplus:true */
 platypus.Game = (function () {
     "use strict";
@@ -22,9 +22,9 @@ platypus.Game = (function () {
             transitions['fade-to-black'] = function (game, load, complete) {
                 var stage  = game.stage,
                     canvas = stage.canvas,
-                    black  = new createjs.Shape();
+                    black  = new PIXI.Graphics();
 
-                black.graphics.f('#000').r(0, 0, canvas.width, canvas.height);
+                black.beginFill('#000').drawRect(0, 0, canvas.width, canvas.height);
                 black.alpha = 0;
                 stage.addChild(black);
                 
