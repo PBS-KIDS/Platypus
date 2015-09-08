@@ -26,6 +26,7 @@
 		constructor: function (definition) {
             this.owner.state.disabled = this.disabled;
             this.owner.state.down = false;
+            this.owner.buttonMode = !this.disabled;
             this.cancelled = false;
             this.used = false;
             this.last = null;
@@ -77,11 +78,14 @@
 			},
 			"disable": function () {
                 this.owner.state.disabled = true;
+                this.owner.buttonMode = false;
 			},
 			"enable": function () {
                 this.owner.state.disabled = false;
+                this.owner.buttonMode = true;
 			},
 			"toggle-disabled": function () {
+                this.owner.buttonMode = this.owner.state.disabled;
                 this.owner.state.disabled = !this.owner.state.disabled;
 			}
 		}

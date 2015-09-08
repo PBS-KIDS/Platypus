@@ -318,6 +318,15 @@
 
         publicProperties: {
             /**
+             * Determines whether hovering over the sprite should alter the cursor.
+             *
+             * @property buttonMode
+             * @type Boolean
+             * @default false
+             */
+            buttonMode: false,
+
+            /**
              * Optional. The X scaling factor for the image. Defaults to 1.
              *
              * @property scaleX
@@ -834,6 +843,10 @@
                         angle    = null,
                         m        = this.affine.copy(this.container.transformMatrix),
                         temp     = PIXI.Matrix.TEMP_MATRIX;
+                    
+                    if (this.buttonMode !== this.container.buttonMode) {
+                        this.container.buttonMode = this.buttonMode;
+                    }
                     
                     if (this.pinnedTo) {
                         if (this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]) {
