@@ -268,7 +268,7 @@
              * @type Boolean
              * @default false
              */
-            visible: false,
+            visible: true,
 
             /**
              * Optional. Specifies whether this component should listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is false.
