@@ -362,8 +362,8 @@
 
                         if (platypus.assets[imageLayer.name] && platypus.assets[imageLayer.name].asset) { // Prefer to have name in tiled match image id in game
                             tileLayer.image = imageLayer.name;
-                            tileLayer.tileheight = platypus.assets[imageLayer.name].asset.image.height;
-                            tileLayer.tilewidth = platypus.assets[imageLayer.name].asset.image.width;
+                            tileLayer.tileheight = platypus.assets[imageLayer.name].asset.height;
+                            tileLayer.tilewidth = platypus.assets[imageLayer.name].asset.width;
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
                             tileLayer.image = imageLayer.image;
