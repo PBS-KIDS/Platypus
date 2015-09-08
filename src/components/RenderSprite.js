@@ -903,6 +903,11 @@
                         this.stateChange = false;
                     }
                     
+                    // Handle rotation
+                    if (rotation) {
+                        m.rotate((rotation / 180) * Math.PI);
+                    }
+
                     if (this.pinnedTo) {
                         temp.tx = x;
                         temp.ty = y;
@@ -930,11 +935,6 @@
                         temp.c = this.owner.skewY;
                         temp.d = this.scaleY * flipped;
                         m.prepend(temp);
-                    }
-
-                    // Handle rotation
-                    if (rotation) {
-                        m.rotate((rotation / 180) * Math.PI);
                     }
                 };
             }()),
