@@ -276,7 +276,7 @@
                 if (!tile) {
                     tile = this.cachedSprites.pop() || new platypus.PIXIAnimation(this.spriteSheet);
                     if (!tile.transformMatrix) {
-                        tile.transformMatrix = PIXI.Matrix();
+                        tile.transformMatrix = new PIXI.Matrix();
                     }
                     this.tiles[index] = tile;
                     this.tilesToRender.addChild(tile);
