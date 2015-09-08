@@ -289,15 +289,6 @@
             stateBased: true,
 
             /**
-             * Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like "render-layer"). The `RenderTiles` component must have its "entityCache" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
-             *
-             * @property cache
-             * @type Boolean
-             * @default false
-             */
-            cache: false,
-
-            /**
              * Optional. When using stateBased animations, forces animations to complete before starting a new animation. Defaults to false.
              *
              * @property forcePlayThrough
@@ -618,36 +609,10 @@
     
                 //Check state against entity's prior state to update animation if necessary on instantiation.
                 this.stateChange = true;
-                
-                if (this.cache) {
-                    this.updateSprite();
-                    this.owner.cacheRender = this.container;
-                }
             };
         }()),
         
         events: {
-            /**
-             * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
-             *
-             * @method 'cache'
-             */
-            "cache": function () {
-                this.updateSprite();
-                this.owner.cacheRender = this.container;
-                if (this.owner.parent && this.owner.parent.triggerEventOnChildren) {
-                    /**
-                     * On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.
-                     *
-                     * @event 'cache-sprite'
-                     * @param entity {platypus.Entity} This component's owner.
-                     */
-                    this.owner.parent.triggerEventOnChildren('cache-sprite', this.owner);
-                } else {
-                    console.warn('Unable to cache sprite for ' + this.owner.type);
-                }
-            },
-
             /**
              * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
              *

@@ -11,8 +11,7 @@
                 "components":[{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
-                    "imageMap":    "import",
-                    "entityCache": true
+                    "imageMap":    "import"
                 }]
             },
             "collision-layer": {
@@ -99,8 +98,7 @@
                 "components":[{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
-                    "imageMap":    "import",
-                    "entityCache": true
+                    "imageMap":    "import"
                 }]
             },
             "collision-layer": {
@@ -483,9 +481,9 @@
                                     images: (layer.image ? [layer.image] : images),
                                     frames: {
                                         width: tWidth * self.unitsPerPixel / self.imagesScale,
-                                        height: tHeight * self.unitsPerPixel / self.imagesScale //,
-                                            //                                    regX: (tileWidth * self.unitsPerPixel / self.imagesScale) / 2,
-                                            //                        regY: (tileHeight * self.unitsPerPixel / self.imagesScale) / 2
+                                        height: tHeight * self.unitsPerPixel / self.imagesScale,
+                                        regX: (tWidth * self.unitsPerPixel / self.imagesScale) / 2,
+                                        regY: (tHeight * self.unitsPerPixel / self.imagesScale) / 2
                                     },
                                     animations: importAnimation
                                 };
@@ -499,16 +497,11 @@
                         }
                         self.layerZ += self.layerIncrement;
 
-                        if ((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
-                            combineRenderLayer.trigger('add-tiles', renderTiles);
-                            return combineRenderLayer;
-                        } else {
-                            return self.owner.addEntity(new platypus.Entity(tileDefinition, {
-                                properties: {
+                        return self.owner.addEntity(new platypus.Entity(tileDefinition, {
+                            properties: {
 
-                                }
-                            }));
-                        }
+                            }
+                        }));
                     };
 
                 if (images.length === 0) {
