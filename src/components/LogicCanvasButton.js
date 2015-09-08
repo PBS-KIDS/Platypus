@@ -34,7 +34,6 @@
 		events: {
             "handle-logic": function (tick) {
                 if (this.last !== (this.disabled === this.owner.state.disabled)) {
-                    console.log(this.owner.type + ': ' + this.disabled + ' && ' + this.owner.state.disabled + ' === ' + (this.disabled === this.owner.state.disabled));
                     this.last = (this.disabled === this.owner.state.disabled);
                 }
             },
@@ -70,13 +69,11 @@
                 if (this.owner.state.down) {
                     this.cancelled = false;
                 }
-				document.body.style.cursor = 'pointer';
 			},
 			"mouseout": function () {
                 if (this.owner.state.down) {
                     this.cancelled = true;
                 }
-                document.body.style.cursor = 'default';
 			},
 			"disable": function () {
                 this.owner.state.disabled = true;
@@ -87,17 +84,6 @@
 			"toggle-disabled": function () {
                 this.owner.state.disabled = !this.owner.state.disabled;
 			}
-		},
-
-		methods: {
-            destroy: function () {
-				this.mouseOverCount = 0;
-				document.body.style.cursor = 'default';
-			}
-		},
-
-		publicMethods: {
-
 		}
 	});
 }());
