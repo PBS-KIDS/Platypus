@@ -314,7 +314,7 @@ This component allows the entity to contain child entities. It will add several 
                     } else if (newEntity.id) {
                         entity = new platypus.Entity(newEntity);
                     } else {
-                        entity = new platypus.Entity(platypus.game.settings.entities[newEntity.type]);
+                        entity = new platypus.Entity(platypus.game.settings.entities[newEntity.type], newEntity);
                     }
                     this.owner.triggerEvent('entity-created', entity);
                 }

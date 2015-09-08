@@ -5,15 +5,28 @@
  * @class AssetLoader
  * @uses Component
  */
-/*global console, platypus */
+/*global console, include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
     
-    var checkPush  = function (asset, list) {
+    
+    var Application = include('springroll.Application'), // Import SpringRoll classes
+        createId = function (src) { // returns just the filename (sans extension) as the Id.
+            var arr = src.split('/');
+            
+            arr = arr[arr.length - 1].split('.');
+            
+            return arr[0];
+        },
+        checkPush  = function (asset, list) {
             var i = 0,
                 found = false;
-    
+            
+            if (!asset.id) {
+                asset.id = createId(asset.src);
+            }
+            
             for (i = 0; i < list.length; i++) {
                 if (list[i].id === asset.id) {
                     found = true;
@@ -23,20 +36,6 @@
             if (!found) {
                 list.push(asset);
             }
-        },
-        createJSInterface = function (resp) {
-            return {
-                id:    resp.item.id,
-                data:  resp.item.data,
-                asset: resp.result
-            };
-        },
-        springRollInterface = function (resp) {
-            return {
-                id:    resp.manifestData.id,
-                data:  resp.manifestData.data,
-                asset: resp.content
-            };
         };
     
     return platypus.createComponentClass({
@@ -75,31 +74,16 @@
              * @type boolean
              * @default true
              */
-            cache: true,
-            
-            /**
-             * Whether images are loaded from a CORS-enabled domain.
-             * 
-             * @property crossOrigin
-             * @type String
-             * @default ""
-             */
-            crossOrigin: '',
-            
-            /**
-             * Whether to use XHR for asset downloading.
-             * 
-             * @property useXHR
-             * @type boolean
-             * @default true
-             */
-            useXHR: true
+            cache: true
         },
 
         constructor: function (definition) {
             if (!this.assets) {
                 this.assets = platypus.game.settings.assets;
             }
+            
+            this.app = Application.instance;
+            this.sound = this.app.sound;
             
             this.owner.assets = {};
             this.progress = 0;
@@ -130,58 +114,55 @@
              * @method 'load-assets'
              */
             "load-assets": function () {
-                var self = this,
-                    onFileLoad = function (resp) {
-                        var item = self.assetInterface(resp),
-                            asset = self.owner.assets[item.id] = {
-                                data:  item.data,
-                                asset: item.asset
-                            };
-                        
-                        if (self.cache) {
-                            platypus.assets[item.id] = asset;
+                this.load(function (result, data) {
+                    var asset = null;
+                    
+                    if (data && data.id) {
+                        asset = this.owner.assets[data.id] = {
+                            data:  data,
+                            asset: result
+                        };
+                    
+                        if (this.cache) {
+                            platypus.assets[data.id] = asset;
                         }
-                        
-                        self.progress += 1;
-                        
+                    } else { // audio files don't return any data from the SpringRoll loader.
+                        result = null;
+                        data   = null;
+                    }
+                    
+                    this.progress += 1;
+                    
+                    /**
+                     * This message is broadcast when an asset has been loaded.
+                     * 
+                     * @event 'file-load'
+                     * @param load {Object} 
+                     * @param load.asset {Object} Loaded asset. (`null` for audio)
+                     * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio) 
+                     * @param load.complete {boolean} Whether this is the final asset to be loaded.
+                     * @param load.total {number} The total number of assets being loaded.
+                     * @param load.progress {number} The number of assets finished loading.
+                     * @param load.fraction {number} Value of (progress / total) provided for convenience.
+                     */
+                    this.owner.trigger('file-load', {
+                        asset:    result,
+                        complete: (this.progress === this.total),
+                        data:     data,
+                        fraction: this.progress / this.total,
+                        progress: this.progress,
+                        total:    this.total
+                    });
+                    
+                    if (this.progress === this.total) {
                         /**
-                         * This message is broadcast when an asset has been loaded.
+                         * This message is triggered when the asset loader is finished loading assets.
                          * 
-                         * @event 'file-load'
-                         * @param load {Object} 
-                         * @param load.asset {Object} Loaded asset.
-                         * @param load.data {Object} Key/value pairs containing asset data. 
-                         * @param load.complete {boolean} Whether this is the final asset to be loaded.
-                         * @param load.total {number} The total number of assets being loaded.
-                         * @param load.progress {number} The number of assets finished loading.
-                         * @param load.fraction {number} Value of (progress / total) provided for convenience.
+                         * @event 'complete'
                          */
-                        self.owner.trigger('file-load', {
-                            asset:    item.asset,
-                            complete: (self.progress === self.total),
-                            data:     item.data,
-                            fraction: self.progress / self.total,
-                            progress: self.progress,
-                            total:    self.total
-                        });
-                        
-                        if (self.progress === self.total) {
-                            /**
-                             * This message is triggered when the asset loader is finished loading assets.
-                             * 
-                             * @event 'complete'
-                             */
-                            self.owner.triggerEvent('complete');
-                        }
-                    };
-                
-                if (window.springroll && window.springroll.Application && window.springroll.Application.instance) {
-                    this.springRollLoad(onFileLoad);
-                } else if (window.createjs && window.createjs.LoadQueue) {
-                    this.createJSLoad(onFileLoad);
-                } else {
-                    console.warn('AssetLoader: Must have SpringRoll or PreloadJS loaded to load assets.');
-                }
+                        this.owner.triggerEvent('complete');
+                    }
+                }.bind(this));
             }
         },
         
@@ -190,46 +171,35 @@
                 delete this.owner.assets;
             },
             
-            createJSLoad: function (onFileLoad) {
+            load: function (onFileLoad) {
                 var i = 0,
                     loadAssets = [],
-                    loader = new window.createjs.LoadQueue(this.useXHR, "", this.crossOrigin);
-
-                this.assetInterface = createJSInterface;
-                
-                loader.addEventListener('fileload', onFileLoad);
+                    sound = this.sound;
 
                 for (i = 0; i < this.assets.length; i++) {
-                    if (typeof this.assets[i].src === 'string') {
-                        checkPush(this.assets[i], loadAssets);
-                    }
-                }
-
-                if (window.createjs.Sound) {
-                    loader.installPlugin(window.createjs.Sound);
-                }
-                platypus.assets = platypus.assets || {};
-                this.total = loadAssets.length;
-                loader.loadManifest(loadAssets);
-            },
-            
-            springRollLoad: function (onFileLoad) {
-                var i = 0,
-                    loadAssets = [],
-                    loader = window.springroll.Application.instance.loader;
-
-                this.assetInterface = springRollInterface;
-                
-                for (i = 0; i < this.assets.length; i++) {
-                    if (typeof this.assets[i].src === 'string') {
+                    if (typeof this.assets[i] === 'string') {
+                        checkPush({src: this.assets[i]}, loadAssets);
+                    } else if (typeof this.assets[i].src === 'string') {
                         checkPush(this.assets[i], loadAssets);
                     }
                 }
 
                 platypus.assets = platypus.assets || {};
                 this.total = loadAssets.length;
-                for (i = 0; i < loadAssets.length; i++) {
-                    loader.load(loadAssets[i].src, onFileLoad, null, 0, loadAssets[i]);
+
+                if (sound) {
+                    for (i = loadAssets.length - 1; i >= 0; i--) {
+                        if (sound.exists(loadAssets[i].id)) {
+                            sound.preload(loadAssets[i].id, onFileLoad);
+                            loadAssets.splice(i, 1);
+                        }
+                    }
+                }
+
+                if (loadAssets.length) {
+                    this.app.load(loadAssets, {
+                        progress: onFileLoad
+                    });
                 }
             }
         }

@@ -32,3 +32,7 @@ The same as the NEXT process, but will not minify the source code. All code form
 * grunt combine - Build a NEXT version, but leave comments and formatting intact.
 * grunt docs - Build only the docs
 * grunt uglify - Build only the min files. (Will use NEXT as the version)
+
+### Credit
+
+The Platypus build tools originate from the [CreateJS](https://github.com/CreateJS) build tool model.
