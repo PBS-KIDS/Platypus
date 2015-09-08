@@ -1126,11 +1126,7 @@
             },
             
             setMask: function (shape) {
-                var mask = new createjs.Shape(),
-                    gfx  = mask.graphics;
-                
-                mask.x   = 0;
-                mask.y   = 0;
+                var gfx  = new PIXI.Graphics();
                 
                 if (typeof shape === 'string') {
                     processGraphics(gfx, shape);
@@ -1142,7 +1138,7 @@
                     }
                 }
 
-                return mask;
+                return gfx;
             },
             
             setHitArea: (function () {

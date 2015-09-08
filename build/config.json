@@ -12,6 +12,7 @@
 		"../src/Entity.js",
 		"../src/factory.js",
 		"../src/PIXIAnimation.js",
+		"../src/PIXIGraphicsMixins.js",
 		"../src/PIXITransformOverride.js",
 		"../src/PlatypusPlugin.js",
 		"../src/components/AIChaser.js",
