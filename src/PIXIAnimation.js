@@ -162,14 +162,6 @@
             this.animationSpeed = speed;
         
             /**
-            * Whether or not the movie clip repeats after playing.
-            *
-            * @member {boolean}
-            * @default true
-            */
-            this.loop = true; //TODO: get rid of loop and use "next"
-        
-            /**
             * Function to call when a PIXIAnimation finishes playing
             *
             * @method
@@ -280,13 +272,24 @@
     * Updates the object transform for rendering
     * @private
     */
+    var test = 0;
+    
     prototype.update = function (deltaTime) {
         var data = null,
             name = "",
             floor = 0;
         
         this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
-    
+        
+        if (!this.test) { this.test = 0; this.test2 = 0; this.oTest = Date.now(); }
+        var now = Date.now();
+        this.test += deltaTime * 60;
+        this.test2 = now - this.oTest;
+        if (now !== test) {
+            test = now;
+            console.log(this.test + ' / ' + this.test2 + ' = ' + (this.test / this.test2));
+        }
+        
         floor = Math.floor(this._currentTime);
     
         if (floor < 0) {
