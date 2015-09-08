@@ -10,7 +10,7 @@
  * @param onFinishedLoading {Function} An optional function to run once the game has begun.
  * @return {Game} Returns the instantiated game. 
  */
-/*global console, createjs, PIXI, platypus */
+/*global console, createjs, PIXI, platypus, springroll */
 /*jslint plusplus:true */
 platypus.Game = (function () {
     "use strict";
@@ -21,7 +21,7 @@ platypus.Game = (function () {
         setupTransitions = function (tween, transitions) { //TODO: fix transitions
             transitions['fade-to-black'] = function (game, load, complete) {
                 var stage  = game.stage,
-                    canvas = stage.canvas,
+                    canvas = springroll.Application.instance.display.canvas,
                     black  = new PIXI.Graphics();
 
                 black.beginFill('#000').drawRect(0, 0, canvas.width, canvas.height);
