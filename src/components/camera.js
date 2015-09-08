@@ -223,6 +223,7 @@
                 console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
             this.container = new PIXI.Container();
+            this.matrix = this.container.transformMatrix = new PIXI.Matrix();
             this.parentContainer.addChild(this.container);
         },
         events: {
@@ -794,10 +795,8 @@
                 this.windowPerWorldUnitHeight = this.viewport.height / this.worldCamera.viewport.height;
                 
                 //this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
-                this.container.x = this.viewport.x,
-                this.container.y = this.viewport.y,
-                //this.container.regX = this.viewport.halfWidth;
-                //this.container.regY = this.viewport.halfHeight;
+                this.matrix.tx = this.viewport.x - this.viewport.halfWidth;
+                this.matrix.ty = this.viewport.y - this.viewport.halfHeight;
                 
                 this.viewportUpdate = true;
             },
