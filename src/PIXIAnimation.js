@@ -149,10 +149,9 @@
             */
             this._animations = anims;
             
-            this._animation = this._animations[animation || 'default'];
-            if (!this._animation) {
-                this._animation = this._animations['default'];
-            }
+            // Set up initial playthrough.
+            this._animation = null;
+            this.gotoAndPlay(animation);
         
             /**
             * The speed that the PIXIAnimation will play at. Higher is faster, lower is slower
