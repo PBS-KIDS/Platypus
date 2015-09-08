@@ -7,7 +7,7 @@
 	
 	var createDebug = function (param) {
 			return function () {
-				if (platypus.debug) {
+				if (platypus.game.settings.debug) {
 					console.log('"' + param + '" is not an available PIXI.Graphics method.');
 				}
 				return this;
