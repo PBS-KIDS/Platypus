@@ -1128,6 +1128,8 @@
             setMask: function (shape) {
                 var gfx  = new PIXI.Graphics();
                 
+                gfx.beginFill(0x000000, 1);
+
                 if (typeof shape === 'string') {
                     processGraphics(gfx, shape);
                 } else {
@@ -1137,6 +1139,8 @@
                         gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
                     }
                 }
+                
+                gfx.isMask = true;
 
                 return gfx;
             },

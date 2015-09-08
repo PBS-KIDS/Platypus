@@ -54,20 +54,20 @@ This component is attached to entities that will appear in the game world. It se
     "use strict";
     
     var types = {
-            "aabb":      "255,128,255",
-            "render":    "128,128,128",
-            "collision": "255,0,255",
-            "group":     "0,255,0"
+            "aabb":      0xff88ff,
+            "render":    0x888888,
+            "collision": 0xff00ff,
+            "group":     0x00ff00
         },
         createShape = function (shape, type, width, height, regX, regY, z) {
             var newShape = null;
 
             switch (shape) {
             case 'rectangle':
-                newShape = new PIXI.Graphics().beginFill("rgba(" + types[type] + ",0.2)").drawRect(-width  / 2, -height / 2, width, height);
+                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawRect(-width  / 2, -height / 2, width, height);
                 break;
             case 'circle':
-                newShape = new PIXI.Graphics().beginFill("rgba(" + types[type] + ",0.1)").drawCircle(0, 0, width);
+                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawCircle(0, 0, width);
                 break;
             }
             newShape.z = z;
