@@ -155,9 +155,7 @@
              * @param data.container {createjs.Container} Container to contain this tile-rendering.
              */
             "handle-render-load": function (resp) {
-                var x = 0,
-                    y = 0,
-                    parentContainer = null;
+                var parentContainer = null;
 
                 if (resp && resp.container) {
                     parentContainer = this.parentContainer = resp.container;
@@ -170,8 +168,8 @@
                     this.tilesToRender = new PIXI.Container();
                     this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
                     
-                    this.tilesWidth  = x * this.tileWidth;
-                    this.tilesHeight = y * this.tileHeight;
+                    this.tilesWidth  = this.imageMap.length * this.tileWidth;
+                    this.tilesHeight = this.imageMap[0].length * this.tileHeight;
                     
                     this.tilesToRender.scaleX = this.scaleX;
                     this.tilesToRender.scaleY = this.scaleY;
