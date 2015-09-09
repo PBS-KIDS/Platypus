@@ -1133,18 +1133,21 @@
                     return;
                 }
                 
-                gfx = new PIXI.Graphics();
-                
-                gfx.beginFill(0x000000, 1);
 
                 if (typeof shape === 'string') {
+                    gfx = new PIXI.Graphics();
+                    gfx.beginFill(0x000000, 1);
                     processGraphics(gfx, shape);
+                } else if (shape.radius) {
+                    gfx = new PIXI.Graphics();
+                    gfx.beginFill(0x000000, 1);
+                    gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+                } else if (shape.width && shape.height) {
+                    gfx = new PIXI.Graphics();
+                    gfx.beginFill(0x000000, 1);
+                    gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
                 } else {
-                    if (shape.radius) {
-                        gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
-                    } else {
-                        gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
-                    }
+                    gfx = shape;
                 }
                 
 //                gfx.isMask = true;
