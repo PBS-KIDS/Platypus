@@ -1148,10 +1148,10 @@
                     gfx.endFill();
                 }
                 
-//                gfx.isMask = true;
+                gfx.isMask = true;
 
-                this.mask = /*this.container.mask = */gfx;
-                this.mask.z = 1000000;
+                this.mask = this.container.mask = gfx;
+
                 if (this.parentContainer) {
                     this.parentContainer.addChild(this.mask);
                 }
