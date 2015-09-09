@@ -1133,21 +1133,19 @@
                     return;
                 }
                 
-
-                if (typeof shape === 'string') {
-                    gfx = new PIXI.Graphics();
-                    gfx.beginFill(0x000000, 1);
-                    processGraphics(gfx, shape);
-                } else if (shape.radius) {
-                    gfx = new PIXI.Graphics();
-                    gfx.beginFill(0x000000, 1);
-                    gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
-                } else if (shape.width && shape.height) {
-                    gfx = new PIXI.Graphics();
-                    gfx.beginFill(0x000000, 1);
-                    gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
-                } else {
+                if (shape instanceof PIXI.Graphics) {
                     gfx = shape;
+                } else {
+                    gfx = new PIXI.Graphics();
+                    gfx.beginFill(0x000000, 1);
+                    if (typeof shape === 'string') {
+                        processGraphics(gfx, shape);
+                    } else if (shape.radius) {
+                        gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+                    } else if (shape.width && shape.height) {
+                        gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
+                    }
+                    gfx.endFill();
                 }
                 
 //                gfx.isMask = true;
