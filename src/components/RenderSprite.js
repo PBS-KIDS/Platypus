@@ -587,11 +587,6 @@
                     }
                 }
                 
-                //Handle mask
-                if (this.mask) {
-                    this.container.mask = this.setMask(this.mask);
-                }
-    
                 // pin to another RenderSprite
                 if (this.pinTo) {
                     this.owner.triggerEvent('pin-me', this.pinTo);
@@ -770,11 +765,7 @@
              * @param mask {Object} The mask. This can specified the same way as the 'mask' parameter on the component.
              */
             "set-mask": function (mask) {
-                if (mask) {
-                    this.container.mask = this.setMask(mask);
-                } else {
-                    this.container.mask = null;
-                }
+                this.setMask(mask);
             }
         },
         
@@ -783,7 +774,12 @@
                 if (stage && !this.pinTo) {
                     this.parentContainer = stage;
                     this.parentContainer.addChild(this.container);
-//                    if (this.container.mask) this.parentContainer.addChild(this.container.mask);
+
+                    //Handle mask
+                    if (this.mask) {
+                        this.setMask(this.mask);
+                    }
+
                     this.addInputs();
                     return stage;
                 } else {
@@ -1126,7 +1122,18 @@
             },
             
             setMask: function (shape) {
-                var gfx  = new PIXI.Graphics();
+                var gfx = null;
+                
+                if (this.mask && this.parentContainer) {
+                    this.parentContainer.removeChild(this.mask);
+                }
+                
+                if (!shape) {
+                    this.mask = this.container.mask = null;
+                    return;
+                }
+                
+                gfx = new PIXI.Graphics();
                 
                 gfx.beginFill(0x000000, 1);
 
@@ -1142,7 +1149,10 @@
                 
                 gfx.isMask = true;
 
-                return gfx;
+                this.mask = this.container.mask = gfx;
+                if (this.parentContainer) {
+                    this.parentContainer.addChild(this.mask);
+                }
             },
             
             setHitArea: (function () {
