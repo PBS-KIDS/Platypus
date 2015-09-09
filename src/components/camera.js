@@ -362,8 +362,8 @@
                     transform.b = 0;
                     transform.c = 0;
                     transform.d = msg.scaleY;
-                    transform.tx = viewport.halfWidth - viewport.x;
-                    transform.ty = viewport.halfHeight - viewport.y;
+                    transform.tx = (viewport.halfWidth - viewport.x) / msg.scaleX;
+                    transform.ty = (viewport.halfHeight - viewport.y) / msg.scaleY;
                     
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
