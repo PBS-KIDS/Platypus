@@ -221,9 +221,9 @@
                     this.camera.x = vpL;
                     this.camera.y = vpT;
                     
-                    maxX = Math.min(Math.ceil((vpL + camera.viewport.width) / (this.tileWidth * this.scaleX)), this.imageMap.length) - 1;
+                    maxX = Math.min(Math.ceil((vpL + camera.viewport.width) / (this.tileWidth * this.scaleX)), this.imageMap.length - 1);
                     minX = Math.max(Math.floor(vpL / (this.tileWidth * this.scaleX)), 0);
-                    maxY = Math.min(Math.ceil((vpT + camera.viewport.height) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
+                    maxY = Math.min(Math.ceil((vpT + camera.viewport.height) / (this.tileHeight * this.scaleY)), this.imageMap[0].length - 1);
                     minY = Math.max(Math.floor(vpT / (this.tileHeight * this.scaleY)), 0);
         
                     //only attempt to handle children if camera has moved more than a tile.
