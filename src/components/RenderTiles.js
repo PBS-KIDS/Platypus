@@ -69,7 +69,32 @@
                 m.d = 1;
             }
             return 0x0fffffff & v;
-        };
+        },
+        Template = function(tile){
+            this.instances = [tile];
+            this.index = 0;
+            tile.template = this; // backwards reference for clearing index later.
+        },
+        prototype = Template.prototype;
+        
+    prototype.getNext = function () {
+        var instance = this.instances[this.index],
+            template = null;
+        
+        if (!instance) {
+            template = this.instances[0];
+            instance = this.instances[this.index] = new PIXI.Sprite(template.texture);
+            instance.transformMatrix = template.transformMatrix.clone();
+        }
+        
+        this.index += 1;
+        
+        return instance;
+    };
+    
+    prototype.clear = function () {
+        this.index = 0;
+    };
 
     return platypus.createComponentClass({
         
@@ -420,7 +445,7 @@
                 anim = 'tile' + transformCheck(imageName, tile.transformMatrix);
                 tile.gotoAndStop(anim);
                 
-                return tile;
+                return new Template(tile);
             },
             
             addImageMap: function (map) {
@@ -453,6 +478,7 @@
                     layer   = 0,
                     tile    = null,
                     ents    = [],
+                    tiles   = [],
                     oList   = null;
                 
                 for (x = bounds.minX; x <= bounds.maxX; x++) {
@@ -460,12 +486,14 @@
                         if (!oldBounds || (y > oldBounds.maxY) || (y < oldBounds.minY) || (x > oldBounds.maxX) || (x < oldBounds.minX)) {
                             // draw tiles
                             for (layer = 0; layer < this.imageMap.length; layer++) {
-                                tile = this.imageMap[layer][x][y];
+                                tile = this.imageMap[layer][x][y].getNext();
                                 if (tile) {
-                                    tile.transformMatrix.tx = x * this.tileWidth;
-                                    tile.transformMatrix.ty = y * this.tileHeight;
+                                    if (tile.template) {
+                                        tiles.push(tile.template);
+                                    }
+                                    tile.transformMatrix.tx = (x + 0.5) * this.tileWidth;
+                                    tile.transformMatrix.ty = (y + 0.5) * this.tileHeight;
                                     this.cacheCamera.addChild(tile);
-//                                            this.cacheTexture.render(tile);
                                 }
                             }
                                 
@@ -490,6 +518,11 @@
                         delete ents[z].drawn;
                         this.cacheCamera.addChild(ents[z]);
                     }
+                }
+                
+                // Clear out tile instances
+                for (z = 0; z < tiles.length; z++) {
+                    tiles[z].clear();
                 }
 
                 this.cacheTexture.render(this.cacheCamera);
