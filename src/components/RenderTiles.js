@@ -149,7 +149,10 @@
             this.controllerEvents = undefined;
             this.doMap            = null; //list of display objects that should overlay tile map.
             this.tiles            = {};
+            
+            this.renderer         = springroll.Application.instance.display.renderer;
             this.tilesSprite      = null;
+            this.cacheTexture     = null;
             
             // temp values
             this.worldWidth    = this.layerWidth    = this.tileWidth;
@@ -222,7 +225,7 @@
                     this.cacheTilesWidth = Math.floor(this.cacheWidth  / this.tileWidth);
                     this.cacheTilesHeight = Math.floor(this.cacheHeight / this.tileHeight);
 
-                    this.cacheTexture = new PIXI.RenderTexture(this.cacheWidth, this.cacheHeight);
+                    this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                     this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
                     this.tilesSprite.scaleX = this.scaleX;
                     this.tilesSprite.scaleY = this.scaleY;
@@ -234,7 +237,7 @@
                         this.fullyCached = false;
                         
                         // Set up copy buffer and circular pointers
-                        this.cacheTexture.alternate = new PIXI.RenderTexture(this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                         this.cacheTexture.alternate.alternate = this.cacheTexture;
                         this.tilesSprite.alternate = new PIXI.Sprite(this.cacheTexture.alternate);
                         this.tilesSprite.alternate.alternate = this.tilesSprite;
