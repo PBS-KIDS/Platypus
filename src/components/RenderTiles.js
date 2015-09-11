@@ -378,14 +378,14 @@
 
                         this.cacheTexture.render(this.cacheCamera);
                         this.cacheCamera.removeChildren();
+                        this.cacheTexture.requiresUpdate = true;
 
 //                        context = this.tilesToRender.cacheCanvas.getContext('2d');
-                        width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
-                        height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
+//                        width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
+//                        height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
                         //context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
                         //this.cacheTexture.render(this.tilesSprite.alternate);
-                        this.cacheTexture.update();
-                        //this.cacheTexture.requiresUpdate = true;
+                        //this.cacheTexture.update();
                         
                         cache.minX = minX;
                         cache.minY = minY;
