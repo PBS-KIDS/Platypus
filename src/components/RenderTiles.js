@@ -264,6 +264,8 @@
                     this.cacheTilesHeight = Math.floor(this.cacheHeight / this.tileHeight);
 
                     this.cacheCamera = new PIXI.Container();
+                    this.cacheCameraWrapper = new PIXI.Container();
+                    this.cacheCameraWrapper.addChild(this.cacheCamera);
                     this.cacheCamera.transformMatrix = new PIXI.Matrix();
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
 
@@ -386,6 +388,9 @@
                         this.tilesSprite.texture = this.cacheTexture;
                         this.updateCache(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
                     }
+                    
+                    this.tilesSprite.x += cache.minX * this.tilesWidth;
+                    this.tilesSprite.y += cache.minY * this.tilesHeight;
                 }
             }
         },
@@ -540,7 +545,7 @@
                 this.cacheCamera.transformMatrix.tx = -bounds.minX * this.tileWidth;
                 this.cacheCamera.transformMatrix.ty = -bounds.minY * this.tileHeight;
                 this.cacheTexture.clear();
-                this.cacheTexture.render(this.cacheCamera);
+                this.cacheTexture.render(this.cacheCameraWrapper);
                 this.cacheCamera.removeChildren();
                 this.cacheTexture.requiresUpdate = true;
                 
