@@ -390,6 +390,7 @@
                         //context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
                         //this.cacheTexture.render(this.tilesSprite.alternate);
                         //this.cacheTexture.update();
+                        this.cacheTexture.requiresUpdate = true;
                         
                         cache.minX = minX;
                         cache.minY = minY;
