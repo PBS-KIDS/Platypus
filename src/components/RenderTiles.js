@@ -13,31 +13,6 @@
     var sort = function (a, b) {
             return a.z - b.z;
         },
-        initializeCanvasConservation = function (displayObject) { //To make CreateJS Display Object have better canvas conservation.
-            var canvas  = [document.createElement("canvas"), document.createElement("canvas")],
-                current = 0;
-
-            if (!displayObject.___cache) { //make sure this is only set up once
-                displayObject.___cache = displayObject.cache;
-
-                displayObject.cache = function (x, y, width, height, scale) {
-                    current = 1 - current;
-                    this.cacheCanvas = canvas[current];
-                    this.___cache(x, y, width, height, scale);
-                };
-            }
-
-            //Overriding EaselJS function to allow the tilemap to catch all clicks.
-            displayObject._getObjectsUnderPoint = function (x, y, arr, mouse, activeListener, currentDepth) {
-                if (arr) {
-                    arr.push(this);
-                } else {
-                    return this;
-                }
-                return null;
-            };
-            return displayObject;
-        },
         transform = {
             x: 1,
             y: 1,
@@ -178,14 +153,14 @@
             };
     
             this.controllerEvents = undefined;
-            this.spriteSheet   = new createjs.SpriteSheet(spriteSheet);
-            this.doMap         = null; //list of display objects that should overlay tile map.
-            this.tiles         = {};
-            this.tilesToRender = undefined;
+            this.spriteSheet      = new createjs.SpriteSheet(spriteSheet);
+            this.doMap            = null; //list of display objects that should overlay tile map.
+            this.tiles            = {};
+            this.tilesSprite      = null;
             
             // temp values
-            this.worldWidth    = this.tilesWidth    = this.tileWidth;
-            this.worldHeight   = this.tilesHeight   = this.tileHeight;
+            this.worldWidth    = this.layerWidth    = this.tileWidth;
+            this.worldHeight   = this.layerHeight   = this.tileHeight;
             
             
             buffer = (this.buffer || (this.tileWidth * 3 / 4)) * this.scaleX;
@@ -206,7 +181,7 @@
 
         events: {
             /**
-             * This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesToRender displayObject to the stage.
+             * This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesSprite displayObject to the stage.
              * 
              * @method 'handle-render-load'
              * @param data.container {createjs.Container} Container to contain this tile-rendering.
@@ -215,9 +190,7 @@
                 var x = 0,
                     y = 0,
                     parentContainer = null,
-                    index = '',
-                    imgMapDefinition = this.imageMap,
-                    newImgMap = [];
+                    imgMap = this.imageMap;
 
                 if (resp && resp.container) {
                     parentContainer = this.parentContainer = resp.container;
@@ -227,28 +200,58 @@
                         this.reorderedStage = true;
                     }
                     
-                    this.tilesToRender = initializeCanvasConservation(new createjs.Container());
-                    this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
+                    //this.tilesToRender = initializeCanvasConservation(new PIXI.Container());
+                    //this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
                     
-                    for (x = 0; x < imgMapDefinition.length; x++) {
-                        newImgMap[x] = [];
-                        for (y = 0; y < imgMapDefinition[x].length; y++) {
-                            newImgMap[x][y] = index = imgMapDefinition[x][y];
-                            if (!this.tiles[index]) {
-                                this.tiles[index] = this.createTile(index);
-                            }
+                    this.imageMap = [];
+                    this.addImageMap(imgMap);
+                    
+                    this.tilesWidth  = this.imageMap[0].length;
+                    this.tilesHeight = this.imageMap[0][0].length;
+                    this.layerWidth  = this.tilesWidth  * this.tileWidth;
+                    this.layerHeight = this.tilesHeight * this.tileHeight;
+                    
+                    // May be too generous? Check for performance impact
+                    this.cacheWidth = 2048;
+                    this.cacheHeight = 2048;
+                    for (x = 1; x < 2048; x *= 2) {
+                        if (x > this.layerWidth) {
+                            this.cacheWidth = x;
+                            break;
                         }
                     }
-                    this.imageMap = newImgMap;
+                    for (y = 1; y < 2048; y *= 2) {
+                        if (y > this.layerHeight) {
+                            this.cacheHeight = y;
+                            break;
+                        }
+                    }
+                    this.cacheTilesWidth = Math.floor(this.cacheWidth  / this.tileWidth);
+                    this.cacheTilesHeight = Math.floor(this.cacheHeight / this.tileHeight);
+
+                    this.cacheTexture = new PIXI.RenderTexture(this.cacheWidth, this.cacheHeight);
+                    this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
+                    this.tilesSprite.scaleX = this.scaleX;
+                    this.tilesSprite.scaleY = this.scaleY;
+                    this.tilesSprite.z = this.owner.z;
                     
-                    this.tilesWidth  = x * this.tileWidth;
-                    this.tilesHeight = y * this.tileHeight;
-                    
-                    this.tilesToRender.scaleX = this.scaleX;
-                    this.tilesToRender.scaleY = this.scaleY;
-                    this.tilesToRender.z = this.owner.z;
-            
-                    parentContainer.addChild(this.tilesToRender);
+                    if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
+                        this.fullyCached = true;
+                    } else {
+                        this.fullyCached = false;
+                        
+                        // Set up copy buffer and circular pointers
+                        this.cacheTexture.alternate = new PIXI.RenderTexture(this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture.alternate.alternate = this.cacheTexture;
+                        this.tilesSprite.alternate = new PIXI.Sprite(this.cacheTexture.alternate);
+                        this.tilesSprite.alternate.alternate = this.tilesSprite;
+
+                        this.tilesSprite.alternate.scaleX = this.scaleX;
+                        this.tilesSprite.alternate.scaleY = this.scaleY;
+                        this.tilesSprite.alternate.z = this.owner.z;
+                    }
+
+                    parentContainer.addChild(this.tilesSprite);
                 }
             },
             
@@ -279,26 +282,10 @@
              * @param message.imageMap {Array} This is a 2D mapping of tile indexes to be rendered.
              */
             "add-tiles": function (definition) {
-                var x = 0,
-                    y = 0,
-                    map   = definition.imageMap,
-                    index = '',
-                    newIndex = 0;
+                var map = definition.imageMap;
                 
                 if (map) {
-                    for (x = 0; x < this.imageMap.length; x++) {
-                        for (y = 0; y < this.imageMap[x].length; y++) {
-                            newIndex = map[x][y];
-                            index = this.imageMap[x][y];
-                            if (this.tiles[index]) {
-                                delete this.tiles[index];
-                            }
-                            index = this.imageMap[x][y] += ' ' + newIndex;
-                            if (!this.tiles[index]) {
-                                this.tiles[index] = this.createTile(index);
-                            }
-                        }
-                    }
+                    this.addImageMap(map);
                 }
             },
 
@@ -326,57 +313,52 @@
                 var x = 0,
                     y = 0,
                     z = 0,
+                    layer   = 0,
                     buffer  = this.camera.buffer,
                     cache   = this.cache,
-                    context = null,
-                    canvas  = null,
                     width   = 0,
                     height  = 0,
                     maxX    = 0,
                     maxY    = 0,
                     minX    = 0,
                     minY    = 0,
-                    camL    = this.convertCamera(camera.viewport.left, this.worldWidth, this.tilesWidth, camera.viewport.width),
-                    camT    = this.convertCamera(camera.viewport.top, this.worldHeight, this.tilesHeight, camera.viewport.height),
+                    camL    = this.convertCamera(camera.viewport.left, this.worldWidth, this.layerWidth, camera.viewport.width),
+                    camT    = this.convertCamera(camera.viewport.top, this.worldHeight, this.layerHeight, camera.viewport.height),
                     vpL     = Math.floor(camL / this.tileWidth)  * this.tileWidth,
                     vpT     = Math.floor(camT / this.tileHeight) * this.tileHeight,
                     tile    = null,
                     ents    = [],
                     oList   = null;
                 
-                this.tilesToRender.x = camera.viewport.left - camL;
-                this.tilesToRender.y = camera.viewport.top  - camT;
+                this.tilesSprite.x = camera.viewport.left - camL;
+                this.tilesSprite.y = camera.viewport.top  - camT;
                 
-                if (((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
+                if (!this.fullyCached && ((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
                     this.camera.x = vpL;
                     this.camera.y = vpT;
                     
                     //only attempt to draw children that are relevant
-                    maxX = Math.min(Math.ceil((vpL + camera.viewport.width + buffer) / (this.tileWidth * this.scaleX)), this.imageMap.length) - 1;
+                    maxX = Math.min(Math.ceil((vpL + camera.viewport.width + buffer) / (this.tileWidth * this.scaleX)), this.tilesWidth) - 1;
                     minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
-                    maxY = Math.min(Math.ceil((vpT + camera.viewport.height + buffer) / (this.tileHeight * this.scaleY)), this.imageMap[0].length) - 1;
+                    maxY = Math.min(Math.ceil((vpT + camera.viewport.height + buffer) / (this.tileHeight * this.scaleY)), this.tilesHeight) - 1;
                     minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
         
                     if ((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)) {
-                        if (this.tilesToRender.cacheCanvas) {
-                            canvas = this.tilesToRender.cacheCanvas;
-                            this.tilesToRender.uncache();
-                        }
-                        
-                        this.tilesToRender.removeChildAt(0);
-                        this.tilesToRender.cache(minX * this.tileWidth, minY * this.tileHeight, (maxX - minX + 1) * this.tileWidth, (maxY - minY + 1) * this.tileHeight, 1);
+                        this.parentContainer.removeChild(this.tilesSprite);
+                        this.tilesSprite = this.tilesSprite.alternate;
+                        this.cacheTexture = this.cacheTexture.alternate;
                         
                         for (x = minX; x <= maxX; x++) {
                             for (y = minY; y <= maxY; y++) {
                                 if ((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)) {
                                     // draw tiles
-                                    tile = this.tiles[this.imageMap[x][y]];
-                                    this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
-                                    this.tilesToRender.addChild(tile);
-                                    tile.x = (x + 0.5) * this.tileWidth;
-                                    tile.y = (y + 0.5) * this.tileHeight;
-                                    this.tilesToRender.updateCache('source-over');
-
+                                    for (layer = 0; layer < this.imageMap.length; layer++) {
+                                        tile = this.tiles[this.imageMap[layer][x][y]];
+                                        tile.x = (x + 0.5) * this.tileWidth;
+                                        tile.y = (y + 0.5) * this.tileHeight;
+                                        this.cacheTexture.render(tile);
+                                    }
+                                        
                                     // check for cached entities
                                     if (this.doMap && this.doMap[x] && this.doMap[x][y]) {
                                         oList = this.doMap[x][y];
@@ -396,22 +378,21 @@
                             ents.sort(sort);
                             for (z = 0; z < ents.length; z++) {
                                 delete ents[z].drawn;
-                                this.tilesToRender.removeChildAt(0); // Leaves one child in the display object so createjs will render the cached image.
-                                this.tilesToRender.addChild(ents[z]);
-                                this.tilesToRender.updateCache('source-over');
+                                this.cacheTexture.render(tile);
                             }
                         }
 
-                        if (canvas) {
-                            context = this.tilesToRender.cacheCanvas.getContext('2d');
-                            width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
-                            height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
-                            context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
-                            cache.minX = minX;
-                            cache.minY = minY;
-                            cache.maxX = maxX;
-                            cache.maxY = maxY;
-                        }
+//                        context = this.tilesToRender.cacheCanvas.getContext('2d');
+                        width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
+                        height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
+                        //context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
+                        //this.cacheTexture.render(this.tilesSprite.alternate);
+                        //this.cacheTexture.update();
+                        
+                        cache.minX = minX;
+                        cache.minY = minY;
+                        cache.maxX = maxX;
+                        cache.maxY = maxY;
                     }
                 }
             }
@@ -421,7 +402,6 @@
             cacheSprite: function (entity) {
                 var x = 0,
                     y = 0,
-                    imgMap = this.imageMap,
                     object = entity.cacheRender,
                     bounds = null,
                     top = 0,
@@ -438,9 +418,9 @@
                     // Determine range:
                     bounds = object.getBounds();
                     top    = Math.max(0, Math.floor(bounds.y / this.tileHeight));
-                    bottom = Math.min(imgMap[0].length, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
+                    bottom = Math.min(this.tilesHeight, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
                     left   = Math.max(0, Math.floor(bounds.x / this.tileWidth));
-                    right  = Math.min(imgMap.length, Math.ceil((bounds.x + bounds.width) / this.tileWidth));
+                    right  = Math.min(this.tilesWidth, Math.ceil((bounds.x + bounds.width) / this.tileWidth));
 
                     // Find tiles that should include this display object
                     for (x = left; x < right; x++) {
@@ -513,14 +493,32 @@
                 }
             },
             
+            addImageMap: function (map) {
+                var x = 0,
+                    y = 0,
+                    index = '',
+                    newMap = [];
+                
+                for (x = 0; x < map.length; x++) {
+                    newMap[x] = [];
+                    for (y = 0; y < map[x].length; y++) {
+                        newMap[x][y] = index = map[x][y];
+                        if (!this.tiles[index]) {
+                            this.tiles[index] = this.createTile(index);
+                        }
+                    }
+                }
+                
+                this.imageMap.push(newMap);
+            },
+            
             destroy: function () {
-                this.tilesToRender.removeAllChildren();
                 this.parentContainer.removeChild(this.tilesToRender);
                 this.imageMap.length = 0;
-                this.tiles = undefined;
-                this.camera = undefined;
-                this.parentContainer = undefined;
-                this.tilesToRender = undefined;
+                this.tiles = null;
+                this.camera = null;
+                this.parentContainer = null;
+                this.tilesSprite = null;
             }
         }
     });

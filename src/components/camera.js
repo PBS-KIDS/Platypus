@@ -7,7 +7,7 @@
  * @class Camera
  * @uses Component
 */
-/*global createjs, PIXI, platypus */
+/*global createjs, PIXI, platypus, springroll */
 /*jslint plusplus:true */
 (function () {
     "use strict";
