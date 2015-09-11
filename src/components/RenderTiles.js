@@ -13,7 +13,7 @@
     var sort = function (a, b) {
             return a.z - b.z;
         },
-        transformCheck = function (value) {
+        transformCheck = function (value, m) {
             var v = +(value.substring(4)),
                 a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
