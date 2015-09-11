@@ -228,8 +228,12 @@
 
                     this.cacheCamera = new PIXI.Container();
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
-                    this.cacheTexture.baseTexture.realWidth = this.cacheWidth;//TODO: Temp fix for broken SpringRoll PIXI implementation.
+
+                    //TODO: Temp fix for broken SpringRoll PIXI implementation.
+                    this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
                     this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
+                    this.cacheTexture._updateUvs();
+                    
                     this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
                     this.tilesSprite.scaleX = this.scaleX;
                     this.tilesSprite.scaleY = this.scaleY;
@@ -242,8 +246,12 @@
                         
                         // Set up copy buffer and circular pointers
                         this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
-                        this.cacheTexture.alternate.baseTexture.realWidth = this.cacheWidth;//TODO: Temp fix for broken SpringRoll PIXI implementation.
+                        
+                        //TODO: Temp fix for broken SpringRoll PIXI implementation.
+                        this.cacheTexture.alternate.baseTexture.realWidth = this.cacheWidth;
                         this.cacheTexture.alternate.baseTexture.realHeight = this.cacheHeight;
+                        this.cacheTexture.alternate._updateUvs();
+
                         this.cacheTexture.alternate.alternate = this.cacheTexture;
                     }
 
