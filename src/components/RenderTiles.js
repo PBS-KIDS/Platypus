@@ -144,8 +144,9 @@
         },
 
         constructor: function (definition) {
+            var buffer = 0;
+            
             this.controllerEvents = undefined;
-            this.spriteSheet      = new createjs.SpriteSheet(spriteSheet);
             this.doMap            = null; //list of display objects that should overlay tile map.
             this.tiles            = {};
             this.tilesSprite      = null;
@@ -345,10 +346,12 @@
                                 if ((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)) {
                                     // draw tiles
                                     for (layer = 0; layer < this.imageMap.length; layer++) {
-                                        tile = this.tiles[this.imageMap[layer][x][y]];
-                                        tile.x = (x + 0.5) * this.tileWidth;
-                                        tile.y = (y + 0.5) * this.tileHeight;
-                                        this.cacheTexture.render(tile);
+                                        tile = this.imageMap[layer][x][y];
+                                        if (tile) {
+                                            tile.transformMatrix.tx = x * this.tileWidth;
+                                            tile.transformMatrix.ty = y * this.tileHeight;
+                                            this.cacheTexture.render(tile);
+                                        }
                                     }
                                         
                                     // check for cached entities
@@ -441,63 +444,39 @@
             },
             
             createTile: function (imageName) {
-                var i = 1,
-                    imageArray = imageName.split(' '),
-                    mergedTile = null,
-                    tile  = new createjs.Sprite(this.spriteSheet, 0),
-                    layer = null;
+                var tile = null,
+                    anim = '';
                 
-                tile.x = 0;
-                tile.y = 0;
-                tile.regX = this.tileWidth / 2;
-                tile.regY = this.tileHeight / 2;
-                if (imageArray[0] !== 'tile-1') {
-                    layer = transformCheck(imageArray[0]);
-                    tile.scaleX = layer.x;
-                    tile.scaleY = layer.y;
-                    tile.rotation = layer.r;
-                    tile.gotoAndStop('tile' + layer.t);
-                } else {
-                    tile.gotoAndStop('tile-1');
+                // "tile-1" is empty, so it remains a null reference.
+                if (imageName === 'tile-1') {
+                    return null;
                 }
                 
-                for (i = 1; i < imageArray.length; i++) {
-                    if (imageArray[i] !== 'tile-1') {
-                        if (!mergedTile) {
-                            mergedTile = new createjs.Container();
-                            mergedTile.addChild(tile);
-                            mergedTile.cache(-this.tileWidth / 2, -this.tileHeight / 2, this.tileWidth, this.tileHeight, 1);
-                        }
-                        layer = transformCheck(imageArray[i]);
-                        tile.scaleX = layer.x;
-                        tile.scaleY = layer.y;
-                        tile.rotation = layer.r;
-                        tile.gotoAndStop('tile' + layer.t);
-                        mergedTile.updateCache('source-over');
-                    }
-                }
-
-                if (mergedTile) {
-                    return mergedTile;
-                } else {
-                    tile.cache(0, 0, this.tileWidth, this.tileHeight, 1);
-                    return tile;
-                }
+                tile = new platypus.PIXIAnimation(this.spriteSheet);
+                tile.transformMatrix = new PIXI.Matrix();
+                anim = transformCheck(imageName, tile.transformMatrix);
+                tile.gotoAndStop('tile' + anim);
+                
+                return tile;
             },
             
             addImageMap: function (map) {
                 var x = 0,
                     y = 0,
-                    index = '',
-                    newMap = [];
+                    index  = '',
+                    newMap = [],
+                    tiles  = this.tiles,
+                    tile   = null;
                 
                 for (x = 0; x < map.length; x++) {
                     newMap[x] = [];
                     for (y = 0; y < map[x].length; y++) {
-                        newMap[x][y] = index = map[x][y];
-                        if (!this.tiles[index]) {
-                            this.tiles[index] = this.createTile(index);
+                        index = map[x][y];
+                        tile = tiles[index];
+                        if (!tile && (tile !== null)) { // Empty grid spaces are null, so we needn't create a new tile.
+                            tile = tiles[index] = this.createTile(index);
                         }
+                        newMap[x][y] = tiles[index];
                     }
                 }
                 
