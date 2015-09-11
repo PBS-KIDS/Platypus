@@ -531,19 +531,14 @@
                 for (z = 0; z < tiles.length; z++) {
                     tiles[z].clear();
                 }
-
+                
+                this.cacheCamera.addChild(this.tilesSprite.alternate); // To copy last rendering over.
                 this.cacheCamera.transformMatrix.tx = -bounds.minX * this.tileWidth;
                 this.cacheCamera.transformMatrix.ty = -bounds.minY * this.tileHeight;
+                this.cacheTexture.clear();
                 this.cacheTexture.render(this.cacheCamera);
                 this.cacheCamera.removeChildren();
                 this.cacheTexture.requiresUpdate = true;
-
-//                        context = this.tilesToRender.cacheCanvas.getContext('2d');
-//                        width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
-//                        height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
-                //context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
-                //this.cacheTexture.render(this.tilesSprite.alternate);
-                //this.cacheTexture.update();
                 
                 if (oldBounds) {
                     oldBounds.minX = bounds.minX;
