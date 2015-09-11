@@ -266,7 +266,7 @@
                     this.cacheCamera = new PIXI.Container();
                     this.cacheCameraWrapper = new PIXI.Container();
                     this.cacheCameraWrapper.addChild(this.cacheCamera);
-                    this.cacheCamera.transformMatrix = new PIXI.Matrix();
+                    //this.cacheCamera.transformMatrix = new PIXI.Matrix();
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
 
                     //TODO: Temp fix for broken SpringRoll PIXI implementation.
@@ -540,10 +540,12 @@
                 }
                 
                 if (tilesSpriteCache) {
+                    tilesSpriteCache.x = oldBounds.minX * this.tilesWidth;
+                    tilesSpriteCache.y = oldBounds.minY * this.tilesHeight;
                     this.cacheCamera.addChild(tilesSpriteCache); // To copy last rendering over.
                 }
-                this.cacheCamera.transformMatrix.tx = -bounds.minX * this.tileWidth;
-                this.cacheCamera.transformMatrix.ty = -bounds.minY * this.tileHeight;
+                this.cacheCamera.x = -bounds.minX * this.tileWidth;
+                this.cacheCamera.y = -bounds.minY * this.tileHeight;
                 this.cacheTexture.clear();
                 this.cacheTexture.render(this.cacheCameraWrapper);
                 this.cacheCamera.removeChildren();
