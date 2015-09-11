@@ -153,6 +153,7 @@
             this.renderer         = springroll.Application.instance.display.renderer;
             this.tilesSprite      = null;
             this.cacheTexture     = null;
+            this.cacheCamera      = null;
             
             // temp values
             this.worldWidth    = this.layerWidth    = this.tileWidth;
@@ -225,6 +226,7 @@
                     this.cacheTilesWidth = Math.floor(this.cacheWidth  / this.tileWidth);
                     this.cacheTilesHeight = Math.floor(this.cacheHeight / this.tileHeight);
 
+                    this.cacheCamera = new PIXI.Container();
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                     this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
                     this.tilesSprite.scaleX = this.scaleX;
@@ -376,8 +378,10 @@
                             ents.sort(sort);
                             for (z = 0; z < ents.length; z++) {
                                 delete ents[z].drawn;
-                                this.cacheTexture.render(tile);
+                                this.cacheCamera.addChild(ents[z]);
                             }
+                            this.cacheTexture.render(this.cacheCamera);
+                            this.cacheCamera.removeChildren();
                         }
 
 //                        context = this.tilesToRender.cacheCanvas.getContext('2d');
