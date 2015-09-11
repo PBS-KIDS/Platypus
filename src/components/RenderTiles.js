@@ -540,8 +540,8 @@
                 }
                 
                 if (tilesSpriteCache) {
-                    tilesSpriteCache.x = oldBounds.minX * this.tilesWidth;
-                    tilesSpriteCache.y = oldBounds.minY * this.tilesHeight;
+                    tilesSpriteCache.x = oldBounds.minX * this.tileWidth;
+                    tilesSpriteCache.y = oldBounds.minY * this.tileHeight;
                     this.cacheCamera.addChild(tilesSpriteCache); // To copy last rendering over.
                 }
                 this.cacheCamera.x = -bounds.minX * this.tileWidth;
