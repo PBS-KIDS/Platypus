@@ -241,12 +241,6 @@
                         // Set up copy buffer and circular pointers
                         this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                         this.cacheTexture.alternate.alternate = this.cacheTexture;
-                        this.tilesSprite.alternate = new PIXI.Sprite(this.cacheTexture.alternate);
-                        this.tilesSprite.alternate.alternate = this.tilesSprite;
-
-                        this.tilesSprite.alternate.scaleX = this.scaleX;
-                        this.tilesSprite.alternate.scaleY = this.scaleY;
-                        this.tilesSprite.alternate.z = this.owner.z;
                     }
 
                     parentContainer.addChild(this.tilesSprite);
@@ -342,9 +336,8 @@
                     minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
         
                     if ((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)) {
-                        this.parentContainer.removeChild(this.tilesSprite);
-                        this.tilesSprite = this.tilesSprite.alternate;
                         this.cacheTexture = this.cacheTexture.alternate;
+                        this.tilesSprite.texture = this.cacheTexture;
                         
                         for (x = minX; x <= maxX; x++) {
                             for (y = minY; y <= maxY; y++) {
