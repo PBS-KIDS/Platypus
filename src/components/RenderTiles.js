@@ -410,7 +410,7 @@
                     }
 
                     // Determine range:
-                    bounds = object.getBounds();
+                    bounds = object.getBounds(object.transformMatrix);
                     top    = Math.max(0, Math.floor(bounds.y / this.tileHeight));
                     bottom = Math.min(this.tilesHeight, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
                     left   = Math.max(0, Math.floor(bounds.x / this.tileWidth));
