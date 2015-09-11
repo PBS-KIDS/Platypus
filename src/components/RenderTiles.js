@@ -290,6 +290,7 @@
                         
                         // Set up copy buffer and circular pointers
                         this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+                        this.tilesSpriteCache = new PIXI.Sprite(this.cacheTexture.alternate);
                         
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.alternate.baseTexture.realWidth = this.cacheWidth;
@@ -380,9 +381,10 @@
                     tempC.minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
         
                     if ((tempC.maxY > cache.maxY) || (tempC.minY < cache.minY) || (tempC.maxX > cache.maxX) || (tempC.minX < cache.minX)) {
+                        this.tilesSpriteCache.texture = this.cacheTexture;
                         this.cacheTexture = this.cacheTexture.alternate;
                         this.tilesSprite.texture = this.cacheTexture;
-                        this.updateCache(this.cacheTexture, tempC, this.cacheTexture.alternate, cache);
+                        this.updateCache(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
                     }
                 }
             }
@@ -478,7 +480,7 @@
                 this.imageMap.push(newMap);
             },
             
-            updateCache: function (texture, bounds, oldTexture, oldBounds) {
+            updateCache: function (texture, bounds, tilesSpriteCache, oldBounds) {
                 var x = 0,
                     y = 0,
                     z = 0,
@@ -532,7 +534,9 @@
                     tiles[z].clear();
                 }
                 
-                this.cacheCamera.addChild(this.tilesSprite.alternate); // To copy last rendering over.
+                if (tilesSpriteCache) {
+                    this.cacheCamera.addChild(tilesSpriteCache); // To copy last rendering over.
+                }
                 this.cacheCamera.transformMatrix.tx = -bounds.minX * this.tileWidth;
                 this.cacheCamera.transformMatrix.ty = -bounds.minY * this.tileHeight;
                 this.cacheTexture.clear();
