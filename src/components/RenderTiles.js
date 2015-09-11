@@ -13,44 +13,56 @@
     var sort = function (a, b) {
             return a.z - b.z;
         },
-        transform = {
-            x: 1,
-            y: 1,
-            t: -1,
-            r: 0
-        },
         transformCheck = function (value) {
             var v = +(value.substring(4)),
-                resp  = transform,
                 a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
                 c = !!(0x80000000 & v);
 
-            resp.t = 0x0fffffff & v;
-            resp.x = 1;
-            resp.y = 1;
-            resp.r = 0;
-
             if (a || b || c) {
                 if (a && b && c) {
-                    resp.x = -1;
-                    resp.r = 90;
+                    m.a = 0;
+                    m.b = -1;
+                    m.c = -1;
+                    m.d = 0;
                 } else if (a && c) {
-                    resp.r = 90;
+                    m.a = 0;
+                    m.b = 1;
+                    m.c = 1;
+                    m.d = 0;
                 } else if (b && c) {
-                    resp.r = 180;
+                    m.a = -1;
+                    m.b = 0;
+                    m.c = 0;
+                    m.d = -1;
                 } else if (a && b) {
-                    resp.r = 270;
+                    m.a = 0;
+                    m.b = 1;
+                    m.c = -1;
+                    m.d = 0;
                 } else if (a) {
-                    resp.y = -1;
-                    resp.r = 90;
+                    m.a = 0;
+                    m.b = -1;
+                    m.c = 1;
+                    m.d = 0;
                 } else if (b) {
-                    resp.y = -1;
+                    m.a = 1;
+                    m.b = 0;
+                    m.c = 0;
+                    m.d = -1;
                 } else if (c) {
-                    resp.x = -1;
+                    m.a = -1;
+                    m.b = 0;
+                    m.c = 0;
+                    m.d = 1;
                 }
+            } else {
+                m.a = 1;
+                m.b = 0;
+                m.c = 0;
+                m.d = 1;
             }
-            return resp;
+            return 0x0fffffff & v;
         };
 
     return platypus.createComponentClass({
@@ -132,26 +144,6 @@
         },
 
         constructor: function (definition) {
-            var x = 0,
-                images = this.spriteSheet.images.slice(),
-                spriteSheet = null,
-                buffer = 0;
-            
-            if (images[0] && (typeof images[0] === 'string')) {
-                images = images.slice(); //so we do not overwrite settings array
-                for (x = 0; x < images.length; x++) {
-                    if (platypus.assets[images[x]] && platypus.assets[images[x]].asset) {
-                        images[x] = platypus.assets[images[x]].asset;
-                    }
-                }
-            }
-    
-            spriteSheet = {
-                images: images,
-                frames: this.spriteSheet.frames,
-                animations: this.spriteSheet.animations
-            };
-    
             this.controllerEvents = undefined;
             this.spriteSheet      = new createjs.SpriteSheet(spriteSheet);
             this.doMap            = null; //list of display objects that should overlay tile map.

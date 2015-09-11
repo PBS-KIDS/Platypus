@@ -54,28 +54,22 @@ This component is attached to entities that will appear in the game world. It se
     "use strict";
     
     var types = {
-            "aabb":      "255,128,255",
-            "render":    "128,128,128",
-            "collision": "255,0,255",
-            "group":     "0,255,0"
+            "aabb":      0xff88ff,
+            "render":    0x888888,
+            "collision": 0xff00ff,
+            "group":     0x00ff00
         },
         createShape = function (shape, type, width, height, regX, regY, z) {
             var newShape = null;
 
             switch (shape) {
             case 'rectangle':
-                newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").rect(0, 0, width, height));
-                regX += width  / 2;
-                regY += height / 2;
+                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawRect(-width  / 2, -height / 2, width, height);
                 break;
             case 'circle':
-                regX += width / 2;
-                regY += width / 2;
-                newShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(" + types[type] + ",0.1)").setStrokeStyle(3).beginStroke("rgb(" + types[type] + ")").drawCircle(width / 2, width / 2, width));
+                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawCircle(0, 0, width);
                 break;
             }
-            newShape.regX  = regX;
-            newShape.regY  = regY;
             newShape.z = z;
 
             return newShape;
@@ -86,14 +80,6 @@ This component is attached to entities that will appear in the game world. It se
         id: 'RenderDebug',
         
         constructor: function (definition) {
-            if (definition.acceptInput) {
-                this.hover = definition.acceptInput.hover || false;
-                this.click = definition.acceptInput.click || false;
-            } else {
-                this.hover = false;
-                this.click = false;
-            }
-            
             this.regX = definition.regX || 0;
             this.regY = definition.regY || 0;
             this.parentContainer = null;
@@ -128,9 +114,7 @@ This component is attached to entities that will appear in the game world. It se
                 if (this.owner.getCollisionGroupAABB) {
                     aabb = this.owner.getCollisionGroupAABB();
                     if (!this.groupShape) {
-                        this.groupShape = new createjs.Shape((new createjs.Graphics()).beginFill("rgba(255,255,0,0.2)").rect(0, 0, 1, 1));
-                        this.groupShape.regX  = 0.5;
-                        this.groupShape.regY  = 0.5;
+                        this.groupShape = new PIXI.Graphics().beginFill("rgba(255,255,0,0.2)").drawRect(-0.5, -0.5, 1, 1);
                         this.groupShape.z     = (this.owner.z || 0) + 10000;
                         this.parentContainer.addChild(this.groupShape);
                     }

@@ -363,9 +363,9 @@
                         }
 
                         if (platypus.assets[imageLayer.name] && platypus.assets[imageLayer.name].asset) { // Prefer to have name in tiled match image id in game
-                            tileLayer.image = platypus.assets[imageLayer.name].asset;
-                            tileLayer.tileheight = tileLayer.image.height;
-                            tileLayer.tilewidth = tileLayer.image.width;
+                            tileLayer.image = imageLayer.name;
+                            tileLayer.tileheight = platypus.assets[imageLayer.name].asset.height;
+                            tileLayer.tilewidth = platypus.assets[imageLayer.name].asset.width;
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
                             tileLayer.image = imageLayer.image;
@@ -454,11 +454,7 @@
                         tileDefinition.properties.layerZ = self.layerZ;
                         tileDefinition.properties.z = tileDefinition.properties.z || self.layerZ;
 
-                        if (layer.image) {
-                            tileTypes = (layer.image.width / tWidth) * (layer.image.height / tHeight);
-                        } else {
-                            tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
-                        }
+                        tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
                         for (x = -1; x < tileTypes; x++) {
                             importAnimation['tile' + x] = x;
                         }
@@ -483,9 +479,9 @@
                                     images: (layer.image ? [layer.image] : images),
                                     frames: {
                                         width: tWidth * self.unitsPerPixel / self.imagesScale,
-                                        height: tHeight * self.unitsPerPixel / self.imagesScale //,
-                                            //                                    regX: (tileWidth * self.unitsPerPixel / self.imagesScale) / 2,
-                                            //                        regY: (tileHeight * self.unitsPerPixel / self.imagesScale) / 2
+                                        height: tHeight * self.unitsPerPixel / self.imagesScale,
+                                        regX: (tWidth * self.unitsPerPixel / self.imagesScale) / 2,
+                                        regY: (tHeight * self.unitsPerPixel / self.imagesScale) / 2
                                     },
                                     animations: importAnimation
                                 };
@@ -514,7 +510,7 @@
                 if (images.length === 0) {
                     for (x = 0; x < tilesets.length; x++) {
                         if (platypus.assets[tilesets[x].name] && platypus.assets[tilesets[x].name].asset) { // Prefer to have name in tiled match image id in game
-                            images.push(platypus.assets[tilesets[x].name].asset);
+                            images.push(tilesets[x].name);
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
                             images.push(tilesets[x].image);
@@ -522,11 +518,6 @@
                     }
                 } else {
                     images = images.slice(); //so we do not overwrite settings array
-                    for (x = 0; x < images.length; x++) {
-                        if (platypus.assets[images[x]] && platypus.assets[images[x]].asset) {
-                            images[x] = platypus.assets[images[x]].asset;
-                        }
-                    }
                 }
 
                 if (layer.type === 'tilelayer') {

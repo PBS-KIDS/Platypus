@@ -596,11 +596,6 @@
                     }
                 }
                 
-                //Handle mask
-                if (this.mask) {
-                    this.container.mask = this.setMask(this.mask);
-                }
-    
                 // pin to another RenderSprite
                 if (this.pinTo) {
                     this.owner.triggerEvent('pin-me', this.pinTo);
@@ -805,11 +800,7 @@
              * @param mask {Object} The mask. This can specified the same way as the 'mask' parameter on the component.
              */
             "set-mask": function (mask) {
-                if (mask) {
-                    this.container.mask = this.setMask(mask);
-                } else {
-                    this.container.mask = null;
-                }
+                this.setMask(mask);
             }
         },
         
@@ -818,7 +809,12 @@
                 if (stage && !this.pinTo) {
                     this.parentContainer = stage;
                     this.parentContainer.addChild(this.container);
-//                    if (this.container.mask) this.parentContainer.addChild(this.container.mask);
+
+                    //Handle mask
+                    if (this.mask) {
+                        this.setMask(this.mask);
+                    }
+
                     this.addInputs();
                     return stage;
                 } else {
@@ -938,6 +934,11 @@
                         this.stateChange = false;
                     }
                     
+                    // Handle rotation
+                    if (rotation) {
+                        m.rotate((rotation / 180) * Math.PI);
+                    }
+
                     if (this.pinnedTo) {
                         temp.tx = x;
                         temp.ty = y;
@@ -965,11 +966,6 @@
                         temp.c = this.owner.skewY;
                         temp.d = this.scaleY * flipped;
                         m.prepend(temp);
-                    }
-
-                    // Handle rotation
-                    if (rotation) {
-                        m.rotate((rotation / 180) * Math.PI);
                     }
                 };
             }()),
@@ -1161,23 +1157,39 @@
             },
             
             setMask: function (shape) {
-                var mask = new createjs.Shape(),
-                    gfx  = mask.graphics;
+                var gfx = null;
                 
-                mask.x   = 0;
-                mask.y   = 0;
-                
-                if (typeof shape === 'string') {
-                    processGraphics(gfx, shape);
-                } else {
-                    if (shape.radius) {
-                        gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
-                    } else {
-                        gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
-                    }
+                if (this.mask && this.parentContainer) {
+                    this.parentContainer.removeChild(this.mask);
                 }
+                
+                if (!shape) {
+                    this.mask = this.container.mask = null;
+                    return;
+                }
+                
+                if (shape instanceof PIXI.Graphics) {
+                    gfx = shape;
+                } else {
+                    gfx = new PIXI.Graphics();
+                    gfx.beginFill(0x000000, 1);
+                    if (typeof shape === 'string') {
+                        processGraphics(gfx, shape);
+                    } else if (shape.radius) {
+                        gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+                    } else if (shape.width && shape.height) {
+                        gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
+                    }
+                    gfx.endFill();
+                }
+                
+                gfx.isMask = true;
 
-                return mask;
+                this.mask = this.container.mask = gfx;
+
+                if (this.parentContainer) {
+                    this.parentContainer.addChild(this.mask);
+                }
             },
             
             setHitArea: (function () {
