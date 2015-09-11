@@ -10,7 +10,13 @@
 (function () {
     "use strict";
 
-    var sort = function (a, b) {
+    var tempCache = {
+            minX: -1,
+            minY: -1,
+            maxX: -1,
+            maxY: -1
+        },
+        sort = function (a, b) {
             return a.z - b.z;
         },
         transformCheck = function (value, m) {
@@ -241,6 +247,12 @@
                     
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                         this.fullyCached = true;
+                        
+                        this.cache.minX = 0,
+                        this.cache.minY = 0,
+                        this.cache.maxX = this.tilesWidth - 1;
+                        this.cache.maxY = this.tilesHeight - 1;
+                        this.updateCache(this.cacheTexture, this.cache);
                     } else {
                         this.fullyCached = false;
                         
@@ -314,25 +326,13 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                var x = 0,
-                    y = 0,
-                    z = 0,
-                    layer   = 0,
-                    buffer  = this.camera.buffer,
+                var buffer  = this.camera.buffer,
                     cache   = this.cache,
-                    width   = 0,
-                    height  = 0,
-                    maxX    = 0,
-                    maxY    = 0,
-                    minX    = 0,
-                    minY    = 0,
+                    tempC   = tempCache,
                     camL    = this.convertCamera(camera.viewport.left, this.worldWidth, this.layerWidth, camera.viewport.width),
                     camT    = this.convertCamera(camera.viewport.top, this.worldHeight, this.layerHeight, camera.viewport.height),
                     vpL     = Math.floor(camL / this.tileWidth)  * this.tileWidth,
-                    vpT     = Math.floor(camT / this.tileHeight) * this.tileHeight,
-                    tile    = null,
-                    ents    = [],
-                    oList   = null;
+                    vpT     = Math.floor(camT / this.tileHeight) * this.tileHeight;
                 
                 this.tilesSprite.x = camera.viewport.left - camL;
                 this.tilesSprite.y = camera.viewport.top  - camT;
@@ -342,67 +342,15 @@
                     this.camera.y = vpT;
                     
                     //only attempt to draw children that are relevant
-                    maxX = Math.min(Math.ceil((vpL + camera.viewport.width + buffer) / (this.tileWidth * this.scaleX)), this.tilesWidth) - 1;
-                    minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
-                    maxY = Math.min(Math.ceil((vpT + camera.viewport.height + buffer) / (this.tileHeight * this.scaleY)), this.tilesHeight) - 1;
-                    minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
+                    tempC.maxX = Math.min(Math.ceil((vpL + camera.viewport.width + buffer) / (this.tileWidth * this.scaleX)), this.tilesWidth) - 1;
+                    tempC.minX = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
+                    tempC.maxY = Math.min(Math.ceil((vpT + camera.viewport.height + buffer) / (this.tileHeight * this.scaleY)), this.tilesHeight) - 1;
+                    tempC.minY = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
         
-                    if ((maxY > cache.maxY) || (minY < cache.minY) || (maxX > cache.maxX) || (minX < cache.minX)) {
+                    if ((tempC.maxY > cache.maxY) || (tempC.minY < cache.minY) || (tempC.maxX > cache.maxX) || (tempC.minX < cache.minX)) {
                         this.cacheTexture = this.cacheTexture.alternate;
                         this.tilesSprite.texture = this.cacheTexture;
-                        
-                        for (x = minX; x <= maxX; x++) {
-                            for (y = minY; y <= maxY; y++) {
-                                if ((y > cache.maxY) || (y < cache.minY) || (x > cache.maxX) || (x < cache.minX)) {
-                                    // draw tiles
-                                    for (layer = 0; layer < this.imageMap.length; layer++) {
-                                        tile = this.imageMap[layer][x][y];
-                                        if (tile) {
-                                            tile.transformMatrix.tx = x * this.tileWidth;
-                                            tile.transformMatrix.ty = y * this.tileHeight;
-                                            this.cacheCamera.addChild(tile);
-//                                            this.cacheTexture.render(tile);
-                                        }
-                                    }
-                                        
-                                    // check for cached entities
-                                    if (this.doMap && this.doMap[x] && this.doMap[x][y]) {
-                                        oList = this.doMap[x][y];
-                                        for (z = 0; z < oList.length; z++) {
-                                            if (!oList[z].drawn) {
-                                                oList[z].drawn = true;
-                                                ents.push(oList[z]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-        
-                        // Draw cached entities
-                        if (ents.length) {
-                            ents.sort(sort);
-                            for (z = 0; z < ents.length; z++) {
-                                delete ents[z].drawn;
-                                this.cacheCamera.addChild(ents[z]);
-                            }
-                        }
-
-                        this.cacheTexture.render(this.cacheCamera);
-                        this.cacheCamera.removeChildren();
-                        this.cacheTexture.requiresUpdate = true;
-
-//                        context = this.tilesToRender.cacheCanvas.getContext('2d');
-//                        width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
-//                        height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
-                        //context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
-                        //this.cacheTexture.render(this.tilesSprite.alternate);
-                        //this.cacheTexture.update();
-                        
-                        cache.minX = minX;
-                        cache.minY = minY;
-                        cache.maxX = maxX;
-                        cache.maxY = maxY;
+                        this.updateCache(this.cacheTexture, tempC, this.cacheTexture.alternate, cache);
                     }
                 }
             }
@@ -469,8 +417,8 @@
                 
                 tile = new platypus.PIXIAnimation(this.spriteSheet);
                 tile.transformMatrix = new PIXI.Matrix();
-                anim = transformCheck(imageName, tile.transformMatrix);
-                tile.gotoAndStop('tile' + anim);
+                anim = 'tile' + transformCheck(imageName, tile.transformMatrix);
+                tile.gotoAndStop(anim);
                 
                 return tile;
             },
@@ -496,6 +444,71 @@
                 }
                 
                 this.imageMap.push(newMap);
+            },
+            
+            updateCache: function (texture, bounds, oldTexture, oldBounds) {
+                var x = 0,
+                    y = 0,
+                    z = 0,
+                    layer   = 0,
+                    tile    = null,
+                    ents    = [],
+                    oList   = null;
+                
+                for (x = bounds.minX; x <= bounds.maxX; x++) {
+                    for (y = bounds.minY; y <= bounds.maxY; y++) {
+                        if (!oldBounds || (y > oldBounds.maxY) || (y < oldBounds.minY) || (x > oldBounds.maxX) || (x < oldBounds.minX)) {
+                            // draw tiles
+                            for (layer = 0; layer < this.imageMap.length; layer++) {
+                                tile = this.imageMap[layer][x][y];
+                                if (tile) {
+                                    tile.transformMatrix.tx = x * this.tileWidth;
+                                    tile.transformMatrix.ty = y * this.tileHeight;
+                                    this.cacheCamera.addChild(tile);
+//                                            this.cacheTexture.render(tile);
+                                }
+                            }
+                                
+                            // check for cached entities
+                            if (this.doMap && this.doMap[x] && this.doMap[x][y]) {
+                                oList = this.doMap[x][y];
+                                for (z = 0; z < oList.length; z++) {
+                                    if (!oList[z].drawn) {
+                                        oList[z].drawn = true;
+                                        ents.push(oList[z]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Draw cached entities
+                if (ents.length) {
+                    ents.sort(sort);
+                    for (z = 0; z < ents.length; z++) {
+                        delete ents[z].drawn;
+                        this.cacheCamera.addChild(ents[z]);
+                    }
+                }
+
+                this.cacheTexture.render(this.cacheCamera);
+                this.cacheCamera.removeChildren();
+                this.cacheTexture.requiresUpdate = true;
+
+//                        context = this.tilesToRender.cacheCanvas.getContext('2d');
+//                        width   = (cache.maxX - cache.minX + 1) * this.tileWidth;
+//                        height  = (cache.maxY - cache.minY + 1) * this.tileHeight;
+                //context.drawImage(canvas, 0, 0, width, height, (cache.minX - minX) * this.tileWidth, (cache.minY - minY) * this.tileHeight, width, height);
+                //this.cacheTexture.render(this.tilesSprite.alternate);
+                //this.cacheTexture.update();
+                
+                if (oldBounds) {
+                    oldBounds.minX = bounds.minX;
+                    oldBounds.minY = bounds.minY;
+                    oldBounds.maxX = bounds.maxX;
+                    oldBounds.maxY = bounds.maxY;
+                }
             },
             
             destroy: function () {
