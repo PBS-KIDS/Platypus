@@ -90,6 +90,7 @@
             template = this.instances[0];
             instance = this.instances[this.index] = new PIXI.Sprite(template.texture);
             instance.transformMatrix = template.transformMatrix.clone();
+            instance.anchor = template.anchor;
         }
         
         this.index += 1;
@@ -263,6 +264,7 @@
                     this.cacheTilesHeight = Math.floor(this.cacheHeight / this.tileHeight);
 
                     this.cacheCamera = new PIXI.Container();
+                    this.cacheCamera.transformMatrix = new PIXI.Matrix();
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
 
                     //TODO: Temp fix for broken SpringRoll PIXI implementation.
@@ -530,6 +532,8 @@
                     tiles[z].clear();
                 }
 
+                this.cacheCamera.transformMatrix.tx = -bounds.minX * this.tileWidth;
+                this.cacheCamera.transformMatrix.ty = -bounds.minY * this.tileHeight;
                 this.cacheTexture.render(this.cacheCamera);
                 this.cacheCamera.removeChildren();
                 this.cacheTexture.requiresUpdate = true;
