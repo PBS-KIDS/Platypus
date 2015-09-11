@@ -114,10 +114,6 @@ This component is attached to entities that will appear in the game world. It se
             "handle-render": function (renderData) {
                 var i = 0,
                     aabb = null;
-                
-                if (!this.container) { // If this component's removal is pending
-                    return;
-                }
 
                 if (!this.parentContainer) {
                     if (!platypus.game.settings.debug) {
