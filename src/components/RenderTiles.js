@@ -369,9 +369,6 @@
                     vpL     = Math.floor(camL / this.tileWidth)  * this.tileWidth,
                     vpT     = Math.floor(camT / this.tileHeight) * this.tileHeight;
                 
-                this.tilesSprite.x = camera.viewport.left - camL;
-                this.tilesSprite.y = camera.viewport.top  - camT;
-                
                 if (!this.fullyCached && ((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
                     this.camera.x = vpL;
                     this.camera.y = vpT;
@@ -388,10 +385,10 @@
                         this.tilesSprite.texture = this.cacheTexture;
                         this.updateCache(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
                     }
-                    
-                    this.tilesSprite.x += cache.minX * this.tilesWidth;
-                    this.tilesSprite.y += cache.minY * this.tilesHeight;
                 }
+
+                this.tilesSprite.x = camera.viewport.left - camL + vpL;
+                this.tilesSprite.y = camera.viewport.top  - camT + vpT;
             }
         },
     
