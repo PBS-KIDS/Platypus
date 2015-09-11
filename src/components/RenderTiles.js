@@ -75,6 +75,11 @@
             this.index = 0;
             tile.template = this; // backwards reference for clearing index later.
         },
+        nullTemplate = {
+            getNext: function () {
+                return null;
+            }
+        },
         prototype = Template.prototype;
         
     prototype.getNext = function () {
@@ -437,7 +442,7 @@
                 
                 // "tile-1" is empty, so it remains a null reference.
                 if (imageName === 'tile-1') {
-                    return null;
+                    return nullTemplate;
                 }
                 
                 tile = new platypus.PIXIAnimation(this.spriteSheet);
