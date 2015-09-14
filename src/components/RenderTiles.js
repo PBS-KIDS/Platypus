@@ -207,7 +207,8 @@
                 minX: -1,
                 minY: -1,
                 maxX: -1,
-                maxY: -1
+                maxY: -1,
+                empty: true
             };
             
             this.reorderedStage = false;
@@ -293,7 +294,6 @@
                         // Set up copy buffer and circular pointers
                         this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                         this.tilesSpriteCache = new PIXI.Sprite(this.cacheTexture.alternate);
-                        this.tilesSpriteCache.transformMatrix = new PIXI.Matrix();
                         
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.alternate.baseTexture.realWidth = this.cacheWidth;
@@ -537,9 +537,9 @@
                     tiles[z].clear();
                 }
                 
-                if (tilesSpriteCache) {
-                    tilesSpriteCache.transformMatrix.tx = oldBounds.minX * this.tileWidth;
-                    tilesSpriteCache.transformMatrix.ty = oldBounds.minY * this.tileHeight;
+                if (!oldBounds.empty && tilesSpriteCache) {
+                    tilesSpriteCache.x = oldBounds.minX * this.tileWidth;
+                    tilesSpriteCache.y = oldBounds.minY * this.tileHeight;
                     this.cacheCamera.addChild(tilesSpriteCache); // To copy last rendering over.
                 }
                 this.cacheCamera.x = -bounds.minX * this.tileWidth;
@@ -554,6 +554,9 @@
                     oldBounds.minY = bounds.minY;
                     oldBounds.maxX = bounds.maxX;
                     oldBounds.maxY = bounds.maxY;
+                    if (oldBounds.empty) {
+                        oldBounds.empty = false;
+                    }
                 }
             },
             
