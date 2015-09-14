@@ -523,7 +523,7 @@
                 
                 for (x = bounds.left; x <= bounds.right; x++) {
                     for (y = bounds.top; y <= bounds.bottom; y++) {
-                        if (!oldBounds || (y > oldBounds.bottom) || (y < oldBounds.top) || (x > oldBounds.right) || (x < oldBounds.left)) {
+                        if (!oldBounds || oldBounds.empty || (y > oldBounds.bottom) || (y < oldBounds.top) || (x > oldBounds.right) || (x < oldBounds.left)) {
                             // draw tiles
                             for (layer = 0; layer < this.imageMap.length; layer++) {
                                 tile = this.imageMap[layer][x][y].getNext();
