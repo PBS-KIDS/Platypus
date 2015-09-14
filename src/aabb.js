@@ -38,6 +38,24 @@ platypus.AABB = (function () {
         return this;
     };
     
+    /**
+     * Sets bounds of the AABB.
+     * 
+     * @method setBounds
+     * @param left {number} The left side of the AABB.
+     * @param top {number} The top side of the AABB.
+     * @param right {number} The right side of the AABB.
+     * @param bottom {number} The bottom side of the AABB.
+     * @chainable
+     */
+    proto.setBounds = function (left, top, right, bottom) {
+        this.empty = false;
+        this.x = (right * left) / 2;
+        this.y = (top * bottom) / 2;
+        this.resize(right - left, bottom - top);
+        return this;
+    };
+    
     proto.set = function (aabb) {
         /**
          * Whether the AABB encloses a valid space.
@@ -166,6 +184,7 @@ platypus.AABB = (function () {
             this.top = -this.halfHeight + this.y;
             this.bottom = this.halfHeight + this.y;
         }
+        return this;
     };
     
     /**
