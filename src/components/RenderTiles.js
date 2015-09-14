@@ -251,6 +251,7 @@
                     this.cacheTilesHeight = Math.min(this.tilesHeight, Math.floor(this.cacheHeight / this.tileHeight));
 
                     this.cacheCamera = new PIXI.Container();
+                    this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheTilesWidth * this.tileWidth, this.cacheTilesHeight * this.tileHeight).endFill();
                     this.cacheCameraWrapper = new PIXI.Container();
                     this.cacheCameraWrapper.addChild(this.cacheCamera);
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
