@@ -359,7 +359,7 @@
                     vpT     = Math.floor(laxCam.top  / this.tileHeight) * this.tileHeight;
                 
 //                if (!this.fullyCached && ((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
-                if (!this.fullyCached && !tempC.set(this.cache).setAll(tempC.x * this.tileWidth, tempC.y * this.tileHeight, tempC.width * this.tileWidth, tempC.height * this.tileHeight).contains(laxCam) && (this.imageMap.length > 0)) {
+                if (!this.fullyCached && (cache.empty || !tempC.set(cache).setAll(tempC.x * this.tileWidth, tempC.y * this.tileHeight, tempC.width * this.tileWidth, tempC.height * this.tileHeight).contains(laxCam)) && (this.imageMap.length > 0)) {
                     this.camera.x = vpL;
                     this.camera.y = vpT;
                     
@@ -380,7 +380,7 @@
                         tempC.moveY(this.tilesHeight - tempC.halfHeight)
                     }
         
-                    if (!tempC.contains(cache)) {
+                    if (cache.empty || !tempC.contains(cache)) {
                         this.tilesSpriteCache.texture = this.cacheTexture;
                         this.cacheTexture = this.cacheTexture.alternate;
                         this.tilesSprite.texture = this.cacheTexture;
