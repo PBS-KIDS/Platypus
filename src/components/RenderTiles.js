@@ -186,7 +186,7 @@
             this.tilesSprite      = null;
             this.cacheTexture     = null;
             this.cacheCamera      = null;
-            this.laxCam = new platypus.Vector();
+            this.laxCam = new platypus.AABB();
             
             // temp values
             this.worldWidth    = this.layerWidth    = this.tileWidth;
@@ -348,8 +348,7 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                var buffer  = this.camera.buffer,
-                    ctw2    = this.cacheTilesWidth / 2,
+                var ctw2    = this.cacheTilesWidth / 2,
                     cth2    = this.cacheTilesHeight / 2,
                     cache   = this.cache,
                     tempC   = tempCache,
