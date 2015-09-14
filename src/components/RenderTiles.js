@@ -21,14 +21,14 @@
                 c = !!(0x80000000 & v);
 
             if (a || b || c) {
-                if (a && b && c) { // -90 deg
-                    m.a = 0;
-                    m.b = -1;
-                    m.c = 1;
-                    m.d = 0;
-                } else if (a && c) { // diagonal flip
+                if (a && b && c) {
                     m.a = 0;
                     m.b = 1;
+                    m.c = 1;
+                    m.d = 0;
+                } else if (a && c) {
+                    m.a = 0;
+                    m.b = -1;
                     m.c = 1;
                     m.d = 0;
                 } else if (b && c) { // 180 deg
@@ -36,14 +36,14 @@
                     m.b = 0;
                     m.c = 0;
                     m.d = -1;
-                } else if (a && b) { // inverse diagonal flip
-                    m.a = 0;
-                    m.b = -1;
-                    m.c = -1;
-                    m.d = 0;
-                } else if (a) { // 90 deg
+                } else if (a && b) {
                     m.a = 0;
                     m.b = 1;
+                    m.c = -1;
+                    m.d = 0;
+                } else if (a) {
+                    m.a = 0;
+                    m.b = -1;
                     m.c = -1;
                     m.d = 0;
                 } else if (b) { // vertical flip
