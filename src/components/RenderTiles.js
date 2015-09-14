@@ -453,15 +453,15 @@
                 if ((worldWidth === this.layerWidth) || !worldPosX) {
                     laxCam.moveX(camera.x);
                 } else {
-                    laxCam.moveX(camera.x * (this.layerWidth - camera.width) / worldPosX);
+                    laxCam.moveX(camera.left * (this.layerWidth - camera.width) / worldPosX + camera.halfWidth);
                 }
 
                 if ((worldHeight === this.layerHeight) || !worldPosY) {
                     laxCam.moveY(camera.y);
                 } else {
-                    laxCam.moveY(camera.y * (this.layerHeight - camera.height) / worldPosY);
+                    laxCam.moveY(camera.top * (this.layerHeight - camera.height) / worldPosY + camera.halfHeight);
                 }
-                
+
                 if (camera.width !== laxCam.width || camera.height !== laxCam.height) {
                     laxCam.resize(camera.width, camera.height);
                 }
