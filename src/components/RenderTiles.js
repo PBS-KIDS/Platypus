@@ -388,8 +388,8 @@
                     }
                 }
 
-                this.tilesSprite.x = camera.viewport.left - camL + vpL;
-                this.tilesSprite.y = camera.viewport.top  - camT + vpT;
+                this.tilesSprite.x = camera.viewport.left - camL + cache.minX * this.tileWidth;
+                this.tilesSprite.y = camera.viewport.top  - camT + cache.minY * this.tileHeight;
             }
         },
     
