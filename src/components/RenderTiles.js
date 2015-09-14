@@ -5,7 +5,7 @@
  * @class RenderTiles
  * @uses Component
  */
-/*global createjs, platypus */
+/*global PIXI, platypus, springroll */
 /*jslint nomen:true, bitwise:true, plusplus:true */
 (function () {
     "use strict";
@@ -38,13 +38,13 @@
                     m.d = -1;
                 } else if (a && b) {
                     m.a = 0;
-                    m.b = 1;
-                    m.c = -1;
+                    m.b = -1;
+                    m.c = 1;
                     m.d = 0;
                 } else if (a) {
                     m.a = 0;
-                    m.b = -1;
-                    m.c = 1;
+                    m.b = 1;
+                    m.c = -1;
                     m.d = 0;
                 } else if (b) {
                     m.a = 1;
@@ -65,7 +65,7 @@
             }
             return 0x0fffffff & v;
         },
-        Template = function(tile){
+        Template = function (tile) {
             this.instances = [tile];
             this.index = 0;
             tile.template = this; // backwards reference for clearing index later.
@@ -361,12 +361,12 @@
                     if (tempC.left < 0) {
                         tempC.moveX(tempC.halfWidth);
                     } else if (tempC.right > this.tilesWidth - 1) {
-                        tempC.moveX(this.tilesWidth - 1 - tempC.halfWidth)
+                        tempC.moveX(this.tilesWidth - 1 - tempC.halfWidth);
                     }
                     if (tempC.top < 0) {
                         tempC.moveY(tempC.halfHeight);
                     } else if (tempC.bottom > this.tilesHeight - 1) {
-                        tempC.moveY(this.tilesHeight - 1 - tempC.halfHeight)
+                        tempC.moveY(this.tilesHeight - 1 - tempC.halfHeight);
                     }
         
                     if (cache.empty || !tempC.contains(cache)) {
