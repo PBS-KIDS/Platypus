@@ -194,12 +194,8 @@
             
             
             buffer = (this.buffer || (this.tileWidth * 3 / 4)) * this.scaleX;
-            this.camera = {
-                x: -buffer - 1, //to force camera update
-                y: -buffer - 1,
-                buffer: buffer
-            };
             this.cache = new platypus.AABB();
+            this.cachePixels = new platypus.AABB();
             
             this.reorderedStage = false;
         },
@@ -353,23 +349,13 @@
                     ctw2    = ctw / 2,
                     cth2    = cth / 2,
                     cache   = this.cache,
+                    cacheP  = this.cachePixels,
                     tempC   = tempCache,
-//                    camL    = this.convertCamera(camera.viewport.left, this.worldWidth, this.layerWidth, camera.viewport.width),
-//                    camT    = this.convertCamera(camera.viewport.top, this.worldHeight, this.layerHeight, camera.viewport.height),
-                    laxCam  = this.convertCamera(camera.viewport),
-                    vpL     = Math.floor(laxCam.left / this.tileWidth)  * this.tileWidth,
-                    vpT     = Math.floor(laxCam.top  / this.tileHeight) * this.tileHeight;
+                    laxCam  = this.convertCamera(camera.viewport);
                 
-//                if (!this.fullyCached && ((Math.abs(this.camera.x - vpL) > buffer) || (Math.abs(this.camera.y - vpT) > buffer)) && (this.imageMap.length > 0)) {
-                if (!this.fullyCached && (cache.empty || !tempC.set(cache).setAll(tempC.x * this.tileWidth, tempC.y * this.tileHeight, tempC.width * this.tileWidth, tempC.height * this.tileHeight).contains(laxCam)) && (this.imageMap.length > 0)) {
-                    this.camera.x = vpL;
-                    this.camera.y = vpT;
+                if (!this.fullyCached && (cacheP.empty || !cacheP.contains(laxCam)) && (this.imageMap.length > 0)) {
                     
                     //only attempt to draw children that are relevant
-                    //tempC.right = Math.min(Math.ceil((vpL + camera.viewport.width + buffer) / (this.tileWidth * this.scaleX)), this.tilesWidth) - 1;
-                    //tempC.left = Math.max(Math.floor((vpL - buffer) / (this.tileWidth * this.scaleX)), 0);
-                    //tempC.bottom = Math.min(Math.ceil((vpT + camera.viewport.height + buffer) / (this.tileHeight * this.scaleY)), this.tilesHeight) - 1;
-                    //tempC.top = Math.max(Math.floor((vpT - buffer) / (this.tileHeight * this.scaleY)), 0);
                     tempC.setAll(Math.round(laxCam.x / this.tileWidth - ctw2) + ctw2, Math.round(laxCam.y / this.tileHeight - cth2) + cth2, ctw, cth);
                     if (tempC.left < 0) {
                         tempC.moveX(tempC.halfWidth);
@@ -388,6 +374,9 @@
                         this.tilesSprite.texture = this.cacheTexture;
                         this.updateCache(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
                     }
+                    
+                    // Store pixel bounding box for checking later.
+                    cacheP.set(cache).setAll(cacheP.x * this.tileWidth, cacheP.y * this.tileHeight, cacheP.width * this.tileWidth, cacheP.height * this.tileHeight);
                 }
 
                 this.tilesSprite.x = camera.viewport.left - laxCam.left + cache.left * this.tileWidth;
@@ -436,15 +425,7 @@
                     entity.removeComponent('RenderSprite');
                 }
             },
-/*
-            convertCamera: function (distance, worldDistance, tileDistance, viewportDistance) {
-                if (((worldDistance / this.scaleX) === tileDistance) || ((worldDistance / this.scaleX) === viewportDistance)) {
-                    return distance;
-                } else {
-                    return distance * (tileDistance - viewportDistance) / ((worldDistance / this.scaleX) - viewportDistance);
-                }
-            },
-*/
+
             convertCamera: function (camera) {
                 var worldWidth  = this.worldWidth / this.scaleX,
                     worldPosX   = worldWidth - camera.width,
@@ -517,6 +498,7 @@
                     z = 0,
                     layer   = 0,
                     tile    = null,
+                    ent     = null,
                     ents    = [],
                     tiles   = [],
                     oList   = null;
@@ -555,8 +537,12 @@
                 if (ents.length) {
                     ents.sort(sort);
                     for (z = 0; z < ents.length; z++) {
-                        delete ents[z].drawn;
-                        this.cacheCamera.addChild(ents[z]);
+                        ent = ents[z];
+                        delete ent.drawn;
+                        this.cacheCamera.addChild(ent);
+                        if (ent.mask) {
+                            this.cacheCamera.addChild(ent.mask);
+                        }
                     }
                 }
                 
@@ -586,7 +572,6 @@
                 this.parentContainer.removeChild(this.tilesToRender);
                 this.imageMap.length = 0;
                 this.tiles = null;
-                this.camera = null;
                 this.parentContainer = null;
                 this.tilesSprite = null;
             }
