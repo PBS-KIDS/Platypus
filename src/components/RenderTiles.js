@@ -377,7 +377,7 @@
                     }
                     
                     // Store pixel bounding box for checking later.
-                    cacheP.set(cache).setAll(cacheP.x * this.tileWidth, cacheP.y * this.tileHeight, cacheP.width * this.tileWidth, cacheP.height * this.tileHeight);
+                    cacheP.set(cache).setAll((cacheP.x + 0.5) * this.tileWidth, (cacheP.y + 0.5) * this.tileHeight, (cacheP.width + 1) * this.tileWidth, (cacheP.height + 1) * this.tileHeight);
                 }
 
                 this.tilesSprite.x = camera.viewport.left - laxCam.left + cache.left * this.tileWidth;
