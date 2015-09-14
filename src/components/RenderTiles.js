@@ -23,13 +23,13 @@
             if (a || b || c) {
                 if (a && b && c) {
                     m.a = 0;
-                    m.b = 1;
-                    m.c = 1;
+                    m.b = -1;
+                    m.c = -1;
                     m.d = 0;
                 } else if (a && c) {
                     m.a = 0;
-                    m.b = -1;
-                    m.c = 1;
+                    m.b = 1;
+                    m.c = -1;
                     m.d = 0;
                 } else if (b && c) { // 180 deg
                     m.a = -1;
@@ -38,13 +38,13 @@
                     m.d = -1;
                 } else if (a && b) {
                     m.a = 0;
-                    m.b = 1;
-                    m.c = -1;
+                    m.b = -1;
+                    m.c = 1;
                     m.d = 0;
                 } else if (a) {
                     m.a = 0;
-                    m.b = -1;
-                    m.c = -1;
+                    m.b = 1;
+                    m.c = 1;
                     m.d = 0;
                 } else if (b) { // vertical flip
                     m.a = 1;
