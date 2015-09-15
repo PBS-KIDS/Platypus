@@ -202,9 +202,9 @@
             addInputs: (function () {
                 var createHandler = function (self, eventName) {
                     return function (event) {
-                        var stageX = event.stageX,
-                            stageY = event.stageY,
-                            nativeEvent = event.nativeEvent,
+                        var stageX = event.data.global.x,
+                            stageY = event.data.global.y,
+                            nativeEvent = event.data.originalEvent,
                             x = 0,
                             y = 0;
 
@@ -213,8 +213,8 @@
                             return;
                         }
 
-                        x = stageX / self.container.scale.x + self.camera.x;
-                        y = stageY / self.container.scale.y + self.camera.y;
+                        x = stageX / self.container.transformMatrix.a + self.camera.x;
+                        y = stageY / self.container.transformMatrix.d + self.camera.y;
 
                         event.target.mouseTarget = true;
 
@@ -238,8 +238,8 @@
                                 self.moveMouse = function () {
                                     self.owner.trigger('pressmove', {
                                         event: nativeEvent,
-                                        x: stageX / self.container.scale.x + self.camera.x,
-                                        y: stageY / self.container.scale.y + self.camera.y,
+                                        x: stageX / self.container.transformMatrix.a + self.camera.x,
+                                        y: stageY / self.container.transformMatrix.d + self.camera.y,
                                         entity: self.owner
                                     });
                                 };
@@ -267,7 +267,7 @@
                          * @event 'mousedown'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
+                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -279,7 +279,7 @@
                          * @event 'pressmove'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
+                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -291,7 +291,7 @@
                          * @event 'pressup'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
+                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -303,7 +303,7 @@
                          * @event 'click'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
+                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -330,7 +330,7 @@
                          * @event 'mouseover'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
+                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
@@ -342,7 +342,7 @@
                          * @event 'mouseout'
                          * @param eventData {Object}
                          * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.cjsEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
+                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
                          * @param eventData.x {Number} The x location of the mouse.
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.

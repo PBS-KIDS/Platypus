@@ -1009,10 +1009,10 @@
                         }
 
                         self.owner.trigger(eventName, {
-                            event: event.nativeEvent,
-                            cjsEvent: event,
-                            x: event.stageX / self.parentContainer.scale.x + self.camera.x,
-                            y: event.stageY / self.parentContainer.scale.y + self.camera.y,
+                            event: event.data.originalEvent,
+                            pixiEvent: event,
+                            x: event.data.global.x / self.parentContainer.transformMatrix.a + self.camera.x,
+                            y: event.data.global.y / self.parentContainer.transformMatrix.d + self.camera.y,
                             entity: self.owner
                         });
 
