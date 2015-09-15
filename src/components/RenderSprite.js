@@ -654,7 +654,7 @@
                 this.camera.x = camera.viewport.left;
                 this.camera.y = camera.viewport.top;
                 
-                if (this.container) {
+                if (this.container && !this.pinnedTo) {
                     this.container._currentBounds = null;
                     bounds = this.container.getBounds(this.container.transformMatrix);
                     if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
