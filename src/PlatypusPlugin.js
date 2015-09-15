@@ -9,9 +9,9 @@
     "use strict";
     
     var ApplicationPlugin = include('springroll.ApplicationPlugin'),
-	    updateFunction = null;
-
-    var plugin = new ApplicationPlugin();
+	    updateFunction = null,
+        plugin = new ApplicationPlugin(),
+        resizeFunction = null;
 
     // Preload is an optional asynchronous call for doing any loading
     // before the application is init. Make sure that done() is called
@@ -29,9 +29,13 @@
 	            delta: elapsed
 	        });
 		};
+
+        resizeFunction = function (event) {
+            game.currentScene.triggerEvent('resize', event);
+        }
 		
 		this.on('update', updateFunction);
-        this.on('resize', function() {console.log('gimminy')});
+        this.on('resize', resizeFunction);
 
         done(); // required!
     };
@@ -39,6 +43,7 @@
     // Clean-up when the application is destroyed
     plugin.teardown = function() {
 		this.off('update', updateFunction);
+        this.off('resize', resizeFunction);
 		this.game.destroy();
 		delete this.game;
     };
