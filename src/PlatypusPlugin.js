@@ -31,6 +31,7 @@
 		};
 		
 		this.on('update', updateFunction);
+        this.on('resize', function() {console.log('gimminy')});
 
         done(); // required!
     };
