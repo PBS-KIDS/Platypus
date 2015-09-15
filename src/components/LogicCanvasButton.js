@@ -42,7 +42,7 @@
                 this.owner.state.down = true;
                 if (!this.owner.state.disabled && !(this.useOnce && this.used)) {
                     if (this.onPress) {
-                        this.owner.triggerEvent(this.onPress);
+                        this.owner.trigger(this.onPress);
                         this.used = true; //Doing this prevents the Release/Cancel calls from occurring. Need to find a way to let the up and down both call for one use buttons.
                     }
                 }
@@ -52,12 +52,12 @@
                 if (!this.owner.state.disabled && !(this.useOnce && this.used)) {
                     if (this.cancelled) {
                         if (this.onCancel) {
-                            this.owner.triggerEvent(this.onCancel);
+                            this.owner.trigger(this.onCancel);
                             this.used = true;
                         }
                     } else {
                         if (this.onRelease) {
-                            this.owner.triggerEvent(this.onRelease);
+                            this.owner.trigger(this.onRelease);
                             this.used = true;
                         }
                     }

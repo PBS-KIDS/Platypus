@@ -108,29 +108,35 @@
                         this.attachmentPosition.z = this.owner.z;
                         this.attachment = this.owner.parent.addEntity(this.attachmentProperties);
                     }
+                    
+                    if (this.attachment.destroyed) {
+                        this.owner.parent.removeEntity(this.attachment);
+                        this.attachment = null;
+                        this.isAttached = false;
+                    } else {
+                        this.attachment.x = this.owner.x;
+                        offset = this.offsetX;
+                        if (state.left) {
+                            offset *= -1;
+                            this.attachment.rotation = 180;
+                        } else if (state.right) {
+                            this.attachment.rotation = 0;
+                        }
+                        this.attachment.x += offset;
 
-                    this.attachment.x = this.owner.x;
-                    offset = this.offsetX;
-                    if (state.left) {
-                        offset *= -1;
-                        this.attachment.rotation = 180;
-                    } else if (state.right) {
-                        this.attachment.rotation = 0;
+                        this.attachment.y = this.owner.y;
+                        offset = this.offsetY;
+                        if (state.top) {
+                            offset *= -1;
+                            this.attachment.rotation = 90;
+                        } else if (state.bottom) {
+                            this.attachment.rotation = -90;
+                        }
+                        this.attachment.y += offset;
+
+                        this.attachment.z = this.owner.z;
+                        this.attachment.z += this.offsetZ;
                     }
-                    this.attachment.x += offset;
-
-                    this.attachment.y = this.owner.y;
-                    offset = this.offsetY;
-                    if (state.top) {
-                        offset *= -1;
-                        this.attachment.rotation = 90;
-                    } else if (state.bottom) {
-                        this.attachment.rotation = -90;
-                    }
-                    this.attachment.y += offset;
-
-                    this.attachment.z = this.owner.z;
-                    this.attachment.z += this.offsetZ;
                 } else if (this.attachment) {
                     this.owner.parent.removeEntity(this.attachment);
                     this.attachment = null;

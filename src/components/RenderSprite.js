@@ -204,9 +204,9 @@
              *
              *      -AND/OR one of the following two-
              *
-             *      "frames": {"0": {"x": 12, "y": -32}, "3": {"x": 12}}  //The keys specify the the frame to match the pin to. If a frame doesn't have coordinates or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is hidden.
+             *      "frames": {"0": {"x": 12, "y": -32}, "3": {"x": 12}}  //The keys specify the the frame to match the pin to. If a frame doesn't have coordinates or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is invisible.
              *
-             *      "frames": [{"x": 12, "y": -32}, null, {"x": 12}]  //In this format, we assume the indexes of the array match those of the frames. If a given index is null or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is hidden.
+             *      "frames": [{"x": 12, "y": -32}, null, {"x": 12}]  //In this format, we assume the indexes of the array match those of the frames. If a given index is null or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is invisible.
              *
              *  }],
              *
@@ -262,13 +262,13 @@
             flip: false,
 
             /**
-             * Optional. Whether this object is visible or not. To change the hidden value dynamically set this.owner.state.hidden to true or false.
+             * Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.
              *
-             * @property hidden
+             * @property visible
              * @type Boolean
              * @default false
              */
-            hidden: false,
+            visible: true,
 
             /**
              * Optional. Specifies whether this component should listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is false.
@@ -598,7 +598,6 @@
                 }
 
                 this.isOnCamera = true;
-                this.visible = (this.hidden === false);
                 this.state = this.owner.state;
                 this.stateChange = false;
                 this.lastState = -1;
@@ -715,7 +714,7 @@
             },
             
             /**
-             * This event hides the sprite. When multiple sprites are pinned together, the entire group is hidden.
+             * This event makes the sprite invisible. When multiple sprites are pinned together, the entire group is invisible.
              *
              * @method 'hide-sprite'
              */
@@ -724,7 +723,7 @@
             },
 
             /**
-             * This event shows a hidden sprite. When multiple sprites are pinned together, the entire group is shown.
+             * This event makes the sprite visible. When multiple sprites are pinned together, the entire group is made visible.
              *
              * @method 'show-sprite'
              */
@@ -928,9 +927,8 @@
                     }
                     
                     if (this.stateBased && this.stateChange) {
-                        if (this.state.hidden !== undefined) {
-                            this.visible = !this.state.hidden;
-                        }
+                        if (this.state.visible !== undefined) {
+                            this.visible = this.state.visible;                        }
 
                         if (this.checkStates) {
                             for (i = 0; i < this.checkStates.length; i++) {
