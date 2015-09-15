@@ -1,5 +1,9 @@
 /**
- * This component handles rendering tile map backgrounds. When rendering the background, this component figures out what tiles are being displayed as caches them so they are rendered as one image rather than individually. As the camera moves, the cache is updated by blitting the relevant part of the old cached image into the new cached image and then rendering the tiles that have shifted into the camera's view into the cache.
+ * This component handles rendering tile map backgrounds.
+ * 
+ * When rendering the background, this component figures out what tiles are being displayed and caches them so they are rendered as one image rather than individually.
+ * 
+ * As the camera moves, the cache is updated by blitting the relevant part of the old cached image into a new cache and then rendering tiles that have shifted into the camera's view into the cache.
  * 
  * @namespace platypus.components
  * @class RenderTiles
@@ -103,15 +107,6 @@
         
         properties: {
             /**
-             * The amount of space in pixels around the edge of the camera that we include in the buffered image. Is multiplied by the scaleX to get the actual buffersize. Defaults to the tileWidth.
-             * 
-             * @property buffer
-             * @type number
-             * @default 0
-             */
-            buffer: 0,
-    
-            /**
              * Whether to cache entities on this layer if the entity's render component requests caching.
              * 
              * @property entityCache
@@ -129,6 +124,15 @@
              */
             imageMap: [],
             
+            /**
+             * The amount of space that is buffered. Defaults to 2048 x 2048 or a smaller area that encloses the tile layer.
+             * 
+             * @property maximumBuffer
+             * @type number
+             * @default 2048
+             */
+            maximumBuffer: 2048,
+    
             /**
              * The x-scale the tilemap is being displayed at.
              * 
@@ -176,8 +180,6 @@
         },
 
         constructor: function (definition) {
-            var buffer = 0;
-            
             this.controllerEvents = undefined;
             this.doMap            = null; //list of display objects that should overlay tile map.
             this.tiles            = {};
@@ -192,8 +194,6 @@
             this.worldWidth    = this.layerWidth    = this.tileWidth;
             this.worldHeight   = this.layerHeight   = this.tileHeight;
             
-            
-            buffer = (this.buffer || (this.tileWidth * 3 / 4)) * this.scaleX;
             this.cache = new platypus.AABB();
             this.cachePixels = new platypus.AABB();
             
@@ -202,16 +202,17 @@
 
         events: {
             /**
-             * This event is triggered before `handle-render` and provides the CreateJS stage that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesSprite displayObject to the stage.
+             * This event is triggered before `handle-render` and provides the container that this component will require to display. In this case it compiles the array of tiles that make up the map and adds the tilesSprite displayObject to the stage.
              * 
              * @method 'handle-render-load'
-             * @param data.container {createjs.Container} Container to contain this tile-rendering.
+             * @param data.container {PIXI.Container} Container to contain this tile-rendering.
              */
             "handle-render-load": function (resp) {
                 var x = 0,
                     y = 0,
                     parentContainer = null,
-                    imgMap = this.imageMap;
+                    imgMap = this.imageMap,
+                    maxBuffer = this.maximumBuffer;
 
                 if (resp && resp.container) {
                     parentContainer = this.parentContainer = resp.container;
@@ -232,16 +233,16 @@
                     this.layerWidth  = this.tilesWidth  * this.tileWidth;
                     this.layerHeight = this.tilesHeight * this.tileHeight;
                     
-                    // May be too generous? Check for performance impact
-                    this.cacheWidth = 2048;
-                    this.cacheHeight = 2048;
-                    for (x = 1; x < 2048; x *= 2) {
+                    // Set up buffer cache size
+                    this.cacheWidth = maxBuffer;
+                    this.cacheHeight = maxBuffer;
+                    for (x = 1; x < maxBuffer; x *= 2) {
                         if (x > this.layerWidth) {
                             this.cacheWidth = x;
                             break;
                         }
                     }
-                    for (y = 1; y < 2048; y *= 2) {
+                    for (y = 1; y < maxBuffer; y *= 2) {
                         if (y > this.layerHeight) {
                             this.cacheHeight = y;
                             break;

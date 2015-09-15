@@ -246,6 +246,7 @@
             "render-world": function (data) {
                 this.world = data.world;
                 this.world.transformMatrix = this.world.transformMatrix || new PIXI.Matrix();
+                this.container.addChild(this.world);
             },
             
             /**
@@ -302,11 +303,7 @@
              * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
              **/
             "tick": function (resp) {
-                var i = 0,
-                    child     = null,
-                    bounds    = null,
-                    resets    = [],
-                    msg       = this.message,
+                var msg       = this.message,
                     viewport  = msg.viewport,
                     transform = null;
                 
@@ -393,28 +390,6 @@
                     
                 }
                 
-                this.container.addChild(this.world);
-
-                // Make sure entities outside of the camera are not drawn (optimization)
-                for (i = 0; i < this.world.children.length; i++) {
-                    child = this.world.children[i];
-                    if (child.visible && (child.name !== 'entity-managed')) {
-                        bounds = child.getBounds();
-                        if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
-                            child.visible = false;
-                            resets.push(child);
-                        }
-                    }
-                }
-                
-                // Update the camera's snapshot
-                //this.container.updateCache(); //TODO: This is not really supported in pixi - need to figure out a better way to handle multiple cameras. - DDD 10/4/2015
-                
-                // Reset visibility of hidden children
-                for (i = 0; i < resets.length; i++) {
-                    resets[i].visible = true;
-                }
-
                 if (this.lastFollow.begin) {
                     if (this.lastFollow.begin < new Date().getTime()) {
                         this.follow(this.lastFollow);

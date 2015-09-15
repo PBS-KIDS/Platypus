@@ -531,18 +531,14 @@
                 this.hover      = false;
                 this.click      = false;
                 
+                this.camera = {
+                    x: 0,
+                    y: 0
+                };
+
                 if (this.acceptInput) {
                     this.hover = this.acceptInput.hover || false;
                     this.click = this.acceptInput.click || false;
-                    
-                    this.camera = {
-                        x: 0,
-                        y: 0
-                    };
-                    this.addEventListener('camera-update', function (camera) {
-                        self.camera.x = camera.viewport.left;
-                        self.camera.y = camera.viewport.top;
-                    });
                 }
                 
                 if (this.eventBased || this.stateBased) {
@@ -601,7 +597,8 @@
                     this.owner.triggerEvent('pin-me', this.pinTo);
                 }
 
-                this.container.hidden = this.hidden;
+                this.isOnCamera = false;
+                this.visible = (this.hidden !== false);
                 this.state = this.owner.state;
                 this.stateChange = false;
                 this.lastState = -1;
@@ -615,7 +612,7 @@
                 this.stateChange = true;
                 
                 if (this.cache) {
-                    this.updateSprite();
+                    this.updateSprite(false);
                     this.owner.cacheRender = this.container;
                 }
             };
@@ -628,7 +625,7 @@
              * @method 'cache'
              */
             "cache": function () {
-                this.updateSprite();
+                this.updateSprite(false);
                 this.owner.cacheRender = this.container;
                 if (this.owner.parent && this.owner.parent.triggerEventOnChildren) {
                     /**
@@ -643,6 +640,27 @@
                 }
             },
 
+            /**
+             * Listens for this event to determine whether this sprite is visible.
+             *
+             * @method 'handle-render-load'
+             * @param handlerData {Object} Data from the render handler
+             * @param handlerData.container {createjs.Container} The parent container.
+             */
+            "camera-update": function (camera) {
+                var bounds = this.container.getBounds(),
+                    viewport = camera.viewport;
+                
+                this.camera.x = camera.viewport.left;
+                this.camera.y = camera.viewport.top;
+                
+                if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
+                    this.isOnCamera = false;
+                } else {
+                    this.isOnCamera = true;
+                }
+            },
+            
             /**
              * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
              *
@@ -680,7 +698,7 @@
                     }
                 }
                 
-                this.updateSprite();
+                this.updateSprite(true);
             },
             
             /**
@@ -698,7 +716,7 @@
              * @method 'hide-sprite'
              */
             "hide-sprite": function () {
-                this.container.hidden = true;
+                this.visible = false;
             },
 
             /**
@@ -707,7 +725,7 @@
              * @method 'show-sprite'
              */
             "show-sprite": function () {
-                this.container.hidden = false;
+                this.visible = true;
             },
             
             /**
@@ -827,7 +845,7 @@
                     return a.z - b.z;
                 };
                 
-                return function (resp) {
+                return function (playing) {
                     var i = 0,
                         x = 0,
                         y = 0,
@@ -855,7 +873,7 @@
                                 this.container.z = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z;
                             }
                             rotation = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].angle || 0;
-                            this.container.visible = true;
+                            this.visible = true;
                         } else if (this.pinnedTo.defaultPin) {
                             x = this.pinnedTo.defaultPin.x;
                             y = this.pinnedTo.defaultPin.y;
@@ -866,9 +884,9 @@
                                 this.container.z = this.pinnedTo.defaultPin.z;
                             }
                             rotation = this.pinnedTo.defaultPin.angle || 0;
-                            this.container.visible = true;
+                            this.visible = true;
                         } else {
-                            this.container.visible = false;
+                            this.visible = false;
                         }
                     } else {
                         x = this.owner.x;
@@ -907,7 +925,7 @@
                     
                     if (this.stateBased && this.stateChange) {
                         if (this.state.hidden !== undefined) {
-                            this.container.hidden = this.state.hidden;
+                            this.visible = !this.state.hidden;
                         }
 
                         if (this.checkStates) {
@@ -919,7 +937,11 @@
                                             this.currentAnimation = testCase;
                                             this.lastState = +i;
                                             this.animationFinished = false;
-                                            this.sprite.gotoAndPlay(testCase);
+                                            if (playing) {
+                                                this.sprite.gotoAndPlay(testCase);
+                                            } else {
+                                                this.sprite.gotoAndStop(testCase);
+                                            }
                                         } else {
                                             this.waitingAnimation = testCase;
                                             this.waitingState = +i;
@@ -934,6 +956,8 @@
                         this.stateChange = false;
                     }
                     
+                    this.container.visible = this.visible && this.isOnCamera;
+
                     // Handle rotation
                     if (rotation) {
                         m.rotate((rotation / 180) * Math.PI);
