@@ -536,19 +536,13 @@
                     y: 0
                 };
 
-                if (this.acceptInput) {
-                    this.hover = this.acceptInput.hover || false;
-                    this.click = this.acceptInput.click || false;
-                    this.interactive = true;
-                }
-                
                 if (this.eventBased || this.stateBased) {
                     setupEventsAndStates(this, map);
                     this.currentAnimation = map['default'] || '';
                 }
                 
                 /*
-                 * CreateJS Sprite created here:
+                 * PIXIAnimation created here:
                  */
                 this.sprite = new platypus.PIXIAnimation(ss.spriteSheet, this.currentAnimation || 0);
                 this.sprite.onComplete = function (animationInstance) {
@@ -564,7 +558,7 @@
                         self.animationFinished = true;
                     }
                 };
-                
+
                 this.affine = new PIXI.Matrix();
                 
                 // add pins to sprite and setup this.container if needed.
@@ -581,23 +575,27 @@
                     this.sprite.transformMatrix = new PIXI.Matrix();
                 }
     
-                
-                /* These next few need this.container set up */
-                
-                //handle hitArea
-                if (this.acceptInput && this.acceptInput.hitArea) {
-                    if (typeof this.acceptInput.hitArea === 'string') {
-                        this.container.hitArea = this.setHitArea(this.acceptInput.hitArea);
-                    } else {
-                        this.container.hitArea = this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
-                    }
-                }
-                
                 // pin to another RenderSprite
                 if (this.pinTo) {
                     this.owner.triggerEvent('pin-me', this.pinTo);
                 }
-
+                
+                /* These next few need this.container set up */
+                
+                //handle hitArea
+                if (this.acceptInput) {
+                    this.hover = this.acceptInput.hover || false;
+                    this.click = this.acceptInput.click || false;
+                    
+                    if (this.acceptInput.hitArea) {
+                        if (typeof this.acceptInput.hitArea === 'string') {
+                            this.container.hitArea = this.setHitArea(this.acceptInput.hitArea);
+                        } else {
+                            this.container.hitArea = this.setHitArea('r(' + (this.owner.x || 0) + ',' + (this.owner.y || 0) + ',' + (this.owner.width || 0) + ',' + (this.owner.height || 0) + ')');
+                        }
+                    }
+                }
+                
                 this.isOnCamera = true;
                 this.state = this.owner.state;
                 this.stateChange = false;
@@ -960,9 +958,6 @@
                     }
                     
                     this.container.visible = this.visible && this.isOnCamera;
-                    if (this.interactive && (this.container.interactive !== this.container.visible)) {
-                        this.container.interactive = this.container.visible;
-                    }
 
                     // Handle rotation
                     if (rotation) {
@@ -1038,6 +1033,8 @@
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click) {
+                        sprite.interactive = true;
+                        
                         mousedown = createHandler(this, 'mousedown');
                         pressmove = createHandler(this, 'pressmove');
                         pressup   = createHandler(this, 'pressup');
@@ -1055,6 +1052,8 @@
                         sprite.addListener('tap',             click);
                     }
                     if (this.hover) {
+                        sprite.interactive = true;
+
                         mouseover = createHandler(this, 'mouseover');
                         mouseout  = createHandler(this, 'mouseout');
 
@@ -1079,6 +1078,7 @@
                             sprite.removeListener('mouseover', mouseover);
                             sprite.removeListener('mouseout',  mouseout);
                         }
+                        sprite.interactive = false;
                         this.removeInputListeners = null;
                     };
                 };
