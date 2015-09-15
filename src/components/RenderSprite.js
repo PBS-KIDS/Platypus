@@ -597,7 +597,7 @@
                     this.owner.triggerEvent('pin-me', this.pinTo);
                 }
 
-                this.isOnCamera = false;
+                this.isOnCamera = true;
                 this.visible = (this.hidden !== false);
                 this.state = this.owner.state;
                 this.stateChange = false;
