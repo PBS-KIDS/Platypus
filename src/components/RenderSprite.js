@@ -598,7 +598,7 @@
                 }
 
                 this.isOnCamera = true;
-                this.visible = (this.hidden !== false);
+                this.visible = (this.hidden === false);
                 this.state = this.owner.state;
                 this.stateChange = false;
                 this.lastState = -1;
