@@ -655,6 +655,11 @@
                 this.camera.y = camera.viewport.top;
                 
                 if (this.container) {
+                    if (!this.container.visible) { // Bounds are incorrect if we've made it invisible.
+                        this.container.visible = true;
+                        this.container.updateTransform();
+                        this.container.visible = false;
+                    }
                     bounds = this.container.getBounds();
                     if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
                         this.isOnCamera = false;
