@@ -31,7 +31,7 @@
 		};
 
         resizeFunction = function (event) {
-            game.currentScene.triggerEvent('resize', event);
+            game.currentScene.trigger('resize', event);
         }
 		
 		this.on('update', updateFunction);
