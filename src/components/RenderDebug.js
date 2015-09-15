@@ -201,6 +201,7 @@ This component is attached to entities that will appear in the game world. It se
                     };
                 
                 return function (sprite) {
+                    sprite.interactive = true;
                     sprite.addListener('rightdown', createHandler(this));
                 };
             }()),

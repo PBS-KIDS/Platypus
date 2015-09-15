@@ -539,6 +539,7 @@
                 if (this.acceptInput) {
                     this.hover = this.acceptInput.hover || false;
                     this.click = this.acceptInput.click || false;
+                    this.interactive = true;
                 }
                 
                 if (this.eventBased || this.stateBased) {
@@ -959,6 +960,9 @@
                     }
                     
                     this.container.visible = this.visible && this.isOnCamera;
+                    if (this.interactive && (this.container.interactive !== this.container.visible)) {
+                        this.container.interactive = this.container.visible;
+                    }
 
                     // Handle rotation
                     if (rotation) {
@@ -1034,8 +1038,6 @@
                     
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click) {
-                        sprite.interactive = true;
-                        
                         mousedown = createHandler(this, 'mousedown');
                         pressmove = createHandler(this, 'pressmove');
                         pressup   = createHandler(this, 'pressup');
@@ -1053,8 +1055,6 @@
                         sprite.addListener('tap',             click);
                     }
                     if (this.hover) {
-                        sprite.interactive = true;
-                        
                         mouseover = createHandler(this, 'mouseover');
                         mouseout  = createHandler(this, 'mouseout');
 
