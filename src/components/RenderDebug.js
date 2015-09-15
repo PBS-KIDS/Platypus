@@ -111,10 +111,23 @@ This component is attached to entities that will appear in the game world. It se
                 }
             },
             
-            "handle-render": function () {
+            "handle-render": function (renderData) {
                 var i = 0,
                     aabb = null;
-                
+
+                if (!this.parentContainer) {
+                    if (!platypus.game.settings.debug) {
+                        this.owner.removeComponent(this);
+                        return;
+                    } else if (renderData.container) {
+                        this.parentContainer = resp.container;
+                    } else {
+                        console.warn('No Container, removing render debug component from "' + this.owner.type + '".');
+                        this.owner.removeComponent(this);
+                        return;
+                    }
+                }
+
                 if (this.isOutdated) {
                     this.updateSprites();
                     this.isOutdated = false;
