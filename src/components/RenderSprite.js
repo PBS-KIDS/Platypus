@@ -648,16 +648,19 @@
              * @param handlerData.container {createjs.Container} The parent container.
              */
             "camera-update": function (camera) {
-                var bounds = this.container.getBounds(),
+                var bounds   = null,
                     viewport = camera.viewport;
                 
                 this.camera.x = camera.viewport.left;
                 this.camera.y = camera.viewport.top;
                 
-                if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
-                    this.isOnCamera = false;
-                } else {
-                    this.isOnCamera = true;
+                if (this.container) {
+                    bounds = this.container.getBounds();
+                    if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
+                        this.isOnCamera = false;
+                    } else {
+                        this.isOnCamera = true;
+                    }
                 }
             },
             
