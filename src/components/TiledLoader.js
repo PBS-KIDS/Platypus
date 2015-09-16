@@ -485,6 +485,13 @@
                                     },
                                     animations: importAnimation
                                 };
+                            } else if (tileDefinition.components[x].spriteSheet) {
+                                if (typeof tileDefinition.components[x].spriteSheet === 'string' && platypus.game.settings.spriteSheets[tileDefinition.components[x].spriteSheet]) {
+                                    tileDefinition.components[x].spriteSheet = platypus.game.settings.spriteSheets[tileDefinition.components[x].spriteSheet];
+                                }
+                                if (!tileDefinition.components[x].spriteSheet.animations) {
+                                    tileDefinition.components[x].spriteSheet.animations = importAnimation;
+                                }
                             }
                             if (tileDefinition.components[x].collisionMap === 'import') {
                                 tileDefinition.components[x].collisionMap = importCollision;

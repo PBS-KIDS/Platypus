@@ -927,8 +927,8 @@
                     
                     if (this.stateBased && this.stateChange) {
                         if (this.state.visible !== undefined) {
-                            this.visible = this.state.visible;                        }
-
+                            this.visible = this.state.visible;
+                        }
                         if (this.checkStates) {
                             for (i = 0; i < this.checkStates.length; i++) {
                                 testCase = this.checkStates[i](this.state);
@@ -1121,7 +1121,7 @@
                     
                     if (pins[i].frames) {
                         pin.frames = [];
-                        for (j in pins[i].frames) {
+                        for (j = 0; j < pins[i].frames.length; j++) {
                             if (pins[i].frames[j]) {
                                 if (isArray) {
                                     regX = frames[j][5] || 0;
@@ -1223,7 +1223,6 @@
                 
                 return function (shape) {
                     var ha  = null,
-                        gfx = null,
                         sav = '';
                     
                     if (typeof shape === 'string') {
@@ -1235,19 +1234,18 @@
                     ha = savedHitAreas[sav];
 
                     if (!ha) {
-                        ha   = new createjs.Shape();
-                        gfx  = ha.graphics;
+                        ha   = new PIXI.Graphics();
                         ha.x = 0;
                         ha.y = 0;
 
-                        gfx.beginFill("#000"); // Force the fill.
+                        ha.beginFill(0x000000); // Force the fill.
 
                         if (typeof shape === 'string') {
-                            processGraphics(gfx, shape);
+                            processGraphics(ha, shape);
                         } else if (shape.radius) {
-                            gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
+                            ha.dc(shape.x || 0, shape.y || 0, shape.radius);
                         } else {
-                            gfx.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
+                            ha.r(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
                         }
                         
                         savedHitAreas[sav] = ha;
