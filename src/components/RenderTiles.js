@@ -107,6 +107,15 @@
         
         properties: {
             /**
+             * The amount of space in pixels around the edge of the camera that we include in the buffered image. If not set, largest buffer allowed by maximumBuffer is used.
+             * 
+             * @property buffer
+             * @type number
+             * @default 0
+             */
+            buffer: 0,
+
+            /**
              * Whether to cache entities on this layer if the entity's render component requests caching.
              * 
              * @property entityCache
@@ -248,11 +257,9 @@
                             break;
                         }
                     }
-                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.floor(this.cacheWidth  / this.tileWidth));
-                    this.cacheTilesHeight = Math.min(this.tilesHeight, Math.floor(this.cacheHeight / this.tileHeight));
 
                     this.cacheCamera = new PIXI.Container();
-                    this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheTilesWidth * this.tileWidth, this.cacheTilesHeight * this.tileHeight).endFill();
+                    this.updateBufferRegion();
                     this.cacheCameraWrapper = new PIXI.Container();
                     this.cacheCameraWrapper.addChild(this.cacheCamera);
                     this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
@@ -346,16 +353,25 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                var ctw     = this.cacheTilesWidth - 1,
-                    cth     = this.cacheTilesHeight - 1,
-                    ctw2    = ctw / 2,
-                    cth2    = cth / 2,
+                var ctw     = 0,
+                    cth     = 0,
+                    ctw2    = 0,
+                    cth2    = 0,
                     cache   = this.cache,
                     cacheP  = this.cachePixels,
+                    vp      = camera.viewport,
+                    resized = (this.buffer && ((vp.width !== this.laxCam.width) || (vp.height !== this.laxCam.height))),
                     tempC   = tempCache,
-                    laxCam  = this.convertCamera(camera.viewport);
+                    laxCam  = this.convertCamera(vp);
                 
                 if (!this.fullyCached && (cacheP.empty || !cacheP.contains(laxCam)) && (this.imageMap.length > 0)) {
+                    if (resized) {
+                        this.updateBufferRegion(laxCam);
+                    }
+                    ctw     = this.cacheTilesWidth - 1;
+                    cth     = this.cacheTilesHeight - 1;
+                    ctw2    = ctw / 2;
+                    cth2    = cth / 2;
                     
                     //only attempt to draw children that are relevant
                     tempC.setAll(Math.round(laxCam.x / this.tileWidth - ctw2) + ctw2, Math.round(laxCam.y / this.tileHeight - cth2) + cth2, ctw, cth);
@@ -492,6 +508,17 @@
                 }
                 
                 this.imageMap.push(newMap);
+            },
+            
+            updateBufferRegion: function (viewport) {
+                if (viewport) {
+                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  Math.floor(this.cacheWidth  / this.tileWidth));
+                    this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), Math.floor(this.cacheHeight / this.tileHeight));
+                } else {
+                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.floor(this.cacheWidth  / this.tileWidth));
+                    this.cacheTilesHeight = Math.min(this.tilesHeight, Math.floor(this.cacheHeight / this.tileHeight));
+                }
+                this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheTilesWidth * this.tileWidth, this.cacheTilesHeight * this.tileHeight).endFill();
             },
             
             updateCache: function (texture, bounds, tilesSpriteCache, oldBounds) {
