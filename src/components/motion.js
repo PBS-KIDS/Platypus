@@ -229,6 +229,17 @@
             }
         },
 
+        events: {
+            "set-vector": function(newVector) {
+                this.vector.set(newVector);
+                if (!isNaN(this.instantDecay)) {
+                    this.capMagnitude = this.vector.magnitude() * this.instantDecay;
+                } else {
+                    this.capMagnitude = -1;
+                }
+            }
+        },
+
         methods: {
             move: function (delta) {
                 if (this.vector.magnitude() > this.maxMagnitude) {
