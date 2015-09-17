@@ -53,24 +53,48 @@
                 });
             }
 
-            if (definition.instantEvent || instantState) {
+            if (definition.instantEvent || instantState || definition.instantBegin || definition.instantEnd) {
                 if (instantState) {
                     getInstantState = function () {
                         return state[instantState];
                     };
                 }
 
-                if (definition.instantEvent) {
+                if (definition.instantEvent || definition.instantBegin || definition.instantEnd) {
                     enact = false;
-                    /**
-                     * This event triggers an instant motion.
-                     * 
-                     * @method '[defined by instantEvent property]'
-                     * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-                     */
-                    self.addEventListener(definition.instantEvent, function (control) {
-                        enact = (control && (control.pressed !== false));
-                    });
+                    if (definition.instantEvent) {
+                        /**
+                        * This event triggers an instant motion.
+                        *
+                        * @method '[defined by instantEvent property]'
+                        * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                        */
+                        self.addEventListener(definition.instantEvent, function (control) {
+                            enact = (control && (control.pressed !== false));
+                        });
+                    }
+                    if (definition.instantBegin) {
+                        /**
+                        * This event triggers the beginning of an instant motion.
+                        *
+                        * @method '[defined by instantBegin property]'
+                        * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                        */
+                        self.addEventListener(definition.instantBegin, function () {
+                            enact = true;
+                        });
+                    }
+                    if (definition.instantEnd) {
+                        /**
+                        * This event triggers the end of an instant motion.
+                        *
+                        * @method '[defined by instantEnd property]'
+                        * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                        */
+                        self.addEventListener(definition.instantEnd, function () {
+                            enact = false;
+                        });
+                    }
                 }
 
                 self.update = prepUpdate(function (velocity, position, delta, grounded) {
@@ -167,6 +191,24 @@
              */
             instantEvent: "",
             
+            /**
+             * If instantBeing is set, the motion is triggered for a single step and must be re-triggered to activate again. The motion cannot begin again until it is ended by instantEnd or instant Event.
+             *
+             * @property instantBegin
+             * @type String
+             * @default ""
+             */
+            instantBegin: "",
+
+            /**
+             * If instantEnd is set, when triggered it will reset the event so that it can triggered again.
+             *
+             * @property instantEnd
+             * @type String
+             * @default ""
+             */
+            instantEnd: "",
+
             /**
              * If instantEvent or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instantEvent" property is also set on this component, both the event and the state must be true for the motion to be active. If "event" or "controlState" are also defined, they must also be `true` to trigger an instant motion on the entity.
              * 
