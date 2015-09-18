@@ -243,6 +243,7 @@
                     z = this.owner.z,
                     col = null,
                     ct = null,
+                    renderer = this.renderer,
                     parentContainer = null,
                     imgMap = this.imageMap,
                     maxBuffer = this.maximumBuffer;
@@ -275,7 +276,7 @@
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                         this.cacheAll   = true;
                         
-                        this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture = new PIXI.RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
     
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
@@ -293,6 +294,7 @@
                     } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
                         this.cacheAll = true;
                         
+                        renderer = new PIXI.CanvasRenderer(this.cacheWidth, this.cacheHeight);
                         this.cacheGrid = [];
                         for (x = 0; x < this.tilesWidth; x += this.cacheTilesWidth) {
                             col = [];
@@ -302,7 +304,7 @@
                                 w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
                                 h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
                                 
-                                ct = new PIXI.RenderTexture(PIXI.CanvasRenderer, w, h);
+                                ct = new PIXI.RenderTexture(renderer, w, h);
 /*                                ct.baseTexture.realWidth  = w;
                                 ct.baseTexture.realHeight = h;
                                 ct._updateUvs();*/
@@ -324,7 +326,7 @@
                     } else {
                         this.cacheAll = false;
                         
-                        this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture = new PIXI.RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
     
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
@@ -337,7 +339,7 @@
                         this.tilesSprite.z = z;
 
                         // Set up copy buffer and circular pointers
-                        this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture.alternate = new PIXI.RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
                         this.tilesSpriteCache = new PIXI.Sprite(this.cacheTexture.alternate);
                         
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
