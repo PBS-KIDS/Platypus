@@ -216,6 +216,7 @@
             this.cachePixels = new platypus.AABB();
             
             this.reorderedStage = false;
+            this.updateCache = false;
         },
 
         events: {
@@ -290,7 +291,7 @@
                         this.tilesSprite.z = this.owner.z;
 
                         this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
-                        this.updateCache(this.cacheTexture, this.cache);
+                        this.update(this.cacheTexture, this.cache);
                         parentContainer.addChild(this.tilesSprite);
                     } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
                         this.cacheAll = true;
@@ -304,8 +305,6 @@
                                 ct.baseTexture.realWidth = this.cacheWidth;
                                 ct.baseTexture.realHeight = this.cacheHeight;
                                 ct._updateUvs();
-                                this.cache.setBounds(x, y, Math.min(x + this.cacheTilesWidth, this.tilesWidth - 1), Math.min(y + this.cacheTilesHeight, this.tilesHeight - 1));
-                                this.updateCache(ct, this.cache);
                                 
                                 ct = new PIXI.Sprite(ct);
                                 ct.x = x * this.tileWidth;
@@ -317,6 +316,8 @@
                                 parentContainer.addChild(ct);
                             }
                         }
+                        
+                        this.updateGrid();
                     } else {
                         this.cacheAll = false;
                         
@@ -442,7 +443,7 @@
                         this.tilesSpriteCache.texture = this.cacheTexture;
                         this.cacheTexture = this.cacheTexture.alternate;
                         this.tilesSprite.texture = this.cacheTexture;
-                        this.updateCache(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
+                        this.update(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
                     }
                     
                     // Store pixel bounding box for checking later.
@@ -453,13 +454,29 @@
                     for (x = 0; x < this.cacheGrid.length; x++) {
                         for (y = 0; y < this.cacheGrid[x].length; y++) {
                             sprite = this.cacheGrid[x][y];
-                            cacheP.setAll(x * this.cacheClipWidth, y * this.cacheClipHeight, this.cacheClipWidth, this.cacheClipHeight);
+                            cacheP.setAll((x + 0.5) * this.cacheClipWidth, (y + 0.5) * this.cacheClipHeight, this.cacheClipWidth, this.cacheClipHeight);
                             sprite.visible = cacheP.intersects(laxCam);
                         }
                     }
                 } else {
                     this.tilesSprite.x = camera.viewport.left - laxCam.left + cache.left * this.tileWidth;
                     this.tilesSprite.y = camera.viewport.top  - laxCam.top  + cache.top  * this.tileHeight;
+                }
+            },
+
+            /**
+             * On receiving this message, determines whether to update which tiles need to be rendered and caches the image.
+             * 
+             * @method 'render'
+             */
+            "render": function (camera) {
+                if (this.updateCache) {
+                    this.updateCache = false;
+                    if (this.cacheGrid) {
+                        this.updateGrid();
+                    } else {
+                        this.update(this.cacheTexture, this.cache);
+                    }
                 }
             }
         },
@@ -503,6 +520,8 @@
 
                     // Prevent subsequent draws
                     entity.removeComponent('RenderSprite');
+                    
+                    this.updateCache = true; //TODO: This currently causes a blanket cache update - may be worthwhile to only recache if this entity's location is currently in a cache (either cacheGrid or the current viewable area).
                 }
             },
 
@@ -589,7 +608,7 @@
                 this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
             },
             
-            updateCache: function (texture, bounds, tilesSpriteCache, oldBounds) {
+            update: function (texture, bounds, tilesSpriteCache, oldBounds) {
                 var x = 0,
                     y = 0,
                     z = 0,
@@ -662,6 +681,19 @@
                 
                 if (oldBounds) {
                     oldBounds.set(bounds);
+                }
+            },
+            
+            updateGrid: function () {
+                var x = 0,
+                    y = 0,
+                    grid = this.cacheGrid;
+                
+                for (x = 0; x < grid.length; x++) {
+                    for (y = 0; y < grid[x].length; y++) {
+                        this.cache.setBounds(x * this.cacheTilesWidth, y * this.cacheTilesHeight, Math.min((x + 1) * this.cacheTilesWidth, this.tilesWidth - 1), Math.min((y + 1) * this.cacheTilesHeight, this.tilesHeight - 1));
+                        this.update(grid[x][y].texture, this.cache);
+                    }
                 }
             },
             
