@@ -161,7 +161,6 @@
                             * @event 'complete'
                             */
                             this.owner.triggerEvent('complete');
-                            this.app.off('taskDone', onFileLoad);
                         }
                     }.bind(this);
                 
@@ -200,8 +199,9 @@
                 }
 
                 if (loadAssets.length) {
-                    this.app.on('taskDone', onFileLoad);
-                    this.app.load(loadAssets);
+                    this.app.load(loadAssets, {
+                        taskDone: onFileLoad
+                    });
                 }
             }
         }
