@@ -453,7 +453,7 @@
                     for (x = 0; x < this.cacheGrid.length; x++) {
                         for (y = 0; y < this.cacheGrid[x].length; y++) {
                             sprite = this.cacheGrid[x][y];
-                            cacheP.setAll(x * this.cacheClipHeight, y * this.cacheClipWidth, this.cacheClipHeight, this.cacheClipWidth);
+                            cacheP.setAll(x * this.cacheClipWidth, y * this.cacheClipHeight, this.cacheClipWidth, this.cacheClipHeight);
                             sprite.visible = cacheP.intersects(laxCam);
                         }
                     }
