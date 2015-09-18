@@ -297,20 +297,20 @@
                         this.cacheAll = true;
                         
                         this.cacheGrid = [];
-                        for (x = 0; x < this.layerWidth; x += this.cacheWidth) {
+                        for (x = 0; x < this.tilesWidth; x += this.cacheTilesWidth) {
                             col = [];
                             this.cacheGrid.push(col);
-                            for (y = 0; y < this.layerHeight; y += this.cacheHeight) {
+                            for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
                                 ct = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                                 ct.baseTexture.realWidth = this.cacheWidth;
                                 ct.baseTexture.realHeight = this.cacheHeight;
                                 ct._updateUvs();
-                                this.cache.setBounds(x, y, x + this.cacheTilesWidth, y + this.cacheTilesHeight);
+                                this.cache.setBounds(x, y, Math.min(x + this.cacheTilesWidth, this.tilesWidth - 1), Math.min(y + this.cacheTilesHeight, this.tilesHeight));
                                 this.updateCache(ct, this.cache);
                                 
                                 ct = new PIXI.Sprite(ct);
-                                ct.x = x;
-                                ct.y = y;
+                                ct.x = x * this.tileWidth;
+                                ct.y = y * this.tileHeight;
                                 ct.z = this.owner.z;
                                 ct.scaleX = this.scaleX;
                                 ct.scaleY = this.scaleY;
