@@ -318,6 +318,9 @@
                                 col.push(ct);
                                 parentContainer.addChild(ct);
                                 
+                                ct.visible = false;
+                                ct.texture.baseTexture.dispose(); // Remove from GPU to keep mem low.
+                                
                                 z -= 0.000001; // so that tiles of large caches overlap consistently.
                             }
                         }
