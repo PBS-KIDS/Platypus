@@ -400,12 +400,12 @@
             /**
             * The camera listens for this event to change its world viewport size.
             *
-            * @method 'resize'
+            * @method 'resize-camera'
             * @param dimensions {Object} List of key/value pairs describing new viewport size
             * @param dimensions.width {number} Width of the camera viewport
             * @param dimensions.height {number} Height of the camera viewport
             **/
-            "resize": function (dimensions) {
+            "resize-camera": function (dimensions) {
                 this.worldCamera.viewport.resize(dimensions.width, dimensions.height);
                 this.resize();
             },
