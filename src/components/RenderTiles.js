@@ -700,12 +700,18 @@
             updateGrid: function () {
                 var x = 0,
                     y = 0,
-                    grid = this.cacheGrid;
+                    grid = this.cacheGrid,
+                    sprite = null;
                 
                 for (x = 0; x < grid.length; x++) {
                     for (y = 0; y < grid[x].length; y++) {
+                        sprite = grid[x][y];
                         this.cache.setBounds(x * this.cacheTilesWidth, y * this.cacheTilesHeight, Math.min((x + 1) * this.cacheTilesWidth, this.tilesWidth - 1), Math.min((y + 1) * this.cacheTilesHeight, this.tilesHeight - 1));
-                        this.update(grid[x][y].texture, this.cache);
+                        this.update(sprite.texture, this.cache);
+                        
+                        if (sprite.visible) { //Somehow, visible grid cache tiles do not visually update. This forces that to happen. - DDD 9-18-2015
+                            sprite.texture.update();
+                        }
                     }
                 }
             },
