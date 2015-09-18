@@ -87,7 +87,7 @@ This component changes the (x, y) position of an object according to its current
                 this.reorient = doNothing;
             }
             
-            this.paused = false;
+            this.owner.state.paused = false;
             
             if (definition.pause) {
                 if (typeof definition.pause === 'string') {
@@ -103,7 +103,7 @@ This component changes the (x, y) position of an object according to its current
                         for (i = 0; i < self.pausers.length; i++) {
                             paused = paused || state[self.pausers[i]];
                         }
-                        this.paused = paused;
+                        this.owner.state.paused = paused;
                     }
                 });
             }
@@ -129,18 +129,20 @@ This component changes the (x, y) position of an object according to its current
             this.owner.heading = 0;
         },
         events: {
-            "load": function () {
-                if (!this.owner.addMover) {
-                    console.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
-                    return;
+            "component-added": function (component) {
+                if (component === this) {
+                    if (!this.owner.addMover) {
+                        console.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
+                        return;
+                    }
+
+                    this.direction = this.owner.addMover({
+                        vector: this.speed,
+                        event: "moving",
+                        orient: false
+                    }).vector;
+                    this.owner.triggerEvent('moving', this.moving);
                 }
-                
-                this.direction = this.owner.addMover({
-                    vector: this.speed,
-                    event: "moving",
-                    orient: false
-                }).vector;
-                this.owner.triggerEvent('moving', this.moving);
             },
             
             "handle-logic": function (resp) {
