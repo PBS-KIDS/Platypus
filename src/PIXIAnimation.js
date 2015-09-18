@@ -67,6 +67,7 @@
             if (!isNaN(animation)) {
                 frames.push(textures[animation] || PIXI.Texture.EMPTY);
                 return {
+                    id: key,
                     frames: frames,
                     next: key,
                     speed: 1
@@ -76,6 +77,7 @@
                     frames.push(textures[i] || PIXI.Texture.EMPTY);
                 }
                 return {
+                    id: key,
                     frames: frames,
                     next: animation[2] || key,
                     speed: animation[3] || 1
@@ -85,6 +87,7 @@
                     frames.push(textures[animation.frames[i]] || PIXI.Texture.EMPTY);
                 }
                 return {
+                    id: key,
                     frames: frames,
                     next: animation.next || key,
                     speed: animation.speed || 1

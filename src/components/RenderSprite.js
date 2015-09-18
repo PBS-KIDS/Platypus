@@ -545,8 +545,8 @@
                  * PIXIAnimation created here:
                  */
                 this.sprite = new platypus.PIXIAnimation(ss.spriteSheet, this.currentAnimation || 0);
-                this.sprite.onComplete = function () {
-                    self.owner.trigger('animation-ended', self.currentAnimation);
+                this.sprite.onComplete = function (animation) {
+                    self.owner.trigger('animation-ended', animation);
                     if (self.waitingAnimation) {
                         self.currentAnimation = self.waitingAnimation;
                         self.waitingAnimation = false;
