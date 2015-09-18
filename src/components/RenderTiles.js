@@ -18,6 +18,15 @@
         sort = function (a, b) {
             return a.z - b.z;
         },
+        getPowerOfTwo = function (amount) {
+            var x = 1;
+            
+            while (x < amount) {
+                x *= 2;
+            }
+            
+            return x;
+        },
         transformCheck = function (value, m) {
             var v = +(value.substring(4)),
                 a = !!(0x20000000 & v),
@@ -227,8 +236,11 @@
              * @param data.container {PIXI.Container} Container to contain this tile-rendering.
              */
             "handle-render-load": function (resp) {
-                var x = 0,
+                var w = 0,
+                    h = 0,
+                    x = 0,
                     y = 0,
+                    z = this.owner.z,
                     col = null,
                     ct = null,
                     parentContainer = null,
@@ -243,9 +255,6 @@
                         this.reorderedStage = true;
                     }
                     
-                    //this.tilesToRender = initializeCanvasConservation(new PIXI.Container());
-                    //this.tilesToRender.name = 'entity-managed'; //its visibility is self-managed
-                    
                     this.imageMap = [];
                     this.addImageMap(imgMap);
                     
@@ -255,20 +264,8 @@
                     this.layerHeight = this.tilesHeight * this.tileHeight;
                     
                     // Set up buffer cache size
-                    this.cacheWidth = maxBuffer;
-                    this.cacheHeight = maxBuffer;
-                    for (x = 1; x < maxBuffer; x *= 2) {
-                        if (x > this.layerWidth) {
-                            this.cacheWidth = x;
-                            break;
-                        }
-                    }
-                    for (y = 1; y < maxBuffer; y *= 2) {
-                        if (y > this.layerHeight) {
-                            this.cacheHeight = y;
-                            break;
-                        }
-                    }
+                    this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth), maxBuffer);
+                    this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight), maxBuffer);
 
                     this.cacheCamera = new PIXI.Container();
                     this.updateBufferRegion();
@@ -288,7 +285,7 @@
                         this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
                         this.tilesSprite.scaleX = this.scaleX;
                         this.tilesSprite.scaleY = this.scaleY;
-                        this.tilesSprite.z = this.owner.z;
+                        this.tilesSprite.z = z;
 
                         this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
                         this.update(this.cacheTexture, this.cache);
@@ -301,19 +298,25 @@
                             col = [];
                             this.cacheGrid.push(col);
                             for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
-                                ct = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
-                                ct.baseTexture.realWidth = this.cacheWidth;
-                                ct.baseTexture.realHeight = this.cacheHeight;
+                                // This prevents us from using too large of a cache for the right and bottom edges of the map.
+                                w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
+                                h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
+                                
+                                ct = new PIXI.RenderTexture(this.renderer, w, h);
+                                ct.baseTexture.realWidth  = w;
+                                ct.baseTexture.realHeight = h;
                                 ct._updateUvs();
                                 
                                 ct = new PIXI.Sprite(ct);
                                 ct.x = x * this.tileWidth;
                                 ct.y = y * this.tileHeight;
-                                ct.z = this.owner.z;
+                                ct.z = z;
                                 ct.scaleX = this.scaleX;
                                 ct.scaleY = this.scaleY;
                                 col.push(ct);
                                 parentContainer.addChild(ct);
+                                
+                                z -= 0.000001; // so that tiles of large caches overlap consistently.
                             }
                         }
                         
@@ -331,7 +334,7 @@
                         this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
                         this.tilesSprite.scaleX = this.scaleX;
                         this.tilesSprite.scaleY = this.scaleY;
-                        this.tilesSprite.z = this.owner.z;
+                        this.tilesSprite.z = z;
 
                         // Set up copy buffer and circular pointers
                         this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
@@ -698,7 +701,25 @@
             },
             
             destroy: function () {
-                this.parentContainer.removeChild(this.tilesToRender);
+                var x = 0,
+                    y = 0,
+                    grid = this.cacheGrid;
+                    
+                if (grid) {
+                    for (x = 0; x < grid.length; x++) {
+                        for (y = 0; y < grid[x].length; y++) {
+                            grid[x][y].texture.destroy(true);
+                            this.parentContainer.removeChild(grid[x][y]);
+                        }
+                    }
+                    delete this.cacheGrid;
+                } else {
+                    if (this.tilesSprite.texture.alternate) {
+                        this.tilesSprite.texture.alternate.destroy(true);
+                    }
+                    this.tilesSprite.texture.destroy(true);
+                    this.parentContainer.removeChild(this.tilesSprite);
+                }
                 this.imageMap.length = 0;
                 this.tiles = null;
                 this.parentContainer = null;
