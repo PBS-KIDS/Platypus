@@ -302,10 +302,10 @@
                                 w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
                                 h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
                                 
-                                ct = new PIXI.RenderTexture(this.renderer, w, h);
-                                ct.baseTexture.realWidth  = w;
+                                ct = new PIXI.RenderTexture(PIXI.CanvasRenderer, w, h);
+/*                                ct.baseTexture.realWidth  = w;
                                 ct.baseTexture.realHeight = h;
-                                ct._updateUvs();
+                                ct._updateUvs();*/
                                 
                                 ct = new PIXI.Sprite(ct);
                                 ct.x = x * this.tileWidth;
