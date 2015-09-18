@@ -470,7 +470,6 @@
                             inFrame = cacheP.intersects(laxCam)
                             if (sprite.visible && !inFrame) {
                                 sprite.visible = false;
-                                sprite.texture.baseTexture.dispose();
                             } else if (!sprite.visible && inFrame) {
                                 sprite.visible = true;
                             }
