@@ -467,9 +467,9 @@
             /**
              * On receiving this message, determines whether to update which tiles need to be rendered and caches the image.
              * 
-             * @method 'render'
+             * @method 'handle-render'
              */
-            "render": function (camera) {
+            "handle-render": function (camera) {
                 if (this.updateCache) {
                     this.updateCache = false;
                     if (this.cacheGrid) {
