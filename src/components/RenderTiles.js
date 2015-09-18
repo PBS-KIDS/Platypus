@@ -305,7 +305,7 @@
                                 ct.baseTexture.realWidth = this.cacheWidth;
                                 ct.baseTexture.realHeight = this.cacheHeight;
                                 ct._updateUvs();
-                                this.cache.setBounds(x, y, Math.min(x + this.cacheTilesWidth, this.tilesWidth - 1), Math.min(y + this.cacheTilesHeight, this.tilesHeight));
+                                this.cache.setBounds(x, y, Math.min(x + this.cacheTilesWidth, this.tilesWidth - 1), Math.min(y + this.cacheTilesHeight, this.tilesHeight - 1));
                                 this.updateCache(ct, this.cache);
                                 
                                 ct = new PIXI.Sprite(ct);
