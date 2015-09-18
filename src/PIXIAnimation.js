@@ -10,7 +10,7 @@
 (function () {
     "use strict";
     
-    var cache = {},
+    var cache = PIXI.utils.TextureCache,
         createFramesArray = function (frame, bases) {
             var i = 0,
                 fw = frame.width,

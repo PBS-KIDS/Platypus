@@ -408,6 +408,7 @@
             "camera-update": function (camera) {
                 var x = 0,
                     y = 0,
+                    inFrame = false,
                     sprite  = null,
                     ctw     = 0,
                     cth     = 0,
@@ -458,7 +459,14 @@
                         for (y = 0; y < this.cacheGrid[x].length; y++) {
                             sprite = this.cacheGrid[x][y];
                             cacheP.setAll((x + 0.5) * this.cacheClipWidth, (y + 0.5) * this.cacheClipHeight, this.cacheClipWidth, this.cacheClipHeight);
-                            sprite.visible = cacheP.intersects(laxCam);
+                            
+                            inFrame = cacheP.intersects(laxCam)
+                            if (sprite.visible && !inFrame) {
+                                sprite.visible = false;
+                                sprite.texture.baseTexture.dispose();
+                            } else if (!sprite.visible && inFrame) {
+                                sprite.visible = true;
+                            }
                         }
                     }
                 } else {
