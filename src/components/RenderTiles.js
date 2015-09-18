@@ -656,10 +656,10 @@
                 }
                 this.cacheCamera.x = -bounds.left * this.tileWidth;
                 this.cacheCamera.y = -bounds.top * this.tileHeight;
-                this.cacheTexture.clear();
-                this.cacheTexture.render(this.cacheCameraWrapper);
+                texture.clear();
+                texture.render(this.cacheCameraWrapper);
+                texture.requiresUpdate = true;
                 this.cacheCamera.removeChildren();
-                this.cacheTexture.requiresUpdate = true;
                 
                 if (oldBounds) {
                     oldBounds.set(bounds);
