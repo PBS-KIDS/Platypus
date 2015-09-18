@@ -275,7 +275,6 @@
                     this.cacheCameraWrapper.addChild(this.cacheCamera);
 
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
-                        this.fullyCached = true;
                         this.cacheAll   = true;
                         
                         this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
@@ -319,7 +318,7 @@
                             }
                         }
                     } else {
-                        this.fullyCached = false;
+                        this.cacheAll = false;
                         
                         this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
     
@@ -417,7 +416,7 @@
                     tempC   = tempCache,
                     laxCam  = this.convertCamera(vp);
                 
-                if (!this.fullyCached && (cacheP.empty || !cacheP.contains(laxCam)) && (this.imageMap.length > 0)) {
+                if (!this.cacheAll && (cacheP.empty || !cacheP.contains(laxCam)) && (this.imageMap.length > 0)) {
                     if (resized) {
                         this.updateBufferRegion(laxCam);
                     }
