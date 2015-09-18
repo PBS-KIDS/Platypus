@@ -305,9 +305,9 @@
                                 h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
                                 
                                 ct = new PIXI.RenderTexture(renderer, w, h);
-/*                                ct.baseTexture.realWidth  = w;
+                                ct.baseTexture.realWidth  = w;
                                 ct.baseTexture.realHeight = h;
-                                ct._updateUvs();*/
+                                ct._updateUvs();
                                 
                                 ct = new PIXI.Sprite(ct);
                                 ct.x = x * this.tileWidth;
@@ -322,7 +322,7 @@
                             }
                         }
                         
-                        this.updateGrid();
+                        this.updateCache = true;
                     } else {
                         this.cacheAll = false;
                         
