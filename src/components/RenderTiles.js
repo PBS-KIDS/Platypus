@@ -236,13 +236,7 @@
              * @param data.container {PIXI.Container} Container to contain this tile-rendering.
              */
             "handle-render-load": function (resp) {
-                var w = 0,
-                    h = 0,
-                    x = 0,
-                    y = 0,
-                    z = this.owner.z,
-                    col = null,
-                    ct = null,
+                var z = this.owner.z,
                     renderer = this.renderer,
                     parentContainer = null,
                     imgMap = this.imageMap,
@@ -294,36 +288,44 @@
                     } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
                         this.cacheAll = true;
                         
-                        renderer = new PIXI.CanvasRenderer(this.cacheWidth, this.cacheHeight);
                         this.cacheGrid = [];
-                        for (x = 0; x < this.tilesWidth; x += this.cacheTilesWidth) {
-                            col = [];
-                            this.cacheGrid.push(col);
-                            for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
-                                // This prevents us from using too large of a cache for the right and bottom edges of the map.
-                                w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
-                                h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
-                                
-                                ct = new PIXI.RenderTexture(renderer, w, h);
-                                ct.baseTexture.realWidth  = w;
-                                ct.baseTexture.realHeight = h;
-                                ct._updateUvs();
-                                
-                                ct = new PIXI.Sprite(ct);
-                                ct.x = x * this.tileWidth;
-                                ct.y = y * this.tileHeight;
-                                ct.z = z;
-                                ct.scaleX = this.scaleX;
-                                ct.scaleY = this.scaleY;
-                                col.push(ct);
-                                parentContainer.addChild(ct);
-                                
-                                ct.visible = false;
-                                ct.texture.baseTexture.dispose(); // Remove from GPU to keep mem low.
-                                
-                                z -= 0.000001; // so that tiles of large caches overlap consistently.
+                        
+                        // Creating this here but instantiating the grid later so that the previous scene has a chance to release gpu textures and reduce memory overhead. - DDD 9-18-15
+                        this.createGrid = function () {
+                            var w = 0,
+                                h = 0,
+                                x = 0,
+                                y = 0,
+                                z = this.owner.z,
+                                col = null,
+                                ct = null;
+                            
+                            for (x = 0; x < this.tilesWidth; x += this.cacheTilesWidth) {
+                                col = [];
+                                this.cacheGrid.push(col);
+                                for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
+                                    // This prevents us from using too large of a cache for the right and bottom edges of the map.
+                                    w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
+                                    h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
+                                    
+                                    ct = new PIXI.RenderTexture(renderer, w, h);
+                                    ct.baseTexture.realWidth  = w;
+                                    ct.baseTexture.realHeight = h;
+                                    ct._updateUvs();
+                                    
+                                    ct = new PIXI.Sprite(ct);
+                                    ct.x = x * this.tileWidth;
+                                    ct.y = y * this.tileHeight;
+                                    ct.z = z;
+                                    ct.scaleX = this.scaleX;
+                                    ct.scaleY = this.scaleY;
+                                    col.push(ct);
+                                    parentContainer.addChild(ct);
+                                    
+                                    z -= 0.000001; // so that tiles of large caches overlap consistently.
+                                }
                             }
-                        }
+                        }.bind(this);
                         
                         this.updateCache = true;
                     } else {
@@ -703,18 +705,17 @@
             updateGrid: function () {
                 var x = 0,
                     y = 0,
-                    grid = this.cacheGrid,
-                    sprite = null;
+                    grid = this.cacheGrid;
+                
+                if (this.createGrid) {
+                    this.createGrid();
+                    this.createGrid = null;
+                }
                 
                 for (x = 0; x < grid.length; x++) {
                     for (y = 0; y < grid[x].length; y++) {
-                        sprite = grid[x][y];
                         this.cache.setBounds(x * this.cacheTilesWidth, y * this.cacheTilesHeight, Math.min((x + 1) * this.cacheTilesWidth, this.tilesWidth - 1), Math.min((y + 1) * this.cacheTilesHeight, this.tilesHeight - 1));
-                        this.update(sprite.texture, this.cache);
-                        
-                        if (sprite.visible) { //Somehow, visible grid cache tiles do not visually update. This forces that to happen. - DDD 9-18-2015
-                            sprite.texture.update();
-                        }
+                        this.update(grid[x][y].texture, this.cache);
                     }
                 }
             },
