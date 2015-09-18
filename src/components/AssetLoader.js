@@ -114,55 +114,58 @@
              * @method 'load-assets'
              */
             "load-assets": function () {
-                this.load(function (result, data) {
-                    var asset = null;
-                    
-                    if (data && data.id) {
-                        asset = this.owner.assets[data.id] = {
-                            data:  data,
-                            asset: result
-                        };
-                    
-                        if (this.cache) {
-                            platypus.assets[data.id] = asset;
+                var onFileLoad = function (result, data) {
+                        var asset = null;
+                        
+                        if (data && data.id) {
+                            asset = this.owner.assets[data.id] = {
+                                data:  data,
+                                asset: result
+                            };
+                        
+                            if (this.cache) {
+                                platypus.assets[data.id] = asset;
+                            }
+                        } else { // audio files don't return any data from the SpringRoll loader.
+                            result = null;
+                            data   = null;
                         }
-                    } else { // audio files don't return any data from the SpringRoll loader.
-                        result = null;
-                        data   = null;
-                    }
-                    
-                    this.progress += 1;
-                    
-                    /**
-                     * This message is broadcast when an asset has been loaded.
-                     * 
-                     * @event 'file-load'
-                     * @param load {Object} 
-                     * @param load.asset {Object} Loaded asset. (`null` for audio)
-                     * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio) 
-                     * @param load.complete {boolean} Whether this is the final asset to be loaded.
-                     * @param load.total {number} The total number of assets being loaded.
-                     * @param load.progress {number} The number of assets finished loading.
-                     * @param load.fraction {number} Value of (progress / total) provided for convenience.
-                     */
-                    this.owner.trigger('file-load', {
-                        asset:    result,
-                        complete: (this.progress === this.total),
-                        data:     data,
-                        fraction: this.progress / this.total,
-                        progress: this.progress,
-                        total:    this.total
-                    });
-                    
-                    if (this.progress === this.total) {
+                        
+                        this.progress += 1;
+                        
                         /**
-                         * This message is triggered when the asset loader is finished loading assets.
-                         * 
-                         * @event 'complete'
-                         */
-                        this.owner.triggerEvent('complete');
-                    }
-                }.bind(this));
+                        * This message is broadcast when an asset has been loaded.
+                        * 
+                        * @event 'file-load'
+                        * @param load {Object} 
+                        * @param load.asset {Object} Loaded asset. (`null` for audio)
+                        * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio) 
+                        * @param load.complete {boolean} Whether this is the final asset to be loaded.
+                        * @param load.total {number} The total number of assets being loaded.
+                        * @param load.progress {number} The number of assets finished loading.
+                        * @param load.fraction {number} Value of (progress / total) provided for convenience.
+                        */
+                        this.owner.trigger('file-load', {
+                            asset:    result,
+                            complete: (this.progress === this.total),
+                            data:     data,
+                            fraction: this.progress / this.total,
+                            progress: this.progress,
+                            total:    this.total
+                        });
+                        
+                        if (this.progress === this.total) {
+                            /**
+                            * This message is triggered when the asset loader is finished loading assets.
+                            * 
+                            * @event 'complete'
+                            */
+                            this.owner.triggerEvent('complete');
+                            this.app.off('taskDone', onFileLoad);
+                        }
+                    }.bind(this);
+                
+                this.load(onFileLoad);
             }
         },
         
@@ -197,9 +200,8 @@
                 }
 
                 if (loadAssets.length) {
-                    this.app.load(loadAssets, {
-                        progress: onFileLoad
-                    });
+                    this.app.on('taskDone', onFileLoad);
+                    this.app.load(loadAssets);
                 }
             }
         }
