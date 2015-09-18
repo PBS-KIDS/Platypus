@@ -50,8 +50,8 @@ platypus.AABB = (function () {
      */
     proto.setBounds = function (left, top, right, bottom) {
         this.empty = false;
-        this.x = (right * left) / 2;
-        this.y = (top * bottom) / 2;
+        this.x = (right + left) / 2;
+        this.y = (top + bottom) / 2;
         this.resize(right - left, bottom - top);
         return this;
     };

@@ -116,13 +116,13 @@
             buffer: 0,
 
             /**
-             * Determines whether to buffer the entire map across one or more texture caches. By default this is `false`; however, if the entire map fits on one or two texture caches, this is set to `true` since it is more efficient than dynamic rebuffering.
+             * Determines whether to cache the entire map across one or more texture caches. By default this is `false`; however, if the entire map fits on one or two texture caches, this is set to `true` since it is more efficient than dynamic buffering.
              * 
-             * @property bufferAll
+             * @property cacheAll
              * @type Boolean
              * @default false
              */
-            bufferAll: false,
+            cacheAll: false,
 
             /**
              * Whether to cache entities on this layer if the entity's render component requests caching.
@@ -276,7 +276,7 @@
 
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                         this.fullyCached = true;
-                        this.bufferAll   = true;
+                        this.cacheAll   = true;
                         
                         this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
     
@@ -293,8 +293,8 @@
                         this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
                         this.updateCache(this.cacheTexture, this.cache);
                         parentContainer.addChild(this.tilesSprite);
-                    } else if (this.bufferAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
-                        this.bufferAll = true;
+                    } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
+                        this.cacheAll = true;
                         
                         this.cacheGrid = [];
                         for (x = 0; x < this.layerWidth; x += this.cacheWidth) {
