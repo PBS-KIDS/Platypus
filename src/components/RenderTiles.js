@@ -116,6 +116,15 @@
             buffer: 0,
 
             /**
+             * Determines whether to buffer the entire map across one or more texture caches. By default this is `false`; however, if the entire map fits on one or two texture caches, this is set to `true` since it is more efficient than dynamic rebuffering.
+             * 
+             * @property bufferAll
+             * @type Boolean
+             * @default false
+             */
+            bufferAll: false,
+
+            /**
              * Whether to cache entities on this layer if the entity's render component requests caching.
              * 
              * @property entityCache
@@ -219,6 +228,8 @@
             "handle-render-load": function (resp) {
                 var x = 0,
                     y = 0,
+                    col = null,
+                    ct = null,
                     parentContainer = null,
                     imgMap = this.imageMap,
                     maxBuffer = this.maximumBuffer;
@@ -262,26 +273,66 @@
                     this.updateBufferRegion();
                     this.cacheCameraWrapper = new PIXI.Container();
                     this.cacheCameraWrapper.addChild(this.cacheCamera);
-                    this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
 
-                    //TODO: Temp fix for broken SpringRoll PIXI implementation.
-                    this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
-                    this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
-                    this.cacheTexture._updateUvs();
-                    
-                    this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
-                    this.tilesSprite.scaleX = this.scaleX;
-                    this.tilesSprite.scaleY = this.scaleY;
-                    this.tilesSprite.z = this.owner.z;
-                    
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                         this.fullyCached = true;
+                        this.bufferAll   = true;
                         
+                        this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+    
+                        //TODO: Temp fix for broken SpringRoll PIXI implementation.
+                        this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
+                        this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
+                        this.cacheTexture._updateUvs();
+                        
+                        this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
+                        this.tilesSprite.scaleX = this.scaleX;
+                        this.tilesSprite.scaleY = this.scaleY;
+                        this.tilesSprite.z = this.owner.z;
+
                         this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
                         this.updateCache(this.cacheTexture, this.cache);
+                        parentContainer.addChild(this.tilesSprite);
+                    } else if (this.bufferAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
+                        this.bufferAll = true;
+                        
+                        this.cacheGrid = [];
+                        for (x = 0; x < this.layerWidth; x += this.cacheWidth) {
+                            col = [];
+                            this.cacheGrid.push(col);
+                            for (y = 0; y < this.layerHeight; y += this.cacheHeight) {
+                                ct = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+                                ct.baseTexture.realWidth = this.cacheWidth;
+                                ct.baseTexture.realHeight = this.cacheHeight;
+                                ct._updateUvs();
+                                this.cache.setBounds(x, y, x + this.cacheTilesWidth, y + this.cacheTilesHeight);
+                                this.updateCache(ct, this.cache);
+                                
+                                ct = new PIXI.Sprite(ct);
+                                ct.x = x;
+                                ct.y = y;
+                                ct.z = this.owner.z;
+                                ct.scaleX = this.scaleX;
+                                ct.scaleY = this.scaleY;
+                                col.push(ct);
+                                parentContainer.addChild(ct);
+                            }
+                        }
                     } else {
                         this.fullyCached = false;
                         
+                        this.cacheTexture = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
+    
+                        //TODO: Temp fix for broken SpringRoll PIXI implementation.
+                        this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
+                        this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
+                        this.cacheTexture._updateUvs();
+                        
+                        this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
+                        this.tilesSprite.scaleX = this.scaleX;
+                        this.tilesSprite.scaleY = this.scaleY;
+                        this.tilesSprite.z = this.owner.z;
+
                         // Set up copy buffer and circular pointers
                         this.cacheTexture.alternate = new PIXI.RenderTexture(this.renderer, this.cacheWidth, this.cacheHeight);
                         this.tilesSpriteCache = new PIXI.Sprite(this.cacheTexture.alternate);
@@ -292,9 +343,8 @@
                         this.cacheTexture.alternate._updateUvs();
 
                         this.cacheTexture.alternate.alternate = this.cacheTexture;
+                        parentContainer.addChild(this.tilesSprite);
                     }
-
-                    parentContainer.addChild(this.tilesSprite);
                 }
             },
             
@@ -353,7 +403,10 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                var ctw     = 0,
+                var x = 0,
+                    y = 0,
+                    sprite  = null,
+                    ctw     = 0,
                     cth     = 0,
                     ctw2    = 0,
                     cth2    = 0,
@@ -397,8 +450,18 @@
                     cacheP.set(cache).setAll((cacheP.x + 0.5) * this.tileWidth, (cacheP.y + 0.5) * this.tileHeight, (cacheP.width + 1) * this.tileWidth, (cacheP.height + 1) * this.tileHeight);
                 }
 
-                this.tilesSprite.x = camera.viewport.left - laxCam.left + cache.left * this.tileWidth;
-                this.tilesSprite.y = camera.viewport.top  - laxCam.top  + cache.top  * this.tileHeight;
+                if (this.cacheGrid) {
+                    for (x = 0; x < this.cacheGrid.length; x++) {
+                        for (y = 0; y < this.cacheGrid[x].length; y++) {
+                            sprite = this.cacheGrid[x][y];
+                            cacheP.setAll(x * this.cacheClipHeight, y * this.cacheClipWidth, this.cacheClipHeight, this.cacheClipWidth);
+                            sprite.visible = cacheP.intersects(laxCam);
+                        }
+                    }
+                } else {
+                    this.tilesSprite.x = camera.viewport.left - laxCam.left + cache.left * this.tileWidth;
+                    this.tilesSprite.y = camera.viewport.top  - laxCam.top  + cache.top  * this.tileHeight;
+                }
             }
         },
     
@@ -511,14 +574,20 @@
             },
             
             updateBufferRegion: function (viewport) {
+                var clipW = Math.floor(this.cacheWidth  / this.tileWidth),
+                    clipH = Math.floor(this.cacheHeight / this.tileHeight);
+                    
+                this.cacheClipWidth  = clipW * this.tileWidth;
+                this.cacheClipHeight = clipH * this.tileHeight;
+                
                 if (viewport) {
-                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  Math.floor(this.cacheWidth  / this.tileWidth));
-                    this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), Math.floor(this.cacheHeight / this.tileHeight));
+                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  clipW);
+                    this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), clipH);
                 } else {
-                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.floor(this.cacheWidth  / this.tileWidth));
-                    this.cacheTilesHeight = Math.min(this.tilesHeight, Math.floor(this.cacheHeight / this.tileHeight));
+                    this.cacheTilesWidth  = Math.min(this.tilesWidth,  clipW);
+                    this.cacheTilesHeight = Math.min(this.tilesHeight, clipH);
                 }
-                this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheTilesWidth * this.tileWidth, this.cacheTilesHeight * this.tileHeight).endFill();
+                this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
             },
             
             updateCache: function (texture, bounds, tilesSpriteCache, oldBounds) {
