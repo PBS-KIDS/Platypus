@@ -255,7 +255,11 @@
                         mouseout  = null,
                         pressmove = null,
                         pressup   = null,
-                        click     = null;
+                        click     = null,
+                        tPM = null,
+                        tPU = null,
+                        tMD = null,
+                        pressed   = false;
 
                     // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     if (this.click) {
@@ -272,7 +276,12 @@
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
                          */
-                        mousedown = createHandler(this, 'mousedown');
+                        tMD = createHandler(this, 'mousedown');
+                        mousedown = function (event) {
+                            tMD(event);
+                            pressed = true;
+                        }.bind(this);
+                        
                         /**
                          * Dispatched when the 'pressmove' event occurs on the container.
                          *
@@ -284,7 +293,13 @@
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
                          */
-                        pressmove = createHandler(this, 'pressmove');
+                        tPM = createHandler(this, 'pressmove');
+                        pressmove = function (event) {
+                            if (pressed) {
+                                tPM(event);
+                            }
+                        }.bind(this);
+                        
                         /**
                          * Dispatched when the 'pressup' event occurs on the container.
                          *
@@ -296,7 +311,12 @@
                          * @param eventData.y {Number} The y location of the mouse.
                          * @param eventData.entity {Object} The entity that contains this component.
                          */
-                        pressup   = createHandler(this, 'pressup');
+                        tPU = createHandler(this, 'pressup');
+                        pressup   = function (event) {
+                            tPU(event);
+                            pressed = false;
+                        }.bind(this);
+                        
                         /**
                          * Dispatched when the 'click' event occurs on the container.
                          *

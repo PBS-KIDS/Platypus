@@ -149,7 +149,7 @@
             animationMap: null,
 
             /**
-             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the CreateJS graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
+             * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
              *
              *  "mask": {
              *      "x": 10,
@@ -169,7 +169,7 @@
             mask: null,
 
             /**
-             * Optional. Defines what types of input the entity will take. Defaults to no input. A hitArea can be defined that determines where on the image should be clickable. A string can also be used to create more complex shapes via the CreateJS graphics API like: "hitArea": "r(10,20,40,40).dc(30,10,12)". Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
+             * Optional. Defines what types of input the entity will take. Defaults to no input. A hitArea can be defined that determines where on the image should be clickable. A string can also be used to create more complex shapes via the PIXI graphics API like: "hitArea": "r(10,20,40,40).dc(30,10,12)". Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
              *
              *
              *  "acceptInput": {
@@ -546,6 +546,12 @@
                  */
                 this.sprite = new platypus.PIXIAnimation(ss.spriteSheet, this.currentAnimation || 0);
                 this.sprite.onComplete = function (animation) {
+                    /**
+                     * This event fires each time an animation completes.
+                     * 
+                     * @event 'animation-ended'
+                     * @param animation {String} The id of the animation that ended.
+                     */
                     self.owner.trigger('animation-ended', animation);
                     if (self.waitingAnimation) {
                         self.currentAnimation = self.waitingAnimation;
@@ -643,7 +649,7 @@
              *
              * @method 'handle-render-load'
              * @param handlerData {Object} Data from the render handler
-             * @param handlerData.container {createjs.Container} The parent container.
+             * @param handlerData.container {PIXI.Container} The parent container.
              */
             "camera-update": function (camera) {
                 var bounds   = null,
@@ -668,7 +674,7 @@
              *
              * @method 'handle-render-load'
              * @param handlerData {Object} Data from the render handler
-             * @param handlerData.container {createjs.Container} The parent container.
+             * @param handlerData.container {PIXI.Container} The parent container.
              */
             "handle-render-load": function (handlerData) {
                 if (!this.parentContainer && handlerData && handlerData.container) {
@@ -681,7 +687,7 @@
              *
              * @method 'handle-render'
              * @param renderData {Object} Data from the render handler
-             * @param renderData.container {createjs.Container} The parent container.
+             * @param renderData.container {PIXI.Container} The parent container.
              */
             "handle-render": function (renderData) {
                 if (!this.container) { // If this component's removal is pending
@@ -691,7 +697,7 @@
                 if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
                         if (!this.addStage(renderData.container)) {
-                            console.warn('No CreateJS Stage, removing render component from "' + this.owner.type + '".');
+                            console.warn('No PIXI Stage, removing render component from "' + this.owner.type + '".');
                             this.owner.removeComponent(this);
                             return;
                         }
@@ -754,7 +760,7 @@
              * @method 'attach-pin'
              * @param pinInfo {Object} Information about the pin.
              * @param pinInfo.pinId {String} The pin id.
-             * @param pinInfo.container {createjs.Container} The container to add this sprite to.
+             * @param pinInfo.container {PIXI.Container} The container to add this sprite to.
              */
             "attach-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
@@ -771,7 +777,7 @@
              * @method 'remove-pin'
              * @param pinInfo {Object} Information about the pin.
              * @param pinInfo.pinId {String} The pin id.
-             * @param pinInfo.container {createjs.Container} The container to add this sprite to.
+             * @param pinInfo.container {PIXI.Container} The container to add this sprite to.
              */
             "remove-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
@@ -782,10 +788,10 @@
             },
             
             /**
-             * This event dispatches a createjs.Event on this component's createjs.Sprite. Useful for rerouting mouse/keyboard events.
+             * This event dispatches a PIXI.Event on this component's PIXI.Sprite. Useful for rerouting mouse/keyboard events.
              *
              * @method 'dispatch-event'
-             * @param event {Object | createjs.Event} The event to dispatch.
+             * @param event {Object | PIXI.Event} The event to dispatch.
              */
             "dispatch-event": function (event) {
                 this.sprite.dispatchEvent(this.sprite, event.event, event.data);
@@ -995,94 +1001,110 @@
                 };
             }()),
             
-            addInputs: (function () {
-                var createHandler = function (self, eventName) {
-                    return function (event) {
-                        //TML - This is in case we do a scene change using an event and the container is destroyed.
-                        if (!self.container) {
-                            return;
-                        }
+            triggerInput: function (event, eventName) {
+                //TML - This is in case we do a scene change using an event and the container is destroyed.
+                if (!this.container) {
+                    return;
+                }
 
-                        self.owner.trigger(eventName, {
-                            event: event.data.originalEvent,
-                            pixiEvent: event,
-                            x: event.data.global.x / self.parentContainer.transformMatrix.a + self.camera.x,
-                            y: event.data.global.y / self.parentContainer.transformMatrix.d + self.camera.y,
-                            entity: self.owner
-                        });
-
-                        if (eventName === 'pressup') {
-                            event.target.mouseTarget = false;
-                            if (event.target.removeDisplayObject) {
-                                event.target.removeDisplayObject();
-                            }
-                        } else {
-                            event.target.mouseTarget = true;
-                        }
-                    };
-                };
+                this.owner.trigger(eventName, {
+                    event: event.data.originalEvent,
+                    pixiEvent: event,
+                    x: event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.x,
+                    y: event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.y,
+                    entity: this.owner
+                });
+            },
+            
+            addInputs: function () {
+                var pressed   = false,
+                    sprite    = this.container,
+                    mousedown = null,
+                    mouseover = null,
+                    mouseout  = null,
+                    pressmove = null,
+                    pressup   = null,
+                    click     = null;
                 
-                return function () {
-                    var sprite    = this.container,
-                        mousedown = null,
-                        mouseover = null,
-                        mouseout  = null,
-                        pressmove = null,
-                        pressup   = null,
-                        click     = null;
+                // The following appends necessary information to displayed objects to allow them to receive touches and clicks
+                if (this.click) {
+                    sprite.interactive = true;
                     
-                    // The following appends necessary information to displayed objects to allow them to receive touches and clicks
+                    mousedown = function (event) {
+                        this.triggerInput(event, 'mousedown');
+                        event.target.mouseTarget = true;
+                        pressed = true;
+                    }.bind(this);
+                    
+                    pressmove = function (event) {
+                        if (pressed) {
+                            this.triggerInput(event, 'pressmove');
+                            event.target.mouseTarget = true;
+                        } else {
+                            this.triggerInput(event, 'mousemove');
+                        }
+                    }.bind(this);
+                    
+                    pressup   = function (event) {
+                        this.triggerInput(event, 'pressup');
+                        event.target.mouseTarget = false;
+                        pressed = false;
+                        
+                        if (event.target.removeDisplayObject) {
+                            event.target.removeDisplayObject();
+                        }
+                    }.bind(this);
+                    
+                    click     = function (event) {
+                        this.triggerInput(event, 'click');
+                    }.bind(this);
+                    
+                    sprite.addListener('mousedown',       mousedown);
+                    sprite.addListener('touchstart',      mousedown);
+                    sprite.addListener('mouseup',         pressup);
+                    sprite.addListener('touchend',        pressup);
+                    sprite.addListener('mouseupoutside',  pressup);
+                    sprite.addListener('touchendoutside', pressup);
+                    sprite.addListener('mousemove',       pressmove);
+                    sprite.addListener('touchmove',       pressmove);
+                    sprite.addListener('click',           click);
+                    sprite.addListener('tap',             click);
+                }
+                if (this.hover) {
+                    sprite.interactive = true;
+
+                    mouseover = function (event) {
+                        this.triggerInput(event, 'mouseover');
+                    }.bind(this);
+                    mouseout  = function (event) {
+                        this.triggerInput(event, 'mouseout');
+                    }.bind(this);
+
+                    sprite.addListener('mouseover', mouseover);
+                    sprite.addListener('mouseout',  mouseout);
+                }
+
+                this.removeInputListeners = function () {
                     if (this.click) {
-                        sprite.interactive = true;
-                        
-                        mousedown = createHandler(this, 'mousedown');
-                        pressmove = createHandler(this, 'pressmove');
-                        pressup   = createHandler(this, 'pressup');
-                        click     = createHandler(this, 'click');
-                        
-                        sprite.addListener('mousedown',       mousedown);
-                        sprite.addListener('touchstart',      mousedown);
-                        sprite.addListener('mouseup',         pressup);
-                        sprite.addListener('touchend',        pressup);
-                        sprite.addListener('mouseupoutside',  pressup);
-                        sprite.addListener('touchendoutside', pressup);
-                        sprite.addListener('mousemove',       pressmove);
-                        sprite.addListener('touchmove',       pressmove);
-                        sprite.addListener('click',           click);
-                        sprite.addListener('tap',             click);
+                        sprite.removeListener('mousedown',       mousedown);
+                        sprite.removeListener('touchstart',      mousedown);
+                        sprite.removeListener('mouseup',         pressup);
+                        sprite.removeListener('touchend',        pressup);
+                        sprite.removeListener('mouseupoutside',  pressup);
+                        sprite.removeListener('touchendoutside', pressup);
+                        sprite.removeListener('mousemove',       pressmove);
+                        sprite.removeListener('touchmove',       pressmove);
+                        sprite.removeListener('click',           click);
+                        sprite.removeListener('tap',             click);
                     }
                     if (this.hover) {
-                        sprite.interactive = true;
-
-                        mouseover = createHandler(this, 'mouseover');
-                        mouseout  = createHandler(this, 'mouseout');
-
-                        sprite.addListener('mouseover', mouseover);
-                        sprite.addListener('mouseout',  mouseout);
+                        sprite.removeListener('mouseover', mouseover);
+                        sprite.removeListener('mouseout',  mouseout);
                     }
-
-                    this.removeInputListeners = function () {
-                        if (this.click) {
-                            sprite.removeListener('mousedown',       mousedown);
-                            sprite.removeListener('touchstart',      mousedown);
-                            sprite.removeListener('mouseup',         pressup);
-                            sprite.removeListener('touchend',        pressup);
-                            sprite.removeListener('mouseupoutside',  pressup);
-                            sprite.removeListener('touchendoutside', pressup);
-                            sprite.removeListener('mousemove',       pressmove);
-                            sprite.removeListener('touchmove',       pressmove);
-                            sprite.removeListener('click',           click);
-                            sprite.removeListener('tap',             click);
-                        }
-                        if (this.hover) {
-                            sprite.removeListener('mouseover', mouseover);
-                            sprite.removeListener('mouseout',  mouseout);
-                        }
-                        sprite.interactive = false;
-                        this.removeInputListeners = null;
-                    };
+                    sprite.interactive = false;
+                    this.removeInputListeners = null;
                 };
-            }()),
+            },
             
             addPins: function (pins, frames) {
                 var i = 0,

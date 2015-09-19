@@ -5,7 +5,7 @@
  * @class RenderProgress
  * @uses Component
  */
-/*global console, createjs, platypus */
+/*global console, PIXI, platypus */
 (function () {
     "use strict";
     
@@ -43,17 +43,17 @@
         },
         
         constructor: function (definition) {
-            var b   = new createjs.Shape(),
-                f   = new createjs.Shape(),
-                con = new createjs.Container();
+            var b   = new PIXI.Graphics(),
+                f   = new PIXI.Graphics(),
+                con = new PIXI.Container();
             
             this.parentContainer = null;
             this.background = b;
             this.progress   = f;
             this.container  = con;
             
-            b.graphics.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
-            f.graphics.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
+            b.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
+            f.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
             f.scaleX = 0.0001;
             con.addChild(b);
             con.addChild(f);
@@ -77,7 +77,7 @@
                         this.parentContainer = resp.container;
                         this.parentContainer.addChild(this.container);
                     } else {
-                        console.warn('No CreateJS Stage, removing ProgressRender component from "' + this.owner.type + '".');
+                        console.warn('No PIXI Stage, removing ProgressRender component from "' + this.owner.type + '".');
                         this.owner.removeComponent(this);
                     }
                 }
