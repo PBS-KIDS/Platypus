@@ -263,9 +263,10 @@
                     this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight), maxBuffer);
 
                     this.cacheCamera = new PIXI.Container();
-                    this.updateBufferRegion();
                     this.cacheCameraWrapper = new PIXI.Container();
                     this.cacheCameraWrapper.addChild(this.cacheCamera);
+
+                    this.updateBufferRegion();
 
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                         this.cacheAll   = true;
@@ -396,13 +397,18 @@
              * Provides the width and height of the world.
              * 
              * @method 'camera-loaded'
-             * @param dimensions {Object}
-             * @param dimensions.width {number} The width of the world.
-             * @param dimensions.height {number} The height of the world.
+             * @param camera {Object}
+             * @param camera.width {number} The width of the world.
+             * @param camera.height {number} The height of the world.
+             * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
-            "camera-loaded": function (dimensions) {
-                this.worldWidth  = dimensions.width;
-                this.worldHeight = dimensions.height;
+            "camera-loaded": function (camera) {
+                this.worldWidth  = camera.worldWidth;
+                this.worldHeight = camera.worldHeight;
+                
+                if (this.buffer) { // do this here to set the correct mask before the first caching.
+                    this.updateBufferRegion(camera.viewport);
+                }
             },
 
             /**
@@ -612,9 +618,6 @@
                 var clipW = Math.floor(this.cacheWidth  / this.tileWidth),
                     clipH = Math.floor(this.cacheHeight / this.tileHeight);
                     
-                this.cacheClipWidth  = clipW * this.tileWidth;
-                this.cacheClipHeight = clipH * this.tileHeight;
-                
                 if (viewport) {
                     this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  clipW);
                     this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), clipH);
@@ -622,6 +625,9 @@
                     this.cacheTilesWidth  = Math.min(this.tilesWidth,  clipW);
                     this.cacheTilesHeight = Math.min(this.tilesHeight, clipH);
                 }
+
+                this.cacheClipWidth   = this.cacheTilesWidth  * this.tileWidth;
+                this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
                 this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
             },
             
