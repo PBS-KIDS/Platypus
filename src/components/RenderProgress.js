@@ -15,9 +15,9 @@
         
         properties: {
             //TODO: Document!
-            backgroundColor: "#000000",
+            backgroundColor: 0x000000,
             
-            color: "#ffffff",
+            color: 0xffffff,
             
             rotate: false,
             
@@ -51,6 +51,13 @@
             this.background = b;
             this.progress   = f;
             this.container  = con;
+            
+            if (typeof this.backgroundColor === 'string') {
+                this.backgroundColor = +this.backgroundColor.replace('#', '0x');
+            }
+            if (typeof this.color === 'string') {
+                this.color = +this.color.replace('#', '0x');
+            }
             
             b.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
             f.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
