@@ -398,8 +398,8 @@
              * 
              * @method 'camera-loaded'
              * @param camera {Object}
-             * @param camera.width {number} The width of the world.
-             * @param camera.height {number} The height of the world.
+             * @param camera.worldWidth {number} The width of the world.
+             * @param camera.worldHeight {number} The height of the world.
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-loaded": function (camera) {

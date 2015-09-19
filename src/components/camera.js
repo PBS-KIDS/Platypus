@@ -264,12 +264,13 @@
                      * 
                      * @event 'camera-loaded'
                      * @param message
-                     * @param message.width {number} The width of the loaded world.
-                     * @param message.height {number} The height of the loaded world.
+                     * @param message.worldWidth {number} The width of the loaded world.
+                     * @param message.worldHeight {number} The height of the loaded world.
                      **/
                     entity.triggerEvent('camera-loaded', {
-                        width: this.worldWidth,
-                        height: this.worldHeight
+                        worldWidth: this.worldWidth,
+                        worldHeight: this.worldHeight,
+                        viewport: this.message.viewport
                     });
                 }
             },
@@ -284,6 +285,8 @@
              * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
              **/
             "world-loaded": function (values) {
+                var msg = this.message;
+                
                 this.worldIsLoaded = true;
                 this.worldWidth    = values.width;
                 this.worldHeight   = values.height;
@@ -291,7 +294,11 @@
                     this.follow(values.camera);
                 }
                 if (this.owner.triggerEventOnChildren) {
-                    this.owner.triggerEventOnChildren('camera-loaded', values);
+                    this.owner.triggerEventOnChildren('camera-loaded', {
+                        viewport: msg.viewport.set(this.worldCamera.viewport),
+                        worldWidth: this.worldWidth,
+                        worldHeight: this.worldHeight
+                    });
                 }
             },
             
