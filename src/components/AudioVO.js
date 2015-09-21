@@ -15,103 +15,85 @@
         sortByTime = function (a, b) {
             return a.time - b.time;
         },
-        addEvents = function (fromList, toList) {
-            var i = 0;
-            
-            if (fromList) {
+        offsetEvents = function (fromList, toList, player) {
+            return function () {
+                var i = 0,
+                    offset = player.getElapsed();
+                
                 for (i = 0; i < fromList.length; i++) {
                     toList.push({
                         event: fromList[i].event,
-                        time: fromList[i].time || 0,
-                        message: fromList[i].message
+                        time: (fromList[i].time || 0) + offset,
+                        message: fromList[i].message || null
                     });
                 }
-            }
-            return toList;
-        },
-        
-        /**
-         * This function merges events from individual sounds into a full list queued to sync with the SpringRoll voPlayer.
-         */
-        setupEvents = function (sounds, fullList) {
-            var i = 0,
-                player = Application.instance.sound,
-                soundList = [];
-            
-            // Adding a function on the beginning of the play list so that time events can be set according to preloaded audio durations, since `getDuration` won't work for audio that has yet to load.
-            soundList.push(function () {
-                var i = 0,
-                    j = 0,
-                    events = null,
-                    sound = null,
-                    time = 0;
                 
-                for (i = 0; i < sounds.length; i++) {
-                    if (typeof sounds[i] === 'string') {
-                        sound = sounds[i];
-                        time += player.getDuration(sound);
-                    } else if (sounds[i].sound) {
-                        sound  = sounds[i].sound;
-                        events = sounds[i].events;
-                        if (events) {
-                            for (j = 0; j < events.length; j++) {
-                                fullList.push({
-                                    event: events[j].event,
-                                    message: events[j].message,
-                                    time: time + events[j].time
-                                });
-                            }
-                        }
-                        time += player.getDuration(sound);
-                    }
+                if (i) {
+                    toList.sort(sortByTime);
                 }
-                fullList.sort(sortByTime);
-            });
+            };
+        },
+        addEvents = function (fromList, toList) {
+            var i = 0;
             
-            // Create alias-only sound list.
-            for (i = 0; i < sounds.length; i++) {
-                if (sounds[i].sound) {
-                    soundList.push(sounds[i].sound);
-                } else {
-                    soundList.push(sounds[i]);
-                }
+            for (i = 0; i < fromList.length; i++) {
+                toList.push({
+                    event: fromList[i].event,
+                    time: fromList[i].time || 0,
+                    message: fromList[i].message
+                });
             }
-            return soundList;
+            
+            if (i) {
+                toList.sort(sortByTime);
+            }
+            
+            return toList;
         },
         playSound = function (soundDefinition) {
             var sound      = null,
-                eventList  = [];
+                eventList  = [],
+                isArray = false;
                 
             if (typeof soundDefinition === 'string') {
                 sound = soundDefinition;
             } else if (Array.isArray(soundDefinition)) {
-                sound = setupEvents(soundDefinition, eventList);
+                sound = soundDefinition;
+                isArray = true;
             } else {
                 sound = soundDefinition.sound;
                 if (soundDefinition.events) {
                     eventList = soundDefinition.events.slice();
+                    eventList.sort(sortByTime);
                 }
                 if (Array.isArray(sound)) {
-                    sound = setupEvents(sound, eventList);
+                    sound = sound;
+                    isArray = true;
                 } else {
                     sound = soundDefinition.sound;
                 }
             }
             
             return function (value) {
-                var self        = this;
+                var self        = this,
+                    soundList   = null;
+                    
+                this.eventList = eventList.slice();
+                if (value && value.events) {
+                    addEvents(value.events, this.eventList);
+                }
 
-                this.player.play(sound, function () {
+                if (isArray) {
+                    soundList = this.setupEventList(sound);
+                } else {
+                    soundList = sound;
+                }
+
+                this.player.play(soundList, function () {
                     self.onComplete(true);
                 }, function () {
                     self.onComplete(false);
                 });
-                
-                this.eventList = eventList;
-                if (value && value.events) {
-                    addEvents(value.events, this.eventList);
-                    this.eventList.sort(sortByTime);
-                }
             };
         };
     
@@ -210,6 +192,28 @@
                     }
                 }
             },
+            
+            /**
+            * This function merges events from individual sounds into a full list queued to sync with the SpringRoll voPlayer.
+            */
+            setupEventList: function (sounds) {
+                var i = 0,
+                    soundList = [];
+                
+                // Create alias-only sound list.
+                for (i = 0; i < sounds.length; i++) {
+                    if (sounds[i].sound) {
+                        if (sounds[i].events) {
+                            soundList.push(offsetEvents(sounds[i].events, this.eventList, this.player));
+                        }
+                        soundList.push(sounds[i].sound);
+                    } else {
+                        soundList.push(sounds[i]);
+                    }
+                }
+                return soundList;
+            },
+
         
             onComplete: function (successful) {
                 this.checkTimeEvents(true);
