@@ -653,14 +653,15 @@
              */
             "camera-update": function (camera) {
                 var bounds   = null,
-                    viewport = camera.viewport;
+                    viewport = camera.viewport,
+                    sprite   = this.sprite;
                 
                 this.camera.x = camera.viewport.left;
                 this.camera.y = camera.viewport.top;
                 
-                if (this.container && !this.pinnedTo) {
-                    this.container._currentBounds = null;
-                    bounds = this.container.getBounds(this.container.transformMatrix);
+                if (sprite) {
+                    sprite._currentBounds = null;
+                    bounds = sprite.getBounds(sprite.transformMatrix);
                     if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
                         this.isOnCamera = false;
                     } else {
