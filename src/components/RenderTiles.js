@@ -406,7 +406,7 @@
                 this.worldWidth  = camera.worldWidth;
                 this.worldHeight = camera.worldHeight;
                 
-                if (this.buffer) { // do this here to set the correct mask before the first caching.
+                if (this.buffer && !this.cacheAll) { // do this here to set the correct mask before the first caching.
                     this.updateBufferRegion(camera.viewport);
                 }
             },
