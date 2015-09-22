@@ -689,6 +689,7 @@
             "handle-render-load": function (handlerData) {
                 if (!this.parentContainer && handlerData && handlerData.container) {
                     this.addStage(handlerData.container);
+                    this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first "render" event.
                 }
             },
             
@@ -778,6 +779,7 @@
                     this.parentContainer.addChild(this.container);
                     this.addInputs();
                     this.pinnedTo = pinInfo;
+                    this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first "render" event.
                 }
             },
             
