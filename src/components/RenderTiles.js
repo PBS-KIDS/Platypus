@@ -214,7 +214,17 @@
             this.renderer         = springroll.Application.instance.display.renderer;
             this.tilesSprite      = null;
             this.cacheTexture     = null;
-            this.cacheCamera      = null;
+            if (this.spriteSheet.images.length === 1) { // Rendering optimization
+                this.cacheTileContainer = new PIXI.ParticleContainer(15000, {
+                    position: true,
+                    rotation: true
+                });
+            } else {
+                this.cacheTileContainer = new PIXI.Container();
+            }
+            this.cacheCamera        = new PIXI.Container();
+            this.cacheCameraWrapper = new PIXI.Container();
+            this.cacheCameraWrapper.addChild(this.cacheCamera);
             this.laxCam = new platypus.AABB();
             
             // temp values
@@ -261,10 +271,6 @@
                     // Set up buffer cache size
                     this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth), maxBuffer);
                     this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight), maxBuffer);
-
-                    this.cacheCamera = new PIXI.Container();
-                    this.cacheCameraWrapper = new PIXI.Container();
-                    this.cacheCameraWrapper.addChild(this.cacheCamera);
 
                     this.updateBufferRegion();
 
@@ -654,7 +660,7 @@
                                     }
                                     tile.transformMatrix.tx = (x + 0.5) * this.tileWidth;
                                     tile.transformMatrix.ty = (y + 0.5) * this.tileHeight;
-                                    this.cacheCamera.addChild(tile);
+                                    this.cacheTileContainer.addChild(tile);
                                 }
                             }
                                 
@@ -671,6 +677,7 @@
                         }
                     }
                 }
+                this.cacheCamera.addChild(this.cacheTileContainer);
 
                 // Draw cached entities
                 if (ents.length) {
@@ -700,6 +707,7 @@
                 texture.clear();
                 texture.render(this.cacheCameraWrapper);
                 texture.requiresUpdate = true;
+                this.cacheTileContainer.removeChildren();
                 this.cacheCamera.removeChildren();
                 
                 if (oldBounds) {
@@ -749,6 +757,9 @@
                 this.tiles = null;
                 this.parentContainer = null;
                 this.tilesSprite = null;
+                this.cacheTileContainer = null;
+                this.cacheCamera = null;
+                this.cacheCameraWrapper = null;
             }
         }
     });
