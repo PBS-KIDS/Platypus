@@ -52,7 +52,8 @@
 (function () {
     "use strict";
 
-    var transformCheck = function (v) {
+    var Application = include('springroll.Application'), // Import SpringRoll classes
+        transformCheck = function (v) {
             var a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
                 c = !!(0x80000000 & v);
@@ -219,6 +220,7 @@
         },
 
         constructor: function (definition) {
+            this.assetCache = Application.instance.assetManager.cache;
             this.entities = [];
             this.layerZ = 0;
             this.followEntity = false;
@@ -362,10 +364,14 @@
                             tileLayer.data.push(1);
                         }
 
-                        if (platypus.assets[imageLayer.name] && platypus.assets[imageLayer.name].asset) { // Prefer to have name in tiled match image id in game
+                        if (platypus.assets && platypus.assets[imageLayer.name] && platypus.assets[imageLayer.name].asset) { // Prefer to have name in tiled match image id in game
                             tileLayer.image = imageLayer.name;
                             tileLayer.tileheight = platypus.assets[imageLayer.name].asset.height;
                             tileLayer.tilewidth = platypus.assets[imageLayer.name].asset.width;
+                        } else if (self.assetCache.read(imageLayer.name)) {
+                            tileLayer.image = imageLayer.name;
+                            tileLayer.tileheight = self.assetCache.read(imageLayer.name).height;
+                            tileLayer.tilewidth = self.assetCache.read(imageLayer.name).width;
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
                             tileLayer.image = imageLayer.image;
@@ -516,7 +522,7 @@
 
                 if (images.length === 0) {
                     for (x = 0; x < tilesets.length; x++) {
-                        if (platypus.assets[tilesets[x].name] && platypus.assets[tilesets[x].name].asset) { // Prefer to have name in tiled match image id in game
+                        if ((platypus.assets && platypus.assets[tilesets[x].name] && platypus.assets[tilesets[x].name].asset) || this.assetCache.read(tilesets[x].name)) { // Prefer to have name in tiled match image id in game
                             images.push(tilesets[x].name);
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');

@@ -10,7 +10,8 @@
 (function () {
     "use strict";
     
-    var cache = PIXI.utils.TextureCache,
+    var Application = include('springroll.Application'), // Import SpringRoll classes
+        cache = PIXI.utils.TextureCache,
         createFramesArray = function (frame, bases) {
             var i = 0,
                 fw = frame.width,
@@ -41,10 +42,20 @@
         getBaseTextures = function (images) {
             var i = 0,
                 bts = [],
-                assetData;
+                assetData = null,
+                assetCache = Application.instance.assetManager.cache;
             
             for (i = 0; i < images.length; i++) {
-                assetData = platypus.assets[images[i]];
+                if (platypus.assets && platypus.assets[images[i]] && platypus.assets[images[i]].asset) {
+                    assetData = platypus.assets[images[i]];
+                } else if (assetCache.read(images[i])) {
+                    assetData = platypus.assets[images[i]] = {
+                        asset: assetCache.read(images[i])
+                    };
+                } else {
+                    assetData = null;
+                }
+                
                 if (assetData) {
                     if (!assetData.texture) {
                         assetData.texture = new PIXI.BaseTexture(assetData.asset);

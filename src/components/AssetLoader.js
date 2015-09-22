@@ -63,7 +63,7 @@
              * 
              * @property assets
              * @type Array
-             * @default null
+             * @default []
              */
             assets: null,
             
@@ -78,9 +78,7 @@
         },
 
         constructor: function (definition) {
-            if (!this.assets) {
-                this.assets = platypus.game.settings.assets;
-            }
+            this.assets = this.assets || platypus.game.settings.assets || [];
             
             this.app = Application.instance;
             this.sound = this.app.sound;
