@@ -15,7 +15,6 @@ module.exports = function (grunt) {
 
 		var json = grunt.file.readJSON(file);
 		json.version = version;
-		json.main = json.main.replace(/\d\.\d\.\d|NEXT/, version);
 		grunt.file.write(file, JSON.stringify(json, null, '\t'));
 	});
 

@@ -27,7 +27,7 @@ module.exports = function (grunt) {
 					},
 					build: {
 						files: {
-							'output/<%= pkg.name.toLowerCase() %>-<%= version %>.min.js': getConfigValue('platypus_source')
+							'output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
 						}
 					}
 				},
@@ -66,7 +66,7 @@ module.exports = function (grunt) {
 					},
 					build: {
 						files: {
-							'output/<%= pkg.name.toLowerCase() %>-<%= version %>.combined.js': combineSource(
+							'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource(
 									[
 										{cwd: '', config:'config.json', source:'platypus_source'}
 									]
@@ -90,7 +90,7 @@ module.exports = function (grunt) {
 							attributesEmit: true,
 							selleck: true,
 							helpers: ["../build/path.js"],
-							themedir: "../build/createjsTheme/"
+							themedir: "../build/platypusTheme/"
 						}
 					}
 				},
@@ -120,7 +120,7 @@ module.exports = function (grunt) {
 					},
 					src: {
 						files: [
-							{expand: true, cwd:'./output/', src: '*<%=version %>*.js', dest: '../lib/'}
+							{expand: true, cwd:'./output/', src: '*.js', dest: '../lib/'}
 						]
 					}
 				},
