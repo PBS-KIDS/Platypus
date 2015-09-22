@@ -11,6 +11,7 @@
     "use strict";
     
     var ssCache = {},
+        tempMatrix = new PIXI.Matrix(),
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -654,14 +655,22 @@
             "camera-update": function (camera) {
                 var bounds   = null,
                     viewport = camera.viewport,
-                    sprite   = this.sprite;
+                    sprite   = this.sprite,
+                    matrix   = null;
                 
                 this.camera.x = camera.viewport.left;
                 this.camera.y = camera.viewport.top;
                 
-                if (sprite) {
+                // Set visiblity of sprite if within camera bounds
+                if (sprite) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
+                    matrix = sprite.transformMatrix.copy(tempMatrix);
+                    if (sprite !== this.container) {
+                        matrix.prepend(this.container.transformMatrix);
+                    }
+
                     sprite._currentBounds = null;
-                    bounds = sprite.getBounds(sprite.transformMatrix);
+                    bounds = sprite.getBounds(matrix);
+                    
                     if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
                         this.isOnCamera = false;
                     } else {
