@@ -162,7 +162,11 @@
                         }
                     }.bind(this);
                 
-                this.load(onFileLoad);
+                if (this.assets && this.assets.length) {
+                    this.load(onFileLoad);
+                } else {
+                    this.owner.triggerEvent('complete');
+                }
             }
         },
         

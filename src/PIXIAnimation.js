@@ -49,6 +49,7 @@
                 if (platypus.assets && platypus.assets[images[i]] && platypus.assets[images[i]].asset) {
                     assetData = platypus.assets[images[i]];
                 } else if (assetCache.read(images[i])) {
+                    platypus.assets = platypus.assets || {};
                     assetData = platypus.assets[images[i]] = {
                         asset: assetCache.read(images[i])
                     };
