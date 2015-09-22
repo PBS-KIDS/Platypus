@@ -656,7 +656,8 @@
                 var bounds   = null,
                     viewport = camera.viewport,
                     sprite   = this.sprite,
-                    matrix   = null;
+                    matrix   = null,
+                    pinning  = null;
                 
                 this.camera.x = camera.viewport.left;
                 this.camera.y = camera.viewport.top;
@@ -664,8 +665,10 @@
                 // Set visiblity of sprite if within camera bounds
                 if (sprite) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
                     matrix = sprite.transformMatrix.copy(tempMatrix);
-                    if (sprite !== this.container) {
-                        matrix.prepend(this.container.transformMatrix);
+                    pinning = this.pinnedTo;
+                    while (pinning) {
+                        matrix.prepend(pinning.container.transformMatrix);
+                        pinning = pinning.pinnedTo;
                     }
 
                     sprite._currentBounds = null;
