@@ -47,7 +47,7 @@
  * @class TiledLoader
  * @uses Component
  */
-/*global console, platypus */
+/*global console, include, platypus */
 /*jslint bitwise: true, plusplus: true */
 (function () {
     "use strict";
@@ -97,7 +97,7 @@
         standardEntityLayers = {
             "render-layer": {
                 "id": "render-layer",
-                "components":[{
+                "components": [{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
                     "imageMap":    "import",
@@ -106,14 +106,14 @@
             },
             "collision-layer": {
                 "id": "collision-layer",
-                "components":[{
+                "components": [{
                     "type": "CollisionTiles",
                     "collisionMap": "import"
                 }]
             },
             "image-layer": {
                 "id": "image-layer",
-                "components":[{
+                "components": [{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
                     "imageMap":    "import"
@@ -121,11 +121,11 @@
             },
             "tile-layer": {
                 "id": "tile-layer",
-                "components":[{
+                "components": [{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
                     "imageMap":    "import"
-                },{
+                }, {
                     "type": "CollisionTiles",
                     "collisionMap": "import"
                 }]
@@ -306,6 +306,7 @@
                     tileHeight = level.tileheight,
                     widthOffset = 0,
                     heightOffset = 0,
+                    key = "",
                     x = 0,
                     p = 0,
                     w = 0,
@@ -397,6 +398,7 @@
                             index = 0,
                             x = 0,
                             y = 0,
+                            prop = "",
                             data = layer.data;
 
                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
@@ -437,10 +439,10 @@
                             for (x = 0; x < tilesets.length; x++) {
                                 tileset = tilesets[x];
                                 if (tileset.tileproperties) {
-                                    for (y in tileset.tileproperties) {
-                                        if (tileset.tileproperties.hasOwnProperty(y)) {
-                                            if (tileset.tileproperties[y].jumpThrough) {
-                                                jumpthroughs.push(tileset.firstgid + parseInt(y, 10) - 1);
+                                    for (prop in tileset.tileproperties) {
+                                        if (tileset.tileproperties.hasOwnProperty(prop)) {
+                                            if (tileset.tileproperties[prop].jumpThrough) {
+                                                jumpthroughs.push(tileset.firstgid + parseInt(prop, 10) - 1);
                                             }
                                         }
                                     }
@@ -626,46 +628,46 @@
                             }
 
                             if ((gid >= 0) && tileset.tileproperties && tileset.tileproperties[gid - tileset.firstgid]) {
-                                for (x in tileset.tileproperties[gid - tileset.firstgid]) {
+                                for (key in tileset.tileproperties[gid - tileset.firstgid]) {
                                     //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
-                                    if (tileset.tileproperties[gid - tileset.firstgid].hasOwnProperty(x)) {
-                                        numberProperty = parseFloat(tileset.tileproperties[gid - tileset.firstgid][x]);
+                                    if (tileset.tileproperties[gid - tileset.firstgid].hasOwnProperty(key)) {
+                                        numberProperty = parseFloat(tileset.tileproperties[gid - tileset.firstgid][key]);
                                         if (numberProperty === 0 || (!!numberProperty)) {
-                                            properties[x] = numberProperty;
-                                        } else if (tileset.tileproperties[gid - tileset.firstgid][x] === 'true') {
-                                            properties[x] = true;
-                                        } else if (tileset.tileproperties[gid - tileset.firstgid][x] === 'false') {
-                                            properties[x] = false;
+                                            properties[key] = numberProperty;
+                                        } else if (tileset.tileproperties[gid - tileset.firstgid][key] === 'true') {
+                                            properties[key] = true;
+                                        } else if (tileset.tileproperties[gid - tileset.firstgid][key] === 'false') {
+                                            properties[key] = false;
                                         } else {
-                                            properties[x] = tileset.tileproperties[gid - tileset.firstgid][x];
+                                            properties[key] = tileset.tileproperties[gid - tileset.firstgid][key];
                                         }
                                     }
                                 }
                             }
 
-                            for (x in entity.properties) {
-                                if (entity.properties.hasOwnProperty(x)) {
-                                    property = entity.properties[x];
+                            for (key in entity.properties) {
+                                if (entity.properties.hasOwnProperty(key)) {
+                                    property = entity.properties[key];
                                     if (typeof property === 'string') {
                                         //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
                                         numberProperty = parseFloat(property);
                                         if (numberProperty === 0 || (!!numberProperty)) {
-                                            properties[x] = numberProperty;
+                                            properties[key] = numberProperty;
                                         } else if (property === 'true') {
-                                            properties[x] = true;
+                                            properties[key] = true;
                                         } else if (property === 'false') {
-                                            properties[x] = false;
+                                            properties[key] = false;
                                         } else if ((property.length > 2) && (((property[0] === '{') && (property[property.length - 1] === '}')) || ((property[0] === '[') && (property[property.length - 1] === ']')))) {
                                             try {
-                                                properties[x] = JSON.parse(property);
+                                                properties[key] = JSON.parse(property);
                                             } catch (e) {
-                                                properties[x] = property;
+                                                properties[key] = property;
                                             }
                                         } else {
-                                            properties[x] = property;
+                                            properties[key] = property;
                                         }
                                     } else {
-                                        properties[x] = property;
+                                        properties[key] = property;
                                     }
                                 }
                             }

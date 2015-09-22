@@ -272,7 +272,7 @@
         },
 
         events: {
-            "set-vector": function(newVector) {
+            "set-vector": function (newVector) {
                 this.vector.set(newVector);
                 if (!isNaN(this.instantDecay)) {
                     this.capMagnitude = this.vector.magnitude() * this.instantDecay;
