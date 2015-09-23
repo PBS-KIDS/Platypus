@@ -1,4 +1,4 @@
-Platypus
+[![Platypus](http://platypus.gopherwoodstudios.com/assets/platypus-title.png)](https://github.com/PBS-KIDS/Platypus)
 ========
 
 2D tile based game framework in HTML5
@@ -23,4 +23,7 @@ Platypus uses:
 Platypus in action:
 Wild Kratts [Monkey Mayhem](http://pbskids.org/wildkratts/games/monkey-mayhem/)
 
-Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see license.txt), all assets in the example games are (c) Gopherwood Studios and/or (c) PBS KIDS.
+***
+[Code](https://github.com/PBS-KIDS/Platypus/) - [Wiki](https://github.com/PBS-KIDS/Platypus/wiki/) - [Docs](http://platypus.gopherwoodstudios.com/)
+
+Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see licenses.txt), all assets in the example games are (c) Gopherwood Studios and/or (c) PBS KIDS.
