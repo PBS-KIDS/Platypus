@@ -61,7 +61,7 @@
             
             b.f(this.backgroundColor).r(-this.regX, -this.regY, this.width, this.height);
             f.f(this.color).r(-this.regX, -this.regY, this.width, this.height);
-            f.scaleX = 0.0001;
+            f.scale = new PIXI.Point(0.0001, 1);
             con.addChild(b);
             con.addChild(f);
         },
@@ -97,12 +97,12 @@
             "update-progress": function (progress) {
                 if (isNaN(progress)) {
                     if (typeof progress.fraction === 'number') {
-                        this.progress.scaleX = progress.fraction;
+                        this.progress.scale.x = progress.fraction;
                     } else if ((typeof progress.total === 'number') && (typeof progress.progress === 'number')) {
-                        this.progress.scaleX = progress.progress / progress.total;
+                        this.progress.scale.x = progress.progress / progress.total;
                     }
                 } else {
-                    this.progress.scaleX = progress;
+                    this.progress.scale.x = progress;
                 }
             }
         },
