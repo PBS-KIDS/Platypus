@@ -29,17 +29,6 @@
                     "spriteSheet": "import",
                     "imageMap":    "import"
                 }]
-            },
-            "tile-layer": {
-                "id": "tile-layer",
-                "components":[{
-                    "type": "RenderTiles",
-                    "spriteSheet": "import",
-                    "imageMap":    "import"
-                },{
-                    "type": "CollisionTiles",
-                    "collisionMap": "import"
-                }]
             }
         }
 
@@ -118,17 +107,6 @@
                     "spriteSheet": "import",
                     "imageMap":    "import"
                 }]
-            },
-            "tile-layer": {
-                "id": "tile-layer",
-                "components": [{
-                    "type": "RenderTiles",
-                    "spriteSheet": "import",
-                    "imageMap":    "import"
-                }, {
-                    "type": "CollisionTiles",
-                    "collisionMap": "import"
-                }]
             }
         };
 
@@ -136,6 +114,15 @@
         id: 'TiledLoader',
 
         properties: {
+            /**
+             * If set to `true` and if the game is running in debug mode, this causes the collision layer to appear.
+             *
+             * @property showCollisionTiles
+             * @type Boolean
+             * @default false
+             */
+            showCollisionTiles: false,
+
             /**
              * If specified, the referenced images are used as the game sprite sheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.
              *
@@ -559,11 +546,11 @@
                         }
                     }
 
-                    if (entity === 'tile-layer') {
+                    if (entity === 'tile-layer' || (this.showCollisionTiles && platypus.game.settings.debug)) {
                         createLayer('collision-layer', layer);
                         return createLayer('render-layer', layer);
                     } else if (entity === 'collision-layer') {
-                        createLayer(entity, layer);
+                        createLayer('collision-layer', layer);
                     } else {
                         return createLayer(entity, layer);
                     }
