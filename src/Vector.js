@@ -146,7 +146,9 @@ platypus.Vector = (function () {
     proto.magnitude = function (dimensions) {
         var squares = 0,
             square = function (coordinate) {
+                console.log("Mag Pre Square: " + squares + " coordinate: " + coordinate);
                 squares += Math.pow(coordinate, 2);
+                console.log("Mag Post Square: " + squares + " coordinate: " + coordinate);
             };
         
         this.forEachAxis(square, dimensions);
