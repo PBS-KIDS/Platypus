@@ -869,11 +869,10 @@
                                     returnInfo.position = thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
                                     v.x = thatShape.x - thisShape.x;
                                     v.y = thatShape.y - thisShape.y;
+                                    console.log("Before v: " + v);
                                     v[axis] = thatShape[axis] - returnInfo.position;
                                     v.normalize();
-                                    console.log("HC: that: " + thatShape.x + ", " + thatShape.y +
-                                                     " this: " + thisShape.x + ", " + thisShape.y);
-                                    console.log("HC: ReturnInfo Position: " + returnInfo.position);
+                                    console.log("After v: " + v);
                                     return returnInfo;
                                 }
                             }
