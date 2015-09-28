@@ -4,7 +4,7 @@
  * @namespace platypus.components
  * @class AudioSFX
  * @uses Component
- * @since tbd
+ * @since 0.6.0
  */
 /*global include, createjs, platypus */
 /*jslint plusplus:true */

@@ -390,6 +390,7 @@
                 
                 if (map) {
                     this.addImageMap(map);
+                    this.updateCache = true;
                 }
             },
 

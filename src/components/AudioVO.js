@@ -4,7 +4,7 @@
  * @namespace platypus.components
  * @class AudioVO
  * @uses Component
- * @since tbd
+ * @since 0.6.0
  */
 /*global include, platypus */
 /*jslint plusplus:true */
