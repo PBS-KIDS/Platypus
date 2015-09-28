@@ -871,9 +871,8 @@
                                     v.y = thatShape.y - thisShape.y;
                                     v[axis] = thatShape[axis] - returnInfo.position;
                                     v.normalize();
-                                    document.title = "HC: x: " + v.x +
-                                                     "y: " + v.y +
-                                                     "z: " + v.z;
+                                    document.title = "HC: that: " + thatShape.x + ", " + thatShape.y +
+                                                     " this: " + thisShape.x + ", " + thisShape.y;
                                     return returnInfo;
                                 }
                             }
