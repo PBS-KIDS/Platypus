@@ -65,7 +65,16 @@ Requires: ["../Vector.js"]
                 this.otherVelocityData.length = 0;
             },
             "hit-static": function (collData) {
-                var magnitude = 0;
+                var magnitude = 0,
+                    other = collData.entity,
+                    x = 0;
+
+                for (x = 0; x < this.hitThisTick.length; x++) {
+                    if (other === this.hitThisTick[x]) {
+                        return;
+                    }
+                }
+                this.hitThisTick.push(other);
                 
                 this.v.set(this.owner.velocity);
                 this.incidentVector.set(collData.direction);
