@@ -150,7 +150,7 @@ platypus.Vector = (function () {
             };
         
         this.forEachAxis(square, dimensions);
-        
+        console.log("Mag Post ForEach: " + squares);
         return Math.sqrt(squares);
     };
     
