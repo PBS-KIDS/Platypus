@@ -80,11 +80,11 @@ platypus.Vector = (function () {
     /**
      * Performs an operation on each vector coordinate.
      * 
-     * @method forEach
+     * @method forEachAxis
      * @param func {Function} A function describing the operation, which accepts the following parameters: coordinate value, index, and coordinate array.
      * @param limit {number} The number of coordinates to limit the operation to. For example, set to `2` for a 2-dimensional operation. If unspecified, the opartion occurs across all coordinates.
      */
-    proto.forEach = function (func, limit) {
+    proto.forEachAxis = function (func, limit) {
         var i = 0,
             l = limit || this.matrix.length;
         
@@ -120,7 +120,7 @@ platypus.Vector = (function () {
         
         if (m) {
             this.matrix.length = m.length;
-            this.forEach(set, y);
+            this.forEachAxis(set, y);
         }
         
         return this;
@@ -149,7 +149,7 @@ platypus.Vector = (function () {
                 squares += Math.pow(coordinate, 2);
             };
         
-        this.forEach(square, dimensions);
+        this.forEachAxis(square, dimensions);
         
         return Math.sqrt(squares);
     };
@@ -200,6 +200,7 @@ platypus.Vector = (function () {
      */
     proto.normalize = function () {
         var mag = this.magnitude();
+        console.log("Mag: " + mag + " This: " + this);
         
         if (mag === 0) {
             return this.multiply(0);
@@ -311,7 +312,7 @@ platypus.Vector = (function () {
                 }
             }
         } else {
-            this.forEach(mult, limit);
+            this.forEachAxis(mult, limit);
         }
         
         return this;
@@ -344,7 +345,7 @@ platypus.Vector = (function () {
             limit = y || 0;
         }
         
-        this.forEach(add, limit);
+        this.forEachAxis(add, limit);
         
         return this;
     };
@@ -396,7 +397,7 @@ platypus.Vector = (function () {
                 sum += coordinate * (otherVector.matrix[index] || 0);
             };
         
-        this.forEach(mult, limit);
+        this.forEachAxis(mult, limit);
         
         return sum;
     };
