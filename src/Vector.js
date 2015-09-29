@@ -106,7 +106,7 @@ platypus.Vector = (function () {
         if (m) {
             this.matrix.length = m.length;
             for (q = 0; q < limit; x++) {
-                this.matrix[q] = m[index];
+                this.matrix[q] = m[q];
             }
         }
         
@@ -285,9 +285,6 @@ platypus.Vector = (function () {
         var i = 0,
             j = 0,
             self = null,
-            mult = function (coordinate, index, matrix) {
-                matrix[index] = coordinate * multiplier;
-            },
             l = 0;
         
         if (Array.isArray(multiplier)) {
@@ -389,7 +386,7 @@ platypus.Vector = (function () {
         limit = limit || this.matrix.length;
         
         for (q = 0; q < limit; q++) {
-            sum += this.matrix[q] * (otherVector.matrix[q] || 0)
+            sum += this.matrix[q] * (otherVector.matrix[q] || 0);
         }
         
         return sum;
