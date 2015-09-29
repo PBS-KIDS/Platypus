@@ -93,10 +93,10 @@ platypus.Vector = (function () {
         
         if (x && Array.isArray(x)) {   // Passing in an array.
             m = x;
-            limit = y || x.length;
+            limit = y || this.matrix.length;
         } else if (x && x.matrix) {   // Passing in a vector.
             m = x.matrix;
-            limit = y || x.length;
+            limit = y || this.matrix.length;
         } else {                     // Passing in coordinates.
             this.x = x || 0;
             this.y = y || 0;
@@ -105,7 +105,7 @@ platypus.Vector = (function () {
         
         if (m) {
             this.matrix.length = m.length;
-            for (q = 0; q < limit; x++) {
+            for (q = 0; q < limit; q++) {
                 this.matrix[q] = m[q];
             }
         }
