@@ -871,9 +871,7 @@
                                     v.y = thatShape.y - thisShape.y;
 
                                     v[axis] = thatShape[axis] - returnInfo.position;
-                                    console.log("Before v: " + v);
                                     v.normalize();
-                                    console.log("After v: " + v);
                                     return returnInfo;
                                 }
                             }
