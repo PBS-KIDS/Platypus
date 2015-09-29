@@ -1,9 +1,14 @@
+/*global PIXI */
+/*jslint plusplus:true, nomen:true */
 (function () {
 	"use strict";
 	
 	var prototype = PIXI.Container.prototype;
 	
 	prototype.updateTransform = function () {
+        var i = 0,
+            j = 0;
+        
 		if (!this.visible) {
 			return;
 		}
@@ -21,10 +26,10 @@
 			this.displayObjectUpdateTransform();
 		}
 	
-		for (var i = 0, j = this.children.length; i < j; ++i) {
+		for (i = 0, j = this.children.length; i < j; ++i) {
 			this.children[i].updateTransform();
 		}
 	};
 	
 	prototype.containerUpdateTransform = prototype.updateTransform;
-} ());
+}());
