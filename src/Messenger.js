@@ -128,7 +128,11 @@ platypus.Messenger = (function () {
      * @return {number} The number of handlers for the triggered message.
      */
     proto.triggerEvent = function (event, value, debug) {
-        var i = 0, j = 0, debugCount = 0;
+        var i = 0,
+            j = 0,
+            debugCount = 0,
+            msgs = null,
+            l = 0;
         
         // Debug logging.
         if (this.debug || debug || (value && value.debug)) {
@@ -152,9 +156,11 @@ platypus.Messenger = (function () {
         }
 
         this.loopCheck.push(event);
-        if (this.messages[event]) {
-            for (i = 0; i < this.messages[event].length; i++) {
-                this.messages[event][i].callback.call(this.messages[event][i].scope || this, value, debug);
+        if (this.messages[event] && this.messages[event].length) {
+            msgs = this.messages[event].slice(); // Create a copy in case any of the messages triggered cause a change in the list of messages.
+            l    = msgs.length;
+            for (i = 0; i < l; i++) {
+                msgs[i].callback.call(msgs[i].scope || this, value, debug);
             }
         }
         this.loopCheck.length = this.loopCheck.length - 1;

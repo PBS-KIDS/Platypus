@@ -5,7 +5,7 @@
  * @extends PIXI.Sprite
  */
 //TODO: Document!
-/*global console, PIXI, platypus */
+/*global console, include, PIXI, platypus */
 /*jslint plusplus:true, nomen:true */
 (function () {
     "use strict";
