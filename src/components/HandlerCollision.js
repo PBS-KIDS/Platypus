@@ -901,7 +901,6 @@
                                 if (shapeCollision(translatedShape, potentialCollidingShapes[i])) {
                                     collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, potentialCollidingShapes[i]);
                                     position = collisionInfo.position;
-                                    
                                     if (direction > 0) {
                                         if (position < finalPosition) {
                                             if (position < initialPoint) { // Reality check: I think this is necessary due to floating point inaccuracies. - DDD

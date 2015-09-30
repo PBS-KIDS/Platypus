@@ -354,14 +354,6 @@
                 marginTop    = this.margin.top    || this.margin,
                 marginBottom = this.margin.bottom || this.margin;
             
-            if (regX === null) {
-                regX = this.regX = width / 2;
-            }
-            
-            if (regY === null) {
-                regY = this.regY = height / 2;
-            }
-            
             platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
             platypus.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
             this.owner.previousX = this.owner.previousX || this.owner.x;
@@ -379,8 +371,6 @@
                         regX: (isNaN(regX) ? radius : regX) - (marginRight - marginLeft) / 2,
                         regY: (isNaN(regY) ? radius : regY) - (marginBottom - marginTop) / 2,
                         radius: radius,
-                        width:  radius * 2,
-                        height: radius * 2,
                         type: this.shapeType
                     }];
                 } else {

@@ -241,7 +241,6 @@
                 
                 if (storedTileIndex < storedTiles.length) {
                     shape = storedTiles[storedTileIndex];
-                    storedTileIndex += 1;
                     shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
                 } else {
                     storedTiles.push(new platypus.CollisionShape(null, {
@@ -253,6 +252,7 @@
                     }, 'tiles'));
                     shape = storedTiles[storedTileIndex];
                 }
+                storedTileIndex += 1;
                 
                 return shape;
             },

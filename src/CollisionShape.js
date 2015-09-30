@@ -31,8 +31,8 @@ platypus.CollisionShape = (function () {
             this.owner = owner;
             this.collisionType = collisionType;
 
-            this.width  = definition.width  || definition.radius || 0;
-            this.height = definition.height || definition.radius || 0;
+            this.width  = definition.width  || definition.radius * 2 || 0;
+            this.height = definition.height || definition.radius * 2 || 0;
             this.radius = definition.radius || 0;
 
             if (typeof regX !== 'number') {
