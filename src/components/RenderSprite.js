@@ -532,10 +532,10 @@
                 this.hover      = false;
                 this.click      = false;
                 
-                this.camera = {
-                    x: 0,
-                    y: 0
-                };
+                this.lastX = this.owner.x;
+                this.lastY = this.owner.y;
+                
+                this.camera = new platypus.AABB()
 
                 if (this.eventBased || this.stateBased) {
                     setupEventsAndStates(this, map);
@@ -648,37 +648,16 @@
             /**
              * Listens for this event to determine whether this sprite is visible.
              *
-             * @method 'handle-render-load'
+             * @method 'camera-update'
              * @param handlerData {Object} Data from the render handler
              * @param handlerData.container {PIXI.Container} The parent container.
              */
             "camera-update": function (camera) {
-                var bounds   = null,
-                    viewport = camera.viewport,
-                    sprite   = this.sprite,
-                    matrix   = null,
-                    pinning  = null;
-                
-                this.camera.x = camera.viewport.left;
-                this.camera.y = camera.viewport.top;
+                this.camera.set(camera.viewport);
                 
                 // Set visiblity of sprite if within camera bounds
-                if (sprite) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
-                    matrix = sprite.transformMatrix.copy(tempMatrix);
-                    pinning = this.pinnedTo;
-                    while (pinning) {
-                        matrix.prepend(pinning.container.transformMatrix);
-                        pinning = pinning.pinnedTo;
-                    }
-
-                    sprite._currentBounds = null;
-                    bounds = sprite.getBounds(matrix);
-                    
-                    if (bounds && ((bounds.x + bounds.width < viewport.left) || (bounds.x > viewport.right) || (bounds.y + bounds.height < viewport.top) || (bounds.y > viewport.bottom))) {
-                        this.isOnCamera = false;
-                    } else {
-                        this.isOnCamera = true;
-                    }
+                if (this.sprite) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
+                    checkCameraBounds();
                 }
             },
             
@@ -846,6 +825,29 @@
         },
         
         methods: {
+            checkCameraBounds: function() {
+                var bounds = null,
+                    sprite   = this.sprite,
+                    matrix   = null,
+                    pinning  = null;
+                
+                matrix = sprite.transformMatrix.copy(tempMatrix);
+                pinning = this.pinnedTo;
+                while (pinning) {
+                    matrix.prepend(pinning.container.transformMatrix);
+                    pinning = pinning.pinnedTo;
+                }
+
+                sprite._currentBounds = null;
+                bounds = sprite.getBounds(matrix);
+                
+                if (bounds && ((bounds.x + bounds.width < this.camera.left) || (bounds.x > this.camera.right) || (bounds.y + bounds.height < this.camera.top) || (bounds.y > this.camera.bottom))) {
+                    this.isOnCamera = false;
+                } else {
+                    this.isOnCamera = true;
+                }
+            },
+            
             addStage: function (stage) {
                 if (stage && !this.pinTo) {
                     this.parentContainer = stage;
@@ -880,6 +882,8 @@
                         angle    = null,
                         m        = this.affine.copy(this.container.transformMatrix),
                         temp     = PIXI.Matrix.TEMP_MATRIX;
+                    
+                    
                     
                     if (this.buttonMode !== this.container.buttonMode) {
                         this.container.buttonMode = this.buttonMode;
@@ -978,6 +982,14 @@
                         this.stateChange = false;
                     }
                     
+                    // Set visiblity of sprite if within camera bounds
+                    if (this.sprite && this.lastX !== this.owner.x || this.lastY !== this.owner.y) { 
+                        //TODO: This check is running twice when an object is moving and the camera is moving. 
+                        //Find a way to remove the duplication!
+                        checkCameraBounds();
+                    }
+                    this.lastX = this.owner.x;
+                    this.lastY = this.owner.y;
                     this.container.visible = this.visible && this.isOnCamera;
 
                     // Handle rotation
@@ -1025,8 +1037,8 @@
                 this.owner.trigger(eventName, {
                     event: event.data.originalEvent,
                     pixiEvent: event,
-                    x: event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.x,
-                    y: event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.y,
+                    x: event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.left,
+                    y: event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.top,
                     entity: this.owner
                 });
             },
