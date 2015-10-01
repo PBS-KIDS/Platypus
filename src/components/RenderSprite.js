@@ -532,6 +532,7 @@
                 this.hover      = false;
                 this.click      = false;
                 
+                this.wasVisible = this.visible;
                 this.lastX = this.owner.x;
                 this.lastY = this.owner.y;
                 
@@ -982,16 +983,6 @@
                         this.stateChange = false;
                     }
                     
-                    // Set visiblity of sprite if within camera bounds
-                    if (this.sprite && this.lastX !== this.owner.x || this.lastY !== this.owner.y) { 
-                        //TODO: This check is running twice when an object is moving and the camera is moving. 
-                        //Find a way to remove the duplication!
-                        this.checkCameraBounds();
-                    }
-                    this.lastX = this.owner.x;
-                    this.lastY = this.owner.y;
-                    this.container.visible = this.visible && this.isOnCamera;
-
                     // Handle rotation
                     if (rotation) {
                         m.rotate((rotation / 180) * Math.PI);
@@ -1025,6 +1016,17 @@
                         temp.d = this.scaleY * flipped;
                         m.prepend(temp);
                     }
+                    
+                    // Set isCameraOn of sprite if within camera bounds
+                    if (this.sprite && ((!this.wasVisible && this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y )) { 
+                        //TODO: This check is running twice when an object is moving and the camera is moving. 
+                        //Find a way to remove the duplication!
+                        this.checkCameraBounds();
+                    }
+                    this.lastX = this.owner.x;
+                    this.lastY = this.owner.y;
+                    this.wasVisible = this.visible;
+                    this.container.visible = this.visible && this.isOnCamera;
                 };
             }()),
             
