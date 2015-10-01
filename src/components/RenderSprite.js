@@ -657,7 +657,7 @@
                 
                 // Set visiblity of sprite if within camera bounds
                 if (this.sprite) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
-                    checkCameraBounds();
+                    this.checkCameraBounds();
                 }
             },
             
@@ -986,7 +986,7 @@
                     if (this.sprite && this.lastX !== this.owner.x || this.lastY !== this.owner.y) { 
                         //TODO: This check is running twice when an object is moving and the camera is moving. 
                         //Find a way to remove the duplication!
-                        checkCameraBounds();
+                        this.checkCameraBounds();
                     }
                     this.lastX = this.owner.x;
                     this.lastY = this.owner.y;
