@@ -259,11 +259,6 @@
                         
                         this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
     
-                        //TODO: Temp fix for broken SpringRoll PIXI implementation.
-                        this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
-                        this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
-                        this.cacheTexture._updateUvs();
-                        
                         this.tilesSprite = new Sprite(this.cacheTexture);
                         this.tilesSprite.scaleX = this.scaleX;
                         this.tilesSprite.scaleY = this.scaleY;
@@ -296,9 +291,6 @@
                                     h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);
                                     
                                     ct = new RenderTexture(renderer, w, h);
-                                    ct.baseTexture.realWidth  = w;
-                                    ct.baseTexture.realHeight = h;
-                                    ct._updateUvs();
                                     
                                     ct = new Sprite(ct);
                                     ct.x = x * this.tileWidth;
@@ -320,11 +312,6 @@
                         
                         this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
     
-                        //TODO: Temp fix for broken SpringRoll PIXI implementation.
-                        this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
-                        this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
-                        this.cacheTexture._updateUvs();
-                        
                         this.tilesSprite = new Sprite(this.cacheTexture);
                         this.tilesSprite.scaleX = this.scaleX;
                         this.tilesSprite.scaleY = this.scaleY;
@@ -334,11 +321,6 @@
                         this.cacheTexture.alternate = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
                         this.tilesSpriteCache = new Sprite(this.cacheTexture.alternate);
                         
-                        //TODO: Temp fix for broken SpringRoll PIXI implementation.
-                        this.cacheTexture.alternate.baseTexture.realWidth = this.cacheWidth;
-                        this.cacheTexture.alternate.baseTexture.realHeight = this.cacheHeight;
-                        this.cacheTexture.alternate._updateUvs();
-
                         this.cacheTexture.alternate.alternate = this.cacheTexture;
                         parentContainer.addChild(this.tilesSprite);
                     }
