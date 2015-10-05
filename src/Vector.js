@@ -326,6 +326,7 @@ platypus.Vector = (function () {
                 limit = y || this.matrix.length;
             } else {
                 addMatrix = [x || 0, y || 0, z || 0];
+                limit = this.matrix.length;
             }
         } else {
             limit = y || this.matrix.length;
