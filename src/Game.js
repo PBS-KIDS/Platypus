@@ -210,6 +210,22 @@ platypus.Game = (function () {
                         window.getEntitiesByType = function (type) {
                             return self.getEntitiesByType(type);
                         };
+                        
+                        window.getVisibleSprites = function (c, a) {
+                            a = a || [];
+                            c = c || stage;
+                            
+                            if (!c.texture && c.visible) {
+                                for (var i = 0; i < c.children.length; i++) {
+                                    window.getVisibleSprites(c.children[i], a);
+                                }
+                                return a;
+                            } else if (c.visible) {
+                                a.push(c);
+                                return a;
+                            }
+                            return a;
+                        };
                     }
                 };
 

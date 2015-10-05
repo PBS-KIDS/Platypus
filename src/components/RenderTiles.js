@@ -9,12 +9,21 @@
  * @class RenderTiles
  * @uses Component
  */
-/*global PIXI, platypus, springroll */
+/*global include, platypus */
 /*jslint nomen:true, bitwise:true, plusplus:true */
 (function () {
     "use strict";
 
-    var tempCache = new platypus.AABB(),
+    var AABB              = include('platypus.AABB'),
+        Animation         = include('platypus.PIXIAnimation'),
+        Application       = include('springroll.Application'),
+        Container         = include('PIXI.Container'),
+        Graphics          = include('PIXI.Graphics'),
+        ParticleContainer = include('PIXI.ParticleContainer'),
+        RenderTexture     = include('PIXI.RenderTexture'),
+        Sprite            = include('PIXI.Sprite'),
+        
+        tempCache = new AABB(),
         sort = function (a, b) {
             return a.z - b.z;
         },
@@ -27,55 +36,19 @@
             
             return x;
         },
-        transformCheck = function (value, m) {
-            var v = +(value.substring(4)),
-                a = !!(0x20000000 & v),
-                b = !!(0x40000000 & v),
-                c = !!(0x80000000 & v);
+        transformCheck = function (value, tile) {
+            var v = +(value.substring(4));
 
-            if (a || b || c) {
-                if (a && b && c) {
-                    m.a = 0;
-                    m.b = -1;
-                    m.c = -1;
-                    m.d = 0;
-                } else if (a && c) {
-                    m.a = 0;
-                    m.b = 1;
-                    m.c = -1;
-                    m.d = 0;
-                } else if (b && c) { // 180 deg
-                    m.a = -1;
-                    m.b = 0;
-                    m.c = 0;
-                    m.d = -1;
-                } else if (a && b) {
-                    m.a = 0;
-                    m.b = -1;
-                    m.c = 1;
-                    m.d = 0;
-                } else if (a) {
-                    m.a = 0;
-                    m.b = 1;
-                    m.c = 1;
-                    m.d = 0;
-                } else if (b) { // vertical flip
-                    m.a = 1;
-                    m.b = 0;
-                    m.c = 0;
-                    m.d = -1;
-                } else if (c) { // horizontal flip
-                    m.a = -1;
-                    m.b = 0;
-                    m.c = 0;
-                    m.d = 1;
-                }
-            } else {
-                m.a = 1;
-                m.b = 0;
-                m.c = 0;
-                m.d = 1;
+            if (0x20000000 & v) {
+                tile.rotation = Math.PI / 2;
             }
+            if (0x40000000 & v) {
+                tile.scale.y = -1;
+            }
+            if (0x80000000 & v) {
+                tile.scale.x = -1;
+            }
+
             return 0x0fffffff & v;
         },
         Template = function (tile) {
@@ -96,9 +69,12 @@
         
         if (!instance) {
             template = this.instances[0];
-            instance = this.instances[this.index] = new PIXI.Sprite(template.texture);
-            instance.transformMatrix = template.transformMatrix.clone();
-            instance.anchor = template.anchor;
+            instance = this.instances[this.index] = new Sprite(template.texture);
+            
+            // Copy properties
+            instance.scale    = template.scale;
+            instance.rotation = template.rotation;
+            instance.anchor   = template.anchor;
         }
         
         this.index += 1;
@@ -188,6 +164,15 @@
             spriteSheet: null,
             
             /**
+             * Whether to cache the tile map to a large texture.
+             * 
+             * @property tileCache
+             * @type boolean
+             * @default true
+             */
+            tileCache: true,
+    
+            /**
              * This is the height in pixels of individual tiles.
              * 
              * @property tileHeight
@@ -207,22 +192,23 @@
         },
 
         constructor: function (definition) {
-            this.controllerEvents = undefined;
             this.doMap            = null; //list of display objects that should overlay tile map.
             this.tiles            = {};
             
-            this.renderer         = springroll.Application.instance.display.renderer;
+            this.renderer         = Application.instance.display.renderer;
             this.tilesSprite      = null;
             this.cacheTexture     = null;
-            this.cacheCamera      = null;
-            this.laxCam = new platypus.AABB();
+            this.mapContainer      = null;
+            this.laxCam = new AABB();
             
             // temp values
             this.worldWidth    = this.layerWidth    = this.tileWidth;
             this.worldHeight   = this.layerHeight   = this.tileHeight;
             
-            this.cache = new platypus.AABB();
-            this.cachePixels = new platypus.AABB();
+            this.cache = new AABB();
+            this.cachePixels = new AABB();
+            
+            this.tileContainer   = (this.spriteSheet.images.length > 1) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
             
             this.reorderedStage = false;
             this.updateCache = false;
@@ -262,23 +248,23 @@
                     this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth), maxBuffer);
                     this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight), maxBuffer);
 
-                    this.cacheCamera = new PIXI.Container();
-                    this.cacheCameraWrapper = new PIXI.Container();
-                    this.cacheCameraWrapper.addChild(this.cacheCamera);
+                    this.mapContainer = new Container();
+                    this.mapContainerWrapper = new Container();
+                    this.mapContainerWrapper.addChild(this.mapContainer);
 
                     this.updateBufferRegion();
 
                     if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                         this.cacheAll   = true;
                         
-                        this.cacheTexture = new PIXI.RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
     
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
                         this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
                         this.cacheTexture._updateUvs();
                         
-                        this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
+                        this.tilesSprite = new Sprite(this.cacheTexture);
                         this.tilesSprite.scaleX = this.scaleX;
                         this.tilesSprite.scaleY = this.scaleY;
                         this.tilesSprite.z = z;
@@ -307,14 +293,14 @@
                                 for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
                                     // This prevents us from using too large of a cache for the right and bottom edges of the map.
                                     w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
-                                    h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);                                
+                                    h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);
                                     
-                                    ct = new PIXI.RenderTexture(renderer, w, h);
+                                    ct = new RenderTexture(renderer, w, h);
                                     ct.baseTexture.realWidth  = w;
                                     ct.baseTexture.realHeight = h;
                                     ct._updateUvs();
                                     
-                                    ct = new PIXI.Sprite(ct);
+                                    ct = new Sprite(ct);
                                     ct.x = x * this.tileWidth;
                                     ct.y = y * this.tileHeight;
                                     ct.z = z;
@@ -332,21 +318,21 @@
                     } else {
                         this.cacheAll = false;
                         
-                        this.cacheTexture = new PIXI.RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
+                        this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
     
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.baseTexture.realWidth = this.cacheWidth;
                         this.cacheTexture.baseTexture.realHeight = this.cacheHeight;
                         this.cacheTexture._updateUvs();
                         
-                        this.tilesSprite = new PIXI.Sprite(this.cacheTexture);
+                        this.tilesSprite = new Sprite(this.cacheTexture);
                         this.tilesSprite.scaleX = this.scaleX;
                         this.tilesSprite.scaleY = this.scaleY;
                         this.tilesSprite.z = z;
 
                         // Set up copy buffer and circular pointers
-                        this.cacheTexture.alternate = new PIXI.RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
-                        this.tilesSpriteCache = new PIXI.Sprite(this.cacheTexture.alternate);
+                        this.cacheTexture.alternate = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
+                        this.tilesSpriteCache = new Sprite(this.cacheTexture.alternate);
                         
                         //TODO: Temp fix for broken SpringRoll PIXI implementation.
                         this.cacheTexture.alternate.baseTexture.realWidth = this.cacheWidth;
@@ -474,7 +460,7 @@
                             sprite = this.cacheGrid[x][y];
                             cacheP.setAll((x + 0.5) * this.cacheClipWidth, (y + 0.5) * this.cacheClipHeight, this.cacheClipWidth, this.cacheClipHeight);
                             
-                            inFrame = cacheP.intersects(laxCam)
+                            inFrame = cacheP.intersects(laxCam);
                             if (sprite.visible && !inFrame) {
                                 sprite.visible = false;
                             } else if (!sprite.visible && inFrame) {
@@ -584,9 +570,8 @@
                     return nullTemplate;
                 }
                 
-                tile = new platypus.PIXIAnimation(this.spriteSheet);
-                tile.transformMatrix = new PIXI.Matrix();
-                anim = 'tile' + transformCheck(imageName, tile.transformMatrix);
+                tile = new Animation(this.spriteSheet);
+                anim = 'tile' + transformCheck(imageName, tile);
                 tile.gotoAndStop(anim);
                 
                 return new Template(tile);
@@ -629,7 +614,7 @@
 
                 this.cacheClipWidth   = this.cacheTilesWidth  * this.tileWidth;
                 this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
-                this.cacheCamera.mask = new PIXI.Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
+                this.mapContainer.mask = new Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
             },
             
             update: function (texture, bounds, tilesSpriteCache, oldBounds) {
@@ -653,9 +638,9 @@
                                     if (tile.template) {
                                         tiles.push(tile.template);
                                     }
-                                    tile.transformMatrix.tx = (x + 0.5) * this.tileWidth;
-                                    tile.transformMatrix.ty = (y + 0.5) * this.tileHeight;
-                                    this.cacheCamera.addChild(tile);
+                                    tile.x = (x + 0.5) * this.tileWidth;
+                                    tile.y = (y + 0.5) * this.tileHeight;
+                                    this.tileContainer.addChild(tile);
                                 }
                             }
                                 
@@ -672,6 +657,7 @@
                         }
                     }
                 }
+                this.mapContainer.addChild(this.tileContainer);
 
                 // Draw cached entities
                 if (ents.length) {
@@ -679,9 +665,9 @@
                     for (z = 0; z < ents.length; z++) {
                         ent = ents[z];
                         delete ent.drawn;
-                        this.cacheCamera.addChild(ent);
+                        this.mapContainer.addChild(ent);
                         if (ent.mask) {
-                            this.cacheCamera.addChild(ent.mask);
+                            this.mapContainer.addChild(ent.mask);
                         }
                     }
                 }
@@ -694,14 +680,15 @@
                 if (tilesSpriteCache && !oldBounds.empty) {
                     tilesSpriteCache.x = oldBounds.left * this.tileWidth;
                     tilesSpriteCache.y = oldBounds.top * this.tileHeight;
-                    this.cacheCamera.addChild(tilesSpriteCache); // To copy last rendering over.
+                    this.mapContainer.addChild(tilesSpriteCache); // To copy last rendering over.
                 }
-                this.cacheCamera.x = -bounds.left * this.tileWidth;
-                this.cacheCamera.y = -bounds.top * this.tileHeight;
+                this.mapContainer.x = -bounds.left * this.tileWidth;
+                this.mapContainer.y = -bounds.top * this.tileHeight;
                 texture.clear();
-                texture.render(this.cacheCameraWrapper);
+                texture.render(this.mapContainerWrapper);
                 texture.requiresUpdate = true;
-                this.cacheCamera.removeChildren();
+                this.tileContainer.removeChildren();
+                this.mapContainer.removeChildren();
                 
                 if (oldBounds) {
                     oldBounds.set(bounds);
