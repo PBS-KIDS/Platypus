@@ -168,8 +168,6 @@
              * @param [options.camera] {Object} Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
              */
             "check-collision-group": function (resp) {
-                var time = new Date().getTime(); //TODO: TML - Why create this in here?
-                
                 if (resp.camera) {
                     this.checkCamera(resp.camera);
                 }/*
@@ -177,45 +175,15 @@
                     this.checkMovers(resp.camera, resp.movers);
                 }*/
 
-                this.timeElapsed.name = 'Col-Cam';
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                time += this.timeElapsed.time;
-
                 this.prepareCollisions(resp);
-
-                this.timeElapsed.name = 'Col-Prep';
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                time += this.timeElapsed.time;
 
                 this.checkGroupCollisions();
 
-                this.timeElapsed.name = 'Col-Group';
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                time += this.timeElapsed.time;
-
                 this.checkSolidCollisions();
 
-                this.timeElapsed.name = 'Col-Solid';
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                time += this.timeElapsed.time;
-
-                this.resolveNonCollisions(resp);
-
-                this.timeElapsed.name = 'Col-None';
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                time += this.timeElapsed.time;
+                this.resolveNonCollisions();
 
                 this.checkSoftCollisions(resp);
-
-                this.timeElapsed.name = 'Col-Soft';
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                time += this.timeElapsed.time;
             }
         },
         
@@ -395,7 +363,7 @@
                 }
             },
             
-            resolveNonCollisions: function (resp) {
+            resolveNonCollisions: function () {
                 var x      = 0,
                     entity = null,
                     xy     = {

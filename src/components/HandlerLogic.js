@@ -74,10 +74,6 @@
                 camera: this.camera,
                 movers: this.activeEntities
             };
-            this.timeElapsed = {
-                name: 'Logic',
-                time: 0
-            };
         },
         
         events: {
@@ -174,8 +170,7 @@
                 var i = 0,
                     j = 0,
                     cycles = 0,
-                    child  = null,
-                    time   = new Date().getTime();
+                    child  = null;
                 
                 this.leftoverTime += resp.delta;
                 cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
@@ -231,16 +226,8 @@
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          */
                         for (j = this.activeEntities.length - 1; j > -1; j--) {
-                            child = this.activeEntities[j];
-                            if (child.triggerEvent('handle-logic', this.message)) {
-                                child.checkCollision = true;
-                            }
+                            this.activeEntities[j].triggerEvent('handle-logic', this.message);
                         }
-                        
-                        this.timeElapsed.name = 'Logic';
-                        this.timeElapsed.time = new Date().getTime() - time;
-                        platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                        time += this.timeElapsed.time;
                         
                         /**
                          * This event is triggered on the entity (layer) to test collisions once logic has been completed.
@@ -250,11 +237,6 @@
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          */
                         if (this.owner.triggerEvent('check-collision-group', this.message)) { // If a collision group is attached, make sure collision is processed on each logic tick.
-                            this.timeElapsed.name = 'Collision';
-                            this.timeElapsed.time = new Date().getTime() - time;
-                            platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                            time += this.timeElapsed.time;
-
                             /**
                              * This event is triggered on entities to run logic that may depend upon collision responses.
                              * 
@@ -276,11 +258,6 @@
                                     child.triggerEvent('state-changed', child.state);
                                 }
                             }
-
-                            this.timeElapsed.name = 'Collision Logic';
-                            this.timeElapsed.time = new Date().getTime() - time;
-                            platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
-                            time += this.timeElapsed.time;
                         } else {
                             for (j = this.activeEntities.length - 1; j > -1; j--) {
                                 child = this.activeEntities[j];
@@ -289,13 +266,8 @@
                                 }
                             }
                         }
-                        
-                        
                     }
                 }
-                
-                this.timeElapsed.time = new Date().getTime() - time;
-                platypus.game.currentScene.trigger('time-elapsed', this.timeElapsed);
             }
         }
     });
