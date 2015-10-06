@@ -621,7 +621,7 @@
                 this.cacheClipWidth   = this.cacheTilesWidth  * this.tileWidth;
                 this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
 
-                if (!this.tileCache) {
+                if (this.tileCache) {
                     this.mapContainer.mask = new Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
                 }
             },
