@@ -40,16 +40,20 @@
             return x;
         },
         transformCheck = function (value, tile) {
-            var v = +(value.substring(4));
+            var v = +(value.substring(4)),
+                x = 0;
 
-            if (0x20000000 & v) {
-                tile.rotation = Math.PI / 2;
+            if (0x80000000 & v) {
+                tile.scale.x = -1;
             }
             if (0x40000000 & v) {
                 tile.scale.y = -1;
             }
-            if (0x80000000 & v) {
-                tile.scale.x = -1;
+            if (0x20000000 & v) {
+                x = tile.scale.x;
+                tile.scale.x = tile.scale.y;
+                tile.scale.y = -x;
+                tile.rotation = Math.PI / 2;
             }
 
             return 0x0fffffff & v;
