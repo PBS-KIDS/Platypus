@@ -52,33 +52,6 @@
             "stretch": false,
             
             /**
-             * Sets how quickly the camera should pan to a new position in the horizontal direction.
-             * 
-             * @property transitionX
-             * @type number
-             * @default 400
-             **/
-            "transitionX": 400,
-            
-            /**
-             * Sets how quickly the camera should pan to a new position in the vertical direction.
-             * 
-             * @property transitionY
-             * @type number
-             * @default 600
-             **/
-            "transitionY": 600,
-             
-            /**
-             * Sets how quickly the camera should rotate to a new orientation.
-             * 
-             * @property transitionAngle
-             * @type number
-             * @default: 600
-             **/
-            "transitionAngle": 600,
-            
-            /**
              * Sets how many units the followed entity can move before the camera will re-center. This should be lowered for small-value coordinate systems such as Box2D.
              * 
              * @property threshold
@@ -124,6 +97,33 @@
              */
             "canvas": null,
             
+            /**
+             * Sets how quickly the camera should pan to a new position in the horizontal direction.
+             * 
+             * @property transitionX
+             * @type number
+             * @default 400
+             **/
+            "transitionX": 400,
+            
+            /**
+             * Sets how quickly the camera should pan to a new position in the vertical direction.
+             * 
+             * @property transitionY
+             * @type number
+             * @default 600
+             **/
+            "transitionY": 600,
+             
+            /**
+             * Sets how quickly the camera should rotate to a new orientation.
+             * 
+             * @property transitionAngle
+             * @type number
+             * @default: 600
+             **/
+            "transitionAngle": 600,
+
             /**
              * Number specifying width of the world in units. This property is available on the Entity.
              * 

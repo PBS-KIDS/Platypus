@@ -174,6 +174,7 @@
              * @property tileCache
              * @type boolean
              * @default true
+             * @since 0.6.4
              */
             tileCache: true,
 
