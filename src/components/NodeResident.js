@@ -148,6 +148,18 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 		
 		id: 'NodeResident',
 		
+		publicProperties: {
+
+            /**
+             * This describes the rate at which a node resident should progress along an edge to another node. This property is set on the entity itself and can be manipulated in real-time.
+             *
+             * @property speed
+             * @type Number
+             * @default 0
+             */
+			speed: 0
+		},
+		
 		constructor: function(definition){
 			var offset = definition.offset || this.owner.nodeOffset || {};
 			
@@ -156,7 +168,6 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 			this.neighbors = {};
 			this.friendlyNodes = definition.nodes || null;
 			this.friendlyEntities = definition.shares || null;
-			this.speed = definition.speed || 0;
 			this.snapToNodes = definition.snapToNodes || false;
 			this.updateOrientation = definition.updateOrientation || false;
 			this.distance = 0;
@@ -197,13 +208,8 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 					this.owner.triggerEvent('in-location', this.owner);
 				}
 
-				if (typeof this.owner.speed === 'number') {
-					this.speed = this.owner.speed;
-				}
-
 				if(this.followEntity){
 					node = this.followEntity.node || this.followEntity;
-//					console.log('Following (' + (node && node.isNode && (node !== this.node)) + ')', node);
 					if(node && node.isNode && (node !== this.node)){
 						this.lag = 0;
 						this.state.moving = this.gotoNode();
@@ -226,7 +232,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				}
 				
 				if(this.destinationNodes.length){
-					this.state.moving = true;
+					this.state.moving = (this.speed !== 0);
 					if(this.node){
 						//console.log('Leaving ' + this.node.id);
 						this.onEdge(this.destinationNodes[0]);
