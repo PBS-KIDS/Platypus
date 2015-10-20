@@ -14,7 +14,7 @@ This command will:
 
 **NEXT version**
 
-The same process as above, but uses "NEXT" as the version. This is used to generate minified builds with the latest source between release versions.
+The same process as above, but uses "NEXT" as the version and doesn't generate documentation. This is used to generate minified builds with the latest source between release versions.
 
 	grunt next
 

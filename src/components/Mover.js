@@ -5,7 +5,6 @@
  * @class Mover
  * @uses Component
  */
-// Requires: ["Motion", "../Vector.js"]
 /*global platypus */
 /*jslint plusplus:true */
 (function () {

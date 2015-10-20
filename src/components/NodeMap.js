@@ -1,56 +1,10 @@
 /**
-# COMPONENT **NodeMap**
-This component sets up a NodeMap to be used by the [[NodeResident]] component on this entity's child entities.
-
-## Dependencies
-- [[EntityContainer]] - This component expects the entity to have an `EntityContainer` component so it knows when `NodeResident` children are added.
-
-## Messages
-
-### Listens for:
-- **add-node** - Expects a node definition to create a node in the NodeMap.
-  - @param definition.nodeId (string or array) - This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
-  - @param definition.type (string) - This determines the type of the node.
-  - @param definition.x (number) - Sets the x axis position of the node.
-  - @param definition.y (number) - Sets the y axis position of the node.
-  - @param definition.z (number) - Sets the z axis position of the node.
-  - @param definition.neighbors (object) - A list of key/value pairs where the keys are directions from the node and values are node ids. For example: {"west": "node12"}.
-- **child-entity-added** - Checks the child entity for a nodeId and if found adds the child to the corresponding node.
-  - @param entity (Entity) - The entity that may be placed on a node.
-
-## JSON Definition
-    {
-      "type": "NodeMap"
-      
-      "map": [
-      // Optional. An array of node definitions to create the NodeMap.
-        
-        {
-          "NodeId": "Node1",
-          // A string or array that becomes the id of the Node. Arrays are joined using "|" to create the id string.
-          
-          "type": "path",
-          // A string that determines the type of the node.
-          
-          "x": 0,
-          // Sets the x axis position of the node.
-          
-          "y": 0,
-          // Sets the y axis position of the node.
-          
-          "z": 0,
-          // Sets the z axis position of the node.
-
-          "neighbors": {
-          // A list of key/value pairs where the keys are directions from the node and values are node ids.
-            
-            "west": "node0",
-            "east": "node2"
-          }
-        }
-      ]
-    }
-*/
+ * This component sets up a NodeMap to be used by the [[NodeResident]] component on this entity's child entities.
+ * 
+ * @namespace platypus.components
+ * @class NodeMap
+ * @uses Component
+ */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
@@ -142,6 +96,37 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
             
             this.residentsAwaitingNode = [];
             
+            /**
+             * An array of node definitions to create the NodeMap. A node definition can take the following form:
+             * 
+             *         {
+             *           "NodeId": "Node1",
+             *           // A string or array that becomes the id of the Node. Arrays are joined using "|" to create the id string.
+             *           
+             *           "type": "path",
+             *           // A string that determines the type of the node.
+             *           
+             *           "x": 0,
+             *           // Sets the x axis position of the node.
+             *           
+             *           "y": 0,
+             *           // Sets the y axis position of the node.
+             *           
+             *           "z": 0,
+             *           // Sets the z axis position of the node.
+             * 
+             *           "neighbors": {
+             *           // A list of key/value pairs where the keys are directions from the node and values are node ids.
+             *             
+             *             "west": "node0",
+             *             "east": "node2"
+             *           }
+             *         }
+             * 
+             * @property map
+             * @type Array
+             * @default []
+             */
             if (definition.map) {
                 for (i = 0; i < definition.map.length; i++) {
                     this.addNode(new Node(definition.map[i], this));
@@ -150,6 +135,18 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
         },
 
         events: {
+            /**
+             * Expects a node definition to create a node in the NodeMap.
+             * 
+             * @method 'add-node'
+             * @param definition {Object} Key/value pairs.
+             * @param definition.nodeId {String|Array} This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
+             * @param definition.type {String} This determines the type of the node.
+             * @param definition.x {String} Sets the x axis position of the node.
+             * @param definition.y {String} Sets the y axis position of the node.
+             * @param definition.z {String} Sets the z axis position of the node.
+             * @param definition.neighbors {Object} A list of key/value pairs where the keys are directions from the node and values are node ids. For example: {"west": "node12"}.
+             */
             "add-node": function (nodeDefinition) {
                 var i = 0,
                     entity = null,
@@ -173,6 +170,13 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
                     }
                 }
 			},
+
+            /**
+             * Checks the child entity for a nodeId and if found adds the child to the corresponding node.
+             * 
+             * @method 'child-entity-added'
+             * @param entity {Entity} The entity that may be placed on a node, or if the entity is a node it is added to the map of nodes.
+             */
 			"child-entity-added": function (entity) {
 				if(entity.isNode){        // a node
 					this.owner.triggerEvent('add-node', entity);
