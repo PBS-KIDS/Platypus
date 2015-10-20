@@ -17,6 +17,7 @@
             iPad:        (uagent.search('ipad')    > -1),
             safari:      (uagent.search('safari')  > -1),
             ie:          (uagent.search('msie')    > -1) || (uagent.search('trident') > -1),
+            ie11:        (!(window.ActiveXObject) && "ActiveXObject" in window), // Currently PIXI's ParticleContainer doesn't work correctly in IE11.
             firefox:     (uagent.search('firefox') > -1),
             android:     (uagent.search('android') > -1),
             chrome:      (uagent.search('chrome')  > -1),

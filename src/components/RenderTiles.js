@@ -219,7 +219,7 @@
             this.cachePixels = new AABB();
 
             // Set up containers
-            this.tileContainer = (this.spriteSheet.images.length > 1) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
+            this.tileContainer = ((this.spriteSheet.images.length > 1) || platypus.supports.ie11) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
             
