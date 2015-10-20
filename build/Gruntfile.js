@@ -244,7 +244,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('next', function() {
 		grunt.config("buildArgs", this.args || []);
 		getBuildArgs();
-		grunt.task.run(["coreBuild", "clearBuildArgs"]);
+		grunt.task.run(["updateversion", "combine", "uglify", "clearversion", "copy:src", "clearBuildArgs"]);
 	});
 
 	/**
@@ -262,20 +262,12 @@ module.exports = function (grunt) {
 	grunt.registerTask('build', function() {
 		grunt.config("buildArgs", this.args || []);
 		getBuildArgs();
-		grunt.task.run(["setVersion", "coreBuild", "updatebower", "copy:docsSite", "clearBuildArgs"]);
+		grunt.task.run(["setVersion", "updateversion", "combine", "uglify", "clearversion", "docs", "copy:src", "updatebower", "copy:docsSite", "clearBuildArgs"]);
 	});
 
 	grunt.registerTask('clearBuildArgs', function() {
 		grunt.config("buildArgs", []);
 	});
-
-	/**
-	 * Main build task, always runs after next or build.
-	 *
-	 */
-	grunt.registerTask('coreBuild', [
-		"updateversion", "combine", "uglify", "clearversion", "docs", "copy:src"
-	]);
 
 	/**
 	 * Task for exporting combined view.
