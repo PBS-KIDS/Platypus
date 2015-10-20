@@ -197,6 +197,10 @@
             * @readonly
             */
             this.playing = false;
+            
+            this._visible = true;
+            
+            this._updating = false;
 
             // Set up initial playthrough.
             if (textures.length < 2) {
@@ -212,6 +216,22 @@
     
     Object.defineProperties(prototype, {
         /**
+        * The visibility of the sprite.
+        *
+        * @property visible
+        * @memberof PIXI.DisplayObject#
+        */
+        visible: {
+            get: function () {
+                return this._visible;
+            },
+            set: function (value) {
+                this._visible = value;
+                this._syncUpdate();
+            }
+        },
+        
+       /**
         * The PIXIAnimations current frame index
         *
         * @member {number}
@@ -237,7 +257,7 @@
         }
     
         this.playing = false;
-        PIXI.ticker.shared.remove(this.update, this);
+        this._syncUpdate();
     };
     
     /**
@@ -250,7 +270,21 @@
         }
     
         this.playing = true;
-        PIXI.ticker.shared.add(this.update, this);
+        this._syncUpdate();
+    };
+    
+    prototype._syncUpdate = function () {
+        var update = this.playing && this._visible;
+        
+        if (update !== this._updating) {
+            this._updating = update;
+            
+            if (update) {
+                PIXI.ticker.shared.add(this.update, this);
+            } else {
+                PIXI.ticker.shared.remove(this.update, this);
+            }
+        }
     };
     
     /**

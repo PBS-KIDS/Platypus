@@ -65,7 +65,8 @@
             tile.template = this; // backwards reference for clearing index later.
         },
         nullTemplate = {
-            getNext: doNothing
+            getNext: doNothing,
+            destroy: doNothing
         },
         prototype = Template.prototype;
 
@@ -90,6 +91,16 @@
 
     prototype.clear = function () {
         this.index = 0;
+    };
+    
+    prototype.destroy = function () {
+        var i = 0;
+        
+        for (i = 0; i < this.instances.length; i++) {
+            this.instances[i].destroy();
+        }
+        
+        this.instances.length = 0;
     };
 
     return platypus.createComponentClass({
@@ -202,6 +213,7 @@
             var imgMap = this.imageMap;
 
             this.doMap            = null; //list of display objects that should overlay tile map.
+            this.cachedDisplayObjects = null;
             this.populate         = this.populateTiles;
 
             this.tiles            = {};
@@ -518,8 +530,10 @@
                 if (this.entityCache && object) { //TODO: currently only handles a single display object on the cached entity.
                     if (!this.doMap) {
                         this.doMap = [];
+                        this.cachedDisplayObjects = [];
                         this.populate = this.populateTilesAndEntities;
                     }
+                    this.cachedDisplayObjects.push(object);
 
                     // Determine range:
                     bounds = object.getBounds(object.transformMatrix);
@@ -784,6 +798,7 @@
             destroy: function () {
                 var x = 0,
                     y = 0,
+                    key = '',
                     grid = this.cacheGrid;
 
                 if (grid) {
@@ -804,9 +819,22 @@
                     this.parentContainer.removeChild(this.mapContainer);
                 }
                 this.imageMap.length = 0;
+                
+                for (key in this.tiles) {
+                    if (this.tiles.hasOwnProperty(key)) {
+                        this.tiles[key].destroy();
+                    }
+                }
                 this.tiles = null;
                 this.parentContainer = null;
                 this.tilesSprite = null;
+                
+                if (this.cachedDisplayObjects) {
+                    for (x = 0; x < this.cachedDisplayObjects.length; x++) {
+                        this.cachedDisplayObjects[x].destroy();
+                    }
+                    this.cachedDisplayObjects.length = 0;
+                }
             }
         }
     });
