@@ -138,12 +138,13 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
             var i = 0;
             
             this.owner.map = this.map = [];
+            this.nodes = {};
             
             this.residentsAwaitingNode = [];
             
             if (definition.map) {
                 for (i = 0; i < definition.map.length; i++) {
-                    this.map.push(new Node(definition.map[i], this));
+                    this.addNode(new Node(definition.map[i], this));
                 }
             }
         },
@@ -160,8 +161,8 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
 				} else {
                     node = new Node(nodeDefinition, this);
 				}
-
-				this.map.push(node);
+                
+                this.addNode(node);
                 
                 for (i = this.residentsAwaitingNode.length - 1; i >= 0; i--) {
                     entity = this.residentsAwaitingNode[i];
@@ -187,6 +188,11 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
 		},
 		
 		publicMethods: {
+            addNode: function (node) {
+                this.map.push(node);
+                this.nodes[node.id] = node;
+            },
+            
 			getNode: function () {
                 var i       = 0,
                     id      = '',
@@ -205,12 +211,8 @@ This component sets up a NodeMap to be used by the [[NodeResident]] component on
                     id += divider + args[i];
                     divider = '|';
                 }
-                for (i = 0; i < this.map.length; i++) {
-                    if (this.map[i].id === id) {
-                        return this.map[i];
-                    }
-                }
-                return null;
+
+                return this.nodes[id] || null;
             },
             
             /**
