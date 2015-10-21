@@ -6,7 +6,7 @@
  * @uses Component
  */
 /*global console, PIXI, platypus */
-/*jslint plusplus:true */
+/*jslint plusplus:true, nomen:true */
 (function () {
     "use strict";
     
@@ -423,12 +423,12 @@
                     //If spriteSheet is a string, we look it up the spritesheet data, otherwise we use the object provided.
                     if (ssDef && typeof ssDef === 'string' && platypus.game.settings.spriteSheets[ssDef]) {
                         ssDef = platypus.game.settings.spriteSheets[ssDef];
-                    } else if (ssDef && typeof ssDef === 'object') {
-                        //We're fine.
-                    } else if (srcImage) {
-                        ssDef = {"images": [srcImage]};
-                    } else {
-                        console.warn(entity.type + ' - RenderSprite : Neither spriteSheet nor image defined.');
+                    } else if (!ssDef || typeof ssDef !== 'object') {
+                        if (srcImage) {
+                            ssDef = {"images": [srcImage]};
+                        } else {
+                            console.warn(entity.type + ' - RenderSprite : Neither spriteSheet nor image defined.');
+                        }
                     }
 
                     if (ssDef.framerate) {
@@ -536,7 +536,7 @@
                 this.lastX = this.owner.x;
                 this.lastY = this.owner.y;
                 
-                this.camera = new platypus.AABB()
+                this.camera = new platypus.AABB();
 
                 if (this.eventBased || this.stateBased) {
                     setupEventsAndStates(this, map);
@@ -827,7 +827,7 @@
         },
         
         methods: {
-            checkCameraBounds: function() {
+            checkCameraBounds: function () {
                 var bounds = null,
                     sprite   = this.sprite,
                     matrix   = null,
@@ -1019,7 +1019,7 @@
                     }
                     
                     // Set isCameraOn of sprite if within camera bounds
-                    if (this.sprite && ((!this.wasVisible && this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y )) { 
+                    if (this.sprite && ((!this.wasVisible && this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
                         //TODO: This check is running twice when an object is moving and the camera is moving. 
                         //Find a way to remove the duplication!
                         this.checkCameraBounds();

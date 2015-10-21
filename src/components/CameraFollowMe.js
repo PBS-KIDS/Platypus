@@ -143,7 +143,7 @@
                  * 
                  * @event 'follow'
                  * @param options {Object} A list of key/value paris describing camera options to set.
-                 * @param options.entity {[[Entity]]} Sends this entity for the camera to follow.
+                 * @param options.entity {platypus.Entity} Sends this entity for the camera to follow.
                  * @param options.mode {String} Camera following mode.
                  * @param options.top {number} The top of a bounding box.
                  * @param options.left {number} The left of a bounding box.

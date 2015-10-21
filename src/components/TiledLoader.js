@@ -1,7 +1,7 @@
 /**
- * This component is attached to a top-level entity (loaded by the [Scene](Scene.html)) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
+ * This component is attached to a top-level entity (loaded by the [Scene](platypus.Scene.html)) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
  * 
- * This component requires an [[EntityContainer]] since it calls `entity.addEntity()` on the entity, provided by `EntityContainer`.
+ * This component requires an [EntityContainer](platypus.components.EntityContainer.html) since it calls `entity.addEntity()` on the entity, provided by `EntityContainer`.
  * 
  * This component looks for the following entities, and if not found will load default versions:
 
@@ -269,7 +269,7 @@
                  * @param world.tile {Object} Properties of the world tiles.
                  * @param world.tile.width {number} The width in world units of a single tile.
                  * @param world.tile.height {number} The height in world units of a single tile.
-                 * @param world.camera {Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+                 * @param world.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
                  */
                 this.owner.trigger('world-loaded', {
                     width: level.width * level.tilewidth * this.unitsPerPixel,

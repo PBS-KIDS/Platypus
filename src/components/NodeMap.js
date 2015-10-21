@@ -1,5 +1,5 @@
 /**
- * This component sets up a NodeMap to be used by the [[NodeResident]] component on this entity's child entities.
+ * This component sets up a NodeMap to be used by the [NodeResident](platypus.components.NodeResident.html) component on this entity's child entities.
  * 
  * @namespace platypus.components
  * @class NodeMap
@@ -177,7 +177,7 @@
              * Checks the child entity for a nodeId and if found adds the child to the corresponding node.
              * 
              * @method 'child-entity-added'
-             * @param entity {Entity} The entity that may be placed on a node, or if the entity is a node it is added to the map of nodes.
+             * @param entity {platypus.Entity} The entity that may be placed on a node, or if the entity is a node it is added to the map of nodes.
              */
             "child-entity-added": function (entity) {
                 if (entity.isNode) {        // a node

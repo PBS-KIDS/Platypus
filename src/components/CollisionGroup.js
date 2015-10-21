@@ -109,7 +109,7 @@
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
              * 
              * @method 'child-entity-added'
-             * @param entity {Entity} The entity to be added.
+             * @param entity {platypus.Entity} The entity to be added.
              */
             "child-entity-added": function (entity) {
                 this.addCollisionEntity(entity);
@@ -119,7 +119,7 @@
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
              * 
              * @method 'add-collision-entity'
-             * @param entity {Entity} The entity to be added.
+             * @param entity {platypus.Entity} The entity to be added.
              */
             "add-collision-entity": function (entity) {
                 this.addCollisionEntity(entity);
@@ -129,7 +129,7 @@
              * On receiving this message, the component looks for the entity in its collision group and removes it.
              * 
              * @method 'child-entity-removed'
-             * @param entity {Entity} The entity to be removed.
+             * @param entity {platypus.Entity} The entity to be removed.
              */
             "child-entity-removed": function (entity) {
                 this.removeCollisionEntity(entity);
@@ -139,7 +139,7 @@
              * On receiving this message, the component looks for the entity in its collision group and removes it.
              * 
              * @method 'remove-collision-entity'
-             * @param entity {Entity} The entity to be removed.
+             * @param entity {platypus.Entity} The entity to be removed.
              */
             "remove-collision-entity": function (entity) {
                 this.removeCollisionEntity(entity);

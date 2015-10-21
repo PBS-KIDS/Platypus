@@ -103,7 +103,7 @@
              * Called when the object is added to its parent, on receiving this message, the component tries to link itself with objects with the same link id.
              *
              * @method 'adopted'
-             * @param owner {Entity} The owner of this component.
+             * @param owner {platypus.Entity} The owner of this component.
              */
             "adopted": function (owner) {
                 this.resolveAdoption(owner);
@@ -113,7 +113,7 @@
              * On receiving this message, this component checks the linkId of the requesting entity and adds it to its list of connections if it matches.
              *
              * @method 'link-entity'
-             * @param toLink {Entity} The enquiring entity.
+             * @param toLink {platypus.Entity} The enquiring entity.
              */
             "link-entity": function (toLink) {
                 var i = 0,
@@ -142,7 +142,7 @@
              * Removes the requesting entity from this component's list of linked entities and no farther messages will be transmitted.
              *
              * @method 'unlink-entity'
-             * @param toUnlink {Entity} The enquiring entity.
+             * @param toUnlink {platypus.Entity} The enquiring entity.
              */
             "unlink-entity": function (toUnlink) {
                 var i = 0;

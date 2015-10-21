@@ -320,8 +320,8 @@
              * Returns all the collision tiles within the provided axis-aligned bounding box as an array of shapes.
              * 
              * @method getTileShapes
-             * @param aabb {AABB} The axis-aligned bounding box for which tiles should be returned.
-             * @param prevAABB {AABB} The axis-aligned bounding box for a previous location to test for jump-through tiles.
+             * @param aabb {platypus.AABB} The axis-aligned bounding box for which tiles should be returned.
+             * @param prevAABB {platypus.AABB} The axis-aligned bounding box for a previous location to test for jump-through tiles.
              * @return {Array} Each returned object provides the [CollisionShape](CollisionShape.html) of a tile.
              */
             getTileShapes: function (aabb, prevAABB) {

@@ -1,5 +1,5 @@
 /**
- * This component checks for collisions between entities which typically have either a [[Collision-Tiles]] component for tile maps or a [[Collision-Basic]] component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
+ * This component checks for collisions between entities which typically have either a [CollisionTiles](platypus.components.CollisionTiles.html) component for tile maps or a [CollisionBasic](platypus.components.CollisionBasic.html) component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
  * 
  * @namespace platypus.components
  * @class HandlerCollision
@@ -144,7 +144,7 @@
              * On receiving this message, the component looks for the entity in its collision group and removes it.
              * 
              * @method 'child-entity-removed'
-             * @param message ([[Entity]] object) - The entity to be removed.
+             * @param message {platypus.Entity} The entity to be removed.
              */
             "child-entity-removed": function (entity) {
                 this.removeCollisionEntity(entity);
@@ -154,7 +154,7 @@
              * On receiving this message, the component looks for the entity in its collision group and removes it.
              * 
              * @method 'remove-collision-entity'
-             * @param message ([[Entity]] object) - The entity to be removed.
+             * @param message {platypus.Entity} The entity to be removed.
              */
             "remove-collision-entity": function (entity) {
                 this.removeCollisionEntity(entity);

@@ -85,7 +85,7 @@
              * Called when this entity spawns a new entity, this event links the newly created entity to this entity.
              *
              * @method 'entity-created'
-             * @param entity {Entity} The entity to link.
+             * @param entity {platypus.Entity} The entity to link.
              */
             "entity-created": function (entity) {
                 if (!entity.triggerEvent('link-family', this.owner.familyLinks)) {

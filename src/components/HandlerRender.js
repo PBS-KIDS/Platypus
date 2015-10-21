@@ -84,7 +84,7 @@
              * Called when a new entity has been added to the parent and should be considered for addition to the handler. Entities are sent a reference the Container that we're rendering to, so they can add their display objects to it and the delta from the lastest tick.
              *
              * @method 'child-entity-added'
-             * @param entity {Entity} The entity added to the parent.
+             * @param entity {platypus.Entity} The entity added to the parent.
              */
             "child-entity-added": function (entity) {
                 /**

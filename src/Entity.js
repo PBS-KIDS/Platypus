@@ -126,8 +126,8 @@ platypus.Entity = (function () {
     * Attaches the provided component to the entity.
     *
     * @method addComponent
-    * @param {Component} component Must be an object that functions as a [[Component]].
-    * @return {Component} Returns the same object that was submitted.
+    * @param {platypus.Component} component Must be an object that functions as a Component.
+    * @return {platypus.Component} Returns the same object that was submitted.
     **/
     proto.addComponent = function (component) {
         this.components.push(component);
@@ -136,7 +136,7 @@ platypus.Entity = (function () {
          * The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.
          *
          * @event component-added
-         * @param {Component} component The added component.
+         * @param {platypus.Component} component The added component.
          * @param {String} component.type The type of component.
          **/
         this.triggerEvent('component-added', component);

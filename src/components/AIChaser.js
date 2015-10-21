@@ -107,7 +107,7 @@
              * On receiving this message, the component will change its target and begin chasing the new entity.
              * 
              * @method 'set-target'
-             * @param entity {Entity} Sets this entity's target to the provided entity.
+             * @param entity {platypus.Entity} Sets this entity's target to the provided entity.
              */
             "set-target": function (entity) {
                 this.target = entity;
@@ -132,7 +132,7 @@
              * On receiving this message, the component will begin chasing the entity.
              * 
              * @method 'start-chasing'
-             * @param [entity] {Entity} Sets the entity if it's provided.
+             * @param [entity] {platypus.Entity} Sets the entity if it's provided.
              */
             "start-chasing": function (entity) {
                 if (entity) {

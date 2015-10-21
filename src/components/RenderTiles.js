@@ -371,7 +371,7 @@
              * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
              *
              * @method 'cache-sprite'
-             * @param entity {Entity} This is the peer entity to be checked for a renderCache.
+             * @param entity {platypus.Entity} This is the peer entity to be checked for a renderCache.
              */
             "cache-sprite": function (entity) {
                 this.cacheSprite(entity);
@@ -381,7 +381,7 @@
              * If this component should cache entities, it checks peers for a "renderCache" display object and adds the display object to its list of objects to render on top of the tile set.
              *
              * @method 'peer-entity-added'
-             * @param entity {Entity} This is the peer entity to be checked for a renderCache.
+             * @param entity {platypus.Entity} This is the peer entity to be checked for a renderCache.
              */
             "peer-entity-added": function (entity) {
                 this.cacheSprite(entity);

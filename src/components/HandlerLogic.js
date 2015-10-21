@@ -81,7 +81,7 @@
              * Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities.
              * 
              * @method 'child-entity-added'
-             * @param entity {Entity} The entity that is being considered for addition to the handler.
+             * @param entity {platypus.Entity} The entity that is being considered for addition to the handler.
              */
             "child-entity-added": function (entity) {
                 var x = 0,
@@ -100,7 +100,7 @@
              * Called when an entity should be removed from the list of logically updated entities.
              * 
              * @method 'child-entity-removed'
-             * @param entity {Entity} The entity to be removed from the handler.
+             * @param entity {platypus.Entity} The entity to be removed from the handler.
              */
             "child-entity-removed": function (entity) {
                 var j = 0;

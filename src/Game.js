@@ -1,5 +1,5 @@
 /**
- * This class is used to create the `platypus.game` object. The `game` object handles loading {Scene}s and transitions between scenes. It also accepts external events and passes them on to the current scene.
+ * This class is used to create the `platypus.game` object. The `game` object handles loading [Scenes](platypus.Scene.html) and transitions between scenes. It also accepts external events and passes them on to the current scene.
  * 
  * @namespace platypus
  * @class Game
@@ -8,7 +8,7 @@
  * @param [definition.global] {Object} Key/value pairs describing global game settings.
  * @param [definition.global.tickerOn=true] {boolean} Whether the game should automatically tick or only tick on `game.tick()` calls.
  * @param onFinishedLoading {Function} An optional function to run once the game has begun.
- * @return {Game} Returns the instantiated game. 
+ * @return {platypus.Game} Returns the instantiated game. 
  */
 /*global console, createjs, PIXI, platypus, springroll */
 /*jslint plusplus:true */
@@ -37,7 +37,7 @@ platypus.Game = (function () {
                     stage.addChild(black);
                     
                     // Commence tween here to accommodate any delay from loading above.
-                    /*window.springroll.*/setTimeout(function () {
+                    setTimeout(function () {
                         tween.get(black).to({alpha: 0}, 500).call(function (t) {
                             stage.removeChild(black);
                         });
@@ -212,11 +212,13 @@ platypus.Game = (function () {
                         };
                         
                         window.getVisibleSprites = function (c, a) {
+                            var i = 0;
+                            
                             a = a || [];
                             c = c || stage;
                             
                             if (!c.texture && c.visible) {
-                                for (var i = 0; i < c.children.length; i++) {
+                                for (i = 0; i < c.children.length; i++) {
                                     window.getVisibleSprites(c.children[i], a);
                                 }
                                 return a;
@@ -374,7 +376,7 @@ platypus.Game = (function () {
     *
     * @method getEntityById
     * @param {string} id The entity id to find.
-    * @return {Entity} Returns the entity that matches the specified entity id.
+    * @return {platypus.Entity} Returns the entity that matches the specified entity id.
     **/
     proto.getEntityById = function (id) {
         if (this.currentScene) {

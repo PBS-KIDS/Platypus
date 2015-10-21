@@ -1,15 +1,15 @@
 /**
- * This class is instantiated by [[Game]] and contains one or more entities as layers. Each layer [[Entity]] handles a unique aspect of the scene. For example, one layer might contain the game world, while another layer contains the game interface. Generally there is only a single scene loaded at any given moment.
+ * This class is instantiated by [Game](platypus.Game.html) and contains one or more entities as layers. Each layer [Entity](platypus.Entity.html) handles a unique aspect of the scene. For example, one layer might contain the game world, while another layer contains the game interface. Generally there is only a single scene loaded at any given moment.
  * ## JSON Definition
  *     {
  *         "layers":[
- *         // Required array listing the entities that should be loaded as scene layers. These can be actual entity JSON definitions as shown in [[Entity]] or references to entities by using the following specification.
+ *         // Required array listing the entities that should be loaded as scene layers. These can be actual entity JSON definitions as shown in Entity or references to entities by using the following specification.
  * 
  *             {
  *                 "type": "entity-id",
- *                 // This value maps to an entity definition with a matching "id" value as shown in [[Entity]] and will load that definition.
+ *                 // This value maps to an entity definition with a matching "id" value as shown in Entity and will load that definition.
  *                 
- *                 "properties":{"x": 400}
+ *                 "properties": {"x": 400}
  *                 // Optional. If properties are passed in this reference, they override the entity definition's properties of the same name.
  *             }
  *         ]

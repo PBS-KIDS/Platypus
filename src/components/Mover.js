@@ -237,7 +237,7 @@
              * 
              * @method 'hit-solid'
              * @param collisionInfo {Object}
-             * @param collisionInfo.direction {Vector} The direction of collision from the entity's position.
+             * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
              */
             "hit-solid": function (collisionInfo) {
                 var s = this.velocity.scalarProjection(collisionInfo.direction),

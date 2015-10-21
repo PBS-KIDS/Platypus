@@ -48,7 +48,7 @@ This component is attached to entities that will appear in the game world. It se
     
 [link1]: http://createjs.com/Docs/EaselJS/Stage.html
 */
-/*global console, createjs, platypus */
+/*global console, createjs, PIXI, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -106,7 +106,7 @@ This component is attached to entities that will appear in the game world. It se
                         this.owner.removeComponent(this);
                         return;
                     } else if (renderData.container) {
-                        this.parentContainer = resp.container;
+                        this.parentContainer = renderData.container;
                     } else {
                         console.warn('No Container, removing render debug component from "' + this.owner.type + '".');
                         this.owner.removeComponent(this);

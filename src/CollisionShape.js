@@ -4,7 +4,7 @@
  * @namespace platypus
  * @class CollisionShape
  * @constructor
- * @param owner {Entity} The entity that uses this shape.
+ * @param owner {platypus.Entity} The entity that uses this shape.
  * @param definition {Object} This is an object of key/value pairs describing the shape.
  * @param definition.x {number} The x position of the shape. The x is always located in the center of the object.
  * @param definition.y {number} The y position of the shape. The y is always located in the center of the object.
@@ -116,7 +116,7 @@ platypus.CollisionShape = (function () {
      * Returns the axis-aligned bounding box of the shape.
      * 
      * @method getAABB
-     * @return {AABB} The AABB of the shape.
+     * @return {platypus.AABB} The AABB of the shape.
      */
     proto.getAABB = function () {
         return this.aABB;

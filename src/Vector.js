@@ -116,7 +116,7 @@ platypus.Vector = (function () {
     /**
      * Sets the vector to values of the parameter vector.
      * 
-     * @param otherVector {Vector} The other vector.
+     * @param otherVector {platypus.Vector} The other vector.
      * @chainable
      */
     proto.copyValues = function (otherVector) {
@@ -165,7 +165,7 @@ platypus.Vector = (function () {
      * Returns a normalized copy of the vector.
      * 
      * @method getUnit
-     * @return {Vector} A normalized vector in the same direction as this vector.
+     * @return {platypus.Vector} A normalized vector in the same direction as this vector.
      */
     proto.getUnit = function () {
         return new platypus.Vector(this).normalize();
@@ -175,7 +175,7 @@ platypus.Vector = (function () {
      * Returns a copy of the Vector inverted.
      * 
      * @method getInverse
-     * @return {Vector}
+     * @return {platypus.Vector}
      */
     proto.getInverse = function () {
         return new platypus.Vector(this).multiply(-1);
@@ -201,7 +201,7 @@ platypus.Vector = (function () {
      * Crosses this vector with the parameter vector.
      * 
      * @method cross
-     * @param vector {Vector} The vector to cross this vector with.
+     * @param vector {platypus.Vector} The vector to cross this vector with.
      * @chainable
      */
     proto.cross = (function () {
@@ -226,8 +226,8 @@ platypus.Vector = (function () {
      * Crosses this vector with the parameter vector and returns the cross product.
      * 
      * @method getCrossProduct
-     * @param vector {Vector} The vector to cross this vector with.
-     * @return {Vector} The cross product.
+     * @param vector {platypus.Vector} The vector to cross this vector with.
+     * @return {platypus.Vector} The cross product.
      */
     proto.getCrossProduct = function (v) {
         return new platypus.Vector(this).cross(v);
@@ -343,7 +343,7 @@ platypus.Vector = (function () {
      * Adds the given vector to this vector.
      * 
      * @method addVector
-     * @param otherVector {Vector} The vector to add.
+     * @param otherVector {platypus.Vector} The vector to add.
      * @chainable
      */
     proto.addVector = function (otherVector, dimensions) {
@@ -354,7 +354,7 @@ platypus.Vector = (function () {
      * Subtracts the given vector from this vector.
      * 
      * @method subtractVector
-     * @param otherVector {Vector} The vector to subtract.
+     * @param otherVector {platypus.Vector} The vector to subtract.
      * @chainable
      */
     proto.subtractVector = function (otherVector, dimensions) {
@@ -377,7 +377,7 @@ platypus.Vector = (function () {
      * Finds the dot product of the two vectors.
      * 
      * @method dot
-     * @param otherVector {Vector} The other vector.
+     * @param otherVector {platypus.Vector} The other vector.
      * @param limit {number} The number of vector indexes to include in the dot product.
      * @return {number} The dot product.
      */
@@ -397,7 +397,7 @@ platypus.Vector = (function () {
      * Finds the shortest angle between the two vectors.
      * 
      * @method angleTo
-     * @param otherVector {Vector} The other vector.
+     * @param otherVector {platypus.Vector} The other vector.
      * @return {number} The angle between this vector and the received vector.
      */
     proto.angleTo = function (otherVector) {
@@ -411,8 +411,8 @@ platypus.Vector = (function () {
      * Finds the shortest signed angle between the two vectors.
      * 
      * @method signedAngleTo
-     * @param otherVector {Vector} The other vector.
-     * @param normal {Vector} A normal vector determining the resultant sign of the angle between two vectors.
+     * @param otherVector {platypus.Vector} The other vector.
+     * @param normal {platypus.Vector} A normal vector determining the resultant sign of the angle between two vectors.
      * @return {number} The angle between this vector and the received vector.
      */
     proto.signedAngleTo = function (otherVector, normal) {
@@ -446,7 +446,7 @@ platypus.Vector = (function () {
     /**
      * Returns a copy of this vector.
      * 
-     * @return {Vector} A copy of this vector.
+     * @return {platypus.Vector} A copy of this vector.
      */
     proto.copy = function () {
         return new platypus.Vector(this);

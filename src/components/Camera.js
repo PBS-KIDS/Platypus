@@ -7,7 +7,7 @@
  * @class Camera
  * @uses Component
 */
-/*global createjs, PIXI, platypus, springroll */
+/*global console, createjs, PIXI, platypus, springroll */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -253,7 +253,7 @@
              * If children entities are listening for a `camera-update` message, they are added to an internal list.
              * 
              * @method 'child-entity-added'
-             * @param entity {Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+             * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
               **/
             "child-entity-added": function (entity) {
                 this.viewportUpdate = true;
@@ -276,13 +276,13 @@
             },
 
             /**
-             * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [[Tiled-Loader]] component.
+             * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [TiledLoader](platypus.components.TiledLoader.html) component.
              * 
              * @method 'world-loaded'
              * @param message {Object}
              * @param [message.width] {number} The width of the loaded world.
              * @param [message.height] {number} The height of the loaded world.
-             * @param [message.camera] {Entity} An entity that the camera should follow in the loaded world.
+             * @param [message.camera] {platypus.Entity} An entity that the camera should follow in the loaded world.
              **/
             "world-loaded": function (values) {
                 var msg = this.message;
@@ -428,13 +428,13 @@
              * @param [location.ease] {Function} The ease function to use. Defaults to a linear transition.
              */
             "relocate": function (location) {
-                var self = this,
+                var v = null,
+                    self = this,
                     move = function () {
                         if (self.move(v.x, v.y)) {
                             self.viewportUpdate = true;
                         }
-                    },
-                    v = null;
+                    };
 
                 if (location.time && window.createjs && createjs.Tween) {
                     v = new platypus.Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
@@ -452,7 +452,7 @@
             * @method 'follow'
             * @param message {Object}
             * @param message.mode {String} Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
-            * @param [message.entity] {Entity} The entity that the camera should commence following.
+            * @param [message.entity] {platypus.Entity} The entity that the camera should commence following.
             * @param [message.top] {number} The top of a bounding box following an entity.
             * @param [message.left] {number} The left of a bounding box following an entity.
             * @param [message.width] {number} The width of a bounding box following an entity.

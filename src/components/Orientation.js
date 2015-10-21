@@ -287,7 +287,7 @@
              * On receiving a vector via this event, the component will transform the vector using the current orientation matrix and then store the vector and continue manipulating it as the orientation matrix changes.
              * 
              * @method 'orient-vector'
-             * @param vector {Vector} The vector whose orientation will be maintained.
+             * @param vector {platypus.Vector} The vector whose orientation will be maintained.
              */
             "orient-vector": function (vector) {
                 var i = 0,
@@ -318,7 +318,7 @@
              * On receiving this message, the maintained vector is immediately dropped from the list of maintained vectors.
              * 
              * @method 'remove-vector'
-             * @param vector {Vector} The vector to be removed.
+             * @param vector {platypus.Vector} The vector to be removed.
              */
             "remove-vector": function (vector) {
                 var i = 0;

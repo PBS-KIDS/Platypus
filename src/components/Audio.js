@@ -1,5 +1,5 @@
 /**
- * This component plays audio using [SoundJS](http://www.createjs.com/Docs/SoundJS/module_SoundJS.html). Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like [[RenderSprite]]).
+ * This component plays audio using [SoundJS](http://www.createjs.com/Docs/SoundJS/module_SoundJS.html). Audio is played in one of two ways, by triggering specific messages defined in the audio component definition or using an audio map which plays sounds when the entity enters specified states (like [RenderSprite](platypus.components.RenderSprite.html)).
  * 
  * @namespace platypus.components
  * @class Audio

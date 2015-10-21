@@ -474,7 +474,7 @@
                  * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
                  * 
                  * @event 'add-collision-entity'
-                 * @param entity {Entity} The entity this component is attached to.
+                 * @param entity {platypus.Entity} The entity this component is attached to.
                  */
                 this.owner.parent.trigger('add-collision-entity', this.owner);
             },
@@ -489,7 +489,7 @@
                  * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
                  * 
                  * @event 'remove-collision-entity'
-                 * @param entity {Entity} The entity this component is attached to.
+                 * @param entity {platypus.Entity} The entity this component is attached to.
                  */
                 this.owner.parent.trigger('remove-collision-entity', this.owner);
             },
