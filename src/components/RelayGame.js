@@ -20,7 +20,7 @@
         
         properties: {
             /**
-             * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event to be broadcast to the scene. The value can also be an array of events to be fired on the scene.
+             * This is an object of key/value pairs. The keys are events this component is listening for locally, and the value is the event to be broadcast to the scene. The value can also be an array of events to be fired on the scene.
              *
              *      "events": {
              *          "sleeping": "good-night",
@@ -29,24 +29,18 @@
              *
              * @property events
              * @type Object
-             * @default null
+             * @default {}
              */
-            events: null
+            events: {}
         },
 
-        publicProperties: {
-
-        },
-
-        constructor: function (definition) {
+        constructor: function () {
             var event = '';
             
             // Messages that this component listens for and then broadcasts to all layers.
-            if (this.events) {
-                for (event in this.events) {
-                    if (this.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, broadcast(this.events[event]));
-                    }
+            for (event in this.events) {
+                if (this.events.hasOwnProperty(event)) {
+                    this.addEventListener(event, broadcast(this.events[event]));
                 }
             }
         }

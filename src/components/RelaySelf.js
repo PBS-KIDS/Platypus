@@ -29,24 +29,18 @@
              *
              * @property events
              * @type Object
-             * @default null
+             * @default {}
              */
-            events: null
+            events: {}
         },
 
-        publicProperties: {
-
-        },
-
-        constructor: function (definition) {
+        constructor: function () {
             var event = '';
             
             // Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
-            if (this.events) {
-                for (event in this.events) {
-                    if (this.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, broadcast(this.events[event]));
-                    }
+            for (event in this.events) {
+                if (this.events.hasOwnProperty(event)) {
+                    this.addEventListener(event, broadcast(this.events[event]));
                 }
             }
         }
