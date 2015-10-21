@@ -19,7 +19,7 @@
  * 
  * @namespace platypus.components
  * @class Orientation
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */

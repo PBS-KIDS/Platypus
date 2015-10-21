@@ -7,7 +7,7 @@
  *
  * @namespace platypus.components
  * @class RenderTiles
- * @uses Component
+ * @uses platypus.Component
  */
 /*global include, platypus */
 /*jslint nomen:true, bitwise:true, plusplus:true */

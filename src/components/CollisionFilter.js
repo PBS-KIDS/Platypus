@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class CollisionFilter
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 (function () {

@@ -3,7 +3,7 @@
  *
  * @namespace platypus.components
  * @class RenderSprite
- * @uses Component
+ * @uses platypus.Component
  */
 /*global console, PIXI, platypus */
 /*jslint plusplus:true, nomen:true */

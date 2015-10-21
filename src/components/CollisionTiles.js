@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class CollisionTiles
- * @uses Component
+ * @uses platypus.Component
  */
 // Requires: ["../CollisionShape.js"]
 /*global platypus */

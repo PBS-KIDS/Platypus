@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class LogicDestroyMe
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 (function () {

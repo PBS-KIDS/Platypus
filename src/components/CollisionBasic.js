@@ -5,7 +5,7 @@
  * 
  * @namespace platypus.components
  * @class CollisionBasic
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */

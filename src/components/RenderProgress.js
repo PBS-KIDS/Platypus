@@ -3,7 +3,7 @@
  *
  * @namespace platypus.components
  * @class RenderProgress
- * @uses Component
+ * @uses platypus.Component
  */
 /*global console, PIXI, platypus */
 (function () {

@@ -14,7 +14,7 @@
  *     
  * @namespace platypus.components
  * @class RandomEvents
- * @uses Component
+ * @uses platypus.Component
 */
 /*global platypus */
 (function () {

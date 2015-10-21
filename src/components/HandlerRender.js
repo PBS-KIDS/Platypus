@@ -3,7 +3,7 @@
  *
  * @namespace platypus.components
  * @class HandlerRender
- * @uses Component
+ * @uses platypus.Component
  */
 /*global PIXI, platypus */
 /*jslint plusplus:true */

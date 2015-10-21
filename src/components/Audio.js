@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class Audio
- * @uses Component
+ * @uses platypus.Component
  * @deprecated Use `components.AudioSFX` or `components.AudioVO` instead.
  */
 /*global include, createjs, platypus */

@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class Mover
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */

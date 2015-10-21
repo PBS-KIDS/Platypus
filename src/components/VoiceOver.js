@@ -5,7 +5,7 @@
  *
  * @namespace platypus.components
  * @class VoiceOver
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */

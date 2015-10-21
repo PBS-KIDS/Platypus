@@ -5,7 +5,7 @@
  *
  * @namespace platypus.components
  * @class LevelBuilder
- * @uses Component
+ * @uses platypus.Component
  */
 
 /*global console */

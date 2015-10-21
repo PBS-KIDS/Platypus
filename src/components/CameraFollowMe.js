@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class CameraFollowMe
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 (function () {

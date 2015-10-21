@@ -3,10 +3,8 @@
  * 
  * @namespace platypus.components
  * @class HandlerCollision
- * @uses Component
+ * @uses platypus.Component
  */
- 
-// Requires: ["../CollisionShape.js", "../AABB.js", "../Vector.js", "../CollisionDataContainer.js"]
 /*global platypus */
 /*jslint plusplus:true */
 (function () {

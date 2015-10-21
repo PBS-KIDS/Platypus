@@ -34,7 +34,7 @@
 
  * @namespace platypus.components
  * @class TiledLoader
- * @uses Component
+ * @uses platypus.Component
  */
 /*global console, include, platypus */
 /*jslint bitwise: true, plusplus: true */
