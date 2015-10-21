@@ -35,7 +35,7 @@
             this.neighbors = definition.neighbors || {};
         },
         proto = Node.prototype;
-	
+    
     proto.getNode = function (desc) {
         var neighbor = null;
         
@@ -84,18 +84,11 @@
         }
         return false;
     };
-	
-	return platypus.createComponentClass({
-		id: 'NodeMap',
-		
-        constructor: function (definition) {
-            var i = 0;
-            
-            this.owner.map = this.map = [];
-            this.nodes = {};
-            
-            this.residentsAwaitingNode = [];
-            
+    
+    return platypus.createComponentClass({
+        id: 'NodeMap',
+        
+        publicProperties: {
             /**
              * An array of node definitions to create the NodeMap. A node definition can take the following form:
              * 
@@ -127,10 +120,19 @@
              * @type Array
              * @default []
              */
-            if (definition.map) {
-                for (i = 0; i < definition.map.length; i++) {
-                    this.addNode(new Node(definition.map[i], this));
-                }
+            map: []
+        },
+        
+        constructor: function (definition) {
+            var i   = 0,
+                map = this.map;
+            
+            this.map   = []; // Original map is node definitions, so we replace it with actual nodes.
+            this.nodes = {};
+            this.residentsAwaitingNode = [];
+            
+            for (i = 0; i < map.length; i++) {
+                this.addNode(new Node(map[i], this));
             }
         },
 
@@ -152,12 +154,12 @@
                     entity = null,
                     node   = null;
                 
-				if(nodeDefinition.isNode){// if it's already a node, put it on the map.
-					node = nodeDefinition;
+                if (nodeDefinition.isNode) {// if it's already a node, put it on the map.
+                    node = nodeDefinition;
                     nodeDefinition.map = this;
-				} else {
+                } else {
                     node = new Node(nodeDefinition, this);
-				}
+                }
                 
                 this.addNode(node);
                 
@@ -165,11 +167,11 @@
                     entity = this.residentsAwaitingNode[i];
                     if (node.id === entity.nodeId) {
                         this.residentsAwaitingNode.splice(i, 1);
-        				entity.node = this.getNode(entity.nodeId);
-       					entity.triggerEvent('on-node', entity.node);
+                        entity.node = this.getNode(entity.nodeId);
+                        entity.triggerEvent('on-node', entity.node);
                     }
                 }
-			},
+            },
 
             /**
              * Checks the child entity for a nodeId and if found adds the child to the corresponding node.
@@ -177,27 +179,35 @@
              * @method 'child-entity-added'
              * @param entity {Entity} The entity that may be placed on a node, or if the entity is a node it is added to the map of nodes.
              */
-			"child-entity-added": function (entity) {
-				if(entity.isNode){        // a node
-					this.owner.triggerEvent('add-node', entity);
-				} else if(entity.nodeId){ // a NodeResident
-					entity.node = this.getNode(entity.nodeId);
-                    if(!entity.node){
+            "child-entity-added": function (entity) {
+                if (entity.isNode) {        // a node
+                    this.owner.triggerEvent('add-node', entity);
+                } else if (entity.nodeId) { // a NodeResident
+                    entity.node = this.getNode(entity.nodeId);
+                    if (!entity.node) {
                         this.residentsAwaitingNode.push(entity);
                     } else {
-    					entity.triggerEvent('on-node', entity.node);
+                        entity.triggerEvent('on-node', entity.node);
                     }
-				}
-			}
-		},
-		
-		publicMethods: {
+                }
+            }
+        },
+        
+        methods: {
             addNode: function (node) {
                 this.map.push(node);
                 this.nodes[node.id] = node;
-            },
-            
-			getNode: function () {
+            }
+        },
+        
+        publicMethods: {
+            /**
+             * Gets a node by node id.
+             * 
+             * @method getNode
+             * @param id {String|Array|Node} This id of the node to retrieve. If an array or more than one parameter is supplied, values are concatenated with "|" to create a single string id. Supplying a node returns the same node (useful for processing a mixed list of nodes and node ids).
+             */
+            getNode: function () {
                 var i       = 0,
                     id      = '',
                     divider = '',
@@ -205,12 +215,12 @@
                 
                 if (args.length === 1) {
                     if (args[0].isNode) {
-						return args[0];
-					} else if (Array.isArray(args[0])) {
-						args = args[0];
-					}
-				}
-				
+                        return args[0];
+                    } else if (Array.isArray(args[0])) {
+                        args = args[0];
+                    }
+                }
+                
                 for (i = 0; i < args.length; i++) {
                     id += divider + args[i];
                     divider = '|';
@@ -221,8 +231,13 @@
             
             /**
              * Finds the closest node to a given point, with respect to any inclusion or exclusion lists.
+             * 
+             * method getClosestNode
+             * @param point {platypus.Vector} A location for which a closest node is being found.
+             * @param [including] {Array} A list of nodes to include in the search. If not set, the entire map is searched.
+             * @param [excluding] {Array} A list of nodes to exclude from the search.
              */
-            getClosestNode: (function(){
+            getClosestNode: (function () {
                 var v1 = new platypus.Vector(0, 0, 0),
                     v2 = new platypus.Vector(0, 0, 0);
 
