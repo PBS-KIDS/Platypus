@@ -220,7 +220,7 @@
 
                 if (types) {
                     for (i = 0; i < types.length; i++) {
-                        for (x in this.entitiesByType[types[i]]) {
+                        for (x = 0; x < this.entitiesByType[types[i]].length; x++) {
                             if (this.entitiesByType[types[i]][x] === entity) {
                                 this.entitiesByType[types[i]].splice(x, 1);
                                 break;
@@ -247,6 +247,7 @@
                 return function (camera, movers) {
                     var i        = 0,
                         j        = 0,
+                        key      = '',
                         length   = 0,
                         list     = null,
                         all      = null,
@@ -323,10 +324,10 @@
                         // add buffer again to capture stationary entities along the border that may be collided against 
                         aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
 
-                        for (i in this.entitiesByType) {
-                            if (this.entitiesByType.hasOwnProperty(i)) {
-                                entities = this.entitiesByType[i];
-                                list = this.entitiesByTypeLive[i];
+                        for (key in this.entitiesByType) {
+                            if (this.entitiesByType.hasOwnProperty(key)) {
+                                entities = this.entitiesByType[key];
+                                list = this.entitiesByTypeLive[key];
                                 list.length = 0;
                                 length = entities.length;
                                 for (j = 0; j < length; j++) {
