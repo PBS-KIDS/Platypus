@@ -35,13 +35,7 @@
         },
         entityCollisionDataContainer = new platypus.CollisionDataContainer(),
         isAABBCollision = function (boxX, boxY) {
-            if ((boxX.left       >=  boxY.right)  ||
-                    (boxX.right  <=  boxY.left)   ||
-                    (boxX.top    >=  boxY.bottom) ||
-                    (boxX.bottom <=  boxY.top)) {
-                return false;
-            }
-            return true;
+            return !((boxX.left >=  boxY.right) || (boxX.right  <=  boxY.left) || (boxX.top    >=  boxY.bottom) || (boxX.bottom <=  boxY.top));
         },
         shapeCollision = function (shapeA, shapeB) {
             var distSquared      = 0,
@@ -174,15 +168,11 @@
                 if (resp.movers) {
                     this.checkMovers(resp.camera, resp.movers);
                 }*/
-
+               
                 this.prepareCollisions(resp);
-
                 this.checkGroupCollisions();
-
                 this.checkSolidCollisions();
-
                 this.resolveNonCollisions();
-
                 this.checkSoftCollisions(resp);
             }
         },
