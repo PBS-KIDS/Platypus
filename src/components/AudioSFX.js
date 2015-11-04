@@ -51,6 +51,8 @@
 
                 value = value || attributes;
 
+                handleAndroidWebAudio();
+                                
                 audio = this.player.play(sound, {
                     interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
                     delay:      value.delay     || attributes.delay  || defaultSettings.delay,
