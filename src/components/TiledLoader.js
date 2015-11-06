@@ -514,6 +514,9 @@
                             props = {};
                             if ((entityKind === 'render-layer') && self.spriteSheet) {
                                 props.spriteSheet = self.spriteSheet;
+                                if (!props.spriteSheet.animations) {
+                                    props.spriteSheet.animations = importAnimation;
+                                }
                             }
                             return self.owner.addEntity(new platypus.Entity(tileDefinition, {
                                 properties: props
