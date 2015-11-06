@@ -513,7 +513,11 @@
                         } else {
                             props = {};
                             if ((entityKind === 'render-layer') && self.spriteSheet) {
-                                props.spriteSheet = self.spriteSheet;
+                                if (typeof self.spriteSheet === 'string') {
+                                    props.spriteSheet = platypus.game.settings.spriteSheets[self.spriteSheet];
+                                } else {
+                                    props.spriteSheet = self.spriteSheet;
+                                }
                                 if (!props.spriteSheet.animations) {
                                     props.spriteSheet.animations = importAnimation;
                                 }
