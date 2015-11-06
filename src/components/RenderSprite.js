@@ -10,8 +10,7 @@
 (function () {
     "use strict";
     
-    var ssCache = {},
-        tempMatrix = new PIXI.Matrix(),
+    var tempMatrix = new PIXI.Matrix(),
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -83,6 +82,7 @@
              * @property image
              * @type String
              * @default null
+             * @deprecated Use `spriteSheet.images` instead.
              */
             image: null,
 
@@ -92,6 +92,7 @@
              * @property regX
              * @type Number
              * @default 0
+             * @deprecated Use `spriteSheet.frames.regX` instead.
              */
             regX: 0,
 
@@ -101,6 +102,7 @@
              * @property regY
              * @type Number
              * @default 0
+             * @deprecated Use `spriteSheet.frames.regY` instead.
              */
             regY: 0,
 
@@ -401,76 +403,7 @@
         },
         
         constructor: (function () {
-            var defaultAnimations = {"default": 0},
-                createSpriteSheet = function (ssDef, srcImage, entity, component) {
-                    var image  = null,
-                        ss     = {
-                            framerate:     0,
-                            images:     null,
-                            frames:     null,
-                            animations: null
-                        },
-                        cache  = {
-                            definition: ss,
-                            spriteSheet: null
-                        };
-
-                    //If we've already created an object with this spriteSheet, used the cached version.
-                    if (typeof ssDef === 'string' && ssCache[ssDef]) {
-                        return ssCache[ssDef];
-                    }
-
-                    //If spriteSheet is a string, we look it up the spritesheet data, otherwise we use the object provided.
-                    if (ssDef && typeof ssDef === 'string' && platypus.game.settings.spriteSheets[ssDef]) {
-                        ssDef = platypus.game.settings.spriteSheets[ssDef];
-                    } else if (!ssDef || typeof ssDef !== 'object') {
-                        if (srcImage) {
-                            ssDef = {"images": [srcImage]};
-                        } else {
-                            console.warn(entity.type + ' - RenderSprite : Neither spriteSheet nor image defined.');
-                        }
-                    }
-
-                    if (ssDef.framerate) {
-                        ss.framerate = ssDef.framerate;
-                    }
-
-                    if (ssDef.images && Array.isArray(ssDef.images)) {
-                        ss.images = ssDef.images.slice();
-                    } else {
-                        console.warn(entity.type + ' - RenderSprite : No source image(s) defined.');
-                    }
-
-                    if (ssDef && ssDef.frames) {
-                        ss.frames = ssDef.frames;
-                    } else {
-                        // Assume this is a single frame image and define accordingly.
-                        image = ss.images[0];
-                        if (image) {
-                            ss.frames = [[
-                                0,
-                                0,
-                                ss.images[0].width  || entity.width || 1,
-                                ss.images[0].height || entity.height || 1,
-                                0,
-                                component.regX || entity.regX || 0,
-                                component.regY || entity.regY || 0
-                            ]];
-                        }
-                    }
-
-                    if (ssDef && ssDef.animations) {
-                        ss.animations = ssDef.animations;
-                    } else {
-                        // Assume this is a single frame image and define accordingly.
-                        ss.animations = defaultAnimations;
-                    }
-
-                    cache.spriteSheet = cache.definition; //TODO: definition and actual can be stored together now
-
-                    return cache;
-                },
-                createAnimationMap = function (animationMap, ss) {
+            var createAnimationMap = function (animationMap, ss) {
                     var map  = null,
                         anim = '';
 
@@ -521,10 +454,31 @@
             
             return function (definition) {
                 var self = this,
-                    ss       = createSpriteSheet(this.spriteSheet, this.image, this.owner, this),
-                    map      = createAnimationMap(this.animationMap, ss.definition);
+                    ss   = null,
+                    map  = null;
                 
-                this.sprite     = null;
+                if (this.spriteSheet) {
+                    if (typeof this.spriteSheet === 'string') {
+                        ss = platypus.game.settings.spriteSheets[this.spriteSheet];
+                    } else {
+                        ss = this.spriteSheet;
+                    }
+                } else if (this.image && platypus.assets[this.image]) { // Deprecate in next version.
+                    ss = {
+                        images: [this.image],
+                        frames: {
+                            width: platypus.assets[this.image].asset.width,
+                            height: platypus.assets[this.image].asset.height,
+                            regX: this.regX,
+                            regY: this.regY
+                        }
+                    };
+                } else {
+                    ss = {};
+                    console.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');
+                }
+                
+                map      = createAnimationMap(this.animationMap, ss);
                 
                 this.parentContainer      = null;
                 this.stateBased = map && this.stateBased;
@@ -546,7 +500,7 @@
                 /*
                  * PIXIAnimation created here:
                  */
-                this.sprite = new platypus.PIXIAnimation(ss.spriteSheet, this.currentAnimation || 0);
+                this.sprite = new platypus.PIXIAnimation(ss, this.currentAnimation || 0);
                 this.sprite.onComplete = function (animation) {
                     /**
                      * This event fires each time an animation completes.
@@ -576,7 +530,7 @@
                     this.container.addChild(this.sprite);
                     this.sprite.z = 0;
 
-                    this.addPins(this.pinLocations, ss.definition.frames);
+                    this.addPins(this.pinLocations, ss.frames);
                     this.sprite.transformMatrix = new PIXI.Matrix();
                 } else {
                     this.container = this.sprite;

@@ -11,6 +11,7 @@
 		"../src/CollisionShape.js",
 		"../src/Entity.js",
 		"../src/factory.js",
+		"../src/handleAndroidWebAudio.js",
 		"../src/PIXIAnimation.js",
 		"../src/PIXIGraphicsMixins.js",
 		"../src/PIXITransformOverride.js",

@@ -6,13 +6,13 @@
 	var lastTime = 0,
 		Sound = include("createjs.Sound"),
 		WebAudioPlugin = include("createjs.WebAudioPlugin"),
-		android = createjs.BrowserDetect.isAndroid,
 		handleAndroidWebAudio = function () {
 			var activePlugin = Sound.activePlugin,
-				lastPlugin = null;
+				lastPlugin = null,
+				fixTime = 0;
 			
-			if (android && (activePlugin instanceof WebAudioPlugin)) {
-				var fixTime = Date.now();
+			if (activePlugin instanceof WebAudioPlugin) {
+				fixTime = Date.now();
 				
 				if (lastTime && ((fixTime - lastTime) > 30000)) {
 					// Reset context
@@ -35,5 +35,5 @@
 			}
 		}
 		
-	window.handleAndroidWebAudio = handleAndroidWebAudio;
+	window.handleAndroidWebAudio = createjs.BrowserDetect.isAndroid ? handleAndroidWebAudio : function () {};
 }());

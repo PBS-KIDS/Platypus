@@ -172,10 +172,10 @@
             scaleY: 1,
 
             /**
-             * EaselJS SpriteSheet describing all the tile images.
+             * A sprite sheet describing all the tile images.
              *
              * @property spriteSheet
-             * @type SpriteSheet
+             * @type Object | String
              * @default null
              */
             spriteSheet: null,
@@ -232,6 +232,9 @@
             this.cachePixels = new AABB();
 
             // Set up containers
+            if (this.spriteSheet && (typeof this.spriteSheet === 'string')) {
+                this.spriteSheet = platypus.game.settings.spriteSheets[this.spriteSheet];
+            }
             this.tileContainer = ((this.spriteSheet.images.length > 1) || (this.renderer instanceof CanvasRenderer)) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
