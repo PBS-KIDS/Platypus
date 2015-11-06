@@ -146,7 +146,17 @@
              * @type boolean
              * @default false
              */
-            separateTiles: false
+            separateTiles: false,
+            
+            /**
+             * If a particular sprite sheet should be used that's not defined by the level images themselves. This is useful for making uniquely-themed variations of the same level. This is overridden by `"spriteSheet": "import"` in the "render-layer" Entity definition, so be sure to remove that when setting this property.
+             * 
+             * @property spriteSheet
+             * @type String | Object
+             * @default null
+             * @since 0.6.6
+             */
+            spriteSheet: null
         },
 
         publicProperties: {
@@ -155,6 +165,7 @@
              *
              * @property level
              * @type String
+             * @default null
              */
             level: null,
 
@@ -366,7 +377,8 @@
                         return tileLayer;
                     },
                     createLayer = function (entityKind, layer) {
-                        var width = layer.width,
+                        var props = null,
+                            width = layer.width,
                             height = layer.height,
                             tHeight = layer.tileheight || tileHeight,
                             tWidth = layer.tilewidth || tileWidth,
@@ -499,10 +511,12 @@
                             combineRenderLayer.trigger('add-tiles', renderTiles);
                             return combineRenderLayer;
                         } else {
+                            props = {};
+                            if ((entityKind === 'render-layer') && self.spriteSheet) {
+                                props.spriteSheet = self.spriteSheet;
+                            }
                             return self.owner.addEntity(new platypus.Entity(tileDefinition, {
-                                properties: {
-
-                                }
+                                properties: props
                             }));
                         }
                     };
