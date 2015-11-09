@@ -88,8 +88,6 @@
                 } else {
                     soundList = sound;
                 }
-
-                handleAndroidWebAudio();
                                 
                 this.player.play(soundList, function () {
                     self.onComplete(true);
