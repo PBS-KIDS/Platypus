@@ -104,7 +104,6 @@ platypus.Vector = (function () {
         }
         
         if (m) {
-            this.matrix.length = m.length;
             for (q = 0; q < limit; q++) {
                 this.matrix[q] = m[q];
             }
