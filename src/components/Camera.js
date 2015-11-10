@@ -544,8 +544,8 @@
                     this.state = 'following';
                     this.followFocused   = false;
                     this.following       = def.entity;
-                    this.lastX           = def.entity.x || 0;
-                    this.lastY           = def.entity.y || 0;
+                    this.lastX           = def.entity.x - def.offsetX || 0;
+                    this.lastY           = def.entity.y - def.offsetY || 0;
                     this.lastOrientation = def.entity.orientation || 0;
                     this.forwardX  = def.movementX || (this.transitionX / 10);
                     this.forwardY  = def.movementY || (this.transitionY / 10);
