@@ -150,6 +150,7 @@
                 animationDefinition = {
                     spriteSheet:   definition.spriteSheet,
                     acceptInput:   definition.acceptInput,
+                    offsetZ:       definition.offsetZ,
                     scaleX:        definition.scaleX,
                     scaleY:        definition.scaleY,
                     rotate:        definition.rotate,
