@@ -1015,9 +1015,11 @@
                     sprite.interactive = true;
                     
                     mousedown = function (event) {
-                        this.triggerInput(event, 'mousedown');
-                        event.target.mouseTarget = true;
-                        pressed = true;
+                        if (!pressed) {
+                            this.triggerInput(event, 'mousedown');
+                            event.target.mouseTarget = true;
+                            pressed = true;
+                        }
                     }.bind(this);
                     
                     pressmove = function (event) {
@@ -1030,12 +1032,14 @@
                     }.bind(this);
                     
                     pressup   = function (event) {
-                        this.triggerInput(event, 'pressup');
-                        event.target.mouseTarget = false;
-                        pressed = false;
-                        
-                        if (event.target.removeDisplayObject) {
-                            event.target.removeDisplayObject();
+                        if (pressed) {
+                            this.triggerInput(event, 'pressup');
+                            event.target.mouseTarget = false;
+                            pressed = false;
+                            
+                            if (event.target.removeDisplayObject) {
+                                event.target.removeDisplayObject();
+                            }
                         }
                     }.bind(this);
                     
