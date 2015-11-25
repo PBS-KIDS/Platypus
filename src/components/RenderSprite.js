@@ -49,12 +49,17 @@
         },
         processGraphics = (function () {
             var process = function (gfx, value) {
-                var paren  = value.indexOf('('),
+                var i = 0,
+                    paren  = value.indexOf('('),
                     func   = value.substring(0, paren),
                     values = value.substring(paren + 1, value.indexOf(')'));
 
                 if (values.length) {
-                    gfx[func].apply(gfx, values.split(','));
+                    values = values.split(',');
+                    for (i = 0; i < values.length; i++) {
+                        values[i] = +values[i];
+                    }
+                    gfx[func].apply(gfx, values);
                 } else {
                     gfx[func]();
                 }
