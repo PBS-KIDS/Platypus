@@ -27,11 +27,27 @@
 	    updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
+        getPortion = function (num, max) {
+            return Math.floor(204 * num / max);
+        },
+        calcColor = function (version) {
+            var max = Math.max(version[0], version[1], version[2]);
+            
+            return 'rgb(' + getPortion(version[0], max) + ',' + getPortion(version[1], max) + ',' + getPortion(version[2], max) + ')';
+        },
         sayHello = function (settings, app) {
-            var options = app.options,
+            var color = '',
+                colorArray = platypus.version.split('.'),
+                options = app.options,
                 title   = 'Platypus ' + platypus.version;
             
             if (hello) {
+                if (colorArray.length === 3) {
+                    color = calcColor(colorArray);
+                } else {
+                    color = '#8A3324';
+                }
+                
                 if (options.author) {
                     title += ' - "' + app.name + '" by ' + options.author;
                 } else {
@@ -39,7 +55,7 @@
                 }
                 
                 if (platypus.supports.firefox || platypus.supports.chrome) {
-                    console.log('\n%c ' + title + ' \n\n', 'color: #ffffff; background: #8A3324; padding:3px 0;');
+                    console.log('\n%c ' + title + ' \n\n', 'color: #ffffff; background: ' + color + '; padding:3px 0;');
                 } else {
                     console.log(title);
                 }
