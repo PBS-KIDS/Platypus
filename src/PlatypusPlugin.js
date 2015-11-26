@@ -27,44 +27,46 @@
 	    updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
-        getPortion = function (num, max) {
-            return Math.floor(204 * num / max);
-        },
-        calcColor = function (version) {
-            var max = Math.max(version[0], version[1], version[2]);
+        sayHello = (function () {
+            var getPortion = function (num, max) {
+                    return Math.floor(204 * num / max);
+                },
+                getStyle = function (version) {
+                    var max = 0,
+                        style = 'color: #ffffff; padding:3px 0; border-radius: 6px;';
+                    
+                    if (version.length === 3) {
+                        max = Math.max(version[0], version[1], version[2]);
+                        
+                        return style + ' background: rgb(' + getPortion(version[0], max) + ',' + getPortion(version[1], max) + ',' + getPortion(version[2], max) + ');';
+                    } else {
+                        return style + ' background: #8A3324;';
+                    }
+                };
             
-            return 'rgb(' + getPortion(version[0], max) + ',' + getPortion(version[1], max) + ',' + getPortion(version[2], max) + ')';
-        },
-        sayHello = function (settings, app) {
-            var color = '',
-                colorArray = platypus.version.split('.'),
-                options = app.options,
-                title   = 'Platypus ' + platypus.version;
-            
-            if (hello) {
-                if (colorArray.length === 3) {
-                    color = calcColor(colorArray);
-                } else {
-                    color = '#8A3324';
-                }
+            return function (settings, app) {
+                var options = app.options,
+                    author  = (options.author ? 'by ' + options.author : ''),
+                    engine  = 'Platypus ' + platypus.version,
+                    pixi    = 'Pixi.js ' + PIXI.VERSION,
+                    title   = app.name,
+                    version = options.version || 'none';
                 
-                if (options.author) {
-                    title += ' - "' + app.name + '" by ' + options.author;
-                } else {
-                    title += ' - ' + app.name;
+                if (hello) {
+                    if (platypus.supports.firefox || platypus.supports.chrome) {
+                        console.log('\n%c ' + pixi + ' %c %c ' + engine + ' %c %c ' + title + ' %c ' + author + ' \n\n', getStyle(PIXI.VERSION.split('.')), '',getStyle(platypus.version.split('.')), '', getStyle(version.split('.')), '');
+                    } else {
+                        console.log('--- ' + pixi + ' - ' + engine + ' - "' + title + '" ' + author + ' ---');
+                    }
                 }
-                
-                if (platypus.supports.firefox || platypus.supports.chrome) {
-                    console.log('\n%c ' + title + ' \n\n', 'color: #ffffff; background: ' + color + '; padding:3px 0;');
-                } else {
-                    console.log(title);
+    
+                if (settings.debug) {
+                    console.log("Game config loaded.", settings);
                 }
-            }
-
-            if (settings.debug) {
-                console.log("Game config loaded.", settings);
-            }
-        };
+            };
+        }());
+    
+    PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
 
 	plugin.setup = function() {
         var author = '';
