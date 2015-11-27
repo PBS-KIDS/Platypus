@@ -12,14 +12,15 @@
             touch:       (window.ontouchstart !== 'undefined'),
 
             // specific browsers as determined above
+            edge:        (uagent.search('edge')    > -1),
             iPod:        (uagent.search('ipod')    > -1),
             iPhone:      (uagent.search('iphone')  > -1),
             iPad:        (uagent.search('ipad')    > -1),
-            safari:      (uagent.search('safari')  > -1),
+            safari:      (uagent.search('safari')  > -1) && (uagent.search('edge') === -1),
             ie:          (uagent.search('msie')    > -1) || (uagent.search('trident') > -1),
             firefox:     (uagent.search('firefox') > -1),
             android:     (uagent.search('android') > -1),
-            chrome:      (uagent.search('chrome')  > -1),
+            chrome:      (uagent.search('chrome')  > -1) && (uagent.search('edge') === -1),
             silk:        (uagent.search('silk')    > -1),
             iPhone4:     false, //determined below
             iPad2:       false, //determined below
