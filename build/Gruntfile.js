@@ -127,14 +127,14 @@ module.exports = function (grunt) {
 
 				updateversion: {
 					platypus: {
-						file: '../src/version.js',
+						file: '../src/platypus.js',
 						version: '<%= version %>'
 					}
 				},
 
 				clearversion: {
 					platypus: {
-						file: '../src/version.js'
+						file: '../src/platypus.js'
 					}
 				}
 			}
