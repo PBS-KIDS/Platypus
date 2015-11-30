@@ -71,10 +71,16 @@
     PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
 
 	plugin.setup = function() {
-        var author = '';
+        var author = '',
+            authorTag = document.getElementsByName('author');
+        
+        if (authorTag.length) { // Set default author by page meta data if it exists.
+            author = authorTag[0].getAttribute('content') || '';
+        }
         
 		/**
-		 * Sets credit for the game.
+		 * Sets credit for the game. Defaults to the "author" META tag if present on the document.
+         * 
 		 * @property {Boolean} options.author
 		 * @default ''
 		 */
@@ -89,7 +95,8 @@
 
 		/**
 		 * Hides console hello for the game.
-		 * @property {Boolean} options.hideHello
+		 * 
+         * @property {Boolean} options.hideHello
 		 * @default ''
 		 */
 		Object.defineProperty(this, 'hideHello', {
