@@ -3,7 +3,7 @@
  *
  * @namespace platypus.components
  * @class AssetLoader
- * @uses Component
+ * @uses platypus.Component
  */
 /*global console, include, platypus */
 /*jslint plusplus:true */

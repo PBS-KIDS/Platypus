@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class AudioSFX
- * @uses Component
+ * @uses platypus.Component
  * @since 0.6.0
  */
 /*global include, createjs, platypus */

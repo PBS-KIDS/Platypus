@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class AIChaser
- * @uses Component
+ * @uses platypus.Component
  */
 /*global console, platypus */
 (function () {

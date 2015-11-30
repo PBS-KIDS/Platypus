@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class NodeMap
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */

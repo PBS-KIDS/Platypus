@@ -3,7 +3,7 @@
  *
  * @namespace platypus.components
  * @class LogicAngularMovement
- * @uses Component
+ * @uses platypus.Component
  */
 
 /*global platypus */

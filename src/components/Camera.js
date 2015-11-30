@@ -5,7 +5,7 @@
  * 
  * @namespace platypus.components
  * @class Camera
- * @uses Component
+ * @uses platypus.Component
 */
 /*global console, createjs, PIXI, platypus, springroll */
 /*jslint plusplus:true */

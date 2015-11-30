@@ -2,7 +2,7 @@
  * This component is an example template from which a developer can create their own components. Summarize the purpose of this component here.
  * 
  * @class ComponentExample
- * @uses Component
+ * @uses platypus.Component
  */
 (function () {
     "use strict";

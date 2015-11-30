@@ -22,7 +22,7 @@
  * 
  * @namespace platypus.components
  * @class AudioMobile
- * @uses Component
+ * @uses platypus.Component
  */
 /*global console, platypus */
 (function () {

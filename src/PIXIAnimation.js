@@ -12,6 +12,7 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         cache = PIXI.utils.TextureCache,
+        animationCache = {},
         createFramesArray = function (frame, bases) {
             var i = 0,
                 fw = frame.width,
@@ -72,6 +73,31 @@
         getCacheId = function (images, frame) {
             return images[frame[4]] + '-x' + frame[0] + 'y' + frame[1] + 'w' + frame[2] + 'h' + frame[3];
         },
+        getTexturesCacheId = function (spriteSheet) {
+            var animations = spriteSheet.animations,
+                i = 0,
+                id = spriteSheet.images.join(","),
+                frames = spriteSheet.frames,
+                key = "";
+            
+            if (Array.isArray(frames)) {
+                for (i = 0; i < frames.length; i++) {
+                    id += "-" + frames[i].join(",");
+                }
+            } else {
+                id += "-w" + frames.width + "h" + frames.height + "rx" + frames.regX + "ry" + frames.regY;
+            }
+            
+            if (animations) {
+                for (key in animations) {
+                    if (animations.hasOwnProperty(key)) {
+                        id += "-" + key;
+                    }
+                }
+            }
+
+            return id;
+        },
         formatAnimation = function (key, animation, textures) {
             var i = 0,
                 frames = [];
@@ -118,21 +144,22 @@
             
             return anims;
         },
-        PIXIAnimation = function (spriteSheet, animation) {
+        cacheAnimations = function (spriteSheet) {
             var i = 0,
                 id = '',
+                anims    = null,
+                frame    = null,
+                frames   = null,
+                images   = spriteSheet.images,
                 texture  = null,
                 textures = [],
-                frame    = null,
-                frames   = spriteSheet.frames,
-                images   = spriteSheet.images,
-                speed    = (spriteSheet.framerate || 60) / 60,
-                anims    = null,
                 bases    = getBaseTextures(images);
-            
+
             // Set up frames array
-            if (!Array.isArray(frames)) {
-                frames = createFramesArray(frames, bases);
+            if (Array.isArray(spriteSheet.frames)) {
+                frames = spriteSheet.frames;
+            } else {
+                frames = createFramesArray(spriteSheet.frames, bases);
             }
             
             // Set up texture for each frame
@@ -148,7 +175,7 @@
                     anchor: new PIXI.Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
                 });
             }
-            
+
             // Set up animations
             anims = standardizeAnimations(spriteSheet.animations || {}, textures);
 
@@ -157,12 +184,26 @@
                 anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
-            PIXI.Sprite.call(this, textures[0].texture);
+            return {
+                textures: textures,
+                animations: anims
+            };
+        },
+        PIXIAnimation = function (spriteSheet, animation) {
+            var cacheId = getTexturesCacheId(spriteSheet),
+                cache   = animationCache[cacheId],
+                speed   = (spriteSheet.framerate || 60) / 60;
+            
+            if (!cache) {
+                cache = animationCache[cacheId] = cacheAnimations(spriteSheet);
+            }
+            
+            PIXI.Sprite.call(this, cache.textures[0].texture);
         
             /**
             * @private
             */
-            this._animations = anims;
+            this._animations = cache.animations;
             
             this._animation = null;
         
@@ -203,7 +244,7 @@
             this._updating = false;
 
             // Set up initial playthrough.
-            if (textures.length < 2) {
+            if (cache.textures.length < 2) {
                 this.gotoAndStop(animation);
             } else {
                 this.gotoAndPlay(animation);

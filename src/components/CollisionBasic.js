@@ -5,7 +5,7 @@
  * 
  * @namespace platypus.components
  * @class CollisionBasic
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */
@@ -621,8 +621,7 @@
             },
             
             destroy: function () {
-                var i   = 0,
-                    col = '';
+                var i = 0;
                 
                 this.owner.parent.trigger('remove-collision-entity', this.owner);
 

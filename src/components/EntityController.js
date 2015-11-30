@@ -212,7 +212,7 @@ This component listens for input messages triggered on the entity and updates th
         
         constructor: function (definition) {
             var i           = 0,
-                j           = 0,
+                j           = '',
                 k           = 0,
                 key         = '',
                 actionState = null,

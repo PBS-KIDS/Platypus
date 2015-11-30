@@ -3,7 +3,7 @@
  * 
  * @namespace platypus.components
  * @class CollisionGroup
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */
@@ -380,7 +380,7 @@
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
-                    childEntity.relocateEntity(new platypus.Vector(vector.x - entity.saveOX, vector.y - entity.saveOY), collisionData);
+                    childEntity.relocateEntity(new platypus.Vector(vector.x - entity.saveOX, vector.y - entity.saveOY, childEntity.z), collisionData);
                     entity.x += entity.saveDX;
                     entity.y += entity.saveDY;
                     if (entity !== this.owner) {

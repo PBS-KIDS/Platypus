@@ -59,7 +59,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
  *
  * @namespace platypus.components
  * @class NodeResident
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 /*jslint plusplus:true */
@@ -279,8 +279,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				}
 			},
 			"on-node": function (node) {
-				var i    = '',
-				    j    = 0,
+				var j = 0,
 				    entities = null;
 				
 				this.owner.node = this.node = node; //TODO: not sure if this needs to be accessible outside this component.

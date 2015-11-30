@@ -3,7 +3,7 @@
  *
  * @namespace platypus.components
  * @class RelayParent
- * @uses Component
+ * @uses platypus.Component
  */
 /*global platypus */
 (function () {
