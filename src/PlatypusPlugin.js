@@ -47,16 +47,18 @@
             return function (settings, app) {
                 var options = app.options,
                     author  = (options.author ? 'by ' + options.author : ''),
+                    srV     = springroll.version || '(?)',
                     engine  = 'Platypus ' + platypus.version,
                     pixi    = 'Pixi.js ' + PIXI.VERSION,
-                    title   = app.name,
-                    version = options.version || 'none';
+                    spring  = 'SpringRoll ' + srV,
+                    version = options.version || '(?)',
+                    title   = ((version !== '(?)') ? app.name + ' ' + version : app.name);
                 
                 if (hello) {
                     if (platypus.supports.firefox || platypus.supports.chrome) {
-                        console.log('\n%c ' + pixi + ' %c %c ' + engine + ' %c %c ' + title + ' %c ' + author + ' \n\n', getStyle(PIXI.VERSION.split('.')), '',getStyle(platypus.version.split('.')), '', getStyle(version.split('.')), '');
+                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(version.split('.')), '', getStyle(srV.split('.')), '', getStyle(PIXI.VERSION.split('.')), '', getStyle(platypus.version.split('.')), '');
                     } else {
-                        console.log('--- ' + pixi + ' - ' + engine + ' - "' + title + '" ' + author + ' ---');
+                        console.log('--- "' + title + '" ' + author + ' - Using ' + spring + ', ' + pixi + ', and ' + engine + ' ---');
                     }
                 }
     
