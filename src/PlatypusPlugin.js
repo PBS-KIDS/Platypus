@@ -23,10 +23,65 @@
     "use strict";
     
     var ApplicationPlugin = include('springroll.ApplicationPlugin'),
+        hello = true,
 	    updateFunction = null,
         plugin = new ApplicationPlugin(),
-        resizeFunction = null;
+        resizeFunction = null,
+        sayHello = function (settings, app) {
+            var options = app.options,
+                title   = 'Platypus ' + platypus.version;
+            
+            if (hello) {
+                if (options.author) {
+                    title += ' - "' + app.name + '" by ' + options.author;
+                } else {
+                    title += ' - ' + app.name;
+                }
+                
+                if (platypus.supports.firefox || platypus.supports.chrome) {
+                    console.log('\n%c ' + title + ' \n\n', 'color: #ffffff; background: #8A3324; padding:3px 0;');
+                } else {
+                    console.log(title);
+                }
+            }
 
+            if (settings.debug) {
+                console.log("Game config loaded.", settings);
+            }
+        };
+
+	plugin.setup = function() {
+        var author = '';
+        
+		/**
+		 * Sets credit for the game.
+		 * @property {Boolean} options.author
+		 * @default ''
+		 */
+		Object.defineProperty(this, 'author', {
+			set: function (value) {
+                author = value;
+			},
+            get: function () {
+                return author;
+            }
+		});
+
+		/**
+		 * Hides console hello for the game.
+		 * @property {Boolean} options.hideHello
+		 * @default ''
+		 */
+		Object.defineProperty(this, 'hideHello', {
+			set: function (value) {
+                hello = !value;
+			},
+            get: function () {
+                return !hello;
+            }
+		});
+	};
+    
     // Preload is an optional asynchronous call for doing any loading
     // before the application is init. Make sure that done() is called
     // when this is complete. The display and options are available here.
@@ -44,7 +99,9 @@
                 config.debug = true;
             }
             
-            game = this.platypus = new platypus.Game(config, this.display.stage);
+            sayHello(config, this);
+            
+            game = this.platypus = new platypus.Game(config, this);
             
             updateFunction = function (elapsed) {
                 time.delta = elapsed;

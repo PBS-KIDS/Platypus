@@ -400,7 +400,7 @@
              * Gets the bounding box of the group of entities.
              * 
              * @method getCollisionGroupAABB
-             * @return platformer.AABB
+             * @return platypus.AABB
              */
             getCollisionGroupAABB: function () {
                 return this.getAABB();
@@ -420,7 +420,7 @@
              * Gets the collision entity representing the world's terrain.
              * 
              * @method getWorldTerrain
-             * @return platformer.Entity
+             * @return platypus.Entity
              */
             getWorldTerrain: function () {
                 return this.owner.parent.getWorldTerrain();

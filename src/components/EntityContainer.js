@@ -1,21 +1,12 @@
 /**
-# COMPONENT **EntityContainer**
-This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
-
-## Dependencies
-- **[[Messenger]] - Entity uses `Messenger` in its prototypal chain to enable event handling.
-
-## Messages
-
-### Listens for:
-- **load** - This component waits until all other entity components are loaded before it begins adding children entities. This allows other entity components to listen to entity-added messages and handle them if necessary.
-- **add-entity** - This message will added the given entity to this component's list of entities.
-  - @param message ([[Entity]] object) - Required. This is the entity to be added as a child.
-- **remove-entity** - On receiving this message, the provided entity will be removed from the list of child entities.
-  - @param message ([[Entity]] object) - Required. The entity to remove.
-- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.
-  - @param message (object) - accepts a message object that it will include in the new message to be triggered.
-
+ * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
+ * 
+ * @namespace platypus.components
+ * @class EntityContainer
+ * @extends platypus.Messenger
+ * @uses platypus.Component
+ */
+/**
 ### Local Broadcasts:
 - **child-entity-added** - This message is triggered when a new entity has been added to the list of children entities.
   - @param message ([[Entity]] object) - The entity that was just added.
@@ -53,29 +44,7 @@ This component allows the entity to contain child entities. It will add several 
   - @param value (variant) - This is a message object or other value to pass along to component functions.
   - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
   - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
-
-## JSON Definition:
-    {
-      "type": "EntityContainer",
-      
-      "entities": [{"type": "hero"}, {"type": "tile"}],
-      // Optional. "entities" is an Array listing entity definitions to specify entities that should be added as children when this component loads.
-      
-      "childEvents": ["tokens-flying", "rules-updated"],
-      // Optional. "childEvents" lists messages that are triggered on the entity and should be triggered on the children as well.
-      
-      "aliases": {
-      // Optional. To prevent function name conflicts on the entity, you can provide alternatives here.
-      
-          "addEntity": "addFruit"
-          //This causes entity.addFruit() to be created on the entity rather than the default entity.addEntity().
-      }
-    }
 */
-
-/*
- * Requires: ["../Messenger.js"]
- */
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
@@ -90,53 +59,75 @@ This component allows the entity to contain child entities. It will add several 
     return platypus.createComponentClass({
         id: 'EntityContainer',
         
+        properties: {
+            /**
+             * An Array listing messages that are triggered on the entity and should be triggered on the children as well.
+             * 
+             * @property childEvents
+             * @type Array
+             * @default []
+             */
+            childEvents: []
+        },
+        
         constructor: function (definition) {
-            var self  = this,
-                event = '';
+            var i = 0,
+                events = this.childEvents;
     
-            this.entities = [];
-            
              //saving list of entities for load message
-            this.definedEntities = null;
+            this.entityDefinitions = null;
             if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
-                this.definedEntities = definition.entities.concat(this.owner.entities);
+                this.entityDefinitions = definition.entities.concat(this.owner.entities);
             } else {
-                this.definedEntities = definition.entities || this.owner.entities || null;
+                this.entityDefinitions = definition.entities || this.owner.entities || null;
             }
-            
-            this.owner.entities     = self.entities;
+
+            this.owner.entities = this.entities = [];
             
             this.childEvents = [];
-            if (definition.childEvents) {
-                for (event in definition.childEvents) {
-                    if (definition.childEvents.hasOwnProperty(event)) {
-                        this.addNewPublicEvent(definition.childEvents[event]);
-                    }
-                }
+            for (i = 0; i < events.length; i++) {
+                this.addNewPublicEvent(events[i]);
             }
             this.addNewPrivateEvent('peer-entity-added');
             this.addNewPrivateEvent('peer-entity-removed');
         },
         
         events: {
+            /**
+             * This component waits until all other entity components are loaded before it begins adding children entities. This allows other entity components to listen to entity-added messages and handle them if necessary.
+             * 
+             * @method 'load'
+             */
             "load": function () {
                 // putting this here so all other components will have been loaded and can listen for "entity-added" calls.
-                var i          = 0,
-                    entities   = this.definedEntities;
-                
-                this.definedEntities = null;
+                var i = 0,
+                    entities   = this.entityDefinitions;
                 
                 if (entities) {
                     for (i = 0; i < entities.length; i++) {
                         this.addEntity(entities[i]);
                     }
                 }
+
+                delete this.entityDefinitions;
             },
             
+            /**
+             * This message will added the given entity to this component's list of entities.
+             * 
+             * @method 'add-entity'
+             * @param entity {platypus.Entity} This is the entity to be added as a child.
+             */            
             "add-entity": function (entity) {
                 this.addEntity(entity);
             },
             
+            /**
+             * On receiving this message, the provided entity will be removed from the list of child entities.
+             * 
+             * @method 'remove-entity'
+             * @param entity {platypus.Entity} The entity to remove.
+             */
             "remove-entity": function (entity) {
                 this.removeEntity(entity);
             },
@@ -152,13 +143,18 @@ This component allows the entity to contain child entities. It will add several 
                 
                 this.addNewPrivateEvent(event);
                 
-                // Listen for message on owner
                 for (i = 0; i < this.childEvents.length; i++) {
                     if (this.childEvents[i] === event) {
                         return false;
                     }
                 }
                 this.childEvents.push(event);
+                /**
+                 * Listens for specified messages and on receiving them, re-triggers them on child entities.
+                 * 
+                 * @method '*'
+                 * @param message {Object} Accepts a message object that it will include in the new message to be triggered.
+                 */
                 this.addEventListener(event, childBroadcast(event));
             },
             

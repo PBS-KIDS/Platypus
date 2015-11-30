@@ -148,19 +148,21 @@
                     aliases:  definition.aliases
                 },
                 animationDefinition = {
-                    spriteSheet:   definition.spriteSheet,
                     acceptInput:   definition.acceptInput,
-                    scaleX:        definition.scaleX,
-                    scaleY:        definition.scaleY,
-                    rotate:        definition.rotate,
-                    mirror:        definition.mirror,
+                    aliases:       definition.aliases,
+                    animationMap:  {},
+                    eventBased:    true, // VO triggers events for changing lip-sync frames.
                     flip:          definition.flip,
                     hidden:        definition.hidden,
-                    animationMap:  {},
+                    mask:          definition.mask,
+                    mirror:        definition.mirror,
+                    offsetZ:       definition.offsetZ,
                     pins:          definition.pins,
                     pinTo:         definition.pinTo,
-                    aliases:       definition.aliases,
-                    eventBased:    true, // VO triggers events for changing lip-sync frames.
+                    rotate:        definition.rotate,
+                    scaleX:        definition.scaleX,
+                    scaleY:        definition.scaleY,
+                    spriteSheet:   definition.spriteSheet,
                     stateBased:    definition.stateBased || false
                 };
             

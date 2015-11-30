@@ -49,12 +49,17 @@
         },
         processGraphics = (function () {
             var process = function (gfx, value) {
-                var paren  = value.indexOf('('),
+                var i = 0,
+                    paren  = value.indexOf('('),
                     func   = value.substring(0, paren),
                     values = value.substring(paren + 1, value.indexOf(')'));
 
                 if (values.length) {
-                    gfx[func].apply(gfx, values.split(','));
+                    values = values.split(',');
+                    for (i = 0; i < values.length; i++) {
+                        values[i] = +values[i];
+                    }
+                    gfx[func].apply(gfx, values);
                 } else {
                     gfx[func]();
                 }
@@ -1012,9 +1017,11 @@
                     sprite.interactive = true;
                     
                     mousedown = function (event) {
-                        this.triggerInput(event, 'mousedown');
-                        event.target.mouseTarget = true;
-                        pressed = true;
+                        if (!pressed) {
+                            this.triggerInput(event, 'mousedown');
+                            event.target.mouseTarget = true;
+                            pressed = true;
+                        }
                     }.bind(this);
                     
                     pressmove = function (event) {
@@ -1027,12 +1034,14 @@
                     }.bind(this);
                     
                     pressup   = function (event) {
-                        this.triggerInput(event, 'pressup');
-                        event.target.mouseTarget = false;
-                        pressed = false;
-                        
-                        if (event.target.removeDisplayObject) {
-                            event.target.removeDisplayObject();
+                        if (pressed) {
+                            this.triggerInput(event, 'pressup');
+                            event.target.mouseTarget = false;
+                            pressed = false;
+                            
+                            if (event.target.removeDisplayObject) {
+                                event.target.removeDisplayObject();
+                            }
                         }
                     }.bind(this);
                     

@@ -48,20 +48,24 @@ This component handles the pressed/released state of a button according to input
             }
         },
         events: {
-            "mousedown": function () {
-                if (!this.toggle) {
-                    this.updateState('pressed');
-                }
-            },
-            "pressup": function () {
-                if (this.toggle) {
-                    if (this.state.pressed) {
-                        this.updateState('released');
-                    } else {
+            "mousedown": function (event) {
+                if (!platypus.supports.mobile || (event.event.type === 'touchstart')) {
+                    if (!this.toggle) {
                         this.updateState('pressed');
                     }
-                } else {
-                    this.updateState('released');
+                }
+            },
+            "pressup": function (event) {
+                if (!platypus.supports.mobile || (event.event.type === 'touchend') || (event.event.type === 'touchcancel')) {
+                    if (this.toggle) {
+                        if (this.state.pressed) {
+                            this.updateState('released');
+                        } else {
+                            this.updateState('pressed');
+                        }
+                    } else {
+                        this.updateState('released');
+                    }
                 }
             },
             "handle-logic": function () {

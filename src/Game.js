@@ -160,44 +160,42 @@ platypus.Game = (function () {
             
             callback(obj);
         },
-        game = function (definition, stage, onFinishedLoading) {
+        game = function (definition, applicationInstance, onFinishedLoading) {
             var self = this,
-                load = function (result) {
+                stage = applicationInstance.display.stage,
+                load = function (settings) {
                     var canvas = null;
-                    
-                    definition = result;
-                    console.log("Game config loaded.", definition);
                     
                     platypus.game = self; //Make this instance the only Game instance.
                     self.currentScene = null;
                     self.loaded    = null;
-                    self.settings = definition;
+                    self.settings = settings;
                     
                     if (stage) {
                         self.stage = stage;
                     } else if (Stage) {
                         try {
-                            canvas = document.getElementById(definition.global.canvas);
+                            canvas = document.getElementById(settings.global.canvas);
                         } catch (e) {
-                            console.warn('Stage not provided and canvas ID "' + definition.global.canvas + '" not found in HTML wrapper.');
+                            console.warn('Stage not provided and canvas ID "' + settings.global.canvas + '" not found in HTML wrapper.');
                         }
                         self.stage = new Stage(canvas);
                     } else {
                         console.warn('Platypus requires a CreateJS Stage for rendering.');
                     }
         
-                    self.loadScene(definition.global.initialScene);
+                    self.loadScene(settings.global.initialScene);
         
                     if (onFinishedLoading) {
                         onFinishedLoading(self);
                     }
                     
-                    if (ticker && (definition.global.tickerOn !== false)) {
+                    if (ticker && (settings.global.tickerOn !== false)) {
                         self.tickHandler = function (e) {
                             self.tick(e);
                         };
                         ticker.timingMode = 'raf';
-                        ticker.setFPS(definition.global.fps || 60);
+                        ticker.setFPS(settings.global.fps || 60);
                         ticker.addEventListener("tick", self.tickHandler);
                     }
         
