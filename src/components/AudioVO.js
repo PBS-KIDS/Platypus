@@ -88,10 +88,12 @@
                 } else {
                     soundList = sound;
                 }
-                                
+                this.playingAudio = true;                
                 this.player.play(soundList, function () {
+                    self.playingAudio = false;
                     self.onComplete(true);
                 }, function () {
+                    self.playingAudio = false;
                     self.onComplete(false);
                 });
             };
@@ -134,6 +136,7 @@
             
             this.eventList = [];
     
+            this.playingAudio = false;
             this.player = Application.instance.voPlayer;
     
             if (definition.audioMap) {
@@ -227,7 +230,9 @@
             },
             
             destroy: function () {
-                this.player.stop();
+                if (this.playingAudio) {
+                    this.player.stop();  
+                }
             }
         }
     });

@@ -60,7 +60,7 @@
             /**
              * Whether to pause the game while the camera is focused.
              * 
-             * @property accelerate
+             * @property pause
              * @type boolean
              * @default false
              */
@@ -68,8 +68,8 @@
         },
         
         constructor: function (definition) {
-            this.pauseGame = definition.pause ? {
-                time: definition.time
+            this.pauseGame = (this.pause && this.camera.time) ? {
+                time: this.camera.time
             } : null;
             
             this.camera = {

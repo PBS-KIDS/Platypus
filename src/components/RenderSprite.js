@@ -565,16 +565,13 @@
                 
                 this.isOnCamera = true;
                 this.state = this.owner.state;
-                this.stateChange = false;
+                this.stateChange = true; //Check state against entity's prior state to update animation if necessary on instantiation.
                 this.lastState = -1;
     
                 this.waitingAnimation = false;
                 this.waitingState = 0;
                 this.playWaiting = false;
                 this.animationFinished = false;
-    
-                //Check state against entity's prior state to update animation if necessary on instantiation.
-                this.stateChange = true;
                 
                 if (this.cache) {
                     this.updateSprite(false);
