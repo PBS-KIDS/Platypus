@@ -23,7 +23,6 @@
     "use strict";
     
     var ApplicationPlugin = include('springroll.ApplicationPlugin'),
-        hello = true,
 	    updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
@@ -47,14 +46,18 @@
             return function (settings, app) {
                 var options = app.options,
                     author  = (options.author ? 'by ' + options.author : ''),
+                    title   = app.name || document.title || '',
                     srV     = springroll.version || '(?)',
                     engine  = 'Platypus ' + platypus.version,
                     pixi    = 'Pixi.js ' + PIXI.VERSION,
                     spring  = 'SpringRoll ' + srV,
-                    version = options.version || '(?)',
-                    title   = ((version !== '(?)') ? app.name + ' ' + version : app.name);
+                    version = options.version || '(?)';
                 
-                if (hello) {
+                if (!options.hideHello) {
+                    if (version !== '(?)') {
+                        title += ' ' + version;
+                    }
+                    
                     if (platypus.supports.firefox || platypus.supports.chrome) {
                         console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(version.split('.')), '', getStyle(srV.split('.')), '', getStyle(PIXI.VERSION.split('.')), '', getStyle(platypus.version.split('.')), '');
                     } else {
@@ -72,7 +75,8 @@
 
 	plugin.setup = function() {
         var author = '',
-            authorTag = document.getElementsByName('author');
+            authorTag = document.getElementsByName('author'),
+            options = this.options;
         
         if (authorTag.length) { // Set default author by page meta data if it exists.
             author = authorTag[0].getAttribute('content') || '';
@@ -81,32 +85,18 @@
 		/**
 		 * Sets credit for the game. Defaults to the "author" META tag if present on the document.
          * 
-		 * @property {Boolean} options.author
+		 * @property {String} options.author
 		 * @default ''
 		 */
-		Object.defineProperty(this, 'author', {
-			set: function (value) {
-                author = value;
-			},
-            get: function () {
-                return author;
-            }
-		});
+		options.add('author', author, true);
 
 		/**
 		 * Hides console hello for the game.
 		 * 
          * @property {Boolean} options.hideHello
-		 * @default ''
+		 * @default false
 		 */
-		Object.defineProperty(this, 'hideHello', {
-			set: function (value) {
-                hello = !value;
-			},
-            get: function () {
-                return !hello;
-            }
-		});
+		options.add('hideHello', false, true);
 	};
     
     // Preload is an optional asynchronous call for doing any loading
