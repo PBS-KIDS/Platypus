@@ -64,7 +64,7 @@ Requires: ["../Vector.js"]
         
         methods: {
             setDestination: function (position) {
-                this.teleportDestination.set(position.x, position.y);
+                this.teleportDestination.set(position.x, position.y, this.owner.z);
                 this.destinationSet = true;
             }
         }
