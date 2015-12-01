@@ -1,37 +1,9 @@
 /**
-# COMPONENT **LogicDirectionalMovement**
-This component changes the (x, y) position of an object according to its current speed and heading. It maintains its own heading information independent of other components allowing it to be used simultaneously with other logic components like [[Logic-Pushable]]. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course accordingly.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
-  - @param message.delta - To determine how far to move the entity, the component checks the length of the tick.
-- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement heading.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
-- **stop** - Stops motion in all directions until movement messages are again received.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-
-### Local Broadcasts:
-- **state-changed** - this component will trigger this message when its movement or direction changes. Note that directions are not mutually exclusive: adjacent directions can both be true, establishing that the entity is facing a diagonal direction.
-  - @param message.moving (boolean) - whether the entity is in motion.
-  - @param message.left (boolean)   - whether the entity is facing left.
-  - @param message.right (boolean)  - whether the entity is facing right.
-  - @param message.up (boolean)     - whether the entity is facing up.
-  - @param message.down (boolean)   - whether the entity is facing down.
-
-## JSON Definition:
-    {
-      "type": "LogicDirectionalMovement",
-      
-      "speed": 4.5
-      // Optional. Defines the distance in world units that the entity should be moved per millisecond. Defaults to 0.3.
-    }
-*/
-// Requires: ["Mover"]
+ * This component changes the [Motion](platypus.components.Motion.html) of an entity according to its current speed and heading. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course.
+ * @namespace platypus.components
+ * @class LogicDirectionalMovement
+ * @uses platypus.Component
+ */
 /*global console */
 /*global platypus */
 /*jslint plusplus:true */
@@ -72,12 +44,27 @@ This component changes the (x, y) position of an object according to its current
         properties: {
             axis: 'y',
             heading: 0,
+            
+            /**
+             * This determines which Entity states should cause directional movement to pause.
+             * 
+             * @property pause
+             * @type String|Array
+             * @default null
+             */
+            pause: null,
+            
+            /**
+             * Defines the distance in world units that the entity should be moved per millisecond.
+             * 
+             * @property speed
+             * @type Number
+             * @default 0.3
+             */
             speed: 0.3
         },
         
         constructor: function (definition) {
-            var self = this;
-            
             if (!isNaN(this.speed)) {
                 this.speed = [this.speed, 0, 0];
             }
@@ -87,25 +74,8 @@ This component changes the (x, y) position of an object according to its current
                 this.reorient = doNothing;
             }
             
-            this.owner.state.paused = false;
-            
-            if (definition.pause) {
-                if (typeof definition.pause === 'string') {
-                    this.pausers = [definition.pause];
-                } else {
-                    this.pausers = definition.pause;
-                }
-                this.addEventListener('state-changed', function (state) {
-                    var i = 0,
-                        paused = false;
-                    
-                    if (definition.pause) {
-                        for (i = 0; i < self.pausers.length; i++) {
-                            paused = paused || state[self.pausers[i]];
-                        }
-                        this.owner.state.paused = paused;
-                    }
-                });
+            if (this.pause && (typeof this.pause === 'string')) {
+                this.pause = [this.pause];
             }
 
             this.state = this.owner.state;
@@ -145,7 +115,12 @@ This component changes the (x, y) position of an object according to its current
                 }
             },
             
-            "handle-logic": function (resp) {
+            /**
+             * On receiving this message, the component updates its direction of motion according to its current state.
+             * 
+             * @method 'handle-logic'
+             */
+            "handle-logic": function () {
                 var up        = this.up        || this.upLeft || this.downLeft,
                     upLeft    = this.upLeft    || (this.up   && this.left),
                     left      = this.left      || this.upLeft || this.downLeft,
@@ -154,6 +129,10 @@ This component changes the (x, y) position of an object according to its current
                     downRight = this.downRight || (this.down && this.right),
                     right     = this.right     || this.upRight || this.downRight,
                     upRight   = this.upRight   || (this.up   && this.right);
+                
+                if (this.isPaused()) {
+                    return;
+                }
                 
                 if (up && down) {
                     this.moving = false;
@@ -252,7 +231,15 @@ This component changes the (x, y) position of an object according to its current
                     this.state.left = left;
                 }
             },
-            
+
+//TODO: expand this documentation:          
+/*
+### Listens for:
+- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement heading.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+- **stop** - Stops motion in all directions until movement messages are again received.
+  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+*/
             "go-down": processDirection('down'),
             "go-south": processDirection('down'),
             "go-down-left": processDirection('downLeft'),
@@ -286,6 +273,22 @@ This component changes the (x, y) position of an object according to its current
             "accelerate": function (velocity) {
                 this.initialVector.normalize().multiply(velocity);
                 this.direction.normalize().multiply(velocity);
+            }
+        },
+        methods: {
+            isPaused: function () {
+                var i = 0,
+                    state = this.owner.state;
+                
+                if (this.pause) {
+                    for (i = 0; i < self.pause.length; i++) {
+                        if (state[self.pause[i]]) {
+                            return true;
+                        }
+                    }
+                }
+                
+                return false;
             }
         }
     });
