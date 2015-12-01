@@ -23,63 +23,80 @@
     "use strict";
     
     var ApplicationPlugin = include('springroll.ApplicationPlugin'),
-        hello = true,
 	    updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
-        sayHello = function (settings, app) {
-            var options = app.options,
-                title   = 'Platypus ' + platypus.version;
+        sayHello = (function () {
+            var getPortion = function (num, max) {
+                    return Math.floor(204 * num / max);
+                },
+                getStyle = function (version) {
+                    var max = 0,
+                        style = 'color: #ffffff; padding:3px 0; border-radius: 6px;';
+                    
+                    if (version.length === 3) {
+                        max = Math.max(version[0], version[1], version[2]);
+                        
+                        return style + ' background: rgb(' + getPortion(version[0], max) + ',' + getPortion(version[1], max) + ',' + getPortion(version[2], max) + ');';
+                    } else {
+                        return style + ' background: #8A3324;';
+                    }
+                };
             
-            if (hello) {
-                if (options.author) {
-                    title += ' - "' + app.name + '" by ' + options.author;
-                } else {
-                    title += ' - ' + app.name;
-                }
+            return function (settings, app) {
+                var options = app.options,
+                    author  = (options.author ? 'by ' + options.author : ''),
+                    title   = app.name || document.title || '',
+                    srV     = springroll.version || '(?)',
+                    engine  = 'Platypus ' + platypus.version,
+                    pixi    = 'Pixi.js ' + PIXI.VERSION,
+                    spring  = 'SpringRoll ' + srV,
+                    version = options.version || '(?)';
                 
-                if (platypus.supports.firefox || platypus.supports.chrome) {
-                    console.log('\n%c ' + title + ' \n\n', 'color: #ffffff; background: #8A3324; padding:3px 0;');
-                } else {
-                    console.log(title);
+                if (!options.hideHello) {
+                    if (version !== '(?)') {
+                        title += ' ' + version;
+                    }
+                    
+                    if (platypus.supports.firefox || platypus.supports.chrome) {
+                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(version.split('.')), '', getStyle(srV.split('.')), '', getStyle(PIXI.VERSION.split('.')), '', getStyle(platypus.version.split('.')), '');
+                    } else {
+                        console.log('--- "' + title + '" ' + author + ' - Using ' + spring + ', ' + pixi + ', and ' + engine + ' ---');
+                    }
                 }
-            }
-
-            if (settings.debug) {
-                console.log("Game config loaded.", settings);
-            }
-        };
+    
+                if (settings.debug) {
+                    console.log("Game config loaded.", settings);
+                }
+            };
+        }());
+    
+    PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
 
 	plugin.setup = function() {
-        var author = '';
+        var author = '',
+            authorTag = document.getElementsByName('author'),
+            options = this.options;
+        
+        if (authorTag.length) { // Set default author by page meta data if it exists.
+            author = authorTag[0].getAttribute('content') || '';
+        }
         
 		/**
-		 * Sets credit for the game.
-		 * @property {Boolean} options.author
+		 * Sets credit for the game. Defaults to the "author" META tag if present on the document.
+         * 
+		 * @property {String} options.author
 		 * @default ''
 		 */
-		Object.defineProperty(this, 'author', {
-			set: function (value) {
-                author = value;
-			},
-            get: function () {
-                return author;
-            }
-		});
+		options.add('author', author, true);
 
 		/**
 		 * Hides console hello for the game.
-		 * @property {Boolean} options.hideHello
-		 * @default ''
+		 * 
+         * @property {Boolean} options.hideHello
+		 * @default false
 		 */
-		Object.defineProperty(this, 'hideHello', {
-			set: function (value) {
-                hello = !value;
-			},
-            get: function () {
-                return !hello;
-            }
-		});
+		options.add('hideHello', false, true);
 	};
     
     // Preload is an optional asynchronous call for doing any loading

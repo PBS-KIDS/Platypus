@@ -1,12 +1,11 @@
 {
 	"platypus_source": [
-		"../src/version.js",
+		"../src/platypus.js",
 		"../src/Game.js",
 		"../src/Messenger.js",
 		"../src/Scene.js",
 		"../src/Vector.js",
 		"../src/AABB.js",
-		"../src/browser.js",
 		"../src/CollisionDataContainer.js",
 		"../src/CollisionShape.js",
 		"../src/Entity.js",
