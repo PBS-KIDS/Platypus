@@ -281,8 +281,8 @@
                     state = this.owner.state;
                 
                 if (this.pause) {
-                    for (i = 0; i < self.pause.length; i++) {
-                        if (state[self.pause[i]]) {
+                    for (i = 0; i < this.pause.length; i++) {
+                        if (state[this.pause[i]]) {
                             return true;
                         }
                     }
