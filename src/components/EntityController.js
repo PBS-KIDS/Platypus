@@ -125,12 +125,12 @@
                     var i = 0;
                     
                     for (i = 0; i < state.length; i++) {
-                        state[i].states[key] = false;
+                        state[i].states[key] = isFalse;
                     }
                 };
             } else {
                 return function (value) {
-                    state.states[key] = false;
+                    state.states[key] = isFalse;
                 };
             }
         },
@@ -142,14 +142,14 @@
                     if (!states || this.isValidState(states)) {
                         for (i = 0; i < state.length; i++) {
                             state[i].current = true;
-                            state[i].states[key] = true;
+                            state[i].states[key] = checkState.bind(this, states);
                             if (value && (typeof (value.over) !== 'undefined')) {
                                 state[i].over = value.over;
                             }
                         }
                     } else {
                         for (i = 0; i < state.length; i++) {
-                            state[i].states[key] = false;
+                            state[i].states[key] = isFalse;
                         }
                     }
                 };
@@ -157,15 +157,21 @@
                 return function (value) {
                     if (!states || this.isValidState(states)) {
                         state.current = true;
-                        state.states[key]   = true;
+                        state.states[key] = checkState.bind(this, states);
                         if (value && (typeof (value.over) !== 'undefined')) {
                             state.over = value.over;
                         }
                     } else {
-                        state.states[key] = false;
+                        state.states[key] = isFalse;
                     }
                 };
             }
+        },
+        checkState = function (states) {
+            return !states || this.isValidState(states);
+        },
+        isFalse = function () {
+            return false;
         },
         addController = function (controls, controller, trigger) {
             var actionState = controls[controller]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
@@ -197,7 +203,7 @@
         this.current = false;
         for (key in this.states) {
             if (this.states.hasOwnProperty(key)) {
-                if (this.states[key]) {
+                if (this.states[key]()) {
                     this.current = true;
                     break;
                 }
