@@ -130,13 +130,7 @@
                     right     = this.right     || this.upRight || this.downRight,
                     upRight   = this.upRight   || (this.up   && this.right);
                 
-                if (this.isPaused()) {
-                    return;
-                }
-                
-                if (up && down) {
-                    this.moving = false;
-                } else if (left && right) {
+                if ((left && right) || (up && down)) {
                     this.moving = false;
                 } else if (upLeft) {
                     this.moving = true;
@@ -273,22 +267,6 @@
             "accelerate": function (velocity) {
                 this.initialVector.normalize().multiply(velocity);
                 this.direction.normalize().multiply(velocity);
-            }
-        },
-        methods: {
-            isPaused: function () {
-                var i = 0,
-                    state = this.owner.state;
-                
-                if (this.pause) {
-                    for (i = 0; i < this.pause.length; i++) {
-                        if (state[this.pause[i]]) {
-                            return true;
-                        }
-                    }
-                }
-                
-                return false;
             }
         }
     });

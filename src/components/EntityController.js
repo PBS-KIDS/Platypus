@@ -1,7 +1,11 @@
 /**
-# COMPONENT **EntityController**
-This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
-
+ * This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
+ * 
+ * @namespace platypus.components
+ * @class EntityController
+ * @uses platypus.Component
+ */
+/*
 ## Dependencies:
 - [[Handler-Controller]] (on entity's parent) - This component listens for a controller "tick" message in order to trigger messages regarding the state of its inputs.
 
@@ -35,22 +39,6 @@ This component listens for input messages triggered on the entity and updates th
 ## JSON Definition:
     {
       "type": "EntityController",
-      
-      "paused": true,
-      // Optional. Whether input controls should start deactivated. Default is false.
-      
-      "controlMap":{
-      // Required. Use the controlMap property object to map inputs to messages that should be triggered. At least one control mapping should be included. The following are a few examples:
-      
-        "key:x": "run-left",
-        // This causes an "x" keypress to fire "run-left" on the entity. For a full listing of key names, check out the `HandlerController` component.
-        
-        "button-pressed": "throw-block",
-        // custom input messages can be fired on this entity from other entities, allowing for on-screen input buttons to run through the same controller channel as other inputs.
-        
-        "mouse:left-button"
-        // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `RenderSprite` component).
-      },
       
       "joystick":{
       // Optional. Determines whether this entity should listen for mouse events to trigger directional events. Can be set simply to "true" to accept all joystick defaults
@@ -94,11 +82,30 @@ This component listens for input messages triggered on the entity and updates th
             return a;
         },
         directions = [null, null, null, null, //joystick directions
-                ['east', 'south', 'west', 'north'], null, null, null,
-                ['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
-                ['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
-            ],
+            ['east', 'south', 'west', 'north'], null, null, null,
+            ['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
+            ['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
+        ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
+        createFilter = function (states) {
+            var arr = states.split(','),
+                i = 0,
+                filter = {},
+                str = '';
+            
+            for (i = 0; i < arr.length; i++) {
+                str = arr[i];
+                if (str) {
+                    if (str.substring(0,1) === '!') {
+                        filter[str.substring(1)] = false;
+                    } else {
+                        filter[str] = true;
+                    }
+                }
+            }
+            
+            return filter;
+        },
         State = function (event, trigger) {
             this.event = event;
             this.trigger = trigger;
@@ -210,53 +217,61 @@ This component listens for input messages triggered on the entity and updates th
     return platypus.createComponentClass({
         id: 'EntityController',
         
+        properties: {
+            /**
+             * Use the controlMap property object to map inputs to messages that should be triggered. At least one control mapping should be included. The following are a few examples:
+             * 
+             *       {
+             *           "key:x": "run-left",
+             *           // This causes an "x" keypress to fire "run-left" on the entity. For a full listing of key names, check out the `HandlerController` component.
+             *           
+             *           "button-pressed": "throw-block",
+             *           // custom input messages can be fired on this entity from other entities, allowing for on-screen input buttons to run through the same controller channel as other inputs.
+             *           
+             *           "mouse:left-button"
+             *           // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `RenderSprite` component).
+             *       }
+             * 
+             * @property controlMap
+             * @type Object
+             * @default {}
+             */
+            controlMap: {},
+            
+            /**
+             * The stateMaps property can hold multiple control maps. Use this if certain controls should only be available for certain states.
+             * 
+             * @property stateMaps
+             * @type Object
+             * @default {}
+             * @since 0.6.7
+             */
+            stateMaps: {}
+        },
+        
+        publicProperties: {
+            /**
+             * Whether input controls should be deactivated.
+             * 
+             * @property paused
+             * @type Boolean
+             * @default false
+             */
+            paused: false
+        },
+        
         constructor: function (definition) {
-            var i           = 0,
-                j           = '',
-                k           = 0,
-                key         = '',
-                actionState = null,
-                self        = this,
-                trigger     = function (event, obj) {
-                    if (!self.paused) {
-                        self.owner.trigger(event, obj);
-                    }
-                };
+            var key = '';
             
-            this.paused = definition.paused || false;
+            this.actions  = {};
             
-            if (definition && definition.controlMap) {
-                this.owner.controlMap = definition.controlMap; // this is used and expected by the HandlerController to handle messages not covered by key and mouse inputs.
-                this.actions  = {};
-                for (key in definition.controlMap) {
-                    if (definition.controlMap.hasOwnProperty(key)) {
-                        if (typeof definition.controlMap[key] === 'string') {
-                            actionState = addActionState(this.actions, definition.controlMap[key], trigger);
-                        } else {
-                            actionState = [];
-                            if (Array.isArray(definition.controlMap[key])) {
-                                for (i = 0; i < definition.controlMap[key].length; i++) {
-                                    actionState[i] = addActionState(this.actions, definition.controlMap[key][i], trigger);
-                                }
-                            } else {
-                                k = 0;
-                                for (j in definition.controlMap[key]) {
-                                    if (definition.controlMap[key].hasOwnProperty(j)) {
-                                        if (typeof definition.controlMap[key][j] === 'string') {
-                                            actionState[k] = addActionState(this.actions, definition.controlMap[key][j], trigger, j);
-                                            k += 1;
-                                        } else {
-                                            for (i = 0; i < definition.controlMap[key][j].length; i++) {
-                                                actionState[k] = addActionState(this.actions, definition.controlMap[key][j][i], trigger, j);
-                                                k += 1;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        this.addEventListener(key + ':up', createUpHandler(actionState));
-                        this.addEventListener(key + ':down', createDownHandler(actionState));
+            this.maps = {};
+            this.addMap(this.controlMap);
+            
+            if (this.stateMaps) {
+                for (key in this.stateMaps) {
+                    if (this.stateMaps.hasOwnProperty(key)) {
+                        this.addMap(this.stateMaps[key], createFilter(key));
                     }
                 }
             }
@@ -347,6 +362,74 @@ This component listens for input messages triggered on the entity and updates th
                     }
                     this.owner.trigger(direction, event);
                     this.owner.trigger("joystick-orientation", orientation);
+                }
+            },
+            
+            isValidState: function (states) {
+                var key = '',
+                    ownerState = this.owner.state;
+                
+                for (key in states) {
+                    if (states.hasOwnProperty(key)) {
+                        if (ownerState.hasOwnProperty(key) && (states[key] !== ownerState[key])) {
+                            return false;
+                        }
+                    }
+                }
+                
+                return true;
+            },
+            
+            addMap: function (map, states) {
+                var actionState = null,
+                    controller = null,
+                    i = 0,
+                    j = '',
+                    k = 0,
+                    key = '',
+                    trigger = function (event, obj) {
+                        if (!this.paused) {
+                            if (!states || this.isValidState(states)) {
+                                this.owner.trigger(event, obj);
+                            } else if (!obj.triggered && obj.pressed) { // If the state changes mid-press, this releases the control.
+                                obj.pressed = false;
+                                obj.released = true;
+                                this.owner.trigger(event, obj);
+                            }
+                        }
+                    }.bind(this);
+                
+                for (key in map) {
+                    if (map.hasOwnProperty(key)) {
+                        controller = map[key];
+                        if (typeof controller === 'string') {
+                            actionState = addActionState(this.actions, controller, trigger);
+                        } else {
+                            actionState = [];
+                            if (Array.isArray(controller)) {
+                                for (i = 0; i < controller.length; i++) {
+                                    actionState[i] = addActionState(this.actions, controller[i], trigger);
+                                }
+                            } else {
+                                k = 0;
+                                for (j in controller) {
+                                    if (controller.hasOwnProperty(j)) {
+                                        if (typeof controller[j] === 'string') {
+                                            actionState[k] = addActionState(this.actions, controller[j], trigger, j);
+                                            k += 1;
+                                        } else {
+                                            for (i = 0; i < controller[j].length; i++) {
+                                                actionState[k] = addActionState(this.actions, controller[j][i], trigger, j);
+                                                k += 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        this.addEventListener(key + ':up', createUpHandler(actionState));
+                        this.addEventListener(key + ':down', createDownHandler(actionState));
+                    }
                 }
             }
         }
