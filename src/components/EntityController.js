@@ -106,13 +106,12 @@
             
             return filter;
         },
-        State = function (event, trigger) {
-            this.event = event;
-            this.trigger = trigger;
-            this.filters = false;
-            this.current = false;
-            this.last    = false;
-            this.state   = false;
+        State = function (event) {
+            this.event    = event;
+            this.triggers = [];
+            this.current  = false;
+            this.last     = false;
+            this.states   = {};
             this.stateSummary = {
                 pressed:   false,
                 released:  false,
@@ -120,88 +119,92 @@
                 over:      false
             };
         },
-        createUpHandler = function (state) {
-            var i = 0;
-            
+        createUpHandler = function (state, key) {
             if (Array.isArray(state)) {
                 return function (value) {
+                    var i = 0;
+                    
                     for (i = 0; i < state.length; i++) {
-                        state[i].state = false;
+                        state[i].states[key] = false;
                     }
                 };
             } else {
                 return function (value) {
-                    state.state = false;
+                    state.states[key] = false;
                 };
             }
         },
-        createDownHandler = function (state) {
-            var i = 0;
-            
+        createDownHandler = function (state, states, key) {
             if (Array.isArray(state)) {
                 return function (value) {
-                    for (i = 0; i < state.length; i++) {
-                        state[i].current = true;
-                        state[i].state   = true;
-                        if (value && (typeof (value.over) !== 'undefined')) {
-                            state[i].over = value.over;
+                    var i = 0;
+
+                    if (!states || this.isValidState(states)) {
+                        for (i = 0; i < state.length; i++) {
+                            state[i].current = true;
+                            state[i].states[key] = true;
+                            if (value && (typeof (value.over) !== 'undefined')) {
+                                state[i].over = value.over;
+                            }
+                        }
+                    } else {
+                        for (i = 0; i < state.length; i++) {
+                            state[i].states[key] = false;
                         }
                     }
                 };
             } else {
                 return function (value) {
-                    state.current = true;
-                    state.state   = true;
-                    if (value && (typeof (value.over) !== 'undefined')) {
-                        state.over = value.over;
+                    if (!states || this.isValidState(states)) {
+                        state.current = true;
+                        state.states[key]   = true;
+                        if (value && (typeof (value.over) !== 'undefined')) {
+                            state.over = value.over;
+                        }
+                    } else {
+                        state.states[key] = false;
                     }
                 };
             }
         },
-        addActionState = function (actionList, action, trigger, requiredState) {
-            var actionState = actionList[action]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
+        addController = function (controls, controller, trigger) {
+            var actionState = controls[controller]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
             if (!actionState) {                                // Otherwise create a new state storage object
-                actionState = actionList[action] = new State(action, trigger);
+                actionState = controls[controller] = new State(controller);
             }
-            if (requiredState) {
-                actionState.setFilter(requiredState);
-            }
+            actionState.triggers.push(trigger);
             return actionState;
         },
         stateProto = State.prototype;
     
     stateProto.update = function () {
-        var i = 0;
+        var i = 0,
+            key = '';
         
         if (this.current || this.last) {
             this.stateSummary.pressed   = this.current;
             this.stateSummary.released  = !this.current && this.last;
             this.stateSummary.triggered = this.current && !this.last;
             this.stateSummary.over      = this.over;
-            if (this.filters) {
-                for (i = 0; i < this.filters.length; i++) {
-                    if (this.stateSummary[this.filters[i]]) {
-                        this.trigger(this.event, this.stateSummary);
-                    }
+            for (i = 0; i < this.triggers.length; i++) {
+                if (this.triggers[i](this.event, this.stateSummary)) {
+                    break;
                 }
-            } else {
-                this.trigger(this.event, this.stateSummary);
             }
         }
         
         this.last    = this.current;
-        this.current = this.state;
+        this.current = false;
+        for (key in this.states) {
+            if (this.states.hasOwnProperty(key)) {
+                if (this.states[key]) {
+                    this.current = true;
+                    break;
+                }
+            }
+        }
     };
     
-    stateProto.setFilter = function (filter) {
-        if (!this.filters) {
-            this.filters = [filter];
-        } else {
-            this.filters.push(filter);
-        }
-        return this;
-    };
-
     stateProto.isPressed = function () {
         return this.current;
     };
@@ -239,7 +242,7 @@
             controlMap: {},
             
             /**
-             * The stateMaps property can hold multiple control maps. Use this if certain controls should only be available for certain states.
+             * The stateMaps property can hold multiple control maps. Use this if certain controls should only be available for certain states. The controller finds the first valid state and falls back to the base `controlMap` as default if no matches are found.
              * 
              * @property stateMaps
              * @type Object
@@ -266,7 +269,6 @@
             this.actions  = {};
             
             this.maps = {};
-            this.addMap(this.controlMap);
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
@@ -276,6 +278,8 @@
                 }
             }
             
+            this.addMap(this.controlMap);
+
             if (definition.joystick) {
                 this.joystick = {};
                 this.joystick.directions  = definition.joystick.directions  || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
@@ -380,6 +384,18 @@
                 return true;
             },
             
+            createTrigger: function (entityStates, controllerState) {
+                return function (event, obj) {
+                    if (!this.paused && (!controllerState || obj[controllerState])) {
+                        if (!entityStates || obj.released || this.isValidState(entityStates)) {
+                            this.owner.trigger(event, obj);
+                            return true;
+                        }
+                    }
+                    return false;
+                }.bind(this);
+            },
+            
             addMap: function (map, states) {
                 var actionState = null,
                     controller = null,
@@ -387,39 +403,29 @@
                     j = '',
                     k = 0,
                     key = '',
-                    trigger = function (event, obj) {
-                        if (!this.paused) {
-                            if (!states || this.isValidState(states)) {
-                                this.owner.trigger(event, obj);
-                            } else if (!obj.triggered && obj.pressed) { // If the state changes mid-press, this releases the control.
-                                obj.pressed = false;
-                                obj.released = true;
-                                this.owner.trigger(event, obj);
-                            }
-                        }
-                    }.bind(this);
+                    hash = JSON.stringify(states) || 'default';
                 
                 for (key in map) {
                     if (map.hasOwnProperty(key)) {
                         controller = map[key];
                         if (typeof controller === 'string') {
-                            actionState = addActionState(this.actions, controller, trigger);
+                            actionState = addController(this.actions, controller, this.createTrigger(states));
                         } else {
                             actionState = [];
                             if (Array.isArray(controller)) {
                                 for (i = 0; i < controller.length; i++) {
-                                    actionState[i] = addActionState(this.actions, controller[i], trigger);
+                                    actionState[i] = addController(this.actions, controller[i], this.createTrigger(states));
                                 }
                             } else {
                                 k = 0;
                                 for (j in controller) {
                                     if (controller.hasOwnProperty(j)) {
                                         if (typeof controller[j] === 'string') {
-                                            actionState[k] = addActionState(this.actions, controller[j], trigger, j);
+                                            actionState[k] = addController(this.actions, controller[j], this.createTrigger(states, j));
                                             k += 1;
                                         } else {
                                             for (i = 0; i < controller[j].length; i++) {
-                                                actionState[k] = addActionState(this.actions, controller[j][i], trigger, j);
+                                                actionState[k] = addController(this.actions, controller[j][i], this.createTrigger(states, j));
                                                 k += 1;
                                             }
                                         }
@@ -427,8 +433,8 @@
                                 }
                             }
                         }
-                        this.addEventListener(key + ':up', createUpHandler(actionState));
-                        this.addEventListener(key + ':down', createDownHandler(actionState));
+                        this.addEventListener(key + ':up', createUpHandler(actionState, hash));
+                        this.addEventListener(key + ':down', createDownHandler(actionState, states, hash));
                     }
                 }
             }
