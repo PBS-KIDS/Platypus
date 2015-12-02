@@ -12,7 +12,7 @@
     
     var processDirection = function (direction) {
             return function (state) {
-                this[direction] = (typeof state === 'undefined') || (state && (state.pressed !== false));
+                this[direction] = !state || (state.pressed !== false);
             };
         },
         doNothing = function () {},
@@ -43,17 +43,7 @@
         
         properties: {
             axis: 'y',
-            heading: 0,
-            
-            /**
-             * This determines which Entity states should cause directional movement to pause.
-             * 
-             * @property pause
-             * @type String|Array
-             * @default null
-             */
-            pause: null,
-            
+
             /**
              * Defines the distance in world units that the entity should be moved per millisecond.
              * 
@@ -65,6 +55,8 @@
         },
         
         constructor: function (definition) {
+            var state = this.state = this.owner.state;
+            
             if (!isNaN(this.speed)) {
                 this.speed = [this.speed, 0, 0];
             }
@@ -74,31 +66,26 @@
                 this.reorient = doNothing;
             }
             
-            if (this.pause && (typeof this.pause === 'string')) {
-                this.pause = [this.pause];
-            }
+            this.moving = state.moving = false;
+            this.left   = state.left   = false;
+            this.right  = state.right  = false;
+            this.up     = state.up     = false;
+            this.down   = state.down   = false;
 
-            this.state = this.owner.state;
-            this.state.moving = false;
-            this.state.left = false;
-            this.state.right = false;
-            this.state.up = false;
-            this.state.down = false;
-
-            this.moving = false;
-            this.left = false;
-            this.right = false;
-            this.up = false;
-            this.down = false;
             this.upLeft = false;
             this.upRight = false;
             this.downLeft = false;
             this.downRight = false;
-            this.facing = 'right';
             
-            this.owner.heading = 0;
+            this.heading = 0;
+            this.owner.heading = this.owner.heading || 0;
         },
         events: {
+            /**
+             * This method checks to make sure there is a `Mover` component attached and sets up initial heading.
+             * 
+             * @method 'component-added'
+             */
             "component-added": function (component) {
                 if (component === this) {
                     if (!this.owner.addMover) {
@@ -111,6 +98,12 @@
                         event: "moving",
                         orient: false
                     }).vector;
+                    
+                    if (this.owner.heading !== this.heading) {
+                        this.direction.set(this.initialVector).rotate((this.owner.heading / 180) * Math.PI);
+                        this.heading = this.owner.heading;
+                    }
+                    
                     this.owner.triggerEvent('moving', this.moving);
                 }
             },
@@ -134,67 +127,60 @@
                     this.moving = false;
                 } else if (upLeft) {
                     this.moving = true;
-                    this.facing = 'up-left';
                     this.heading = 225;
                 } else if (upRight) {
                     this.moving = true;
-                    this.facing = 'up-right';
                     this.heading = 315;
                 } else if (downLeft) {
                     this.moving = true;
-                    this.facing = 'down-left';
                     this.heading = 135;
                 } else if (downRight) {
                     this.moving = true;
-                    this.facing = 'down-right';
                     this.heading = 45;
                 } else if (left) {
                     this.moving = true;
-                    this.facing = 'left';
                     this.heading = 180;
                 } else if (right) {
                     this.moving = true;
-                    this.facing = 'right';
                     this.heading = 0;
                 } else if (up) {
                     this.moving = true;
-                    this.facing = 'up';
                     this.heading = 270;
                 } else if (down) {
                     this.moving = true;
-                    this.facing = 'down';
                     this.heading = 90;
                 } else {
                     this.moving = false;
                     
                     // This is to retain the entity's direction even if there is no movement. There's probably a better way to do this since this is a bit of a retrofit. - DDD
-                    switch (this.facing) {
-                    case 'up':
+                    switch (this.heading) {
+                    case 270:
                         up = true;
                         break;
-                    case 'down':
+                    case 90:
                         down = true;
                         break;
-                    case 'left':
+                    case 180:
                         left = true;
                         break;
-                    case 'right':
-                        right = true;
-                        break;
-                    case 'up-left':
+                    case 225:
                         up = true;
                         left = true;
                         break;
-                    case 'up-right':
+                    case 315:
                         up = true;
                         right = true;
                         break;
-                    case 'down-left':
+                    case 135:
                         down = true;
                         left = true;
                         break;
-                    case 'down-right':
+                    case 45:
                         down = true;
+                        right = true;
+                        break;
+                    case 0:
+                    default:
                         right = true;
                         break;
                     }
@@ -226,31 +212,140 @@
                 }
             },
 
-//TODO: expand this documentation:          
-/*
-### Listens for:
-- **[directional message]** - Directional messages include `go-down`, `go-south`, `go-down-left`, `go-southwest`, `go-left`, `go-west`, `go-up-left`, `go-northwest`, `go-up`, `go-north`, `go-up-right`, `go-northeast`, `go-right`, `go-east`, `go-down-right`, and `go-southeast`. On receiving one of these messages, the entity adjusts its movement heading.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
-- **stop** - Stops motion in all directions until movement messages are again received.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
-*/
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-down'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
             "go-down": processDirection('down'),
-            "go-south": processDirection('down'),
-            "go-down-left": processDirection('downLeft'),
-            "go-southwest": processDirection('downLeft'),
-            "go-left": processDirection('left'),
-            "go-west": processDirection('left'),
-            "go-up-left": processDirection('upLeft'),
-            "go-northwest": processDirection('upLeft'),
-            "go-up": processDirection('up'),
-            "go-north": processDirection('up'),
-            "go-up-right": processDirection('upRight'),
-            "go-northeast": processDirection('upRight'),
-            "go-right": processDirection('right'),
-            "go-east": processDirection('right'),
-            "go-down-right": processDirection('downRight'),
-            "go-southeast": processDirection('downRight'),
 
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-south'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-south": processDirection('down'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-down-left'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-down-left": processDirection('downLeft'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-southwest'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-southwest": processDirection('downLeft'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-left'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-left": processDirection('left'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-west'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-west": processDirection('left'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-up-left'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-up-left": processDirection('upLeft'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-northwest'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-northwest": processDirection('upLeft'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-up'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-up": processDirection('up'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-north'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-north": processDirection('up'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-up-right'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-up-right": processDirection('upRight'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-northeast'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-northeast": processDirection('upRight'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-right'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-right": processDirection('right'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-east'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-east": processDirection('right'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-down-right'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-down-right": processDirection('downRight'),
+
+            /**
+             * On receiving this message, this component updates its heading accordingly.
+             * 
+             * @method 'go-southeast'
+             * @param [message.pressed] {Boolean} If `message` is included, the component checks the value of `pressed`: true causes movement in the triggered direction, false turns off movement in that direction. Note that if no message is included, the only way to stop movement in a particular direction is to trigger `stop` on the entity before progressing in a new heading. This allows triggering `up` and `left` in sequence to cause `up-left` movement on the entity.
+             */
+            "go-southeast": processDirection('downRight'),
+            
+            /**
+             * Stops motion in all directions until movement messages are again received.
+             * 
+             * @method 'stop'
+             * @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: a value of false will not stop the entity.
+             */
             "stop": function (state) {
                 if (!state || (state.pressed !== false)) {
                     this.left = false;
@@ -264,6 +359,12 @@
                 }
             },
             
+            /**
+             * Changes the velocity of the Entity when in motion.
+             * 
+             * @method 'accelerate'
+             * @param velocity {Number|platypus.Vector} The magnitude or Vector to multiply the current velocity by.
+             */
             "accelerate": function (velocity) {
                 this.initialVector.normalize().multiply(velocity);
                 this.direction.normalize().multiply(velocity);

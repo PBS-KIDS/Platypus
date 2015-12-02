@@ -30,17 +30,30 @@
             var getPortion = function (num, max) {
                     return Math.floor(204 * num / max);
                 },
-                getStyle = function (version) {
+                getStyle = function (title, version) {
                     var max = 0,
-                        style = 'color: #ffffff; padding:3px 0; border-radius: 6px;';
+                        min = 0,
+                        style = 'color: #ffffff; padding:3px 0; border-radius: 6px;',
+                        r = 0,
+                        g = 0,
+                        b = 0;
                     
-                    if (version.length === 3) {
-                        max = Math.max(version[0], version[1], version[2]);
-                        
-                        return style + ' background: rgb(' + getPortion(version[0], max) + ',' + getPortion(version[1], max) + ',' + getPortion(version[2], max) + ');';
+                    if (version && (version.length === 3)) {
+                        r = version[0];
+                        g = version[1];
+                        b = version[2];
                     } else {
-                        return style + ' background: #8A3324;';
+                        r = title.charCodeAt(0) || 0;
+                        g = title.charCodeAt(1) || 0;
+                        b = title.charCodeAt(2) || 0;
+                        min = Math.min(r, g, b);
+                        r -= min;
+                        g -= min;
+                        b -= min;
                     }
+                    max = Math.max(r, g, b, 1);
+
+                    return style + ' background: rgb(' + getPortion(r, max) + ',' + getPortion(g, max) + ',' + getPortion(b, max) + ');';
                 };
             
             return function (settings, app) {
@@ -59,7 +72,7 @@
                     }
                     
                     if (platypus.supports.firefox || platypus.supports.chrome) {
-                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(version.split('.')), '', getStyle(srV.split('.')), '', getStyle(PIXI.VERSION.split('.')), '', getStyle(platypus.version.split('.')), '');
+                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(title, version.split('.')), '', getStyle(spring, srV.split('.')), '', getStyle(pixi, PIXI.VERSION.split('.')), '', getStyle(engine, platypus.version.split('.')), '');
                     } else {
                         console.log('--- "' + title + '" ' + author + ' - Using ' + spring + ', ' + pixi + ', and ' + engine + ' ---');
                     }
