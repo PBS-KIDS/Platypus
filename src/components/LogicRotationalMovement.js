@@ -52,7 +52,7 @@ This component changes the (x, y) position of an object according to its current
         constructor: function (definition) {
             this.speed = definition.speed || 0.3;
             this.magnitude = 0;
-            this.degree = (definition.degree || 1) * pi / 180;
+            this.degree = definition.degree || 1;
             this.angle = definition.angle || 0;
             
             this.state = this.owner.state;
@@ -96,8 +96,8 @@ This component changes the (x, y) position of an object according to its current
                 if (this.state.turningRight !== this.turningRight) {
                     this.state.turningRight = this.turningRight;
                 }
-                if (this.owner.orientation !== this.angle) {
-                    this.owner.orientation = this.angle;
+                if (this.owner.rotation !== this.angle) {
+                    this.owner.rotation = this.angle;
                 }
             },
             "turn-right": function (state) {
