@@ -10,6 +10,11 @@
     "use strict";
     
     var tempVector = new platypus.Vector(),
+        depWarning = function (ownerType, oldProperty, oldValue, newProperty) {
+            if (platypus.game.settings.debug) {
+                console.warn('"' + ownerType + '" Motion: The "' + oldProperty + '" property has been deprecated. Use "aliases": {"' + oldValue + '": "' + newProperty + '"} instead.');
+            }
+       },
         prepUpdate = function (func) {
             return function (velocity, position, delta, grounded) {
                 if (this.accelerator) {
@@ -25,10 +30,7 @@
             return true;
         },
         createController = function (self, definition) {
-            var active = self.active,
-                enact  = true,
-                ready  = true,
-                getActiveState = isTrue,
+            var getActiveState = isTrue,
                 getInstantState = isTrue,
                 state = self.owner.state,
                 controlState = definition.controlState,
@@ -47,9 +49,11 @@
                  * 
                  * @method '[defined by event property]'
                  * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                 * @deprecated since 0.6.7
                  */
+                depWarning(self.owner.type, "event", definition.event, "switch-motion");
                 self.addEventListener(definition.event, function (control) {
-                    active = (control && (control.pressed !== false));
+                    this.active = (control && (control.pressed !== false));
                 });
             }
 
@@ -61,16 +65,19 @@
                 }
 
                 if (definition.instantEvent || definition.instantBegin || definition.instantEnd) {
-                    enact = false;
+                    self.instant = true;
+                    self.enact   = false;
                     if (definition.instantEvent) {
                         /**
                         * This event triggers an instant motion.
                         *
                         * @method '[defined by instantEvent property]'
                         * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                        * @deprecated since 0.6.7
                         */
+                        depWarning(self.owner.type, "instantEvent", definition.instantEvent, "instant-motion");
                         self.addEventListener(definition.instantEvent, function (control) {
-                            enact = (control && (control.pressed !== false));
+                            this.enact = (control && (control.pressed !== false));
                         });
                     }
                     if (definition.instantBegin) {
@@ -79,9 +86,11 @@
                         *
                         * @method '[defined by instantBegin property]'
                         * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                        * @deprecated since 0.6.7
                         */
+                        depWarning(self.owner.type, "instantBegin", definition.instantBegin, "instant-begin");
                         self.addEventListener(definition.instantBegin, function () {
-                            enact = true;
+                            this.enact = true;
                         });
                     }
                     if (definition.instantEnd) {
@@ -90,9 +99,11 @@
                         *
                         * @method '[defined by instantEnd property]'
                         * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+                        * @deprecated since 0.6.7
                         */
+                        depWarning(self.owner.type, "instantEnd", definition.instantEnd, "instant-end");
                         self.addEventListener(definition.instantEnd, function () {
-                            enact = false;
+                            this.enact = false;
                         });
                     }
                 }
@@ -100,23 +111,20 @@
                 self.update = prepUpdate(function (velocity, position, delta, grounded) {
                     var state = getInstantState();
 
-                    this.active = active && getActiveState();
-
-                    if (ready && enact && this.active && state) {
-                        ready = false; // to insure a single instance until things are reset
+                    if (this.ready && this.enact && this.active && getActiveState() && state) {
+                        this.ready = false; // to insure a single instance until things are reset
                         this.move(1);
                         if (instantSuccess) {
                             this.owner.triggerEvent(instantSuccess);
                         }
-                    } else if (!ready && !(enact && state)) {
-                        ready = true;
+                    } else if (!this.ready && !(this.enact && state)) {
+                        this.ready = true;
                         this.decay();
                     }
                 });
             } else {
                 self.update = prepUpdate(function (velocity, position, delta, grounded) {
-                    this.active = active && getActiveState();
-                    if (this.active) {
+                    if (this.active && getActiveState()) {
                         this.move(delta);
                     }
                 });
@@ -170,6 +178,7 @@
              * @property event
              * @type String
              * @default ""
+             * @deprecated since 0.6.7
              */
             event: "",
             
@@ -188,6 +197,7 @@
              * @property instantEvent
              * @type String
              * @default ""
+             * @deprecated since 0.6.7
              */
             instantEvent: "",
             
@@ -197,6 +207,7 @@
              * @property instantBegin
              * @type String
              * @default ""
+             * @deprecated since 0.6.7
              */
             instantBegin: "",
 
@@ -206,11 +217,22 @@
              * @property instantEnd
              * @type String
              * @default ""
+             * @deprecated since 0.6.7
              */
             instantEnd: "",
 
             /**
-             * If instantEvent or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instantEvent" property is also set on this component, both the event and the state must be true for the motion to be active. If "event" or "controlState" are also defined, they must also be `true` to trigger an instant motion on the entity.
+             * If instant or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instantState" property is also set on this component, both the event and the state must be true for the motion to be active.
+             * 
+             * @property instant
+             * @type Boolean
+             * @default false
+             * @since 0.6.7
+             */
+            instant: false,
+            
+            /**
+             * If instant or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instant" property is also set on this component, both the event and the state must be true for the motion to be active. If "event" or "controlState" are also defined, they must also be `true` to trigger an instant motion on the entity.
              * 
              * @property instantState
              * @type String
@@ -258,6 +280,9 @@
             this.vector = new platypus.Vector(this.vector);
             this.triggered = false;
             
+            this.enact = !this.instant;
+            this.ready = true;
+            
             if (!isNaN(this.instantDecay)) {
                 this.capMagnitude = this.vector.magnitude() * this.instantDecay;
             } else {
@@ -272,6 +297,68 @@
         },
 
         events: {
+            /**
+             * This event controls whether this motion is active or inactive.
+             * 
+             * @method 'toggle-motion'
+             * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+             * @since 0.6.7
+             */
+            "switch-motion": function (control) {
+                this.active = (control && (control.pressed !== false));
+            },
+            
+            /**
+             * This event sets the motion to inactive.
+             * 
+             * @method 'stop-motion'
+             * @since 0.6.7
+             */
+            "stop-motion": function () {
+                this.active = false;
+            },
+            
+            /**
+             * This event sets the motion to active.
+             * 
+             * @method 'start-motion'
+             * @since 0.6.7
+             */
+            "start-motion": function () {
+                this.active = true;
+            },
+            
+            /**
+            * This event triggers an instant motion.
+            *
+            * @method 'instant-motion'
+            * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+            * @since 0.6.7
+            */
+            "instant-motion": function (control) {
+                this.enact = (control && (control.pressed !== false));
+            },
+
+            /**
+            * This event triggers the beginning of an instant motion.
+            *
+            * @method 'instant-begin'
+            * @since 0.6.7
+            */
+            "instant-begin": function () {
+                this.enact = true;
+            },
+
+            /**
+            * This event triggers the end of an instant motion.
+            *
+            * @method 'instant-end'
+            * @since 0.6.7
+            */
+            "instant-end": function () {
+                this.enact = false;
+            },
+            
             "set-vector": function (newVector) {
                 this.vector.set(newVector);
                 if (!isNaN(this.instantDecay)) {

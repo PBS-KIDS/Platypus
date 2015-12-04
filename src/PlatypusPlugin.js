@@ -18,7 +18,7 @@
  * @namespace platypus
  * @class PlatypusPlugin
  */
-/*global console, include, platypus */
+/*global console, include, springroll, platypus, PIXI */
 (function () {
     "use strict";
     
