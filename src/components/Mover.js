@@ -10,7 +10,35 @@
 (function () {
     "use strict";
     
-    var tempVector = new platypus.Vector();
+    var tempVector = new platypus.Vector(),
+    clampNumber = function (v) {
+        if (v.magnitude() > this.maxMagnitude) {
+            v.normalize().multiply(this.maxMagnitude);
+        }
+    },
+    clampObject = function (v) {
+        var max = this.maxMagnitude;
+        
+        if (v.x > 0) {
+            if (v.x > max.right) {
+                v.x = max.right;
+            }
+        } else if (v.x < 0) {
+            if (v.x < -max.left) {
+                v.x = -max.left;
+            }
+        }
+
+        if (v.y > 0) {
+            if (v.y > max.down) {
+                v.y = max.down;
+            }
+        } else if (v.y < 0) {
+            if (v.y < -max.up) {
+                v.y = -max.up;
+            }
+        }
+    };
     
     return platypus.createComponentClass({
         
@@ -82,16 +110,25 @@
             friction: 0.94,
             
             /**
-             * This property determines the maximum amount of velocity this entity can maintain.
+             * This property determines the maximum amount of velocity this entity can maintain. This can be a number or an object describing maximum velocity in a particular direction. For example:
+             *     
+             *     {
+             *         "up": 8,
+             *         "right": 12,
+             *         "down": 0.4,
+             *         "left": 12
+             *     }
              * 
              * @property maxMagnitude
-             * @type number
+             * @type number|Object
              * @default Infinity
              */
             maxMagnitude: Infinity
         },
         
         constructor: function (definition) {
+            var maxMagnitude = this.maxMagnitude;
+            
             platypus.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
             platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
@@ -103,6 +140,41 @@
             this.movers = [];
 
             this.ground = new platypus.Vector(this.ground);
+            
+            Object.defineProperty(this.owner, "maxMagnitude", {
+                get: function () {
+                    return maxMagnitude;
+                },
+                set: function (max) {
+                    if (typeof max === 'number') {
+                        this.clamp = clampNumber;
+                        maxMagnitude = max;
+                    } else {
+                        this.clamp = clampObject;
+                        if (typeof maxMagnitude === 'number') {
+                            maxMagnitude = {
+                                up: maxMagnitude,
+                                right: maxMagnitude,
+                                down: maxMagnitude,
+                                left: maxMagnitude
+                            }
+                        }
+                        if (typeof max.up === 'number') {
+                            maxMagnitude.up = max.up;
+                        }
+                        if (typeof max.right === 'number') {
+                            maxMagnitude.right = max.right;
+                        }
+                        if (typeof max.down === 'number') {
+                            maxMagnitude.down = max.down;
+                        }
+                        if (typeof max.left === 'number') {
+                            maxMagnitude.left = max.left;
+                        }
+                    }
+                }.bind(this)
+            });
+            this.maxMagnitude = maxMagnitude;
         },
 
         events: {
@@ -230,15 +302,14 @@
                 } else {
                     velocity.multiply(this.drag);
                 }*/
-                if (velocity.magnitude() > this.maxMagnitude) {
-                    velocity.normalize().multiply(this.maxMagnitude);
-                }
+                this.clamp(velocity);
                 vect.set(velocity).multiply(delta);
                 position.add(vect);
                 
                 if (this.grounded !== this.owner.state.grounded) {
                     this.owner.state.grounded = this.grounded;
                 }
+                
                 this.grounded = false;
             },
             
@@ -268,16 +339,26 @@
                         }
                     }
                 }
+            },
+            
+            "set-mover": function (mover) {
+                if (mover.maxMagnitude) {
+                    this.maxMagnitude = mover.maxMagnitude;
+                }
             }
         },
         
         methods: {
             destroy: function () {
-                var i = 0;
+                var i = 0,
+                    max = this.maxMagnitude;
                 
                 for (i = this.movers.length - 1; i >= 0; i--) {
                     this.removeMover(this.movers[i]);
                 }
+                
+                delete this.owner.maxMagnitude; // remove property handlers
+                this.owner.maxMagnitude = max;
             }
         },
         
