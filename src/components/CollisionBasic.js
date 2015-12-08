@@ -349,10 +349,22 @@
                 width        = this.width,
                 height       = this.height,
                 radius       = this.radius,
-                marginLeft   = this.margin.left   || this.margin,
-                marginRight  = this.margin.right  || this.margin,
-                marginTop    = this.margin.top    || this.margin,
-                marginBottom = this.margin.bottom || this.margin;
+                marginLeft   = 0,
+                marginRight  = 0,
+                marginTop    = 0,
+                marginBottom = 0;
+
+            if (typeof this.margin === "number") {
+                marginLeft   = this.margin;
+                marginRight  = this.margin;
+                marginTop    = this.margin;
+                marginBottom = this.margin;
+            } else {
+                marginLeft   = this.margin.left || 0;
+                marginRight  = this.margin.right || 0;
+                marginTop    = this.margin.top || 0;
+                marginBottom = this.margin.bottom || 0;
+            }
             
             if (regX === null) {
                 regX = this.regX = width / 2;
@@ -383,8 +395,10 @@
                     }];
                 } else {
                     shapes = [{
-                        regX: (isNaN(regX) ? (width  || 0) / 2 : regX) - (marginRight  - marginLeft) / 2,
-                        regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
+                        //regX: (isNaN(regX) ? (width  || 0) / 2 : regX) - (marginRight  - marginLeft) / 2,
+                        //regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
+                        regX: (isNaN(regX) ? (width  || 0) / 2 : regX) + marginLeft,
+                        regY: (isNaN(regY) ? (height || 0) / 2 : regY) + marginTop,
                         points: definition.points,
                         width:  (width  || 0) + marginLeft + marginRight,
                         height: (height || 0) + marginTop  + marginBottom,
