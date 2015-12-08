@@ -10,7 +10,57 @@
 (function () {
     "use strict";
     
-    var tempVector = new platypus.Vector();
+    var tempVector = new platypus.Vector(),
+    updateMax   = function (delta, interim, goal, time) {
+        if (delta && (interim !== goal)) {
+            if (interim < goal) {
+                console.log("Up   - " + Math.min(interim + delta * time, goal));
+                return Math.min(interim + delta * time, goal);
+            } else {
+                console.log("Down - " + Math.max(interim - delta * time, goal));
+                return Math.max(interim - delta * time, goal);
+            }
+        }
+        
+        return interim;
+    },
+    clampNumber = function (v, d) {
+        var mIn = this.maxMagnitudeInterim = updateMax(this.maxMagnitudeDelta, this.maxMagnitudeInterim, this.maxMagnitude, d);
+        
+        if (v.magnitude() > mIn) {
+            v.normalize().multiply(mIn);
+        }
+    },
+    clampObject = function (v, d) {
+        var max = this.maxMagnitude,
+            mD  = this.maxMagnitudeDelta,
+            mIn = this.maxMagnitudeInterim;
+
+        mIn.up    = updateMax(mD, mIn.up,    max.up,    d);
+        mIn.right = updateMax(mD, mIn.right, max.right, d);
+        mIn.down  = updateMax(mD, mIn.down,  max.down,  d);
+        mIn.left  = updateMax(mD, mIn.left,  max.left,  d);
+        
+        if (v.x > 0) {
+            if (v.x > mIn.right) {
+                v.x = mIn.right;
+            }
+        } else if (v.x < 0) {
+            if (v.x < -mIn.left) {
+                v.x = -mIn.left;
+            }
+        }
+
+        if (v.y > 0) {
+            if (v.y > mIn.down) {
+                v.y = mIn.down;
+            }
+        } else if (v.y < 0) {
+            if (v.y < -mIn.up) {
+                v.y = -mIn.up;
+            }
+        }
+    };
     
     return platypus.createComponentClass({
         
@@ -82,16 +132,35 @@
             friction: 0.94,
             
             /**
-             * This property determines the maximum amount of velocity this entity can maintain.
+             * This property determines the maximum amount of velocity this entity can maintain. This can be a number or an object describing maximum velocity in a particular direction. For example:
+             *     
+             *     {
+             *         "up": 8,
+             *         "right": 12,
+             *         "down": 0.4,
+             *         "left": 12
+             *     }
              * 
              * @property maxMagnitude
-             * @type number
+             * @type number|Object
              * @default Infinity
              */
-            maxMagnitude: Infinity
+            maxMagnitude: Infinity,
+            
+            /**
+             * This property determines the rate of change to new maximum amount of velocities.
+             * 
+             * @property maxMagnitudeDelta
+             * @type number
+             * @default 0
+             */
+            maxMagnitudeDelta: 0
         },
         
         constructor: function (definition) {
+            var maxMagnitude = Infinity,
+                max = this.maxMagnitude;
+            
             platypus.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
             platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
@@ -103,6 +172,68 @@
             this.movers = [];
 
             this.ground = new platypus.Vector(this.ground);
+            
+            Object.defineProperty(this.owner, "maxMagnitude", {
+                get: function () {
+                    return maxMagnitude;
+                },
+                set: function (max) {
+                    if (typeof max === 'number') {
+                        this.clamp = clampNumber;
+                        maxMagnitude = max;
+                        if (!this.maxMagnitudeDelta) {
+                            this.maxMagnitudeInterim = max;
+                        }
+                    } else {
+                        this.clamp = clampObject;
+                        if (typeof maxMagnitude === 'number') {
+                            maxMagnitude = {
+                                up: maxMagnitude,
+                                right: maxMagnitude,
+                                down: maxMagnitude,
+                                left: maxMagnitude
+                            }
+                        }
+                        if (typeof max.up === 'number') {
+                            maxMagnitude.up = max.up;
+                        }
+                        if (typeof max.right === 'number') {
+                            maxMagnitude.right = max.right;
+                        }
+                        if (typeof max.down === 'number') {
+                            maxMagnitude.down = max.down;
+                        }
+                        if (typeof max.left === 'number') {
+                            maxMagnitude.left = max.left;
+                        }
+
+                        if (typeof this.maxMagnitudeInterim === 'number') {
+                            if (this.maxMagnitudeDelta) {
+                                this.maxMagnitudeInterim = {
+                                    up:    this.maxMagnitudeInterim,
+                                    right: this.maxMagnitudeInterim,
+                                    down:  this.maxMagnitudeInterim,
+                                    left:  this.maxMagnitudeInterim
+                                };
+                            } else {
+                                this.maxMagnitudeInterim = {
+                                    up:    maxMagnitude.up,
+                                    right: maxMagnitude.right,
+                                    down:  maxMagnitude.down,
+                                    left:  maxMagnitude.left
+                                };
+                            }
+                        } else if (!this.maxMagnitudeDelta) {
+                            this.maxMagnitudeInterim.up    = maxMagnitude.up;
+                            this.maxMagnitudeInterim.right = maxMagnitude.right;
+                            this.maxMagnitudeInterim.down  = maxMagnitude.down;
+                            this.maxMagnitudeInterim.left  = maxMagnitude.left;
+                        }
+                    }
+                }.bind(this)
+            });
+            this.maxMagnitudeInterim = 0;
+            this.maxMagnitude = max;
         },
 
         events: {
@@ -230,15 +361,14 @@
                 } else {
                     velocity.multiply(this.drag);
                 }*/
-                if (velocity.magnitude() > this.maxMagnitude) {
-                    velocity.normalize().multiply(this.maxMagnitude);
-                }
+                this.clamp(velocity, delta);
                 vect.set(velocity).multiply(delta);
                 position.add(vect);
                 
                 if (this.grounded !== this.owner.state.grounded) {
                     this.owner.state.grounded = this.grounded;
                 }
+                
                 this.grounded = false;
             },
             
@@ -268,16 +398,30 @@
                         }
                     }
                 }
+            },
+            
+            "set-mover": function (mover) {
+                if (typeof mover.maxMagnitudeDelta === 'number') {
+                    this.maxMagnitudeDelta = mover.maxMagnitudeDelta;
+                }
+                
+                if (mover.maxMagnitude) {
+                    this.maxMagnitude = mover.maxMagnitude;
+                }
             }
         },
         
         methods: {
             destroy: function () {
-                var i = 0;
+                var i = 0,
+                    max = this.maxMagnitude;
                 
                 for (i = this.movers.length - 1; i >= 0; i--) {
                     this.removeMover(this.movers[i]);
                 }
+                
+                delete this.owner.maxMagnitude; // remove property handlers
+                this.owner.maxMagnitude = max;
             }
         },
         
