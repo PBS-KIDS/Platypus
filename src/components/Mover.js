@@ -202,6 +202,7 @@
             "handle-logic": function (tick) {
                 var i = 0,
                     delta    = tick.delta,
+                    m        = null,
                     vect     = tempVector,
                     velocity = this.velocity,
                     position = this.position;
@@ -210,16 +211,25 @@
                     return;
                 }
                 
+                velocity.set(0, 0, 0);
                 for (i = 0; i < this.movers.length; i++) {
-                    this.movers[i].update(velocity, position, delta, this.grounded);
+                    m = this.movers[i].update(delta);
+                    if (m) {
+                        if (this.grounded) { // put this in here to match earlier behavior
+                            m.multiply(this.movers[i].friction || this.friction);
+                        } else {
+                            m.multiply(this.movers[i].drag || this.drag);
+                        }
+                        velocity.add(m);
+                    }
                 }
                 
                 // Finally, add aggregated velocity to the position
-                if (this.grounded) {
+/*                if (this.grounded) {
                     velocity.multiply(this.friction);
                 } else {
                     velocity.multiply(this.drag);
-                }
+                }*/
                 if (velocity.magnitude() > this.maxMagnitude) {
                     velocity.normalize().multiply(this.maxMagnitude);
                 }
@@ -240,15 +250,23 @@
              * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
              */
             "hit-solid": function (collisionInfo) {
-                var s = this.velocity.scalarProjection(collisionInfo.direction),
+                var i = 0,
+                    m = null,
+                    s = 0,
                     v = tempVector;
                 
                 if (collisionInfo.direction.dot(this.ground) > 0) {
                     this.grounded = true;
                 }
                 
-                if (v.set(collisionInfo.direction).normalize().multiply(s).dot(this.velocity) > 0) {
-                    this.velocity.subtractVector(v);
+                for (i = 0; i < this.movers.length; i++) {
+                    m = this.movers[i];
+                    if (m.stopOnCollision) {
+                        s = m.velocity.scalarProjection(collisionInfo.direction);
+                        if (v.set(collisionInfo.direction).normalize().multiply(s).dot(m.velocity) > 0) {
+                            m.velocity.subtractVector(v);
+                        }
+                    }
                 }
             }
         },

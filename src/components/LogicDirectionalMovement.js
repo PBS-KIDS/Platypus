@@ -95,7 +95,10 @@
 
                     this.direction = this.owner.addMover({
                         vector: this.speed,
+                        drag: 1,
+                        friction: 1,
                         event: "moving",
+                        stopOnCollision: false,
                         orient: false
                     }).vector;
                     

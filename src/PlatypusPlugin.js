@@ -36,12 +36,17 @@
                         style = 'color: #ffffff; padding:3px 0; border-radius: 6px;',
                         r = 0,
                         g = 0,
-                        b = 0;
+                        b = 0,
+                        v = null;
+                        
+                    if (version) {
+                        v = version.split('.');
+                    }
                     
-                    if (version && (version.length === 3)) {
-                        r = version[0];
-                        g = version[1];
-                        b = version[2];
+                    if (version && (v.length === 3)) {
+                        r = parseInt(v[0], 10);
+                        g = parseInt(v[1], 10);
+                        b = parseInt(v[2], 10);
                     } else {
                         r = title.charCodeAt(0) || 0;
                         g = title.charCodeAt(1) || 0;
@@ -72,7 +77,7 @@
                     }
                     
                     if (platypus.supports.firefox || platypus.supports.chrome) {
-                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(title, version.split('.')), '', getStyle(spring, srV.split('.')), '', getStyle(pixi, PIXI.VERSION.split('.')), '', getStyle(engine, platypus.version.split('.')), '');
+                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(title, version), '', getStyle(spring, srV), '', getStyle(pixi, PIXI.VERSION), '', getStyle(engine, platypus.version), '');
                     } else {
                         console.log('--- "' + title + '" ' + author + ' - Using ' + spring + ', ' + pixi + ', and ' + engine + ' ---');
                     }
