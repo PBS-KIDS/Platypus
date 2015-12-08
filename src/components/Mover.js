@@ -11,31 +11,53 @@
     "use strict";
     
     var tempVector = new platypus.Vector(),
-    clampNumber = function (v) {
-        if (v.magnitude() > this.maxMagnitude) {
-            v.normalize().multiply(this.maxMagnitude);
+    updateMax   = function (delta, interim, goal, time) {
+        if (delta && (interim !== goal)) {
+            if (interim < goal) {
+                console.log("Up   - " + Math.min(interim + delta * time, goal));
+                return Math.min(interim + delta * time, goal);
+            } else {
+                console.log("Down - " + Math.max(interim - delta * time, goal));
+                return Math.max(interim - delta * time, goal);
+            }
+        }
+        
+        return interim;
+    },
+    clampNumber = function (v, d) {
+        var mIn = this.maxMagnitudeInterim = updateMax(this.maxMagnitudeDelta, this.maxMagnitudeInterim, this.maxMagnitude, d);
+        
+        if (v.magnitude() > mIn) {
+            v.normalize().multiply(mIn);
         }
     },
-    clampObject = function (v) {
-        var max = this.maxMagnitude;
+    clampObject = function (v, d) {
+        var max = this.maxMagnitude,
+            mD  = this.maxMagnitudeDelta,
+            mIn = this.maxMagnitudeInterim;
+
+        mIn.up    = updateMax(mD, mIn.up,    max.up,    d);
+        mIn.right = updateMax(mD, mIn.right, max.right, d);
+        mIn.down  = updateMax(mD, mIn.down,  max.down,  d);
+        mIn.left  = updateMax(mD, mIn.left,  max.left,  d);
         
         if (v.x > 0) {
-            if (v.x > max.right) {
-                v.x = max.right;
+            if (v.x > mIn.right) {
+                v.x = mIn.right;
             }
         } else if (v.x < 0) {
-            if (v.x < -max.left) {
-                v.x = -max.left;
+            if (v.x < -mIn.left) {
+                v.x = -mIn.left;
             }
         }
 
         if (v.y > 0) {
-            if (v.y > max.down) {
-                v.y = max.down;
+            if (v.y > mIn.down) {
+                v.y = mIn.down;
             }
         } else if (v.y < 0) {
-            if (v.y < -max.up) {
-                v.y = -max.up;
+            if (v.y < -mIn.up) {
+                v.y = -mIn.up;
             }
         }
     };
@@ -123,11 +145,21 @@
              * @type number|Object
              * @default Infinity
              */
-            maxMagnitude: Infinity
+            maxMagnitude: Infinity,
+            
+            /**
+             * This property determines the rate of change to new maximum amount of velocities.
+             * 
+             * @property maxMagnitudeDelta
+             * @type number
+             * @default 0
+             */
+            maxMagnitudeDelta: 0
         },
         
         constructor: function (definition) {
-            var maxMagnitude = this.maxMagnitude;
+            var maxMagnitude = Infinity,
+                max = this.maxMagnitude;
             
             platypus.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
             platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
@@ -149,6 +181,9 @@
                     if (typeof max === 'number') {
                         this.clamp = clampNumber;
                         maxMagnitude = max;
+                        if (!this.maxMagnitudeDelta) {
+                            this.maxMagnitudeInterim = max;
+                        }
                     } else {
                         this.clamp = clampObject;
                         if (typeof maxMagnitude === 'number') {
@@ -171,10 +206,34 @@
                         if (typeof max.left === 'number') {
                             maxMagnitude.left = max.left;
                         }
+
+                        if (typeof this.maxMagnitudeInterim === 'number') {
+                            if (this.maxMagnitudeDelta) {
+                                this.maxMagnitudeInterim = {
+                                    up:    this.maxMagnitudeInterim,
+                                    right: this.maxMagnitudeInterim,
+                                    down:  this.maxMagnitudeInterim,
+                                    left:  this.maxMagnitudeInterim
+                                };
+                            } else {
+                                this.maxMagnitudeInterim = {
+                                    up:    maxMagnitude.up,
+                                    right: maxMagnitude.right,
+                                    down:  maxMagnitude.down,
+                                    left:  maxMagnitude.left
+                                };
+                            }
+                        } else if (!this.maxMagnitudeDelta) {
+                            this.maxMagnitudeInterim.up    = maxMagnitude.up;
+                            this.maxMagnitudeInterim.right = maxMagnitude.right;
+                            this.maxMagnitudeInterim.down  = maxMagnitude.down;
+                            this.maxMagnitudeInterim.left  = maxMagnitude.left;
+                        }
                     }
                 }.bind(this)
             });
-            this.maxMagnitude = maxMagnitude;
+            this.maxMagnitudeInterim = 0;
+            this.maxMagnitude = max;
         },
 
         events: {
@@ -302,7 +361,7 @@
                 } else {
                     velocity.multiply(this.drag);
                 }*/
-                this.clamp(velocity);
+                this.clamp(velocity, delta);
                 vect.set(velocity).multiply(delta);
                 position.add(vect);
                 
@@ -342,6 +401,10 @@
             },
             
             "set-mover": function (mover) {
+                if (typeof mover.maxMagnitudeDelta === 'number') {
+                    this.maxMagnitudeDelta = mover.maxMagnitudeDelta;
+                }
+                
                 if (mover.maxMagnitude) {
                     this.maxMagnitude = mover.maxMagnitude;
                 }
