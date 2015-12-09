@@ -14,10 +14,10 @@
     updateMax   = function (delta, interim, goal, time) {
         if (delta && (interim !== goal)) {
             if (interim < goal) {
-                console.log("Up   - " + Math.min(interim + delta * time, goal));
+                //console.log("Up   - " + Math.min(interim + delta * time, goal));
                 return Math.min(interim + delta * time, goal);
             } else {
-                console.log("Down - " + Math.max(interim - delta * time, goal));
+                //console.log("Down - " + Math.max(interim - delta * time, goal));
                 return Math.max(interim - delta * time, goal);
             }
         }

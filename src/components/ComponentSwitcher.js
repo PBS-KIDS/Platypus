@@ -54,6 +54,7 @@
                      */
                     owner.parent.triggerEvent('child-entity-updated', owner);
                 }
+                owner.triggerEvent('add-remove-component-complete');
             }, 1);
         };
     };
