@@ -59,12 +59,12 @@ This component is attached to entities that will appear in the game world. It se
             "collision": 0xff00ff,
             "group":     0x00ff00
         },
-        createShape = function (shape, type, width, height, regX, regY, z) {
+        createShape = function (shape, type, left, top, width, height, z) {
             var newShape = null;
 
             switch (shape) {
             case 'rectangle':
-                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawRect(-width  / 2, -height / 2, width, height);
+                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawRect(left, top, width, height);
                 break;
             case 'circle':
                 newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawCircle(0, 0, width);
@@ -167,20 +167,20 @@ This component is attached to entities that will appear in the game world. It se
                         height = this.initialHeight = aabb.height;
                         shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
                         
-                        shape  = createShape('rectangle', 'aabb', width, height, this.owner.x - aabb.x, this.owner.y - aabb.y, z--);
+                        shape  = createShape('rectangle', 'aabb', aabb.left - this.owner.x, aabb.top - this.owner.y, width, height, z--);
                         this.shapes.push(shape);
                         this.parentContainer.addChild(shape);
                         this.addInput(shape);
                         
                         for (i = 0; i < shapes.length; i++) {
-                            shape = createShape(shapes[i].type, 'collision', shapes[i].radius || shapes[i].width, shapes[i].height, -shapes[i].offsetX, -shapes[i].offsetY, z--);
+                            shape = createShape(shapes[i].type, 'collision', shapes[i].offsetX - shapes[i].width / 2, shapes[i].offsetY - shapes[i].height / 2, shapes[i].radius || shapes[i].width, shapes[i].height, z--);
                             this.shapes.push(shape);
                             this.parentContainer.addChild(shape);
                             this.addInput(shape);
                         }
                     }
                 } else {
-                    shape = createShape('rectangle', 'render', width, height, width / 2, height / 2, z--);
+                    shape = createShape('rectangle', 'render', -width / 2, -height / 2, width, height, z--);
                     this.shapes.push(shape);
                     this.parentContainer.addChild(shape);
                     this.addInput(shape);
