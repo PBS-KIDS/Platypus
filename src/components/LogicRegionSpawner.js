@@ -13,7 +13,7 @@ This component spawns new entities within a given area at set intervals.
 
 ## JSON Definition
     {
-      "type": "LogicSpawner",
+      "type": "LogicRegionSpawner",
       // List all additional parameters and their possible values here.
       
       "spawn": "teddy-bear",
