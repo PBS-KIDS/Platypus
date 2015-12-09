@@ -167,6 +167,8 @@
             this.position = this.owner.position;
             this.velocity = this.owner.velocity;
             
+            this.pause = false;
+            
             // Copy movers so we're not re-using mover definitions
             this.moversCopy = this.movers;
             this.movers = [];
@@ -338,7 +340,7 @@
                     velocity = this.velocity,
                     position = this.position;
                 
-                if (this.owner.state.paused) {
+                if (this.owner.state.paused || this.paused) {
                     return;
                 }
                 
@@ -408,6 +410,14 @@
                 if (mover.maxMagnitude) {
                     this.maxMagnitude = mover.maxMagnitude;
                 }
+            },
+            
+            "pause-movement": function () {
+                this.paused = true;
+            },
+            
+            "unpause-movement": function () {
+                this.paused = false;
             }
         },
         
