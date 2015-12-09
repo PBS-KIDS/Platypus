@@ -324,13 +324,13 @@
             },
             
             /**
-             * On each "handle-logic" event, this component moves the entity according to the list of movers on the entity.
+             * On each "handle-movement" event, this component moves the entity according to the list of movers on the entity.
              * 
-             * @method 'handle-logic'
+             * @method 'handle-movement'
              * @param tick {Object}
              * @param tick.delta {number} The amount of time in milliseconds since the last tick.
              */
-            "handle-logic": function (tick) {
+            "handle-movement": function (tick) {
                 var i = 0,
                     delta    = tick.delta,
                     m        = null,

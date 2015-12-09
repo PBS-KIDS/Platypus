@@ -41,8 +41,8 @@ This component will cause the entity to move in a certain direction on colliding
         id: 'LogicImpactLaunch',
         
         properties: {
-            accelerationX: -0.1,
-            accelerationY: -0.6,
+            accelerationX: -0.3,
+            accelerationY: -0.8,
             flipX: true,
             flipY: false
         },
@@ -53,8 +53,6 @@ This component will cause the entity to move in a certain direction on colliding
             this.flipX = this.flipX ? -1 : 1;
             this.flipY = this.flipY ? -1 : 1;
 
-            platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
-            
             this.justJumped = false;
             this.stunned = false;
             
@@ -75,6 +73,7 @@ This component will cause the entity to move in a certain direction on colliding
                         vector: [0, 0, 0],
                         orient: false
                     }).vector;
+                    this.vector = new platypus.Vector();
                 }
             },
 
@@ -87,6 +86,7 @@ This component will cause the entity to move in a certain direction on colliding
                 }
 
                 if (this.justJumped) {
+                    this.direction.set(this.vector);
                     this.justJumped = false;
                     this.stunned = true;
                 }
@@ -104,14 +104,14 @@ This component will cause the entity to move in a certain direction on colliding
                 if (!this.stunned) {
                     this.justJumped = true;
                     if (dx >= 0) {
-                        this.direction.x = this.accelerationX;
+                        this.vector.x = this.accelerationX;
                     } else if (dx < 0) {
-                        this.direction.x = this.accelerationX * this.flipX;
+                        this.vector.x = this.accelerationX * this.flipX;
                     }
                     if (dy >= 0) {
-                        this.direction.y = this.accelerationY;
+                        this.vector.y = this.accelerationY;
                     } else if (dy < 0) {
-                        this.direction.y = this.accelerationY * this.flipY;
+                        this.vector.y = this.accelerationY * this.flipY;
                     }
                 }
             },

@@ -223,15 +223,25 @@
                         if (this.owner.triggerEventOnChildren) {
                             this.owner.triggerEventOnChildren('handle-ai', this.message);
                         }
-                        /**
+
+                        for (j = this.activeEntities.length - 1; j > -1; j--) {
+                            /**
                             * This event is triggered on children entities to run their logic.
                             * 
                             * @event 'handle-logic'
                             * @param tick {Object}
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             */
-                        for (j = this.activeEntities.length - 1; j > -1; j--) {
                             this.activeEntities[j].triggerEvent('handle-logic', this.message);
+
+                            /**
+                            * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
+                            * 
+                            * @event 'handle-movement'
+                            * @param tick {Object}
+                            * @param tick.delta {Number} The time that has passed since the last tick.
+                            */
+                            this.activeEntities[j].triggerEvent('handle-movement', this.message);
                         }
                         
                         /**
