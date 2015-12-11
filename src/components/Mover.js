@@ -349,13 +349,13 @@
                     m = this.movers[i].update(delta);
                     if (m) {
                         if (this.grounded) { // put this in here to match earlier behavior
-                            if (this.movers[i].friction) {
+                            if (this.movers[i].friction !== -1) {
                                 m.multiply(1 - this.movers[i].friction)
                             } else {
                                 m.multiply(1 - this.friction);
                             }
                         } else {
-                            if (this.movers[i].drag) {
+                            if (this.movers[i].drag !== -1) {
                                 m.multiply(1 - this.movers[i].drag);
                             } else {
                                 m.multiply(1 - this.drag);
