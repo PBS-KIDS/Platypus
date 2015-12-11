@@ -18,11 +18,12 @@
  * @namespace platypus
  * @class PlatypusPlugin
  */
-/*global console, include, springroll, platypus, PIXI */
+/*global console, include, platypus, PIXI */
 (function () {
     "use strict";
     
-    var ApplicationPlugin = include('springroll.ApplicationPlugin'),
+    var Application = include('springroll.Application'),
+	    ApplicationPlugin = include('springroll.ApplicationPlugin'),
 	    updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
@@ -65,7 +66,7 @@
                 var options = app.options,
                     author  = (options.author ? 'by ' + options.author : ''),
                     title   = app.name || document.title || '',
-                    srV     = springroll.version || '(?)',
+                    srV     = Application.version || '(?)',
                     engine  = 'Platypus ' + platypus.version,
                     pixi    = 'Pixi.js ' + PIXI.VERSION,
                     spring  = 'SpringRoll ' + srV,
