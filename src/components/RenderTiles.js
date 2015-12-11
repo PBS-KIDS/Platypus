@@ -493,6 +493,11 @@
                             } else if (!sprite.visible && inFrame) {
                                 sprite.visible = true;
                             }
+                            
+                            if (sprite.visible && inFrame) {
+                                sprite.x = camera.viewport.left - laxCam.left + x * this.cacheClipWidth;
+                                sprite.y = camera.viewport.top  - laxCam.top  + y * this.cacheClipHeight;
+                            }
                         }
                     }
                 } else if (this.tileCache) {
