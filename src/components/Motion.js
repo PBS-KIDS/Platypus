@@ -346,8 +346,8 @@
             
             stopOnCollision: true,
             
-            drag: 0,
-            friction: 0
+            drag: -1,
+            friction: -1
         },
         
         constructor: function (definition) {

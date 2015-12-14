@@ -114,22 +114,22 @@
             speed: 0,
             
             /**
-             * This property determines how quickly velocity is dampened when the entity is not in a "grounded" state. This should be a value between 0 (no motion) and 1 (no drag).
+             * This property determines how quickly velocity is dampened when the entity is not in a "grounded" state. This should be a value between 1 (no motion) and 0 (no drag).
              * 
              * @property drag
              * @type number
-             * @default 0.99
+             * @default 0.01
              */
-            drag: 0.99,
+            drag: 0.01,
             
             /**
-             * This property determines how quickly velocity is dampened when the entity is in a "grounded" state. This should be a value between 0 (no motion) and 1 (no friction).
+             * This property determines how quickly velocity is dampened when the entity is in a "grounded" state. This should be a value between 1 (no motion) and 0 (no friction).
              * 
              * @property friction
              * @type number
-             * @default 0.94
+             * @default 0.06
              */
-            friction: 0.94,
+            friction: 0.06,
             
             /**
              * This property determines the maximum amount of velocity this entity can maintain. This can be a number or an object describing maximum velocity in a particular direction. For example:
@@ -349,9 +349,17 @@
                     m = this.movers[i].update(delta);
                     if (m) {
                         if (this.grounded) { // put this in here to match earlier behavior
-                            m.multiply(this.movers[i].friction || this.friction);
+                            if (this.movers[i].friction !== -1) {
+                                m.multiply(1 - this.movers[i].friction)
+                            } else {
+                                m.multiply(1 - this.friction);
+                            }
                         } else {
-                            m.multiply(this.movers[i].drag || this.drag);
+                            if (this.movers[i].drag !== -1) {
+                                m.multiply(1 - this.movers[i].drag);
+                            } else {
+                                m.multiply(1 - this.drag);
+                            }
                         }
                         velocity.add(m);
                     }
