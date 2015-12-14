@@ -57,7 +57,7 @@
         constructor: function (definition) {
             var state = this.state = this.owner.state;
             
-            if (!isNaN(this.speed)) {
+            if (typeof this.speed === 'number') {
                 this.speed = [this.speed, 0, 0];
             }
             this.initialVector = new platypus.Vector(this.speed);
