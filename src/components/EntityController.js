@@ -139,30 +139,20 @@
                 return function (value) {
                     var i = 0;
 
-                    if (!states || this.isValidState(states)) {
-                        for (i = 0; i < state.length; i++) {
-                            state[i].current = true;
-                            state[i].states[key] = checkState.bind(this, states);
-                            if (value && (typeof (value.over) !== 'undefined')) {
-                                state[i].over = value.over;
-                            }
-                        }
-                    } else {
-                        for (i = 0; i < state.length; i++) {
-                            state[i].states[key] = isFalse;
+                    for (i = 0; i < state.length; i++) {
+                        state[i].current = true;
+                        state[i].states[key] = checkState.bind(this, states);
+                        if (value && (typeof (value.over) !== 'undefined')) {
+                            state[i].over = value.over;
                         }
                     }
                 };
             } else {
                 return function (value) {
-                    if (!states || this.isValidState(states)) {
-                        state.current = true;
-                        state.states[key] = checkState.bind(this, states);
-                        if (value && (typeof (value.over) !== 'undefined')) {
-                            state.over = value.over;
-                        }
-                    } else {
-                        state.states[key] = isFalse;
+                    state.current = true;
+                    state.states[key] = checkState.bind(this, states);
+                    if (value && (typeof (value.over) !== 'undefined')) {
+                        state.over = value.over;
                     }
                 };
             }
