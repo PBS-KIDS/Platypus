@@ -53,7 +53,7 @@
                 });
             }
 
-            if (definition.instantEvent || instantState || definition.instantBegin || definition.instantEnd) {
+            if (self.instant || definition.instantEvent || instantState || definition.instantBegin || definition.instantEnd) {
                 if (instantState) {
                     getInstantState = function () {
                         return state[instantState];
@@ -115,8 +115,8 @@
                         }
                     }
 
-                    if (this.activeVelocity && getActiveVelocityState()) {
-                        if (this.ready && this.enact && this.activeAcceleration && getActiveAccelerationState() && state) {
+                    if (this.activeVelocity) {
+                        if (this.ready && this.enact && state && getActiveVelocityState()) {
                             this.ready = false; // to insure a single instance until things are reset
                             this.velocity.set(this.instant);
                             if (instantSuccess) {
@@ -125,12 +125,9 @@
                         } else if (!this.ready && !(this.enact && state)) {
                             this.ready = true;
                             this.decay();
+                        } else if (getActiveVelocityState()) {
+                            return null;
                         }
-                        /*
-                        if (this.velocity.magnitude()) {
-                            console.log('active ' + this.velocity.toString());
-                        }
-                        */
                         return this.velocity;
                     } else {
                         return null;
@@ -373,7 +370,9 @@
             if (this.vector) { // deprecated behavior
                 if (this.accelerator && !this.instant) {
                     this.activeAcceleration = true;
-                    console.warn('"' + this.owner.type + '" Motion: "vector" and "accelerator" are deprecated. Set "acceleration" to "' + this.vector.toString() + '" instead.');
+                    if (platypus.game.settings.debug) {
+                        console.warn('"' + this.owner.type + '" Motion: "vector" and "accelerator" are deprecated. Set "acceleration" to "' + this.vector.toString() + '" instead.');
+                    }
                     Object.defineProperty(this, "vector", {
                         get: function () {
                                 return this.acceleration;
@@ -384,7 +383,9 @@
                     });
                 } else {
                     this.activeAcceleration = false;
-                    console.warn('"' + this.owner.type + '" Motion: "vector" and "accelerator" are deprecated. Set "velocity" to "' + this.vector.toString() + '" instead.');
+                    if (platypus.game.settings.debug) {
+                        console.warn('"' + this.owner.type + '" Motion: "vector" and "accelerator" are deprecated. Set "velocity" to "' + this.vector.toString() + '" instead.');
+                    }
                     Object.defineProperty(this, "vector", {
                         get: function () {
                                 return this.velocity;
@@ -449,7 +450,7 @@
              * @since 0.6.8
              */
             "control-acceleration": function (control) {
-                this.activeVelocity = (control && (control.pressed !== false));
+                this.activeAcceleration = (control && (control.pressed !== false));
             },
             
             /**
@@ -459,7 +460,7 @@
              * @since 0.6.8
              */
             "stop-acceleration": function () {
-                this.activeVelocity = false;
+                this.activeAcceleration = false;
             },
             
             /**
@@ -469,7 +470,7 @@
              * @since 0.6.8
              */
             "start-acceleration": function () {
-                this.activeVelocity = true;
+                this.activeAcceleration = true;
             },
             
             /**
@@ -508,7 +509,7 @@
             *
             * @method 'set-vector'
             * @since 0.6.7
-            * @deprecated since 0.6.8 - Use "set-motion" instead with an accleration or velocity property.
+            * @deprecated since 0.6.8 - Use "set-motion" instead with an acceleration or velocity property.
             */
             "set-vector": function (newVector) {
                 this.vector.set(newVector);
@@ -516,6 +517,14 @@
                     this.capMagnitude = this.vector.magnitude() * this.instantDecay;
                 } else {
                     this.capMagnitude = -1;
+                }
+                if (platypus.game.settings.debug && !this.setVectorWarning) {
+                    this.setVectorWarning = true;
+                    if (this.accelerator) {
+                        console.warn('"' + this.owner.type + '" Motion: The "set-vector" message is deprecated. Trigger "set-motion" with a {"acceleration": ' + JSON.stringify(newVector) + '} message instead.');
+                    } else {
+                        console.warn('"' + this.owner.type + '" Motion: The "set-vector" message is deprecated. Trigger "set-motion" with a {"velocity": ' + JSON.stringify(newVector) + '} message instead.');
+                    }
                 }
             },
             
