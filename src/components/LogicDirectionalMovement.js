@@ -94,13 +94,15 @@
                     }
 
                     this.direction = this.owner.addMover({
-                        vector: this.speed,
+                        velocity: this.speed,
                         drag: 0,
                         friction: 0,
-                        event: "moving",
                         stopOnCollision: false,
-                        orient: false
-                    }).vector;
+                        orient: false,
+                        aliases: {
+                            "moving": "control-velocity"
+                        }
+                    }).velocity;
                     
                     if (this.owner.heading !== this.heading) {
                         this.direction.set(this.initialVector).rotate((this.owner.heading / 180) * Math.PI);

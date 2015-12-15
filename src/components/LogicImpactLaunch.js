@@ -70,9 +70,9 @@ This component will cause the entity to move in a certain direction on colliding
                     }
 
                     this.direction = this.owner.addMover({
-                        vector: [0, 0, 0],
+                        velocity: [0, 0, 0],
                         orient: false
-                    }).vector;
+                    }).velocity;
                     this.vector = new platypus.Vector();
                 }
             },

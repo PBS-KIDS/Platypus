@@ -290,9 +290,9 @@
                         this.speed = [this.speed, 0, 0];
                     }
                     this.speed = this.addMover({
-                        vector: this.speed,
+                        velocity: this.speed,
                         controlState: "moving"
-                    }).vector;
+                    }).velocity;
                 }
 
                 // Set up gravity property if supplied.
@@ -301,11 +301,12 @@
                         this.gravity = [0, this.gravity, 0];
                     }
                     this.gravity = this.addMover({
-                        vector: this.gravity,
+                        acceleration: this.gravity,
                         orient: false,
-                        accelerator: true,
-                        event: "gravitate"
-                    }).vector;
+                        aliases: {
+                            "gravitate": "control-acceleration"
+                        }
+                    }).acceleration;
                 }
                 
                 // Set up jump property if supplied.
@@ -314,14 +315,16 @@
                         this.jump = [0, this.jump, 0];
                     }
                     this.jump = this.addMover({
-                        vector: this.jump,
-                        accelerator: true,
+                        velocity: this.jump,
+                        instant: true,
                         controlState: "grounded",
                         state: "jumping",
-                        instantEvent: "jump",
                         instantSuccess: "just-jumped",
-                        instantDecay: 0.2
-                    }).vector;
+                        instantDecay: 0.2,
+                        aliases: {
+                            "jump": "instant-motion"
+                        }
+                    }).instant;
                 }
             },
             
