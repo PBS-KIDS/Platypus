@@ -105,7 +105,8 @@
                 }
 
                 self.update = function (delta) {
-                    var state = getInstantState();
+                    var state  = getInstantState(),
+                        vState = getActiveVelocityState();
                     
                     if (this.vector) {
                         if (this.accelerator) {
@@ -114,9 +115,13 @@
                             this.activeVelocity = this.active;
                         }
                     }
-
+                    
                     if (this.activeVelocity) {
-                        if (this.ready && this.enact && state && getActiveVelocityState()) {
+                        if (this.enact && !vState) { // Turn off ready if the state doesn't allow it.
+                            this.ready = false;
+                        }
+
+                        if (this.ready && this.enact && state) {
                             this.ready = false; // to insure a single instance until things are reset
                             this.velocity.set(this.instant);
                             if (instantSuccess) {
@@ -125,7 +130,7 @@
                         } else if (!this.ready && !(this.enact && state)) {
                             this.ready = true;
                             this.decay();
-                        } else if (getActiveVelocityState()) {
+                        } else if (vState) {
                             return null;
                         }
                         return this.velocity;
@@ -477,11 +482,11 @@
             * This event triggers an instant motion.
             *
             * @method 'instant-motion'
-            * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
+            * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{triggered: false}`, the motion becomes inactive.
             * @since 0.6.7
             */
             "instant-motion": function (control) {
-                this.enact = (control && (control.pressed !== false));
+                this.enact = (control && (control.triggered !== false));
             },
 
             /**
