@@ -7,10 +7,12 @@
  * @class Camera
  * @uses platypus.Component
 */
-/*global console, createjs, PIXI, platypus, springroll */
+/*global console, createjs, PIXI, platypus, include */
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Application = include("springroll.Application");
     
     return platypus.createComponentClass({
         id: 'Camera',
@@ -215,7 +217,7 @@
             if (this.owner.container) {
                 this.parentContainer = this.owner.container;
             } else if (this.owner.stage) {
-                this.canvas = this.canvas || springroll.Application.instance.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
+                this.canvas = this.canvas || Application.instance.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
                 this.parentContainer = this.owner.stage;
                 this.owner.width  = this.canvas.width;
                 this.owner.height = this.canvas.height;
@@ -398,7 +400,7 @@
                 }
                 
                 if (this.lastFollow.begin) {
-                    if (this.lastFollow.begin < new Date().getTime()) {
+                    if (this.lastFollow.begin < Date.now()) {
                         this.follow(this.lastFollow);
                     }
                 }
@@ -522,7 +524,7 @@
                         this.lastFollow.offsetX = this.offsetX;
                         this.lastFollow.offsetY = this.offsetY;
                     }
-                    this.lastFollow.begin  = new Date().getTime() + def.time;
+                    this.lastFollow.begin  = Date.now() + def.time;
                 } else {
                     if (this.lastFollow.begin) {
                         this.lastFollow.begin = 0;

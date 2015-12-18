@@ -93,7 +93,7 @@ platypus.Scene = (function () {
             }
             messages.length = 0;
 
-            this.time = new Date().getTime();
+            this.time = Date.now();
             this.timeElapsed = {
                 name: '',
                 time: 0
@@ -118,22 +118,8 @@ platypus.Scene = (function () {
                 value: event
             });
         } else {
-            if (eventId === 'tick') {
-                time = new Date().getTime();
-                this.timeElapsed.name = 'Non-Engine';
-                this.timeElapsed.time = time - this.time;
-                this.trigger('time-elapsed', this.timeElapsed);
-                this.time = time;
-            }
             for (i = 0; i < this.layers.length; i++) {
                 this.layers[i].trigger(eventId, event);
-            }
-            if (eventId === 'tick') {
-                time = new Date().getTime();
-                this.timeElapsed.name = 'Engine Total';
-                this.timeElapsed.time = time - this.time;
-                this.trigger('time-elapsed', this.timeElapsed);
-                this.time = time;
             }
         }
     };
