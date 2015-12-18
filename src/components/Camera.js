@@ -159,7 +159,8 @@
                 viewport: new platypus.AABB(),
                 scaleX: 0,
                 scaleY: 0,
-                orientation: 0
+                orientation: 0,
+                stationary: false
             };
     
             //Whether the map has finished loading.
@@ -278,6 +279,21 @@
             },
 
             /**
+             * Triggers "camera-update" on newly changed entities.
+             * 
+             * @method 'child-entity-updated'
+             * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+             * @since 0.6.8
+             **/
+            "child-entity-updated": function (entity) {
+                this.viewportUpdate = true;
+                
+                if (this.worldIsLoaded) {
+                    entity.triggerEvent('camera-update', this.message);
+                }
+            },
+
+            /**
              * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [TiledLoader](platypus.components.TiledLoader.html) component.
              * 
              * @method 'world-loaded'
@@ -336,6 +352,7 @@
                 if (this.viewportUpdate) {
                     this.viewportUpdate = false;
                     this.stationary = false;
+                    msg.stationary = false;
                     
                     viewport.set(this.worldCamera.viewport);
 
@@ -376,27 +393,32 @@
                      * 
                      * @event 'camera-update'
                      * @param message {Object}
-                     * @param message.orientation {number} Number describing the orientation of the camera.
-                     * @param message.scaleX {number} Number of window pixels that comprise a single world coordinate on the x-axis.
-                     * @param message.scaleY {number} Number of window pixels that comprise a single world coordinate on the y-axis.
+                     * @param message.orientation {Number} Number describing the orientation of the camera.
+                     * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
+                     * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
                      * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
+                     * @param message.stationary {Boolean} Whether the camera is moving.
                      **/
                     this.owner.trigger('camera-update', msg);
-
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('camera-update', msg);
                     }
-                    
                 } else if (!this.stationary) {
+                    this.stationary = true;
+                    msg.stationary = true;
+
+                    this.owner.trigger('camera-update', msg);
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('camera-update', msg);
+                    }
                     
                     /**
                     * This component triggers "camera-stationary" on the entity when the camera stops moving.
                     *
                     * @event 'camera-stationary'
+                    * @deprecated since 0.6.8 - Listen for "camera-update" instead, with a `stationary` property of `true`.
                     **/
                     this.owner.trigger('camera-stationary', msg);
-                    this.stationary = true;
-                    
                 }
                 
                 if (this.lastFollow.begin) {

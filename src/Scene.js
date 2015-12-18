@@ -109,8 +109,7 @@ platypus.Scene = (function () {
  * @param {*} event This is a message object or other value to pass along to component functions.
  **/
     proto.trigger = function (eventId, event) {
-        var i    = 0,
-            time = 0;
+        var i = 0;
         
         if (this.storedMessages) {
             this.storedMessages.push({
