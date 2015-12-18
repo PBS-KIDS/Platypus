@@ -10,54 +10,9 @@
 (function () {
     "use strict";
 
-    var addRemoveComponents = function (definition, owner) {
-        return function () {
-            //Perform this swap outside of the entity's message loop to prevent endless loop errors due to messages not being able to be unbound.
-            //TODO: should probably create a "safe" tick message to handle this sort of entity restructuring operation within the game loop.
-            setTimeout(function () {
-                var i = 0, j = 0;
-                
-                if (definition.remove) {
-                    if (typeof definition.remove === 'string') {
-                        for (i = owner.components.length - 1; i > -1; i--) {
-                            if (owner.components[i].type === definition.remove) {
-                                owner.removeComponent(owner.components[i]);
-                            }
-                        }
-                    } else {
-                        for (i = 0; i < definition.remove.length; i++) {
-                            for (j = owner.components.length - 1; j > -1; j--) {
-                                if (owner.components[j].type === definition.remove[i]) {
-                                    owner.removeComponent(owner.components[j]);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (definition.add) {
-                    if (!Array.isArray(definition.add)) {
-                        owner.addComponent(new platypus.components[definition.add.type](owner, definition.add));
-                    } else {
-                        for (i = 0; i < definition.add.length; i++) {
-                            owner.addComponent(new platypus.components[definition.add[i].type](owner, definition.add[i]));
-                        }
-                    }
-                }
-                
-                if (owner.parent) {
-                    /**
-                     * This message is triggered on the parent when the entity's components change.
-                     * 
-                     * @event 'child-entity-updated'
-                     * @param entity {platypus.Entity} This is the entity itself.
-                     */
-                    owner.parent.triggerEvent('child-entity-updated', owner);
-                }
-                owner.triggerEvent('add-remove-component-complete');
-            }, 1);
+    var addSwitch = function (event) {
+            this.switches.push(event);
         };
-    };
     
     return platypus.createComponentClass({
         id: 'ComponentSwitcher',
@@ -99,17 +54,92 @@
         constructor: function (definition) {
             var event = '';
             
+            this.switches = []; // The list of switches to make.
+            
             if (this.componentMap) {
                 for (event in this.componentMap) {
                     if (this.componentMap.hasOwnProperty(event)) {
                         /**
                          * Message(s) listed by `componentMap` will add or remove components.
                          * 
-                         * @event *
+                         * @method '*'
                          */
-                        this.addEventListener(event, addRemoveComponents(this.componentMap[event], this.owner));
+                        this.addEventListener(event, addSwitch.bind(this, event));
                     }
                 }
+            }
+        },
+        
+        events: {
+            /**
+             * This component handles component-switching on this call so that it doesn't interfere with the "handle-logic" loop.
+             * 
+             * @method 'prepare-logic'
+             */
+            "prepare-logic": function () {
+                var i = 0;
+                
+                if (this.switches.length) {
+                    for (i = 0; i < this.switches.length; i++) {
+                        this.switchComponents(this.componentMap[this.switches[i]]);
+                    }
+                    this.switches.length = 0;
+                }
+            }
+        },
+        
+        methods: {
+            switchComponents: function (definition) {
+                var i = 0,
+                    j = 0,
+                    owner = this.owner,
+                    components = owner.components,
+                    remove = definition.remove,
+                    add = definition.add;
+                    
+                if (remove) {
+                    if (!Array.isArray(remove)) {
+                        for (i = components.length - 1; i > -1; i--) {
+                            if (components[i].type === remove) {
+                                owner.removeComponent(components[i]);
+                            }
+                        }
+                    } else {
+                        for (i = 0; i < remove.length; i++) {
+                            for (j = components.length - 1; j > -1; j--) {
+                                if (components[j].type === remove[i]) {
+                                    owner.removeComponent(components[j]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (add) {
+                    if (!Array.isArray(add)) {
+                        owner.addComponent(new platypus.components[add.type](owner, add));
+                    } else {
+                        for (i = 0; i < add.length; i++) {
+                            owner.addComponent(new platypus.components[add[i].type](owner, add[i]));
+                        }
+                    }
+                }
+                
+                if (owner.parent) {
+                    /**
+                    * This message is triggered on the parent when the entity's components change.
+                    * 
+                    * @event 'child-entity-updated'
+                    * @param entity {platypus.Entity} This is the entity itself.
+                    */
+                    owner.parent.triggerEvent('child-entity-updated', owner);
+                }
+                /**
+                * This message is triggered on the entity itself when its components change.
+                * 
+                * @event 'add-remove-component-complete'
+                */
+                owner.triggerEvent('add-remove-component-complete');
             }
         }
     });

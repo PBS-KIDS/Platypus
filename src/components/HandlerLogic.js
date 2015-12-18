@@ -226,6 +226,15 @@
 
                         for (j = this.activeEntities.length - 1; j > -1; j--) {
                             /**
+                            * This event is triggered on children entities to run anything that should occur before "handle-logic". For example, removing or adding components should happen here and not in "handle-logic".
+                            * 
+                            * @event 'prepare-logic'
+                            * @param tick {Object}
+                            * @param tick.delta {Number} The time that has passed since the last tick.
+                            */
+                            this.activeEntities[j].triggerEvent('prepare-logic', this.message);
+
+                            /**
                             * This event is triggered on children entities to run their logic.
                             * 
                             * @event 'handle-logic'
