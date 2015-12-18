@@ -69,10 +69,10 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             "handle-logic": function (resp) {
                 if (this.racing) {
                     if (!this.blocked && this.right && this.state.right) {
-                        this.owner.x += this.speed;
+                        this.owner.x += this.speed * resp.delta;
                         this.owner.trigger('racing');
                     } else if (!this.blocked && this.left && this.state.left) {
-                        this.owner.x -= this.speed;
+                        this.owner.x -= this.speed * resp.delta;
                         this.owner.trigger('racing');
                     } else {
                         this.racing = false;
