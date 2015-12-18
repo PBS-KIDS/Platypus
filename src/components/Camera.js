@@ -7,10 +7,12 @@
  * @class Camera
  * @uses platypus.Component
 */
-/*global console, createjs, PIXI, platypus, springroll */
+/*global console, createjs, PIXI, platypus, include */
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Application = include("springroll.Application");
     
     return platypus.createComponentClass({
         id: 'Camera',
@@ -157,7 +159,8 @@
                 viewport: new platypus.AABB(),
                 scaleX: 0,
                 scaleY: 0,
-                orientation: 0
+                orientation: 0,
+                stationary: false
             };
     
             //Whether the map has finished loading.
@@ -215,7 +218,7 @@
             if (this.owner.container) {
                 this.parentContainer = this.owner.container;
             } else if (this.owner.stage) {
-                this.canvas = this.canvas || springroll.Application.instance.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
+                this.canvas = this.canvas || Application.instance.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
                 this.parentContainer = this.owner.stage;
                 this.owner.width  = this.canvas.width;
                 this.owner.height = this.canvas.height;
@@ -272,6 +275,21 @@
                         worldHeight: this.worldHeight,
                         viewport: this.message.viewport
                     });
+                }
+            },
+
+            /**
+             * Triggers "camera-update" on newly changed entities.
+             * 
+             * @method 'child-entity-updated'
+             * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+             * @since 0.6.8
+             **/
+            "child-entity-updated": function (entity) {
+                this.viewportUpdate = true;
+                
+                if (this.worldIsLoaded) {
+                    entity.triggerEvent('camera-update', this.message);
                 }
             },
 
@@ -334,6 +352,7 @@
                 if (this.viewportUpdate) {
                     this.viewportUpdate = false;
                     this.stationary = false;
+                    msg.stationary = false;
                     
                     viewport.set(this.worldCamera.viewport);
 
@@ -374,31 +393,36 @@
                      * 
                      * @event 'camera-update'
                      * @param message {Object}
-                     * @param message.orientation {number} Number describing the orientation of the camera.
-                     * @param message.scaleX {number} Number of window pixels that comprise a single world coordinate on the x-axis.
-                     * @param message.scaleY {number} Number of window pixels that comprise a single world coordinate on the y-axis.
+                     * @param message.orientation {Number} Number describing the orientation of the camera.
+                     * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
+                     * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
                      * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
+                     * @param message.stationary {Boolean} Whether the camera is moving.
                      **/
                     this.owner.trigger('camera-update', msg);
-
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('camera-update', msg);
                     }
-                    
                 } else if (!this.stationary) {
+                    this.stationary = true;
+                    msg.stationary = true;
+
+                    this.owner.trigger('camera-update', msg);
+                    if (this.owner.triggerEventOnChildren) {
+                        this.owner.triggerEventOnChildren('camera-update', msg);
+                    }
                     
                     /**
                     * This component triggers "camera-stationary" on the entity when the camera stops moving.
                     *
                     * @event 'camera-stationary'
+                    * @deprecated since 0.6.8 - Listen for "camera-update" instead, with a `stationary` property of `true`.
                     **/
                     this.owner.trigger('camera-stationary', msg);
-                    this.stationary = true;
-                    
                 }
                 
                 if (this.lastFollow.begin) {
-                    if (this.lastFollow.begin < new Date().getTime()) {
+                    if (this.lastFollow.begin < Date.now()) {
                         this.follow(this.lastFollow);
                     }
                 }
@@ -522,7 +546,7 @@
                         this.lastFollow.offsetX = this.offsetX;
                         this.lastFollow.offsetY = this.offsetY;
                     }
-                    this.lastFollow.begin  = new Date().getTime() + def.time;
+                    this.lastFollow.begin  = Date.now() + def.time;
                 } else {
                     if (this.lastFollow.begin) {
                         this.lastFollow.begin = 0;

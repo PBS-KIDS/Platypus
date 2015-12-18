@@ -93,7 +93,7 @@ platypus.Scene = (function () {
             }
             messages.length = 0;
 
-            this.time = new Date().getTime();
+            this.time = Date.now();
             this.timeElapsed = {
                 name: '',
                 time: 0
@@ -109,8 +109,7 @@ platypus.Scene = (function () {
  * @param {*} event This is a message object or other value to pass along to component functions.
  **/
     proto.trigger = function (eventId, event) {
-        var i    = 0,
-            time = 0;
+        var i = 0;
         
         if (this.storedMessages) {
             this.storedMessages.push({
@@ -118,22 +117,8 @@ platypus.Scene = (function () {
                 value: event
             });
         } else {
-            if (eventId === 'tick') {
-                time = new Date().getTime();
-                this.timeElapsed.name = 'Non-Engine';
-                this.timeElapsed.time = time - this.time;
-                this.trigger('time-elapsed', this.timeElapsed);
-                this.time = time;
-            }
             for (i = 0; i < this.layers.length; i++) {
                 this.layers[i].trigger(eventId, event);
-            }
-            if (eventId === 'tick') {
-                time = new Date().getTime();
-                this.timeElapsed.name = 'Engine Total';
-                this.timeElapsed.time = time - this.time;
-                this.trigger('time-elapsed', this.timeElapsed);
-                this.time = time;
             }
         }
     };

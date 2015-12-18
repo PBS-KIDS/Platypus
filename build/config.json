@@ -6,6 +6,7 @@
 		"../src/Scene.js",
 		"../src/Vector.js",
 		"../src/AABB.js",
+		"../src/ActionState.js",
 		"../src/CollisionDataContainer.js",
 		"../src/CollisionShape.js",
 		"../src/Entity.js",

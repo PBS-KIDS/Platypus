@@ -54,12 +54,14 @@
       }
     }
 */
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    var distance = function (origin, destination) {
+    var ActionState = include('platypus.ActionState'),
+        tempArr = [],
+        distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
 
@@ -106,112 +108,16 @@
             
             return filter;
         },
-        State = function (event) {
-            this.event    = event;
-            this.triggers = [];
-            this.current  = false;
-            this.last     = false;
-            this.states   = {};
-            this.stateSummary = {
-                pressed:   false,
-                released:  false,
-                triggered: false,
-                over:      false
-            };
-        },
-        createUpHandler = function (state, key) {
-            if (Array.isArray(state)) {
-                return function (value) {
-                    var i = 0;
-                    
-                    for (i = 0; i < state.length; i++) {
-                        state[i].states[key] = isFalse;
-                    }
-                };
-            } else {
-                return function (value) {
-                    state.states[key] = isFalse;
-                };
+        trigger = function (event, message) {
+            if (!this.paused) {
+                this.owner.trigger(event, message);
             }
         },
-        createDownHandler = function (state, states, key) {
-            if (Array.isArray(state)) {
-                return function (value) {
-                    var i = 0;
-
-                    for (i = 0; i < state.length; i++) {
-                        state[i].current = true;
-                        state[i].states[key] = checkState.bind(this, states);
-                        if (value && (typeof (value.over) !== 'undefined')) {
-                            state[i].over = value.over;
-                        }
-                    }
-                };
-            } else {
-                return function (value) {
-                    state.current = true;
-                    state.states[key] = checkState.bind(this, states);
-                    if (value && (typeof (value.over) !== 'undefined')) {
-                        state.over = value.over;
-                    }
-                };
+        filteredTrigger = function (state, event, message) {
+            if (!this.paused && message[state]) {
+                this.owner.trigger(event, message);
             }
-        },
-        checkState = function (states) {
-            return !states || this.isValidState(states);
-        },
-        isFalse = function () {
-            return false;
-        },
-        addController = function (controls, controller, trigger) {
-            var actionState = controls[controller]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
-            if (!actionState) {                                // Otherwise create a new state storage object
-                actionState = controls[controller] = new State(controller);
-            }
-            actionState.triggers.push(trigger);
-            return actionState;
-        },
-        stateProto = State.prototype;
-    
-    stateProto.update = function () {
-        var i = 0,
-            key = '';
-        
-        if (this.current || this.last) {
-            this.stateSummary.pressed   = this.current;
-            this.stateSummary.released  = !this.current && this.last;
-            this.stateSummary.triggered = this.current && !this.last;
-            this.stateSummary.over      = this.over;
-            for (i = 0; i < this.triggers.length; i++) {
-                if (this.triggers[i](this.event, this.stateSummary)) {
-                    break;
-                }
-            }
-        }
-        
-        this.last    = this.current;
-        this.current = false;
-        for (key in this.states) {
-            if (this.states.hasOwnProperty(key)) {
-                if (this.states[key]()) {
-                    this.current = true;
-                    break;
-                }
-            }
-        }
-    };
-    
-    stateProto.isPressed = function () {
-        return this.current;
-    };
-    
-    stateProto.isTriggered = function () {
-        return this.current && !this.last;
-    };
-
-    stateProto.isReleased = function () {
-        return !this.current && this.last;
-    };
+        };
 
     return platypus.createComponentClass({
         id: 'EntityController',
@@ -287,14 +193,24 @@
         
         events: {
             'handle-controller': function () {
-                var action    = '';
+                var i = 0,
+                    action = '',
+                    resolution = tempArr;
+                
+                resolution.length = 0;
                 
                 if (this.actions) {
                     for (action in this.actions) {
                         if (this.actions.hasOwnProperty(action)) {
-                            this.actions[action].update();
+                            if (this.actions[action].update(this.owner.state)) {
+                                resolution.push(this.actions[action]);
+                            }
                         }
                     }
+                }
+                
+                for (i = 0; i < resolution.length; i++) {
+                    resolution[i].resolve();
                 }
             },
             
@@ -315,15 +231,6 @@
             },
             
             'pressmove': function (value) {
-                if (this.actions['mouse:left-button']   && (this.actions['mouse:left-button'].over !== value.over)) {
-                    this.actions['mouse:left-button'].over = value.over;
-                }
-                if (this.actions['mouse:middle-button'] && (this.actions['mouse:middle-button'].over !== value.over)) {
-                    this.actions['mouse:middle-button'].over = value.over;
-                }
-                if (this.actions['mouse:right-button']  && (this.actions['mouse:right-button'].over !== value.over)) {
-                    this.actions['mouse:right-button'].over = value.over;
-                }
                 if (this.joystick) {
                     this.handleJoy(value);
                 }
@@ -365,39 +272,39 @@
                 }
             },
             
-            isValidState: function (states) {
-                var key = '',
-                    ownerState = this.owner.state;
+            addController: (function () {
+                var up = function (index) {
+                        this.inputs[index] = false;
+                    },
+                    down = function (index) {
+                        this.inputs[index] = true;
+                    };
                 
-                for (key in states) {
-                    if (states.hasOwnProperty(key)) {
-                        if (ownerState.hasOwnProperty(key) && (states[key] !== ownerState[key])) {
-                            return false;
+                return function (key, stateId, controller, states, controllerState) {
+                    var actions = this.actions,
+                        id = stateId + '-' + controller + '-' + (controllerState || 'all'),
+                        actionState = actions[id]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
+                        
+                    // Otherwise create a new state storage object
+                    if (!actionState) {
+                        if (controllerState) {
+                            actionState = actions[id] = new ActionState(controller, states, filteredTrigger.bind(this, controllerState));
+                        } else {
+                            actionState = actions[id] = new ActionState(controller, states, trigger.bind(this));
                         }
                     }
-                }
-                
-                return true;
-            },
-            
-            createTrigger: function (entityStates, controllerState) {
-                return function (event, obj) {
-                    if (!this.paused && (!controllerState || obj[controllerState])) {
-                        if (!entityStates || obj.released || this.isValidState(entityStates)) {
-                            this.owner.trigger(event, obj);
-                            return true;
-                        }
-                    }
-                    return false;
-                }.bind(this);
-            },
-            
+                    
+                    // Set up listeners and input flag.
+                    this.addEventListener(key + ':up',   up.bind(actionState, actionState.inputs.length));
+                    this.addEventListener(key + ':down', down.bind(actionState, actionState.inputs.length));
+                    actionState.inputs.push(false);
+                };
+            }()),
+
             addMap: function (map, states) {
-                var actionState = null,
-                    controller = null,
+                var controller = null,
                     i = 0,
                     j = '',
-                    k = 0,
                     key = '',
                     hash = JSON.stringify(states) || 'default';
                 
@@ -405,32 +312,26 @@
                     if (map.hasOwnProperty(key)) {
                         controller = map[key];
                         if (typeof controller === 'string') {
-                            actionState = addController(this.actions, controller, this.createTrigger(states));
+                            this.addController(key, hash, controller, states);
                         } else {
-                            actionState = [];
                             if (Array.isArray(controller)) {
                                 for (i = 0; i < controller.length; i++) {
-                                    actionState[i] = addController(this.actions, controller[i], this.createTrigger(states));
+                                    this.addController(key, hash, controller[i], states);
                                 }
                             } else {
-                                k = 0;
                                 for (j in controller) {
                                     if (controller.hasOwnProperty(j)) {
                                         if (typeof controller[j] === 'string') {
-                                            actionState[k] = addController(this.actions, controller[j], this.createTrigger(states, j));
-                                            k += 1;
+                                            this.addController(key, hash, controller[j], states, j);
                                         } else {
                                             for (i = 0; i < controller[j].length; i++) {
-                                                actionState[k] = addController(this.actions, controller[j][i], this.createTrigger(states, j));
-                                                k += 1;
+                                                this.addController(key, hash, controller[j][i], states, j);
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        this.addEventListener(key + ':up', createUpHandler(actionState, hash));
-                        this.addEventListener(key + ':down', createDownHandler(actionState, states, hash));
                     }
                 }
             }
