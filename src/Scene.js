@@ -31,12 +31,14 @@ Requires: ["Entity.js"]
 platypus.Scene = (function () {
     "use strict";
     
-    var State = include('springroll.State'),
-        Scene = function (panel, definition) {
+    var Entity = include('platypus.Entity'),
+        State  = include('springroll.State'),
+        Scene  = function (panel, definition) {
             State.call(this, panel, definition.options);
             
-            this.layerDefinitions = definition.layers;
             this.id = definition.id;
+            this.assets = this.manageAssets(definition);
+            this.layerDefinitions = definition.layers;
             this.storeMessages = false;
             this.storedMessages = [];
             this.stage = panel;
@@ -216,6 +218,26 @@ platypus.Scene = (function () {
         this.layers.length = 0;
         
         platypus.game.currentScene = null;
+    };
+    
+    proto.manageAssets = function (def) {
+        var i = 0,
+            j = 0,
+            layerAssets = null,
+            assets = [];
+        
+        for (i = 0; i < def.layers.length; i++) {
+            layerAssets = Entity.manageAssets(def.layers[i]);
+            if (layerAssets) {
+                for (j = 0; j < layerAssets.length; j++) {
+                    assets.push(layerAssets[j]);
+                }
+            }
+        }
+        
+        console.log('"' + this.id + '" Assets: ', assets.join(', '));
+        
+        return assets;
     };
     
     return Scene;

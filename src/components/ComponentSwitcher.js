@@ -141,6 +141,33 @@
                 */
                 owner.triggerEvent('add-remove-component-complete');
             }
+        },
+        
+        manageAssets: function (def, props, defaultProps) {
+            var map = def.componentMap || props.componentMap || defaultProps.componentMap,
+                event = '',
+                i = 0,
+                component = null,
+                componentAssets = null,
+                assets = [];
+            
+            for (event in map) {
+                if (map.hasOwnProperty(event)) {
+                    for (i = 0; i < map[event].add.length; i++) {
+                        component = platypus.components[map[event].add[i].type];
+                        if (component) {
+                            componentAssets = component.manageAssets(map[event].add[i], props, defaultProps);
+                            if (componentAssets) {
+                                for (j = 0; j < componentAssets.length; j++) {
+                                    assets.push(componentAssets[j]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return assets;
         }
     });
 }());

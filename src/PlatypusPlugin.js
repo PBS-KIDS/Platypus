@@ -3,7 +3,6 @@
  * 
  *      {
  *          "platypus": {
- *              "global": {}, // Global Platypus settings go here.
  *              "assets": [], // Images and preloaded sounds should be listed here if they should be loaded graphically.
  *              "entities": {},
  *              "levels": {},

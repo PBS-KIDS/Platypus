@@ -1,15 +1,15 @@
 {
 	"platypus_source": [
 		"../src/platypus.js",
+		"../src/Messenger.js",
+		"../src/Entity.js",
 		"../src/Scene.js",
 		"../src/Game.js",
-		"../src/Messenger.js",
 		"../src/Vector.js",
 		"../src/AABB.js",
 		"../src/ActionState.js",
 		"../src/CollisionDataContainer.js",
 		"../src/CollisionShape.js",
-		"../src/Entity.js",
 		"../src/factory.js",
 		"../src/PIXIAnimation.js",
 		"../src/PIXIGraphicsMixins.js",

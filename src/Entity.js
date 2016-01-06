@@ -215,5 +215,31 @@ platypus.Entity = (function () {
         this.destroyed = true;
     };
     
+    entity.manageAssets = function (def, props) {
+        var i = 0,
+            j = 0,
+            component = null,
+            componentAssets = null,
+            assets = [];
+        
+        if (def.type) {
+            return entity.manageAssets(platypus.game.settings.entities[def.type], def.properties);
+        }
+
+        for (i = 0; i < def.components.length; i++) {
+            component = platypus.components[def.components[i].type];
+            if (component) {
+                componentAssets = component.manageAssets(def.components[i], def.properties, props);
+                if (componentAssets) {
+                    for (j = 0; j < componentAssets.length; j++) {
+                        assets.push(componentAssets[j]);
+                    }
+                }
+            }
+        }
+        
+        return assets;
+    };
+    
     return entity;
 }());
