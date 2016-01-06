@@ -6,7 +6,6 @@
  * @constructor
  * @param [definition] {Object} Collection of configuration settings, typically from config.json.
  * @param [definition.global] {Object} Key/value pairs describing global game settings.
- * @param [definition.global.tickerOn=true] {boolean} Whether the game should automatically tick or only tick on `game.tick()` calls.
  * @param onFinishedLoading {Function} An optional function to run once the game has begun.
  * @return {platypus.Game} Returns the instantiated game. 
  */
@@ -184,21 +183,12 @@ platypus.Game = (function () {
                         console.warn('Platypus requires a CreateJS Stage for rendering.');
                     }
         
-                    self.loadScene(settings.global.initialScene);
+                    self.loadScene(settings.global.initialScene); // settings.global.initialScene is deprecated - remove for 0.7.0
         
                     if (onFinishedLoading) {
                         onFinishedLoading(self);
                     }
                     
-                    if (ticker && (settings.global.tickerOn !== false)) {
-                        self.tickHandler = function (e) {
-                            self.tick(e);
-                        };
-                        ticker.timingMode = 'raf';
-                        ticker.setFPS(settings.global.fps || 60);
-                        ticker.addEventListener("tick", self.tickHandler);
-                    }
-        
                     //Add entity-finder for debugging
                     if (window) {
                         window.getEntityById = function (id) {
@@ -259,7 +249,7 @@ platypus.Game = (function () {
     }
     
     /**
-    * This method causes the game to tick once. It's called automatically if the global setting `tickerOn` is `true` (default value). If this setting is `false`, `game.tick()` must be called to enact each tick.
+    * This method causes the game to tick once. It's called by the SpringRoll Application.
     *
     * @method tick
     * @param tickEvent {Object} Key/value pairs passed on to the current scene.

@@ -231,6 +231,7 @@
                             * @event 'prepare-logic'
                             * @param tick {Object}
                             * @param tick.delta {Number} The time that has passed since the last tick.
+                            * @since 0.6.8
                             */
                             this.activeEntities[j].triggerEvent('prepare-logic', this.message);
 
@@ -249,6 +250,7 @@
                             * @event 'handle-movement'
                             * @param tick {Object}
                             * @param tick.delta {Number} The time that has passed since the last tick.
+                            * @since 0.6.8
                             */
                             this.activeEntities[j].triggerEvent('handle-movement', this.message);
                         }
