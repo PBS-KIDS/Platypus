@@ -1,9 +1,9 @@
 {
 	"platypus_source": [
 		"../src/platypus.js",
+		"../src/Scene.js",
 		"../src/Game.js",
 		"../src/Messenger.js",
-		"../src/Scene.js",
 		"../src/Vector.js",
 		"../src/AABB.js",
 		"../src/ActionState.js",

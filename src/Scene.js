@@ -26,80 +26,101 @@
  *     
 Requires: ["Entity.js"]
 */
-/*global platypus */
+/*global extend, platypus */
 /*jslint plusplus:true */
 platypus.Scene = (function () {
     "use strict";
     
-    var scene = function (definition, stage) {
-            var i = 0,
-                key = '',
-                layers = definition.layers,
-                supportedLayer = true,
-                layerDefinition = false,
-                properties = null,
-                messages = null;
-
+    var State = include('springroll.State'),
+        Scene = function (panel, definition) {
+            State.call(this, panel, definition.options);
+            
+            this.layerDefinitions = definition.layers;
             this.id = definition.id;
-
+            this.storeMessages = false;
             this.storedMessages = [];
-
-            this.stage = stage;
+            this.stage = panel;
             this.layers = [];
-            for (i = 0; i < layers.length; i++) {
-                layerDefinition = layers[i];
-                properties = {stage: this.stage, parent: this};
-                if (layerDefinition.properties) {
-                    for (key in layerDefinition.properties) {
-                        if (layerDefinition.properties.hasOwnProperty(key)) {
-                            properties[key] = layerDefinition.properties[key];
-                        }
-                    }
-                }
-
-                if (layerDefinition.type) { // this layer should be loaded from an entity definition rather than this instance
-                    layerDefinition = platypus.game.settings.entities[layerDefinition.type];
-                }
-
-                supportedLayer = true;
-                if (layerDefinition.filter) {
-                    if (layerDefinition.filter.includes) {
-                        supportedLayer = false;
-                        for (key in layerDefinition.filter.includes) {
-                            if (layerDefinition.filter.includes.hasOwnProperty(key) && platypus.supports[layerDefinition.filter.includes[key]]) {
-                                supportedLayer = true;
-                            }
-                        }
-                    }
-                    if (layerDefinition.filter.excludes) {
-                        for (key in layerDefinition.filter.excludes) {
-                            if (layerDefinition.filter.excludes.hasOwnProperty(key) && platypus.supports[layerDefinition.filter.excludes[key]]) {
-                                supportedLayer = false;
-                            }
-                        }
-                    }
-                }
-                if (supportedLayer) {
-                    this.layers.push(new platypus.Entity(layerDefinition, {
-                        properties: properties
-                    }));
-                }
-            }
-            // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
-            messages = this.storedMessages;
-            this.storedMessages = false;
-            for (i = 0; i < messages.length; i++) {
-                this.trigger(messages[i].message, messages[i].value);
-            }
-            messages.length = 0;
-
-            this.time = Date.now();
-            this.timeElapsed = {
-                name: '',
-                time: 0
-            };
         },
-        proto = scene.prototype;
+        proto = extend(Scene, State);
+        
+    proto.enter = function () {
+        var i = 0,
+            key = '',
+            layers = this.layerDefinitions,
+            supportedLayer = true,
+            layerDefinition = false,
+            properties = null,
+            messages = null;
+
+        this.storeMessages = true;
+        for (i = 0; i < layers.length; i++) {
+            layerDefinition = layers[i];
+            properties = {stage: this.stage, parent: this};
+            if (layerDefinition.properties) {
+                for (key in layerDefinition.properties) {
+                    if (layerDefinition.properties.hasOwnProperty(key)) {
+                        properties[key] = layerDefinition.properties[key];
+                    }
+                }
+            }
+
+            if (layerDefinition.type) { // this layer should be loaded from an entity definition rather than this instance
+                layerDefinition = platypus.game.settings.entities[layerDefinition.type];
+            }
+
+            supportedLayer = true;
+            if (layerDefinition.filter) {
+                if (layerDefinition.filter.includes) {
+                    supportedLayer = false;
+                    for (key in layerDefinition.filter.includes) {
+                        if (layerDefinition.filter.includes.hasOwnProperty(key) && platypus.supports[layerDefinition.filter.includes[key]]) {
+                            supportedLayer = true;
+                        }
+                    }
+                }
+                if (layerDefinition.filter.excludes) {
+                    for (key in layerDefinition.filter.excludes) {
+                        if (layerDefinition.filter.excludes.hasOwnProperty(key) && platypus.supports[layerDefinition.filter.excludes[key]]) {
+                            supportedLayer = false;
+                        }
+                    }
+                }
+            }
+            if (supportedLayer) {
+                this.layers.push(new platypus.Entity(layerDefinition, {
+                    properties: properties
+                }));
+            }
+        }
+        // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
+        messages = this.storedMessages;
+        this.storeMessages = false;
+        for (i = 0; i < messages.length; i++) {
+            this.trigger(messages[i].message, messages[i].value);
+        }
+        messages.length = 0;
+
+        if (platypus.game.settings.debug) {
+            console.log('Scene loaded: ' + this.id);
+        }
+        this.trigger('scene-loaded', this.data);
+    };
+    
+    proto.enterDone = function () {
+        platypus.game.currentScene = this;
+        if (platypus.game.settings.debug) {
+            console.log('Scene live: ' + this.id);
+        }
+        this.trigger('scene-live', this.data);
+    };
+    
+    proto.exitStart = function () {
+        if (platypus.game.settings.debug) {
+            console.log('Scene ending: ' + this.id);
+        }
+//        this.trigger('scene-live', this.data);
+    };
     
 /**
  * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
@@ -111,7 +132,7 @@ platypus.Scene = (function () {
     proto.trigger = function (eventId, event) {
         var i = 0;
         
-        if (this.storedMessages) {
+        if (this.storeMessages) {
             this.storedMessages.push({
                 message: eventId,
                 value: event
@@ -178,15 +199,24 @@ platypus.Scene = (function () {
  * This method destroys all the layers in the scene.
  * 
  * @method destroy
+ * @deprecated since 0.7.0 - Use the `exit` method in line with SpringRoll State methods.
  **/
-    proto.destroy = function () {
+
+/**
+ * This method destroys all the layers in the scene.
+ * 
+ * @method exit
+ **/
+    proto.destroy = proto.exit = function () {
         var i = 0;
         
         for (i = 0; i < this.layers.length; i++) {
             this.layers[i].destroy();
         }
         this.layers.length = 0;
+        
+        platypus.game.currentScene = null;
     };
     
-    return scene;
+    return Scene;
 }());
