@@ -88,7 +88,25 @@
                     console.log("Game config loaded.", settings);
                 }
             };
-        }());
+        }()),
+        flattenEntityList = function(entityList) {
+            var entity = null,
+                folder = null,
+                folderEntity = null,
+                resultList = {};
+            
+            for (entity in entityList) {
+                if (!entityList[entity].id) {
+                    folder = flattenEntityList(entityList[entity]);
+                    for (folderEntity in folder) {
+                        resultList[folderEntity] = folder[folderEntity]
+                    }
+                } else {
+                    resultList[entity] = entityList[entity]
+                }
+            }
+            return resultList;
+        };
     
     PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
 
@@ -136,6 +154,8 @@
             }
             
             sayHello(config, this);
+            
+            config.entities = flattenEntityList(config.entities);
             
             game = this.platypus = new platypus.Game(config, this);
             
