@@ -42,6 +42,7 @@
     "use strict";
 
     var Application = include('springroll.Application'), // Import SpringRoll classes
+        Entity      = include('platypus.Entity'),
         transformCheck = function (v) {
             var a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
@@ -79,6 +80,98 @@
                 resp.x = -1;
             }
             return resp;
+        },
+        getEntityData = function (obj, tilesets) {
+            var x = 0,
+                gid = obj.gid || -1,
+                properties = {},
+                data = {
+                    gid: -1,
+                    transform: null,
+                    properties: properties,
+                    type: ''
+                },
+                props = null,
+                tileset = null;
+            
+            if (data.gid !== -1) {
+                data.transform = entityTransformCheck(gid);
+                gid = data.gid = transform.id;
+            }
+            
+            for (x = 0; x < tilesets.length; x++) {
+                if (tilesets[x].firstgid > gid) {
+                    break;
+                } else {
+                    tileset = tilesets[x];
+                }
+            }
+            
+            if (tileset && tileset.tileproperties && tileset.tileproperties[gid - tileset.firstgid]) {
+                props = tileset.tileproperties[gid - tileset.firstgid];
+            }
+
+            // Check Tiled data to find this object's type
+            if (obj.type !== '') {
+                data.type = obj.type;
+            } else if (obj.name !== '') {
+                data.type = obj.name;
+            } else if (props) {
+                data.type = props.entity || props.type || '';
+            }
+            
+            if (!data.type) { // undefined entity
+                return null;
+            }
+            
+            //Copy properties from Tiled
+            if (data.transform) {
+                properties.scaleX = data.transform.x;
+                properties.scaleY = data.transform.y;
+            } else {
+                properties.scaleX = 1;
+                properties.scaleY = 1;
+            }
+            
+            mergeAndFormatProperties(props, data.properties);
+            mergeAndFormatProperties(obj.properties, data.properties);
+            
+            return data;
+        },
+        mergeAndFormatProperties = function (src, dest) {
+            var key = '';
+            
+            if (src && dest) {
+                for (key in src) {
+                    if (src.hasOwnProperty(key)) {
+                        dest[key] = formatProperty(src[key]);
+                    }
+                }
+            }
+            
+            return dest;
+        },
+        formatProperty = function (value) {
+            var numberProperty = 0;
+            
+            if (typeof value === 'string') {
+                //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
+                numberProperty = parseFloat(value);
+                if (numberProperty === 0 || (!!numberProperty)) {
+                    return numberProperty;
+                } else if (value === 'true') {
+                    return true;
+                } else if (value === 'false') {
+                    return false;
+                } else if ((value.length > 1) && (((value[0] === '{') && (value[value.length - 1] === '}')) || ((value[0] === '[') && (value[value.length - 1] === ']')))) {
+                    try {
+                        return JSON.parse(value);
+                    } catch (e) {
+                    }
+                }
+            }
+
+            return value;
         },
         // These are provided but can be overwritten by entities of the same name in the configuration.
         standardEntityLayers = {
@@ -320,8 +413,7 @@
                     largestX = -Infinity,
                     smallestY = Infinity,
                     largestY = -Infinity,
-                    transform = null,
-                    tileset = null,
+                    entityData = null,
                     properties = null,
                     layerCollides = true,
                     numberProperty = 0,
@@ -522,7 +614,7 @@
                                     props.spriteSheet.animations = importAnimation;
                                 }
                             }
-                            return self.owner.addEntity(new platypus.Entity(tileDefinition, {
+                            return self.owner.addEntity(new Entity(tileDefinition, {
                                 properties: props
                             }));
                         }
@@ -590,93 +682,13 @@
                     }
 
                     for (obj = 0; obj < layer.objects.length; obj++) {
-                        entity = layer.objects[obj];
-                        gid = entity.gid || -1;
-                        transform = null;
+                        entity     = layer.objects[obj];
+                        entityData = getEntityData(entity, tilesets);
+                        if (entityData) {
+                            gid = entityData.gid;
+                            entityType = entityData.type;
 
-                        if (gid !== -1) {
-                            transform = entityTransformCheck(gid);
-                            gid = transform.id;
-                        }
-
-                        for (x = 0; x < tilesets.length; x++) {
-                            if (tilesets[x].firstgid > gid) {
-                                break;
-                            } else {
-                                tileset = tilesets[x];
-                            }
-                        }
-
-                        // Check Tiled data to find this object's type
-                        entityType = '';
-                        if (entity.type !== '') {
-                            entityType = entity.type;
-                        } else if (entity.name !== '') {
-                            entityType = entity.name;
-                        } else if (tileset.tileproperties[gid - tileset.firstgid]) {
-                            if (tileset.tileproperties[gid - tileset.firstgid].entity) {
-                                entityType = tileset.tileproperties[gid - tileset.firstgid].entity;
-                            } else if (tileset.tileproperties[gid - tileset.firstgid].type) {
-                                entityType = tileset.tileproperties[gid - tileset.firstgid].type;
-                            }
-                        }
-
-                        if (entityType !== '') {
                             properties = {};
-
-                            //Copy properties from Tiled
-                            if (transform) {
-                                properties.scaleX = transform.x;
-                                properties.scaleY = transform.y;
-                            } else {
-                                properties.scaleX = 1;
-                                properties.scaleY = 1;
-                            }
-
-                            if ((gid >= 0) && tileset.tileproperties && tileset.tileproperties[gid - tileset.firstgid]) {
-                                for (key in tileset.tileproperties[gid - tileset.firstgid]) {
-                                    //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
-                                    if (tileset.tileproperties[gid - tileset.firstgid].hasOwnProperty(key)) {
-                                        numberProperty = parseFloat(tileset.tileproperties[gid - tileset.firstgid][key]);
-                                        if (numberProperty === 0 || (!!numberProperty)) {
-                                            properties[key] = numberProperty;
-                                        } else if (tileset.tileproperties[gid - tileset.firstgid][key] === 'true') {
-                                            properties[key] = true;
-                                        } else if (tileset.tileproperties[gid - tileset.firstgid][key] === 'false') {
-                                            properties[key] = false;
-                                        } else {
-                                            properties[key] = tileset.tileproperties[gid - tileset.firstgid][key];
-                                        }
-                                    }
-                                }
-                            }
-
-                            for (key in entity.properties) {
-                                if (entity.properties.hasOwnProperty(key)) {
-                                    property = entity.properties[key];
-                                    if (typeof property === 'string') {
-                                        //This is going to assume that if you pass in something that starts with a number, it is a number and converts it to one.
-                                        numberProperty = parseFloat(property);
-                                        if (numberProperty === 0 || (!!numberProperty)) {
-                                            properties[key] = numberProperty;
-                                        } else if (property === 'true') {
-                                            properties[key] = true;
-                                        } else if (property === 'false') {
-                                            properties[key] = false;
-                                        } else if ((property.length > 2) && (((property[0] === '{') && (property[property.length - 1] === '}')) || ((property[0] === '[') && (property[property.length - 1] === ']')))) {
-                                            try {
-                                                properties[key] = JSON.parse(property);
-                                            } catch (e) {
-                                                properties[key] = property;
-                                            }
-                                        } else {
-                                            properties[key] = property;
-                                        }
-                                    } else {
-                                        properties[key] = property;
-                                    }
-                                }
-                            }
 
                             if (entity.polygon || entity.polyline) {
                                 //Figuring out the width of the polygon and shifting the origin so it's in the top-left.
@@ -836,7 +848,7 @@
                             }
 
                             properties.parent = this.owner;
-                            entity = this.owner.addEntity(new platypus.Entity(platypus.game.settings.entities[entityType], {
+                            entity = this.owner.addEntity(new Entity(platypus.game.settings.entities[entityType], {
                                 properties: properties
                             }));
                             if (entity) {
@@ -858,6 +870,53 @@
             "destroy": function () {
                 this.entities.length = 0;
             }
+        },
+        
+        manageAssets: function (def, props, defaultProps) {
+            var i = 0,
+                j = 0,
+                ps = props || {},
+                dps = defaultProps || {},
+                level  = def.level || ps.level || dps.level,
+                ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
+                images = def.images || ps.images || dps.images,
+                assets = [],
+                entity = null,
+                entityAssets = null;
+            
+            if (ss) {
+                if (typeof ss === 'string') {
+                    assets = assets.concat(platypus.game.settings.spriteSheets[ss].images)
+                } else {
+                    assets = assets.concat(ss.images)
+                }
+            }
+            
+            if (images) {
+                assets = assets.concat(images);
+            }
+            
+            if (typeof level === 'string') {
+                level = platypus.game.settings.levels[level];
+            }
+
+            if (level) {
+                for (i = 0; i < level.layers.length; i++) {
+                    if (level.layers[i].objects) {
+                        for (j = 0; j < level.layers[i].objects.length; j++) {
+                            entity = getEntityData(level.layers[i].objects[j], level.tilesets);
+                            if (entity) {
+                                entityAssets = Entity.manageAssets(entity);
+                                if (entityAssets) {
+                                    assets = assets.concat(entityAssets);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return assets;
         }
     });
 }());

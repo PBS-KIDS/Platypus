@@ -1294,6 +1294,16 @@
                 }
                 this.sprite = null;
             }
+        },
+        
+        manageAssets: function (component, props, defaultProps) {
+            var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+            
+            if (typeof ss === 'string') {
+                return platypus.game.settings.spriteSheets[ss].images;
+            } else {
+                return ss.images;
+            }
         }
     });
 }());

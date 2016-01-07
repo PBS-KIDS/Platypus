@@ -18,7 +18,10 @@
 (function () {
     "use strict";
     
-    var setupProperty = function (property, component, owner) {
+    var manageAssets = function (definition) {
+            return null;
+        },
+        setupProperty = function (property, component, owner) {
             Object.defineProperty(component, property, {
                 get: function () {
                     return owner[property];
@@ -146,6 +149,13 @@
                     proto[func] = componentDefinition.publicMethods[func];
                 }
             }
+        }
+
+        // This handles dynamic listing of assets for a scene.
+        if (componentDefinition.manageAssets) {
+            component.manageAssets = componentDefinition.manageAssets;
+        } else {
+            component.manageAssets = manageAssets;
         }
         
         /**

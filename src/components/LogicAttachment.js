@@ -9,7 +9,8 @@
 (function () {
     "use strict";
 
-    var linkId = 0;
+    var Entity = include('platypus.Entity'),
+        linkId = 0;
 
     return platypus.createComponentClass({
 
@@ -176,6 +177,18 @@
                 }
                 this.isAttached = false;
             }
+        },
+        
+        manageAssets: function (def, props, defaultProps) {
+            var attachment = def.attachment || props.attachment || defaultProps.attachment;
+            
+            if (attachment) {
+                return Entity.manageAssets({
+                    type: attachment
+                });
+            }
+            
+            return null;
         }
     });
 }());

@@ -334,6 +334,7 @@
              * @method 'handle-movement'
              * @param tick {Object}
              * @param tick.delta {number} The amount of time in milliseconds since the last tick.
+             * @since 0.6.8
              */
             "handle-movement": function (tick) {
                 var i = 0,
@@ -413,6 +414,15 @@
                 }
             },
             
+            /**
+             * Update mover properties.
+             * 
+             * @method 'set-mover'
+             * @param mover {Object}
+             * @param [mover.maxMagnitude] {Number|Object} New maximums for magnitude.
+             * @param [mover.magnitude] {Number} Delta for the change in maximums.
+             * @since 0.6.8
+             */
             "set-mover": function (mover) {
                 if (typeof mover.maxMagnitudeDelta === 'number') {
                     this.maxMagnitudeDelta = mover.maxMagnitudeDelta;
@@ -423,10 +433,22 @@
                 }
             },
             
+            /**
+             * Stops all movement on the Entity.
+             * 
+             * @method 'pause-movment'
+             * @since 0.6.8
+             */
             "pause-movement": function () {
                 this.paused = true;
             },
             
+            /**
+             * Unpauses all movement on the Entity.
+             * 
+             * @method 'unpause-movment'
+             * @since 0.6.8
+             */
             "unpause-movement": function () {
                 this.paused = false;
             }

@@ -36,6 +36,8 @@ This component creates an entity and propels it away. This is useful for casting
 (function () {
     "use strict";
 
+    var Entity = include('platypus.Entity');
+
     return platypus.createComponentClass({
         
         id: 'LogicSpawner',
@@ -141,6 +143,18 @@ This component creates an entity and propels it away. This is useful for casting
                 
                 this.parent = this.owner.parent; //proofing against this entity being destroyed prior to spawned entity. For example, when a destroyed entity spawns a drop.
             }
+        },
+        
+        manageAssets: function (def, props, defaultProps) {
+            var spawn = def.spawneeClass || props.spawneeClass || defaultProps.spawneeClass;
+            
+            if (spawn) {
+                return Entity.manageAssets({
+                    type: spawn
+                });
+            }
+            
+            return null;
         }
     });
 }());

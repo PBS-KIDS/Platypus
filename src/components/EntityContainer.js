@@ -50,11 +50,12 @@
 (function () {
     "use strict";
 
-    var childBroadcast = function (event) {
-        return function (value, debug) {
-            this.triggerOnChildren(event, value, debug);
+    var Entity = include('platypus.Entity'),
+        childBroadcast = function (event) {
+            return function (value, debug) {
+                this.triggerOnChildren(event, value, debug);
+            };
         };
-    };
     
     return platypus.createComponentClass({
         id: 'EntityContainer',
@@ -360,6 +361,35 @@
                 }
                 return this.trigger(event, message, debug);
             }
+        },
+        
+        manageAssets: function (def, props, defaultProps) {
+            var i = 0,
+                j = 0,
+                entityAssets = null,
+                assets = [],
+                entities = [];
+            
+            if (def.entities) {
+                entities = entities.concat(def.entities);
+            }
+            
+            if (props && props.entities) {
+                entities = entities.concat(props.entities);
+            } else if (defaultProps && defaultProps.entities) {
+                entities = entities.concat(defaultProps.entities);
+            }
+
+            for (i = 0; i < entities.length; i++) {
+                entityAssets = Entity.manageAssets(entities[i]);
+                if (entityAssets) {
+                    for (j = 0; j < entityAssets.length; j++) {
+                        assets.push(entityAssets[j]);
+                    }
+                }
+            }
+            
+            return assets;
         }
     }, platypus.Messenger);
 }());

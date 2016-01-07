@@ -35,6 +35,8 @@ This component spawns new entities within a given area at set intervals.
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Entity = include('platypus.Entity');
 
     return platypus.createComponentClass({
         
@@ -118,6 +120,18 @@ This component spawns new entities within a given area at set intervals.
                     this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new platypus.Entity(this.entityClass, this.spawnProperties)));
                 }
             }
+        },
+        
+        manageAssets: function (def, props, defaultProps) {
+            var spawn = def.spawn || props.spawn || defaultProps.spawn;
+            
+            if (spawn) {
+                return Entity.manageAssets({
+                    type: spawn
+                });
+            }
+            
+            return null;
         }
     });
 }());
