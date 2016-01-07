@@ -600,16 +600,20 @@
                 var tile = null,
                     anim = '';
 
-                // "tile-1" is empty, so it remains a null reference.
-                if (imageName === 'tile-1') {
-                    return nullTemplate;
+                if (typeof imageName === 'string') {
+                    // "tile-1" is empty, so it remains a null reference.
+                    if (imageName === 'tile-1') {
+                        return nullTemplate;
+                    }
+    
+                    tile = new Animation(this.spriteSheet);
+                    anim = 'tile' + transformCheck(imageName, tile);
+                    tile.gotoAndStop(anim);
+    
+                    return new Template(tile);
+                } else {
+                    return imageName;
                 }
-
-                tile = new Animation(this.spriteSheet);
-                anim = 'tile' + transformCheck(imageName, tile);
-                tile.gotoAndStop(anim);
-
-                return new Template(tile);
             },
 
             addImageMap: function (map) {
