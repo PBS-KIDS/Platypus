@@ -1,9 +1,10 @@
 /**
- * This component loads a list of assets, wrapping [PreloadJS](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) or [SpringRoll](http://springroll.github.io/SpringRoll/classes/springroll.Loader.html)loading functionality into a game engine component.
+ * This component loads a list of assets, wrapping [PreloadJS](http://www.createjs.com/Docs/PreloadJS/modules/PreloadJS.html) or [SpringRoll](http://springroll.github.io/SpringRoll/classes/springroll.Loader.html)loading functionality into a game engine component. This component has been deprecated in favor of SpringRoll preloading.
  *
  * @namespace platypus.components
  * @class AssetLoader
  * @uses platypus.Component
+ * @deprecated since 0.7.0
  */
 /*global console, include, platypus */
 /*jslint plusplus:true */

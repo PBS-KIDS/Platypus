@@ -143,31 +143,48 @@
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
-            var map = def.componentMap || props.componentMap || defaultProps.componentMap,
-                event = '',
-                i = 0,
-                component = null,
-                componentAssets = null,
-                assets = [];
+        getAssetList: (function () {
+            var union = function (a, b) {
+                    var i = 0,
+                        j = 0,
+                        aL = a.length,
+                        bL = b.length,
+                        found = false;
+                        
+                    for (i = 0; i < bL; i++) {
+                        found = false;
+                        for (j = 0; j < aL; j++) {
+                            if (b[i] === a[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            a.push(b[i]);
+                        }
+                    }
+                };
             
-            for (event in map) {
-                if (map.hasOwnProperty(event)) {
-                    for (i = 0; i < map[event].add.length; i++) {
-                        component = platypus.components[map[event].add[i].type];
-                        if (component) {
-                            componentAssets = component.manageAssets(map[event].add[i], props, defaultProps);
-                            if (componentAssets) {
-                                for (j = 0; j < componentAssets.length; j++) {
-                                    assets.push(componentAssets[j]);
-                                }
+            return function (def, props, defaultProps) {
+                var map = def.componentMap || props.componentMap || defaultProps.componentMap,
+                    event = '',
+                    i = 0,
+                    component = null,
+                    assets = [];
+                
+                for (event in map) {
+                    if (map.hasOwnProperty(event)) {
+                        for (i = 0; i < map[event].add.length; i++) {
+                            component = platypus.components[map[event].add[i].type];
+                            if (component) {
+                                union(assets, component.getAssetList(map[event].add[i], props, defaultProps));
                             }
                         }
                     }
                 }
-            }
-            
-            return assets;
-        }
+                
+                return assets;
+            };
+        }())
     });
 }());

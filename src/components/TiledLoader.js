@@ -395,7 +395,6 @@
                     tileHeight = level.tileheight,
                     widthOffset = 0,
                     heightOffset = 0,
-                    key = "",
                     x = 0,
                     p = 0,
                     w = 0,
@@ -406,7 +405,6 @@
                     entity = null,
                     entityPositionX = "",
                     entityPositionY = "",
-                    property = null,
                     entityType = '',
                     gid = -1,
                     smallestX = Infinity,
@@ -416,7 +414,6 @@
                     entityData = null,
                     properties = null,
                     layerCollides = true,
-                    numberProperty = 0,
                     polyPoints = null,
                     fallbackWidth = 0,
                     fallbackHeight = 0,
@@ -453,11 +450,8 @@
                             tileLayer.data.push(1);
                         }
 
-                        if (platypus.assets && platypus.assets[imageLayer.name] && platypus.assets[imageLayer.name].asset) { // Prefer to have name in tiled match image id in game
-                            tileLayer.image = imageLayer.name;
-                            tileLayer.tileheight = platypus.assets[imageLayer.name].asset.height;
-                            tileLayer.tilewidth = platypus.assets[imageLayer.name].asset.width;
-                        } else if (self.assetCache.read(imageLayer.name)) {
+                        // Prefer to have name in tiled match image id in game
+                        if (self.assetCache.read(imageLayer.name)) {
                             tileLayer.image = imageLayer.name;
                             tileLayer.tileheight = self.assetCache.read(imageLayer.name).height;
                             tileLayer.tilewidth = self.assetCache.read(imageLayer.name).width;
@@ -622,7 +616,7 @@
 
                 if (images.length === 0) {
                     for (x = 0; x < tilesets.length; x++) {
-                        if ((platypus.assets && platypus.assets[tilesets[x].name] && platypus.assets[tilesets[x].name].asset) || this.assetCache.read(tilesets[x].name)) { // Prefer to have name in tiled match image id in game
+                        if (this.assetCache.read(tilesets[x].name)) { // Prefer to have name in tiled match image id in game
                             images.push(tilesets[x].name);
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
@@ -872,52 +866,87 @@
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
-            var i = 0,
-                j = 0,
-                ps = props || {},
-                dps = defaultProps || {},
-                level  = def.level || ps.level || dps.level,
-                ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
-                images = def.images || ps.images || dps.images,
-                assets = [],
-                entity = null,
-                entityAssets = null;
+        getAssetList: (function () {
+            var union = function (a, b) {
+                    var i = 0,
+                        j = 0,
+                        aL = a.length,
+                        bL = b.length,
+                        found = false;
+                        
+                    for (i = 0; i < bL; i++) {
+                        found = false;
+                        for (j = 0; j < aL; j++) {
+                            if (b[i] === a[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            a.push(b[i]);
+                        }
+                    }
+                };
             
-            if (ss) {
-                if (typeof ss === 'string') {
-                    assets = assets.concat(platypus.game.settings.spriteSheets[ss].images)
-                } else {
-                    assets = assets.concat(ss.images)
+            return function (def, props, defaultProps) {
+                var i = 0,
+                    j = 0,
+                    ps = props || {},
+                    dps = defaultProps || {},
+                    level  = def.level || ps.level || dps.level,
+                    ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
+                    tilesets = [],
+                    images = def.images || ps.images || dps.images,
+                    assets = [],
+                    entity = null,
+                    entityAssets = null;
+                
+                if (typeof level === 'string') {
+                    level = platypus.game.settings.levels[level];
                 }
-            }
-            
-            if (images) {
-                assets = assets.concat(images);
-            }
-            
-            if (typeof level === 'string') {
-                level = platypus.game.settings.levels[level];
-            }
 
-            if (level) {
-                for (i = 0; i < level.layers.length; i++) {
-                    if (level.layers[i].objects) {
-                        for (j = 0; j < level.layers[i].objects.length; j++) {
-                            entity = getEntityData(level.layers[i].objects[j], level.tilesets);
-                            if (entity) {
-                                entityAssets = Entity.manageAssets(entity);
-                                if (entityAssets) {
-                                    assets = assets.concat(entityAssets);
+                if (level) {
+                    if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
+                        assets.concat(level.assets);
+                    } else {
+                        for (i = 0; i < level.layers.length; i++) {
+                            if (level.layers[i].objects) {
+                                for (j = 0; j < level.layers[i].objects.length; j++) {
+                                    entity = getEntityData(level.layers[i].objects[j], level.tilesets);
+                                    if (entity) {
+                                        entityAssets = Entity.getAssetList(entity);
+                                        if (entityAssets) {
+                                            union(assets, entityAssets);
+                                        }
+                                    }
                                 }
                             }
                         }
+                        if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
+                            for (i = 0; i < level.tilesets.length; i++) {
+                                tilesets.push(level.tilesets[i].name);
+                            }
+                            union(assets, tilesets);
+                        }
+                        level.assets = assets.slice(); // Save for later in case this level is checked again.
                     }
                 }
-            }
-            
-            return assets;
-        }
+                
+                if (ss) {
+                    if (typeof ss === 'string') {
+                        union(assets, platypus.game.settings.spriteSheets[ss].images);
+                    } else {
+                        union(assets, ss.images);
+                    }
+                }
+                
+                if (images) {
+                    union(assets, images);
+                }
+                
+                return assets;
+            };
+        }())
     });
 }());
 

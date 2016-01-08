@@ -165,7 +165,9 @@
             this.on('update', updateFunction, 320); // Needs to occur before PIXI's ticker update so rendered objects can be positioned correctly.
     
             resizeFunction = function (event) {
-                game.currentScene.trigger('resize', event);
+                if (game.currentScene) {
+                    game.currentScene.triggerOnChildren('resize', event);
+                }
             };
             this.on('resize', resizeFunction);
         }

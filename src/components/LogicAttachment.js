@@ -179,11 +179,11 @@
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
+        getAssetList: function (def, props, defaultProps) {
             var attachment = def.attachment || props.attachment || defaultProps.attachment;
             
             if (attachment) {
-                return Entity.manageAssets({
+                return Entity.getAssetList({
                     type: attachment
                 });
             }

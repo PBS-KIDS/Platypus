@@ -215,31 +215,47 @@ platypus.Entity = (function () {
         this.destroyed = true;
     };
     
-    entity.manageAssets = function (def, props) {
-        var i = 0,
-            j = 0,
-            component = null,
-            componentAssets = null,
-            assets = [];
-        
-        if (def.type) {
-            return entity.manageAssets(platypus.game.settings.entities[def.type], def.properties);
-        }
-
-        for (i = 0; i < def.components.length; i++) {
-            component = platypus.components[def.components[i].type];
-            if (component) {
-                componentAssets = component.manageAssets(def.components[i], def.properties, props);
-                if (componentAssets) {
-                    for (j = 0; j < componentAssets.length; j++) {
-                        assets.push(componentAssets[j]);
+    entity.getAssetList = (function () {
+        var union = function (a, b) {
+                var i = 0,
+                    j = 0,
+                    aL = a.length,
+                    bL = b.length,
+                    found = false;
+                    
+                for (i = 0; i < bL; i++) {
+                    found = false;
+                    for (j = 0; j < aL; j++) {
+                        if (b[i] === a[j]) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        a.push(b[i]);
                     }
                 }
-            }
-        }
+            };
         
-        return assets;
-    };
+        return function (def, props) {
+            var i = 0,
+                component = null,
+                assets = [];
+            
+            if (def.type) {
+                return entity.getAssetList(platypus.game.settings.entities[def.type], def.properties);
+            }
+
+            for (i = 0; i < def.components.length; i++) {
+                component = platypus.components[def.components[i].type];
+                if (component) {
+                    union(assets, component.getAssetList(def.components[i], def.properties, props));
+                }
+            }
+            
+            return assets;
+        };
+    }());
     
     return entity;
 }());

@@ -18,9 +18,12 @@
 (function () {
     "use strict";
     
-    var manageAssets = function (definition) {
-            return null;
-        },
+    var getAssetList = (function () {
+            var emptyArray = [];            
+            return function (definition) {
+                return emptyArray;
+            }
+        }()),
         setupProperty = function (property, component, owner) {
             Object.defineProperty(component, property, {
                 get: function () {
@@ -152,10 +155,10 @@
         }
 
         // This handles dynamic listing of assets for a scene.
-        if (componentDefinition.manageAssets) {
-            component.manageAssets = componentDefinition.manageAssets;
+        if (componentDefinition.getAssetList) {
+            component.getAssetList = componentDefinition.getAssetList;
         } else {
-            component.manageAssets = manageAssets;
+            component.getAssetList = getAssetList;
         }
         
         /**

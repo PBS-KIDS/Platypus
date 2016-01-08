@@ -243,8 +243,7 @@
             this.updateCache = false;
 
             // Prepare map tiles
-            this.imageMap = [];
-            this.addImageMap(imgMap);
+            this.imageMap = [this.createMap(imgMap)];
 
             this.tilesWidth  = this.imageMap[0].length;
             this.tilesHeight = this.imageMap[0][0].length;
@@ -400,7 +399,7 @@
                 var map = definition.imageMap;
 
                 if (map) {
-                    this.addImageMap(map);
+                    this.imageMap.push(this.createMap(map));
                     this.updateCache = true;
                 }
             },
@@ -616,27 +615,32 @@
                 }
             },
 
-            addImageMap: function (map) {
+            createMap: function (mapDefinition) {
                 var x = 0,
                     y = 0,
-                    index  = '',
-                    newMap = [],
-                    tiles  = this.tiles,
-                    tile   = null;
+                    index = '',
+                    map   = null,
+                    tiles = this.tiles,
+                    tile  = null;
 
-                for (x = 0; x < map.length; x++) {
-                    newMap[x] = [];
-                    for (y = 0; y < map[x].length; y++) {
-                        index = map[x][y];
+                if (typeof mapDefinition[0][0] !== 'string') { // This is not a map definition: it's an actual RenderTiles map.
+                    return mapDefinition;
+                }
+
+                map = [];
+                for (x = 0; x < mapDefinition.length; x++) {
+                    map[x] = [];
+                    for (y = 0; y < mapDefinition[x].length; y++) {
+                        index = mapDefinition[x][y];
                         tile = tiles[index];
                         if (!tile && (tile !== null)) { // Empty grid spaces are null, so we needn't create a new tile.
                             tile = tiles[index] = this.createTile(index);
                         }
-                        newMap[x][y] = tiles[index];
+                        map[x][y] = tiles[index];
                     }
                 }
-
-                this.imageMap.push(newMap);
+                
+                return map;
             },
 
             updateRegion: function () {
@@ -850,7 +854,7 @@
             }
         },
         
-        manageAssets: function (component, props, defaultProps) {
+        getAssetList: function (component, props, defaultProps) {
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
             if (typeof ss === 'string') {

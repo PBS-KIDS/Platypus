@@ -195,7 +195,7 @@
             }
         },
         
-        manageAssets: function (component, props, defaultProps) {
+        getAssetList: function (component, props, defaultProps) {
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
             if (typeof ss === 'string') {
