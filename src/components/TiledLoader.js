@@ -688,7 +688,7 @@
                             gid = entityData.gid;
                             entityType = entityData.type;
 
-                            properties = {};
+                            properties = entityData.properties;
 
                             if (entity.polygon || entity.polyline) {
                                 //Figuring out the width of the polygon and shifting the origin so it's in the top-left.
