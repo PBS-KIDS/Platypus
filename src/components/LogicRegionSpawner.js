@@ -122,11 +122,11 @@ This component spawns new entities within a given area at set intervals.
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
+        getAssetList: function (def, props, defaultProps) {
             var spawn = def.spawn || props.spawn || defaultProps.spawn;
             
             if (spawn) {
-                return Entity.manageAssets({
+                return Entity.getAssetList({
                     type: spawn
                 });
             }

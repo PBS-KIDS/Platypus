@@ -363,33 +363,49 @@
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
-            var i = 0,
-                j = 0,
-                entityAssets = null,
-                assets = [],
-                entities = [];
-            
-            if (def.entities) {
-                entities = entities.concat(def.entities);
-            }
-            
-            if (props && props.entities) {
-                entities = entities.concat(props.entities);
-            } else if (defaultProps && defaultProps.entities) {
-                entities = entities.concat(defaultProps.entities);
-            }
-
-            for (i = 0; i < entities.length; i++) {
-                entityAssets = Entity.manageAssets(entities[i]);
-                if (entityAssets) {
-                    for (j = 0; j < entityAssets.length; j++) {
-                        assets.push(entityAssets[j]);
+        getAssetList: (function () {
+            var union = function (a, b) {
+                    var i = 0,
+                        j = 0,
+                        aL = a.length,
+                        bL = b.length,
+                        found = false;
+                        
+                    for (i = 0; i < bL; i++) {
+                        found = false;
+                        for (j = 0; j < aL; j++) {
+                            if (b[i] === a[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            a.push(b[i]);
+                        }
                     }
-                }
-            }
+                };
             
-            return assets;
-        }
+            return function (def, props, defaultProps) {
+                var i = 0,
+                    assets = [],
+                    entities = [];
+                
+                if (def.entities) {
+                    entities = entities.concat(def.entities);
+                }
+                
+                if (props && props.entities) {
+                    entities = entities.concat(props.entities);
+                } else if (defaultProps && defaultProps.entities) {
+                    entities = entities.concat(defaultProps.entities);
+                }
+
+                for (i = 0; i < entities.length; i++) {
+                    union(assets, Entity.getAssetList(entities[i]));
+                }
+                
+                return assets;
+            };
+        }())
     }, platypus.Messenger);
 }());

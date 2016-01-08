@@ -872,52 +872,80 @@
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
-            var i = 0,
-                j = 0,
-                ps = props || {},
-                dps = defaultProps || {},
-                level  = def.level || ps.level || dps.level,
-                ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
-                images = def.images || ps.images || dps.images,
-                assets = [],
-                entity = null,
-                entityAssets = null;
+        getAssetList: (function () {
+            var union = function (a, b) {
+                    var i = 0,
+                        j = 0,
+                        aL = a.length,
+                        bL = b.length,
+                        found = false;
+                        
+                    for (i = 0; i < bL; i++) {
+                        found = false;
+                        for (j = 0; j < aL; j++) {
+                            if (b[i] === a[j]) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            a.push(b[i]);
+                        }
+                    }
+                };
             
-            if (ss) {
-                if (typeof ss === 'string') {
-                    assets = assets.concat(platypus.game.settings.spriteSheets[ss].images)
-                } else {
-                    assets = assets.concat(ss.images)
+            return function (def, props, defaultProps) {
+                var i = 0,
+                    j = 0,
+                    ps = props || {},
+                    dps = defaultProps || {},
+                    level  = def.level || ps.level || dps.level,
+                    ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
+                    images = def.images || ps.images || dps.images,
+                    assets = [],
+                    entity = null,
+                    entityAssets = null;
+                
+                if (typeof level === 'string') {
+                    level = platypus.game.settings.levels[level];
                 }
-            }
-            
-            if (images) {
-                assets = assets.concat(images);
-            }
-            
-            if (typeof level === 'string') {
-                level = platypus.game.settings.levels[level];
-            }
 
-            if (level) {
-                for (i = 0; i < level.layers.length; i++) {
-                    if (level.layers[i].objects) {
-                        for (j = 0; j < level.layers[i].objects.length; j++) {
-                            entity = getEntityData(level.layers[i].objects[j], level.tilesets);
-                            if (entity) {
-                                entityAssets = Entity.manageAssets(entity);
-                                if (entityAssets) {
-                                    assets = assets.concat(entityAssets);
+                if (level) {
+                    if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
+                        assets.concat(level.assets);
+                    } else {
+                        for (i = 0; i < level.layers.length; i++) {
+                            if (level.layers[i].objects) {
+                                for (j = 0; j < level.layers[i].objects.length; j++) {
+                                    entity = getEntityData(level.layers[i].objects[j], level.tilesets);
+                                    if (entity) {
+                                        entityAssets = Entity.getAssetList(entity);
+                                        if (entityAssets) {
+                                            union(assets, entityAssets);
+                                        }
+                                    }
                                 }
                             }
                         }
+                        level.assets = assets.slice(); // Save for later in case this level is checked again.
                     }
                 }
-            }
-            
-            return assets;
-        }
+                
+                if (ss) {
+                    if (typeof ss === 'string') {
+                        union(assets, platypus.game.settings.spriteSheets[ss].images);
+                    } else {
+                        union(assets, ss.images);
+                    }
+                }
+                
+                if (images) {
+                    union(assets, images);
+                }
+                
+                return assets;
+            };
+        }())
     });
 }());
 

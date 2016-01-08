@@ -145,11 +145,11 @@ This component creates an entity and propels it away. This is useful for casting
             }
         },
         
-        manageAssets: function (def, props, defaultProps) {
+        getAssetList: function (def, props, defaultProps) {
             var spawn = def.spawneeClass || props.spawneeClass || defaultProps.spawneeClass;
             
             if (spawn) {
-                return Entity.manageAssets({
+                return Entity.getAssetList({
                     type: spawn
                 });
             }

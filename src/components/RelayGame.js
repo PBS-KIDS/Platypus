@@ -11,7 +11,7 @@
 
     var broadcast = function (event) {
         return function (value, debug) {
-            platypus.game.currentScene.trigger(event, value, debug);
+            platypus.game.currentScene.triggerOnChildren(event, value, debug);
         };
     };
     
