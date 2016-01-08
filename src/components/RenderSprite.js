@@ -80,37 +80,6 @@
         id: 'RenderSprite',
         
         properties: {
-
-            /**
-             * The id of the image. Unless otherwise defined the image id is the the name of the image. image is only used when there is no spritesheet. It is useful for files containing a single image.
-             *
-             * @property image
-             * @type String
-             * @default null
-             * @deprecated Use `spriteSheet.images` instead.
-             */
-            image: null,
-
-            /**
-             * The x registration point of the image. Used when you don't a spritesheet and are using the image property.
-             *
-             * @property regX
-             * @type Number
-             * @default 0
-             * @deprecated Use `spriteSheet.frames.regX` instead.
-             */
-            regX: 0,
-
-            /**
-             * The y registration point of the image. Used when you don't a spritesheet and are using the image property.
-             *
-             * @property regY
-             * @type Number
-             * @default 0
-             * @deprecated Use `spriteSheet.frames.regY` instead.
-             */
-            regY: 0,
-
            /**
              * spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.
              *
@@ -468,16 +437,6 @@
                     } else {
                         ss = this.spriteSheet;
                     }
-                } else if (this.image && platypus.assets[this.image]) { // Deprecate in next version.
-                    ss = {
-                        images: [this.image],
-                        frames: {
-                            width: platypus.assets[this.image].asset.width,
-                            height: platypus.assets[this.image].asset.height,
-                            regX: this.regX,
-                            regY: this.regY
-                        }
-                    };
                 } else {
                     ss = {};
                     console.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');

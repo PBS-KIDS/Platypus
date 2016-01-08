@@ -47,15 +47,18 @@
                 assetCache = Application.instance.assetManager.cache;
             
             for (i = 0; i < images.length; i++) {
-                if (platypus.assets && platypus.assets[images[i]] && platypus.assets[images[i]].asset) {
-                    assetData = platypus.assets[images[i]];
-                } else if (assetCache.read(images[i])) {
-                    platypus.assets = platypus.assets || {};
-                    assetData = platypus.assets[images[i]] = {
-                        asset: assetCache.read(images[i])
-                    };
+                if (typeof images[i] === 'string') {
+                    if (assetCache.read(images[i])) {
+                        assetData = {
+                            asset: assetCache.read(images[i])
+                        };
+                    } else {
+                        assetData = null;
+                    }
                 } else {
-                    assetData = null;
+                    assetData = {
+                        asset: images[i]
+                    };
                 }
                 
                 if (assetData) {
@@ -80,6 +83,12 @@
                 frames = spriteSheet.frames,
                 key = "";
             
+            for (i = 0; i < spriteSheet.images.length; i++) {
+                if (typeof spriteSheet.images[i] !== 'string') {
+                    return '';
+                }
+            }
+
             if (Array.isArray(frames)) {
                 for (i = 0; i < frames.length; i++) {
                     id += "-" + frames[i].join(",");
@@ -144,6 +153,46 @@
             
             return anims;
         },
+        getAnimations = function (spriteSheet) {
+            var i = 0,
+                anims    = null,
+                frame    = null,
+                frames   = null,
+                images   = spriteSheet.images,
+                texture  = null,
+                textures = [],
+                bases    = getBaseTextures(images);
+
+            // Set up frames array
+            if (Array.isArray(spriteSheet.frames)) {
+                frames = spriteSheet.frames;
+            } else {
+                frames = createFramesArray(spriteSheet.frames, bases);
+            }
+            
+            // Set up texture for each frame
+            for (i = 0; i < frames.length; i++) {
+                frame = frames[i];
+                texture = new PIXI.Texture(bases[frame[4]], new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]));
+                textures.push({
+                    texture: texture,
+                    anchor: new PIXI.Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
+                });
+            }
+
+            // Set up animations
+            anims = standardizeAnimations(spriteSheet.animations || {}, textures);
+
+            // Set up a default animation that plays through all frames
+            if (!anims['default']) {
+                anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
+            }
+            
+            return {
+                textures: textures,
+                animations: anims
+            };
+        },
         cacheAnimations = function (spriteSheet) {
             var i = 0,
                 id = '',
@@ -191,10 +240,12 @@
         },
         PIXIAnimation = function (spriteSheet, animation) {
             var cacheId = getTexturesCacheId(spriteSheet),
-                cache   = animationCache[cacheId],
+                cache   = (cacheId ? animationCache[cacheId] : null),
                 speed   = (spriteSheet.framerate || 60) / 60;
             
-            if (!cache) {
+            if (!cacheId) {
+                cache = getAnimations(spriteSheet);
+            } else if (!cache) {
                 cache = animationCache[cacheId] = cacheAnimations(spriteSheet);
             }
             
