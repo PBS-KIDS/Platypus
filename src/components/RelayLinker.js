@@ -163,7 +163,7 @@
                     grandparent = grandparent.parent;
                 }
                 this.linkMessage.reciprocate = true;
-                grandparent.trigger('link-entity', this.linkMessage, true);
+                grandparent.triggerOnChildren('link-entity', this.linkMessage, true);
             },
             
             destroy: function () {
