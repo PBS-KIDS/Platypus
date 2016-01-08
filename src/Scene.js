@@ -271,8 +271,6 @@ platypus.Scene = (function () {
                 assets[i] = formatAsset(assets[i]);
             }
             
-            console.log('"' + this.id + '" Assets: ', assets.join(', '));
-            
             return assets;
         };
     }());
