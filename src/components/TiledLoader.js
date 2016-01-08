@@ -395,7 +395,6 @@
                     tileHeight = level.tileheight,
                     widthOffset = 0,
                     heightOffset = 0,
-                    key = "",
                     x = 0,
                     p = 0,
                     w = 0,
@@ -406,7 +405,6 @@
                     entity = null,
                     entityPositionX = "",
                     entityPositionY = "",
-                    property = null,
                     entityType = '',
                     gid = -1,
                     smallestX = Infinity,
@@ -416,7 +414,6 @@
                     entityData = null,
                     properties = null,
                     layerCollides = true,
-                    numberProperty = 0,
                     polyPoints = null,
                     fallbackWidth = 0,
                     fallbackHeight = 0,
@@ -901,6 +898,7 @@
                     dps = defaultProps || {},
                     level  = def.level || ps.level || dps.level,
                     ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
+                    tilesets = [],
                     images = def.images || ps.images || dps.images,
                     assets = [],
                     entity = null,
@@ -926,6 +924,12 @@
                                     }
                                 }
                             }
+                        }
+                        if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
+                            for (i = 0; i < level.tilesets.length; i++) {
+                                tilesets.push(level.tilesets[i].name);
+                            }
+                            union(assets, tilesets);
                         }
                         level.assets = assets.slice(); // Save for later in case this level is checked again.
                     }
