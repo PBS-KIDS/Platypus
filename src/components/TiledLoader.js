@@ -94,7 +94,7 @@
                 props = null,
                 tileset = null;
             
-            if (data.gid !== -1) {
+            if (gid !== -1) {
                 data.transform = entityTransformCheck(gid);
                 gid = data.gid = transform.id;
             }
