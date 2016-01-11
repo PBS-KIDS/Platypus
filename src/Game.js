@@ -1,12 +1,12 @@
 /**
- * This class is used to create the `platypus.game` object. The `game` object handles loading [Scenes](platypus.Scene.html) and transitions between scenes. It also accepts external events and passes them on to the current scene.
+ * This class is used to create the `platypus.game` object and loads the Platypus game as described by the game configuration files.
  * 
  * @namespace platypus
  * @class Game
  * @constructor
- * @param [definition] {Object} Collection of configuration settings, typically from config.json.
- * @param [definition.global] {Object} Key/value pairs describing global game settings.
- * @param onFinishedLoading {Function} An optional function to run once the game has begun.
+ * @param definition {Object} Collection of configuration settings, typically from config.json.
+ * @param applicationInstance {springroll.Application} The Spring Roll application that the Platypus game is in.
+ * @param [onFinishedLoading] {Function} An optional function to run once the game has begun.
  * @return {platypus.Game} Returns the instantiated game. 
  */
 /*global console, createjs, PIXI, platypus, springroll */
@@ -14,8 +14,7 @@
 platypus.Game = (function () {
     "use strict";
     
-    var Application = include('springroll.Application'),
-	    Container   = include('PIXI.Container'),
+    var Container   = include('PIXI.Container'),
         Scene       = include('platypus.Scene'),
         getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
@@ -107,63 +106,61 @@ platypus.Game = (function () {
             callback(obj);
         },
         game = function (definition, applicationInstance, onFinishedLoading) {
-            var self = this,
-                stage = applicationInstance.display.stage,
-                load = function (settings) {
+            var load = function (settings) {
                     var scene  = '',
-                        states = Application.instance.states || {};
+                        states = this.app.states || {};
                     
-                    platypus.game = self; //Make this instance the only Game instance.
+                    platypus.game = this; //Make this instance the only Game instance.
 
-                    self.currentScene = null;
-                    self.loaded    = null;
-                    self.settings = settings;
-                    self.stage = stage;
+                    this.currentScene = null;
+                    this.settings = settings;
+                    this.stage = this.app.display.stage;
                     
+                    // Create Game Scenes.
                     for (scene in settings.scenes) {
                         if (settings.scenes.hasOwnProperty(scene)) {
                             states[settings.scenes[scene].id] = new Scene(new Container(), settings.scenes[scene]);
                         }
                     }
                     
-                    if (!Application.instance.states) {
-                        Application.instance.states = states;
+                    if (!this.app.states) {
+                        this.app.states = states;
                     }
                     
                     if (onFinishedLoading) {
-                        onFinishedLoading(self);
+                        onFinishedLoading(this);
                     }
                     
-                    //Add entity-finder for debugging
-                    if (window) {
-                        window.getEntityById = function (id) {
-                            return self.getEntityById(id);
-                        };
-        
-                        window.getEntitiesByType = function (type) {
-                            return self.getEntitiesByType(type);
-                        };
+                    //Add Debug tools
+                    window.getEntityById = function (id) {
+                        return this.getEntityById(id);
+                    }.bind(this);
+    
+                    window.getEntitiesByType = function (type) {
+                        return this.getEntitiesByType(type);
+                    }.bind(this);
+                    
+                    window.getVisibleSprites = function (c, a) {
+                        var i = 0;
                         
-                        window.getVisibleSprites = function (c, a) {
-                            var i = 0;
-                            
-                            a = a || [];
-                            c = c || stage;
-                            
-                            if (!c.texture && c.visible) {
-                                for (i = 0; i < c.children.length; i++) {
-                                    window.getVisibleSprites(c.children[i], a);
-                                }
-                                return a;
-                            } else if (c.visible) {
-                                a.push(c);
-                                return a;
+                        a = a || [];
+                        c = c || this.stage;
+                        
+                        if (!c.texture && c.visible) {
+                            for (i = 0; i < c.children.length; i++) {
+                                window.getVisibleSprites(c.children[i], a);
                             }
                             return a;
-                        };
-                    }
-                };
-
+                        } else if (c.visible) {
+                            a.push(c);
+                            return a;
+                        }
+                        return a;
+                    }.bind(this);
+                }.bind(this);
+            
+            this.app = applicationInstance;
+            
             if (!definition) {
                 console.warn('No game definition is supplied. Game not created.');
                 return null;
@@ -201,10 +198,8 @@ platypus.Game = (function () {
     * @param preloading=false {boolean} Whether the scene should appear immediately or just be loaded and not shown.
     **/
     proto.loadScene = function (sceneId, data) {
-        var app = Application.instance;
-        
-        app.states[sceneId].data = data; //sets data to send to next scene.
-        app.manager.state = sceneId;
+        this.app.states[sceneId].data = data; //sets data to send to next scene.
+        this.app.manager.state = sceneId;
     };
     
     /**

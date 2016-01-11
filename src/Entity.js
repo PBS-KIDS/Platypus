@@ -215,6 +215,14 @@ platypus.Entity = (function () {
         this.destroyed = true;
     };
     
+    /**
+     * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
+     * 
+     * @method getAssetList
+     * @param definition {Object} The definition for the Entity.
+     * @param properties {Object} Properties for this instance of the Entity.
+     * @return {Array} A list of the necessary assets to load.
+     */
     entity.getAssetList = (function () {
         var union = function (a, b) {
                 var i = 0,

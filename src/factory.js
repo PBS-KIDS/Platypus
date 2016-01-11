@@ -154,7 +154,15 @@
             }
         }
 
-        // This handles dynamic listing of assets for a scene.
+        /**
+         * This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
+         * 
+         * @method getAssetList
+         * @param definition {Object} The definition for the component.
+         * @param properties {Object} The properties of the Entity.
+         * @param defaultProperties {Object} The default properties of the Entity.
+         * @return {Array} A list of the necessary assets to load.
+         */
         if (componentDefinition.getAssetList) {
             component.getAssetList = componentDefinition.getAssetList;
         } else {

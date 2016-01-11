@@ -17,15 +17,13 @@
  * @namespace platypus
  * @class Scene
  * @constructor
+ * @extends springroll.State
+ * @param Stage {PIXI.Container} Object where the scene displays layers.
  * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties, filters, and components as shown above under "JSON Definition Example".
  * @param {String} [definition.id] This declares the id of the scene.
  * @param {Array} [definition.layers] This lists the layers that comprise the scene.
- * @param Stage {createjs.Stage} Object where the scene displays layers.
  * @return {Scene} Returns the new scene made up of the provided layers. 
- * 
- *     
-Requires: ["Entity.js"]
-*/
+ */
 /*global extend, platypus */
 /*jslint plusplus:true */
 platypus.Scene = (function () {
@@ -113,6 +111,13 @@ platypus.Scene = (function () {
             if (platypus.game.settings.debug) {
                 console.log('Scene loaded: ' + this.id);
             }
+        
+            /**
+             * This event is triggered on the layers once the Scene is finished loading.
+             * 
+             * @event 'scene-loaded'
+             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+             */
             this.triggerOnChildren('scene-loaded', this.data);
         },
         Scene  = function (panel, definition) {
@@ -130,14 +135,31 @@ platypus.Scene = (function () {
         },
         proto = extend(Scene, State);
         
+    /**
+     * Triggers "scene-live" on the Scene layers once the Scene is finished loading and the transition into the Scene has finished.
+     * 
+     * @method enterDone
+     */
     proto.enterDone = function () {
         platypus.game.currentScene = this;
         if (platypus.game.settings.debug) {
             console.log('Scene live: ' + this.id);
         }
+        
+        /**
+         * This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.
+         * 
+         * @event 'scene-live'
+         * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+         */
         this.triggerOnChildren('scene-live', this.data);
     };
     
+    /**
+     * Logs the end of the Scene to the console in debug mode.
+     * 
+     * @method exitStart
+     */
     proto.exitStart = function () {
         if (platypus.game.settings.debug) {
             console.log('Scene ending: ' + this.id);
@@ -240,6 +262,13 @@ platypus.Scene = (function () {
         platypus.game.currentScene = null;
     };
     
+    /**
+     * Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets.
+     * 
+     * @method getAssetList
+     * @param definition {Object} The definition for the Scene.
+     * @return {Array} A list of the necessary assets to load.
+     */
     proto.getAssetList = (function () {
         var fn = /([\w-]+)\.(\w)$/,
             formatAsset = function (asset) {

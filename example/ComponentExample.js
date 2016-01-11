@@ -106,6 +106,22 @@
                    entity.whatIsMyFavoriteColor().
             *********************************************************************/
             
+        },
+        
+        getAssetList: function (component, props, defaultProps) {
+            /*********************************************************************
+             TODO: This method can be provided to the list of assets this
+                   component requires. This method is invoked when the list of
+                   game scenes is created to determine assets for each scene.
+                   
+                   e.g.
+                   function (component, props, defaultProps) {
+                       return ['yellow-sprite'];
+                   }
+                   
+                   If the component doesn't require any assets, this method does
+                   not need to be provided.
+            *********************************************************************/
         }
     });
 }());
