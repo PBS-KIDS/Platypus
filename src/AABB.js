@@ -350,6 +350,23 @@ platypus.AABB = (function () {
     proto.intersects = function (aabb) {
         return !((aabb.bottom < this.top) || (aabb.top > this.bottom) || (aabb.right < this.left) || (aabb.left > this.right));
     };
+
+    /**
+     * Returns the area of the intersection.
+     * 
+     * @method getIntersectionArea
+     * @param aabb {AABB} The AABB this AABB intersects with.
+     * @return {Number} Returns the area of the intersected AABB's.
+     */
+	proto.getIntersectionArea = function(aabb){
+		var max    = Math.max,
+            min    = Math.min,
+            width  = min(this.bottom, aabb.bottom) - max(this.top,  aabb.top),
+            height = min(this.right,  aabb.right)  - max(this.left, aabb.left),
+            area   = width * height;
+		
+		return area;
+	};
     
     return AABB;
 }());
