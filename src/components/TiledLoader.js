@@ -43,6 +43,24 @@
 
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Entity      = include('platypus.Entity'),
+        decodeBase64 = (function () {
+            var decode = function (str) {
+                return (((str.charCodeAt(0)) + (str.charCodeAt(1) << 8) + (str.charCodeAt(2) << 16) + (str.charCodeAt(3) << 24 )) >>> 0);
+            };
+            
+            return function (data) {
+                var index = 4,
+                    arr   = [],
+                    step1 = atob(data);
+                
+                while (index <= step1.length) {
+                    arr.push(decode(step1.substr(index - 4, 4)));
+                    index += 4;
+                }
+                
+                return arr;
+            };
+        }()),
         transformCheck = function (v) {
             var a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
@@ -199,6 +217,31 @@
                     "imageMap":    "import"
                 }]
             }
+        },
+        importTileset = function (tileset) {
+            var key = '',
+                source = platypus.game.settings.levels[tileset.source.replace('.json', '')];
+            
+            for (key in source) {
+                if (source.hasOwnProperty(key)) {
+                    tileset[key] = source[key];
+                }
+            }
+            
+            delete tileset.source; // We remove this so we never have to rerun this import. Note that we can't simply replace the tileset properties since the tileset's firstgid property may change from level to level.
+            
+            return tileset;
+        },
+        importTilesetData = function (tilesets) {
+            var i = 0;
+            
+            for (i = 0; i < tilesets.length; i++) {
+                if (tilesets[i].source) {
+                    tilesets[i] = importTileset(tilesets[i]);
+                }
+            }
+            
+            return tilesets;
         };
 
     return platypus.createComponentClass({
@@ -483,6 +526,11 @@
                             y = 0,
                             prop = "",
                             data = layer.data;
+                            
+                        if (layer.encoding === 'base64') {
+                            data = layer.data = decodeBase64(data);
+                            layer.encoding = 'csv'; // So we won't have to decode again.
+                        }
 
                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                         if (layer.properties) {
@@ -613,6 +661,8 @@
                             }));
                         }
                     };
+                
+                tilesets = importTilesetData(tilesets);
 
                 if (images.length === 0) {
                     for (x = 0; x < tilesets.length; x++) {
@@ -755,11 +805,11 @@
                                 properties.height = (entity.height || 0) * this.unitsPerPixel;
 
                                 if (entityType && platypus.game.settings.entities[entityType] && platypus.game.settings.entities[entityType].properties) {
-                                    if (!properties.width) {
+                                    if (platypus.game.settings.entities[entityType].properties.width) {
                                         properties.width = platypus.game.settings.entities[entityType].properties.width || 0;
                                         widthOffset = fallbackWidth;
                                     }
-                                    if (!properties.height) {
+                                    if (platypus.game.settings.entities[entityType].properties.height) {
                                         properties.height = platypus.game.settings.entities[entityType].properties.height || 0;
                                         heightOffset = fallbackHeight;
                                     }
@@ -906,6 +956,8 @@
                 }
 
                 if (level) {
+                    level.tilesets = importTilesetData(level.tilesets);
+
                     if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
                         assets.concat(level.assets);
                     } else {
