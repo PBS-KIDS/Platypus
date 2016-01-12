@@ -36,7 +36,7 @@
  * @class TiledLoader
  * @uses platypus.Component
  */
-/*global console, include, platypus */
+/*global console, include, pako, platypus */
 /*jslint bitwise: true, plusplus: true */
 (function () {
     "use strict";
@@ -44,18 +44,29 @@
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Entity      = include('platypus.Entity'),
         decodeBase64 = (function () {
-            var decode = function (str) {
-                return (((str.charCodeAt(0)) + (str.charCodeAt(1) << 8) + (str.charCodeAt(2) << 16) + (str.charCodeAt(3) << 24 )) >>> 0);
-            };
+            var decodeString = function (str) {
+                    return (((str.charCodeAt(0)) + (str.charCodeAt(1) << 8) + (str.charCodeAt(2) << 16) + (str.charCodeAt(3) << 24 )) >>> 0);
+                },
+                decodeArray = function (arr, index) {
+                    return ((arr[index] + (arr[index + 1] << 8) + (arr[index + 2] << 16) + (arr[index + 3] << 24 )) >>> 0);
+                };
             
-            return function (data) {
+            return function (data, compression) {
                 var index = 4,
                     arr   = [],
-                    step1 = atob(data);
-                
-                while (index <= step1.length) {
-                    arr.push(decode(step1.substr(index - 4, 4)));
-                    index += 4;
+                    step1 = atob(data.replace(/\\/g, ''));
+                    
+                if (compression === 'zlib') {
+                    step1 = pako.inflate(step1);
+                    while (index <= step1.length) {
+                        arr.push(decodeArray(step1, index - 4));
+                        index += 4;
+                    }
+                } else {
+                    while (index <= step1.length) {
+                        arr.push(decodeString(step1.substr(index - 4, 4)));
+                        index += 4;
+                    }
                 }
                 
                 return arr;
@@ -526,9 +537,9 @@
                             y = 0,
                             prop = "",
                             data = layer.data;
-                            
+                        
                         if (layer.encoding === 'base64') {
-                            data = layer.data = decodeBase64(data);
+                            data = layer.data = decodeBase64(data, layer.compression);
                             layer.encoding = 'csv'; // So we won't have to decode again.
                         }
 
