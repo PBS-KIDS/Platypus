@@ -973,7 +973,7 @@
                         assets.concat(level.assets);
                     } else {
                         for (i = 0; i < level.layers.length; i++) {
-                            if (level.layers[i].objects) {
+                            if (level.layers[i].type === 'objectgroup') {
                                 for (j = 0; j < level.layers[i].objects.length; j++) {
                                     entity = getEntityData(level.layers[i].objects[j], level.tilesets);
                                     if (entity) {
@@ -983,6 +983,8 @@
                                         }
                                     }
                                 }
+                            } else if (level.layers[i].type === 'imagelayer') {
+                                union(assets, [level.layers[i].name]);
                             }
                         }
                         if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
