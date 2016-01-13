@@ -18,7 +18,8 @@
 (function () {
     "use strict";
     
-    var getAssetList = (function () {
+    var priority = 0,
+        getAssetList = (function () {
             var emptyArray = [];            
             return function (definition) {
                 return emptyArray;
@@ -91,13 +92,14 @@
                 }
 
                 if (componentDefinition.events) {
+                    priority -= 0.0000001; // So event priority remains in order of component addition.
                     for (func in componentDefinition.events) {
                         if (componentDefinition.events.hasOwnProperty(func)) {
-                            this.addEventListener(func, componentDefinition.events[func]);
+                            this.addEventListener(func, componentDefinition.events[func], priority);
                             if (definition.aliases) {
                                 for (alias in definition.aliases) {
                                     if (definition.aliases.hasOwnProperty(alias) && (definition.aliases[alias] === func)) {
-                                        this.addEventListener(alias, componentDefinition.events[func]);
+                                        this.addEventListener(alias, componentDefinition.events[func], priority);
                                     }
                                 }
                             }
@@ -250,10 +252,10 @@
          * @param callback {Function} The handler for the event.
          * @private
          */
-        proto.addEventListener = function (event, callback) {
+        proto.addEventListener = function (event, callback, priority) {
             this.listener.events.push(event);
             this.listener.messages.push(callback);
-            this.owner.bind(event, callback, this);
+            this.owner.on(event, callback.bind(this), priority);
         };
         
         /**

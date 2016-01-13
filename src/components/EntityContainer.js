@@ -163,17 +163,17 @@
                 var x = 0,
                     y = 0;
                 
-                if (this.messages[event]) {
+                if (this._listeners[event]) {
                     return false; // event is already added.
                 }
 
-                this.messages[event] = []; //to signify it's been added even if not used
+                this._listeners[event] = []; //to signify it's been added even if not used
                 
                 //Listen for message on children
                 for (x = 0; x < this.entities.length; x++) {
-                    if (this.entities[x].messages[event]) {
-                        for (y = 0; y < this.entities[x].messages[event].length; y++) {
-                            this.addChildEventListener(this.entities[x], event, this.entities[x].messages[event][y].callback, this.entities[x].messages[event][y].scope);
+                    if (this.entities[x]._listeners[event]) {
+                        for (y = 0; y < this.entities[x]._listeners[event].length; y++) {
+                            this.addChildEventListener(this.entities[x], event, this.entities[x]._listeners[event][y]);
                         }
                     }
                 }
@@ -188,10 +188,10 @@
                 var y     = 0,
                     event = '';
                 
-                for (event in this.messages) {
-                    if (this.messages.hasOwnProperty(event) && entity.messages[event]) {
-                        for (y = 0; y < entity.messages[event].length; y++) {
-                            this.addChildEventListener(entity, event, entity.messages[event][y].callback, entity.messages[event][y].scope);
+                for (event in this._listeners) {
+                    if (this._listeners.hasOwnProperty(event) && entity._listeners[event]) {
+                        for (y = 0; y < entity._listeners[event].length; y++) {
+                            this.addChildEventListener(entity, event, entity._listeners[event][y]);
                         }
                     }
                 }
@@ -200,43 +200,39 @@
             removeChildEventListeners: function (entity) {
                 var i        = 0,
                     events   = null,
-                    messages = null,
-                    scopes   = null;
+                    messages = null;
                 
                 if (entity.containerListener) {
                     events   = entity.containerListener.events;
                     messages = entity.containerListener.messages;
-                    scopes   = entity.containerListener.scopes;
+
                     for (i = 0; i < events.length; i++) {
-                        this.removeChildEventListener(entity, events[i], messages[i], scopes[i]);
+                        this.removeChildEventListener(entity, events[i], messages[i]);
                     }
                     entity.containerListener = null;
                 }
             },
             
-            addChildEventListener: function (entity, event, callback, scope) {
+            addChildEventListener: function (entity, event, callback) {
                 if (!entity.containerListener) {
                     entity.containerListener = {
                         events: [],
-                        messages: [],
-                        scopes: []
+                        messages: []
                     };
                 }
                 entity.containerListener.events.push(event);
                 entity.containerListener.messages.push(callback);
-                entity.containerListener.scopes.push(scope);
-                this.bind(event, callback, scope);
+                this.bind(event, callback);
             },
             
-            removeChildEventListener: function (entity, event, callback, scope) {
+            removeChildEventListener: function (entity, event, callback) {
                 var i        = 0,
                     events   = entity.containerListener.events,
-                    messages = entity.containerListener.messages,
-                    scopes   = entity.containerListener.scopes;
+                    messages = entity.containerListener.messages;
                 
                 for (i = 0; i < events.length; i++) {
-                    if ((events[i] === event) && (!callback || (messages[i] === callback)) && (!scope || (scopes[i] === scope))) {
-                        this.unbind(event, messages[i], scopes[i]);
+                    if ((events[i] === event) && (!callback || (messages[i] === callback))) {
+                        this.unbind(event, messages[i]);
                     }
                 }
             },
@@ -350,13 +346,13 @@
             },
             
             triggerEventOnChildren: function (event, message, debug) {
-                if (!this.messages[event]) {
+                if (!this._listeners[event]) {
                     this.addNewPrivateEvent(event);
                 }
                 return this.triggerEvent(event, message, debug);
             },
             triggerOnChildren: function (event, message, debug) {
-                if (!this.messages[event]) {
+                if (!this._listeners[event]) {
                     this.addNewPrivateEvent(event);
                 }
                 return this.trigger(event, message, debug);

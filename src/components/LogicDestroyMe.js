@@ -20,12 +20,10 @@
              * @type number
              * @default 0
              */
-            delay: 0
-        },
-        
-        publicProperties: {
+            delay: 0,
+
             /**
-             * Whether this entity has been destroyed. Typically `false` until a "destroy-me" event has been triggered. Available on the entity as `entity.destroyed`.
+             * Whether this entity has been destroyed. Typically `false` until a "destroy-me" event has been triggered.
              * 
              * @property destroyed
              * @type boolean
