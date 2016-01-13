@@ -49,6 +49,26 @@ platypus.Entity = (function () {
     "use strict";
     
     var entityIds = {},
+        union = function (a, b) {
+            var i = 0,
+                j = 0,
+                aL = a.length,
+                bL = b.length,
+                found = false;
+                
+            for (i = 0; i < bL; i++) {
+                found = false;
+                for (j = 0; j < aL; j++) {
+                    if (b[i] === a[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    a.push(b[i]);
+                }
+            }
+        },
         entity = function (definition, instanceDefinition) {
             var self                 = this,
                 i                    = 0,
@@ -223,47 +243,51 @@ platypus.Entity = (function () {
      * @param properties {Object} Properties for this instance of the Entity.
      * @return {Array} A list of the necessary assets to load.
      */
-    entity.getAssetList = (function () {
-        var union = function (a, b) {
-                var i = 0,
-                    j = 0,
-                    aL = a.length,
-                    bL = b.length,
-                    found = false;
-                    
-                for (i = 0; i < bL; i++) {
-                    found = false;
-                    for (j = 0; j < aL; j++) {
-                        if (b[i] === a[j]) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        a.push(b[i]);
-                    }
-                }
-            };
+    entity.getAssetList = function (def, props) {
+        var i = 0,
+            component = null,
+            assets = [];
         
-        return function (def, props) {
-            var i = 0,
-                component = null,
-                assets = [];
-            
-            if (def.type) {
-                return entity.getAssetList(platypus.game.settings.entities[def.type], def.properties);
-            }
+        if (def.type) {
+            return entity.getAssetList(platypus.game.settings.entities[def.type], def.properties);
+        }
 
-            for (i = 0; i < def.components.length; i++) {
-                component = platypus.components[def.components[i].type];
-                if (component) {
-                    union(assets, component.getAssetList(def.components[i], def.properties, props));
-                }
+        for (i = 0; i < def.components.length; i++) {
+            component = platypus.components[def.components[i].type];
+            if (component) {
+                union(assets, component.getAssetList(def.components[i], def.properties, props));
             }
-            
-            return assets;
-        };
-    }());
+        }
+        
+        return assets;
+    };
+    
+    /**
+     * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
+     * 
+     * @method getLateAssetList
+     * @param definition {Object} The definition for the Entity.
+     * @param data {Object} Scene data that affects asset list.
+     * @return {Array} A list of the necessary assets to load.
+     */
+    entity.getLateAssetList = function (def, props, data) {
+        var i = 0,
+            component = null,
+            assets = [];
+        
+        if (def.type) {
+            return entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
+        }
+
+        for (i = 0; i < def.components.length; i++) {
+            component = platypus.components[def.components[i].type];
+            if (component) {
+                union(assets, component.getLateAssetList(def.components[i], def.properties, props, data));
+            }
+        }
+        
+        return assets;
+    };
     
     return entity;
 }());

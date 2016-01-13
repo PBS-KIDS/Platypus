@@ -197,10 +197,17 @@ platypus.Game = (function () {
     * @param data {Object} A list of key/value pairs describing options or settings for the loading scene.
     * @param preloading=false {boolean} Whether the scene should appear immediately or just be loaded and not shown.
     **/
-    proto.loadScene = function (sceneId, data) {
-        this.app.states[sceneId].data = data; //sets data to send to next scene.
-        this.app.manager.state = sceneId;
-    };
+    proto.loadScene = (function () {
+        var load = function (sceneId, data) {
+            this.app.states[sceneId].data = data; //sets data to send to next scene.
+            this.app.manager.state = sceneId;
+        };
+        
+        return function (sceneId, data) {
+            // Delay load so it doesn't end a scene mid-tick.
+            setTimeout(load.bind(this, sceneId, data), 1);
+        }
+    }());
     
     /**
     * This method will return the first entity it finds with a matching id.

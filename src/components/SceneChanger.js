@@ -41,7 +41,7 @@ This component allows the entity to initiate a change from the current scene to 
         
         constructor: function (definition) {
             this.scene = this.owner.scene || definition.scene;
-            this.transition = this.owner.transition || definition.transition || 'instant';
+            //this.transition = this.owner.transition || definition.transition || 'instant';
             this.persistentData = definition.persistentData || {};
             this.preload = definition.preload || false;
             
@@ -61,10 +61,10 @@ This component allows the entity to initiate a change from the current scene to 
             "new-scene": function (response) {
                 var resp       = response || this,
                     scene      = resp.scene || this.scene,
-                    transition = resp.transition || this.transition,
+                    //transition = resp.transition || this.transition,
                     data       = resp.persistentData || this.persistentData;
             
-                platypus.game.loadScene(scene, transition, data);
+                platypus.game.loadScene(scene, data);
             },
             "set-scene": function (scene) {
                 this.scene = scene;

@@ -43,6 +43,26 @@
 
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Entity      = include('platypus.Entity'),
+        union = function (a, b) {
+            var i = 0,
+                j = 0,
+                aL = a.length,
+                bL = b.length,
+                found = false;
+                
+            for (i = 0; i < bL; i++) {
+                found = false;
+                for (j = 0; j < aL; j++) {
+                    if (b[i] === a[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    a.push(b[i]);
+                }
+            }
+        },
         decodeBase64 = (function () {
             var decodeString = function (str) {
                     return (((str.charCodeAt(0)) + (str.charCodeAt(1) << 8) + (str.charCodeAt(2) << 16) + (str.charCodeAt(3) << 24 )) >>> 0);
@@ -201,6 +221,51 @@
             }
 
             return value;
+        },
+        checkLevel = function (level, ss) {
+            var i = 0,
+                j = 0,
+                tilesets = [],
+                assets = [],
+                entity = null,
+                entityAssets = null;
+
+            if (typeof level === 'string') {
+                level = platypus.game.settings.levels[level];
+            }
+
+            if (level) {
+                level.tilesets = importTilesetData(level.tilesets);
+
+                if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
+                    union(assets, level.assets);
+                } else {
+                    for (i = 0; i < level.layers.length; i++) {
+                        if (level.layers[i].type === 'objectgroup') {
+                            for (j = 0; j < level.layers[i].objects.length; j++) {
+                                entity = getEntityData(level.layers[i].objects[j], level.tilesets);
+                                if (entity) {
+                                    entityAssets = Entity.getAssetList(entity);
+                                    if (entityAssets) {
+                                        union(assets, entityAssets);
+                                    }
+                                }
+                            }
+                        } else if (level.layers[i].type === 'imagelayer') {
+                            union(assets, [level.layers[i].name]);
+                        }
+                    }
+                    if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
+                        for (i = 0; i < level.tilesets.length; i++) {
+                            tilesets.push(level.tilesets[i].name);
+                        }
+                        union(assets, tilesets);
+                    }
+                    level.assets = assets.slice(); // Save for later in case this level is checked again.
+                }
+            }
+            
+            return assets;
         },
         // These are provided but can be overwritten by entities of the same name in the configuration.
         standardEntityLayers = {
@@ -927,91 +992,37 @@
             }
         },
         
-        getAssetList: (function () {
-            var union = function (a, b) {
-                    var i = 0,
-                        j = 0,
-                        aL = a.length,
-                        bL = b.length,
-                        found = false;
-                        
-                    for (i = 0; i < bL; i++) {
-                        found = false;
-                        for (j = 0; j < aL; j++) {
-                            if (b[i] === a[j]) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            a.push(b[i]);
-                        }
-                    }
-                };
+        getAssetList: function (def, props, defaultProps) {
+            var ps = props || {},
+                dps = defaultProps || {},
+                ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
+                images = def.images || ps.images || dps.images,
+                assets = [];
             
-            return function (def, props, defaultProps) {
-                var i = 0,
-                    j = 0,
-                    ps = props || {},
-                    dps = defaultProps || {},
-                    level  = def.level || ps.level || dps.level,
-                    ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
-                    tilesets = [],
-                    images = def.images || ps.images || dps.images,
-                    assets = [],
-                    entity = null,
-                    entityAssets = null;
-                
-                if (typeof level === 'string') {
-                    level = platypus.game.settings.levels[level];
+            union(assets, checkLevel(def.level || ps.level || dps.level, ss));
+            
+            if (ss) {
+                if (typeof ss === 'string') {
+                    union(assets, platypus.game.settings.spriteSheets[ss].images);
+                } else {
+                    union(assets, ss.images);
                 }
+            }
+            
+            if (images) {
+                union(assets, images);
+            }
+            
+            return assets;
+        },
+        
+        getLateAssetList: function (def, props, defaultProps, data) {
+            var ps = props || {},
+                dps = defaultProps || {},
+                ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet;
 
-                if (level) {
-                    level.tilesets = importTilesetData(level.tilesets);
-
-                    if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
-                        assets.concat(level.assets);
-                    } else {
-                        for (i = 0; i < level.layers.length; i++) {
-                            if (level.layers[i].type === 'objectgroup') {
-                                for (j = 0; j < level.layers[i].objects.length; j++) {
-                                    entity = getEntityData(level.layers[i].objects[j], level.tilesets);
-                                    if (entity) {
-                                        entityAssets = Entity.getAssetList(entity);
-                                        if (entityAssets) {
-                                            union(assets, entityAssets);
-                                        }
-                                    }
-                                }
-                            } else if (level.layers[i].type === 'imagelayer') {
-                                union(assets, [level.layers[i].name]);
-                            }
-                        }
-                        if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
-                            for (i = 0; i < level.tilesets.length; i++) {
-                                tilesets.push(level.tilesets[i].name);
-                            }
-                            union(assets, tilesets);
-                        }
-                        level.assets = assets.slice(); // Save for later in case this level is checked again.
-                    }
-                }
-                
-                if (ss) {
-                    if (typeof ss === 'string') {
-                        union(assets, platypus.game.settings.spriteSheets[ss].images);
-                    } else {
-                        union(assets, ss.images);
-                    }
-                }
-                
-                if (images) {
-                    union(assets, images);
-                }
-                
-                return assets;
-            };
-        }())
+            return checkLevel(data.level, ss);
+        }
     });
 }());
 
