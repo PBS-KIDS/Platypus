@@ -3,6 +3,7 @@
  * 
  * @namespace platypus
  * @class Messenger
+ * @extends springroll.EventDispatcher
  */
 /*global console, platypus */
 /*jslint plusplus:true */
