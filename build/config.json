@@ -2,6 +2,7 @@
 	"platypus_source": [
         "../src/pako.js",
 		"../src/platypus.js",
+		"../src/Component.js",
 		"../src/Messenger.js",
 		"../src/Entity.js",
 		"../src/Scene.js",
