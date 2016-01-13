@@ -92,7 +92,7 @@
                 }
 
                 if (componentDefinition.events) {
-                    priority -= 0.0000001; // So event priority remains in order of component addition.
+                    priority -= 1; // So event priority remains in order of component addition.
                     for (func in componentDefinition.events) {
                         if (componentDefinition.events.hasOwnProperty(func)) {
                             this.addEventListener(func, componentDefinition.events[func], priority);
