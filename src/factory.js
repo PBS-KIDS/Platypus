@@ -10,7 +10,7 @@
  * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
  * 
  */
-/*global console, platypus */
+/*global extend, include, platypus */
 /*jslint nomen:true, plusplus:true */
 (function () {
     "use strict";

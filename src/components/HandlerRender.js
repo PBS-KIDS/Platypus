@@ -396,12 +396,11 @@
             }()),
 
             destroy: function () {
-                var self = this;
                 if (this.container.mouseTarget) {
                     this.container.visible = false;
                     this.container.removeDisplayObject = function () {
-                        self.container = null;
-                    };
+                        this.container = null;
+                    }.bind(this);
                 } else {
                     this.container = null;
                 }

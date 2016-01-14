@@ -37,8 +37,6 @@
         id: 'CollisionGroup',
         
         constructor: function (definition) {
-            var self = this;
-            
             this.solidEntities = [];
             
             this.terrain = undefined;
@@ -56,9 +54,9 @@
                         count       = 0,
                         childEntity = null;
                     
-                    for (x = 0; x < self.solidEntities.length; x++) {
-                        childEntity = self.solidEntities[x];
-                        if ((childEntity !== self.owner) && childEntity.collisionGroup) {
+                    for (x = 0; x < this.solidEntities.length; x++) {
+                        childEntity = this.solidEntities[x];
+                        if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                             count += childEntity.collisionGroup.getAllEntities();
                         } else {
                             count += 1;
@@ -66,40 +64,40 @@
                     }
 
                     return count;
-                },
+                }.bind(this),
                 getSize: function () {
-                    return self.solidEntities.length;
-                },
+                    return this.solidEntities.length;
+                }.bind(this),
                 getCollisionTypes: function () {
-                    return self.getCollisionTypes();
-                },
+                    return this.getCollisionTypes();
+                }.bind(this),
                 getSolidCollisions: function () {
-                    return self.getSolidCollisions();
-                },
+                    return this.getSolidCollisions();
+                }.bind(this),
                 getAABB: function (collisionType) {
-                    return self.getAABB(collisionType);
-                },
+                    return this.getAABB(collisionType);
+                }.bind(this),
                 getPreviousAABB: function (collisionType) {
-                    return self.getPreviousAABB(collisionType);
-                },
+                    return this.getPreviousAABB(collisionType);
+                }.bind(this),
                 getShapes: function (collisionType) {
-                    return self.getShapes(collisionType);
-                },
+                    return this.getShapes(collisionType);
+                }.bind(this),
                 getPrevShapes: function (collisionType) {
-                    return self.getPrevShapes(collisionType);
-                },
+                    return this.getPrevShapes(collisionType);
+                }.bind(this),
                 prepareCollision: function (x, y) {
-                    return self.prepareCollision(x, y);
-                },
+                    return this.prepareCollision(x, y);
+                }.bind(this),
                 relocateEntity: function (vector, collisionData) {
-                    return self.relocateEntity(vector, collisionData);
-                },
+                    return this.relocateEntity(vector, collisionData);
+                }.bind(this),
                 movePreviousX: function (x) {
-                    return self.movePreviousX(x);
-                },
+                    return this.movePreviousX(x);
+                }.bind(this),
                 getSolidEntities: function () {
-                    return self.solidEntities;
-                },
+                    return this.solidEntities;
+                }.bind(this),
                 jumpThrough: false //TODO: this introduces odd behavior - not sure how to resolve yet. - DDD
             };
         },

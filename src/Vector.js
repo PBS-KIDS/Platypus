@@ -283,16 +283,16 @@ platypus.Vector = (function () {
     proto.multiply = function (multiplier, limit) {
         var i = 0,
             j = 0,
-            self = null,
+            arr = null,
             l = 0;
         
         if (Array.isArray(multiplier)) {
-            self = this.matrix.slice();
+            arr = this.matrix.slice();
             l = limit || multiplier.length;
             for (i = 0; i < l; i++) {
                 this.matrix[i] = 0;
                 for (j = 0; j < l; j++) {
-                    this.matrix[i] += self[j] * multiplier[i][j];
+                    this.matrix[i] += arr[j] * multiplier[i][j];
                 }
             }
         } else {

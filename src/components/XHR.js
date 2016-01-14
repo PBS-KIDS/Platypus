@@ -83,7 +83,6 @@
             setProperties: function (properties) {
                 var key     = '',
                     divider = '',
-                    self    = this,
                     props   = properties || this;
                 
                 this.method       = props.method       || this.method       || "GET";
@@ -111,9 +110,9 @@
                          * @event 'response'
                          * @param message {String} The message contains the responseText returned by the server.
                          */
-                        self.owner.trigger('response', this.responseText);
+                        this.owner.trigger('response', this.responseText);
                     }
-                };
+                }.bind(this);
             },
             get: function () {
                 var xhr  = new XMLHttpRequest(),

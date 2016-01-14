@@ -117,7 +117,6 @@
 
             return function (value) {
                 var i           = 0,
-                    self        = this,
                     audio       = null,
                     next        = false,
                     events      = false;
@@ -141,12 +140,12 @@
                         complete: function (cancelled) {
                             if (audio) {
                                 if (cancelled) {
-                                    self.onComplete(audio);
+                                    this.onComplete(audio);
                                 } else {
-                                    self.onComplete(audio, next);
+                                    this.onComplete(audio, next);
                                 }
                             }
-                        }
+                        }.bind(this)
                     });
                     
                     if (audio) {
@@ -309,8 +308,7 @@
              * @method 'handle-render'
              */
             "handle-render": function () {
-                var self      = this,
-                    i         = 0,
+                var i         = 0,
                     audioClip = null;
                 
                 if (this.paused) {
@@ -318,8 +316,8 @@
                 }
                 
                 this.getAllClips(function (clip) {
-                    self.checkTimeEvents(clip);
-                });
+                    this.checkTimeEvents(clip);
+                }.bind(this));
 
                 if (this.stateChange) {
                     if (this.checkStates) {
@@ -509,10 +507,9 @@
             stopAudio: function (audioId, playthrough) {
                 var i        = 0,
                     clips    = this.activeAudioClips,
-                    self     = this,
                     loopFunc = function (instance) {
-                        self.stopAudioInstance(instance.currentTarget);
-                    };
+                        this.stopAudioInstance(instance.currentTarget);
+                    }.bind(this);
                 
                 if (audioId) {
                     for (i = clips.length - 1; i >= 0; i--) {

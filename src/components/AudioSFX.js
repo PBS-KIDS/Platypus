@@ -46,8 +46,7 @@
             }
 
             return function (value) {
-                var self        = this,
-                    audio       = null;
+                var audio = null;
 
                 value = value || attributes;
 
@@ -62,9 +61,9 @@
                     paused:     value.paused    || attributes.paused || defaultSettings.paused,
                     complete: function (cancelled) {
                         if (audio) {
-                            self.onComplete(audio);
+                            this.onComplete(audio);
                         }
-                    }
+                    }.bind(this)
                 });
                 
                 if (audio) {
@@ -393,10 +392,9 @@
             stopAudio: function (audioId, playthrough) {
                 var i        = 0,
                     clips    = this.activeAudioClips,
-                    self     = this,
                     loopFunc = function (instance) {
-                        self.stopAudioInstance(instance.currentTarget);
-                    };
+                        this.stopAudioInstance(instance.currentTarget);
+                    }.bind(this);
                 
                 if (audioId) {
                     for (i = clips.length - 1; i >= 0; i--) {

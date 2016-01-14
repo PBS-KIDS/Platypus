@@ -53,7 +53,6 @@
 
         constructor: function (definition) {
             var i = 0,
-                self  = this,
                 event = '';
 
             if (this.events) {
@@ -70,8 +69,8 @@
             
             this.addEventListener('to-' + this.linkId + '-entities', broadcast('from-' + this.linkId + '-entities'));
             this.addEventListener('from-' + this.linkId + '-entities', function (resp) {
-                self.owner.trigger(resp.message, resp.value, resp.debug);
-            });
+                this.owner.trigger(resp.message, resp.value, resp.debug);
+            }.bind(this));
             
             this.links = [];
             

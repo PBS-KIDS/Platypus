@@ -427,8 +427,7 @@
                 };
             
             return function (definition) {
-                var self = this,
-                    ss   = null,
+                var ss   = null,
                     map  = null;
                 
                 if (this.spriteSheet) {
@@ -472,18 +471,18 @@
                      * @event 'animation-ended'
                      * @param animation {String} The id of the animation that ended.
                      */
-                    self.owner.trigger('animation-ended', animation);
-                    if (self.waitingAnimation) {
-                        self.currentAnimation = self.waitingAnimation;
-                        self.waitingAnimation = false;
-                        self.lastState = self.waitingState;
+                    this.owner.trigger('animation-ended', animation);
+                    if (this.waitingAnimation) {
+                        this.currentAnimation = this.waitingAnimation;
+                        this.waitingAnimation = false;
+                        this.lastState = this.waitingState;
                         
-                        self.animationFinished = false;
-                        self.sprite.gotoAndPlay(self.currentAnimation);
+                        this.animationFinished = false;
+                        this.sprite.gotoAndPlay(this.currentAnimation);
                     } else {
-                        self.animationFinished = true;
+                        this.animationFinished = true;
                     }
-                };
+                }.bind(this);
 
                 this.affine = new PIXI.Matrix();
                 
@@ -1227,8 +1226,6 @@
             }()),
             
             destroy: function () {
-                var self = this;
-
                 if (this.removeInputListeners) {
                     this.removeInputListeners();
                 }
@@ -1236,10 +1233,10 @@
                     if (this.container.mouseTarget) {
                         this.container.visible = false;
                         this.container.removeDisplayObject = function () {
-                            self.parentContainer.removeChild(self.container);
-                            self.parentContainer = null;
-                            self.container = null;
-                        };
+                            this.parentContainer.removeChild(this.container);
+                            this.parentContainer = null;
+                            this.container = null;
+                        }.bind(this);
                     } else {
                         this.parentContainer.removeChild(this.container);
                         this.parentContainer = null;

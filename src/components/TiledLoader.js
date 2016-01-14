@@ -507,8 +507,7 @@
             },
 
             setupLayer: function (layer, level, combineRenderLayer) {
-                var self = this,
-                    images = self.images || [],
+                var images = this.images || [],
                     tilesets = level.tilesets,
                     tileWidth = level.tilewidth,
                     tileHeight = level.tileheight,
@@ -570,17 +569,17 @@
                         }
 
                         // Prefer to have name in tiled match image id in game
-                        if (self.assetCache.read(imageLayer.name)) {
+                        if (this.assetCache.read(imageLayer.name)) {
                             tileLayer.image = imageLayer.name;
-                            tileLayer.tileheight = self.assetCache.read(imageLayer.name).height;
-                            tileLayer.tilewidth = self.assetCache.read(imageLayer.name).width;
+                            tileLayer.tileheight = this.assetCache.read(imageLayer.name).height;
+                            tileLayer.tilewidth = this.assetCache.read(imageLayer.name).width;
                         } else {
                             console.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
                             tileLayer.image = imageLayer.image;
                         }
 
                         return tileLayer;
-                    },
+                    }.bind(this),
                     createLayer = function (entityKind, layer) {
                         var props = null,
                             width = layer.width,
@@ -658,16 +657,16 @@
                         }
 
                         tileDefinition.properties = tileDefinition.properties || {};
-                        tileDefinition.properties.width = tWidth * width * self.unitsPerPixel;
-                        tileDefinition.properties.height = tHeight * height * self.unitsPerPixel;
+                        tileDefinition.properties.width = tWidth * width * this.unitsPerPixel;
+                        tileDefinition.properties.height = tHeight * height * this.unitsPerPixel;
                         tileDefinition.properties.columns = width;
                         tileDefinition.properties.rows = height;
-                        tileDefinition.properties.tileWidth = tWidth * self.unitsPerPixel;
-                        tileDefinition.properties.tileHeight = tHeight * self.unitsPerPixel;
-                        tileDefinition.properties.scaleX = self.imagesScale;
-                        tileDefinition.properties.scaleY = self.imagesScale;
-                        tileDefinition.properties.layerZ = self.layerZ;
-                        tileDefinition.properties.z = tileDefinition.properties.z || self.layerZ;
+                        tileDefinition.properties.tileWidth = tWidth * this.unitsPerPixel;
+                        tileDefinition.properties.tileHeight = tHeight * this.unitsPerPixel;
+                        tileDefinition.properties.scaleX = this.imagesScale;
+                        tileDefinition.properties.scaleY = this.imagesScale;
+                        tileDefinition.properties.layerZ = this.layerZ;
+                        tileDefinition.properties.z = tileDefinition.properties.z || this.layerZ;
 
                         tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
                         for (x = -1; x < tileTypes; x++) {
@@ -693,10 +692,10 @@
                                 tileDefinition.components[x].spriteSheet = {
                                     images: (layer.image ? [layer.image] : images),
                                     frames: {
-                                        width: tWidth * self.unitsPerPixel / self.imagesScale,
-                                        height: tHeight * self.unitsPerPixel / self.imagesScale,
-                                        regX: (tWidth * self.unitsPerPixel / self.imagesScale) / 2,
-                                        regY: (tHeight * self.unitsPerPixel / self.imagesScale) / 2
+                                        width: tWidth * this.unitsPerPixel / this.imagesScale,
+                                        height: tHeight * this.unitsPerPixel / this.imagesScale,
+                                        regX: (tWidth * this.unitsPerPixel / this.imagesScale) / 2,
+                                        regY: (tHeight * this.unitsPerPixel / this.imagesScale) / 2
                                     },
                                     animations: importAnimation
                                 };
@@ -715,28 +714,28 @@
                                 tileDefinition.components[x].imageMap = importRender;
                             }
                         }
-                        self.layerZ += self.layerIncrement;
+                        this.layerZ += this.layerIncrement;
 
                         if ((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
                             combineRenderLayer.trigger('add-tiles', renderTiles);
                             return combineRenderLayer;
                         } else {
                             props = {};
-                            if ((entityKind === 'render-layer') && self.spriteSheet) {
-                                if (typeof self.spriteSheet === 'string') {
-                                    props.spriteSheet = platypus.game.settings.spriteSheets[self.spriteSheet];
+                            if ((entityKind === 'render-layer') && this.spriteSheet) {
+                                if (typeof this.spriteSheet === 'string') {
+                                    props.spriteSheet = platypus.game.settings.spriteSheets[this.spriteSheet];
                                 } else {
-                                    props.spriteSheet = self.spriteSheet;
+                                    props.spriteSheet = this.spriteSheet;
                                 }
                                 if (!props.spriteSheet.animations) {
                                     props.spriteSheet.animations = importAnimation;
                                 }
                             }
-                            return self.owner.addEntity(new Entity(tileDefinition, {
+                            return this.owner.addEntity(new Entity(tileDefinition, {
                                 properties: props
                             }));
                         }
-                    };
+                    }.bind(this);
                 
                 tilesets = importTilesetData(tilesets);
 

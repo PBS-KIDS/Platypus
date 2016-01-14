@@ -75,8 +75,7 @@
             }
             
             return function (value) {
-                var self        = this,
-                    soundList   = null;
+                var soundList   = null;
                     
                 this.eventList = eventList.slice();
                 if (value && value.events) {
@@ -90,12 +89,12 @@
                 }
                 this.playingAudio = true;                
                 this.player.play(soundList, function () {
-                    self.playingAudio = false;
-                    self.onComplete(true);
-                }, function () {
-                    self.playingAudio = false;
-                    self.onComplete(false);
-                });
+                    this.playingAudio = false;
+                    this.onComplete(true);
+                }.bind(this), function () {
+                    this.playingAudio = false;
+                    this.onComplete(false);
+                }.bind(this));
             };
         };
     

@@ -116,27 +116,25 @@
         id: 'HandlerController',
         
         constructor: function (definition) {
-            var self = this;
-            
             this.callbackKeyUp   = null;
             this.callbackKeyDown = null;
             
             if (platypus.game.settings.debug) { // If this is a test build, leave in the browser key combinations so debug tools can be opened as expected.
                 this.callbackKeyDown = function (event) {
-                    self.keyDown(event);
-                };
+                    this.keyDown(event);
+                }.bind(this);
                 this.callbackKeyUp = function (event) {
-                    self.keyUp(event);
-                };
+                    this.keyUp(event);
+                }.bind(this);
             } else { // Otherwise remove default browser behavior for key inputs so that they do not interfere with game-play.
                 this.callbackKeyDown = function (event) {
-                    self.keyDown(event);
+                    this.keyDown(event);
                     event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-                };
+                }.bind(this);
                 this.callbackKeyUp = function (event) {
-                    self.keyUp(event);
+                    this.keyUp(event);
                     event.preventDefault(); // this may be too aggressive - if problems arise, we may need to limit this to certain key combos that get in the way of game-play. Example: (event.metaKey && event.keyCode == 37) causes an accidental cmd key press to send the browser back a page while playing and hitting the left arrow button.
-                };
+                }.bind(this);
             }
             
             window.addEventListener('keydown', this.callbackKeyDown, true);

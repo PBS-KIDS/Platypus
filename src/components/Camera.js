@@ -453,12 +453,11 @@
              */
             "relocate": function (location) {
                 var v = null,
-                    self = this,
                     move = function () {
-                        if (self.move(v.x, v.y)) {
-                            self.viewportUpdate = true;
+                        if (this.move(v.x, v.y)) {
+                            this.viewportUpdate = true;
                         }
-                    };
+                    }.bind(this);
 
                 if (location.time && window.createjs && createjs.Tween) {
                     v = new platypus.Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);

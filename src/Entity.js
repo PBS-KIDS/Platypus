@@ -70,8 +70,7 @@ platypus.Entity = (function () {
             }
         },
         entity = function (definition, instanceDefinition) {
-            var self                 = this,
-                i                    = 0,
+            var i                    = 0,
                 componentDefinition  = null,
                 def                  = definition || {},
                 componentDefinitions = def.components || [],
@@ -80,35 +79,35 @@ platypus.Entity = (function () {
                 instanceProperties   = instance.properties || {};
 
             // Set properties of messenger on this entity.
-            platypus.Messenger.call(self);
+            platypus.Messenger.call(this);
 
-            self.components  = [];
-            self.type = def.id || 'none';
+            this.components  = [];
+            this.type = def.id || 'none';
 
-            self.id = instance.id || instanceProperties.id;
-            if (!self.id) {
-                if (!entityIds[self.type]) {
-                    entityIds[self.type] = 0;
+            this.id = instance.id || instanceProperties.id;
+            if (!this.id) {
+                if (!entityIds[this.type]) {
+                    entityIds[this.type] = 0;
                 }
-                self.id = self.type + '-' + entityIds[self.type];
-                entityIds[self.type] += 1;
+                this.id = this.type + '-' + entityIds[this.type];
+                entityIds[this.type] += 1;
             }
 
             this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
             this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
             this.bind('set-property', function (keyValuePairs) {
-                self.setProperty(keyValuePairs);
-            });
+                this.setProperty(keyValuePairs);
+            }.bind(this));
 
-            if (!self.state) {
-                self.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
+            if (!this.state) {
+                this.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
             }
-            self.lastState = {}; //This is used to determine if the state of the entity has changed.
+            this.lastState = {}; //This is used to determine if the state of the entity has changed.
 
             for (i = 0; i < componentDefinitions.length; i++) {
                 componentDefinition = componentDefinitions[i];
                 if (platypus.components[componentDefinition.type]) {
-                    self.addComponent(new platypus.components[componentDefinition.type](self, componentDefinition));
+                    this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
                 } else {
                     console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
                 }
@@ -119,7 +118,7 @@ platypus.Entity = (function () {
              *
              * @event load
              */
-            self.triggerEvent('load');
+            this.triggerEvent('load');
         },
         proto = entity.prototype = new platypus.Messenger();
     

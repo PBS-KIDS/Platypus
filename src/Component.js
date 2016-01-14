@@ -115,14 +115,12 @@ platypus.Component = (function () {
      * @private
      */
     proto.addMethod = function (name, func) {
-        var self = this;
-        
         if (this.owner[name]) {
             console.warn(this.owner.type + ': Entity already has a method called "' + name + '". Method not added.');
         } else {
             this.owner[name] = function () {
-                return func.apply(self, arguments);
-            };
+                return func.apply(this, arguments);
+            }.bind(this);
             this.publicMethods[name] = func;
         }
     };
