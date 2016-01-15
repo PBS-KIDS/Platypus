@@ -324,10 +324,6 @@ platypus.Scene = (function () {
         var i = 0,
             assets = [];
         
-        if (!this.data) {
-            return assets;
-        }
-        
         for (i = 0; i < def.layers.length; i++) {
             union(assets, Entity.getLateAssetList(def.layers[i], null, this.data));
         }

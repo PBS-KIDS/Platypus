@@ -1016,11 +1016,15 @@
         },
         
         getLateAssetList: function (def, props, defaultProps, data) {
-            var ps = props || {},
+            var ps  = props || {},
                 dps = defaultProps || {},
-                ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet;
-
-            return checkLevel(data.level, ss);
+                ss  = def.spriteSheet || ps.spriteSheet || dps.spriteSheet;
+                
+            if (data && data.level) {
+                return checkLevel(data.level, ss);
+            } else {
+                return [];
+            }
         }
     });
 }());
