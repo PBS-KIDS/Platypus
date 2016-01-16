@@ -18,11 +18,12 @@
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
-/*global platypus */
+/*global include, platypus */
 platypus.CollisionShape = (function () {
     "use strict";
     
-    var collisionShape = function (owner, definition, collisionType) {
+    var Vector = include('platypus.Vector'),
+        collisionShape = function (owner, definition, collisionType) {
             var regX = definition.regX,
                 regY = definition.regY,
                 width = 0,
@@ -42,11 +43,11 @@ platypus.CollisionShape = (function () {
                 regY = this.height / 2;
             }
 
-            platypus.Vector.assign(this, 'offset', 'offsetX', 'offsetY');
+            Vector.assign(this, 'offset', 'offsetX', 'offsetY');
             this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
             this.offsetY = definition.offsetY || ((this.height / 2) - regY);
 
-            platypus.Vector.assign(this, 'position', 'x', 'y');
+            Vector.assign(this, 'position', 'x', 'y');
             if (owner) {
                 this.x = owner.x + this.offsetX;
                 this.y = owner.y + this.offsetY;
@@ -69,7 +70,7 @@ platypus.CollisionShape = (function () {
                 break;
             }
 
-            platypus.Vector.assign(this, 'size', 'width', 'height');
+            Vector.assign(this, 'size', 'width', 'height');
             this.width  = width;
             this.height = height;
 

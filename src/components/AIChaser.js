@@ -5,11 +5,12 @@
  * @class AIChaser
  * @uses platypus.Component
  */
-/*global console, platypus */
+/*global console, include, platypus */
 (function () {
     "use strict";
     
-    var tempVect = new platypus.Vector();
+    var Vector = include('platypus.Vector'),
+        tempVect = new Vector();
 
     return platypus.createComponentClass({
         
@@ -48,7 +49,7 @@
         
         constructor: function (definition) {
             this.target = this.owner.target || null;
-            this.offset = new platypus.Vector(0, 0);
+            this.offset = new Vector(0, 0);
         },
 
         events: {

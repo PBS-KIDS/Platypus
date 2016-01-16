@@ -23,6 +23,7 @@
  * @namespace platypus.components
  * @class AudioMobile
  * @uses platypus.Component
+ * @deprecated since 0.7.0
  */
 /*global console, platypus */
 (function () {
@@ -54,6 +55,9 @@
         },
         
         constructor: function (definition) {
+            if (platypus.game.settings.debug) {
+                console.warn('"' + this.owner.type + '" is using the AudioMobile component which has been deprecated.');
+            }
         },
 
         events: {

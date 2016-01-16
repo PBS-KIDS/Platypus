@@ -4,7 +4,7 @@
  * @namespace platypus.components
  * @class Audio
  * @uses platypus.Component
- * @deprecated Use `components.AudioSFX` or `components.AudioVO` instead.
+ * @deprecated since 0.6.0 - Use `components.AudioSFX` or `components.AudioVO` instead.
  */
 /*global include, createjs, platypus */
 /*jslint plusplus:true */
@@ -296,6 +296,10 @@
                         this.checkStates.push(createTest(key, definition.audioMap[key], playClip));
                     }
                 }
+            }
+
+            if (platypus.game.settings.debug) {
+                console.warn('"' + this.owner.type + '" is using the Audio component which has been deprecated in favor of AudioSFX for sound effects and AudioVO for voice-over.');
             }
             
             this.paused          = false;

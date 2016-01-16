@@ -299,15 +299,15 @@
                 var entity = null,
                     x = 0;
                 
-                if (newEntity instanceof platypus.Entity) {
+                if (newEntity instanceof Entity) {
                     entity = newEntity;
                 } else {
                     if (typeof newEntity === 'string') {
-                        entity = new platypus.Entity(platypus.game.settings.entities[newEntity]);
+                        entity = new Entity(platypus.game.settings.entities[newEntity]);
                     } else if (newEntity.id) {
-                        entity = new platypus.Entity(newEntity);
+                        entity = new Entity(newEntity);
                     } else {
-                        entity = new platypus.Entity(platypus.game.settings.entities[newEntity.type], newEntity);
+                        entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity);
                     }
                     this.owner.triggerEvent('entity-created', entity);
                 }

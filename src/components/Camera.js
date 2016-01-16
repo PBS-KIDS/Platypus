@@ -12,7 +12,9 @@
 (function () {
     "use strict";
     
-    var Application = include("springroll.Application");
+    var Application = include("springroll.Application"),
+        AABB = include('platypus.AABB'),
+        Vector = include('platypus.Vector');
     
     return platypus.createComponentClass({
         id: 'Camera',
@@ -146,17 +148,17 @@
         },
         constructor: function (definition) {
             //The dimensions of the camera in the window
-            this.viewport = new platypus.AABB(0, 0, 0, 0);
+            this.viewport = new AABB(0, 0, 0, 0);
             
             //The dimensions of the camera in the game world
             this.worldCamera = {
-                viewport: new platypus.AABB(this.x, this.y, this.width, this.height),
+                viewport: new AABB(this.x, this.y, this.width, this.height),
                 orientation: definition.orientation || 0
             };
             
             //Message object defined here so it's reusable
             this.message = {
-                viewport: new platypus.AABB(),
+                viewport: new AABB(),
                 scaleX: 0,
                 scaleY: 0,
                 orientation: 0,
@@ -172,7 +174,7 @@
             //FOLLOW MODE VARIABLES
             
             //--Bounding
-            this.boundingBox = new platypus.AABB(this.worldCamera.viewport.x, this.worldCamera.viewport.y, this.worldCamera.viewport.width / 2, this.worldCamera.viewport.height / 2);
+            this.boundingBox = new AABB(this.worldCamera.viewport.x, this.worldCamera.viewport.y, this.worldCamera.viewport.width / 2, this.worldCamera.viewport.height / 2);
             
             //Forward Follow
             this.lastX = this.worldCamera.viewport.x;
@@ -460,7 +462,7 @@
                     }.bind(this);
 
                 if (location.time && window.createjs && createjs.Tween) {
-                    v = new platypus.Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
+                    v = new Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
                     createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move);
                 } else {
                     if (this.move(location.x, location.y)) {

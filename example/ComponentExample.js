@@ -4,6 +4,7 @@
  * @class ComponentExample
  * @uses platypus.Component
  */
+/*global platypus */
 (function () {
     "use strict";
     

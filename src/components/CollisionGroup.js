@@ -11,27 +11,29 @@
     "use strict";
 
     //set here to make them reusable objects
-    var appendUniqueItems = function (hostArray, insertArray) {
-        var i      = 0,
-            j      = 0,
-            length = hostArray.length,
-            found  = false;
-        
-        for (i = 0; i < insertArray.length; i++) {
-            found = false;
-            for (j = 0; j < length; j++) {
-                if (insertArray[i] === hostArray[j]) {
-                    found = true;
-                    break;
+        var AABB = include('platypus.AABB'),
+            Vector = include('platypus.Vector'),
+            appendUniqueItems = function (hostArray, insertArray) {
+                var i      = 0,
+                    j      = 0,
+                    length = hostArray.length,
+                    found  = false;
+                
+                for (i = 0; i < insertArray.length; i++) {
+                    found = false;
+                    for (j = 0; j < length; j++) {
+                        if (insertArray[i] === hostArray[j]) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        hostArray.push(insertArray[i]);
+                    }
                 }
-            }
-            if (!found) {
-                hostArray.push(insertArray[i]);
-            }
-        }
-        
-        return hostArray;
-    };
+                
+                return hostArray;
+            };
     
     return platypus.createComponentClass({
         id: 'CollisionGroup',
@@ -40,11 +42,11 @@
             this.solidEntities = [];
             
             this.terrain = undefined;
-            this.aabb     = new platypus.AABB(this.owner.x, this.owner.y);
-            this.prevAABB = new platypus.AABB(this.owner.x, this.owner.y);
+            this.aabb     = new AABB(this.owner.x, this.owner.y);
+            this.prevAABB = new AABB(this.owner.x, this.owner.y);
 
-            platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
-            platypus.Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
+            Vector.assign(this.owner, 'position', 'x', 'y', 'z');
+            Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
@@ -236,7 +238,7 @@
                 if (!collisionType) {
                     return this.aabb;
                 } else {
-                    aabb = new platypus.AABB();
+                    aabb = new AABB();
                     for (x = 0; x < this.solidEntities.length; x++) {
                         childEntity = this.solidEntities[x];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
@@ -257,7 +259,7 @@
                 if (!collisionType) {
                     return this.prevAABB;
                 } else {
-                    aabb = new platypus.AABB();
+                    aabb = new AABB();
                     for (x = 0; x < this.solidEntities.length; x++) {
                         childEntity = this.solidEntities[x];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
@@ -378,7 +380,7 @@
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
-                    childEntity.relocateEntity(new platypus.Vector(vector.x - entity.saveOX, vector.y - entity.saveOY, childEntity.z), collisionData);
+                    childEntity.relocateEntity(new Vector(vector.x - entity.saveOX, vector.y - entity.saveOY, childEntity.z), collisionData);
                     entity.x += entity.saveDX;
                     entity.y += entity.saveDY;
                     if (entity !== this.owner) {
