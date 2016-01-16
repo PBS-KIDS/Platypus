@@ -825,7 +825,7 @@
                         }
                     }
                     delete this.cacheGrid;
-                } else if (this.tileSprite) {
+                } else if (this.tilesSprite) {
                     if (this.tilesSprite.texture.alternate) {
                         this.tilesSprite.texture.alternate.destroy(true);
                     }
