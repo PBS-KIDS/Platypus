@@ -37,6 +37,8 @@
              **/
             "height": 0,
             
+            "mode": "static",
+            
             /**
              * Whether camera overflows to cover the whole canvas or remains contained within its aspect ratio's boundary.
              * 
@@ -170,6 +172,9 @@
             
             this.following = undefined;
             this.state = 'static';//'roaming';
+            if (this.mode === 'pan') {
+                this.state = 'mouse-pan';
+            }
             
             //FOLLOW MODE VARIABLES
             
@@ -320,6 +325,34 @@
                         worldHeight: this.worldHeight
                     });
                 }
+            },
+            
+            "mousedown": function (event) {
+                if (this.state === 'mouse-pan') {
+                    if (!this.mouseVector) {
+                        this.mouseVector = new Vector();
+                        this.mouseWorldOrigin = new Vector();
+                    }
+                    this.mouse = this.mouseVector;
+                    this.mouse.x = event.event.x;
+                    this.mouse.y = event.event.y;
+                    this.mouseWorldOrigin.x = this.worldCamera.viewport.x;
+                    this.mouseWorldOrigin.y = this.worldCamera.viewport.y;
+                }
+            },
+            
+            "pressmove": function (event) {
+                if (this.mouse) {
+                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transformMatrix.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transformMatrix.d)) {
+                        this.viewportUpdate = true;
+                    }
+//                    this.mouse.x = event.x;
+//                    this.mouse.y = event.y;
+                }
+            },
+
+            "pressup": function (event) {
+                this.mouse = null;
             },
             
             /**
@@ -591,6 +624,15 @@
                     this.boundingBox.setAll(def.x, def.y, def.width, def.height);
                     this.followingFunction = this.boundingFollow;
                     break;
+                case 'pan':
+                    this.state = 'mouse-pan';
+                    this.following = undefined;
+                    this.followingFunction = undefined;
+                    if (def && (typeof def.x === 'number') && (typeof def.y === 'number')) {
+                        this.move(def.x, def.y, def.orientation || 0);
+                        this.viewportUpdate = true;
+                    }
+                    break;
                 default:
                     this.state = 'static';
                     this.following = undefined;
@@ -806,20 +848,6 @@
                 this.matrix.ty = this.viewport.y - this.viewport.halfHeight;
                 
                 this.viewportUpdate = true;
-            },
-            
-            windowToWorld: function (sCoords) {
-                var wCoords = [];
-                wCoords[0] = Math.round((sCoords[0] - this.viewport.x) * this.worldPerWindowUnitWidth);
-                wCoords[1] = Math.round((sCoords[1] - this.viewport.y) * this.worldPerWindowUnitHeight);
-                return wCoords;
-            },
-            
-            worldToWindow: function (wCoords) {
-                var sCoords = [];
-                sCoords[0] = Math.round((wCoords[0] * this.windowPerWorldUnitWidth) + this.viewport.x);
-                sCoords[1] = Math.round((wCoords[1] * this.windowPerWorldUnitHeight) + this.viewport.y);
-                return sCoords;
             },
             
             destroy: function () {

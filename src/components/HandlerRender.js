@@ -51,7 +51,6 @@
                 this.hover = this.acceptInput.hover;
                 if (this.click || this.hover) {
                     this.addInputs();
-                    this.addEventListener();
                 }
             }
 
@@ -220,7 +219,7 @@
 
                         self.owner.trigger(eventName, {
                             event: nativeEvent,
-                            cjsEvent: event,
+                            pixiEvent: event,
                             x: x,
                             y: y,
                             entity: self.owner
@@ -408,7 +407,33 @@
         },
 
         publicMethods: {
+            windowToWorld: function (windowVector, withOffset, vector) {
+                var worldVector = vector || new Vector();
+                
+                worldVector.x = windowVector.x * this.worldPerWindowUnitWidth;
+                worldVector.y = windowVector.y * this.worldPerWindowUnitHeight;
+                
+                if (withOffset !== false) {
+                    worldVector.x -= this.viewport.x * this.worldPerWindowUnitWidth;
+                    worldVector.y -= this.viewport.y * this.worldPerWindowUnitHeight;
+                }
 
+                return worldVector;
+            },
+            
+            worldToWindow: function (worldVector, withOffset, vector) {
+                var windowVector = vector || new Vector();
+
+                windowVector.x = worldVector.x * this.windowPerWorldUnitWidth;
+                windowVector.y = worldVector.y * this.windowPerWorldUnitHeight;
+                
+                if (withOffset !== false) {
+                    windowVector.x += this.viewport.x;
+                    windowVector.y += this.viewport.y;
+                }
+
+                return windowVector;
+            }
         }
     });
 }());
