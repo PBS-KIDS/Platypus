@@ -3,7 +3,6 @@
  * 
  *      {
  *          "platypus": {
- *              "assets": [], // Images and preloaded sounds should be listed here if they should be loaded graphically.
  *              "entities": {},
  *              "levels": {},
  *              "scenes": {},
@@ -139,7 +138,7 @@
     // before the application is init. Make sure that done() is called
     // when this is complete. The display and options are available here.
     plugin.preload = function (done) {
-        var config = this.config.platypus,
+        var config = this.config.platypus || this.config,
             game = null,
             time = {
                 delta: 0
