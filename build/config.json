@@ -84,7 +84,8 @@
 		"../src/components/TiledLoader.js",
 		"../src/components/Tween.js",
 		"../src/components/VoiceOver.js",
-		"../src/components/XHR.js"
+		"../src/components/XHR.js",
+        "../src/mixins/Array.js"
 	],
 
 	"docs_out_path":"./output/docs/"

@@ -43,26 +43,6 @@
 
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Entity      = include('platypus.Entity'),
-        union = function (a, b) {
-            var i = 0,
-                j = 0,
-                aL = a.length,
-                bL = b.length,
-                found = false;
-                
-            for (i = 0; i < bL; i++) {
-                found = false;
-                for (j = 0; j < aL; j++) {
-                    if (b[i] === a[j]) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    a.push(b[i]);
-                }
-            }
-        },
         decodeBase64 = (function () {
             var decodeString = function (str) {
                     return (((str.charCodeAt(0)) + (str.charCodeAt(1) << 8) + (str.charCodeAt(2) << 16) + (str.charCodeAt(3) << 24 )) >>> 0);
@@ -238,7 +218,7 @@
                 level.tilesets = importTilesetData(level.tilesets);
 
                 if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
-                    union(assets, level.assets);
+                    assets.union(level.assets);
                 } else {
                     for (i = 0; i < level.layers.length; i++) {
                         if (level.layers[i].type === 'objectgroup') {
@@ -247,19 +227,19 @@
                                 if (entity) {
                                     entityAssets = Entity.getAssetList(entity);
                                     if (entityAssets) {
-                                        union(assets, entityAssets);
+                                        assets.union(entityAssets);
                                     }
                                 }
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
-                            union(assets, [level.layers[i].name]);
+                            assets.union([level.layers[i].name]);
                         }
                     }
                     if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
                         for (i = 0; i < level.tilesets.length; i++) {
                             tilesets.push(level.tilesets[i].name);
                         }
-                        union(assets, tilesets);
+                        assets.union(tilesets);
                     }
                     level.assets = assets.slice(); // Save for later in case this level is checked again.
                 }
@@ -998,18 +978,18 @@
                 images = def.images || ps.images || dps.images,
                 assets = [];
             
-            union(assets, checkLevel(def.level || ps.level || dps.level, ss));
+            assets.union(checkLevel(def.level || ps.level || dps.level, ss));
             
             if (ss) {
                 if (typeof ss === 'string') {
-                    union(assets, platypus.game.settings.spriteSheets[ss].images);
+                    assets.union(platypus.game.settings.spriteSheets[ss].images);
                 } else {
-                    union(assets, ss.images);
+                    assets.union(ss.images);
                 }
             }
             
             if (images) {
-                union(assets, images);
+                assets.union(images);
             }
             
             return assets;

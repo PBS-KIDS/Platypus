@@ -49,26 +49,6 @@ platypus.Entity = (function () {
     "use strict";
     
     var entityIds = {},
-        union = function (a, b) {
-            var i = 0,
-                j = 0,
-                aL = a.length,
-                bL = b.length,
-                found = false;
-                
-            for (i = 0; i < bL; i++) {
-                found = false;
-                for (j = 0; j < aL; j++) {
-                    if (b[i] === a[j]) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    a.push(b[i]);
-                }
-            }
-        },
         entity = function (definition, instanceDefinition) {
             var i                    = 0,
                 componentDefinition  = null,
@@ -246,7 +226,7 @@ platypus.Entity = (function () {
         for (i = 0; i < def.components.length; i++) {
             component = platypus.components[def.components[i].type];
             if (component) {
-                union(assets, component.getAssetList(def.components[i], def.properties, props));
+                assets.union(component.getAssetList(def.components[i], def.properties, props));
             }
         }
         
@@ -273,7 +253,7 @@ platypus.Entity = (function () {
         for (i = 0; i < def.components.length; i++) {
             component = platypus.components[def.components[i].type];
             if (component) {
-                union(assets, component.getLateAssetList(def.components[i], def.properties, props, data));
+                assets.union(component.getLateAssetList(def.components[i], def.properties, props, data));
             }
         }
         

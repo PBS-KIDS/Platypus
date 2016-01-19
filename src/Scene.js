@@ -48,31 +48,11 @@ platypus.Scene = (function () {
             
             return a;
         },
-        union = function (a, b) {
-            var i = 0,
-                j = 0,
-                aL = a.length,
-                bL = b.length,
-                found = false;
-                
-            for (i = 0; i < bL; i++) {
-                found = false;
-                for (j = 0; j < aL; j++) {
-                    if (b[i] === a[j]) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    a.push(b[i]);
-                }
-            }
-        },
         Scene  = function (panel, definition) {
             State.call(this, panel, definition.options);
             
             this.id = definition.id;
-            union(this.preload, this.getAssetList(definition));
+            this.preload.union(this.getAssetList(definition));
             this.layerDefinitions = definition.layers;
             this.storeMessages = false;
             this.storedMessages = [];
@@ -84,7 +64,7 @@ platypus.Scene = (function () {
                 var lateAssets = this.getLateAssetList(definition);
                 
                 if (lateAssets.length) {
-                    union(assets, lateAssets);
+                    assets.union(lateAssets);
                     
                     this.on('exit', function (lateAssets) {
                         this.app.unload(lateAssets);
@@ -304,7 +284,7 @@ platypus.Scene = (function () {
             assets = [];
         
         for (i = 0; i < def.layers.length; i++) {
-            union(assets, Entity.getAssetList(def.layers[i]));
+            assets.union(Entity.getAssetList(def.layers[i]));
         }
         
         for (i = 0; i < assets.length; i++) {
@@ -325,7 +305,7 @@ platypus.Scene = (function () {
             assets = [];
         
         for (i = 0; i < def.layers.length; i++) {
-            union(assets, Entity.getLateAssetList(def.layers[i], null, this.data));
+            assets.union(Entity.getLateAssetList(def.layers[i], null, this.data));
         }
         
         for (i = 0; i < assets.length; i++) {

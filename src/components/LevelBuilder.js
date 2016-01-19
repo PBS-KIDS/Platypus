@@ -335,46 +335,23 @@
             }
         },
         
-        getAssetList: (function () {
-            var union = function (a, b) {
-                    var i = 0,
-                        j = 0,
-                        aL = a.length,
-                        bL = b.length,
-                        found = false;
-                        
-                    for (i = 0; i < bL; i++) {
-                        found = false;
-                        for (j = 0; j < aL; j++) {
-                            if (b[i] === a[j]) {
-                                found = true;
-                                break;
-                            }
-                        }
-                        if (!found) {
-                            a.push(b[i]);
-                        }
-                    }
-                };
+        getAssetList: function (def, props, defaultProps) {
+            var assets = [],
+                key = '',
+                levels = def.levelPieces || props.levelPieces || defaultProps.levelPieces;
             
-            return function (def, props, defaultProps) {
-                var assets = [],
-                    key = '',
-                    levels = def.levelPieces || props.levelPieces || defaultProps.levelPieces;
-                
-                if (levels) {
-                    for (key in levels) {
-                        if (levels.hasOwnProperty(key)) {
-                            // Offload to TiledLoader since it has level-parsing handling
-                            union(assets, platypus.components.TiledLoader.getAssetList({
-                                level: levels[key]
-                            }));
-                        }
+            if (levels) {
+                for (key in levels) {
+                    if (levels.hasOwnProperty(key)) {
+                        // Offload to TiledLoader since it has level-parsing handling
+                        assets.union(platypus.components.TiledLoader.getAssetList({
+                            level: levels[key]
+                        }));
                     }
                 }
-                
-                return assets;
-            };
-        }())
+            }
+            
+            return assets;
+        }
     });
 }());
