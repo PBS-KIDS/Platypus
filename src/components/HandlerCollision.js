@@ -288,14 +288,14 @@
                                 types = entity.collisionTypes;
                                 if (entity !== this.owner) {
                                     for (j = 0; j < types.length; j++) {
-                                        if (entity.solidCollisions[types[j]].length) {
+                                        if (entity.solidCollisionMap[types[j]].length) {
                                             solids[solids.length] = entity;
                                             break;
                                         }
                                     }
                                 }
                                 for (j = 0; j < types.length; j++) {
-                                    if (entity.softCollisions[types[j]].length) {
+                                    if (entity.softCollisionMap[types[j]].length) {
                                         softs[softs.length] = entity;
                                         break;
                                     }
@@ -576,7 +576,7 @@
                         entitiesByTypeLive       = this.getWorldEntities(),
                         otherEntities            = null,
                         terrain                  = this.getWorldTerrain(),
-                        solidCollisions          = entityOrGroup.getSolidCollisions();
+                        solidCollisionMap        = entityOrGroup.getSolidCollisions();
                     
 //                    if (!entityOrGroup.jumpThrough || (entityDeltaY >= 0)) { //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
     
@@ -591,8 +591,8 @@
                         sweepAABB.include(currentAABB);
                         sweepAABB.include(previousAABB);
 
-                        for (y = 0; y < solidCollisions[collisionType].length; y++) {
-                            otherCollisionType = solidCollisions[collisionType][y];
+                        for (y = 0; y < solidCollisionMap[collisionType].length; y++) {
+                            otherCollisionType = solidCollisionMap[collisionType][y];
 
                             if (entitiesByTypeLive[otherCollisionType]) {
                                 otherEntities = entitiesByTypeLive[otherCollisionType];
@@ -905,7 +905,7 @@
                     y   = 0,
                     z   = 0,
                     checkAABBCollision = isAABBCollision,
-                    softCollisions = null,
+                    softCollisionMap = null,
                     otherEntities  = null,
                     otherCollisionType = null,
                     shapes = null,
@@ -916,9 +916,9 @@
                 message.y = 0;
 
                 for (i = 0; i < ent.collisionTypes.length; i++) {
-                    softCollisions = ent.softCollisions[ent.collisionTypes[i]];
-                    for (y = 0; y < softCollisions.length; y++) {
-                        otherCollisionType = softCollisions[y];
+                    softCollisionMap = ent.softCollisionMap[ent.collisionTypes[i]];
+                    for (y = 0; y < softCollisionMap.length; y++) {
+                        otherCollisionType = softCollisionMap[y];
                         otherEntities = entitiesByTypeLive[otherCollisionType];
                         if (otherEntities) {
                             for (z = 0; z < otherEntities.length; z++) {

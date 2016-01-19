@@ -163,7 +163,7 @@
                 
                 if (types) {
                     for (i = 0; i < types.length; i++) {
-                        if (entity.solidCollisions[types[i]].length && !entity.immobile) {
+                        if (entity.solidCollisionMap[types[i]].length && !entity.immobile) {
                             this.solidEntities[this.solidEntities.length] = entity;
                         }
                     }
@@ -178,7 +178,7 @@
 
                 if (types) {
                     for (i = 0; i < types.length; i++) {
-                        if (entity.solidCollisions[types[i]].length) {
+                        if (entity.solidCollisionMap[types[i]].length) {
                             for (x in this.solidEntities) {
                                 if (this.solidEntities[x] === entity) {
                                     this.solidEntities.splice(x, 1);

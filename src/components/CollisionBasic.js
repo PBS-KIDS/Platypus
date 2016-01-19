@@ -186,7 +186,7 @@
                 };
 
                 entity.getSolidCollisions = function () {
-                    return entity.solidCollisions;
+                    return entity.solidCollisionMap;
                 };
             }
 
@@ -294,6 +294,35 @@
              * @default 0
              */
             radius: 0,
+            
+            /**
+             * Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so. Example:
+             * 
+             *     {
+             *         "water": "soaked",       // This triggers a "soaked" message on the entity when it passes over a "water" collision-type entity.
+             *         "lava": ["burn", "ouch"] // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
+             *     }
+             * 
+             * @property softCollisions
+             * @type Object
+             * @default null
+             */
+            softCollisions: null,
+            
+            /**
+             * Determines which collision types this entity should consider solid, meaning this entity should not pass through them. Example:
+             * 
+             *     {
+             *         "boulder": "",                       // This specifies that this entity should not pass through other "boulder" collision-type entities.
+             *         "diamond": "crack-up",               // This specifies that this entity should not pass through "diamond" collision-type entities, but if it touches one, it triggers a "crack-up" message on the entity.
+             *         "marble": ["flip", "dance", "crawl"] // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
+             *     }
+             * 
+             * @property solidCollisions
+             * @type Object
+             * @default null
+             */
+            solidCollisions: null,
             
             /**
              * This is the margin around the entity's width and height. This is an alternative method for specifying the collision shape in terms of the size of the entity. Can also pass in an object specifying the following parameters if the margins vary per side: top, bottom, left, and right.
@@ -425,53 +454,28 @@
             
             setupCollisionFunctions(this, this.owner);
             
-            /**
-             * Determines which collision types this entity should consider solid, meaning this entity should not pass through them. Example:
-             * 
-             *     {
-             *         "boulder": "",                       // This specifies that this entity should not pass through other "boulder" collision-type entities.
-             *         "diamond": "crack-up",               // This specifies that this entity should not pass through "diamond" collision-type entities, but if it touches one, it triggers a "crack-up" message on the entity.
-             *         "marble": ["flip", "dance", "crawl"] // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
-             *     }
-             * 
-             * @property solidCollisions
-             * @type Object
-             * @default null
-             */
-            this.owner.solidCollisions = this.owner.solidCollisions || {};
-            this.owner.solidCollisions[this.collisionType] = [];
-            if (definition.solidCollisions) {
-                for (key in definition.solidCollisions) {
-                    if (definition.solidCollisions.hasOwnProperty(key)) {
-                        this.owner.solidCollisions[this.collisionType].push(key);
+            this.owner.solidCollisionMap = this.owner.solidCollisionMap || {};
+            this.owner.solidCollisionMap[this.collisionType] = [];
+            if (this.solidCollisions) {
+                for (key in this.solidCollisions) {
+                    if (this.solidCollisions.hasOwnProperty(key)) {
+                        this.owner.solidCollisionMap[this.collisionType].push(key);
                         this.owner.collides = true; //informs HandlerCollision that this entity should be processed in the list of solid colliders.
-                        if (definition.solidCollisions[key]) { // To make sure it's not an empty string.
-                            this.addEventListener('hit-by-' + key, entityBroadcast(definition.solidCollisions[key], 'solid', this.collisionType));
+                        if (this.solidCollisions[key]) { // To make sure it's not an empty string.
+                            this.addEventListener('hit-by-' + key, entityBroadcast(this.solidCollisions[key], 'solid', this.collisionType));
                         }
                     }
                 }
             }
     
-            /**
-             * Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so. Example:
-             * 
-             *     {
-             *         "water": "soaked",       // This triggers a "soaked" message on the entity when it passes over a "water" collision-type entity.
-             *         "lava": ["burn", "ouch"] // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
-             *     }
-             * 
-             * @property softCollisions
-             * @type Object
-             * @default null
-             */
-            this.owner.softCollisions = this.owner.softCollisions || {};
-            this.owner.softCollisions[this.collisionType] = [];
-            if (definition.softCollisions) {
-                for (key in definition.softCollisions) {
-                    if (definition.softCollisions.hasOwnProperty(key)) {
-                        this.owner.softCollisions[this.collisionType].push(key);
-                        if (definition.softCollisions[key]) { // To make sure it's not an empty string.
-                            this.addEventListener('hit-by-' + key, entityBroadcast(definition.softCollisions[key], 'soft', this.collisionType));
+            this.owner.softCollisionMap = this.owner.softCollisionMap || {};
+            this.owner.softCollisionMap[this.collisionType] = [];
+            if (this.softCollisions) {
+                for (key in this.softCollisions) {
+                    if (this.softCollisions.hasOwnProperty(key)) {
+                        this.owner.softCollisionMap[this.collisionType].push(key);
+                        if (this.softCollisions[key]) { // To make sure it's not an empty string.
+                            this.addEventListener('hit-by-' + key, entityBroadcast(this.softCollisions[key], 'soft', this.collisionType));
                         }
                     }
                 }
@@ -653,16 +657,16 @@
                         break;
                     }
                 }
-                if (this.owner.solidCollisions[this.collisionType]) {
-                    this.owner.solidCollisions[this.collisionType].length = 0;
-                    delete this.owner.solidCollisions[this.collisionType];
+                if (this.owner.solidCollisionMap[this.collisionType]) {
+                    this.owner.solidCollisionMap[this.collisionType].length = 0;
+                    delete this.owner.solidCollisionMap[this.collisionType];
                 }
-                if (Object.keys(this.owner.solidCollisions).length > 0) {
+                if (Object.keys(this.owner.solidCollisionMap).length > 0) {
                     this.owner.collides = true;
                 }
-                if (this.owner.softCollisions[this.collisionType]) {
-                    this.owner.softCollisions[this.collisionType].length = 0;
-                    delete this.owner.softCollisions[this.collisionType];
+                if (this.owner.softCollisionMap[this.collisionType]) {
+                    this.owner.softCollisionMap[this.collisionType].length = 0;
+                    delete this.owner.softCollisionMap[this.collisionType];
                 }
                 delete this.owner.collisionFunctions[this.collisionType];
                 
