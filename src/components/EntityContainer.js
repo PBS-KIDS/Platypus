@@ -222,7 +222,7 @@
                 }
                 entity.containerListener.events.push(event);
                 entity.containerListener.messages.push(callback);
-                this.bind(event, callback);
+                this.on(event, callback);
             },
             
             removeChildEventListener: function (entity, event, callback) {
@@ -232,7 +232,7 @@
                 
                 for (i = 0; i < events.length; i++) {
                     if ((events[i] === event) && (!callback || (messages[i] === callback))) {
-                        this.unbind(event, messages[i]);
+                        this.off(event, messages[i]);
                     }
                 }
             },

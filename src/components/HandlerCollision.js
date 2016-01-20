@@ -153,6 +153,17 @@
             },
             
             /**
+             * On receiving this message, the component looks for the entity in its collision group and updates it.
+             * 
+             * @method 'child-entity-updated'
+             * @param message {platypus.Entity} The entity to be updated.
+             */
+            "child-entity-updated": function (entity) {
+                this.removeCollisionEntity(entity);
+                this.addCollisionEntity(entity);
+            },
+            
+            /**
              * This message causes the component to go through the entities and check for collisions.
              * 
              * @method 'check-collision-group'

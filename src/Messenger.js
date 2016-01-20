@@ -27,28 +27,6 @@ platypus.Messenger = (function () {
     proto.toString = function () {
         return "[Messenger Object]";
     };
-    
-    /**
-     * Used by components to bind handler functions to triggered events.
-     * 
-     * @method bind
-     * @param event {String} This is the message being listened for.
-     * @param func {Function} This is the function that will be run when the message is triggered.
-     * @param scope {Object} This is the scope with which the function should be run.
-     * @deprecated since 0.7.0 - Use "on".
-     */
-    proto.bind = proto.on;
-    
-    /**
-     * Used to safely unbind handler functions when in the middle of events occurring by delaying removal until the end of the game tick.
-     * 
-     * @method unbind
-     * @param event {String} This is the message the component is currently listening to.
-     * @param callback {Function} This is the function that was attached to the message.
-     * @param scope {Function} This is the scope of the function that was attached to the message.
-     * @deprecated since 0.7.0 - Use "off"
-     */
-    proto.unbind = proto.off;
 
     /**
      * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}

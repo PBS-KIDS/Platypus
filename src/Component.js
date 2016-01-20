@@ -101,9 +101,11 @@ platypus.Component = (function () {
      * @private
      */
     proto.addEventListener = function (event, callback, priority) {
+        var handler = callback.bind(this);
+        
         this.listener.events.push(event);
-        this.listener.messages.push(callback);
-        this.owner.on(event, callback.bind(this), priority);
+        this.listener.messages.push(handler);
+        this.owner.on(event, handler, priority);
     };
     
     /**
@@ -140,7 +142,7 @@ platypus.Component = (function () {
         
         for (i = 0; i < events.length; i++) {
             if ((events[i] === event) && (!callback || (messages[i] === callback))) {
-                this.owner.unbind(event, messages[i], this);
+                this.owner.off(event, messages[i]);
             }
         }
     };

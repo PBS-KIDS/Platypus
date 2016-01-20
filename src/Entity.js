@@ -75,7 +75,7 @@ platypus.Entity = (function () {
 
             this.setProperty(defaultProperties); // This takes the list of properties in the JSON definition and appends them directly to the object.
             this.setProperty(instanceProperties); // This takes the list of options for this particular instance and appends them directly to the object.
-            this.bind('set-property', function (keyValuePairs) {
+            this.on('set-property', function (keyValuePairs) {
                 this.setProperty(keyValuePairs);
             }.bind(this));
 
