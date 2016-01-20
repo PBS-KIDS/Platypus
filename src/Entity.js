@@ -86,10 +86,12 @@ platypus.Entity = (function () {
 
             for (i = 0; i < componentDefinitions.length; i++) {
                 componentDefinition = componentDefinitions[i];
-                if (platypus.components[componentDefinition.type]) {
-                    this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
-                } else {
-                    console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
+                if (componentDefinition) {
+                    if (platypus.components[componentDefinition.type]) {
+                        this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
+                    } else {
+                        console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
+                    }
                 }
             }
 
@@ -224,7 +226,7 @@ platypus.Entity = (function () {
         }
 
         for (i = 0; i < def.components.length; i++) {
-            component = platypus.components[def.components[i].type];
+            component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
             if (component) {
                 assets.union(component.getAssetList(def.components[i], def.properties, props));
             }
@@ -251,7 +253,7 @@ platypus.Entity = (function () {
         }
 
         for (i = 0; i < def.components.length; i++) {
-            component = platypus.components[def.components[i].type];
+            component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
             if (component) {
                 assets.union(component.getLateAssetList(def.components[i], def.properties, props, data));
             }
