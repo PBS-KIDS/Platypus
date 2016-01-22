@@ -11,7 +11,7 @@
     "use strict";
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
-        cache = PIXI.utils.TextureCache,
+        //cache = PIXI.utils.TextureCache,
         animationCache = {},
         createFramesArray = function (frame, bases) {
             var i = 0,
@@ -193,7 +193,7 @@
                 animations: anims
             };
         },
-        cacheAnimations = function (spriteSheet) {
+        cacheAnimations = function (spriteSheet, cacheId) {
             var i = 0,
                 id = '',
                 anims    = null,
@@ -215,10 +215,7 @@
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
                 id = getCacheId(images, frame);
-                texture = cache[id];
-                if (!texture) {
-                    texture = cache[id] = new PIXI.Texture(bases[frame[4]], new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]));
-                }
+                texture = new PIXI.Texture(bases[frame[4]], new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]));
                 textures.push({
                     texture: texture,
                     anchor: new PIXI.Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
@@ -235,7 +232,9 @@
             
             return {
                 textures: textures,
-                animations: anims
+                animations: anims,
+                viable: 1,
+                cacheId: cacheId
             };
         },
         PIXIAnimation = function (spriteSheet, animation) {
@@ -246,7 +245,10 @@
             if (!cacheId) {
                 cache = getAnimations(spriteSheet);
             } else if (!cache) {
-                cache = animationCache[cacheId] = cacheAnimations(spriteSheet);
+                cache = animationCache[cacheId] = cacheAnimations(spriteSheet, cacheId);
+                this.cacheId = cacheId;
+            } else {
+                cache.viable += 1;
             }
             
             PIXI.Sprite.call(this, cache.textures[0].texture);
@@ -451,5 +453,11 @@
     prototype.destroy = function () {
         this.stop();
         PIXI.Sprite.prototype.destroy.call(this);
+        if (this.cacheId) {
+            animationCache[this.cacheId].viable -= 1;
+            if (animationCache[this.cacheId].viable <= 0) {
+                delete animationCache[this.cacheId];
+            }
+        }
     };
 }());
