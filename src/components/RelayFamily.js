@@ -97,13 +97,10 @@
         
         methods: {
             destroy: function () {
-                var i = 0;
+                var i = this.owner.familyLinks.indexOf(this.owner);
                 
-                for (i = 0; i < this.owner.familyLinks.length; i++) {
-                    if (this.owner === this.owner.familyLinks[i]) {
-                        this.owner.familyLinks.splice(i, 1);
-                        break;
-                    }
+                if (i >= 0) {
+                    this.owner.familyLinks.splice(i, 1);
                 }
                 trigger(this.owner.familyLinks, 'family-member-removed', this.owner);
                 this.events = null;

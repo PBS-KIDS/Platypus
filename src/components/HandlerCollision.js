@@ -219,20 +219,16 @@
 
                 if (types) {
                     for (i = 0; i < types.length; i++) {
-                        for (x = 0; x < this.entitiesByType[types[i]].length; x++) {
-                            if (this.entitiesByType[types[i]][x] === entity) {
-                                this.entitiesByType[types[i]].splice(x, 1);
-                                break;
-                            }
+                        x = this.entitiesByType[types[i]].indexOf(entity);
+                        if (x >= 0) {
+                            this.entitiesByType[types[i]].splice(x, 1);
                         }
                     }
                     
                     if (!entity.immobile) {
-                        for (j = 0; j < this.allEntities.length; j++) {
-                            if (this.allEntities[j] === entity) {
-                                this.allEntities.splice(j, 1);
-                                break;
-                            }
+                        i = this.allEntities.indexOf(entity);
+                        if (i >= 0) {
+                            this.allEntities.splice(i, 1);
                         }
                     }
                     this.updateLiveList = true;

@@ -20,20 +20,10 @@
 			writable: false,
 			value: function (array) {
                 var i = 0,
-                    j = 0,
-                    aL = this.length,
-                    bL = array.length,
-                    found = false;
+                    bL = array.length;
                     
                 for (i = 0; i < bL; i++) {
-                    found = false;
-                    for (j = 0; j < aL; j++) {
-                        if (array[i] === this[j]) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
+                    if (this.indexOf(array[i]) === -1) {
                         this.push(array[i]);
                     }
                 }

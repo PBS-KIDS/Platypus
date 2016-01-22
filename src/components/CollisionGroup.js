@@ -10,30 +10,8 @@
 (function () {
     "use strict";
 
-    //set here to make them reusable objects
-        var AABB = include('platypus.AABB'),
-            Vector = include('platypus.Vector'),
-            appendUniqueItems = function (hostArray, insertArray) {
-                var i      = 0,
-                    j      = 0,
-                    length = hostArray.length,
-                    found  = false;
-                
-                for (i = 0; i < insertArray.length; i++) {
-                    found = false;
-                    for (j = 0; j < length; j++) {
-                        if (insertArray[i] === hostArray[j]) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        hostArray.push(insertArray[i]);
-                    }
-                }
-                
-                return hostArray;
-            };
+    var AABB = include('platypus.AABB'),
+        Vector = include('platypus.Vector');
     
     return platypus.createComponentClass({
         id: 'CollisionGroup',
@@ -179,11 +157,9 @@
                 if (types) {
                     for (i = 0; i < types.length; i++) {
                         if (entity.solidCollisionMap[types[i]].length) {
-                            for (x in this.solidEntities) {
-                                if (this.solidEntities[x] === entity) {
-                                    this.solidEntities.splice(x, 1);
-                                    break;
-                                }
+                            x = this.solidEntities.indexOf(entity);
+                            if (x >= 0) {
+                                this.solidEntities.splice(x, 1);
                             }
                         }
                     }
@@ -201,7 +177,7 @@
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
-                    compiledList = appendUniqueItems(compiledList, childEntity.getCollisionTypes());
+                    compiledList.union(childEntity.getCollisionTypes());
                 }
                 
                 return compiledList;
@@ -222,7 +198,10 @@
                     entityList = childEntity.getSolidCollisions();
                     for (key in entityList) {
                         if (entityList.hasOwnProperty(key)) {
-                            compiledList[key] = appendUniqueItems(compiledList[key] || [], entityList[key]);
+                            if (!compiledList[key]) {
+                                compiledList[key] = [];
+                            }
+                            compiledList[key].union(entityList[key]);
                         }
                     }
                 }

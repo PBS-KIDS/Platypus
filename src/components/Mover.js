@@ -261,11 +261,9 @@
                 var i = 0;
                 
                 if (component.type === 'Motion') {
-                    for (i = 0; i < this.movers.length; i++) {
-                        if (component === this.movers[i]) {
-                            this.movers.splice(i, 1);
-                            break;
-                        }
+                    i = this.movers.indexOf(component);
+                    if (i >= 0) {
+                        this.movers.splice(i, 1);
                     }
                 }
             },

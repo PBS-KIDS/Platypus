@@ -95,10 +95,9 @@ Requires: ["../Vector.js"]
                     otherRelevantV = 0,
                     reboundV       = 0;
                 
-                for (x = 0; x < this.hitThisTick.length; x++) {
-                    if (other === this.hitThisTick[x]) {
-                        return;
-                    }
+                x = this.hitThisTick.indexOf(other);
+                if (x >= 0) {
+                    return;
                 }
                 this.hitThisTick.push(other);
                 

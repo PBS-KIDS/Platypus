@@ -115,19 +115,9 @@
              * @param toLink {platypus.Entity} The enquiring entity.
              */
             "link-entity": function (toLink) {
-                var i = 0,
-                    already = false;
-                
                 if ((toLink.linkId === this.linkId) && (toLink.entity !== this.owner)) {
                     // Make sure this link is not already in place
-                    for (i = 0; i < this.links.length; i++) {
-                        if (this.links[i] === toLink.entity) {
-                            already = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!already) {
+                    if (this.links.indexOf(toLink.entity) === -1) {
                         this.links.push(toLink.entity);
                         if (toLink.reciprocate) {
                             this.linkMessage.reciprocate = false;
@@ -144,13 +134,10 @@
              * @param toUnlink {platypus.Entity} The enquiring entity.
              */
             "unlink-entity": function (toUnlink) {
-                var i = 0;
+                var i = this.links.indexOf(toUnlink.entity);
                 
-                for (i = 0; i < this.links.length; i++) {
-                    if (toUnlink.entity === this.links[i]) {
-                        this.links.splice(i, 1);
-                        break;
-                    }
+                if (i >= 0) {
+                    this.links.splice(i, 1);
                 }
             }
         },

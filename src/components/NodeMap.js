@@ -249,21 +249,14 @@
                         m = 0,
                         list = including || this.map,
                         closest = null,
-                        exclude = false,
                         d = Infinity;
                     
                     for (i = 0; i < list.length; i++) {
                         m = p2.set(p1).subtractVector(list[i].position).magnitude();
                         if (m < d) {
                             if (excluding) {
-                                exclude = false;
-                                for (j = 0; j < excluding.length; j++) {
-                                    if (excluding[j] === list[i]) {
-                                        exclude = true;
-                                        break;
-                                    }
-                                }
-                                if (exclude) {
+                                j = excluding.indexOf(list[i]);
+                                if (j >= 0) {
                                     break;
                                 }
                             }

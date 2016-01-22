@@ -446,13 +446,10 @@
             },
             
             removeClip: function (audioClip) {
-                var i = 0;
+                var i = this.activeAudioClips.indexOf(audioClip);
 
-                for (i = 0; i < this.activeAudioClips.length; i++) {
-                    if (this.activeAudioClips[i] === audioClip) {
-                        this.activeAudioClips.splice(i, 1);
-                        break;
-                    }
+                if (i >= 0) {
+                    this.activeAudioClips.splice(i, 1);
                 }
             },
             

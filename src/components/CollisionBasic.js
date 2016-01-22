@@ -490,14 +490,18 @@
              * 
              * @method 'collide-on'
              */
-            "collide-on": function () {
+            "collide-on": function (type) {
                 /**
                  * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
                  * 
                  * @event 'add-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                this.owner.parent.trigger('add-collision-entity', this.owner);
+                if (!type || (type === this.collisionType)) {
+                    this.owner.collisionTypes.union([this.collisionType]);
+                    this.owner.parent.trigger('add-collision-entity', this.owner);
+                    this.active = true;
+                }
             },
             
             /**
@@ -505,14 +509,29 @@
              * 
              * @method 'collide-off'
              */
-            "collide-off": function () {
+            "collide-off": function (type) {
+                var index = 0;
+                
                 /**
                  * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
                  * 
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                this.owner.parent.trigger('remove-collision-entity', this.owner);
+                if (!type) {
+                    this.owner.parent.trigger('remove-collision-entity', this.owner);
+                    this.active = false;
+                } else if (type === this.collisionType) {
+                    this.owner.parent.trigger('remove-collision-entity', this.owner);
+                    index = this.owner.collisionTypes.indexOf(this.collisionType);
+                    if (index >= 0) {
+                        this.owner.collisionTypes.splice(index, 1);
+                    }
+                    if (this.owner.collisionTypes.length) {
+                        this.owner.parent.trigger('add-collision-entity', this.owner);
+                    }
+                    this.active = false;
+                }
             },
             
             /**
@@ -642,7 +661,7 @@
             },
             
             destroy: function () {
-                var i = 0;
+                var i = this.owner.collisionTypes.indexOf(this.collisionType);
                 
                 this.owner.parent.trigger('remove-collision-entity', this.owner);
 
@@ -651,11 +670,8 @@
                 delete this.aabb;
                 delete this.prevAABB;
                 
-                for (i = 0; i < this.owner.collisionTypes.length; i++) {
-                    if (this.owner.collisionTypes[i] === this.collisionType) {
-                        this.owner.collisionTypes.splice(i, 1);
-                        break;
-                    }
+                if (i >= 0) {
+                    this.owner.collisionTypes.splice(i, 1);
                 }
                 if (this.owner.solidCollisionMap[this.collisionType]) {
                     this.owner.solidCollisionMap[this.collisionType].length = 0;

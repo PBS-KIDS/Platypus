@@ -11,7 +11,6 @@
     "use strict";
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
-        //cache = PIXI.utils.TextureCache,
         animationCache = {},
         createFramesArray = function (frame, bases) {
             var i = 0,

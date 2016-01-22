@@ -290,22 +290,13 @@
              * @param vector {platypus.Vector} The vector whose orientation will be maintained.
              */
             "orient-vector": function (vector) {
-                var i = 0,
-                    found = false,
-                    aligned = vector.aligned || false;
+                var aligned = vector.aligned || false;
                 
                 if (vector.vector) {
                     vector = vector.vector;
                 }
                 
-                for (i = 0; i < this.vectors.length; i++) {
-                    if (vector === this.vectors[i]) {
-                        found = true;
-                        break;
-                    }
-                }
-                
-                if (!found) {
+                if (this.vectors.indexOf(vector) === -1) {
                     if (!aligned) {
                         vector.multiply(this.matrix);
                     }
@@ -321,14 +312,11 @@
              * @param vector {platypus.Vector} The vector to be removed.
              */
             "remove-vector": function (vector) {
-                var i = 0;
+                var i = this.vectors.indexOf(vector);
                 
-                for (i = 0; i < this.vectors.length; i++) {
-                    if (vector === this.vectors[i]) {
-                        this.vectors.splice(i, 1);
-                        this.inverses.splice(i, 1);
-                        break;
-                    }
+                if (i >= 0) {
+                    this.vectors.splice(i, 1);
+                    this.inverses.splice(i, 1);
                 }
             },
             

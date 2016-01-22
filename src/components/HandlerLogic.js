@@ -103,13 +103,10 @@
              * @param entity {platypus.Entity} The entity to be removed from the handler.
              */
             "child-entity-removed": function (entity) {
-                var j = 0;
+                var j = this.entities.indexOf(entity);
                 
-                for (j = this.entities.length - 1; j > -1; j--) {
-                    if (this.entities[j] === entity) {
-                        this.entities.splice(j, 1);
-                        break;
-                    }
+                if (j >= 0) {
+                    this.entities.splice(j, 1);
                 }
             },
             
