@@ -49,6 +49,11 @@ platypus.Entity = (function () {
     "use strict";
     
     var entityIds = {},
+        warn = function (content, obj) {
+            if (platypus.game.settings.debug) {
+                console.warn(content, obj);
+            }
+        },
         entity = function (definition, instanceDefinition) {
             var i                    = 0,
                 componentDefinition  = null,
@@ -56,7 +61,9 @@ platypus.Entity = (function () {
                 componentDefinitions = def.components || [],
                 defaultProperties    = def.properties || {},
                 instance             = instanceDefinition || {},
-                instanceProperties   = instance.properties || {};
+                instanceProperties   = instance.properties || {},
+                savedEvents          = [],
+                savedMessages        = [];
 
             // Set properties of messenger on this entity.
             platypus.Messenger.call(this);
@@ -84,15 +91,27 @@ platypus.Entity = (function () {
             }
             this.lastState = {}; //This is used to determine if the state of the entity has changed.
 
+            this.trigger = this.triggerEvent = function (event, message) {
+                savedEvents.push(event);
+                savedMessages.push(message);
+            }
+            
             for (i = 0; i < componentDefinitions.length; i++) {
                 componentDefinition = componentDefinitions[i];
                 if (componentDefinition) {
                     if (platypus.components[componentDefinition.type]) {
                         this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
                     } else {
-                        console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
+                        warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
                     }
                 }
+            }
+            
+            // Trigger saved events that were being fired during component addition.
+            delete this.trigger;
+            delete this.triggerEvent;
+            for (i = 0; i < savedEvents.length; i++) {
+                this.trigger(savedEvents[i], savedMessages[i]);
             }
 
             /**
