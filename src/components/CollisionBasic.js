@@ -518,19 +518,17 @@
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if (!type) {
-                    this.owner.parent.trigger('remove-collision-entity', this.owner);
-                    this.active = false;
-                } else if (type === this.collisionType) {
+                if (!type || (type === this.collisionType)) {
                     this.owner.parent.trigger('remove-collision-entity', this.owner);
                     index = this.owner.collisionTypes.indexOf(this.collisionType);
                     if (index >= 0) {
                         this.owner.collisionTypes.splice(index, 1);
                     }
-                    if (this.owner.collisionTypes.length) {
-                        this.owner.parent.trigger('add-collision-entity', this.owner);
-                    }
                     this.active = false;
+                }
+
+                if (this.owner.collisionTypes.length) {
+                    this.owner.parent.trigger('add-collision-entity', this.owner);
                 }
             },
             
