@@ -61,6 +61,14 @@
                    instantiation. Use the "load" event shown below for anything
                    that should happen once all of the entity's components are
                    finished loading.
+                   
+             NOTE: Any events triggered in the constructor are delayed until the
+                   entity has finished adding components (but immediately before
+                   "load" is triggered). As such, be aware that event listeners
+                   will get the message after the constructor is finished, and
+                   any event content or owner properties that changes between
+                   the trigger call and the end of components' constructor calls
+                   will be reflected in the the event handler.
             *********************************************************************/
         },
 

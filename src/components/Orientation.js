@@ -26,7 +26,10 @@
 (function () {
     "use strict";
     
-    var matrices = {
+    var Vector = include('platypus.Vector'),
+        tempV1 = new Vector(),
+        tempV2 = new Vector(),
+        matrices = {
             'horizontal':              [[ -1,  0,  0],
                                         [  0,  1,  0],
                                         [  0,  0, -1]],
@@ -146,9 +149,9 @@
         },
         constructor: (function () {
             var setupOrientation = function (self, orientation) {
-                var normal = new platypus.Vector([0, 0, 1]),
-                    origin = new platypus.Vector([1, 0, 0]),
-                    vector = new platypus.Vector([1, 0, 0]),
+                var normal = new Vector([0, 0, 1]),
+                    origin = new Vector([1, 0, 0]),
+                    vector = new Vector([1, 0, 0]),
                     owner  = self.owner,
                     matrix = [[1, 0, 0],
                               [0, 1, 0],
@@ -245,7 +248,8 @@
                 var i = 0,
                     delta = tick.delta,
                     state = this.owner.state,
-                    finishedTweening = [];
+                    finishedTweening = [],
+                    tween = null;
                 
                 if (this.tweens.length) {
                     state.reorienting = true;
@@ -260,12 +264,33 @@
                         this.updateVector(this.vectors[i], this.inverses[i]);
                     }
                     for (i = 0; i < finishedTweening.length; i++) {
-                        this.transform(finishedTweening[i].endMatrix);
-                        finishedTweening[i].onFinished(finishedTweening[i].endMatrix);
+                        tween = finishedTweening[i];
+                        this.transform(tween.endMatrix);
+                        if (tween.anchor) {
+                            tween.offset.multiply(tween.endMatrix).addVector(tween.anchor);
+                            this.owner.triggerEvent('relocate-entity', {
+                                position: tween.offset
+                            });
+                        }
+                        tween.onFinished(tween.endMatrix);
                     }
                 } else if (state.reorienting) {
                     identitize(this.matrixTween);
                     state.reorienting = false;
+                }
+            },
+            
+            /**
+             * On receiving this message, any currently running orientation tweens are immediately completed to give the entity a new stable position.
+             * 
+             * @method 'complete-tweens'
+             * @since 0.7.1
+             */
+            "complete-tweens": function () {
+                var i = 0;
+                
+                for (i = 0; i < this.tweens.length; i++) {
+                    this.tweens[i].time = this.tweens[i].endTime;
                 }
             },
             
@@ -301,7 +326,7 @@
                         vector.multiply(this.matrix);
                     }
                     this.vectors.push(vector);
-                    this.inverses.push(new platypus.Vector());
+                    this.inverses.push(new Vector());
                 }
             },
             
@@ -328,14 +353,21 @@
              * @param options.matrix {Array} A transformation matrix: only required if `transform` is not provided
              * @param options.transform {String} A transformation type: only required if `matrix` is not provided.
              * @param options.time {number} The time over which the tween occurs. 0 makes it instantaneous.
+             * @param [options.anchor] {platypus.Vector} The anchor of the orientation change. If not provided, the owner's position is used.
+             * @param [options.offset] {platypus.Vector} If an anchor is supplied, this vector describes the entity's distance from the anchor. It defaults to the entity's current position relative to the anchor position.
              * @param [options.angle] {number} Angle in radians to transform. This is only valid for rotations and is derived from the transform if not provided.
              * @param [options.tween] {Function} A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
-             * @param [options.onTick] {Function} A function that should be processed on each tick as the tween occurs.
+             * @param [options.beforeTick] {Function} A function that should be processed before each tick as the tween occurs. This function should return `true`, otherwise the tween doesn't take a step.
+             * @param [options.afterTick] {Function} A function that should be processed after each tick as the tween occurs.
+             * @param [options.onTick] {Function} Deprecated in favor of `beforeTick` and `afterTick`.
              * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
              */
             "tween-transform": (function () {
                 var doNothing = function () {
                         // Doing nothing!
+                    },
+                    returnTrue = function () {
+                        return true;
                     },
                     linearEase = function (t) {
                         return t;
@@ -343,7 +375,8 @@
 
                 return function (props) {
                     var angle  = props.angle || 0,
-                        matrix = props.matrix;
+                        matrix = props.matrix,
+                        offset = null;
                     
                     if (!matrix) {
                         matrix = matrices[props.transform];
@@ -366,15 +399,22 @@
                         }
                     }
                     
+                    if (props.anchor) {
+                        offset = props.offset || this.owner.position.copy().subtractVector(props.anchor, 2);
+                    }
+                    
                     this.tweens.push({
                         transform: props.transform,
+                        anchor: props.anchor,
+                        offset: offset,
                         endTime: props.time || 0,
                         time: 0,
                         endMatrix: matrix,
                         angle: angle,
                         tween: props.tween || linearEase,
                         onFinished: props.onFinished || doNothing,
-                        onTick: props.onTick || doNothing
+                        beforeTick: props.beforeTick || returnTrue,
+                        afterTick: props.onTick || props.afterTick || doNothing
                     });
                 };
             }()),
@@ -508,9 +548,13 @@
                         z = 1,
                         angle = 0,
                         m = tween.endMatrix,
-                        matrix = null;
+                        matrix = null,
+                        initialOffset = tempV1,
+                        finalOffset = tempV2;
                     
-                    tween.time += delta;
+                    if (tween.beforeTick(tween.time)) {
+                        tween.time += delta;
+                    }
                     
                     if (tween.time >= tween.endTime) {
                         return true;
@@ -534,8 +578,17 @@
                     matrix = [[a, c, 0], [b, d, 0], [0, 0, z]];
 
                     multiply(matrix, this.matrixTween, this.matrixTween);
+                    
+                    if (tween.anchor) {
+                        initialOffset.set(tween.offset).multiply(1 - t);
+                        finalOffset.set(tween.offset).multiply(t);
+                        
+                        this.owner.triggerEvent('relocate-entity', {
+                            position: initialOffset.add(finalOffset).multiply(matrix).addVector(tween.anchor)
+                        });
+                    }
 
-                    tween.onTick(t, matrix);
+                    tween.afterTick(t, matrix);
                 };
             }()),
             
