@@ -281,6 +281,20 @@
             },
             
             /**
+             * On receiving this message, any currently running orientation tweens are immediately completed to give the entity a new stable position.
+             * 
+             * @method 'complete-tweens'
+             * @since 0.7.1
+             */
+            "complete-tweens": function () {
+                var i = 0;
+                
+                for (i = 0; i < this.tweens.length; i++) {
+                    this.tweens[i].time = this.tweens[i].endTime;
+                }
+            },
+            
+            /**
              * On receiving this message, any currently running orientation tweens are discarded, returning the entity to its last stable position.
              * 
              * @method 'drop-tweens'
@@ -340,14 +354,20 @@
              * @param options.transform {String} A transformation type: only required if `matrix` is not provided.
              * @param options.time {number} The time over which the tween occurs. 0 makes it instantaneous.
              * @param [options.anchor] {platypus.Vector} The anchor of the orientation change. If not provided, the owner's position is used.
+             * @param [options.offset] {platypus.Vector} If an anchor is supplied, this vector describes the entity's distance from the anchor. It defaults to the entity's current position relative to the anchor position.
              * @param [options.angle] {number} Angle in radians to transform. This is only valid for rotations and is derived from the transform if not provided.
              * @param [options.tween] {Function} A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
-             * @param [options.onTick] {Function} A function that should be processed on each tick as the tween occurs.
+             * @param [options.beforeTick] {Function} A function that should be processed before each tick as the tween occurs. This function should return `true`, otherwise the tween doesn't take a step.
+             * @param [options.afterTick] {Function} A function that should be processed after each tick as the tween occurs.
+             * @param [options.onTick] {Function} Deprecated in favor of `beforeTick` and `afterTick`.
              * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
              */
             "tween-transform": (function () {
                 var doNothing = function () {
                         // Doing nothing!
+                    },
+                    returnTrue = function () {
+                        return true;
                     },
                     linearEase = function (t) {
                         return t;
@@ -380,7 +400,7 @@
                     }
                     
                     if (props.anchor) {
-                        offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                        offset = props.offset || this.owner.position.copy().subtractVector(props.anchor, 2);
                     }
                     
                     this.tweens.push({
@@ -393,7 +413,8 @@
                         angle: angle,
                         tween: props.tween || linearEase,
                         onFinished: props.onFinished || doNothing,
-                        onTick: props.onTick || doNothing
+                        beforeTick: props.beforeTick || returnTrue,
+                        afterTick: props.onTick || props.afterTick || doNothing
                     });
                 };
             }()),
@@ -531,7 +552,9 @@
                         initialOffset = tempV1,
                         finalOffset = tempV2;
                     
-                    tween.time += delta;
+                    if (tween.beforeTick(tween.time)) {
+                        tween.time += delta;
+                    }
                     
                     if (tween.time >= tween.endTime) {
                         return true;
@@ -565,7 +588,7 @@
                         });
                     }
 
-                    tween.onTick(t, matrix);
+                    tween.afterTick(t, matrix);
                 };
             }()),
             
