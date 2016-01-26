@@ -52,7 +52,17 @@
              * @type number
              * @default 100
              */
-            maxStepsPerTick: 100
+            maxStepsPerTick: 100,
+            
+            /**
+             * Whether logic should occur at an alternate speed. This is useful for simulations where the game should speed up or slow down.
+             * 
+             * @property timeMultiplier
+             * @type number
+             * @default 1
+             * @since 0.7.1
+             */
+            timeMultiplier: 1
         },
         constructor: function (definition) {
             this.entities = [];
@@ -169,7 +179,7 @@
                     cycles = 0,
                     child  = null;
                 
-                this.leftoverTime += resp.delta;
+                this.leftoverTime += (resp.delta * this.timeMultiplier);
                 cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
         
                 // This makes the frames smoother, but adds variance into the calculations

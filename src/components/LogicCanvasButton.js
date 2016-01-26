@@ -43,6 +43,7 @@
                 if (!this.owner.state.disabled && !(this.useOnce && this.used)) {
                     if (this.onPress) {
                         this.owner.trigger(this.onPress);
+                        eventData.pixiEvent.stopPropagation();
                         this.used = true; //Doing this prevents the Release/Cancel calls from occurring. Need to find a way to let the up and down both call for one use buttons.
                     }
                 }
@@ -61,6 +62,7 @@
                             this.used = true;
                         }
                     }
+                    eventData.pixiEvent.stopPropagation();
                 }
 
                 this.owner.state.down = false;
