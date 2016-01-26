@@ -536,8 +536,7 @@
              * This message causes the entity's x,y coordinates to update.
              * 
              * @method 'relocate-entity'
-             * @param position.x {number} The new x coordinate.
-             * @param position.y {number} The new y coordinate.
+             * @param position {platypus.Vector} The new coordinates.
              * @param [position.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
              */
             "relocate-entity": function (resp) {
