@@ -200,14 +200,27 @@ platypus.Game = (function () {
     * @param preloading=false {boolean} Whether the scene should appear immediately or just be loaded and not shown.
     **/
     proto.loadScene = (function () {
-        var load = function (sceneId, data) {
-            this.app.states[sceneId].data = data; //sets data to send to next scene.
-            this.app.manager.state = sceneId;
+        var load = function (scene, data) {
+            var id = '',
+                sceneInstance = null;
+            
+            if (typeof scene === 'string') {
+                this.app.states[scene].data = data; //sets data to send to next scene.
+                this.app.manager.state = scene;
+            } else {
+                id = scene.id = scene.id || "new-scene";
+                sceneInstance = new Scene(new Container(), scene);
+                sceneInstance.data = data;
+                this.app.manager.addState(id, sceneInstance);
+				this.stage.addChild(sceneInstance.panel);
+    			this.app.trigger('stateAdded', id, sceneInstance);
+                this.app.manager.state = id;
+            }
         };
         
-        return function (sceneId, data) {
+        return function (scene, data) {
             // Delay load so it doesn't end a scene mid-tick.
-            setTimeout(load.bind(this, sceneId, data), 1);
+            setTimeout(load.bind(this, scene, data), 1);
         }
     }());
     
