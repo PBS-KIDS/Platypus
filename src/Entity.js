@@ -238,10 +238,16 @@ platypus.Entity = (function () {
     entity.getAssetList = function (def, props) {
         var i = 0,
             component = null,
-            assets = [];
+            assets = [],
+            definition = null;
         
         if (def.type) {
-            return entity.getAssetList(platypus.game.settings.entities[def.type], def.properties);
+            definition = platypus.game.settings.entities[def.type];
+            if (!definition) {
+                warn('Entity "' + def.type + '": This entity is not defined.', def);
+                return assets;
+            }
+            return entity.getAssetList(definition, def.properties);
         }
 
         for (i = 0; i < def.components.length; i++) {
