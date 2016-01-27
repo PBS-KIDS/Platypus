@@ -357,12 +357,12 @@
                             for (i = 0; i < levels[key].length; i++) {
                                 assets.union(platypus.components.TiledLoader.getAssetList({
                                     level: levels[key][i]
-                                }));
+                                }, props, defaultProps));
                             }
                         } else {
                             assets.union(platypus.components.TiledLoader.getAssetList({
                                 level: levels[key]
-                            }));
+                            }, props, defaultProps));
                         }
                     }
                 }

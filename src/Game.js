@@ -107,7 +107,8 @@ platypus.Game = (function () {
         },
         game = function (definition, applicationInstance, onFinishedLoading) {
             var load = function (settings) {
-                    var scene  = '',
+                    var id = '',
+                        scene  = '',
                         states = this.app.states || {};
                     
                     platypus.game = this; //Make this instance the only Game instance.
@@ -119,7 +120,8 @@ platypus.Game = (function () {
                     // Create Game Scenes.
                     for (scene in settings.scenes) {
                         if (settings.scenes.hasOwnProperty(scene)) {
-                            states[settings.scenes[scene].id] = new Scene(new Container(), settings.scenes[scene]);
+                            id = settings.scenes[scene].id = settings.scenes[scene].id || scene;
+                            states[id] = new Scene(new Container(), settings.scenes[scene]);
                         }
                     }
                     

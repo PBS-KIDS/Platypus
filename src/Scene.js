@@ -12,7 +12,10 @@
  *                 "properties": {"x": 400}
  *                 // Optional. If properties are passed in this reference, they override the entity definition's properties of the same name.
  *             }
- *         ]
+ *         ],
+ * 
+ *         "assets": []
+ *         // Optional list of assets this scene requires.
  *     }
  * @namespace platypus
  * @class Scene
@@ -22,6 +25,7 @@
  * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties, filters, and components as shown above under "JSON Definition Example".
  * @param {String} [definition.id] This declares the id of the scene.
  * @param {Array} [definition.layers] This lists the layers that comprise the scene.
+ * @param {Array} [definition.assets] This lists the assets that this scene requires.
  * @return {Scene} Returns the new scene made up of the provided layers. 
  */
 /*global extend, platypus */
@@ -31,7 +35,7 @@ platypus.Scene = (function () {
     
     var Entity = include('platypus.Entity'),
         State  = include('springroll.State'),
-        fn = /([\w-]+)\.(\w)$/,
+        fn = /([\w-]+)\.(\w+)$/,
         formatAsset = function (asset) {
             var match = asset.match(fn),
                 a = {
@@ -58,6 +62,7 @@ platypus.Scene = (function () {
             this.storedMessages = [];
             this.stage = panel;
             this.layers = [];
+            this.assets = definition.assets || null;
             
             // If the scene has dynamically added assets such as level data
             this.on('loading', function (assets) {
@@ -282,6 +287,10 @@ platypus.Scene = (function () {
     proto.getAssetList = function (def) {
         var i = 0,
             assets = [];
+        
+        if (def.assets) {
+            assets.union(def.assets);
+        }
         
         for (i = 0; i < def.layers.length; i++) {
             assets.union(Entity.getAssetList(def.layers[i]));
