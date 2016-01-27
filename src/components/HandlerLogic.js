@@ -10,7 +10,14 @@
 (function () {
     "use strict";
 
-    var doNothing = function () {},
+    var addAll = function (all, active) {
+            var j = 0;
+            
+            active.length = 0;
+            for (j = all.length - 1; j > -1; j--) {
+                active.push(all[j]);
+            }
+        },
         checkCamera = function (all, active, camera) {
             var j = 0,
                 child = null;
@@ -89,15 +96,13 @@
             timeMultiplier: 1
         },
         constructor: function (definition) {
-            
             this.entities = [];
-            
+            this.activeEntities = [];
+
             if (this.alwaysOn) {
-                this.activeEntities = this.entities;
-                this.updateList = doNothing;
+                this.updateList = addAll;
                 this.camera = null;
             } else {
-                this.activeEntities = [];
                 this.updateList = checkCamera;
                 this.camera = {
                     left: 0,
