@@ -336,17 +336,34 @@
         },
         
         getAssetList: function (def, props, defaultProps) {
-            var assets = [],
+            var i = 0,
+                assets = [],
                 key = '',
-                levels = def.levelPieces || props.levelPieces || defaultProps.levelPieces;
+                levels = null;
+            
+            if (def && def.levelPieces) {
+                levels = def.levelPieces;
+            } else if (props && props.levelPieces) {
+                levels = props.levelPieces;
+            } else if (defaultProps && defaultProps.levelPieces) {
+                levels = defaultProps.levelPieces;
+            }
             
             if (levels) {
                 for (key in levels) {
                     if (levels.hasOwnProperty(key)) {
                         // Offload to TiledLoader since it has level-parsing handling
-                        assets.union(platypus.components.TiledLoader.getAssetList({
-                            level: levels[key]
-                        }));
+                        if (Array.isArray(levels[key])) {
+                            for (i = 0; i < levels[key].length; i++) {
+                                assets.union(platypus.components.TiledLoader.getAssetList({
+                                    level: levels[key][i]
+                                }));
+                            }
+                        } else {
+                            assets.union(platypus.components.TiledLoader.getAssetList({
+                                level: levels[key]
+                            }));
+                        }
                     }
                 }
             }
