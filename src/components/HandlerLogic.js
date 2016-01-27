@@ -10,7 +10,20 @@
 (function () {
     "use strict";
 
-    var updateState = function (entity) {
+    var doNothing = function () {},
+        checkCamera = function (all, active, camera) {
+            var j = 0,
+                child = null;
+            
+            active.length = 0;
+            for (j = all.length - 1; j > -1; j--) {
+                child = all[j];
+                if (child.alwaysOn  || (typeof child.x === 'undefined') || ((child.x >= camera.left - camera.buffer) && (child.x <= camera.left + camera.width + camera.buffer) && (child.y >= camera.top - camera.buffer) && (child.y <= camera.top + camera.height + camera.buffer))) {
+                    active.push(child);
+                }
+            }
+        },
+        updateState = function (entity) {
         var state   = null,
             changed = false;
         
@@ -26,6 +39,17 @@
 
     return platypus.createComponentClass({
         id: "HandlerLogic",
+        properties: {
+            /**
+             * Whether logic should always run on all entities or only run on entities within the visible camera area (plus the buffer amount specified by the `buffer` property).
+             * 
+             * @property alwaysOn
+             * @type Boolean
+             * @default false
+             * @since 0.7.1
+             */
+            alwaysOn: false
+        },
         publicProperties: {
             /**
              * The buffer area around the camera in which entity logic is active. This property is available on the Entity as `entity.buffer`.
@@ -35,7 +59,7 @@
              * @default camera width / 10
              */
             buffer: -1,
-
+            
             /**
              * The length in milliseconds of a single logic step. If the framerate drops too low, logic is run for each step of this many milliseconds. This property is available on the Entity as `entity.stepLength`.
              * 
@@ -65,19 +89,28 @@
             timeMultiplier: 1
         },
         constructor: function (definition) {
+            
             this.entities = [];
-            this.activeEntities = this.entities;
+            
+            if (this.alwaysOn) {
+                this.activeEntities = this.entities;
+                this.updateList = doNothing;
+                this.camera = null;
+            } else {
+                this.activeEntities = [];
+                this.updateList = checkCamera;
+                this.camera = {
+                    left: 0,
+                    top: 0,
+                    width: 0,
+                    height: 0,
+                    buffer:     this.buffer,
+                    active: false
+                };
+            }
             
             this.paused = 0;
             this.leftoverTime = 0;
-            this.camera = {
-                left: 0,
-                top: 0,
-                width: 0,
-                height: 0,
-                buffer:     this.buffer,
-                active: false
-            };
             this.message = {
                 delta: this.stepLength,
                 tick: null,
@@ -100,7 +133,6 @@
                 for (x = 0; x < messageIds.length; x++) {
                     if (messageIds[x] === 'handle-logic' || messageIds[x] === 'handle-post-collision-logic') {
                         this.entities.push(entity);
-                        this.updateNeeded = this.camera.active;
                         break;
                     }
                 }
@@ -152,18 +184,18 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                this.camera.left   = camera.viewport.left;
-                this.camera.top    = camera.viewport.top;
-                this.camera.width  = camera.viewport.width;
-                this.camera.height = camera.viewport.height;
-                
-                if (this.camera.buffer === -1) {
-                    this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+                if (this.camera) {
+                    this.camera.left   = camera.viewport.left;
+                    this.camera.top    = camera.viewport.top;
+                    this.camera.width  = camera.viewport.width;
+                    this.camera.height = camera.viewport.height;
+                    
+                    if (this.camera.buffer === -1) {
+                        this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+                    }
+                    
+                    this.camera.active = true;
                 }
-                
-                this.camera.active = true;
-                
-                this.updateNeeded = true;
             },
             
             /**
@@ -194,24 +226,9 @@
                 this.message.delta = this.stepLength;
                 this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
         
-                
-                    
-                    
                 this.message.tick = resp;
                 
-                //if (this.updateNeeded) {//causes blocks to fall through dirt - not sure the connection here, so leaving out this optimization for now. - DDD
-                if (this.activeEntities === this.entities) {
-                    this.message.movers = this.activeEntities = [];
-                }
-
-                this.activeEntities.length = 0;
-                for (j = this.entities.length - 1; j > -1; j--) {
-                    child = this.entities[j];
-                    if (child.alwaysOn  || (typeof child.x === 'undefined') || ((child.x >= this.camera.left - this.camera.buffer) && (child.x <= this.camera.left + this.camera.width + this.camera.buffer) && (child.y >= this.camera.top - this.camera.buffer) && (child.y <= this.camera.top + this.camera.height + this.camera.buffer))) {
-                        this.activeEntities.push(child);
-                    }
-                }
-                //}
+                this.updateList(this.entities, this.activeEntities, this.camera);
                 
                 //Prevents game lockdown when processing takes longer than time alotted.
                 cycles = Math.min(cycles, this.maxStepsPerTick);

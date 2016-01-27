@@ -23,7 +23,9 @@
      * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
      * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
      */
-    var triggerMessage = {
+    var CollisionDataContainer = include('platypus.CollisionDataContainer'),
+        entityCollisionDataContainer = new CollisionDataContainer(),
+        triggerMessage = {
             entity: null,
             type:   null,
             x: 0,
@@ -31,7 +33,9 @@
             hitType: null,
             myType: null
         },
-        entityCollisionDataContainer = new platypus.CollisionDataContainer(),
+        groupSortBySize = function (a, b) {
+            return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
+        },
         isAABBCollision = function (boxX, boxY) {
             return !((boxX.left >=  boxY.right) || (boxX.right  <=  boxY.left) || (boxX.top    >=  boxY.bottom) || (boxX.bottom <=  boxY.top));
         },
@@ -173,7 +177,11 @@
             "check-collision-group": function (resp) {
                 if (resp.camera) {
                     this.checkCamera(resp.camera);
-                }/*
+                } else {
+                    this.updateLists();
+                }
+                
+                /*
                 if (resp.movers) {
                     this.checkMovers(resp.camera, resp.movers);
                 }*/
@@ -214,7 +222,6 @@
             removeCollisionEntity: function (entity) {
                 var x     = 0,
                     i     = 0,
-                    j     = 0,
                     types = entity.collisionTypes;
 
                 if (types) {
@@ -235,108 +242,176 @@
                 }
             },
             
-            checkCamera: (function () {
-                var groupSortBySize = function (a, b) {
-                    return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
-                };
-                return function (camera, movers) {
-                    var i        = 0,
-                        j        = 0,
-                        key      = '',
-                        length   = 0,
-                        list     = null,
-                        all      = null,
-                        softs    = null,
-                        solids   = null,
-                        groups   = null,
-                        width    = camera.width,
-                        height   = camera.height,
-                        x        = camera.left + width  / 2,
-                        y        = camera.top  + height / 2,
-                        buffer   = camera.buffer,
-                        entities      = null,
-                        entity        = null,
-                        check         = isAABBCollision,
-                        aabbLogic     = this.cameraLogicAABB,
-                        aabbCollision = this.cameraCollisionAABB,
-                        types = null;
+            checkCamera: function (camera, movers) {
+                var i        = 0,
+                    j        = 0,
+                    key      = '',
+                    length   = 0,
+                    list     = null,
+                    all      = null,
+                    softs    = null,
+                    solids   = null,
+                    groups   = null,
+                    width    = camera.width,
+                    height   = camera.height,
+                    x        = camera.left + width  / 2,
+                    y        = camera.top  + height / 2,
+                    buffer   = camera.buffer,
+                    entities      = null,
+                    entity        = null,
+                    check         = isAABBCollision,
+                    aabbLogic     = this.cameraLogicAABB,
+                    aabbCollision = this.cameraCollisionAABB,
+                    types = null;
+                
+                // store buffered size since the actual width x height is not used below.
+                width  += buffer * 2;
+                height += buffer * 2;
+                
+                if (this.updateLiveList || !aabbLogic.matches(x, y, width, height)) {
                     
-                    // store buffered size since the actual width x height is not used below.
-                    width  += buffer * 2;
-                    height += buffer * 2;
+                    aabbLogic.setAll(x, y, width, height);
                     
-                    if (this.updateLiveList || !aabbLogic.matches(x, y, width, height)) {
-                        
-                        aabbLogic.setAll(x, y, width, height);
-                        
-                        // Removing this line since it allows logic to run without collision turned on. Not certain why, but can turn this back on and trace down the issue if optimization is necessary. - DDD 12/31/2014
-                        //if (this.updateLiveList || !aabbCollision.contains(aabbLogic)) { //if the camera has not moved beyond the original buffer, we do not continue these calculations
-                        this.updateLiveList = false;
+                    // Removing this line since it allows logic to run without collision turned on. Not certain why, but can turn this back on and trace down the issue if optimization is necessary. - DDD 12/31/2014
+                    //if (this.updateLiveList || !aabbCollision.contains(aabbLogic)) { //if the camera has not moved beyond the original buffer, we do not continue these calculations
+                    this.updateLiveList = false;
 
-                        all = this.allEntitiesLive;
-                        all.length = 0;
+                    all = this.allEntitiesLive;
+                    all.length = 0;
 
-                        solids = this.solidEntitiesLive;
-                        solids.length = 0;
+                    solids = this.solidEntitiesLive;
+                    solids.length = 0;
 
-                        softs = this.softEntitiesLive;
-                        softs.length = 0;
+                    softs = this.softEntitiesLive;
+                    softs.length = 0;
 
-                        groups = this.groupsLive;
-                        groups.length = 0;
+                    groups = this.groupsLive;
+                    groups.length = 0;
 
-                        length = this.allEntities.length;// console.log(length);
-                        for (i = 0; i < length; i++) {
-                            entity = this.allEntities[i];
-                            if (entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)) {
-                                entity.checkCollision = false;  //TML - This should be here. I think. :)
-                                all[all.length] = entity;
+                    length = this.allEntities.length;// console.log(length);
+                    for (i = 0; i < length; i++) {
+                        entity = this.allEntities[i];
+                        if (entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)) {
+                            entity.checkCollision = false;  //TML - This should be here. I think. :)
+                            all[all.length] = entity;
 
-                                types = entity.collisionTypes;
-                                if (entity !== this.owner) {
-                                    for (j = 0; j < types.length; j++) {
-                                        if (entity.solidCollisionMap[types[j]].length) {
-                                            solids[solids.length] = entity;
-                                            break;
-                                        }
-                                    }
-                                }
+                            types = entity.collisionTypes;
+                            if (entity !== this.owner) {
                                 for (j = 0; j < types.length; j++) {
-                                    if (entity.softCollisionMap[types[j]].length) {
-                                        softs[softs.length] = entity;
+                                    if (entity.solidCollisionMap[types[j]].length) {
+                                        solids[solids.length] = entity;
                                         break;
                                     }
                                 }
-
-                                if (entity.collisionGroup) {
-                                    groups.push(entity);
+                            }
+                            for (j = 0; j < types.length; j++) {
+                                if (entity.softCollisionMap[types[j]].length) {
+                                    softs[softs.length] = entity;
+                                    break;
                                 }
                             }
-                        }
 
-                        groups.sort(groupSortBySize);
-
-                        // add buffer again to capture stationary entities along the border that may be collided against 
-                        aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
-
-                        for (key in this.entitiesByType) {
-                            if (this.entitiesByType.hasOwnProperty(key)) {
-                                entities = this.entitiesByType[key];
-                                list = this.entitiesByTypeLive[key];
-                                list.length = 0;
-                                length = entities.length;
-                                for (j = 0; j < length; j++) {
-                                    entity = entities[j];
-                                    if (entity.alwaysOn  || check(entity.getAABB(), aabbCollision)) {
-                                        list[list.length] = entity;
-                                    }
-                                }
+                            if (entity.collisionGroup) {
+                                groups.push(entity);
                             }
                         }
-                        //}
                     }
-                };
-            }()),
+
+                    groups.sort(groupSortBySize);
+
+                    // add buffer again to capture stationary entities along the border that may be collided against 
+                    aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
+
+                    for (key in this.entitiesByType) {
+                        if (this.entitiesByType.hasOwnProperty(key)) {
+                            entities = this.entitiesByType[key];
+                            list = this.entitiesByTypeLive[key];
+                            list.length = 0;
+                            length = entities.length;
+                            for (j = 0; j < length; j++) {
+                                entity = entities[j];
+                                if (entity.alwaysOn  || check(entity.getAABB(), aabbCollision)) {
+                                    list[list.length] = entity;
+                                }
+                            }
+                        }
+                    }
+                    //}
+                }
+            },
+            
+            updateLists: function () {
+                var i        = 0,
+                    j        = 0,
+                    key      = '',
+                    length   = 0,
+                    list     = null,
+                    all      = null,
+                    softs    = null,
+                    solids   = null,
+                    groups   = null,
+                    entities = null,
+                    entity   = null,
+                    types    = null;
+                
+                if (this.updateLiveList) {
+                    this.updateLiveList = false;
+
+                    all = this.allEntitiesLive;
+                    all.length = 0;
+
+                    solids = this.solidEntitiesLive;
+                    solids.length = 0;
+
+                    softs = this.softEntitiesLive;
+                    softs.length = 0;
+
+                    groups = this.groupsLive;
+                    groups.length = 0;
+
+                    length = this.allEntities.length;// console.log(length);
+                    for (i = 0; i < length; i++) {
+                        entity = this.allEntities[i];
+                        entity.checkCollision = false;  //TML - This should be here. I think. :)
+                        all[all.length] = entity;
+
+                        types = entity.collisionTypes;
+                        if (entity !== this.owner) {
+                            for (j = 0; j < types.length; j++) {
+                                if (entity.solidCollisionMap[types[j]].length) {
+                                    solids[solids.length] = entity;
+                                    break;
+                                }
+                            }
+                        }
+                        for (j = 0; j < types.length; j++) {
+                            if (entity.softCollisionMap[types[j]].length) {
+                                softs[softs.length] = entity;
+                                break;
+                            }
+                        }
+
+                        if (entity.collisionGroup) {
+                            groups.push(entity);
+                        }
+                    }
+
+                    groups.sort(groupSortBySize);
+
+                    for (key in this.entitiesByType) {
+                        if (this.entitiesByType.hasOwnProperty(key)) {
+                            entities = this.entitiesByType[key];
+                            list = this.entitiesByTypeLive[key];
+                            list.length = 0;
+                            length = entities.length;
+                            for (j = 0; j < length; j++) {
+                                entity = entities[j];
+                                list[list.length] = entity;
+                            }
+                        }
+                    }
+                }
+            },
             
             prepareCollisions: function (resp) {
                 var x      = 0,
