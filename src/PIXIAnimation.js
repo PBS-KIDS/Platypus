@@ -341,8 +341,7 @@
         /**
         * The PIXIAnimations paused state. If paused, the animation doesn't update.
         *
-        * @member {number}
-        * @memberof platypus.PIXIAnimation#
+        * @property paused
         */
         paused: {
             get: function() {
