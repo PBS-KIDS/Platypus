@@ -1,5 +1,6 @@
 /**
  * This component changes the [Motion](platypus.components.Motion.html) of an entity according to its current speed and heading. It accepts directional messages that can stand alone, or come from a mapped controller, in which case it checks the `pressed` value of the message before changing its course.
+ * 
  * @namespace platypus.components
  * @class LogicDirectionalMovement
  * @uses platypus.Component
@@ -42,6 +43,13 @@
         id: 'LogicDirectionalMovement',
         
         properties: {
+            /**
+             * Defines the axis around which the entity should be transformed. Defaults to "y" for platforming behavior. Use "z" for top-down behavior.
+             * 
+             * @property axis
+             * @type String
+             * @default "y"
+             */
             axis: 'y',
 
             /**
@@ -363,6 +371,37 @@
                     this.downRight = false;
                 }
             },
+            
+            /**
+             * Set the direction the entity should face while stopped.
+             * 
+             * @method 'face'
+             * @param direction {String} A value such as "north" or "left" to point the entity in a particular direction.
+             */
+            "face": (function () {
+                var headings = {
+                    up: 270,
+                    north: 270,
+                    down: 90,
+                    south: 90,
+                    left: 180,
+                    west: 180,
+                    right: 0,
+                    east: 0,
+                    "up-left": 225,
+                    northwest: 225,
+                    "up-right": 315,
+                    northeast: 315,
+                    "down-left": 135,
+                    southwest: 135,
+                    "down-right": 45,
+                    southeast: 45
+                };
+                
+                return function (direction) {
+                    this.heading = headings[direction] || 0;
+                };
+            }()),
             
             /**
              * Changes the velocity of the Entity when in motion.
