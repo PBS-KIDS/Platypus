@@ -179,6 +179,15 @@ platypus.Scene = (function () {
         if (platypus.game.settings.debug) {
             console.log('Scene ending: ' + this.id);
         }
+
+        /**
+         * This event is triggered on the layers once the Scene is over.
+         * 
+         * @event 'scene-ended'
+         * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+         * @since 0.7.1
+         */
+        this.triggerOnChildren('scene-ended', this.data);
     };
     
 /**
