@@ -222,7 +222,7 @@
                 }
                 entity.containerListener.events.push(event);
                 entity.containerListener.messages.push(callback);
-                this.on(event, callback);
+                this.on(event, callback, callback._priority || 0);
             },
             
             removeChildEventListener: function (entity, event, callback) {

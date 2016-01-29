@@ -33,7 +33,7 @@
         },
         mergeObjects  = function (obj1s, obj2s, mergeAxisLength, mergeAxis) {
             var i    = 0,
-                j    = 0,
+                j    = '',
                 list = obj1s.slice(),
                 obj  = null;
 
@@ -55,7 +55,7 @@
         },
         mergeSegment  = function (level, segment, mergeAxis) {
             var i = 0,
-                j = 0;
+                j = '';
 
             if (!level.tilewidth && !level.tileheight) {
                 //set level tile size data if it's not already set.
@@ -120,9 +120,9 @@
             }
 
             //Go through all the STUFF in segment and copy it to the level if it's not already there.
-            for (i in segment) {
-                if (segment.hasOwnProperty(i) && !level[i]) {
-                    level[i] = segment[i];
+            for (j in segment) {
+                if (segment.hasOwnProperty(j) && !level[j]) {
+                    level[j] = segment[j];
                 }
             }
         },
