@@ -186,7 +186,6 @@ platypus.Game = (function () {
     proto.tick = function (tickEvent) {
         if (this.currentScene) {
             this.currentScene.triggerOnChildren('tick', tickEvent);
-            //this.stage.update(tickEvent);
         }
     };
     

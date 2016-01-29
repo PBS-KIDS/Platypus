@@ -68,7 +68,7 @@ platypus.Messenger = (function () {
      */
     proto.triggerEvent = function (event, value, debug) {
         var i = 0,
-            debugLogging = this.debug || debug || (value && value.debug),
+            debugLogging = debug || (value && value.debug),
             debugCount = 0,
             count = 0;
         
@@ -79,12 +79,14 @@ platypus.Messenger = (function () {
         count = (this._listeners[event] && this._listeners[event].length) || 0;
         
         // Debug logging.
-        if (debugLogging) {
-            if (count) {
-                console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
-            } else {
-                console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
-                return 0;
+        if (debugLogging || this.debug) {
+            if (debugLogging) {
+                if (count) {
+                    console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
+                } else {
+                    console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
+                    return 0;
+                }
             }
             
             for (i = 0; i < this.loopCheck.length; i++) {
@@ -99,7 +101,14 @@ platypus.Messenger = (function () {
             }
 
             this.loopCheck.push(event);
+            if (window.performance) {
+                window.performance.mark("a");
+            }
             this._trigger(event, value, debug);
+            if (window.performance) {
+                window.performance.mark("b");
+                window.performance.measure(this.type + ":" + event, 'a', 'b');
+            }
             this.loopCheck.length = this.loopCheck.length - 1;
         } else if (count) {
             this._trigger(event, value, debug);
