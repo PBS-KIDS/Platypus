@@ -248,6 +248,7 @@
                 this.cacheId = cacheId;
             } else {
                 cache.viable += 1;
+                this.cacheId = cacheId;
             }
             
             PIXI.Sprite.call(this, cache.textures[0].texture);
