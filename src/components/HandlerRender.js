@@ -141,7 +141,7 @@
 
                     if (this.paused > 0) {
                         this.paused -= tick.delta;
-                        if (this.paused < 0) {
+                        if (this.paused <= 0) {
                             this.paused = 0;
                         }
                     }
