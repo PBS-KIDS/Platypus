@@ -226,9 +226,11 @@
 
                 if (types) {
                     for (i = 0; i < types.length; i++) {
-                        x = this.entitiesByType[types[i]].indexOf(entity);
-                        if (x >= 0) {
-                            this.entitiesByType[types[i]].splice(x, 1);
+                        if (this.entitiesByType[types[i]]) {
+                            x = this.entitiesByType[types[i]].indexOf(entity);
+                            if (x >= 0) {
+                                this.entitiesByType[types[i]].splice(x, 1);
+                            }
                         }
                     }
                     
