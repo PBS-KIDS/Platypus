@@ -580,13 +580,11 @@
                             x = 0,
                             y = 0,
                             prop = "",
-                            data = layer.data;
+                            data = null;
                         
-                        if (layer.encoding === 'base64') {
-                            data = layer.data = decodeBase64(data, layer.compression);
-                            layer.encoding = 'csv'; // So we won't have to decode again.
-                        }
-
+                        this.decodeLayer(layer);
+                        data = layer.data;
+                        
                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                         if (layer.properties) {
                             if (layer.properties.width) {
@@ -970,6 +968,25 @@
             "destroy": function () {
                 this.entities.length = 0;
             }
+        },
+        
+        publicMethods: {
+            /**
+             * This method decodes a Tiled layer and sets its data to CSV format.
+             * 
+             * @method decodeLayer
+             * @param layer {Object} An object describing a Tiled JSON-exported layer.
+             * @return {Object} The same object provided, but with the data field updated.
+             * @chainable
+             * @since 0.7.1
+             */
+            decodeLayer: function (layer) {
+                if (layer.encoding === 'base64') {
+                    layer.data = decodeBase64(layer.data, layer.compression);
+                    layer.encoding = 'csv'; // So we won't have to decode again.
+                }
+                return layer;
+            }            
         },
         
         getAssetList: function (def, props, defaultProps) {

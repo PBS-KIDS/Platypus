@@ -53,7 +53,7 @@
             }
             return list;
         },
-        mergeSegment  = function (level, segment, mergeAxis) {
+        mergeSegment  = function (level, segment, mergeAxis, decoder) {
             var i = 0,
                 j = '';
 
@@ -82,6 +82,7 @@
             for (i = 0; i < segment.layers.length; i++) {
                 if (!level.layers[i]) {
                     //if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
+                    decoder(segment.layers[i]);
                     level.layers[i] = {};
                     for (j in segment.layers[i]) {
                         if (segment.layers[i].hasOwnProperty(j)) {
@@ -92,6 +93,9 @@
                     if (level.layers[i].type === segment.layers[i].type) {
                         //if the level does have a layer, we're appending the new data to it.
                         if (level.layers[i].data && segment.layers[i].data) {
+                            // Make sure we're not trying to merge compressed levels.
+                            decoder(segment.layers[i]);
+                            
                             if (mergeAxis === 'horizontal') {
                                 level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
                                 level.layers[i].width += segment.width;
@@ -126,7 +130,7 @@
                 }
             }
         },
-        mergeLevels = function (levelSegments) {
+        mergeLevels = function (levelSegments, decoder) {
             var i = 0,
                 j = 0,
                 levelDefinitions = platypus.game.settings.levels,
@@ -154,13 +158,13 @@
                 for (j = 0; j < levelSegments[i].length; j++) {
                     //Merge horizontally
                     if (typeof levelSegments[i][j] === 'string') {
-                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
+                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal', decoder);
                     } else {
-                        mergeSegment(row, levelSegments[i][j], 'horizontal');
+                        mergeSegment(row, levelSegments[i][j], 'horizontal', decoder);
                     }
                 }
                 //Then merge vertically
-                mergeSegment(level, row, 'vertical');
+                mergeSegment(level, row, 'vertical', decoder);
             }
             return level;
         };
@@ -273,7 +277,7 @@
                 }
                 
                 if (this.levelMessage.level) {
-                    this.levelMessage.level = mergeLevels(this.levelMessage.level);
+                    this.levelMessage.level = mergeLevels(this.levelMessage.level, this.owner.decodeLayer);
                     /**
                      * Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.
                      *
@@ -331,7 +335,7 @@
         
         publicMethods: {
             mergeLevels: function (levels) {
-                return mergeLevels(levels);
+                return mergeLevels(levels, this.owner.decodeLayer);
             }
         },
         
