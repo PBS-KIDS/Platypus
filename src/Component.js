@@ -81,12 +81,13 @@ platypus.Component = (function () {
             events   = this.listener.events;
             messages = this.listener.messages;
             for (i = 0; i < events.length; i++) {
-                this.removeEventListener(events[i], messages[i]);
+                this.owner.off(events[i], messages[i]);
             }
+            events.length = 0;
+            messages.length = 0;
         } else {
-            events   = listeners;
-            for (i = 0; i < events.length; i++) {
-                this.removeEventListener(events[i]);
+            for (i = 0; i < listeners.length; i++) {
+                this.removeEventListener(listeners[i]);
             }
         }
     };
