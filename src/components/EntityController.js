@@ -287,9 +287,9 @@
                     // Otherwise create a new state storage object
                     if (!actionState) {
                         if (controllerState) {
-                            actionState = actions[id] = new ActionState(controller, states, filteredTrigger.bind(this, controllerState));
+                            actionState = actions[id] = ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState));
                         } else {
-                            actionState = actions[id] = new ActionState(controller, states, trigger.bind(this));
+                            actionState = actions[id] = ActionState.setUp(controller, states, trigger.bind(this));
                         }
                     }
                     

@@ -20,11 +20,10 @@
             
             if (cache.length) {
                 newObject = cache.pop();
+                newObject.recycled = false;
             } else {
                 newObject = Object.create(this.prototype);
             }
-            
-            newObject.recycled = false;
 
             this.apply(newObject, arguments);
 

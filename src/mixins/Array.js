@@ -110,11 +110,10 @@
         
         if (cache.length) {
             arr = cache.pop();
+            arr.recycled = false;
         } else {
             arr = [];
         }
-        
-        arr.recycled = false;
         
         for (i = 0; i < arguments.length; i++) {
             arr.push(arguments[i]);
