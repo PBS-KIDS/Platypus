@@ -729,6 +729,14 @@
              */
             "set-mask": function (mask) {
                 this.setMask(mask);
+            },
+            
+            "stop-sprite": function() {
+                this.sprite.stop();
+            },
+            
+            "play-sprite": function() {
+                this.sprite.play();
             }
         },
         

@@ -343,6 +343,23 @@
                 var frames = this._animation.frames;
                 return frames[Math.floor(this._currentTime) % frames.length];
             }
+        },
+        
+        /**
+        * The PIXIAnimations paused state. If paused, the animation doesn't update.
+        *
+        * @property paused
+        */
+        paused: {
+            get: function() {
+                return !this.playing;
+            },
+            set: function(value) {
+                if ((value && this.playing) || (!value && !this.playing)){
+                    this.playing = !value;
+                    this._syncUpdate();
+                }
+            }
         }
     
     });
@@ -352,12 +369,15 @@
     *
     */
     prototype.stop = function () {
+        this.paused = true;
+        /*
         if (!this.playing) {
             return;
         }
     
         this.playing = false;
         this._syncUpdate();
+        */
     };
     
     /**
@@ -365,12 +385,15 @@
     *
     */
     prototype.play = function () {
+        this.paused = false;
+        /*
         if (this.playing) {
             return;
         }
     
         this.playing = true;
         this._syncUpdate();
+        */
     };
     
     prototype._syncUpdate = function () {
