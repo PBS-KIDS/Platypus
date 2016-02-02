@@ -12,6 +12,7 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         animationCache = {},
+        regex = /[\[\]{},-]/g,
         createFramesArray = function (frame, bases) {
             var i = 0,
                 fw = frame.width,
@@ -78,31 +79,21 @@
         getTexturesCacheId = function (spriteSheet) {
             var animations = spriteSheet.animations,
                 i = 0,
-                id = spriteSheet.images.join(","),
+                id = '',
                 frames = spriteSheet.frames,
                 key = "";
+            
+            if (spriteSheet.id) {
+                return spriteSheet.id;
+            }
             
             for (i = 0; i < spriteSheet.images.length; i++) {
                 if (typeof spriteSheet.images[i] !== 'string') {
                     return '';
                 }
             }
-
-            if (Array.isArray(frames)) {
-                for (i = 0; i < frames.length; i++) {
-                    id += "-" + frames[i].join(",");
-                }
-            } else {
-                id += "-w" + frames.width + "h" + frames.height + "rx" + frames.regX + "ry" + frames.regY;
-            }
             
-            if (animations) {
-                for (key in animations) {
-                    if (animations.hasOwnProperty(key)) {
-                        id += "-" + key;
-                    }
-                }
-            }
+            spriteSheet.id = id = JSON.stringify(spriteSheet).replace(regex, '');
 
             return id;
         },

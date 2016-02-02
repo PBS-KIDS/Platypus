@@ -731,10 +731,22 @@
                 this.setMask(mask);
             },
             
+            /**
+             * Stops the sprite's animation.
+             * 
+             * @method 'stop-sprite'
+             * @since 0.7.1
+             */
             "stop-sprite": function() {
                 this.sprite.stop();
             },
             
+            /**
+             * Starts the sprite's animation.
+             * 
+             * @method 'play-sprite'
+             * @since 0.7.1
+             */
             "play-sprite": function() {
                 this.sprite.play();
             }

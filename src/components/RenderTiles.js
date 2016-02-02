@@ -15,7 +15,7 @@
     "use strict";
 
     var AABB              = include('platypus.AABB'),
-        Animation         = include('platypus.PIXIAnimation'),
+        PIXIAnimation     = include('platypus.PIXIAnimation'),
         Application       = include('springroll.Application'),
         CanvasRenderer    = include('PIXI.CanvasRenderer'),
         Container         = include('PIXI.Container'),
@@ -608,7 +608,7 @@
                     return nullTemplate;
                 }
 
-                tile = new Animation(this.spriteSheet);
+                tile = new PIXIAnimation(this.spriteSheet);
                 anim = 'tile' + transformCheck(imageName, tile);
                 tile.gotoAndStop(anim);
 
