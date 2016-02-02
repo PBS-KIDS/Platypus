@@ -58,17 +58,17 @@ platypus.Entity = (function () {
             var i                    = 0,
                 componentDefinition  = null,
                 def                  = definition || {},
-                componentDefinitions = def.components || [],
+                componentDefinitions = def.components,
                 defaultProperties    = def.properties || {},
                 instance             = instanceDefinition || {},
                 instanceProperties   = instance.properties || {},
-                savedEvents          = [],
-                savedMessages        = [];
+                savedEvents          = Array.setUp(),
+                savedMessages        = Array.setUp();
 
             // Set properties of messenger on this entity.
             platypus.Messenger.call(this);
 
-            this.components  = [];
+            this.components  = Array.setUp();
             this.type = def.id || 'none';
 
             this.id = instance.id || instanceProperties.id;
@@ -96,13 +96,15 @@ platypus.Entity = (function () {
                 savedMessages.push(message);
             }
             
-            for (i = 0; i < componentDefinitions.length; i++) {
-                componentDefinition = componentDefinitions[i];
-                if (componentDefinition) {
-                    if (platypus.components[componentDefinition.type]) {
-                        this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
-                    } else {
-                        warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
+            if (componentDefinitions) {
+                for (i = 0; i < componentDefinitions.length; i++) {
+                    componentDefinition = componentDefinitions[i];
+                    if (componentDefinition) {
+                        if (platypus.components[componentDefinition.type]) {
+                            this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
+                        } else {
+                            warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
+                        }
                     }
                 }
             }
@@ -113,6 +115,8 @@ platypus.Entity = (function () {
             for (i = 0; i < savedEvents.length; i++) {
                 this.trigger(savedEvents[i], savedMessages[i]);
             }
+            savedEvents.recycle();
+            savedMessages.recycle();
 
             /**
              * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
@@ -175,7 +179,7 @@ platypus.Entity = (function () {
             for (i = 0; i < this.components.length; i++) {
                 if (this.components[i].type === component) {
                     component = this.components[i];
-                    this.components.splice(i, 1);
+                    this.components.greenSplice(i);
                     this.triggerEvent('component-removed', component);
                     component.destroy();
                     return component;
@@ -184,7 +188,7 @@ platypus.Entity = (function () {
         } else {
             for (i = 0; i < this.components.length; i++) {
                 if (this.components[i] === component) {
-                    this.components.splice(i, 1);
+                    this.components.greenSplice(i);
                     this.triggerEvent('component-removed', component);
                     component.destroy();
                     return component;
@@ -223,7 +227,7 @@ platypus.Entity = (function () {
         for (i = 0; i < this.components.length; i++) {
             this.components[i].destroy();
         }
-        this.components.length = 0;
+        this.components.recycle();
         this.messengerDestroy();
     };
     
@@ -238,7 +242,8 @@ platypus.Entity = (function () {
     entity.getAssetList = function (def, props) {
         var i = 0,
             component = null,
-            assets = [],
+            arr = null,
+            assets = null,
             definition = null;
         
         if (def.type) {
@@ -249,11 +254,15 @@ platypus.Entity = (function () {
             }
             return entity.getAssetList(definition, def.properties);
         }
+        
+        assets = Array.setUp();
 
         for (i = 0; i < def.components.length; i++) {
             component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
             if (component) {
-                assets.union(component.getAssetList(def.components[i], def.properties, props));
+                arr = component.getAssetList(def.components[i], def.properties, props);
+                assets.union(arr);
+                arr.recycle();
             }
         }
         
@@ -271,16 +280,21 @@ platypus.Entity = (function () {
     entity.getLateAssetList = function (def, props, data) {
         var i = 0,
             component = null,
-            assets = [];
+            arr = null,
+            assets = null;
         
         if (def.type) {
             return entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
         }
+        
+        assets = Array.setUp();
 
         for (i = 0; i < def.components.length; i++) {
             component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
             if (component) {
-                assets.union(component.getLateAssetList(def.components[i], def.properties, props, data));
+                arr = component.getLateAssetList(def.components[i], def.properties, props, data);
+                assets.union(arr);
+                arr.recycle();
             }
         }
         

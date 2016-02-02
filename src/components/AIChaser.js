@@ -9,8 +9,7 @@
 (function () {
     "use strict";
     
-    var Vector = include('platypus.Vector'),
-        tempVect = new Vector();
+    var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
         
@@ -49,7 +48,7 @@
         
         constructor: function (definition) {
             this.target = this.owner.target || null;
-            this.offset = new Vector(0, 0);
+            this.offset = Vector.setUp(0, 0);
         },
 
         events: {
@@ -77,7 +76,7 @@
              * @method 'handle-ai'
              */
             "handle-ai": function () {
-                var v = tempVect,
+                var v = Vector.setUp(),
                     m = 0,
                     c = false;
 
@@ -102,6 +101,8 @@
                      */
                     this.owner.triggerEvent('chase', c);
                 }
+                
+                v.recycle();
             },
             
             /**
@@ -155,6 +156,7 @@
         methods: {// These are methods that are called on the component
             destroy: function () {
                 this.target = null;
+                this.offset.recycle();
             }
         }
     });

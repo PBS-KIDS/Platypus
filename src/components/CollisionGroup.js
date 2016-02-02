@@ -17,7 +17,12 @@
         id: 'CollisionGroup',
         
         constructor: function (definition) {
-            this.solidEntities = [];
+            this.solidEntities = Array.setUp();
+            
+            // These are used as return values for methods, but are instantiated here for recycling later.
+            this.collisionTypes = Array.setUp();
+            this.shapes = Array.setUp();
+            this.prevShapes = Array.setUp();
             
             this.terrain = undefined;
             this.aabb     = new AABB(this.owner.x, this.owner.y);
@@ -159,7 +164,7 @@
                         if (entity.solidCollisionMap[types[i]].length) {
                             x = this.solidEntities.indexOf(entity);
                             if (x >= 0) {
-                                this.solidEntities.splice(x, 1);
+                                this.solidEntities.greenSplice(x);
                             }
                         }
                     }
@@ -170,7 +175,9 @@
             getCollisionTypes: function () {
                 var x            = 0,
                     childEntity  = null,
-                    compiledList = [];
+                    compiledList = this.collisionTypes;
+                
+                compiledList.length = 0;
                 
                 for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
@@ -199,14 +206,14 @@
                     for (key in entityList) {
                         if (entityList.hasOwnProperty(key)) {
                             if (!compiledList[key]) {
-                                compiledList[key] = [];
+                                compiledList[key] = Array.setUp();
                             }
                             compiledList[key].union(entityList[key]);
                         }
                     }
                 }
                 
-                return compiledList;
+                return compiledList; // TODO: Track down where this is used and make sure the arrays are recycled. - DDD 2/1/2016
             },
             
             getAABB: function (collisionType) {
@@ -263,8 +270,10 @@
             getShapes: function (collisionType) {
                 var x           = 0,
                     childEntity = null,
-                    shapes      = [],
+                    shapes      = this.shapes,
                     newShapes   = null;
+                    
+                shapes.length = 0;
                 
                 for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
@@ -273,7 +282,7 @@
                     }
                     newShapes = childEntity.getShapes(collisionType);
                     if (newShapes) {
-                        shapes = shapes.concat(newShapes);
+                        shapes.union(newShapes);
                     }
                 }
                 return shapes;
@@ -283,7 +292,9 @@
                 var x           = 0,
                     childEntity = null,
                     newShapes   = null,
-                    shapes      = [];
+                    shapes      = this.prevShapes;
+                    
+                shapes.length = 0;
                 
                 for (x = 0; x < this.solidEntities.length; x++) {
                     childEntity = this.solidEntities[x];
@@ -292,7 +303,7 @@
                     }
                     newShapes = childEntity.getPrevShapes(collisionType);
                     if (newShapes) {
-                        shapes = shapes.concat(newShapes);
+                        shapes.union(newShapes);
                     }
                 }
                 return shapes;
@@ -335,7 +346,8 @@
             relocateEntity: function (vector, collisionData) {
                 var childEntity = null,
                     entity      = null,
-                    i           = 0;
+                    i           = 0,
+                    v           = null;
                 
                 this.owner.saveDX -= vector.x - this.owner.previousX;
                 this.owner.saveDY -= vector.y - this.owner.previousY;
@@ -359,7 +371,9 @@
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
-                    childEntity.relocateEntity(new Vector(vector.x - entity.saveOX, vector.y - entity.saveOY, childEntity.z), collisionData);
+                    v = Vector.setUp(vector.x - entity.saveOX, vector.y - entity.saveOY, childEntity.z);
+                    childEntity.relocateEntity(v, collisionData);
+                    v.recycle();
                     entity.x += entity.saveDX;
                     entity.y += entity.saveDY;
                     if (entity !== this.owner) {
@@ -370,7 +384,10 @@
             },
 
             destroy: function () {
-                this.solidEntities.length = 0;
+                this.solidEntities.recycle();
+                this.collisionTypes.recycle();
+                this.shapes.recycle();
+                this.prevShapes.recycle();
             }
         },
         

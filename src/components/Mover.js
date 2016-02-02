@@ -10,7 +10,7 @@
 (function () {
     "use strict";
     
-    var tempVector = new platypus.Vector(),
+    var Vector = include('platypus.Vector'),
     updateMax   = function (delta, interim, goal, time) {
         if (delta && (interim !== goal)) {
             if (interim < goal) {
@@ -171,9 +171,9 @@
             
             // Copy movers so we're not re-using mover definitions
             this.moversCopy = this.movers;
-            this.movers = [];
+            this.movers = Array.setUp();
 
-            this.ground = new platypus.Vector(this.ground);
+            this.ground = Vector.setUp(this.ground);
             
             Object.defineProperty(this.owner, "maxMagnitude", {
                 get: function () {
@@ -263,7 +263,7 @@
                 if (component.type === 'Motion') {
                     i = this.movers.indexOf(component);
                     if (i >= 0) {
-                        this.movers.splice(i, 1);
+                        this.movers.greenSplice(i);
                     }
                 }
             },
@@ -338,7 +338,7 @@
                 var i = 0,
                     delta    = tick.delta,
                     m        = null,
-                    vect     = tempVector,
+                    vect     = Vector.setUp(),
                     velocity = this.velocity,
                     position = this.position;
                 
@@ -376,6 +376,7 @@
                 this.clamp(velocity, delta);
                 vect.set(velocity).multiply(delta);
                 position.add(vect);
+                vect.recycle();
                 
                 if (this.grounded !== this.owner.state.grounded) {
                     this.owner.state.grounded = this.grounded;
@@ -395,7 +396,7 @@
                 var i = 0,
                     m = null,
                     s = 0,
-                    v = tempVector;
+                    v = Vector.setUp();
                 
                 if (collisionInfo.direction.dot(this.ground) > 0) {
                     this.grounded = true;
@@ -410,6 +411,8 @@
                         }
                     }
                 }
+                
+                v.recycle();
             },
             
             /**
@@ -460,6 +463,9 @@
                 for (i = this.movers.length - 1; i >= 0; i--) {
                     this.removeMover(this.movers[i]);
                 }
+                this.movers.recycle();
+                
+                this.ground.recycle();
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;

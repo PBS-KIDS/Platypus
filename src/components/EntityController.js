@@ -60,7 +60,6 @@
     "use strict";
 
     var ActionState = include('platypus.ActionState'),
-        tempArr = [],
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
@@ -195,9 +194,7 @@
             'handle-controller': function () {
                 var i = 0,
                     action = '',
-                    resolution = tempArr;
-                
-                resolution.length = 0;
+                    resolution = Array.setUp();
                 
                 if (this.actions) {
                     for (action in this.actions) {
@@ -212,6 +209,8 @@
                 for (i = 0; i < resolution.length; i++) {
                     resolution[i].resolve();
                 }
+                
+                resolution.recycle();
             },
             
             'mousedown': function (value) {
@@ -332,6 +331,16 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            
+            destroy: function () {
+                var action = '';
+                
+                for (action in this.actions) {
+                    if (this.actions.hasOwnProperty(action)) {
+                        this.actions[action].recycle();
                     }
                 }
             }

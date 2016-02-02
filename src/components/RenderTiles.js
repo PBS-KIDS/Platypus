@@ -61,7 +61,7 @@
         },
         Template = function (tile, id) {
             this.id = id;
-            this.instances = [tile];
+            this.instances = Array.setUp(tile);
             this.index = 0;
             tile.template = this; // backwards reference for clearing index later.
         },
@@ -101,8 +101,11 @@
             this.instances[i].destroy();
         }
         
-        this.instances.length = 0;
+        this.instances.recycle();
+        this.recycle();
     };
+    
+    platypus.setUpRecycle(Template);
 
     return platypus.createComponentClass({
 
@@ -244,7 +247,7 @@
             this.updateCache = false;
 
             // Prepare map tiles
-            this.imageMap = [this.createMap(imgMap)];
+            this.imageMap = Array.setUp(this.createMap(imgMap));
 
             this.tilesWidth  = this.imageMap[0].length;
             this.tilesHeight = this.imageMap[0][0].length;
@@ -312,7 +315,7 @@
                         } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
                             this.cacheAll = true;
 
-                            this.cacheGrid = [];
+                            this.cacheGrid = Array.setUp();
 
                             // Creating this here but instantiating the grid later so that the previous scene has a chance to release gpu textures and reduce memory overhead. - DDD 9-18-15
                             this.createGrid = function () {
@@ -325,7 +328,7 @@
                                     ct = null;
 
                                 for (x = 0; x < this.tilesWidth; x += this.cacheTilesWidth) {
-                                    col = [];
+                                    col = Array.setUp();
                                     this.cacheGrid.push(col);
                                     for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
                                         // This prevents us from using too large of a cache for the right and bottom edges of the map.
@@ -537,8 +540,8 @@
                 // Determine whether to merge this image with the background.
                 if (this.entityCache && object) { //TODO: currently only handles a single display object on the cached entity.
                     if (!this.doMap) {
-                        this.doMap = [];
-                        this.cachedDisplayObjects = [];
+                        this.doMap = Array.setUp();
+                        this.cachedDisplayObjects = Array.setUp();
                         this.populate = this.populateTilesAndEntities;
                     }
                     this.cachedDisplayObjects.push(object);
@@ -553,11 +556,11 @@
                     // Find tiles that should include this display object
                     for (x = left; x < right; x++) {
                         if (!this.doMap[x]) {
-                            this.doMap[x] = [];
+                            this.doMap[x] = Array.setUp();
                         }
                         for (y = top; y < bottom; y++) {
                             if (!this.doMap[x][y]) {
-                                this.doMap[x][y] = [];
+                                this.doMap[x][y] = Array.setUp();
                             }
                             this.doMap[x][y].push(object);
                         }
@@ -609,7 +612,7 @@
                 anim = 'tile' + transformCheck(imageName, tile);
                 tile.gotoAndStop(anim);
 
-                return new Template(tile, imageName);
+                return Template.setUp(tile, imageName);
             },
 
             createMap: function (mapDefinition) {
@@ -624,9 +627,9 @@
                     return mapDefinition;
                 }
 
-                map = [];
+                map = Array.setUp();
                 for (x = 0; x < mapDefinition.length; x++) {
-                    map[x] = [];
+                    map[x] = Array.setUp();
                     for (y = 0; y < mapDefinition[x].length; y++) {
                         index = mapDefinition[x][y];
                         if (index.id) {
@@ -685,9 +688,9 @@
                 var x = 0,
                     y = 0,
                     z = 0,
-                    layer   = 0,
-                    tile    = null,
-                    tiles   = [];
+                    layer = 0,
+                    tile  = null,
+                    tiles = Array.setUp();
 
                 this.tileContainer.removeChildren();
                 for (x = bounds.left; x <= bounds.right; x++) {
@@ -712,6 +715,7 @@
                 for (z = 0; z < tiles.length; z++) {
                     tiles[z].clear();
                 }
+                tiles.recycle();
             },
             
             populateTilesAndEntities: function (bounds, oldBounds) {
@@ -721,8 +725,8 @@
                     layer   = 0,
                     tile    = null,
                     ent     = null,
-                    ents    = [],
-                    tiles   = [],
+                    ents    = Array.setUp(),
+                    tiles   = Array.setUp(),
                     oList   = null;
 
                 this.tileContainer.removeChildren();
@@ -776,6 +780,9 @@
                 for (z = 0; z < tiles.length; z++) {
                     tiles[z].clear();
                 }
+                
+                tiles.recycle();
+                ents.recycle();
             },
             
             renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds) {
@@ -815,8 +822,10 @@
                 var x = 0,
                     y = 0,
                     key = '',
-                    grid = this.cacheGrid;
-
+                    grid = this.cacheGrid,
+                    map = this.doMap,
+                    img = this.imageMap;
+                    
                 if (grid) {
                     for (x = 0; x < grid.length; x++) {
                         for (y = 0; y < grid[x].length; y++) {
@@ -824,6 +833,7 @@
                             this.parentContainer.removeChild(grid[x][y]);
                         }
                     }
+                    grid.recycle(2);
                     delete this.cacheGrid;
                 } else if (this.tilesSprite) {
                     if (this.tilesSprite.texture.alternate) {
@@ -834,7 +844,8 @@
                 } else {
                     this.parentContainer.removeChild(this.mapContainer);
                 }
-                this.imageMap.length = 0;
+                
+                img.recycle(2);
                 
                 for (key in this.tiles) {
                     if (this.tiles.hasOwnProperty(key)) {
@@ -845,12 +856,24 @@
                 this.parentContainer = null;
                 this.tilesSprite = null;
                 
-                if (this.cachedDisplayObjects) {
+                if (map) {
                     for (x = 0; x < this.cachedDisplayObjects.length; x++) {
                         this.cachedDisplayObjects[x].destroy();
                     }
-                    this.cachedDisplayObjects.length = 0;
-                }
+                    this.cachedDisplayObjects.recycle();
+
+                    for (x = 0; x < map.length; x++) {
+                        if (map[x]) {
+                            for (y = 0; y < map.length; y++) {
+                                if (map[x][y]) {
+                                    map[x][y].recycle();
+                                }
+                            }
+                            map[x].recycle();
+                        }
+                    }
+                    map.recycle();
+                }        
             }
         },
         
@@ -858,9 +881,9 @@
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
             if (typeof ss === 'string') {
-                return platypus.game.settings.spriteSheets[ss].images;
+                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
             } else {
-                return ss.images;
+                return ss.images.greenSlice();
             }
         }
     });

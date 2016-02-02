@@ -188,7 +188,7 @@
                 });
             }
             
-            return null;
+            return Array.setUp();
         }
     });
 }());

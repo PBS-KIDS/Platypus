@@ -522,7 +522,7 @@
                                 clips[i].addEventListener('loop', loopFunc);
                             } else {
                                 clips[i].stop();
-                                clips.splice(i, 1);
+                                clips.greenSplice(i);
                             }
                         }
                     }
@@ -547,7 +547,7 @@
                 for (i = clips.length - 1; i >= 0; i--) {
                     if (clips[i] === instance) {
                         clips[i].stop();
-                        clips.splice(i, 1);
+                        clips.greenSplice(i);
                     }
                 }
             },
@@ -561,7 +561,7 @@
 
                     while (events.length && (finished || (events[0].time <= currentTime))) {
                         this.owner.trigger(events[0].event, events[0].message);
-                        events.splice(0, 1);
+                        events.greenSplice(0);
                     }
                 }
             },
@@ -584,7 +584,7 @@
                         (playSound(next)).call(this);
                     } else {
                         var arr = next.slice();
-                        arr.splice(0, 1);
+                        arr.greenSplice(0);
                         if (arr.length > 0) {
                             (playSound(next[0])).call(this, {'next': arr});
                         } else {
@@ -606,7 +606,7 @@
 
                 for (i = 0; i < this.activeAudioClips.length; i++) {
                     if (this.activeAudioClips[i] === audioClip) {
-                        this.activeAudioClips.splice(i, 1);
+                        this.activeAudioClips.greenSplice(i);
                         break;
                     }
                 }

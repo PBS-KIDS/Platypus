@@ -30,7 +30,7 @@
 
             if (typeof sound.sound === 'string') {
                 definition.sound = sound.sound;
-                definition.events = [];
+                definition.events = Array.setUp();
             } else {
                 for (key in sound.sound) {
                     if (sound.sound.hasOwnProperty(key)) {
@@ -39,9 +39,9 @@
                 }
 
                 if (definition.events) {
-                    definition.events = definition.events.slice();
+                    definition.events = definition.events.greenSlice();
                 } else {
-                    definition.events = [];
+                    definition.events = Array.setUp();
                 }
             }
 
@@ -65,7 +65,7 @@
         },
         createVO = function (sound, events, message, frameLength) {
             var i = 0,
-                definitions = [];
+                definitions = Array.setUp();
 
             if (!events[' ']) {
                 events[' '] = events['default'];
@@ -199,9 +199,9 @@
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
             if (typeof ss === 'string') {
-                return platypus.game.settings.spriteSheets[ss].images;
+                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
             } else {
-                return ss.images;
+                return ss.images.greenSlice();
             }
         }
     });

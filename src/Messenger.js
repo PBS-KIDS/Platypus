@@ -14,7 +14,7 @@ platypus.Messenger = (function () {
         Messenger = function () {
             EventDispatcher.call(this);
             
-            this.loopCheck   = [];
+            this.loopCheck = Array.setUp();
         },
         proto = extend(Messenger, EventDispatcher);
     
@@ -29,6 +29,46 @@ platypus.Messenger = (function () {
     };
 
     /**
+     * This method identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
+     * 
+     * @method greenTrigger
+     * @since 0.7.1
+     */
+    proto.greenTrigger = function(type) {
+        var listeners = null,
+            args = null;
+        
+		if (this._destroyed) {
+            return;
+        }
+
+		if (this._listeners.hasOwnProperty(type) && (this._listeners[type] !== undefined)) {
+			// copy the listeners array
+			listeners = this._listeners[type].greenSlice();
+
+			if (arguments.length > 1) {
+				args = Array.prototype.greenSlice.call(arguments);
+                args.greenSplice(0);
+			}
+
+			for (var i = listeners.length - 1; i >= 0; --i) {
+				var listener = listeners[i];
+				if (listener._eventDispatcherOnce)
+				{
+					delete listener._eventDispatcherOnce;
+					this.off(type, listener);
+				}
+				listener.apply(this, args);
+			}
+            
+            if (args) {
+                args.recycle();
+            }
+            listeners.recycle();
+		}
+	};
+
+    /**
      * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
      * 
      * @method trigger
@@ -37,7 +77,6 @@ platypus.Messenger = (function () {
      * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
      * @return {number} The number of handlers for the triggered message.
      */
-    proto._trigger = proto.trigger;
     proto.trigger = function (events, message, debug) {
         var i = 0,
             count = 0;
@@ -104,14 +143,14 @@ platypus.Messenger = (function () {
             if (window.performance) {
                 window.performance.mark("a");
             }
-            this._trigger(event, value, debug);
+            this.greenTrigger(event, value, debug);
             if (window.performance) {
                 window.performance.mark("b");
                 window.performance.measure(this.type + ":" + event, 'a', 'b');
             }
             this.loopCheck.length = this.loopCheck.length - 1;
         } else if (count) {
-            this._trigger(event, value, debug);
+            this.greenTrigger(event, value, debug);
         }
         
         return count;
@@ -126,6 +165,18 @@ platypus.Messenger = (function () {
     proto.getMessageIds = function () {
         return Object.keys(this._listeners);
     };
+    
+    /**
+     * This method relinguishes Messenger properties
+     * 
+     * @method destroy
+     * @since 0.7.1
+     */
+    proto.eventDispatcherDestroy = proto.destroy;
+    proto.destroy = function () {
+        this.loopCheck.recycle();
+        this.eventDispatcherDestroy();
+    }
     
     return Messenger;
 }());

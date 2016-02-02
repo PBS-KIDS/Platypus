@@ -178,7 +178,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				y: offset.y || 0,
 				z: offset.z || 0
 			};
-			this.destinationNodes = [];
+			this.destinationNodes = Array.setUp();
 			this.algorithm = definition.algorithm || distance;
 			
 			this.state = this.owner.state;
@@ -238,7 +238,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 						this.onEdge(this.destinationNodes[0]);
 					} else if (!this.lastNode) {
 						this.owner.triggerEvent('on-node', this.destinationNodes[0]);
-						this.destinationNodes.splice(0, 1);
+						this.destinationNodes.greenSplice(0);
 						if (!this.destinationNodes.length) {
 							this.state.moving = false;
 							return;
@@ -256,7 +256,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 								node = this.destinationNodes[0];
 								momentum -= (this.distance - this.progress);
 								this.progress = 0;
-								this.destinationNodes.splice(0, 1);
+								this.destinationNodes.greenSplice(0);
 								this.owner.triggerEvent('on-node', node);
 								if (this.destinationNodes.length && momentum) {
 									this.onEdge(this.destinationNodes[0]);
@@ -360,7 +360,8 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
                         depth    = 20, //arbitrary limit
                         origin   = this.node || this.lastNode,
                         test     = null,
-                        steps    = nodesOrNodeType.steps || 0;
+                        steps    = nodesOrNodeType.steps || 0,
+                        nodes    = null;
 
 					this.goingToNode = nodesOrNodeType;
 					
@@ -373,13 +374,14 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 					}
 					
 					if (origin && nodesOrNodeType && !test(origin, nodesOrNodeType)) {
+                        nodes = Array.setUp();
 						travResp = this.traverseNode({
 							depth:        depth,
 							origin:       origin,
 							position:     origin,
 							test:         test,
 							destination:  nodesOrNodeType,
-							nodes:        [],
+							nodes:        nodes,
 							shortestPath: Infinity,
 							distance:     0,
 							found:        false,
@@ -393,25 +395,22 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 							//TODO: should probably set this up apart from this containing function
 							if (this.followEntity) {
 								if (!this.followDistance) {
-									return this.setPath(travResp, steps);
-								} else {
-									if ((travResp.distance + (this.followEntity.progress || 0)) > this.followDistance) {
-										this.lag = travResp.distance + (this.followEntity.progress || 0) - this.followDistance;
-										return this.setPath(travResp, steps);
-									} else {
-										this.lag = 0;
-									}
+									this.setPath(travResp, steps);
+								} else if ((travResp.distance + (this.followEntity.progress || 0)) > this.followDistance) {
+                                    this.lag = travResp.distance + (this.followEntity.progress || 0) - this.followDistance;
+                                    this.setPath(travResp, steps);
+                                } else {
+                                    this.lag = 0;
 								}
 							} else {
-								return this.setPath(travResp, steps);
+								this.setPath(travResp, steps);
 							}
 						} else if (travResp.blocked) {
 							this.blocked = true;
-							return false;
 						}
+                        
+                        nodes.recycle();
 					}
-					
-					return false;
 				};
 			}()),
 			"set-directions": function () {
@@ -461,20 +460,24 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				return function (node) {
 					var travResp = null,
                         depth = 20, //arbitrary limit
-                        origin = this.node || this.lastNode;
+                        origin = this.node || this.lastNode,
+                        nodes = null,
+                        moving = false;
 					
 					if (!node && this.followEntity) {
 						node = this.followEntity.node || this.followEntity.lastNode || this.followEntity;
 					}
 					
 					if (origin && node && (this.node !== node)) {
+                        nodes = Array.setUp();
+                        
 						travResp = this.traverseNode({
 							depth:        depth,
 							origin:       origin,
 							position:     origin,
 							test:         test,
 							destination:  node,
-							nodes:        [],
+							nodes:        nodes,
 							shortestPath: Infinity,
 							distance:     0,
 							found:        false,
@@ -488,25 +491,27 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 							//TODO: should probably set this up apart from this containing function
 							if (this.followEntity) {
 								if (!this.followDistance) {
-									return this.setPath(travResp);
-								} else {
-									if ((travResp.distance + (this.followEntity.progress || 0)) > this.followDistance) {
-										this.lag = travResp.distance + (this.followEntity.progress || 0) - this.followDistance;
-										return this.setPath(travResp);
-									} else {
-										this.lag = 0;
-									}
+									this.setPath(travResp);
+                                    moving = true;
+								} else if ((travResp.distance + (this.followEntity.progress || 0)) > this.followDistance) {
+                                    this.lag = travResp.distance + (this.followEntity.progress || 0) - this.followDistance;
+                                    this.setPath(travResp);
+                                    moving = true;
+                                } else {
+                                    this.lag = 0;
 								}
 							} else {
-								return this.setPath(travResp);
+								this.setPath(travResp);
+                                moving = true;
 							}
 						} else if (travResp.blocked) {
 							this.blocked = true;
-							return false;
 						}
+                        
+                        nodes.recycle();
 					}
-					
-					return false;
+                    
+                    return moving;
 				};
 			}()),
 			
@@ -567,7 +572,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
                             node = map.getNode(neighbors[j]);
                             hasNeighbor = true;
                             if (this.isPassable(node)) {
-                                nodeList = record.nodes.slice();
+                                nodeList = record.nodes.greenSlice();
                                 nodeList.push(node);
                                 resp = this.traverseNode({
                                     depth:        record.depth - 1,
@@ -583,6 +588,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
                                     found:        false,
                                     blocked:      false
                                 });
+                                nodeList.recycle();
                                 if (resp.found && (savedResp.shortestPath > resp.shortestPath)) {
                                     savedResp = resp;
                                 }
@@ -596,9 +602,10 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 			},
 			setPath: function (resp, steps) {
 				if (resp.nodes[0] === this.node) {
-					resp.nodes.splice(0, 1);
+					resp.nodes.greenSplice(0);
 				}
-				this.destinationNodes = resp.nodes;
+                this.destinationNodes.recycle()
+				this.destinationNodes = resp.nodes.greenSlice();
 				if (steps) {
 					this.destinationNodes.length = Math.min(steps, this.destinationNodes.length);
 				}
@@ -623,7 +630,10 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				this.node.addToEdge(this.owner);
 				toNode.addToEdge(this.owner);
 				this.owner.triggerEvent('leave-node');
-			}
+			},
+            destroy: function () {
+                this.destinationNodes.recycle();
+            }
 		}
 	});
 }());

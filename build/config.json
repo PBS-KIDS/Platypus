@@ -2,6 +2,8 @@
 	"platypus_source": [
         "../src/pako.js",
 		"../src/platypus.js",
+        "../src/mixins/Array.js",
+		"../src/mixins/Recycler.js",
 		"../src/Component.js",
 		"../src/Messenger.js",
 		"../src/Entity.js",
@@ -84,8 +86,7 @@
 		"../src/components/TiledLoader.js",
 		"../src/components/Tween.js",
 		"../src/components/VoiceOver.js",
-		"../src/components/XHR.js",
-        "../src/mixins/Array.js"
+		"../src/components/XHR.js"
 	],
 
 	"docs_out_path":"./output/docs/"

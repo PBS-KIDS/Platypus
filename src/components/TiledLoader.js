@@ -205,8 +205,8 @@
         checkLevel = function (level, ss) {
             var i = 0,
                 j = 0,
-                tilesets = [],
-                assets = [],
+                tilesets = Array.setUp(),
+                assets = Array.setUp(),
                 entity = null,
                 entityAssets = null;
 
@@ -226,9 +226,8 @@
                                 entity = getEntityData(level.layers[i].objects[j], level.tilesets);
                                 if (entity) {
                                     entityAssets = Entity.getAssetList(entity);
-                                    if (entityAssets) {
-                                        assets.union(entityAssets);
-                                    }
+                                    assets.union(entityAssets);
+                                    entityAssets.recycle();
                                 }
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
@@ -240,8 +239,9 @@
                             tilesets.push(level.tilesets[i].name);
                         }
                         assets.union(tilesets);
+                        tilesets.recycle();
                     }
-                    level.assets = assets.slice(); // Save for later in case this level is checked again.
+                    level.assets = assets.greenSlice(); // Save for later in case this level is checked again.
                 }
             }
             
@@ -729,7 +729,7 @@
                         }
                     }
                 } else {
-                    images = images.slice(); //so we do not overwrite settings array
+                    images = images.greenSlice(); //so we do not overwrite settings array
                 }
 
                 if (layer.type === 'tilelayer') {
@@ -886,10 +886,11 @@
                                     w = (entity.width || fallbackWidth) / 2;
                                     h = (entity.height || fallbackHeight) / 2;
                                     a = ((entity.rotation / 180) % 2) * Math.PI;
-                                    v = new platypus.Vector(w, -h).rotate(a);
+                                    v = platypus.Vector.setUp(w, -h).rotate(a);
                                     properties.rotation = entity.rotation;
                                     properties.x = Math.round((properties.x + v.x - w) * 1000) / 1000;
                                     properties.y = Math.round((properties.y + v.y + h) * 1000) / 1000;
+                                    v.recycle();
                                 }
 
                                 if (entityPositionX === 'left') {
@@ -976,9 +977,7 @@
                 dps = defaultProps || {},
                 ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
                 images = def.images || ps.images || dps.images,
-                assets = [];
-            
-            assets.union(checkLevel(def.level || ps.level || dps.level, ss));
+                assets = checkLevel(def.level || ps.level || dps.level, ss);
             
             if (ss) {
                 if (typeof ss === 'string') {
@@ -1003,7 +1002,7 @@
             if (data && data.level) {
                 return checkLevel(data.level, ss);
             } else {
-                return [];
+                return Array.setUp();
             }
         }
     });

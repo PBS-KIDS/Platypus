@@ -398,7 +398,7 @@
                         animation = '';
 
                     component.followThroughs = {};
-                    component.checkStates = [];
+                    component.checkStates = Array.setUp();
 
                     for (anim in map) {
                         if (map.hasOwnProperty(anim)) {
@@ -1054,7 +1054,7 @@
                     regY  = frames.regY || 0,
                     isArray = Array.isArray(frames);
                 
-                this.pinsToRemove = this.pinsToRemove || [];
+                this.pinsToRemove = this.pinsToRemove || Array.setUp();
                 
                 this.pins = {};
                 
@@ -1082,7 +1082,7 @@
                     }
                     
                     if (pins[i].frames) {
-                        pin.frames = [];
+                        pin.frames = Array.setUp();
                         for (j = 0; j < pins[i].frames.length; j++) {
                             if (pins[i].frames[j]) {
                                 if (isArray) {
@@ -1138,9 +1138,12 @@
                 if (this.pins && this.pinsToRemove) {
                     for (i = 0; i < this.pinsToRemove.length; i++) {
                         this.owner.trigger('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
+                        if (this.pins[this.pinsToRemove[i]].frames) {
+                            this.pins[this.pinsToRemove[i]].frames.recycle();    
+                        }
                         delete this.pins[this.pinsToRemove[i]];
                     }
-                    this.pinsToRemove.length = 0;
+                    this.pinsToRemove.recycle();
                 }
             },
             
@@ -1225,6 +1228,9 @@
                 }
                 this.removePins();
                 this.followThroughs = null;
+                if (this.checkStates) {
+                    this.checkStates.recycle();
+                }
                 if (!this.cache) {
                     this.sprite.destroy();
                 }
@@ -1236,9 +1242,9 @@
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
             if (typeof ss === 'string') {
-                return platypus.game.settings.spriteSheets[ss].images;
+                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
             } else {
-                return ss.images;
+                return ss.images.greenSlice();
             }
         }
     });

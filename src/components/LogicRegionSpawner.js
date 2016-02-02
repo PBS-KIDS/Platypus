@@ -65,8 +65,8 @@ This component spawns new entities within a given area at set intervals.
             this.regionWidth = 0;
             this.regionHeight = 0;
             if (definition.regions) {
-                this.regions = [];
-                this.usedRegions = [];
+                this.regions = Array.setUp();
+                this.usedRegions = Array.setUp();
                 this.regionWidth  = width  = definition.regions.width  || this.owner.width;
                 this.regionHeight = height = definition.regions.height || this.owner.height;
                 columns = Math.round(this.owner.width  / width);
@@ -122,6 +122,13 @@ This component spawns new entities within a given area at set intervals.
             }
         },
         
+        methods: {
+            destroy: function () {
+                this.regions.recycle();
+                this.usedRegions.recycle();
+            }
+        },
+        
         getAssetList: function (def, props, defaultProps) {
             var spawn = def.spawn || props.spawn || defaultProps.spawn;
             
@@ -131,7 +138,7 @@ This component spawns new entities within a given area at set intervals.
                 });
             }
             
-            return null;
+            return Array.setUp();
         }
     });
 }());

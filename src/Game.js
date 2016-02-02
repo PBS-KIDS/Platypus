@@ -145,7 +145,7 @@ platypus.Game = (function () {
                     window.getVisibleSprites = function (c, a) {
                         var i = 0;
                         
-                        a = a || [];
+                        a = a || Array.setUp();
                         c = c || this.stage;
                         
                         if (!c.texture && c.visible) {
@@ -249,7 +249,7 @@ platypus.Game = (function () {
         if (this.currentScene) {
             return this.currentScene.getEntitiesByType(type);
         } else {
-            return [];
+            return Array.setUp();
         }
     };
     

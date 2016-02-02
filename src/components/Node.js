@@ -79,8 +79,8 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
 			
 			this.owner.isNode = true;
 			this.map = this.owner.map = this.owner.map || null;
-			this.contains = this.owner.contains = [];
-			this.edgesContain = this.owner.edgesContain = [];
+			this.contains = this.owner.contains = Array.setUp();
+			this.edgesContain = this.owner.edgesContain = Array.setUp();
 			
 			platypus.Vector.assign(this.owner, 'position', 'x', 'y', 'z');
 			
@@ -127,6 +127,13 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
 				}
 			}
 		},
+        
+        methods: {
+            destroy: function () {
+                this.contains.recycle();
+                this.edgesContain.recycle();
+            }
+        },
 		
 		publicMethods: {
 			getNode: function (desc) {
@@ -175,7 +182,7 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
                 
 				for (i = 0; i < this.contains.length; i++) {
 					if (this.contains[i] === entity) {
-						return this.contains.splice(i, 1)[0];
+						return this.contains.greenSplice(i);
 					}
 				}
 				return false;
@@ -196,7 +203,7 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
                 
 				for (i = 0; i < this.edgesContain.length; i++) {
 					if (this.edgesContain[i] === entity) {
-						return this.edgesContain.splice(i, 1)[0];
+						return this.edgesContain.greenSplice(i);
 					}
 				}
 				return false;

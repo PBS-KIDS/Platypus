@@ -96,8 +96,8 @@
             timeMultiplier: 1
         },
         constructor: function (definition) {
-            this.entities = [];
-            this.activeEntities = [];
+            this.entities = Array.setUp();
+            this.activeEntities = Array.setUp();
 
             if (this.alwaysOn) {
                 this.updateList = addAll;
@@ -153,7 +153,7 @@
                 var j = this.entities.indexOf(entity);
                 
                 if (j >= 0) {
-                    this.entities.splice(j, 1);
+                    this.entities.greenSplice(j);
                 }
             },
             
@@ -323,6 +323,13 @@
                         }
                     }
                 }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.entities.recycle();
+                this.activeEntities.recycle();
             }
         }
     });

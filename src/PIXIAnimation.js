@@ -22,7 +22,7 @@
                 h = 0,
                 x = 0,
                 y = 0,
-                frames = [];
+                frames = Array.setUp();
             
             for (i = 0; i < bases.length; i++) {
                 
@@ -41,7 +41,7 @@
         },
         getBaseTextures = function (images) {
             var i = 0,
-                bts = [],
+                bts = Array.setUp(),
                 assetData = null,
                 assetCache = Application.instance.assetManager.cache;
             
@@ -108,7 +108,7 @@
         },
         formatAnimation = function (key, animation, textures) {
             var i = 0,
-                frames = [];
+                frames = Array.setUp();
             
             if (!isNaN(animation)) {
                 frames.push(textures[animation] || PIXI.Texture.EMPTY);
@@ -159,12 +159,12 @@
                 frames   = null,
                 images   = spriteSheet.images,
                 texture  = null,
-                textures = [],
+                textures = Array.setUp(),
                 bases    = getBaseTextures(images);
 
             // Set up frames array
             if (Array.isArray(spriteSheet.frames)) {
-                frames = spriteSheet.frames;
+                frames = spriteSheet.frames.greenSlice();
             } else {
                 frames = createFramesArray(spriteSheet.frames, bases);
             }
@@ -187,6 +187,9 @@
                 anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
+            frames.recycle();
+            bases.recycle();
+            
             return {
                 textures: textures,
                 animations: anims
@@ -200,12 +203,12 @@
                 frames   = null,
                 images   = spriteSheet.images,
                 texture  = null,
-                textures = [],
+                textures = Array.setUp(),
                 bases    = getBaseTextures(images);
 
             // Set up frames array
             if (Array.isArray(spriteSheet.frames)) {
-                frames = spriteSheet.frames;
+                frames = spriteSheet.frames.greenSlice();
             } else {
                 frames = createFramesArray(spriteSheet.frames, bases);
             }
@@ -228,6 +231,9 @@
             if (!anims['default']) {
                 anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
             }
+            
+            frames.recycle();
+            bases.recycle();
             
             return {
                 textures: textures,
@@ -446,16 +452,25 @@
         }
     };
     
-    /*
-    * Stops the PIXIAnimation and destroys it
-    *
-    */
+    /**
+     * Stops the PIXIAnimation and destroys it
+     * 
+     * @method destroy
+     */
     prototype.destroy = function () {
+        var key = '';
+        
         this.stop();
         PIXI.Sprite.prototype.destroy.call(this);
         if (this.cacheId) {
             animationCache[this.cacheId].viable -= 1;
             if (animationCache[this.cacheId].viable <= 0) {
+                animationCache[this.cacheId].textures.recycle();
+                for (key in animationCache[this.cacheId].animations) {
+                    if (animationCache[this.cacheId].animations.hasOwnProperty(key)) {
+                        animationCache[this.cacheId].animations[key].frames.recycle();
+                    }
+                }
                 delete animationCache[this.cacheId];
             }
         }

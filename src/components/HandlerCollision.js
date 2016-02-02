@@ -23,7 +23,10 @@
      * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
      * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
      */
-    var CollisionDataContainer = include('platypus.CollisionDataContainer'),
+    var AABB = include('platypus.AABB'),
+        CollisionData = include('platypus.CollisionData'),
+        CollisionDataContainer = include('platypus.CollisionDataContainer'),
+        Vector = include('platypus.Vector'),
         entityCollisionDataContainer = new CollisionDataContainer(),
         triggerMessage = {
             entity: null,
@@ -90,22 +93,22 @@
         constructor: function (definition) {
             this.entitiesByType = {};
             this.entitiesByTypeLive = {};
-            this.allEntities = [];
-            this.solidEntitiesLive = [];
-            this.softEntitiesLive = [];
-            this.allEntitiesLive = [];
-            this.groupsLive = [];
-            this.nonColliders = [];
+            this.allEntities = Array.setUp();
+            this.solidEntitiesLive = Array.setUp();
+            this.softEntitiesLive = Array.setUp();
+            this.allEntitiesLive = Array.setUp();
+            this.groupsLive = Array.setUp();
+            this.nonColliders = Array.setUp();
             
             this.terrain = undefined;
-            this.aabb     = new platypus.AABB(this.owner.x, this.owner.y);
-            this.prevAABB = new platypus.AABB(this.owner.x, this.owner.y);
+            this.aabb     = new AABB(this.owner.x, this.owner.y);
+            this.prevAABB = new AABB(this.owner.x, this.owner.y);
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
             this.updateLiveList = true;
-            this.cameraLogicAABB = new platypus.AABB(0, 0);
-            this.cameraCollisionAABB = new platypus.AABB(0, 0);
+            this.cameraLogicAABB = new AABB(0, 0);
+            this.cameraCollisionAABB = new AABB(0, 0);
             
             this.timeElapsed = {
                 name: 'Col',
@@ -206,8 +209,8 @@
                     if (types) {
                         for (i = 0; i < types.length; i++) {
                             if (!this.entitiesByType[types[i]]) {
-                                this.entitiesByType[types[i]] = [];
-                                this.entitiesByTypeLive[types[i]] = [];
+                                this.entitiesByType[types[i]] = Array.setUp();
+                                this.entitiesByTypeLive[types[i]] = Array.setUp();
                             }
                             this.entitiesByType[types[i]][this.entitiesByType[types[i]].length] = entity;
                         }
@@ -229,7 +232,7 @@
                         if (this.entitiesByType[types[i]]) {
                             x = this.entitiesByType[types[i]].indexOf(entity);
                             if (x >= 0) {
-                                this.entitiesByType[types[i]].splice(x, 1);
+                                this.entitiesByType[types[i]].greenSplice(x);
                             }
                         }
                     }
@@ -237,7 +240,7 @@
                     if (!entity.immobile) {
                         i = this.allEntities.indexOf(entity);
                         if (i >= 0) {
-                            this.allEntities.splice(i, 1);
+                            this.allEntities.greenSplice(i);
                         }
                     }
                     this.updateLiveList = true;
@@ -440,7 +443,7 @@
                 var x      = 0,
                     entity = null,
                     xy     = {
-                        position: new platypus.Vector(),
+                        position: Vector.setUp(),
                         relative: false
                     };
                 
@@ -456,6 +459,8 @@
                     xy.position.set(entity.position);
                     entity.trigger('relocate-entity', xy);
                 }
+                
+                xy.position.recycle();
             },
             
             checkGroupCollisions:  (function () {
@@ -487,14 +492,12 @@
                     var x           = 0,
                         i           = 0,
                         entities    = this.groupsLive,
-                        fmi         = new platypus.Vector(),
                         messageData = null;
                     
                     for (x = entities.length - 1; x > -1; x--) {
                         if (entities[x].collisionGroup.getSize() > 1) {
                             entityCollisionDataContainer.reset();
-                            fmi.set(0, 0, 0);
-                            fmi = this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer, fmi);
+                            this.checkSolidEntityCollision(entities[x], entities[x].collisionGroup, entityCollisionDataContainer);
                             
                             for (i = 0; i < entityCollisionDataContainer.xCount; i++) {
                                 messageData = entityCollisionDataContainer.getXEntry(i);
@@ -539,13 +542,11 @@
                     var x           = 0,
                         i           = 0,
                         messageData = null,
-                        entities    = this.solidEntitiesLive,
-                        fmi         = new platypus.Vector();
+                        entities    = this.solidEntitiesLive;
                     
                     for (x = entities.length - 1; x > -1; x--) {
                         entityCollisionDataContainer.reset();
-                        fmi.set(0, 0, 0);
-                        fmi = this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer, fmi);
+                        this.checkSolidEntityCollision(entities[x], entities[x], entityCollisionDataContainer);
                         
                         for (i = 0; i < entityCollisionDataContainer.xCount; i++) {
                             messageData = entityCollisionDataContainer.getXEntry(i);
@@ -560,11 +561,11 @@
                 };
             }()),
             
-            checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection, xyInfo) {
+            checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection) {
                 var steps             = 0,
                     step              = 0,
                     i                 = 0,
-                    finalMovementInfo = xyInfo,
+                    finalMovementInfo = Vector.setUp(),
                     entityDeltaX      = ent.x - ent.previousX,
                     entityDeltaY      = ent.y - ent.previousY,
                     aabb              = null,
@@ -619,11 +620,11 @@
                     }
                 }
                 
-                return finalMovementInfo;
+                finalMovementInfo.recycle();
             },
             
             processCollisionStep: (function () {
-                var sweepAABB     = new platypus.AABB(),
+                var sweepAABB     = new AABB(),
                     includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
                         var i         = 0,
                             otherAABB = otherEntity.getAABB(otherCollisionType);
@@ -650,7 +651,7 @@
                         z = 0,
                         q = 0,
                         potentialCollision       = false,
-                        potentialCollidingShapes = [],
+                        potentialCollidingShapes = Array.setUp(),
                         previousAABB             = null,
                         currentAABB              = null,
                         collisionType            = null,
@@ -666,7 +667,7 @@
     
                     for (i = 0; i < collisionTypes.length; i++) {
                         //Sweep the full movement of each collision type
-                        potentialCollidingShapes[i] = [];
+                        potentialCollidingShapes[i] = Array.setUp();
                         collisionType = collisionTypes[i];
                         previousAABB = entityOrGroup.getPreviousAABB(collisionType);
                         currentAABB = entityOrGroup.getAABB(collisionType);
@@ -712,15 +713,16 @@
                     if (potentialCollision) {
                         finalMovementInfo = this.resolveCollisionPosition(ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY);
                     }
-    
-//                    }
+                    
+                    // Array recycling
+                    potentialCollidingShapes.recycle(2);
                     
                     return finalMovementInfo;
                 };
             }()),
             
             resolveCollisionPosition: (function () {
-                var collisionData = new platypus.CollisionData();
+                var collisionData = new CollisionData();
                 
                 return function (ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY) {
                     var j = 0;
@@ -771,7 +773,7 @@
             }()),
             
             findMinAxisMovement: (function () {
-                var shapeCollisionData = new platypus.CollisionData();
+                var shapeCollisionData = new CollisionData();
                 
                 return function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
                     //Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
@@ -820,7 +822,7 @@
                         collisionData.vector = vector.copy();
                     },
                     findAxisCollisionPosition = (function () {
-                        var v = new platypus.Vector(),
+                        var v = Vector.setUp(),
                             returnInfo = {
                                 position: 0,
                                 contactVector: v
@@ -1043,13 +1045,20 @@
             destroy: function () {
                 var key = '';
                 
-                this.allEntities.length = 0;
-                this.allEntitiesLive.length = 0;
-                this.softEntitiesLive.length = 0;
-                this.solidEntitiesLive.length = 0;
+                this.groupsLive.recycle();
+                this.nonColliders.recycle();
+                this.allEntities.recycle();
+                this.allEntitiesLive.recycle();
+                this.softEntitiesLive.recycle();
+                this.solidEntitiesLive.recycle();
                 for (key in this.entitiesByType) {
                     if (this.entitiesByType.hasOwnProperty(key)) {
-                        this.entitiesByType[key].length = 0;
+                        this.entitiesByType[key].recycle();
+                    }
+                }
+                for (key in this.entitiesByTypeLive) {
+                    if (this.entitiesByTypeLive.hasOwnProperty(key)) {
+                        this.entitiesByTypeLive[key].recycle();
                     }
                 }
             }
@@ -1085,7 +1094,7 @@
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
              */
             getEntityCollisions: function (entity, entities) {
-                var collisions = [];
+                var collisions = Array.setUp();
                 
                 this.checkEntityForSoftCollisions(entity, entities || this.entitiesByTypeLive, function (collision) {
                     var i    = '',

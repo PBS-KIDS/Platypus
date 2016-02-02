@@ -67,9 +67,10 @@ Tween takes a list of tween definitions and plays them as needed.
                         if (tweenDef[0] === 'call' && typeof tweenDef[1] === 'string') {
                             tween.call(createTrigger(this.owner, tweenDef[1]));
                         } else {
-                            arr = tweenDef.slice();
-                            arr.splice(0, 1);
+                            arr = tweenDef.greenSlice();
+                            arr.greenSplice(0);
                             tween[tweenDef[0]].apply(tween, arr);
+                            arr.recycle();
                         }
                     } else {
                         if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {

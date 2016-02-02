@@ -18,7 +18,7 @@
             var x        = 0,
                 y        = 0,
                 z        = 0,
-                combined = levelData.slice();
+                combined = levelData.greenSlice();
 
             if (mergeAxis === 'horizontal') {
                 for (y = nonMergeAxisLength - 1; y >= 0; y--) {
@@ -34,7 +34,7 @@
         mergeObjects  = function (obj1s, obj2s, mergeAxisLength, mergeAxis) {
             var i    = 0,
                 j    = '',
-                list = obj1s.slice(),
+                list = obj1s.greenSlice(),
                 obj  = null;
 
             for (i = 0; i < obj2s.length; i++) {
@@ -308,7 +308,7 @@
                     } else if (pieces.length) {
                         random = Math.floor(Math.random() * pieces.length);
                         if (this.useUniques) {
-                            return (this.levelPieces[type].splice(random, 1))[0];
+                            return this.levelPieces[type].greenSplice(random);
                         } else {
                             return pieces[random];
                         }
@@ -337,7 +337,8 @@
         
         getAssetList: function (def, props, defaultProps) {
             var i = 0,
-                assets = [],
+                arr = null,
+                assets = Array.setUp(),
                 key = '',
                 levels = null;
             
@@ -355,14 +356,18 @@
                         // Offload to TiledLoader since it has level-parsing handling
                         if (Array.isArray(levels[key])) {
                             for (i = 0; i < levels[key].length; i++) {
-                                assets.union(platypus.components.TiledLoader.getAssetList({
+                                arr = platypus.components.TiledLoader.getAssetList({
                                     level: levels[key][i]
-                                }, props, defaultProps));
+                                }, props, defaultProps);
+                                assets.union(arr);
+                                arr.recycle();
                             }
                         } else {
-                            assets.union(platypus.components.TiledLoader.getAssetList({
+                            arr = platypus.components.TiledLoader.getAssetList({
                                 level: levels[key]
-                            }, props, defaultProps));
+                            }, props, defaultProps);
+                            assets.union(arr);
+                            arr.recycle();
                         }
                     }
                 }

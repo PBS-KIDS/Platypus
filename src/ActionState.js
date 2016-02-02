@@ -77,7 +77,7 @@ platypus.ActionState = (function () {
              * @property inputs
              * @type Array
              */
-            this.inputs    = [];
+            this.inputs    = Array.setUp();
 
             /**
              * The message that is passed to the Entity if the ActionState is active.
@@ -164,6 +164,34 @@ platypus.ActionState = (function () {
         
         return true;
     };
+    
+    /**
+     * Returns an ActionState from cache or creates a new one if none are available.
+     * 
+     * @method ActionState.setUp
+     * @return {platypus.ActionState} The instantiated ActionState.
+     * @since 0.7.1
+     */
+    /**
+     * Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.
+     * 
+     * @method ActionState.recycle
+     * @param {platypus.ActionState} The ActionState to be recycled.
+     * @since 0.7.1
+     */
+    platypus.setUpRecycle(ActionState);
+
+    /**
+     * Relinquishes properties of the ActionState and recycles it.
+     * 
+     * @method recycle
+     * @since 0.7.1
+     */
+    proto.recycle = function () {
+        this.inputs.recycle();
+        ActionState.recycle(this);
+    };
+    
     
     return ActionState;
 }());

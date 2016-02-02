@@ -408,7 +408,7 @@
 
         publicMethods: {
             windowToWorld: function (windowVector, withOffset, vector) {
-                var worldVector = vector || new Vector();
+                var worldVector = vector || Vector.setUp();
                 
                 worldVector.x = windowVector.x * this.worldPerWindowUnitWidth;
                 worldVector.y = windowVector.y * this.worldPerWindowUnitHeight;
@@ -422,7 +422,7 @@
             },
             
             worldToWindow: function (worldVector, withOffset, vector) {
-                var windowVector = vector || new Vector();
+                var windowVector = vector || Vector.setUp();
 
                 windowVector.x = worldVector.x * this.windowPerWorldUnitWidth;
                 windowVector.y = worldVector.y * this.windowPerWorldUnitHeight;

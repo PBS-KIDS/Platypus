@@ -154,7 +154,7 @@ This component creates an entity and propels it away. This is useful for casting
                 });
             }
             
-            return null;
+            return Array.setUp();
         }
     });
 }());

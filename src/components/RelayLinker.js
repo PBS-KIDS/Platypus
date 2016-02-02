@@ -72,7 +72,7 @@
                 this.owner.trigger(resp.message, resp.value, resp.debug);
             }.bind(this));
             
-            this.links = [];
+            this.links = Array.setUp();
             
             if (this.owner.linkEntities) {
                 for (i = 0; i < this.owner.linkEntities.length; i++) {
@@ -137,7 +137,7 @@
                 var i = this.links.indexOf(toUnlink.entity);
                 
                 if (i >= 0) {
-                    this.links.splice(i, 1);
+                    this.links.greenSplice(i);
                 }
             }
         },
@@ -158,7 +158,7 @@
                 for (i = 0; i < this.links.length; i++) {
                     this.links[i].trigger('unlink-entity', this.linkMessage);
                 }
-                this.links.length = 0;
+                this.links.recycle();
                 this.events = null;
             }
         }

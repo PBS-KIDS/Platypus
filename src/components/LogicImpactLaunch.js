@@ -36,6 +36,8 @@ This component will cause the entity to move in a certain direction on colliding
 /*global platypus */
 (function () {
     "use strict";
+    
+    var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
         id: 'LogicImpactLaunch',
@@ -73,7 +75,7 @@ This component will cause the entity to move in a certain direction on colliding
                         velocity: [0, 0, 0],
                         orient: false
                     }).velocity;
-                    this.vector = new platypus.Vector();
+                    this.vector = Vector.setUp();
                 }
             },
 
@@ -122,6 +124,12 @@ This component will cause the entity to move in a certain direction on colliding
                     this.direction.y = 0;
                     this.stunned = false;
                 }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.vector.recycle();
             }
         }
     });

@@ -154,7 +154,7 @@
             var key      = '',
                 playClip = null;
             
-            this.activeAudioClips = [];
+            this.activeAudioClips = Array.setUp();
     
             this.state = this.owner.state;
             this.stateChange = false;
@@ -163,7 +163,7 @@
             this.player = Application.instance.sound;
     
             if (definition.audioMap) {
-                this.checkStates = [];
+                this.checkStates = Array.setUp();
                 for (key in definition.audioMap) {
                     if (definition.audioMap.hasOwnProperty(key)) {
                         playClip = playSound(definition.audioMap[key]);
@@ -403,7 +403,7 @@
                                 clips[i].addEventListener('loop', loopFunc);
                             } else {
                                 clips[i].stop();
-                                clips.splice(i, 1);
+                                clips.greenSplice(i);
                             }
                         }
                     }
@@ -428,7 +428,7 @@
                 for (i = clips.length - 1; i >= 0; i--) {
                     if (clips[i] === instance) {
                         clips[i].stop();
-                        clips.splice(i, 1);
+                        clips.greenSplice(i);
                     }
                 }
             },
@@ -449,12 +449,16 @@
                 var i = this.activeAudioClips.indexOf(audioClip);
 
                 if (i >= 0) {
-                    this.activeAudioClips.splice(i, 1);
+                    this.activeAudioClips.greenSplice(i);
                 }
             },
             
             destroy: function () {
                 this.stopAudio();
+                this.activeAudioClips.recycle();
+                if (this.checkStates) {
+                    this.checkStates.recycle();
+                }
             }
         }
     });

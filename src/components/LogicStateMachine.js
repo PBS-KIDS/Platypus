@@ -181,22 +181,22 @@ This component is a general purpose state-machine for an entity, taking in vario
 
             this.snapshot = {};
             this.last = {};
-            this.tempQueue = [];
-            this.queueTimes = [];
-            this.queue = [];
+            this.queueTimes = Array.setUp();
+            this.queue = Array.setUp();
             this.outputs = definition.outputs || null;
         },
 
         events: {
             "handle-logic":  function (resp) {
-                var i = '';
+                var i = 0,
+                    state = '';
                 
-                for (i in this.sustainedState) {
-                    if (this.sustainedState.hasOwnProperty(i)) {
-                        if (this.owner.state[i] !== this.sustainedState[i]) {
-                            this.owner.state[i] = this.sustainedState[i];
+                for (state in this.sustainedState) {
+                    if (this.sustainedState.hasOwnProperty(state)) {
+                        if (this.owner.state[state] !== this.sustainedState[state]) {
+                            this.owner.state[state] = this.sustainedState[state];
                         }
-                        this.sustainedState[i] = false;
+                        this.sustainedState[state] = false;
                     }
                 }
                 
@@ -205,8 +205,8 @@ This component is a general purpose state-machine for an entity, taking in vario
                     
                     if (this.queueTimes[i] <= 0) {
                         this.owner.trigger(this.queue[i].event, this.queue[i].message);
-                        this.queueTimes.splice(i, 1);
-                        this.queue.splice(i, 1);
+                        this.queueTimes.greenSplice(i);
+                        this.queue.greenSplice(i);
                     }
                 }
             },
@@ -222,7 +222,8 @@ This component is a general purpose state-machine for an entity, taking in vario
             },
             
             "state-changed": function (state) {
-                var i = null;
+                var i = null,
+                    queue = null;
                 
                 if (this.outputs) {
                     for (i in state) {
@@ -230,12 +231,13 @@ This component is a general purpose state-machine for an entity, taking in vario
                             this.snapshot[i] = state[i];
                         }
                     }
-                    this.tempQueue.length = 0;
-                    handleOutput('outputs', this.snapshot, this.last, this.outputs, false, this.owner, this.tempQueue);
-                    for (i = 0; i < this.tempQueue.length; i++) {
-                        this.queue.push(this.tempQueue[i]);
-                        this.queueTimes.push(this.tempQueue[i].delay);
+                    queue = Array.setUp();
+                    handleOutput('outputs', this.snapshot, this.last, this.outputs, false, this.owner, queue);
+                    for (i = 0; i < queue.length; i++) {
+                        this.queue.push(queue[i]);
+                        this.queueTimes.push(queue[i].delay);
                     }
+                    queue.recycle();
                     for (i in this.snapshot) {
                         if (this.snapshot[i] !== this.last[i]) {
                             this.last[i] = this.snapshot[i];
@@ -243,6 +245,11 @@ This component is a general purpose state-machine for an entity, taking in vario
                     }
                 }
             }
+        },
+        
+        methods: function () {
+            this.queueTimes.recycle();
+            this.queue.recycle();
         }
     });
 }());

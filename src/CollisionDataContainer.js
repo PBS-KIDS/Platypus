@@ -51,8 +51,8 @@ platypus.CollisionDataContainer = (function () {
     "use strict";
     
     var collisionDataContainer = function () {
-            this.xData = [new platypus.CollisionData(), new platypus.CollisionData()];
-            this.yData = [new platypus.CollisionData(), new platypus.CollisionData()];
+            this.xData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());
+            this.yData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());
             this.xCount = 0;
             this.yCount = 0;
             this.xDeltaMovement = Infinity;

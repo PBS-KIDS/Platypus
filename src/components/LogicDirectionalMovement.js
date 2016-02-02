@@ -68,7 +68,7 @@
             if (typeof this.speed === 'number') {
                 this.speed = [this.speed, 0, 0];
             }
-            this.initialVector = new platypus.Vector(this.speed);
+            this.initialVector = platypus.Vector.setUp(this.speed);
             this.reorient = rotate[this.axis];
             if (!this.reorient) {
                 this.reorient = doNothing;
@@ -412,6 +412,12 @@
             "accelerate": function (velocity) {
                 this.initialVector.normalize().multiply(velocity);
                 this.direction.normalize().multiply(velocity);
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.initialVector.recycle();
             }
         }
     });

@@ -14,7 +14,7 @@ platypus.Vector = (function () {
     "use strict";
     
     var Vector = function (x, y, z) {
-            this.matrix = [0, 0, 0];
+            this.matrix = Array.setUp(0, 0, 0);
             this.set(x, y, z);
         },
         proto = Vector.prototype;
@@ -167,7 +167,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector} A normalized vector in the same direction as this vector.
      */
     proto.getUnit = function () {
-        return new platypus.Vector(this).normalize();
+        return platypus.Vector.setUp(this).normalize();
     };
     
     /**
@@ -177,7 +177,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector}
      */
     proto.getInverse = function () {
-        return new platypus.Vector(this).multiply(-1);
+        return platypus.Vector.setUp(this).multiply(-1);
     };
     
     /**
@@ -229,7 +229,7 @@ platypus.Vector = (function () {
      * @return {platypus.Vector} The cross product.
      */
     proto.getCrossProduct = function (v) {
-        return new platypus.Vector(this).cross(v);
+        return platypus.Vector.setUp(this).cross(v);
     };
     
     /**
@@ -242,34 +242,43 @@ platypus.Vector = (function () {
      */
     proto.rotate = function (angle, axis) {
         var a    = axis,
+            arr  = null,
             cos  = Math.cos(angle),
             sin  = Math.sin(angle),
             icos = 1 - cos,
             x    = 0,
             y    = 0,
-            z    = 0;
+            z    = 0,
+            temp = platypus.Vector.setUp();
         
         if (a) {
             if (a === 'x') {
-                a = new Vector(1, 0, 0);
+                a = temp.set(1, 0, 0);
             } else if (a === 'y') {
-                a = new Vector(0, 1, 0);
+                a = temp.set(0, 1, 0);
             } else if (a === 'z') {
-                a = new Vector(0, 0, 1);
+                a = temp.set(0, 0, 1);
             }
         } else {
-            a = new Vector(0, 0, 1);
+            a = temp.set(0, 0, 1);
         }
         
         x     = a.x;
         y     = a.y;
         z     = a.z;
         
-        return this.multiply([
-            [    cos + x * x * icos, x * y * icos - z * sin, x * z * icos + y * sin],
-            [y * x * icos + z * sin,     cos + y * y * icos, y * z * icos - x * sin],
-            [z * x * icos - y * sin, z * y * icos + x * sin,     cos + z * z * icos]
-        ]);
+        arr = Array.setUp(
+            Array.setUp(    cos + x * x * icos, x * y * icos - z * sin, x * z * icos + y * sin),
+            Array.setUp(y * x * icos + z * sin,     cos + y * y * icos, y * z * icos - x * sin),
+            Array.setUp(z * x * icos - y * sin, z * y * icos + x * sin,     cos + z * z * icos)
+        );
+        
+        this.multiply(arr);
+        
+        temp.recycle();
+        arr.recycle(2);
+        
+        return this;
     };
     
     /**
@@ -287,7 +296,7 @@ platypus.Vector = (function () {
             l = 0;
         
         if (Array.isArray(multiplier)) {
-            arr = this.matrix.slice();
+            arr = this.matrix.greenSlice();
             l = limit || multiplier.length;
             for (i = 0; i < l; i++) {
                 this.matrix[i] = 0;
@@ -295,6 +304,7 @@ platypus.Vector = (function () {
                     this.matrix[i] += arr[j] * multiplier[i][j];
                 }
             }
+            arr.recycle();
         } else {
             l = limit || this.matrix.length;
             for (i = 0; i < l; i++) {
@@ -445,10 +455,11 @@ platypus.Vector = (function () {
     /**
      * Returns a copy of this vector.
      * 
+     * @method copy
      * @return {platypus.Vector} A copy of this vector.
      */
     proto.copy = function () {
-        return new platypus.Vector(this);
+        return platypus.Vector.setUp(this);
     };
     
     /**
@@ -492,7 +503,7 @@ platypus.Vector = (function () {
 
             if (obj && prop) {
                 if (!obj[prop]) {
-                    obj[prop] = new platypus.Vector();
+                    obj[prop] = platypus.Vector.setUp();
                     
                     for (i = 2; i < arguments.length; i++) {
                         if (arguments[i] !== prop) {
@@ -508,6 +519,34 @@ platypus.Vector = (function () {
             }
         };
     }());
+
+    /**
+     * Returns a Vector from cache or creates a new one if none are available.
+     * 
+     * @method Vector.setUp
+     * @return {platypus.Vector} The instantiated Vector.
+     * @since 0.7.1
+     */
+    /**
+     * Returns a Vector back to the cache. Prefer the Vector's recycle method since it recycles property objects as well.
+     * 
+     * @method Vector.recycle
+     * @param {platypus.Vector} The Vector to be recycled.
+     * @since 0.7.1
+     */
+    platypus.setUpRecycle(Vector);
+
+    /**
+     * Relinquishes properties of the vector and recycles it.
+     * 
+     * @method recycle
+     * @since 0.7.1
+     */
+    proto.recycle = function () {
+        this.matrix.recycle();
+        Vector.recycle(this);
+    };
+    
     
     return Vector;
 }());

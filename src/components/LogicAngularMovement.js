@@ -58,7 +58,7 @@
 
         constructor: function (definition) {
             this.angle     = this.startAngle;
-            this.v         = [0, 0];
+            this.v         = Array.setUp(0, 0);
             this.moving    = false;
             this.piOverTwo = Math.PI / 2;
             this.owner.rotation = this.owner.rotation || this.visualOffset;
@@ -145,6 +145,12 @@
              */
             "set-max-velocity": function (newMaxV) {
                 this.maxVelocity = newMaxV;
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.v.recycle();
             }
         }
     });
