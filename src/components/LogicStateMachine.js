@@ -134,11 +134,13 @@ This component is a general purpose state-machine for an entity, taking in vario
     
     handleOutput = function (title, state, last, checks, changed, self, queue) {
         var c     = changed,
-            value = false;
+            value = false,
+            st = "";
 
         if (title.charAt(0) === '!') {
-            value = (state[title.substring(1)] === false);
-            if ((title !== 'outputs') && (last[title.substring(1)] !== state[title.substring(1)])) {
+            st = title.substring(1);
+            value = (state[st] === false);
+            if ((title !== 'outputs') && (last[st] !== state[st])) {
                 c = true;
             }
         } else {

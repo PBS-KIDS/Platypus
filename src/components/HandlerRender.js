@@ -159,7 +159,8 @@
                     }
 
                     if (this.container) {
-                        for (x = this.container.children.length - 1; x > -1; x--) {
+                        x = this.container.children.length;
+                        while (x--) {
                             child = this.container.children[x];
 
                             if (child.visible) {

@@ -331,7 +331,6 @@
                             for (j = 0; j < types.length; j++) {
                                 if (entity.softCollisionMap[types[j]].length) {
                                     softs[softs.length] = entity;
-                                    collides = true;
                                     break;
                                 }
                             }
@@ -425,7 +424,6 @@
                         for (j = 0; j < types.length; j++) {
                             if (entity.softCollisionMap[types[j]].length) {
                                 softs[softs.length] = entity;
-                                collides = true;
                                 break;
                             }
                         }
