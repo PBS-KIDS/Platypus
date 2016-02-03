@@ -10,7 +10,8 @@
 (function () {
     "use strict";
     
-    var tempMatrix = new PIXI.Matrix(),
+    var Data = include('platypus.Data'),
+        tempMatrix = new PIXI.Matrix(),
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -958,18 +959,23 @@
             }()),
             
             triggerInput: function (event, eventName) {
+                var msg = null;
+                
                 //TML - This is in case we do a scene change using an event and the container is destroyed.
                 if (!this.container) {
                     return;
                 }
+                
+                msg = Data.setUp(
+                    "event", event.data.originalEvent,
+                    "pixiEvent", event,
+                    "x", event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.left,
+                    "y", event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.top,
+                    "entity", this.owner
+                );
 
-                this.owner.trigger(eventName, {
-                    event: event.data.originalEvent,
-                    pixiEvent: event,
-                    x: event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.left,
-                    y: event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.top,
-                    entity: this.owner
-                });
+                this.owner.trigger(eventName, msg);
+                msg.recycle();                
             },
             
             addInputs: function () {

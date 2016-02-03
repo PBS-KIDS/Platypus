@@ -105,7 +105,7 @@
         this.recycle();
     };
     
-    platypus.setUpRecycle(Template);
+    platypus.setUpRecycle(Template, 'Template');
 
     return platypus.createComponentClass({
 

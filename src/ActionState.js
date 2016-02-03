@@ -179,7 +179,7 @@ platypus.ActionState = (function () {
      * @param {platypus.ActionState} The ActionState to be recycled.
      * @since 0.7.1
      */
-    platypus.setUpRecycle(ActionState);
+    platypus.setUpRecycle(ActionState, 'ActionState');
 
     /**
      * Relinquishes properties of the ActionState and recycles it.

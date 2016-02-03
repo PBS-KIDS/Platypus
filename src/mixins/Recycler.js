@@ -10,10 +10,13 @@
                 value: true,
                 writable: true
             }
-        };
+        },
+        caches = {};
     
-    platypus.setUpRecycle = function (ClassObject) {
+    platypus.setUpRecycle = function (ClassObject, name) {
         var cache = [];
+        
+        caches[name] = cache;
         
         ClassObject.setUp = function () {
             var newObject = null;
@@ -44,4 +47,8 @@
             ClassObject.recycle(this);
         };
     }
+    
+    platypus.getObjectCaches = function () {
+        return caches;
+    };
 }());

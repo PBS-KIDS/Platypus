@@ -2,9 +2,10 @@
 	"platypus_source": [
         "../src/pako.js",
 		"../src/platypus.js",
-        "../src/mixins/Array.js",
 		"../src/mixins/Recycler.js",
+        "../src/mixins/Array.js",
 		"../src/Component.js",
+		"../src/Data.js",
 		"../src/Messenger.js",
 		"../src/Entity.js",
 		"../src/Scene.js",

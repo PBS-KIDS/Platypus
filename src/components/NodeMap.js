@@ -90,7 +90,7 @@
         this.recycle();
     };
     
-    platypus.setUpRecycle(Node);
+    platypus.setUpRecycle(Node, 'Node');
     
     return platypus.createComponentClass({
         id: 'NodeMap',

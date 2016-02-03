@@ -547,7 +547,7 @@ platypus.Vector = (function () {
      * @param {platypus.Vector} The Vector to be recycled.
      * @since 0.7.1
      */
-    platypus.setUpRecycle(Vector);
+    platypus.setUpRecycle(Vector, 'Vector');
 
     /**
      * Relinquishes properties of the vector and recycles it.

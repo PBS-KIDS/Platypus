@@ -165,5 +165,6 @@
 		});
 	}
     
-    window.getArrayCache = function () {return cache};
+    platypus.getObjectCaches()['Array'] = cache;
+    
 }(Array, Object));
