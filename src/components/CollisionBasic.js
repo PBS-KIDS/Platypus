@@ -470,7 +470,6 @@
                 for (key in this.solidCollisions) {
                     if (this.solidCollisions.hasOwnProperty(key)) {
                         this.owner.solidCollisionMap[this.collisionType].push(key);
-                        this.owner.collides = true; //informs HandlerCollision that this entity should be processed in the list of solid colliders.
                         if (this.solidCollisions[key]) { // To make sure it's not an empty string.
                             this.addEventListener('hit-by-' + key, entityBroadcast(this.solidCollisions[key], 'solid', this.collisionType));
                         }
@@ -676,8 +675,6 @@
                 
                 this.owner.parent.trigger('remove-collision-entity', this.owner);
 
-                this.owner.collides = false;
-
                 delete this.aabb;
                 delete this.prevAABB;
                 
@@ -687,9 +684,6 @@
                 if (this.owner.solidCollisionMap[this.collisionType]) {
                     this.owner.solidCollisionMap[this.collisionType].recycle();
                     delete this.owner.solidCollisionMap[this.collisionType];
-                }
-                if (Object.keys(this.owner.solidCollisionMap).length > 0) {
-                    this.owner.collides = true;
                 }
                 if (this.owner.softCollisionMap[this.collisionType]) {
                     this.owner.softCollisionMap[this.collisionType].recycle();

@@ -189,7 +189,17 @@
                     this.checkMovers(resp.camera, resp.movers);
                 }*/
                
-                this.prepareCollisions(resp);
+                /**
+                 * This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
+                 * 
+                 * @event 'prepare-for-collision'
+                 * @param tick {Object} Object containing information about the current logic step.
+                 * @deprecated since 0.7.1
+                 */
+                if (this.owner.triggerEventOnChildren) {
+                    this.owner.triggerEventOnChildren('prepare-for-collision', resp);
+                }
+
                 this.checkGroupCollisions();
                 this.checkSolidCollisions();
                 this.resolveNonCollisions();
@@ -256,6 +266,7 @@
                     allLive  = null,
                     softs    = null,
                     solids   = null,
+                    nons     = null,
                     groups   = null,
                     width    = camera.width,
                     height   = camera.height,
@@ -267,7 +278,8 @@
                     check         = isAABBCollision,
                     aabbLogic     = this.cameraLogicAABB,
                     aabbCollision = this.cameraCollisionAABB,
-                    types = null;
+                    types = null,
+                    collides = false;
                 
                 // store buffered size since the actual width x height is not used below.
                 width  += buffer * 2;
@@ -292,11 +304,15 @@
                     softs = this.softEntitiesLive;
                     softs.length = 0;
 
+                    nons = this.nonColliders;
+                    nons.length = 0;
+
                     groups = this.groupsLive;
                     groups.length = 0;
 
                     i = all.length;
                     while (i--) {
+                        collides = false;
                         entity = all[i];
                         if (entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)) {
                             entity.checkCollision = false;
@@ -307,6 +323,7 @@
                                 for (j = 0; j < types.length; j++) {
                                     if (entity.solidCollisionMap[types[j]].length) {
                                         solids[solids.length] = entity;
+                                        collides = true;
                                         break;
                                     }
                                 }
@@ -314,8 +331,13 @@
                             for (j = 0; j < types.length; j++) {
                                 if (entity.softCollisionMap[types[j]].length) {
                                     softs[softs.length] = entity;
+                                    collides = true;
                                     break;
                                 }
+                            }
+
+                            if (!collides) {
+                                nons.push(entity);
                             }
 
                             if (entity.collisionGroup) {
@@ -356,10 +378,12 @@
                     allLive  = null,
                     softs    = null,
                     solids   = null,
+                    nons     = null,
                     groups   = null,
                     entities = null,
                     entity   = null,
-                    types    = null;
+                    types    = null,
+                    collides = false;
                 
                 if (this.updateLiveList) {
                     this.updateLiveList = false;
@@ -374,12 +398,16 @@
 
                     softs = this.softEntitiesLive;
                     softs.length = 0;
+                    
+                    nons = this.nonColliders;
+                    nons.length = 0;
 
                     groups = this.groupsLive;
                     groups.length = 0;
 
                     i = all.length;
                     while (i--) {
+                        collides = false;
                         entity = all[i];
                         entity.checkCollision = false;
                         allLive[allLive.length] = entity;
@@ -389,6 +417,7 @@
                             for (j = 0; j < types.length; j++) {
                                 if (entity.solidCollisionMap[types[j]].length) {
                                     solids[solids.length] = entity;
+                                    collides = true;
                                     break;
                                 }
                             }
@@ -396,8 +425,13 @@
                         for (j = 0; j < types.length; j++) {
                             if (entity.softCollisionMap[types[j]].length) {
                                 softs[softs.length] = entity;
+                                collides = true;
                                 break;
                             }
+                        }
+                        
+                        if (!collides) {
+                            nons.push(entity);
                         }
 
                         if (entity.collisionGroup) {
@@ -418,29 +452,6 @@
                                 list[list.length] = entity;
                             }
                         }
-                    }
-                }
-            },
-            
-            prepareCollisions: function (resp) {
-                var entity  = null,
-                    allLive = this.allEntitiesLive,
-                    i       = allLive.length,
-                    nons    = this.nonColliders;
-                
-                nons.length = 0;
-                
-                /**
-                 * This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
-                 * 
-                 * @event 'prepare-for-collision'
-                 * @param tick {Object} Object containing information about the current logic step.
-                 */
-                while (i--) {
-                    entity = allLive[i];
-                    entity.triggerEvent('prepare-for-collision', resp);
-                    if (!entity.collides) {
-                        nons.push(entity);
                     }
                 }
             },

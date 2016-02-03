@@ -133,7 +133,8 @@
         var i = 0;
         
         if (depth && depth > 1) {
-            for (i = 0; i < instance.length; i++) {
+            i = instance.length;
+            while (i--) {
                 Array.recycle(instance[i], depth - 1);
             }
         }
