@@ -552,7 +552,8 @@
             "relocate-entity": function (resp) {
                 var unstick = resp.unstick,
                     um      = 0,
-                    i       = 0;
+                    i       = 0,
+                    v       = null;
                 
                 if (unstick) {
                     um = unstick.magnitude();

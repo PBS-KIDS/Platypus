@@ -411,9 +411,13 @@ platypus.Vector = (function () {
      */
     proto.angleTo = function (otherVector) {
         var v1 = this.getUnit(),
-            v2 = otherVector.getUnit();
+            v2 = otherVector.getUnit(),
+            ang = Math.acos(v1.dot(v2));
+            
+        v1.recycle();
+        v2.recycle();
         
-        return Math.acos(v1.dot(v2));
+        return ang;
     };
     
     /**
@@ -426,12 +430,21 @@ platypus.Vector = (function () {
      */
     proto.signedAngleTo = function (otherVector, normal) {
         var v1 = this.getUnit(),
-            v2 = otherVector.getUnit();
+            v2 = otherVector.getUnit(),
+            v3 = v1.getCrossProduct(v2),
+            ang = 0;
         
-        if (v1.getCrossProduct(v2).dot(normal) < 0) {
-            return -Math.acos(v1.dot(v2));
+        if (v3.dot(normal) < 0) {
+            ang = -Math.acos(v1.dot(v2));
+        } else {
+            ang =  Math.acos(v1.dot(v2));
         }
-        return Math.acos(v1.dot(v2));
+        
+        v1.recycle();
+        v2.recycle();
+        v3.recycle();
+        
+        return ang;
     };
     
     /**

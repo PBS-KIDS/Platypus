@@ -35,7 +35,8 @@ platypus.Messenger = (function () {
      * @since 0.7.1
      */
     proto.greenTrigger = function(type) {
-        var listeners = null,
+        var i = 0,
+            listeners = null,
             args = null;
         
 		if (this._destroyed) {
@@ -51,7 +52,8 @@ platypus.Messenger = (function () {
                 args.greenSplice(0);
 			}
 
-			for (var i = listeners.length - 1; i >= 0; --i) {
+            i = listeners.length;
+			while (i--) {
 				var listener = listeners[i];
 				if (listener._eventDispatcherOnce)
 				{

@@ -283,6 +283,7 @@
                             tween.offset.multiply(tween.endMatrix).addVector(tween.anchor);
                             msg.position = tween.offset;
                             this.owner.triggerEvent('relocate-entity', msg);
+                            tween.offset.recycle();
                         }
                         tween.onFinished(tween.endMatrix);
                     }
@@ -316,8 +317,16 @@
             "drop-tweens": function () {
                 var i = 0;
                 
+                i = this.tweens.length;
+                while (i--) {
+                    if (this.tweens[i].offset) {
+                        this.tweens[i].offset.recycle();
+                    }
+                }
                 this.tweens.length = 0;
-                for (i = 0; i < this.vectors.length; i++) {
+                
+                i = this.vectors.length;
+                while (i--) {
                     this.updateVector(this.vectors[i], this.inverses[i]);
                 }
             },
@@ -414,7 +423,12 @@
                     }
                     
                     if (props.anchor) {
-                        offset = props.offset || this.owner.position.copy().subtractVector(props.anchor, 2);
+                        offset = props.offset
+                        if (offset) {
+                            offset = offset.copy();
+                        } else {
+                            offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                        }
                     }
                     
                     this.tweens.push({
