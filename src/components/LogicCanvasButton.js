@@ -34,8 +34,10 @@
 
 		events: {
             "handle-logic": function (tick) {
-                if (this.last !== (this.disabled === this.owner.state.disabled)) {
-                    this.last = (this.disabled === this.owner.state.disabled);
+                var eq = (this.disabled === this.owner.state.disabled);
+                
+                if (this.last !== eq) {
+                    this.last = eq;
                 }
             },
             "mousedown": function (eventData) {

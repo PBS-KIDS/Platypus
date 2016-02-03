@@ -214,24 +214,25 @@
                 var i = 0,
                     j = 0,
                     cycles = 0,
-                    child  = null;
+                    child  = null,
+                    msg = this.message;
                 
                 this.leftoverTime += (resp.delta * this.timeMultiplier);
                 cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
         
                 // This makes the frames smoother, but adds variance into the calculations
-        //        this.message.delta = this.leftoverTime / cycles;
+        //        msg.delta = this.leftoverTime / cycles;
         //        this.leftoverTime = 0;
                 
                 // This makes the frames more exact, but varying step numbers between ticks can cause movement to be jerky
-        //        this.message.delta = Math.min(this.leftoverTime, this.stepLength);
+        //        msg.delta = Math.min(this.leftoverTime, this.stepLength);
         //        this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
         
                 // This makes the frames exact, but varying step numbers between ticks can cause movement to be jerky
-                this.message.delta = this.stepLength;
+                msg.delta = this.stepLength;
                 this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
         
-                this.message.tick = resp;
+                msg.tick = resp;
                 
                 this.updateList(this.entities, this.activeEntities, this.camera);
                 
@@ -250,7 +251,7 @@
                     if (!this.paused) {
                     
                         if (this.owner.triggerEventOnChildren) {
-                            this.owner.triggerEventOnChildren('handle-ai', this.message);
+                            this.owner.triggerEventOnChildren('handle-ai', msg);
                         }
 
                         for (j = this.activeEntities.length - 1; j > -1; j--) {
@@ -262,7 +263,7 @@
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             * @since 0.6.8
                             */
-                            this.activeEntities[j].triggerEvent('prepare-logic', this.message);
+                            this.activeEntities[j].triggerEvent('prepare-logic', msg);
 
                             /**
                             * This event is triggered on children entities to run their logic.
@@ -271,7 +272,7 @@
                             * @param tick {Object}
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             */
-                            this.activeEntities[j].triggerEvent('handle-logic', this.message);
+                            this.activeEntities[j].triggerEvent('handle-logic', msg);
 
                             /**
                             * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
@@ -281,7 +282,7 @@
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             * @since 0.6.8
                             */
-                            this.activeEntities[j].triggerEvent('handle-movement', this.message);
+                            this.activeEntities[j].triggerEvent('handle-movement', msg);
                         }
                         
                         /**
@@ -291,7 +292,7 @@
                             * @param tick {Object}
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             */
-                        if (this.owner.triggerEvent('check-collision-group', this.message)) { // If a collision group is attached, make sure collision is processed on each logic tick.
+                        if (this.owner.triggerEvent('check-collision-group', msg)) { // If a collision group is attached, make sure collision is processed on each logic tick.
                             /**
                                 * This event is triggered on entities to run logic that may depend upon collision responses.
                                 * 
@@ -308,7 +309,7 @@
                                 */
                             for (j = this.activeEntities.length - 1; j > -1; j--) {
                                 child = this.activeEntities[j];
-                                child.triggerEvent('handle-post-collision-logic', this.message);
+                                child.triggerEvent('handle-post-collision-logic', msg);
                                 if (updateState(child)) {
                                     child.triggerEvent('state-changed', child.state);
                                 }

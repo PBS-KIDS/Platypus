@@ -75,7 +75,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
                         } else if (this.time < 0) {
                             this.time = -this.maxTime;
                         }
-                        this['stop-timer']();
+                        this.triggerEvent('stop-timer');
                     }
                     
                     if (typeof this.alarmTime !== 'undefined') {

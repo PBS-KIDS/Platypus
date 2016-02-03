@@ -191,7 +191,7 @@
         },
         
         events: {
-            'handle-controller': function () {
+            "handle-controller": function () {
                 var i = 0,
                     action = '',
                     resolution = Array.setUp();
@@ -213,7 +213,7 @@
                 resolution.recycle();
             },
             
-            'mousedown': function (value) {
+            "mousedown": function (value) {
                 this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
                 if (this.joystick) {
                     this.owner.trigger('joystick:down', value.event);
@@ -221,7 +221,7 @@
                 }
             },
             
-            'pressup': function (value) {
+            "pressup": function (value) {
                 this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
                 if (this.joystick) {
                     this.owner.trigger('joystick:up', value.event);
@@ -229,17 +229,17 @@
                 }
             },
             
-            'pressmove': function (value) {
+            "pressmove": function (value) {
                 if (this.joystick) {
                     this.handleJoy(value);
                 }
             },
             
-            'pause-controls': function () {
+            "pause-controls": function () {
                 this.paused = true;
             },
             
-            'unpause-controls': function () {
+            "unpause-controls": function () {
                 this.paused = false;
             }
         },

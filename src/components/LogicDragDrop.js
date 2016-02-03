@@ -62,8 +62,8 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 this.owner.y = this.nextY;
                 
                 this.owner.state.noDrop = false;
-                
             },
+
             "handle-post-collision-logic": function (resp) {
                 if (this.tryDrop) {
                     this.tryDrop = false;

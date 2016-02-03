@@ -194,10 +194,13 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				var i = 0,
                     ratio    = 0,
                     momentum = 0,
-                    node     = null;
+                    node     = null,
+                    arr = null;
 				
 				if (!this.owner.node) {
-					this.owner.triggerEvent('on-node', this.owner.parent.getClosestNode([this.owner.x, this.owner.y]));
+                    arr = Array.setUp(this.owner.x, this.owner.y);
+					this.owner.triggerEvent('on-node', this.owner.parent.getClosestNode(arr));
+                    arr.recycle();
 					
 					/**
 					 * This event is triggered if the entity is placed on the map but not assigned a node. It is moved to the nearest node and "in-location" is triggered.
@@ -268,7 +271,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 								this.owner.y = axisProgress(ratio, this.lastNode.y, this.destinationNodes[0].y, this.offset.y);
 								this.owner.z = axisProgress(ratio, this.lastNode.z, this.destinationNodes[0].z, this.offset.z);
 								if (this.updateOrientation) {
-									this.owner.rotation = angle(this.lastNode, this.destinationNodes[0], this.distanc, ratio);
+									this.owner.rotation = angle(this.lastNode, this.destinationNodes[0], this.distance, ratio);
 								}
 								momentum = 0;
 							}

@@ -28,6 +28,9 @@
             this.count = 0;
             this.lastTotal = 0;
             this.lastCount = 0;
+            this.message = {
+                text: ""
+            };
         },
 
         events: {
@@ -37,8 +40,8 @@
              * @method 'handle-logic'
              */
             "handle-logic": function () {
-                var txt = '',
-                update  = false;
+                var update  = false,
+                    msg = this.message;
                 
                 if (this.total !== this.lastTotal) {
                     this.lastTotal = this.total;
@@ -52,9 +55,9 @@
                 
                 if (update) {
                     if (this.total) {
-                        txt = String(this.count) + "/" + String(this.total);
+                        msg.text = String(this.count) + "/" + String(this.total);
                     } else {
-                        txt = String(this.count);
+                        msg.text = String(this.count);
                     }
                     
                     /**
@@ -63,9 +66,7 @@
                      * @event 'update-content'
                      * @param update.text {string} String describing the current count.
                      */
-                    this.owner.triggerEvent('update-content', {
-                        text: txt
-                    });
+                    this.owner.triggerEvent('update-content', msg);
                 }
             },
 

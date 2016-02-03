@@ -188,7 +188,7 @@ This component is a general purpose state-machine for an entity, taking in vario
 
         events: {
             "handle-logic":  function (resp) {
-                var i = 0,
+                var i = this.queue.length,
                     state = '';
                 
                 for (state in this.sustainedState) {
@@ -200,7 +200,7 @@ This component is a general purpose state-machine for an entity, taking in vario
                     }
                 }
                 
-                for (i = this.queue.length - 1; i > -1; i--) {
+                while (i--) {
                     this.queueTimes[i] -= resp.delta;
                     
                     if (this.queueTimes[i] <= 0) {

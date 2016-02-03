@@ -198,6 +198,10 @@
                 // This is the tweening transform
                 this.matrixTween = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
                 
+                this.relocationMessage = {
+                    position: null
+                }
+                
                 this.vectors  = Array.setUp();
                 this.inverses = Array.setUp();
                 this.tweens   = Array.setUp();
@@ -248,33 +252,37 @@
              * @param tick.delta {number} Time passed since the last logic step.
              */
             "handle-logic": function (tick) {
-                var i = 0,
+                var i = this.tweens.length,
                     delta = tick.delta,
                     state = this.owner.state,
                     finishedTweening = null,
-                    tween = null;
+                    tween = null,
+                    msg = this.relocationMessage;
                 
-                if (this.tweens.length) {
+                if (i) {
                     finishedTweening = Array.setUp();
                     state.reorienting = true;
                     identitize(this.matrixTween);
                     
-                    for (i = this.tweens.length - 1; i >= 0; i--) {
+                    while (i--) {
                         if (this.updateTween(this.tweens[i], delta)) { // finished tweening
                             finishedTweening.push(this.tweens.greenSplice(i));
                         }
                     }
-                    for (i = 0; i < this.vectors.length; i++) {
+                    
+                    i = this.vectors.length;
+                    while (i--) {
                         this.updateVector(this.vectors[i], this.inverses[i]);
                     }
-                    for (i = 0; i < finishedTweening.length; i++) {
+                    
+                    i = finishedTweening.length;
+                    while (i--) {
                         tween = finishedTweening[i];
                         this.transform(tween.endMatrix);
                         if (tween.anchor) {
                             tween.offset.multiply(tween.endMatrix).addVector(tween.anchor);
-                            this.owner.triggerEvent('relocate-entity', {
-                                position: tween.offset
-                            });
+                            msg.position = tween.offset;
+                            this.owner.triggerEvent('relocate-entity', msg);
                         }
                         tween.onFinished(tween.endMatrix);
                     }

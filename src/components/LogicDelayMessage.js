@@ -131,9 +131,9 @@ This component allows certain messages to trigger new messages at a later time. 
 
         events: {// These are messages that this component listens for
             "handle-logic":  function (resp) {
-                var i = 0;
+                var i = this.queue.length;
                 
-                for (i = this.queue.length - 1; i > -1; i--) {
+                while (i--) {
                     this.queueTimes[i] -= resp.delta;
                     
                     if (this.queueTimes[i] <= 0) {

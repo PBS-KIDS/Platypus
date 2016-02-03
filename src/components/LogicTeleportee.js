@@ -41,14 +41,15 @@ Requires: ["../Vector.js"]
             this.teleportDestination = Vector.setUp();
             this.teleportNow = false;
             this.DestinationSet = false;
+            this.message = {
+                position: this.teleportDestination
+            };
         },
 
         events: {// These are messages that this component listens for
             "handle-logic": function () {
                 if (this.teleportNow) {
-                    this.owner.trigger('relocate-entity', {
-                        position: this.teleportDestination
-                    });
+                    this.owner.trigger('relocate-entity', this.message);
                     this.teleportNow = false;
                     this.owner.trigger('teleport-complete');
                 }

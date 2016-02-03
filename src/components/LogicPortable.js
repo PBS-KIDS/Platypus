@@ -32,34 +32,38 @@ This component allows this entity to be carried by other entities with which it 
 /*global platypus */
 (function () {
     "use strict";
+    
+    var defaultOrientation = {
+            down: true //default is false, 'true' means as soon as carrier is connected downward
+        };
 
     return platypus.createComponentClass({
         id: 'LogicPortable',
         constructor: function (definition) {
-            this.portableDirections = definition.portableDirections || {
-                down: true //default is false, 'true' means as soon as carrier is connected downward
-            };
+            this.portableDirections = definition.portableDirections || defaultOrientation;
     
-            this.carrier      = this.lastCarrier = undefined;
+            this.carrier      = this.lastCarrier = null;
             this.message      = {
                 entity: this.owner
             };
         },
         events: {
             "handle-logic": function (resp) {
+                var msg = this.message;
+                
                 if (this.carrierConnected) {
                     if (this.carrier !== this.lastCarrier) {
                         if (this.lastCarrier) {
-                            this.lastCarrier.trigger('release-me', this.message);
+                            this.lastCarrier.trigger('release-me', msg);
                         }
-                        this.carrier.trigger('carry-me', this.message);
+                        this.carrier.trigger('carry-me', msg);
                     }
                     
                     this.carrierConnected = false;
                 } else {
                     if (this.carrier) {
-                        this.carrier.trigger('release-me', this.message);
-                        this.carrier = undefined;
+                        this.carrier.trigger('release-me', msg);
+                        this.carrier = null;
                     }
                 }
                 this.lastCarrier = this.carrier;
