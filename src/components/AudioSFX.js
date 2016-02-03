@@ -12,6 +12,7 @@
     "use strict";
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
+        Data = include('platypus.Data'),
         defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay:     0,
@@ -24,7 +25,13 @@
         },
         playSound = function (soundDefinition) {
             var sound      = '',
-                attributes = null;
+                attributes = null,
+                completed  = function (data, cancelled) {
+                    if (data.audio) {
+                        this.onComplete(data.audio);
+                    }
+                    data.recycle();
+                };
             
             if (typeof soundDefinition === 'string') {
                 sound      = soundDefinition;
@@ -46,29 +53,26 @@
             }
 
             return function (value) {
-                var audio = null;
+                var data = null;
 
                 value = value || attributes;
-
-                audio = this.player.play(sound, {
-                    interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
-                    delay:      value.delay     || attributes.delay  || defaultSettings.delay,
-                    loop:       value.loop      || attributes.loop   || defaultSettings.loop,
-                    offset:     value.offset    || attributes.offset || defaultSettings.offset,
-                    volume:     (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
-                    pan:        value.pan       || attributes.pan    || defaultSettings.pan,
-                    mute:       value.mute      || attributes.mute   || defaultSettings.mute,
-                    paused:     value.paused    || attributes.paused || defaultSettings.paused,
-                    complete: function (cancelled) {
-                        if (audio) {
-                            this.onComplete(audio);
-                        }
-                    }.bind(this)
-                });
                 
-                if (audio) {
-                    audio.soundId = sound;
-                    this.activeAudioClips.push(audio);
+                data = Data.setUp(
+                    "interrupt", value.interrupt || attributes.interrupt || defaultSettings.interrupt,
+                    "delay",     value.delay     || attributes.delay  || defaultSettings.delay,
+                    "loop",      value.loop      || attributes.loop   || defaultSettings.loop,
+                    "offset",    value.offset    || attributes.offset || defaultSettings.offset,
+                    "volume",    (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
+                    "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
+                    "mute",      value.mute      || attributes.mute   || defaultSettings.mute,
+                    "paused",    value.paused    || attributes.paused || defaultSettings.paused
+                );
+                data.complete = completed.bind(this, data);
+                data.audio = this.player.play(sound, data);
+                
+                if (data.audio) {
+                    data.audio.soundId = sound;
+                    this.activeAudioClips.push(data.audio);
                 }
             };
         },
@@ -433,9 +437,10 @@
                 }
             },
             
-            onComplete: function (audioClip) {
+            onComplete: function (data) {
+                
                 //clean up active clips
-                this.removeClip(audioClip);
+                this.removeClip(data.audio);
                 
                 /**
                  * When a sound effect is finished playing, this event is triggered.

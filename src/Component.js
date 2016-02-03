@@ -16,13 +16,14 @@
 platypus.Component = (function () {
     "use strict";
     
-    var getAssetList = function (definition) {
+    var Data = include('platypus.Data'),
+        getAssetList = function (definition) {
             return Array.setUp();
         },
         Component = function (type, owner) {
             this.type = type;
             this.owner = owner;
-            this.publicMethods = {};
+            this.publicMethods = Data.setUp();
             this.listener = {
                 events: Array.setUp(),
                 messages: Array.setUp()
@@ -60,6 +61,7 @@ platypus.Component = (function () {
                 this.removeMethod(func);
             }
         }
+        this.publicMethods.recycle();
         this.removeEventListeners();
         this.listener.events.recycle();
         this.listener.messages.recycle();
