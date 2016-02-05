@@ -439,16 +439,17 @@
             },
             
             onComplete: function (data) {
-                
-                //clean up active clips
-                this.removeClip(data.audio);
-                
-                /**
-                 * When a sound effect is finished playing, this event is triggered.
-                 * 
-                 * @event clip-complete
-                 */
-                this.owner.triggerEvent('clip-complete');
+                if (!this.owner.destroyed) {
+                    //clean up active clips
+                    this.removeClip(data.audio);
+                    
+                    /**
+                     * When a sound effect is finished playing, this event is triggered.
+                     * 
+                     * @event clip-complete
+                     */
+                    this.owner.triggerEvent('clip-complete');
+                }
             },
             
             removeClip: function (audioClip) {

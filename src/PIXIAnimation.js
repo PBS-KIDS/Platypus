@@ -12,6 +12,7 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         animationCache = {},
+        baseTextureCache = {},
         regex = /[\[\]{},-]/g,
         createFramesArray = function (frame, bases) {
             var i = 0,
@@ -44,20 +45,25 @@
             var i = 0,
                 bts = Array.setUp(),
                 asset = null,
-                assetCache = Application.instance.assetManager.cache;
+                assetCache = Application.instance.assetManager.cache,
+                btCache = baseTextureCache,
+                path = null;
             
             for (i = 0; i < images.length; i++) {
-                if (typeof images[i] === 'string') {
-                    asset = assetCache.read(images[i]);
-                    if (!asset) {
-                        console.warn('"' + images[i] + '" is not a loaded asset.');
-                        break;
+                path = images[i];
+                if (typeof path === 'string') {
+                    if (!btCache[path]) {
+                        asset = assetCache.read(path);
+                        if (!asset) {
+                            console.warn('"' + path + '" is not a loaded asset.');
+                            break;
+                        }
+                        btCache[path] = new PIXI.BaseTexture(asset);
                     }
+                    bts.push(btCache[path]);
                 } else {
-                    asset = images[i];
+                    bts.push(new PIXI.BaseTexture(path));
                 }
-                
-                bts.push(new PIXI.BaseTexture(asset));
             }
             
             return bts;
@@ -471,6 +477,18 @@
                     }
                 }
                 delete animationCache[this.cacheId];
+            }
+        }
+    };
+    
+    PIXIAnimation.destroyBaseTextures = function () {
+        var btCache = baseTextureCache,
+            key = '';
+        
+        for (key in btCache) {
+            if (btCache.hasOwnProperty(key)) {
+                btCache[key].destroy();
+                delete btCache[key];
             }
         }
     };

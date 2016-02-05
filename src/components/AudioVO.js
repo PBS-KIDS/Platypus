@@ -225,14 +225,16 @@
 
         
             onComplete: function (successful) {
-                this.checkTimeEvents(true);
-                
-                /**
-                 * When an audio sequence is finished playing, this event is triggered.
-                 * 
-                 * @event sequence-complete
-                 */
-                this.owner.triggerEvent('sequence-complete');
+                if (!this.owner.destroyed) {
+                    this.checkTimeEvents(true);
+                    
+                    /**
+                     * When an audio sequence is finished playing, this event is triggered.
+                     * 
+                     * @event sequence-complete
+                     */
+                    this.owner.triggerEvent('sequence-complete');
+                }
             },
             
             destroy: function () {
