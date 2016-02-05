@@ -70,7 +70,7 @@ platypus.ActionState = (function () {
              * @property states
              * @type Object
              */
-            this.states    = states || Data.setUp();
+            this.states    = Data.setUp(states);
 
             /**
              * The list of input toggles to track control input.

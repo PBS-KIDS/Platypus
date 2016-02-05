@@ -35,12 +35,17 @@
         
         ClassObject.recycle = function (instance) {
             if (instance.recycleIndex) {
-                instance.recycleIndex += 1;
-                instance.recycled = true;
+                if (instance.recycled) {
+                    console.warn('WHOA! I have already been recycled!', instance);
+                } else {
+                    instance.recycleIndex += 1;
+                    instance.recycled = true;
+                    cache.push(instance);
+                }
             } else {
                 Object.defineProperties(instance, recycleProps);
+                cache.push(instance);
             }
-            cache.push(instance);
         };
 
         ClassObject.prototype.recycle = function () {

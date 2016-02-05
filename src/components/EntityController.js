@@ -166,14 +166,17 @@
         },
         
         constructor: function (definition) {
-            var key = '';
+            var key = '',
+                filter = null;
             
             this.actions = Data.setUp();
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
                     if (this.stateMaps.hasOwnProperty(key)) {
-                        this.addMap(this.stateMaps[key], createFilter(key));
+                        filter = createFilter(key);
+                        this.addMap(this.stateMaps[key], filter);
+                        filter.recycle();
                     }
                 }
             }

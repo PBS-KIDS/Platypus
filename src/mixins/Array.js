@@ -140,13 +140,19 @@
         }
         
         if (instance.recycleIndex) {
-            instance.recycleIndex += 1;
-            instance.recycled = true;
+            if (instance.recycled) {
+                console.warn('WHOA! I have already been recycled!', instance);
+            } else {
+                instance.recycleIndex += 1;
+                instance.recycled = true;
+                instance.length = 0;
+                cache.push(instance);
+            }
         } else {
             Object.defineProperties(instance, recycleProps);
+            instance.length = 0;
+            cache.push(instance);
         }
-        instance.length = 0;
-        cache.push(instance);
     };
 
     /**

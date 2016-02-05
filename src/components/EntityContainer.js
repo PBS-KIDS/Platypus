@@ -242,11 +242,13 @@
             },
 
             destroy: function () {
-                var i = 0;
+                var i = this.entities.length,
+                    entity = null;
                 
-                for (i = 0; i < this.entities.length; i++) {
-                    this.removeChildEventListeners(this.entities[i]);
-                    this.entities[i].destroy();
+                while (i--) {
+                    entity = this.entities[i];
+                    this.removeChildEventListeners(entity);
+                    entity.destroy();
                 }
                 this.entities.recycle();
                 delete this.owner.entities;
@@ -334,18 +336,16 @@
             },
             
             removeEntity: function (entity) {
-                var x = 0;
+                var i = this.entities.indexOf(entity);
 
-                for (x = 0; x < this.entities.length; x++) {
-                    if (this.entities[x] === entity) {
-                        this.removeChildEventListeners(entity);
-                        this.entities.greenSplice(x);
-                        this.triggerEventOnChildren('peer-entity-removed', entity);
-                        this.owner.triggerEvent('child-entity-removed', entity);
-                        entity.destroy();
-                        entity.parent = null;
-                        return entity;
-                    }
+                if (i >= 0) {
+                    this.removeChildEventListeners(entity);
+                    this.entities.greenSplice(i);
+                    this.triggerEventOnChildren('peer-entity-removed', entity);
+                    this.owner.triggerEvent('child-entity-removed', entity);
+                    entity.destroy();
+                    entity.parent = null;
+                    return entity;
                 }
                 return false;
             },
