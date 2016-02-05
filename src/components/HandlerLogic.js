@@ -31,18 +31,21 @@
             }
         },
         updateState = function (entity) {
-        var state   = null,
-            changed = false;
-        
-        for (state in entity.state) {
-            if (entity.state[state] !== entity.lastState[state]) {
-                entity.lastState[state] = entity.state[state];
-                changed = true;
+            var state   = null,
+                changed = false;
+            
+            for (state in entity.state) {
+                if (entity.state[state] !== entity.lastState[state]) {
+                    entity.lastState[state] = entity.state[state];
+                    changed = true;
+                }
             }
-        }
-        
-        return changed;
-    };
+            
+            return changed;
+        },
+        hasLogic = function (item, index, arr) {
+            return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic');
+        };
 
     return platypus.createComponentClass({
         id: "HandlerLogic",
@@ -132,14 +135,8 @@
              * @param entity {platypus.Entity} The entity that is being considered for addition to the handler.
              */
             "child-entity-added": function (entity) {
-                var x = 0,
-                    messageIds = entity.getMessageIds();
-                
-                for (x = 0; x < messageIds.length; x++) {
-                    if (messageIds[x] === 'handle-logic' || messageIds[x] === 'handle-post-collision-logic') {
-                        this.entities.push(entity);
-                        break;
-                    }
+                if (entity.getMessageIds().some(hasLogic)) {
+                    this.entities.push(entity);
                 }
             },
 
@@ -212,13 +209,15 @@
              */
             "tick": function (resp) {
                 var i = 0,
-                    j = 0,
                     cycles = 0,
-                    child  = null,
-                    msg = this.message;
+                    entity = null,
+                    msg = this.message,
+                    update = updateState,
+                    actives = this.activeEntities,
+                    stepLength = this.stepLength;
                 
                 this.leftoverTime += (resp.delta * this.timeMultiplier);
-                cycles = Math.floor(this.leftoverTime / this.stepLength) || 1;
+                cycles = Math.floor(this.leftoverTime / stepLength) || 1;
         
                 // This makes the frames smoother, but adds variance into the calculations
         //        msg.delta = this.leftoverTime / cycles;
@@ -229,20 +228,20 @@
         //        this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
         
                 // This makes the frames exact, but varying step numbers between ticks can cause movement to be jerky
-                msg.delta = this.stepLength;
-                this.leftoverTime = Math.max(this.leftoverTime - (cycles * this.stepLength), 0);
+                msg.delta = stepLength;
+                this.leftoverTime = Math.max(this.leftoverTime - (cycles * stepLength), 0);
         
                 msg.tick = resp;
                 
-                this.updateList(this.entities, this.activeEntities, this.camera);
+                this.updateList(this.entities, actives, this.camera);
                 
                 //Prevents game lockdown when processing takes longer than time alotted.
                 cycles = Math.min(cycles, this.maxStepsPerTick);
                 
-                for (i = 0; i < cycles; i++) {
+                while (cycles--) {
                     
                     if (this.paused > 0) {
-                        this.paused -= this.stepLength;
+                        this.paused -= stepLength;
                         if (this.paused < 0) {
                             this.paused = 0;
                         }
@@ -254,7 +253,10 @@
                             this.owner.triggerEventOnChildren('handle-ai', msg);
                         }
 
-                        for (j = this.activeEntities.length - 1; j > -1; j--) {
+                        i = actives.length;
+                        while (i--) {
+                            entity = actives[i];
+                            
                             /**
                             * This event is triggered on children entities to run anything that should occur before "handle-logic". For example, removing or adding components should happen here and not in "handle-logic".
                             * 
@@ -263,7 +265,7 @@
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             * @since 0.6.8
                             */
-                            this.activeEntities[j].triggerEvent('prepare-logic', msg);
+                            entity.triggerEvent('prepare-logic', msg);
 
                             /**
                             * This event is triggered on children entities to run their logic.
@@ -272,7 +274,7 @@
                             * @param tick {Object}
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             */
-                            this.activeEntities[j].triggerEvent('handle-logic', msg);
+                            entity.triggerEvent('handle-logic', msg);
 
                             /**
                             * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
@@ -282,9 +284,10 @@
                             * @param tick.delta {Number} The time that has passed since the last tick.
                             * @since 0.6.8
                             */
-                            this.activeEntities[j].triggerEvent('handle-movement', msg);
+                            entity.triggerEvent('handle-movement', msg);
                         }
                         
+                        i = actives.length;
                         /**
                             * This event is triggered on the entity (layer) to test collisions once logic has been completed.
                             * 
@@ -307,18 +310,18 @@
                                 * @event 'state-changed'
                                 * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
                                 */
-                            for (j = this.activeEntities.length - 1; j > -1; j--) {
-                                child = this.activeEntities[j];
-                                child.triggerEvent('handle-post-collision-logic', msg);
-                                if (updateState(child)) {
-                                    child.triggerEvent('state-changed', child.state);
+                            while (i--) {
+                                entity = actives[i];
+                                entity.triggerEvent('handle-post-collision-logic', msg);
+                                if (update(entity)) {
+                                    entity.triggerEvent('state-changed', entity.state);
                                 }
                             }
                         } else {
-                            for (j = this.activeEntities.length - 1; j > -1; j--) {
-                                child = this.activeEntities[j];
-                                if (updateState(child)) {
-                                    child.triggerEvent('state-changed', child.state);
+                            while (i--) {
+                                entity = actives[i];
+                                if (update(entity)) {
+                                    entity.triggerEvent('state-changed', entity.state);
                                 }
                             }
                         }
