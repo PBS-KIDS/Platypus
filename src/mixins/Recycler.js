@@ -51,6 +51,8 @@
         ClassObject.prototype.recycle = function () {
             ClassObject.recycle(this);
         };
+        
+        return cache;
     }
     
     platypus.getObjectCaches = function () {

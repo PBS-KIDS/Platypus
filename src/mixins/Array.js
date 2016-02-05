@@ -7,19 +7,7 @@
 	 * @class Array
 	 */
     
-    var cache = [],
-        recycleProps = {
-            recycleIndex: {
-                enumerable: false,
-                value: 1,
-                writable: true
-            },
-            recycled: {
-                enumerable: false,
-                value: true,
-                writable: true
-            }
-        },
+    var cache = null,
         prototype = Array.prototype;
 
 	/**
@@ -98,75 +86,64 @@
 		});
 	}
     
-    /**
-     * Create a new instance or reuse an old instance if available.
-     * 
-     * @method Array.setUp
-     * @return Array
-     */
-    Array.setUp = function () {
-        var i = 0,
-            arr = null;
-        
-        if (cache.length) {
-            arr = cache.pop();
-            arr.recycled = false;
-        } else {
-            arr = [];
-        }
-        
-        for (i = 0; i < arguments.length; i++) {
-            arr.push(arguments[i]);
-        }
-
-        return arr;
-    };
-        
-    /**
-     * Save instance for reuse.
-     * 
-     * @method Array.recycle
-     * @param instance {Array} The instance to recycle.
-     * @param [depth] {Number} The dimensions of the array.
-     */
-    Array.recycle = function (instance, depth) {
-        var i = 0;
-        
-        if (depth && depth > 1) {
-            i = instance.length;
-            while (i--) {
-                Array.recycle(instance[i], depth - 1);
-            }
-        }
-        
-        if (instance.recycleIndex) {
-            if (instance.recycled) {
-                console.warn('WHOA! I have already been recycled!', instance);
-            } else {
-                instance.recycleIndex += 1;
-                instance.recycled = true;
-                instance.length = 0;
-                cache.push(instance);
-            }
-        } else {
-            Object.defineProperties(instance, recycleProps);
-            instance.length = 0;
-            cache.push(instance);
-        }
-    };
-
-    /**
-     * Save instance for reuse.
-     * 
-     * @method recycle
-     * @param [depth] {Number} The dimensions of the array.
-     */
 	if (!prototype.recycle) {
+        /**
+         * Save instance for reuse.
+         * 
+         * @method Array.recycle
+         * @param instance {Array} The instance to recycle.
+         * @since 0.7.1
+         */
+        cache = platypus.setUpRecycle(Array, 'Array');
+        
+        /**
+         * Create a new instance or reuse an old instance if available.
+         * 
+         * @method Array.setUp
+         * @param [item] {Object|String|Number|Boolean} One or more arguments to prepopulate items in the array.
+         * @return Array
+         * @since 0.7.1
+         */
+        Array.setUp = function () {
+            var i = 0,
+                arr = null;
+            
+            if (cache.length) {
+                arr = cache.pop();
+                arr.recycled = false;
+            } else {
+                arr = [];
+            }
+            
+            for (i = 0; i < arguments.length; i++) {
+                arr.push(arguments[i]);
+            }
+
+            return arr;
+        };
+
+        /**
+         * Save instance for reuse.
+         * 
+         * @method recycle
+         * @param [depth] {Number} The dimensions of the array.
+         * @since 0.7.1
+         */
 		Object.defineProperty(prototype, 'recycle', {
 			enumerable: false,
 			writable: false,
 			value: function (depth) {
-                Array.recycle(this, depth);
+                var i = 0;
+                
+                if (depth > 1) {
+                    i = this.length;
+                    depth -= 1;
+                    while (i--) {
+                        this[i].recycle(depth);
+                    }
+                }
+                this.length = 0;
+                Array.recycle(this);
             }
 		});
 	}
