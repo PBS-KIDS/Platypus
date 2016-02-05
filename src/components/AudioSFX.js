@@ -13,6 +13,7 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Data = include('platypus.Data'),
+        spaceRegEx = / /g,
         defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay:     0,
@@ -77,7 +78,7 @@
             };
         },
         createTest = function (testStates, audio, play) {
-            var states = testStates.replace(/ /g, '').split(',');
+            var states = testStates.replace(spaceRegEx, '').greenSplit(',');
             if (testStates === 'default') {
                 return function (state) {
                     play.call(this);

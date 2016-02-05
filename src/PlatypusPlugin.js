@@ -39,7 +39,7 @@
                         v = null;
                         
                     if (version) {
-                        v = version.split('.');
+                        v = version.greenSplit('.');
                     }
                     
                     if (version && (v.length === 3)) {
@@ -55,6 +55,11 @@
                         g -= min;
                         b -= min;
                     }
+                    
+                    if (v) {
+                        v.recycle();
+                    }
+                    
                     max = Math.max(r, g, b, 1);
 
                     return style + ' background: rgb(' + getPortion(r, max) + ',' + getPortion(g, max) + ',' + getPortion(b, max) + ');';

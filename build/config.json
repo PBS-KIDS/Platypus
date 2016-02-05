@@ -4,6 +4,7 @@
 		"../src/platypus.js",
 		"../src/mixins/Recycler.js",
         "../src/mixins/Array.js",
+        "../src/mixins/String.js",
 		"../src/Data.js",
 		"../src/Component.js",
 		"../src/Messenger.js",

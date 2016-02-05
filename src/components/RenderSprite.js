@@ -12,6 +12,7 @@
     
     var Data = include('platypus.Data'),
         tempMatrix = new PIXI.Matrix(),
+        spaceRegEx = / /g,
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -29,9 +30,9 @@
                 //}
             };
         },
-        createTest = function (testStates, animation) {
+        createTest = function (testStates, animation) { //TODO: Better clean-up: Create a lot of these closures without removing them later... DDD 2/5/2016
             var i = 0,
-                states = testStates.replace(/ /g, '').split(',');
+                states = testStates.replace(spaceRegEx, '').greenSplit(',');
             
             if (testStates === 'default') {
                 return function (state) {
@@ -56,11 +57,13 @@
                     values = value.substring(paren + 1, value.indexOf(')'));
 
                 if (values.length) {
-                    values = values.split(',');
-                    for (i = 0; i < values.length; i++) {
+                    values = values.greenSplit(',');
+                    i = values.length;
+                    while (i--) {
                         values[i] = +values[i];
                     }
                     gfx[func].apply(gfx, values);
+                    values.recycle();
                 } else {
                     gfx[func]();
                 }
@@ -68,11 +71,13 @@
 
             return function (gfx, value) {
                 var i = 0,
-                    arr = value.split('.');
+                    arr = value.greenSplit('.');
 
                 for (i = 0; i < arr.length; i++) {
                     process(gfx, arr[i]);
                 }
+                
+                arr.recycle();
             };
         }());
     

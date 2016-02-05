@@ -90,21 +90,23 @@
         ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
         createFilter = function (states) {
-            var arr = states.split(','),
-                i = 0,
+            var arr = states.greenSplit(','),
+                i = arr.length,
                 filter = Data.setUp(),
                 str = '';
             
-            for (i = 0; i < arr.length; i++) {
+            while (i--) {
                 str = arr[i];
                 if (str) {
-                    if (str.substring(0,1) === '!') {
-                        filter[str.substring(1)] = false;
+                    if (str.substr(0, 1) === '!') {
+                        filter[str.substr(1)] = false;
                     } else {
                         filter[str] = true;
                     }
                 }
             }
+            
+            arr.recycle();
             
             return filter;
         },

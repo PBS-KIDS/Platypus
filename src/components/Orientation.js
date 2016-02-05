@@ -397,7 +397,8 @@
                     };
 
                 return function (props) {
-                    var angle  = props.angle || 0,
+                    var arr = null,
+                        angle  = props.angle || 0,
                         matrix = props.matrix,
                         offset = null;
                     
@@ -417,7 +418,9 @@
                             angle = -Math.PI / 2;
                             break;
                         default:
-                            angle = (props.transform.split('-')[1] / 180) * Math.PI;
+                            arr = props.transform.greenSplit('-');
+                            angle = (arr[1] / 180) * Math.PI;
+                            arr.recycle();
                             break;
                         }
                     }

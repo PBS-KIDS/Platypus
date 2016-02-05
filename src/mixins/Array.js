@@ -147,7 +147,4 @@
             }
 		});
 	}
-    
-    platypus.getObjectCaches()['Array'] = cache;
-    
 }(Array, Object));
