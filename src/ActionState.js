@@ -14,7 +14,8 @@
 platypus.ActionState = (function () {
     "use strict";
     
-    var ActionState = function (event, states, trigger) {
+    var Data = include('platypus.Data'),
+        ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.
              * 
@@ -69,7 +70,7 @@ platypus.ActionState = (function () {
              * @property states
              * @type Object
              */
-            this.states    = states || {};
+            this.states    = states || Data.setUp();
 
             /**
              * The list of input toggles to track control input.
@@ -85,11 +86,11 @@ platypus.ActionState = (function () {
              * @property stateSummary
              * @type Object
              */
-            this.stateSummary = {
-                pressed:   false,
-                released:  false,
-                triggered: false
-            };
+            this.stateSummary = Data.setUp(
+                "pressed",   false,
+                "released",  false,
+                "triggered", false
+            );
         },
         orArray = function (element) {
             return element;
@@ -188,6 +189,8 @@ platypus.ActionState = (function () {
      * @since 0.7.1
      */
     proto.recycle = function () {
+        this.states.recycle();
+        this.stateSummary.recycle();
         this.inputs.recycle();
         ActionState.recycle(this);
     };

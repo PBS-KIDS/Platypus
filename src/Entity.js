@@ -48,7 +48,8 @@
 platypus.Entity = (function () {
     "use strict";
     
-    var entityIds = {},
+    var Data = include('platypus.Data'),
+        entityIds = {},
         warn = function (content, obj) {
             if (platypus.game.settings.debug) {
                 console.warn(content, obj);
@@ -57,11 +58,11 @@ platypus.Entity = (function () {
         entity = function (definition, instanceDefinition) {
             var i                    = 0,
                 componentDefinition  = null,
-                def                  = definition || {},
+                def                  = Data.setUp(definition),
                 componentDefinitions = def.components,
-                defaultProperties    = def.properties || {},
-                instance             = instanceDefinition || {},
-                instanceProperties   = instance.properties || {},
+                defaultProperties    = Data.setUp(def.properties),
+                instance             = Data.setUp(instanceDefinition),
+                instanceProperties   = Data.setUp(instance.properties),
                 savedEvents          = Array.setUp(),
                 savedMessages        = Array.setUp();
 
@@ -86,10 +87,8 @@ platypus.Entity = (function () {
                 this.setProperty(keyValuePairs);
             }.bind(this));
 
-            if (!this.state) {
-                this.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
-            }
-            this.lastState = {}; //This is used to determine if the state of the entity has changed.
+            this.state = Data.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
+            this.lastState = Data.setUp(); //This is used to determine if the state of the entity has changed.
 
             this.trigger = this.triggerEvent = function (event, message) {
                 savedEvents.push(event);
@@ -124,6 +123,11 @@ platypus.Entity = (function () {
              * @event load
              */
             this.triggerEvent('load');
+
+            def.recycle();
+            defaultProperties.recycle();
+            instance.recycle();
+            instanceProperties.recycle();
         },
         proto = entity.prototype = new platypus.Messenger();
     
@@ -228,6 +232,10 @@ platypus.Entity = (function () {
             this.components[i].destroy();
         }
         this.components.recycle();
+        
+        this.state.recycle();
+        this.lastState.recycle();
+        
         this.messengerDestroy();
     };
     

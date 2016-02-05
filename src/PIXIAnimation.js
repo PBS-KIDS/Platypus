@@ -43,32 +43,21 @@
         getBaseTextures = function (images) {
             var i = 0,
                 bts = Array.setUp(),
-                assetData = null,
+                asset = null,
                 assetCache = Application.instance.assetManager.cache;
             
             for (i = 0; i < images.length; i++) {
                 if (typeof images[i] === 'string') {
-                    if (assetCache.read(images[i])) {
-                        assetData = {
-                            asset: assetCache.read(images[i])
-                        };
-                    } else {
-                        assetData = null;
+                    asset = assetCache.read(images[i]);
+                    if (!asset) {
+                        console.warn('"' + images[i] + '" is not a loaded asset.');
+                        break;
                     }
                 } else {
-                    assetData = {
-                        asset: images[i]
-                    };
+                    asset = images[i];
                 }
                 
-                if (assetData) {
-                    if (!assetData.texture) {
-                        assetData.texture = new PIXI.BaseTexture(assetData.asset);
-                    }
-                    bts.push(assetData.texture);
-                } else {
-                    console.warn('"' + images[i] + '" is not a loaded asset.');
-                }
+                bts.push(new PIXI.BaseTexture(asset));
             }
             
             return bts;
@@ -77,11 +66,7 @@
             return images[frame[4]] + '-x' + frame[0] + 'y' + frame[1] + 'w' + frame[2] + 'h' + frame[3];
         },
         getTexturesCacheId = function (spriteSheet) {
-            var animations = spriteSheet.animations,
-                i = 0,
-                id = '',
-                frames = spriteSheet.frames,
-                key = "";
+            var i = 0;
             
             if (spriteSheet.id) {
                 return spriteSheet.id;
@@ -93,9 +78,9 @@
                 }
             }
             
-            spriteSheet.id = id = JSON.stringify(spriteSheet).replace(regex, '');
+            spriteSheet.id = JSON.stringify(spriteSheet).replace(regex, '');
 
-            return id;
+            return spriteSheet.id;
         },
         formatAnimation = function (key, animation, textures) {
             var i = 0,

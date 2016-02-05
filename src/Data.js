@@ -11,16 +11,26 @@ platypus.Data = (function () {
     "use strict";
     
     var Data = function () {
-            var i = arguments.length;
+            var i = arguments.length,
+                first = arguments[0],
+                key = '';
             
-            if (i) {
-                if (i % 2) {
-                    this[i] = null;
-                    i -= 1;
-                } 
-                while (i) {
-                    this[arguments[i - 2]] = arguments[i - 1];
-                    i -= 2;
+            if (first) {
+                if (typeof first === 'string') {
+                    if (i % 2) {
+                        this[i] = null;
+                        i -= 1;
+                    } 
+                    while (i) {
+                        this[arguments[i - 2]] = arguments[i - 1];
+                        i -= 2;
+                    }
+                } else {
+                    for (key in first) {
+                        if (first.hasOwnProperty(key)) {
+                            this[key] = first[key];
+                        }
+                    }
                 }
             }
         },

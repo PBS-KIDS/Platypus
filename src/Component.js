@@ -24,10 +24,10 @@ platypus.Component = (function () {
             this.type = type;
             this.owner = owner;
             this.publicMethods = Data.setUp();
-            this.listener = {
-                events: Array.setUp(),
-                messages: Array.setUp()
-            };
+            this.listener = Data.setUp(
+                "events", Array.setUp(),
+                "messages", Array.setUp()
+            );
         },
         proto = Component.prototype;
     
@@ -65,6 +65,7 @@ platypus.Component = (function () {
         this.removeEventListeners();
         this.listener.events.recycle();
         this.listener.messages.recycle();
+        this.listener.recycle();
     };
     
     /**

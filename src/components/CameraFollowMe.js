@@ -8,6 +8,8 @@
 /*global platypus */
 (function () {
     "use strict";
+    
+    var Data = include('platypus.Data');
 
     return platypus.createComponentClass({
         id: 'CameraFollowMe',
@@ -72,17 +74,17 @@
                 time: this.camera.time
             } : null;
             
-            this.camera = {
-                entity: this.owner,
-                mode: this.camera.mode || this.mode,
-                top: this.camera.top,
-                left: this.camera.left,
-                offsetX: this.camera.offsetX,
-                offsetY: this.camera.offsetY,
-                width: this.camera.width,
-                height: this.camera.height,
-                time: this.camera.time
-            };
+            this.camera = Data.setUp(
+                "entity", this.owner,
+                "mode", this.camera.mode || this.mode,
+                "top", this.camera.top,
+                "left", this.camera.left,
+                "offsetX", this.camera.offsetX,
+                "offsetY", this.camera.offsetY,
+                "width", this.camera.width,
+                "height", this.camera.height,
+                "time", this.camera.time
+            );
         },
         
         events: {
@@ -101,20 +103,22 @@
              * @param [options.time] {number} How many milliseconds to follow the entity.
              */
             "follow-me": function (options) {
-                var msg = this.camera;
+                var msg = null;
                 
                 if (options) {
-                    msg = {
-                        entity:  this.owner,
-                        mode:    options.mode    || this.camera.mode,
-                        top:     options.top     || this.camera.top,
-                        left:    options.left    || this.camera.left,
-                        offsetX: options.offsetX || this.camera.offsetX,
-                        offsetY: options.offsetY || this.camera.offsetY,
-                        width:   options.width   || this.camera.width,
-                        height:  options.height  || this.camera.height,
-                        time:    options.time    || this.camera.time
-                    };
+                    msg = Data.setUp(
+                        "entity",  this.owner,
+                        "mode",    options.mode    || this.camera.mode,
+                        "top",     options.top     || this.camera.top,
+                        "left",    options.left    || this.camera.left,
+                        "offsetX", options.offsetX || this.camera.offsetX,
+                        "offsetY", options.offsetY || this.camera.offsetY,
+                        "width",   options.width   || this.camera.width,
+                        "height",  options.height  || this.camera.height,
+                        "time",    options.time    || this.camera.time
+                    );
+                } else {
+                    msg = Data.setUp(this.camera);
                 }
 
                 if (this.pauseGame) {
@@ -142,7 +146,7 @@
                  * This component fires this message on this entity's parent so the camera will begin following this entity.
                  * 
                  * @event 'follow'
-                 * @param options {Object} A list of key/value paris describing camera options to set.
+                 * @param options {Object} A list of key/value pairs describing camera options to set.
                  * @param options.entity {platypus.Entity} Sends this entity for the camera to follow.
                  * @param options.mode {String} Camera following mode.
                  * @param options.top {number} The top of a bounding box.
@@ -154,6 +158,14 @@
                  * @param options.time {number} How many milliseconds to follow the entity.
                  */
                 this.owner.parent.trigger('follow', msg);
+                
+                msg.recycle();
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.camera.recycle();
             }
         }
     });

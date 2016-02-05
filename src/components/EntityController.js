@@ -59,7 +59,8 @@
 (function () {
     "use strict";
 
-    var ActionState = include('platypus.ActionState'),
+    var Data = include('platypus.Data'),
+        ActionState = include('platypus.ActionState'),
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
@@ -91,7 +92,7 @@
         createFilter = function (states) {
             var arr = states.split(','),
                 i = 0,
-                filter = {},
+                filter = Data.setUp(),
                 str = '';
             
             for (i = 0; i < arr.length; i++) {
@@ -167,9 +168,7 @@
         constructor: function (definition) {
             var key = '';
             
-            this.actions  = {};
-            
-            this.maps = {};
+            this.actions = Data.setUp();
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
@@ -182,11 +181,12 @@
             this.addMap(this.controlMap);
 
             if (definition.joystick) {
-                this.joystick = {};
-                this.joystick.directions  = definition.joystick.directions  || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
-                this.joystick.handleEdge  = definition.joystick.handleEdge  || false;
-                this.joystick.innerRadius = definition.joystick.innerRadius || 0;
-                this.joystick.outerRadius = definition.joystick.outerRadius || Infinity;
+                this.joystick = Data.setUp(
+                    "directions",  definition.joystick.directions  || 4, // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
+                    "handleEdge",  definition.joystick.handleEdge  || false,
+                    "innerRadius", definition.joystick.innerRadius || 0,
+                    "outerRadius", definition.joystick.outerRadius || Infinity
+                );
             }
         },
         
@@ -196,12 +196,10 @@
                     action = '',
                     resolution = Array.setUp();
                 
-                if (this.actions) {
-                    for (action in this.actions) {
-                        if (this.actions.hasOwnProperty(action)) {
-                            if (this.actions[action].update(this.owner.state)) {
-                                resolution.push(this.actions[action]);
-                            }
+                for (action in this.actions) {
+                    if (this.actions.hasOwnProperty(action)) {
+                        if (this.actions[action].update(this.owner.state)) {
+                            resolution.push(this.actions[action]);
                         }
                     }
                 }
@@ -342,6 +340,10 @@
                     if (this.actions.hasOwnProperty(action)) {
                         this.actions[action].recycle();
                     }
+                }
+                this.actions.recycle();
+                if (this.joystick) {
+                    this.joystick.recycle();
                 }
             }
         }

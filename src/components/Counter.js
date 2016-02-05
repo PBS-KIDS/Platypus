@@ -9,6 +9,8 @@
 (function () {
     "use strict";
     
+    var Data = include('platypus.Data');
+    
     return platypus.createComponentClass({
 
         id: 'Counter',
@@ -28,9 +30,9 @@
             this.count = 0;
             this.lastTotal = 0;
             this.lastCount = 0;
-            this.message = {
-                text: ""
-            };
+            this.message = Data.setUp(
+                "text", ""
+            );
         },
 
         events: {
@@ -97,6 +99,12 @@
              */
             "increment-count": function () {
                 this.count += 1;
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.message.recycle();
             }
         }
     });

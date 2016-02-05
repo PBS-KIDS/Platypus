@@ -50,7 +50,8 @@
 (function () {
     "use strict";
 
-    var Entity = include('platypus.Entity'),
+    var Data = include('platypus.Data'),
+        Entity = include('platypus.Entity'),
         childBroadcast = function (event) {
             return function (value, debug) {
                 this.triggerOnChildren(event, value, debug);
@@ -211,16 +212,17 @@
                     }
                     events.recycle();
                     messages.recycle();
+                    entity.containerListener.recycle();
                     entity.containerListener = null;
                 }
             },
             
             addChildEventListener: function (entity, event, callback) {
                 if (!entity.containerListener) {
-                    entity.containerListener = {
-                        events: Array.setUp(),
-                        messages: Array.setUp()
-                    };
+                    entity.containerListener = Data.setUp(
+                        "events", Array.setUp(),
+                        "messages", Array.setUp()
+                    );
                 }
                 entity.containerListener.events.push(event);
                 entity.containerListener.messages.push(callback);

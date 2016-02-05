@@ -79,6 +79,7 @@ platypus.Messenger = (function () {
      * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
      * @return {number} The number of handlers for the triggered message.
      */
+    proto._trigger = proto.trigger;
     proto.trigger = function (events, message, debug) {
         var i = 0,
             count = 0;
