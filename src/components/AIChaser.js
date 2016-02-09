@@ -76,18 +76,20 @@
              * @method 'handle-ai'
              */
             "handle-ai": function () {
-                var v = Vector.setUp(),
+                var v = null,
                     m = 0,
                     c = false;
 
                 if (this.target && this.chasing) {
-                    v.set(this.offset).add(this.target.position).subtractVector(this.owner.position);
+                    v = Vector.setUp(this.offset).add(this.target.position).subtractVector(this.owner.position);
                     m = v.magnitude(2);
 
                     if (m) {
                         c = true;
                         this.direction.set(v).normalize().multiply(this.speed);
                     }
+
+                    v.recycle();
                 }
                 
                 if (c !== this.owner.state.chasing) {
@@ -101,8 +103,6 @@
                      */
                     this.owner.triggerEvent('chase', c);
                 }
-                
-                v.recycle();
             },
             
             /**

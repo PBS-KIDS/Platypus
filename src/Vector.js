@@ -88,25 +88,24 @@ platypus.Vector = (function () {
      */
     proto.set = function (x, y, z) {
         var m = null,
-            limit = 0,
-            q = 0;
+            q = 0,
+            matrix = this.matrix;
         
         if (x && Array.isArray(x)) {   // Passing in an array.
-            m = x;
-            limit = y || m.length;
+            q = y || x.length;
+            while (q--) {
+                matrix[q] = x[q];
+            }
         } else if (x && x.matrix) {   // Passing in a vector.
             m = x.matrix;
-            limit = y || m.length;
-        } else {                     // Passing in coordinates.
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-        }
-        
-        if (m) {
-            for (q = 0; q < limit; q++) {
-                this.matrix[q] = m[q];
+            q = y || m.length;
+            while (q--) {
+                matrix[q] = m[q];
             }
+        } else {                     // Passing in coordinates.
+            matrix[0] = x || 0;
+            matrix[1] = y || 0;
+            matrix[2] = z || 0;
         }
         
         return this;

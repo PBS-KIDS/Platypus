@@ -11,6 +11,7 @@
     "use strict";
     
     var Vector = include('platypus.Vector'),
+    tempVector = Vector.setUp(),
     updateMax   = function (delta, interim, goal, time) {
         if (delta && (interim !== goal)) {
             if (interim < goal) {
@@ -397,7 +398,7 @@
                 var i = 0,
                     m = null,
                     s = 0,
-                    v = Vector.setUp();
+                    v = tempVector;
                 
                 if (collisionInfo.direction.dot(this.ground) > 0) {
                     this.grounded = true;
@@ -412,8 +413,6 @@
                         }
                     }
                 }
-                
-                v.recycle();
             },
             
             /**

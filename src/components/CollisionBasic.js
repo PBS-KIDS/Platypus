@@ -125,24 +125,30 @@
                 };
 
                 entity.getPreviousAABB = function (collisionType) {
-                    if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getPreviousAABB();
+                    var colFunc = entity.collisionFunctions[collisionType];
+                    
+                    if (colFunc) {
+                        return colFunc.getPreviousAABB();
                     } else {
                         return null;
                     }
                 };
 
                 entity.getShapes = function (collisionType) {
-                    if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getShapes();
+                    var colFunc = entity.collisionFunctions[collisionType];
+                    
+                    if (colFunc) {
+                        return colFunc.getShapes();
                     } else {
                         return null;
                     }
                 };
 
                 entity.getPrevShapes = function (collisionType) {
-                    if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getPrevShapes();
+                    var colFunc = entity.collisionFunctions[collisionType];
+                    
+                    if (colFunc) {
+                        return colFunc.getPrevShapes();
                     } else {
                         return null;
                     }
@@ -552,7 +558,12 @@
                 var unstick = resp.unstick,
                     um      = 0,
                     i       = 0,
-                    v       = null;
+                    x       = 0,
+                    y       = 0,
+                    aabb    = this.aabb,
+                    owner   = this.owner,
+                    shape   = null,
+                    shapes  = this.shapes;
                 
                 if (unstick) {
                     um = unstick.magnitude();
@@ -564,32 +575,37 @@
                 }
                 
                 if (resp.relative) {
-                    this.owner.position.set(this.owner.previousPosition).add(resp.position);
+                    owner.position.set(owner.previousPosition).add(resp.position);
                 } else {
-                    this.owner.position.set(resp.position);
+                    owner.position.set(resp.position);
                 }
 
                 if (this.stuck) {
                     if (um > 0) {
-                        this.owner.position.add(unstick);
+                        owner.position.add(unstick);
                     } else {
                         this.stuck = false;
                     }
                 }
                 
-                this.aabb.reset();
-                for (i = 0; i < this.shapes.length; i++) {
-                    this.shapes[i].update(this.owner.x, this.owner.y);
-                    this.aabb.include(this.shapes[i].getAABB());
+                x = owner.x;
+                y = owner.y;
+                
+                aabb.reset();
+                i = shapes.length;
+                while (i--) {
+                    shape = shapes[i];
+                    shape.update(x, y);
+                    aabb.include(shape.aABB);
                 }
 
-                this.owner.previousPosition.set(this.owner.position);
+                owner.previousPosition.set(owner.position);
                 
                 if (um > 0) { // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
                     if (!this.stuck) {
                         this.stuck = true;
                     }
-                    this.move = this.owner.stuckWith.copy().add(-this.owner.x, -this.owner.y).normalize();
+                    this.move = owner.stuckWith.copy().add(-x, -y).normalize();
                 }
             },
             
@@ -643,21 +659,26 @@
             
             prepareCollision: function (x, y) {
                 var i          = 0,
-                    tempShapes = this.prevShapes;
+                    shape      = null,
+                    prevShapes = this.shapes,
+                    shapes     = this.prevShapes,
+                    aabb       = this.aabb;
                 
                 this.owner.x = x;
                 this.owner.y = y;
                 
-                this.prevShapes = this.shapes;
-                this.shapes = tempShapes;
+                this.prevShapes = prevShapes;
+                this.shapes = shapes;
                 
-                this.prevAABB.set(this.aabb);
-                this.aabb.reset();
+                this.prevAABB.set(aabb);
+                aabb.reset();
                 
                 // update shapes
-                for (i = 0; i < this.shapes.length; i++) {
-                    this.shapes[i].update(this.owner.x, this.owner.y);
-                    this.aabb.include(this.shapes[i].getAABB());
+                i = shapes.length;
+                while (i--) {
+                    shape = shapes[i];
+                    shape.update(x, y);
+                    aabb.include(shape.aABB);
                 }
             },
             

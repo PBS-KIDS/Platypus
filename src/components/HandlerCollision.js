@@ -589,7 +589,7 @@
             checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection) {
                 var abs               = Math.abs,
                     step              = 0,
-                    finalMovementInfo = Vector.setUp(),
+                    finalMovementInfo = null,
                     entityDeltaX      = ent.x - ent.previousX,
                     entityDeltaY      = ent.y - ent.previousY,
                     aabb              = null,
@@ -606,7 +606,7 @@
                     ignoredEntities = entityOrGroup.getSolidEntities();
                 }
                 
-                finalMovementInfo.set(ent.position);
+                finalMovementInfo = Vector.setUp(ent.position);
 
                 if (entityDeltaX || entityDeltaY) {
                     
@@ -650,7 +650,7 @@
             },
             
             processCollisionStep: (function () {
-                var sweepAABB     = new AABB(),
+                var sweeper       = new AABB(),
                     includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
                         var i         = 0,
                             otherAABB = otherEntity.getAABB(otherCollisionType);
@@ -686,10 +686,12 @@
                         otherEntity              = null,
                         otherCollisionType       = '',
                         otherShapes              = null,
-                        entitiesByTypeLive       = this.getWorldEntities(),
+                        entitiesByTypeLive       = this.entitiesByTypeLive,
                         otherEntities            = null,
-                        terrain                  = this.getWorldTerrain(),
-                        solidCollisionMap        = entityOrGroup.getSolidCollisions();
+                        terrain                  = this.terrain,
+                        solidCollisionMap        = entityOrGroup.getSolidCollisions(),
+                        collisionSubTypes        = null,
+                        sweepAABB                = sweeper;
                     
 //                    if (!entityOrGroup.jumpThrough || (entityDeltaY >= 0)) { //TODO: Need to extend jumpthrough to handle different directions and forward motion - DDD
     
@@ -700,17 +702,16 @@
                         previousAABB = entityOrGroup.getPreviousAABB(collisionType);
                         currentAABB = entityOrGroup.getAABB(collisionType);
 
-                        sweepAABB.reset();
-                        sweepAABB.include(currentAABB);
+                        sweepAABB.set(currentAABB);
                         sweepAABB.include(previousAABB);
-
-                        j = solidCollisionMap[collisionType].length;
+                        
+                        collisionSubTypes = solidCollisionMap[collisionType];
+                        j = collisionSubTypes.length;
                         while (j--) {
-                            otherCollisionType = solidCollisionMap[collisionType][j];
+                            otherCollisionType = collisionSubTypes[j];
+                            otherEntities = entitiesByTypeLive[otherCollisionType];
 
-                            if (entitiesByTypeLive[otherCollisionType]) {
-                                otherEntities = entitiesByTypeLive[otherCollisionType];
-
+                            if (otherEntities) {
                                 k = otherEntities.length;
                                 while (k--) {
 

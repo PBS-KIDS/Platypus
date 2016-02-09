@@ -259,11 +259,16 @@
             },
             
             updateAABB: function () {
-                var x = 0;
+                var aabb = this.aabb,
+                    sE = this.solidEntities,
+                    entity = null,
+                    x = sE.length,
+                    owner = this.owner;
                 
-                this.aabb.reset();
-                for (x = 0; x < this.solidEntities.length; x++) {
-                    this.aabb.include(((this.solidEntities[x] !== this.owner) && this.solidEntities[x].getCollisionGroupAABB) ? this.solidEntities[x].getCollisionGroupAABB() : this.solidEntities[x].getAABB());
+                aabb.reset();
+                while (x--) {
+                    entity = sE[x],
+                    aabb.include(((entity !== owner) && entity.getCollisionGroupAABB) ? entity.getCollisionGroupAABB() : entity.getAABB());
                 }
             },
             

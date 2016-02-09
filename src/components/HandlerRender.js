@@ -9,6 +9,8 @@
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
 
