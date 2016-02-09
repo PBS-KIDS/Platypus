@@ -276,16 +276,9 @@ platypus.Scene = (function () {
 /**
  * This method destroys all the layers in the scene.
  * 
- * @method destroy
- * @deprecated since 0.7.0 - Use the `exit` method in line with SpringRoll State methods.
- **/
-
-/**
- * This method destroys all the layers in the scene.
- * 
  * @method exit
  **/
-    proto.destroy = proto.exit = function () {
+    proto.exit = function () {
         var i = 0;
         
         for (i = 0; i < this.layers.length; i++) {
