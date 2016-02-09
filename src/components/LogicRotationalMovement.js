@@ -37,8 +37,7 @@ This component changes the (x, y) position of an object according to its current
 (function () {
     "use strict";
 
-    var pi  = Math.PI,
-        cos = Math.cos,
+    var cos = Math.cos,
         sin = Math.sin,
         polarToCartesianX = function (m, a) {
             return m * cos(a);

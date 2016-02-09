@@ -39,7 +39,7 @@
                         v = null;
                         
                     if (version) {
-                        v = version.split('.');
+                        v = version.greenSplit('.');
                     }
                     
                     if (version && (v.length === 3)) {
@@ -55,6 +55,11 @@
                         g -= min;
                         b -= min;
                     }
+                    
+                    if (v) {
+                        v.recycle();
+                    }
+                    
                     max = Math.max(r, g, b, 1);
 
                     return style + ' background: rgb(' + getPortion(r, max) + ',' + getPortion(g, max) + ',' + getPortion(b, max) + ');';
@@ -104,6 +109,15 @@
                 }
             }
             return resultList;
+        },
+        setSpriteSheetIds = function (ss) { // Putting this here for now. May handle differently in the future. - DDD 2/2/2016
+            var key = '';
+            
+            for (key in ss) {
+                if (ss.hasOwnProperty(key)) {
+                    ss[key].id = key;
+                }
+            }
         };
     
     PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
@@ -154,6 +168,10 @@
             sayHello(config, this);
             
             config.entities = flattenEntityList(config.entities);
+            
+            if (config.spriteSheets) {
+                setSpriteSheetIds(config.spriteSheets);
+            }
             
             game = this.platypus = new platypus.Game(config, this);
             

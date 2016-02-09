@@ -247,8 +247,8 @@ platypus.AABB = (function () {
      */
     proto.moveX = function (x) {
         this.x = x;
-        this.left   = -this.halfWidth + this.x;
-        this.right  = this.halfWidth + this.x;
+        this.left   = -this.halfWidth + x;
+        this.right  = this.halfWidth + x;
         return this;
     };
 
@@ -261,8 +261,8 @@ platypus.AABB = (function () {
      */
     proto.moveY = function (y) {
         this.y = y;
-        this.top    = -this.halfHeight + this.y;
-        this.bottom = this.halfHeight + this.y;
+        this.top    = -this.halfHeight + y;
+        this.bottom = this.halfHeight + y;
         return this;
     };
     
@@ -274,10 +274,7 @@ platypus.AABB = (function () {
      * @chainable
      */
     proto.moveXBy = function (deltaX) {
-        this.x += deltaX;
-        this.left   = -this.halfWidth + this.x;
-        this.right  = this.halfWidth + this.x;
-        return this;
+        return this.moveX(this.x + deltaX);
     };
 
     /**
@@ -288,10 +285,7 @@ platypus.AABB = (function () {
      * @chainable
      */
     proto.moveYBy = function (deltaY) {
-        this.y += deltaY;
-        this.top    = -this.halfHeight + this.y;
-        this.bottom = this.halfHeight + this.y;
-        return this;
+        return this.moveY(this.y + deltaY);
     };
     
     /**

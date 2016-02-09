@@ -10,7 +10,9 @@
 (function () {
     "use strict";
     
-    var tempMatrix = new PIXI.Matrix(),
+    var Data = include('platypus.Data'),
+        tempMatrix = new PIXI.Matrix(),
+        spaceRegEx = / /g,
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -28,9 +30,9 @@
                 //}
             };
         },
-        createTest = function (testStates, animation) {
+        createTest = function (testStates, animation) { //TODO: Better clean-up: Create a lot of these closures without removing them later... DDD 2/5/2016
             var i = 0,
-                states = testStates.replace(/ /g, '').split(',');
+                states = testStates.replace(spaceRegEx, '').greenSplit(',');
             
             if (testStates === 'default') {
                 return function (state) {
@@ -55,11 +57,13 @@
                     values = value.substring(paren + 1, value.indexOf(')'));
 
                 if (values.length) {
-                    values = values.split(',');
-                    for (i = 0; i < values.length; i++) {
+                    values = values.greenSplit(',');
+                    i = values.length;
+                    while (i--) {
                         values[i] = +values[i];
                     }
                     gfx[func].apply(gfx, values);
+                    values.recycle();
                 } else {
                     gfx[func]();
                 }
@@ -67,11 +71,13 @@
 
             return function (gfx, value) {
                 var i = 0,
-                    arr = value.split('.');
+                    arr = value.greenSplit('.');
 
                 for (i = 0; i < arr.length; i++) {
                     process(gfx, arr[i]);
                 }
+                
+                arr.recycle();
             };
         }());
     
@@ -398,7 +404,7 @@
                         animation = '';
 
                     component.followThroughs = {};
-                    component.checkStates = [];
+                    component.checkStates = Array.setUp();
 
                     for (anim in map) {
                         if (map.hasOwnProperty(anim)) {
@@ -729,6 +735,26 @@
              */
             "set-mask": function (mask) {
                 this.setMask(mask);
+            },
+            
+            /**
+             * Stops the sprite's animation.
+             * 
+             * @method 'stop-sprite'
+             * @since 0.7.1
+             */
+            "stop-sprite": function() {
+                this.sprite.stop();
+            },
+            
+            /**
+             * Starts the sprite's animation.
+             * 
+             * @method 'play-sprite'
+             * @since 0.7.1
+             */
+            "play-sprite": function() {
+                this.sprite.play();
             }
         },
         
@@ -938,18 +964,23 @@
             }()),
             
             triggerInput: function (event, eventName) {
+                var msg = null;
+                
                 //TML - This is in case we do a scene change using an event and the container is destroyed.
                 if (!this.container) {
                     return;
                 }
+                
+                msg = Data.setUp(
+                    "event", event.data.originalEvent,
+                    "pixiEvent", event,
+                    "x", event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.left,
+                    "y", event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.top,
+                    "entity", this.owner
+                );
 
-                this.owner.trigger(eventName, {
-                    event: event.data.originalEvent,
-                    pixiEvent: event,
-                    x: event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.left,
-                    y: event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.top,
-                    entity: this.owner
-                });
+                this.owner.trigger(eventName, msg);
+                msg.recycle();                
             },
             
             addInputs: function () {
@@ -1054,7 +1085,7 @@
                     regY  = frames.regY || 0,
                     isArray = Array.isArray(frames);
                 
-                this.pinsToRemove = this.pinsToRemove || [];
+                this.pinsToRemove = this.pinsToRemove || Array.setUp();
                 
                 this.pins = {};
                 
@@ -1082,7 +1113,7 @@
                     }
                     
                     if (pins[i].frames) {
-                        pin.frames = [];
+                        pin.frames = Array.setUp();
                         for (j = 0; j < pins[i].frames.length; j++) {
                             if (pins[i].frames[j]) {
                                 if (isArray) {
@@ -1138,9 +1169,12 @@
                 if (this.pins && this.pinsToRemove) {
                     for (i = 0; i < this.pinsToRemove.length; i++) {
                         this.owner.trigger('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
+                        if (this.pins[this.pinsToRemove[i]].frames) {
+                            this.pins[this.pinsToRemove[i]].frames.recycle();    
+                        }
                         delete this.pins[this.pinsToRemove[i]];
                     }
-                    this.pinsToRemove.length = 0;
+                    this.pinsToRemove.recycle();
                 }
             },
             
@@ -1225,6 +1259,9 @@
                 }
                 this.removePins();
                 this.followThroughs = null;
+                if (this.checkStates) {
+                    this.checkStates.recycle();
+                }
                 if (!this.cache) {
                     this.sprite.destroy();
                 }
@@ -1236,9 +1273,9 @@
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
             if (typeof ss === 'string') {
-                return platypus.game.settings.spriteSheets[ss].images;
+                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
             } else {
-                return ss.images;
+                return ss.images.greenSlice();
             }
         }
     });

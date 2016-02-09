@@ -26,7 +26,10 @@
 (function () {
     "use strict";
     
-    var matrices = {
+    var Vector = include('platypus.Vector'),
+        normal = Vector.setUp(0, 0, 1),
+        origin = Vector.setUp(1, 0, 0),
+        matrices = {
             'horizontal':              [[ -1,  0,  0],
                                         [  0,  1,  0],
                                         [  0,  0, -1]],
@@ -64,7 +67,7 @@
             return function (a, b, dest) {
                 var i   = 0,
                     j   = 0,
-                    arr = [];
+                    arr = Array.setUp();
 
                 for (i = 0; i < a.length; i++) {
                     for (j = 0; j < a[0].length; j++) {
@@ -74,9 +77,11 @@
 
                 for (i = 0; i < a.length; i++) {
                     for (j = 0; j < a[0].length; j++) {
-                        dest[i][j] = arr.splice(0, 1)[0];
+                        dest[i][j] = arr.greenSplice(0);
                     }
                 }
+                
+                arr.recycle();
             };
         }()),
         identitize = function (m) {
@@ -146,13 +151,13 @@
         },
         constructor: (function () {
             var setupOrientation = function (self, orientation) {
-                var normal = new platypus.Vector([0, 0, 1]),
-                    origin = new platypus.Vector([1, 0, 0]),
-                    vector = new platypus.Vector([1, 0, 0]),
+                var vector = Vector.setUp(1, 0, 0),
                     owner  = self.owner,
-                    matrix = [[1, 0, 0],
-                              [0, 1, 0],
-                              [0, 0, 1]];
+                    matrix = Array.setUp(
+                        Array.setUp(1, 0, 0),
+                        Array.setUp(0, 1, 0),
+                        Array.setUp(0, 0, 1)
+                    );
                 
                 Object.defineProperty(owner, 'orientationMatrix', {
                     get: function () {
@@ -193,11 +198,16 @@
                 // This is the tweening transform
                 this.matrixTween = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
                 
-                this.vectors  = [];
-                this.inverses = [];
-                this.tweens   = [];
+                this.relocationMessage = {
+                    position: null
+                }
                 
-                this.owner.triggerEvent('orient-vector', setupOrientation(this, this.orientation));
+                this.vectors  = Array.setUp();
+                this.inverses = Array.setUp();
+                this.tweens   = Array.setUp();
+                
+                this.orientationVector = setupOrientation(this, this.orientation);
+                this.owner.triggerEvent('orient-vector', this.orientationVector);
             };
         }()),
 
@@ -242,30 +252,60 @@
              * @param tick.delta {number} Time passed since the last logic step.
              */
             "handle-logic": function (tick) {
-                var i = 0,
+                var i = this.tweens.length,
                     delta = tick.delta,
                     state = this.owner.state,
-                    finishedTweening = [];
+                    finishedTweening = null,
+                    tween = null,
+                    msg = this.relocationMessage;
                 
-                if (this.tweens.length) {
+                if (i) {
+                    finishedTweening = Array.setUp();
                     state.reorienting = true;
                     identitize(this.matrixTween);
                     
-                    for (i = this.tweens.length - 1; i >= 0; i--) {
+                    while (i--) {
                         if (this.updateTween(this.tweens[i], delta)) { // finished tweening
-                            finishedTweening.push(this.tweens.splice(i, 1)[0]);
+                            finishedTweening.push(this.tweens.greenSplice(i));
                         }
                     }
-                    for (i = 0; i < this.vectors.length; i++) {
+                    
+                    i = this.vectors.length;
+                    while (i--) {
                         this.updateVector(this.vectors[i], this.inverses[i]);
                     }
-                    for (i = 0; i < finishedTweening.length; i++) {
-                        this.transform(finishedTweening[i].endMatrix);
-                        finishedTweening[i].onFinished(finishedTweening[i].endMatrix);
+                    
+                    i = finishedTweening.length;
+                    while (i--) {
+                        tween = finishedTweening[i];
+                        this.transform(tween.endMatrix);
+                        if (tween.anchor) {
+                            tween.offset.multiply(tween.endMatrix).addVector(tween.anchor);
+                            msg.position = tween.offset;
+                            this.owner.triggerEvent('relocate-entity', msg);
+                            tween.offset.recycle();
+                        }
+                        tween.onFinished(tween.endMatrix);
                     }
+                    
+                    finishedTweening.recycle();
                 } else if (state.reorienting) {
                     identitize(this.matrixTween);
                     state.reorienting = false;
+                }
+            },
+            
+            /**
+             * On receiving this message, any currently running orientation tweens are immediately completed to give the entity a new stable position.
+             * 
+             * @method 'complete-tweens'
+             * @since 0.7.1
+             */
+            "complete-tweens": function () {
+                var i = 0;
+                
+                for (i = 0; i < this.tweens.length; i++) {
+                    this.tweens[i].time = this.tweens[i].endTime;
                 }
             },
             
@@ -277,8 +317,16 @@
             "drop-tweens": function () {
                 var i = 0;
                 
+                i = this.tweens.length;
+                while (i--) {
+                    if (this.tweens[i].offset) {
+                        this.tweens[i].offset.recycle();
+                    }
+                }
                 this.tweens.length = 0;
-                for (i = 0; i < this.vectors.length; i++) {
+                
+                i = this.vectors.length;
+                while (i--) {
                     this.updateVector(this.vectors[i], this.inverses[i]);
                 }
             },
@@ -301,7 +349,7 @@
                         vector.multiply(this.matrix);
                     }
                     this.vectors.push(vector);
-                    this.inverses.push(new platypus.Vector());
+                    this.inverses.push(Vector.setUp());
                 }
             },
             
@@ -315,8 +363,8 @@
                 var i = this.vectors.indexOf(vector);
                 
                 if (i >= 0) {
-                    this.vectors.splice(i, 1);
-                    this.inverses.splice(i, 1);
+                    this.vectors.greenSplice(i);
+                    this.inverses.greenSplice(i).recycle();
                 }
             },
             
@@ -328,22 +376,31 @@
              * @param options.matrix {Array} A transformation matrix: only required if `transform` is not provided
              * @param options.transform {String} A transformation type: only required if `matrix` is not provided.
              * @param options.time {number} The time over which the tween occurs. 0 makes it instantaneous.
+             * @param [options.anchor] {platypus.Vector} The anchor of the orientation change. If not provided, the owner's position is used.
+             * @param [options.offset] {platypus.Vector} If an anchor is supplied, this vector describes the entity's distance from the anchor. It defaults to the entity's current position relative to the anchor position.
              * @param [options.angle] {number} Angle in radians to transform. This is only valid for rotations and is derived from the transform if not provided.
              * @param [options.tween] {Function} A function describing the transition. Performs a linear transition by default. See CreateJS Ease for other options.
-             * @param [options.onTick] {Function} A function that should be processed on each tick as the tween occurs.
+             * @param [options.beforeTick] {Function} A function that should be processed before each tick as the tween occurs. This function should return `true`, otherwise the tween doesn't take a step.
+             * @param [options.afterTick] {Function} A function that should be processed after each tick as the tween occurs.
+             * @param [options.onTick] {Function} Deprecated in favor of `beforeTick` and `afterTick`.
              * @param [options.onFinished] {Function} A function that should be run once the transition is complete.
              */
             "tween-transform": (function () {
                 var doNothing = function () {
                         // Doing nothing!
                     },
+                    returnTrue = function () {
+                        return true;
+                    },
                     linearEase = function (t) {
                         return t;
                     };
 
                 return function (props) {
-                    var angle  = props.angle || 0,
-                        matrix = props.matrix;
+                    var arr = null,
+                        angle  = props.angle || 0,
+                        matrix = props.matrix,
+                        offset = null;
                     
                     if (!matrix) {
                         matrix = matrices[props.transform];
@@ -361,20 +418,34 @@
                             angle = -Math.PI / 2;
                             break;
                         default:
-                            angle = (props.transform.split('-')[1] / 180) * Math.PI;
+                            arr = props.transform.greenSplit('-');
+                            angle = (arr[1] / 180) * Math.PI;
+                            arr.recycle();
                             break;
+                        }
+                    }
+                    
+                    if (props.anchor) {
+                        offset = props.offset
+                        if (offset) {
+                            offset = offset.copy();
+                        } else {
+                            offset = this.owner.position.copy().subtractVector(props.anchor, 2);
                         }
                     }
                     
                     this.tweens.push({
                         transform: props.transform,
+                        anchor: props.anchor,
+                        offset: offset,
                         endTime: props.time || 0,
                         time: 0,
                         endMatrix: matrix,
                         angle: angle,
                         tween: props.tween || linearEase,
                         onFinished: props.onFinished || doNothing,
-                        onTick: props.onTick || doNothing
+                        beforeTick: props.beforeTick || returnTrue,
+                        afterTick: props.onTick || props.afterTick || doNothing
                     });
                 };
             }()),
@@ -471,7 +542,7 @@
                         return sum;
                     },
                     invert = function (a) {
-                        var arr = [[], [], []],
+                        var arr = Array.setUp(Array.setUp(), Array.setUp(), Array.setUp()),
                             inv = 1 / det3(a);
 
                         arr[0].push(det2(a[1][1], a[1][2], a[2][1], a[2][2]) * inv);
@@ -488,9 +559,14 @@
                     };
                 
                 return function (m) {
+                    var inversion = invert(this.matrix);
+                    
                     // We invert the matrix so we can re-orient all vectors for the incoming replacement matrix.
-                    this.multiply(invert(this.matrix));
+                    this.multiply(inversion);
                     this.multiply(m);
+                    
+                    // clean-up
+                    inversion.recycle(2);
                 };
             }()),
             
@@ -508,9 +584,13 @@
                         z = 1,
                         angle = 0,
                         m = tween.endMatrix,
-                        matrix = null;
+                        matrix = null,
+                        initialOffset = null,
+                        finalOffset = null;
                     
-                    tween.time += delta;
+                    if (tween.beforeTick(tween.time)) {
+                        tween.time += delta;
+                    }
                     
                     if (tween.time >= tween.endTime) {
                         return true;
@@ -531,11 +611,29 @@
                         z = getMid(z, m[2][2], t);
                     }
                     
-                    matrix = [[a, c, 0], [b, d, 0], [0, 0, z]];
+                    matrix = Array.setUp(
+                        Array.setUp(a, c, 0),
+                        Array.setUp(b, d, 0),
+                        Array.setUp(0, 0, z)
+                    );
 
                     multiply(matrix, this.matrixTween, this.matrixTween);
+                    
+                    if (tween.anchor) {
+                        initialOffset = Vector.setUp(tween.offset).multiply(1 - t);
+                        finalOffset = Vector.setUp(tween.offset).multiply(t);
+                        
+                        this.owner.triggerEvent('relocate-entity', {
+                            position: initialOffset.add(finalOffset).multiply(matrix).addVector(tween.anchor)
+                        });
+                        
+                        initialOffset.recycle();
+                        finalOffset.recycle();
+                    }
 
-                    tween.onTick(t, matrix);
+                    tween.afterTick(t, matrix);
+                    
+                    matrix.recycle(2);
                 };
             }()),
             
@@ -546,7 +644,11 @@
             },
             
             destroy: function () {
-                
+                this.vectors.recycle();
+                this.inverses.recycle();
+                this.tweens.recycle();
+                this.orientationVector.recycle();
+                this.orientationMatrix.recycle(2);
             }
         },
         

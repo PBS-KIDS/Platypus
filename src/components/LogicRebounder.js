@@ -38,6 +38,8 @@ Requires: ["../Vector.js"]
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
         id: 'LogicRebounder',
@@ -48,20 +50,25 @@ Requires: ["../Vector.js"]
             this.owner.mass = this.owner.mass || definition.mass || 1;
             this.elasticity = definition.elasticity || 0.8;
             
-            this.v = new platypus.Vector(0, 0, 0);
-            this.incidentVector = new platypus.Vector(0, 0, 0);
+            this.v = Vector.setUp(0, 0, 0);
+            this.incidentVector = Vector.setUp(0, 0, 0);
             
             this.staticCollisionOccurred = false;
             this.nonStaticCollisionOccurred = false;
             
-            this.hitThisTick = [];
-            this.otherV = new platypus.Vector(0, 0, 0);
-            this.otherVelocityData = [];
+            this.hitThisTick = Array.setUp();
+            this.otherV = Vector.setUp(0, 0, 0);
+            this.otherVelocityData = Array.setUp();
         },
 
         events: {// These are messages that this component listens for
             "handle-logic": function (resp) {
-                this.hitThisTick = [];
+                var i = 0;
+                
+                this.hitThisTick.length = 0;
+                for (i = 0; i < this.otherVelocityData.length; i++) {
+                    this.otherVelocityData[i].velocity.recycle();
+                }
                 this.otherVelocityData.length = 0;
             },
             "hit-static": function (collData) {
@@ -131,16 +138,20 @@ Requires: ["../Vector.js"]
                 
             },
             "share-velocity": function (other) {
-                this.otherVelocityData.push({entity: other, velocity: new platypus.Vector(other.velocity)});
+                this.otherVelocityData.push({
+                    entity: other,
+                    velocity: Vector.setUp(other.velocity)
+                });
             }
         },
         
         methods: {// These are methods that are called by this component.
             destroy: function () {
-                this.v = null;
-                this.otherV = null;
-                this.incidentVector = null;
-                this.hitThisTick = null;
+                this.v.recycle();
+                this.incidentVector.recycle();
+                this.otherV.recycle();
+                this.hitThisTick.recycle();
+                this.otherVelocityData.recycle();
             }
         },
         

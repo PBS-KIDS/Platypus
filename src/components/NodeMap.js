@@ -10,8 +10,8 @@
 (function () {
     "use strict";
     
-    // This is a basic node object, but can be replaced by entities having a `Node` component if more functionality is needed.
-    var Node = function (definition, map) {
+    var Vector = include('platypus.Vector'),
+        Node = function (definition, map) { // This is a basic node object, but can be replaced by entities having a `Node` component if more functionality is needed.
             if (definition.id) {
                 if (typeof definition.id === 'string') {
                     this.id = definition.id;
@@ -26,7 +26,7 @@
 
             this.isNode = true;
             this.map = map;
-            this.contains = [];
+            this.contains = Array.setUp();
             this.type = definition.type || '';
             this.x = definition.x || 0;
             this.y = definition.y || 0;
@@ -79,11 +79,18 @@
         
         for (i = 0; i < this.contains.length; i++) {
             if (this.contains[i] === entity) {
-                return this.contains.splice(i, 1)[0];
+                return this.contains.greenSplice(i);
             }
         }
         return false;
     };
+    
+    proto.recycle = function () {
+        this.contains.recycle();
+        this.recycle();
+    };
+    
+    platypus.setUpRecycle(Node, 'Node');
     
     return platypus.createComponentClass({
         id: 'NodeMap',
@@ -127,12 +134,12 @@
             var i   = 0,
                 map = this.map;
             
-            this.map   = []; // Original map is node definitions, so we replace it with actual nodes.
+            this.map   = Array.setUp(); // Original map is node definitions, so we replace it with actual nodes.
             this.nodes = {};
-            this.residentsAwaitingNode = [];
+            this.residentsAwaitingNode = Array.setUp();
             
             for (i = 0; i < map.length; i++) {
-                this.addNode(new Node(map[i], this));
+                this.addNode(Node.setUp(map[i], this));
             }
         },
 
@@ -158,7 +165,7 @@
                     node = nodeDefinition;
                     nodeDefinition.map = this;
                 } else {
-                    node = new Node(nodeDefinition, this);
+                    node = Node.setUp(nodeDefinition, this);
                 }
                 
                 this.addNode(node);
@@ -166,7 +173,7 @@
                 for (i = this.residentsAwaitingNode.length - 1; i >= 0; i--) {
                     entity = this.residentsAwaitingNode[i];
                     if (node.id === entity.nodeId) {
-                        this.residentsAwaitingNode.splice(i, 1);
+                        this.residentsAwaitingNode.greenSplice(i);
                         entity.node = this.getNode(entity.nodeId);
                         entity.triggerEvent('on-node', entity.node);
                     }
@@ -197,6 +204,20 @@
             addNode: function (node) {
                 this.map.push(node);
                 this.nodes[node.id] = node;
+            },
+            
+            destroy: function () {
+                var i = 0;
+                
+                // Destroy simple node objects.
+                for (i = 0; i < this.map.length; i++) {
+                    if (!(this.map[i] instanceof platypus.Entity)) {
+                        this.map[i].recycle();
+                    }
+                }
+                
+                this.map.recycle();
+                this.residentsAwaitingNode.recycle();
             }
         },
         
@@ -237,38 +258,36 @@
              * @param [including] {Array} A list of nodes to include in the search. If not set, the entire map is searched.
              * @param [excluding] {Array} A list of nodes to exclude from the search.
              */
-            getClosestNode: (function () {
-                var v1 = new platypus.Vector(0, 0, 0),
-                    v2 = new platypus.Vector(0, 0, 0);
-
-                return function (point, including, excluding) {
-                    var i = 0,
-                        j = 0,
-                        p1 = v1.set(point),
-                        p2 = v2,
-                        m = 0,
-                        list = including || this.map,
-                        closest = null,
-                        d = Infinity;
-                    
-                    for (i = 0; i < list.length; i++) {
-                        m = p2.set(p1).subtractVector(list[i].position).magnitude();
-                        if (m < d) {
-                            if (excluding) {
-                                j = excluding.indexOf(list[i]);
-                                if (j >= 0) {
-                                    break;
-                                }
+            getClosestNode: function (point, including, excluding) {
+                var i = 0,
+                    j = 0,
+                    p1 = Vector.setUp(point),
+                    p2 = Vector.setUp(),
+                    m = 0,
+                    list = including || this.map,
+                    closest = null,
+                    d = Infinity;
+                
+                for (i = 0; i < list.length; i++) {
+                    m = p2.set(p1).subtractVector(list[i].position).magnitude();
+                    if (m < d) {
+                        if (excluding) {
+                            j = excluding.indexOf(list[i]);
+                            if (j >= 0) {
+                                break;
                             }
-                            
-                            d = m;
-                            closest = list[i];
                         }
+                        
+                        d = m;
+                        closest = list[i];
                     }
-                    
-                    return closest;
-                };
-            }())
+                }
+                
+                p1.recycle();
+                p2.recycle();
+                
+                return closest;
+            }
         }
     });
 }());

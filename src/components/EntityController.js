@@ -59,8 +59,8 @@
 (function () {
     "use strict";
 
-    var ActionState = include('platypus.ActionState'),
-        tempArr = [],
+    var Data = include('platypus.Data'),
+        ActionState = include('platypus.ActionState'),
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
@@ -90,21 +90,23 @@
         ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
         createFilter = function (states) {
-            var arr = states.split(','),
-                i = 0,
-                filter = {},
+            var arr = states.greenSplit(','),
+                i = arr.length,
+                filter = Data.setUp(),
                 str = '';
             
-            for (i = 0; i < arr.length; i++) {
+            while (i--) {
                 str = arr[i];
                 if (str) {
-                    if (str.substring(0,1) === '!') {
-                        filter[str.substring(1)] = false;
+                    if (str.substr(0, 1) === '!') {
+                        filter[str.substr(1)] = false;
                     } else {
                         filter[str] = true;
                     }
                 }
             }
+            
+            arr.recycle();
             
             return filter;
         },
@@ -166,16 +168,17 @@
         },
         
         constructor: function (definition) {
-            var key = '';
+            var key = '',
+                filter = null;
             
-            this.actions  = {};
-            
-            this.maps = {};
+            this.actions = Data.setUp();
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
                     if (this.stateMaps.hasOwnProperty(key)) {
-                        this.addMap(this.stateMaps[key], createFilter(key));
+                        filter = createFilter(key);
+                        this.addMap(this.stateMaps[key], filter);
+                        filter.recycle();
                     }
                 }
             }
@@ -183,28 +186,25 @@
             this.addMap(this.controlMap);
 
             if (definition.joystick) {
-                this.joystick = {};
-                this.joystick.directions  = definition.joystick.directions  || 4; // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
-                this.joystick.handleEdge  = definition.joystick.handleEdge  || false;
-                this.joystick.innerRadius = definition.joystick.innerRadius || 0;
-                this.joystick.outerRadius = definition.joystick.outerRadius || Infinity;
+                this.joystick = Data.setUp(
+                    "directions",  definition.joystick.directions  || 4, // 4 = n,e,s,w; 8 = n,ne,e,se,s,sw,w,nw; 16 = n,nne,ene,e...
+                    "handleEdge",  definition.joystick.handleEdge  || false,
+                    "innerRadius", definition.joystick.innerRadius || 0,
+                    "outerRadius", definition.joystick.outerRadius || Infinity
+                );
             }
         },
         
         events: {
-            'handle-controller': function () {
+            "handle-controller": function () {
                 var i = 0,
                     action = '',
-                    resolution = tempArr;
+                    resolution = Array.setUp();
                 
-                resolution.length = 0;
-                
-                if (this.actions) {
-                    for (action in this.actions) {
-                        if (this.actions.hasOwnProperty(action)) {
-                            if (this.actions[action].update(this.owner.state)) {
-                                resolution.push(this.actions[action]);
-                            }
+                for (action in this.actions) {
+                    if (this.actions.hasOwnProperty(action)) {
+                        if (this.actions[action].update(this.owner.state)) {
+                            resolution.push(this.actions[action]);
                         }
                     }
                 }
@@ -212,9 +212,11 @@
                 for (i = 0; i < resolution.length; i++) {
                     resolution[i].resolve();
                 }
+                
+                resolution.recycle();
             },
             
-            'mousedown': function (value) {
+            "mousedown": function (value) {
                 this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
                 if (this.joystick) {
                     this.owner.trigger('joystick:down', value.event);
@@ -222,7 +224,7 @@
                 }
             },
             
-            'pressup': function (value) {
+            "pressup": function (value) {
                 this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
                 if (this.joystick) {
                     this.owner.trigger('joystick:up', value.event);
@@ -230,17 +232,17 @@
                 }
             },
             
-            'pressmove': function (value) {
+            "pressmove": function (value) {
                 if (this.joystick) {
                     this.handleJoy(value);
                 }
             },
             
-            'pause-controls': function () {
+            "pause-controls": function () {
                 this.paused = true;
             },
             
-            'unpause-controls': function () {
+            "unpause-controls": function () {
                 this.paused = false;
             }
         },
@@ -288,9 +290,9 @@
                     // Otherwise create a new state storage object
                     if (!actionState) {
                         if (controllerState) {
-                            actionState = actions[id] = new ActionState(controller, states, filteredTrigger.bind(this, controllerState));
+                            actionState = actions[id] = ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState));
                         } else {
-                            actionState = actions[id] = new ActionState(controller, states, trigger.bind(this));
+                            actionState = actions[id] = ActionState.setUp(controller, states, trigger.bind(this));
                         }
                     }
                     
@@ -333,6 +335,20 @@
                             }
                         }
                     }
+                }
+            },
+            
+            destroy: function () {
+                var action = '';
+                
+                for (action in this.actions) {
+                    if (this.actions.hasOwnProperty(action)) {
+                        this.actions[action].recycle();
+                    }
+                }
+                this.actions.recycle();
+                if (this.joystick) {
+                    this.joystick.recycle();
                 }
             }
         }

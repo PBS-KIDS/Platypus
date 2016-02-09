@@ -83,7 +83,7 @@ This component is attached to entities that will appear in the game world. It se
             this.regX = definition.regX || 0;
             this.regY = definition.regY || 0;
             this.parentContainer = null;
-            this.shapes = [];
+            this.shapes = Array.setUp();
             
             this.isOutdated = true;
         },
@@ -212,7 +212,7 @@ This component is attached to entities that will appear in the game world. It se
                 for (i = 0; i < this.shapes.length; i++) {
                     this.parentContainer.removeChild(this.shapes[i]);
                 }
-                this.shapes.length = 0;
+                this.shapes.recycle();
                 this.parentContainer = undefined;
             }
         }

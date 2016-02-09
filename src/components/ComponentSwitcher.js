@@ -54,7 +54,7 @@
         constructor: function (definition) {
             var event = '';
             
-            this.switches = []; // The list of switches to make.
+            this.switches = Array.setUp(); // The list of switches to make.
             
             if (this.componentMap) {
                 for (event in this.componentMap) {
@@ -140,6 +140,10 @@
                 * @event 'add-remove-component-complete'
                 */
                 owner.triggerEvent('add-remove-component-complete');
+            },
+            
+            destroy: function () {
+                this.switches.recycle();
             }
         },
         
@@ -148,14 +152,17 @@
                 event = '',
                 i = 0,
                 component = null,
-                assets = [];
+                assets = Array.setUp(),
+                arr = null;
             
             for (event in map) {
                 if (map.hasOwnProperty(event)) {
                     for (i = 0; i < map[event].add.length; i++) {
                         component = platypus.components[map[event].add[i].type];
                         if (component) {
-                            assets.union(component.getAssetList(map[event].add[i], props, defaultProps));
+                            arr = component.getAssetList(map[event].add[i], props, defaultProps);
+                            assets.union(arr);
+                            arr.recycle();
                         }
                     }
                 }

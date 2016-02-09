@@ -42,7 +42,7 @@ This component serves as a switch in the game world, typically tied to collision
         },
 
         events: {// These are messages that this component listens for
-            'handle-logic': function () {
+            "handle-logic": function () {
                 if (this.sticky) {
                     if (this.pressed && !this.wasPressed) {
                         this.state.pressed = true;

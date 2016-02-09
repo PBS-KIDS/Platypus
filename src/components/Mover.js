@@ -10,7 +10,8 @@
 (function () {
     "use strict";
     
-    var tempVector = new platypus.Vector(),
+    var Vector = include('platypus.Vector'),
+    tempVector = Vector.setUp(),
     updateMax   = function (delta, interim, goal, time) {
         if (delta && (interim !== goal)) {
             if (interim < goal) {
@@ -171,9 +172,9 @@
             
             // Copy movers so we're not re-using mover definitions
             this.moversCopy = this.movers;
-            this.movers = [];
+            this.movers = Array.setUp();
 
-            this.ground = new platypus.Vector(this.ground);
+            this.ground = Vector.setUp(this.ground);
             
             Object.defineProperty(this.owner, "maxMagnitude", {
                 get: function () {
@@ -263,7 +264,7 @@
                 if (component.type === 'Motion') {
                     i = this.movers.indexOf(component);
                     if (i >= 0) {
-                        this.movers.splice(i, 1);
+                        this.movers.greenSplice(i);
                     }
                 }
             },
@@ -335,30 +336,31 @@
              * @since 0.6.8
              */
             "handle-movement": function (tick) {
-                var i = 0,
-                    delta    = tick.delta,
+                var delta    = tick.delta,
                     m        = null,
-                    vect     = tempVector,
+                    vect     = null,
                     velocity = this.velocity,
-                    position = this.position;
+                    position = this.position,
+                    movers   = this.movers,
+                    i        = movers.length;
                 
                 if (this.owner.state.paused || this.paused) {
                     return;
                 }
                 
                 velocity.set(0, 0, 0);
-                for (i = 0; i < this.movers.length; i++) {
-                    m = this.movers[i].update(delta);
+                while (i--) {
+                    m = movers[i].update(delta);
                     if (m) {
                         if (this.grounded) { // put this in here to match earlier behavior
-                            if (this.movers[i].friction !== -1) {
-                                m.multiply(1 - this.movers[i].friction)
+                            if (movers[i].friction !== -1) {
+                                m.multiply(1 - movers[i].friction)
                             } else {
                                 m.multiply(1 - this.friction);
                             }
                         } else {
-                            if (this.movers[i].drag !== -1) {
-                                m.multiply(1 - this.movers[i].drag);
+                            if (movers[i].drag !== -1) {
+                                m.multiply(1 - movers[i].drag);
                             } else {
                                 m.multiply(1 - this.drag);
                             }
@@ -374,8 +376,9 @@
                     velocity.multiply(this.drag);
                 }*/
                 this.clamp(velocity, delta);
-                vect.set(velocity).multiply(delta);
+                vect = Vector.setUp(velocity).multiply(delta);
                 position.add(vect);
+                vect.recycle();
                 
                 if (this.grounded !== this.owner.state.grounded) {
                     this.owner.state.grounded = this.grounded;
@@ -460,6 +463,9 @@
                 for (i = this.movers.length - 1; i >= 0; i--) {
                     this.removeMover(this.movers[i]);
                 }
+                this.movers.recycle();
+                
+                this.ground.recycle();
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;

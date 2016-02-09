@@ -28,6 +28,12 @@
                 },
                 enumerable: true
             });
+        },
+        runBoth = function (f1, f2) {
+            return function () {
+                f1.apply(this, arguments);
+                f2.apply(this, arguments);
+            };
         };
         
     platypus.components = {};
@@ -119,7 +125,11 @@
         if (Prototype) { //absorb template prototype if it exists.
             proto = extend(component, Prototype);
             for (key in Component.prototype) {
-                proto[key] = Component.prototype[key];
+                if (proto[key]) {
+                    proto[key] = runBoth(proto[key], Component.prototype[key]);
+                } else {
+                    proto[key] = Component.prototype[key];
+                }
             }
         } else {
             proto = extend(component, Component);

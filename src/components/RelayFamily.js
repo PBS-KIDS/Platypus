@@ -57,7 +57,7 @@
                 }
             }
     
-            this.owner.familyLinks = [this.owner];
+            this.owner.familyLinks = Array.setUp(this.owner);
         },
         
         events: {
@@ -72,13 +72,14 @@
             "link-family": function (links) {
                 var i = 0,
                     oldList = this.owner.familyLinks,
-                    newList = links.concat(oldList);
+                    newList = Array.setUp().union(links).union(oldList);
 
                 for (i = 0; i < newList.length; i++) {
                     newList[i].familyLinks = newList;
                 }
                 trigger(links,   'family-members-added', oldList);
                 trigger(oldList, 'family-members-added', links);
+                oldList.recycle();
             },
             
             /**
@@ -100,7 +101,7 @@
                 var i = this.owner.familyLinks.indexOf(this.owner);
                 
                 if (i >= 0) {
-                    this.owner.familyLinks.splice(i, 1);
+                    this.owner.familyLinks.greenSplice(i);
                 }
                 trigger(this.owner.familyLinks, 'family-member-removed', this.owner);
                 this.events = null;

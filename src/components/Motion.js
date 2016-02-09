@@ -9,7 +9,7 @@
 (function () {
     "use strict";
     
-    var tempVector = new platypus.Vector(),
+    var Vector = include('platypus.Vector'),
         depWarning = function (ownerType, oldProperty, oldValue, newProperty) {
             if (platypus.game.settings.debug) {
                 console.warn('"' + ownerType + '" Motion: The "' + oldProperty + '" property has been deprecated. Use "aliases": {"' + oldValue + '": "' + newProperty + '"} instead.');
@@ -358,8 +358,8 @@
             if (!this.acceleration) {
                 this.activeAcceleration = false;
             }
-            this.acceleration = new platypus.Vector(this.acceleration);
-            this.velocity     = new platypus.Vector(this.velocity);
+            this.acceleration = Vector.setUp(this.acceleration);
+            this.velocity     = Vector.setUp(this.velocity);
 
             this.triggered = false;
             this.ready = true;
@@ -405,7 +405,7 @@
 
             if (this.instant) {
                 this.enact = false;
-                this.instant = new platypus.Vector(this.velocity);
+                this.instant = Vector.setUp(this.velocity);
                 this.velocity.set(0, 0, 0);
             }
 
@@ -561,7 +561,11 @@
 
         methods: {
             move: function (delta) {
-                this.velocity.add(tempVector.set(this.acceleration).multiply(delta));
+                var v = Vector.setUp(this.acceleration).multiply(delta);
+                
+                this.velocity.add(v);
+                v.recycle();
+                
                 if (this.velocity.magnitude() > this.maxMagnitude) {
                     this.velocity.normalize().multiply(this.maxMagnitude);
                 }
@@ -579,6 +583,11 @@
                 if (this.orient) {
                     this.owner.triggerEvent('remove-vector', this.acceleration);
                     this.owner.triggerEvent('remove-vector', this.velocity);
+                }
+                this.acceleration.recycle();
+                this.velocity.recycle();
+                if (this.instant) {
+                    this.instant.recycle();
                 }
             }
         },

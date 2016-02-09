@@ -52,7 +52,7 @@
         },
         playSound = function (soundDefinition) {
             var sound      = null,
-                eventList  = [],
+                eventList  = Array.setUp(),
                 isArray = false;
                 
             if (typeof soundDefinition === 'string') {
@@ -63,7 +63,7 @@
             } else {
                 sound = soundDefinition.sound;
                 if (soundDefinition.events) {
-                    eventList = soundDefinition.events.slice();
+                    eventList.union(soundDefinition.events);
                     eventList.sort(sortByTime);
                 }
                 if (Array.isArray(sound)) {
@@ -76,8 +76,9 @@
             
             return function (value) {
                 var soundList   = null;
-                    
-                this.eventList = eventList.slice();
+                
+                this.eventList.recycle();
+                this.eventList = eventList.greenSlice();
                 if (value && value.events) {
                     addEvents(value.events, this.eventList);
                 }
@@ -91,9 +92,15 @@
                 this.player.play(soundList, function () {
                     this.playingAudio = false;
                     this.onComplete(true);
+                    if (isArray) {
+                        soundList.recycle();
+                    }
                 }.bind(this), function () {
                     this.playingAudio = false;
                     this.onComplete(false);
+                    if (isArray) {
+                        soundList.recycle();
+                    }
                 }.bind(this));
             };
         };
@@ -133,7 +140,7 @@
         constructor: function (definition) {
             var key = '';
             
-            this.eventList = [];
+            this.eventList = Array.setUp();
     
             this.playingAudio = false;
             this.player = Application.instance.voPlayer;
@@ -190,7 +197,7 @@
 
                     while (events.length && (finished || (events[0].time <= currentTime))) {
                         this.owner.trigger(events[0].event, events[0].message);
-                        events.splice(0, 1);
+                        events.greenSplice(0);
                     }
                 }
             },
@@ -200,7 +207,7 @@
             */
             setupEventList: function (sounds) {
                 var i = 0,
-                    soundList = [];
+                    soundList = Array.setUp();
                 
                 // Create alias-only sound list.
                 for (i = 0; i < sounds.length; i++) {
@@ -218,20 +225,23 @@
 
         
             onComplete: function (successful) {
-                this.checkTimeEvents(true);
-                
-                /**
-                 * When an audio sequence is finished playing, this event is triggered.
-                 * 
-                 * @event sequence-complete
-                 */
-                this.owner.triggerEvent('sequence-complete');
+                if (!this.owner.destroyed) {
+                    this.checkTimeEvents(true);
+                    
+                    /**
+                     * When an audio sequence is finished playing, this event is triggered.
+                     * 
+                     * @event sequence-complete
+                     */
+                    this.owner.triggerEvent('sequence-complete');
+                }
             },
             
             destroy: function () {
                 if (this.playingAudio) {
                     this.player.stop();  
                 }
+                this.eventList.recycle();
             }
         }
     });

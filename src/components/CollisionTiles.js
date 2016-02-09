@@ -11,9 +11,9 @@
 (function () {
     "use strict";
     
-    var storedTiles = [],
+    var storedTiles = Array.setUp(),
         storedTileIndex = 0,
-        serveTiles      = [],
+        serveTiles      = Array.setUp(),
         flip = function (num, arr) {
             if (num < -1) {
                 num = Math.abs(num) - 2;
@@ -25,10 +25,10 @@
         copySection = function (array, originX, originY, width, height) {
             var x   = 0,
                 y   = 0,
-                arr = [];
+                arr = Array.setUp();
 
             for (y = 0; y < height; y++) {
-                arr[y] = [];
+                arr[y] = Array.setUp();
                 for (x = 0; x < width; x++) {
                     arr[y][x] = array[originX + x][originY + y];
                 }
@@ -38,10 +38,10 @@
         cutSection = function (array, originX, originY, width, height) {
             var x   = 0,
                 y   = 0,
-                arr = [];
+                arr = Array.setUp();
 
             for (y = 0; y < height; y++) {
-                arr[y] = [];
+                arr[y] = Array.setUp();
                 for (x = 0; x < width; x++) {
                     arr[y][x] = array[originX + x][originY + y];
                     array[originX + x][originY + y] = -1;
@@ -65,91 +65,105 @@
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-5, -4, -3, -2];
+                    flips = Array.setUp(-5, -4, -3, -2);
 
-                for (y = 0; y < height; y++) {
-                    for (x = 0; x < width; x++) {
+                for (x = 0; x < width; x++) {
+                    for (y = 0; y < height; y++) {
                         array[originX + x][originY + y] = flip(arr[x][y], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "diagonal-inverse": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-3, -2, -5, -4];
+                    flips = Array.setUp(-3, -2, -5, -4);
 
-                for (y = 0; y < height; y++) {
-                    for (x = 0; x < width; x++) {
+                for (x = 0; x < width; x++) {
+                    for (y = 0; y < height; y++) {
                         array[originX + width - x - 1][originY + height - y - 1] = flip(arr[x][y], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "horizontal": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-2, -5, -4, -3];
+                    flips = Array.setUp(-2, -5, -4, -3);
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
                         array[originX + width - x - 1][originY + y] = flip(arr[y][x], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "vertical": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-4, -3, -2, -5];
+                    flips = Array.setUp(-4, -3, -2, -5);
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
                         array[originX + x][originY + height - y - 1] = flip(arr[y][x], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "rotate-90": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-3, -4, -5, -2];
+                    flips = Array.setUp(-3, -4, -5, -2);
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
                         array[originX + height - y - 1][originY + x] = flip(arr[y][x], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "rotate-180": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-4, -5, -2, -3];
+                    flips = Array.setUp(-4, -5, -2, -3);
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
                         array[originX + width - x - 1][originY + height - y - 1] = flip(arr[y][x], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "rotate-270": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
                     x     = 0,
                     y     = 0,
-                    flips = [-5, -2, -3, -4];
+                    flips = Array.setUp(-5, -2, -3, -4);
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
                         array[originX + y][originY + width - x - 1] = flip(arr[y][x], flips);
                     }
                 }
+                arr.recycle(2);
+                flips.recycle();
                 return array;
             },
             "translate": function (array, originX, originY, width, height, dx, dy) {
@@ -162,6 +176,7 @@
                         array[originX + x + dx][originY + y + dy] = arr[y][x];
                     }
                 }
+                arr.recycle(2);
                 return array;
             }
         };

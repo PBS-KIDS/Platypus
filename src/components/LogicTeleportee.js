@@ -31,20 +31,25 @@ Requires: ["../Vector.js"]
 /*global platypus */
 (function () {
     "use strict";
+    
+    var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
         id: 'LogicTeleportee',
         
         constructor: function (definition) {
-            this.teleportDestination = new platypus.Vector();
+            this.teleportDestination = Vector.setUp();
             this.teleportNow = false;
             this.DestinationSet = false;
+            this.message = {
+                position: this.teleportDestination
+            };
         },
 
         events: {// These are messages that this component listens for
             "handle-logic": function () {
                 if (this.teleportNow) {
-                    this.owner.trigger('relocate-entity', {position: this.teleportDestination});
+                    this.owner.trigger('relocate-entity', this.message);
                     this.teleportNow = false;
                     this.owner.trigger('teleport-complete');
                 }
@@ -66,6 +71,10 @@ Requires: ["../Vector.js"]
             setDestination: function (position) {
                 this.teleportDestination.set(position.x, position.y, this.owner.z);
                 this.destinationSet = true;
+            },
+            
+            destroy: function () {
+                this.teleportDestination.recycle();
             }
         }
     });

@@ -33,7 +33,10 @@
                         position.x = 0;
                         position.y = s;
                     }
-                    owner.stuckWith = new Vector(data.thatShape.x, data.thatShape.y);
+                    if (owner.stuckWith) {
+                        owner.stuckWith.recycle();
+                    }
+                    owner.stuckWith = Vector.setUp(data.thatShape.x, data.thatShape.y);
                 }
             }
         },
@@ -122,24 +125,30 @@
                 };
 
                 entity.getPreviousAABB = function (collisionType) {
-                    if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getPreviousAABB();
+                    var colFunc = entity.collisionFunctions[collisionType];
+                    
+                    if (colFunc) {
+                        return colFunc.getPreviousAABB();
                     } else {
                         return null;
                     }
                 };
 
                 entity.getShapes = function (collisionType) {
-                    if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getShapes();
+                    var colFunc = entity.collisionFunctions[collisionType];
+                    
+                    if (colFunc) {
+                        return colFunc.getShapes();
                     } else {
                         return null;
                     }
                 };
 
                 entity.getPrevShapes = function (collisionType) {
-                    if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getPrevShapes();
+                    var colFunc = entity.collisionFunctions[collisionType];
+                    
+                    if (colFunc) {
+                        return colFunc.getPrevShapes();
                     } else {
                         return null;
                     }
@@ -159,16 +168,23 @@
                     var v = null;
 
                     if (collisionData.xCount) {
-                        v = new Vector(0, 0, 0);
+                        v = Vector.setUp(0, 0, 0);
                         handleStuck(v, collisionData.getXEntry(0), entity);
                     }
 
                     if (collisionData.yCount) {
-                        v = v || new Vector(0, 0, 0);
+                        v = v || Vector.setUp(0, 0, 0);
                         handleStuck(v, collisionData.getYEntry(0), entity);
                     }
 
-                    entity.triggerEvent('relocate-entity', {position: vector, unstick: v});
+                    entity.triggerEvent('relocate-entity', {
+                        position: vector,
+                        unstick: v
+                    });
+                    
+                    if (v) {
+                        v.recycle();
+                    }
                 };
 
                 entity.movePreviousX = function (x) {
@@ -439,11 +455,11 @@
                 }
             }
             
-            this.owner.collisionTypes = this.owner.collisionTypes || [];
+            this.owner.collisionTypes = this.owner.collisionTypes || Array.setUp();
             this.owner.collisionTypes.push(this.collisionType);
             
-            this.shapes = [];
-            this.prevShapes = [];
+            this.shapes = Array.setUp();
+            this.prevShapes = Array.setUp();
             this.entities = undefined;
             for (x = 0; x < shapes.length; x++) {
                 this.shapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
@@ -455,12 +471,11 @@
             setupCollisionFunctions(this, this.owner);
             
             this.owner.solidCollisionMap = this.owner.solidCollisionMap || {};
-            this.owner.solidCollisionMap[this.collisionType] = [];
+            this.owner.solidCollisionMap[this.collisionType] = Array.setUp();
             if (this.solidCollisions) {
                 for (key in this.solidCollisions) {
                     if (this.solidCollisions.hasOwnProperty(key)) {
                         this.owner.solidCollisionMap[this.collisionType].push(key);
-                        this.owner.collides = true; //informs HandlerCollision that this entity should be processed in the list of solid colliders.
                         if (this.solidCollisions[key]) { // To make sure it's not an empty string.
                             this.addEventListener('hit-by-' + key, entityBroadcast(this.solidCollisions[key], 'solid', this.collisionType));
                         }
@@ -469,7 +484,7 @@
             }
     
             this.owner.softCollisionMap = this.owner.softCollisionMap || {};
-            this.owner.softCollisionMap[this.collisionType] = [];
+            this.owner.softCollisionMap[this.collisionType] = Array.setUp();
             if (this.softCollisions) {
                 for (key in this.softCollisions) {
                     if (this.softCollisions.hasOwnProperty(key)) {
@@ -518,19 +533,17 @@
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if (!type) {
-                    this.owner.parent.trigger('remove-collision-entity', this.owner);
-                    this.active = false;
-                } else if (type === this.collisionType) {
+                if (!type || (type === this.collisionType)) {
                     this.owner.parent.trigger('remove-collision-entity', this.owner);
                     index = this.owner.collisionTypes.indexOf(this.collisionType);
                     if (index >= 0) {
-                        this.owner.collisionTypes.splice(index, 1);
-                    }
-                    if (this.owner.collisionTypes.length) {
-                        this.owner.parent.trigger('add-collision-entity', this.owner);
+                        this.owner.collisionTypes.greenSplice(index);
                     }
                     this.active = false;
+                }
+
+                if (this.owner.collisionTypes.length) {
+                    this.owner.parent.trigger('add-collision-entity', this.owner);
                 }
             },
             
@@ -538,48 +551,61 @@
              * This message causes the entity's x,y coordinates to update.
              * 
              * @method 'relocate-entity'
-             * @param position.x {number} The new x coordinate.
-             * @param position.y {number} The new y coordinate.
+             * @param position {platypus.Vector} The new coordinates.
              * @param [position.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
              */
             "relocate-entity": function (resp) {
                 var unstick = resp.unstick,
                     um      = 0,
-                    i       = 0;
+                    i       = 0,
+                    x       = 0,
+                    y       = 0,
+                    aabb    = this.aabb,
+                    owner   = this.owner,
+                    shape   = null,
+                    shapes  = this.shapes;
                 
                 if (unstick) {
                     um = unstick.magnitude();
                 }
                 
-                this.move = null;
+                if (this.move) {
+                    this.move.recycle();
+                    this.move = null;
+                }
                 
                 if (resp.relative) {
-                    this.owner.position.set(this.owner.previousPosition).add(resp.position);
+                    owner.position.set(owner.previousPosition).add(resp.position);
                 } else {
-                    this.owner.position.set(resp.position);
+                    owner.position.set(resp.position);
                 }
 
                 if (this.stuck) {
                     if (um > 0) {
-                        this.owner.position.add(unstick);
+                        owner.position.add(unstick);
                     } else {
                         this.stuck = false;
                     }
                 }
                 
-                this.aabb.reset();
-                for (i = 0; i < this.shapes.length; i++) {
-                    this.shapes[i].update(this.owner.x, this.owner.y);
-                    this.aabb.include(this.shapes[i].getAABB());
+                x = owner.x;
+                y = owner.y;
+                
+                aabb.reset();
+                i = shapes.length;
+                while (i--) {
+                    shape = shapes[i];
+                    shape.update(x, y);
+                    aabb.include(shape.aABB);
                 }
 
-                this.owner.previousPosition.set(this.owner.position);
+                owner.previousPosition.set(owner.position);
                 
                 if (um > 0) { // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
                     if (!this.stuck) {
                         this.stuck = true;
                     }
-                    this.move = this.owner.stuckWith.copy().add(-this.owner.x, -this.owner.y).normalize();
+                    this.move = owner.stuckWith.copy().add(-x, -y).normalize();
                 }
             },
             
@@ -633,21 +659,26 @@
             
             prepareCollision: function (x, y) {
                 var i          = 0,
-                    tempShapes = this.prevShapes;
+                    shape      = null,
+                    prevShapes = this.shapes,
+                    shapes     = this.prevShapes,
+                    aabb       = this.aabb;
                 
                 this.owner.x = x;
                 this.owner.y = y;
                 
-                this.prevShapes = this.shapes;
-                this.shapes = tempShapes;
+                this.prevShapes = prevShapes;
+                this.shapes = shapes;
                 
-                this.prevAABB.set(this.aabb);
-                this.aabb.reset();
+                this.prevAABB.set(aabb);
+                aabb.reset();
                 
                 // update shapes
-                for (i = 0; i < this.shapes.length; i++) {
-                    this.shapes[i].update(this.owner.x, this.owner.y);
-                    this.aabb.include(this.shapes[i].getAABB());
+                i = shapes.length;
+                while (i--) {
+                    shape = shapes[i];
+                    shape.update(x, y);
+                    aabb.include(shape.aABB);
                 }
             },
             
@@ -665,29 +696,24 @@
                 
                 this.owner.parent.trigger('remove-collision-entity', this.owner);
 
-                this.owner.collides = false;
-
                 delete this.aabb;
                 delete this.prevAABB;
                 
                 if (i >= 0) {
-                    this.owner.collisionTypes.splice(i, 1);
+                    this.owner.collisionTypes.greenSplice(i);
                 }
                 if (this.owner.solidCollisionMap[this.collisionType]) {
-                    this.owner.solidCollisionMap[this.collisionType].length = 0;
+                    this.owner.solidCollisionMap[this.collisionType].recycle();
                     delete this.owner.solidCollisionMap[this.collisionType];
                 }
-                if (Object.keys(this.owner.solidCollisionMap).length > 0) {
-                    this.owner.collides = true;
-                }
                 if (this.owner.softCollisionMap[this.collisionType]) {
-                    this.owner.softCollisionMap[this.collisionType].length = 0;
+                    this.owner.softCollisionMap[this.collisionType].recycle();
                     delete this.owner.softCollisionMap[this.collisionType];
                 }
                 delete this.owner.collisionFunctions[this.collisionType];
                 
-                this.shapes.length = 0;
-                this.prevShapes.length = 0;
+                this.shapes.recycle();
+                this.prevShapes.recycle();
                 delete this.entities;
 
                 if (this.owner.collisionTypes.length) {

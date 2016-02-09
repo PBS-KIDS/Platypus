@@ -107,7 +107,8 @@ platypus.Game = (function () {
         },
         game = function (definition, applicationInstance, onFinishedLoading) {
             var load = function (settings) {
-                    var scene  = '',
+                    var id = '',
+                        scene  = '',
                         states = this.app.states || {};
                     
                     platypus.game = this; //Make this instance the only Game instance.
@@ -119,7 +120,8 @@ platypus.Game = (function () {
                     // Create Game Scenes.
                     for (scene in settings.scenes) {
                         if (settings.scenes.hasOwnProperty(scene)) {
-                            states[settings.scenes[scene].id] = new Scene(new Container(), settings.scenes[scene]);
+                            id = settings.scenes[scene].id = settings.scenes[scene].id || scene;
+                            states[id] = new Scene(new Container(), settings.scenes[scene]);
                         }
                     }
                     
@@ -143,7 +145,7 @@ platypus.Game = (function () {
                     window.getVisibleSprites = function (c, a) {
                         var i = 0;
                         
-                        a = a || [];
+                        a = a || Array.setUp();
                         c = c || this.stage;
                         
                         if (!c.texture && c.visible) {
@@ -184,7 +186,6 @@ platypus.Game = (function () {
     proto.tick = function (tickEvent) {
         if (this.currentScene) {
             this.currentScene.triggerOnChildren('tick', tickEvent);
-            //this.stage.update(tickEvent);
         }
     };
     
@@ -198,14 +199,27 @@ platypus.Game = (function () {
     * @param preloading=false {boolean} Whether the scene should appear immediately or just be loaded and not shown.
     **/
     proto.loadScene = (function () {
-        var load = function (sceneId, data) {
-            this.app.states[sceneId].data = data; //sets data to send to next scene.
-            this.app.manager.state = sceneId;
+        var load = function (scene, data) {
+            var id = '',
+                sceneInstance = null;
+            
+            if (typeof scene === 'string') {
+                this.app.states[scene].data = data; //sets data to send to next scene.
+                this.app.manager.state = scene;
+            } else {
+                id = scene.id = scene.id || "new-scene";
+                sceneInstance = new Scene(new Container(), scene);
+                sceneInstance.data = data;
+                this.app.manager.addState(id, sceneInstance);
+				this.stage.addChild(sceneInstance.panel);
+    			this.app.trigger('stateAdded', id, sceneInstance);
+                this.app.manager.state = id;
+            }
         };
         
-        return function (sceneId, data) {
+        return function (scene, data) {
             // Delay load so it doesn't end a scene mid-tick.
-            setTimeout(load.bind(this, sceneId, data), 1);
+            setTimeout(load.bind(this, scene, data), 1);
         }
     }());
     
@@ -235,7 +249,7 @@ platypus.Game = (function () {
         if (this.currentScene) {
             return this.currentScene.getEntitiesByType(type);
         } else {
-            return [];
+            return Array.setUp();
         }
     };
     

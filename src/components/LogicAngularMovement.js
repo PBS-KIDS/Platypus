@@ -58,7 +58,7 @@
 
         constructor: function (definition) {
             this.angle     = this.startAngle;
-            this.v         = [0, 0];
+            this.v         = Array.setUp(0, 0);
             this.moving    = false;
             this.piOverTwo = Math.PI / 2;
             this.owner.rotation = this.owner.rotation || this.visualOffset;
@@ -73,12 +73,17 @@
              * @param tick {Object} The tick data.
              */
             "handle-logic": function (tick) {
-                var delta        = tick.delta,
+                var PI  = Math.PI,
+                    sin = Math.sin,
+                    cos = Math.cos,
+                    min = Math.min,
+                    max = Math.max,
+                    delta        = tick.delta,
                     currentAngle = 0;
                 
                 if (this.moving) {
-                    this.v[0] += this.acceleration * Math.cos(this.angle) * delta;
-                    this.v[1] += this.acceleration * Math.sin(this.angle) * delta;
+                    this.v[0] += this.acceleration * cos(this.angle) * delta;
+                    this.v[1] += this.acceleration * sin(this.angle) * delta;
                     if (this.v[0] === 0) {
                         if (this.v[1] > 0) {
                             currentAngle = this.piOverTwo;
@@ -90,24 +95,24 @@
                     } else {
                         currentAngle = Math.atan(this.v[1] / this.v[0]);
                         if (this.v[0] < 0) {
-                            currentAngle = Math.PI + currentAngle;
+                            currentAngle = PI + currentAngle;
                         }
                     }
                     if (this.v[0] >= 0) {
-                        this.v[0] = Math.min(this.v[0], this.maxVelocity * Math.cos(currentAngle));
+                        this.v[0] = min(this.v[0], this.maxVelocity * cos(currentAngle));
                     } else {
-                        this.v[0] = Math.max(this.v[0], this.maxVelocity * Math.cos(currentAngle));
+                        this.v[0] = max(this.v[0], this.maxVelocity * cos(currentAngle));
                     }
                     if (this.v[1] >= 0) {
-                        this.v[1] = Math.min(this.v[1], this.maxVelocity * Math.sin(currentAngle));
+                        this.v[1] = min(this.v[1], this.maxVelocity * sin(currentAngle));
                     } else {
-                        this.v[1] = Math.max(this.v[1], this.maxVelocity * Math.sin(currentAngle));
+                        this.v[1] = max(this.v[1], this.maxVelocity * sin(currentAngle));
                     }
                     
                     this.owner.x += this.v[0];
                     this.owner.y += this.v[1];
 
-                    this.owner.rotation = (currentAngle * (180 / Math.PI)) + this.visualOffset;
+                    this.owner.rotation = (currentAngle * (180 / PI)) + this.visualOffset;
                 }
             },
             /**
@@ -145,6 +150,12 @@
              */
             "set-max-velocity": function (newMaxV) {
                 this.maxVelocity = newMaxV;
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.v.recycle();
             }
         }
     });

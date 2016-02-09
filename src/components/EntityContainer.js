@@ -50,7 +50,8 @@
 (function () {
     "use strict";
 
-    var Entity = include('platypus.Entity'),
+    var Data = include('platypus.Data'),
+        Entity = include('platypus.Entity'),
         childBroadcast = function (event) {
             return function (value, debug) {
                 this.triggerOnChildren(event, value, debug);
@@ -83,9 +84,9 @@
                 this.entityDefinitions = definition.entities || this.owner.entities || null;
             }
 
-            this.owner.entities = this.entities = [];
+            this.owner.entities = this.entities = Array.setUp();
             
-            this.childEvents = [];
+            this.childEvents = Array.setUp();
             for (i = 0; i < events.length; i++) {
                 this.addNewPublicEvent(events[i]);
             }
@@ -167,7 +168,7 @@
                     return false; // event is already added.
                 }
 
-                this._listeners[event] = []; //to signify it's been added even if not used
+                this._listeners[event] = Array.setUp(); //to signify it's been added even if not used
                 
                 //Listen for message on children
                 for (x = 0; x < this.entities.length; x++) {
@@ -209,20 +210,23 @@
                     for (i = 0; i < events.length; i++) {
                         this.removeChildEventListener(entity, events[i], messages[i]);
                     }
+                    events.recycle();
+                    messages.recycle();
+                    entity.containerListener.recycle();
                     entity.containerListener = null;
                 }
             },
             
             addChildEventListener: function (entity, event, callback) {
                 if (!entity.containerListener) {
-                    entity.containerListener = {
-                        events: [],
-                        messages: []
-                    };
+                    entity.containerListener = Data.setUp(
+                        "events", Array.setUp(),
+                        "messages", Array.setUp()
+                    );
                 }
                 entity.containerListener.events.push(event);
                 entity.containerListener.messages.push(callback);
-                this.on(event, callback);
+                this.on(event, callback, callback._priority || 0);
             },
             
             removeChildEventListener: function (entity, event, callback) {
@@ -238,13 +242,17 @@
             },
 
             destroy: function () {
-                var i = 0;
+                var i = this.entities.length,
+                    entity = null;
                 
-                for (i = 0; i < this.entities.length; i++) {
-                    this.removeChildEventListeners(this.entities[i]);
-                    this.entities[i].destroy();
+                while (i--) {
+                    entity = this.entities[i];
+                    this.removeChildEventListeners(entity);
+                    entity.destroy();
                 }
-                this.entities.length = 0;
+                this.entities.recycle();
+                delete this.owner.entities;
+                this.childEvents.recycle();
             }
         },
         
@@ -270,7 +278,7 @@
             getEntitiesByType: function (type) {
                 var i         = 0,
                     selection = null,
-                    entities  = [];
+                    entities  = Array.setUp();
                 
                 for (i = 0; i < this.entities.length; i++) {
                     if (this.entities[i].type === type) {
@@ -278,9 +286,8 @@
                     }
                     if (this.entities[i].getEntitiesByType) {
                         selection = this.entities[i].getEntitiesByType(type);
-                        if (selection) {
-                            entities = entities.concat(selection);
-                        }
+                        entities.union(selection);
+                        selection.recycle();
                     }
                 }
                 return entities;
@@ -329,18 +336,16 @@
             },
             
             removeEntity: function (entity) {
-                var x = 0;
+                var i = this.entities.indexOf(entity);
 
-                for (x = 0; x < this.entities.length; x++) {
-                    if (this.entities[x] === entity) {
-                        this.removeChildEventListeners(entity);
-                        this.entities.splice(x, 1);
-                        this.triggerEventOnChildren('peer-entity-removed', entity);
-                        this.owner.triggerEvent('child-entity-removed', entity);
-                        entity.destroy();
-                        entity.parent = null;
-                        return entity;
-                    }
+                if (i >= 0) {
+                    this.removeChildEventListeners(entity);
+                    this.entities.greenSplice(i);
+                    this.triggerEventOnChildren('peer-entity-removed', entity);
+                    this.owner.triggerEvent('child-entity-removed', entity);
+                    entity.destroy();
+                    entity.parent = null;
+                    return entity;
                 }
                 return false;
             },
@@ -361,22 +366,27 @@
         
         getAssetList: function (def, props, defaultProps) {
             var i = 0,
-                assets = [],
-                entities = [];
+                assets = Array.setUp(),
+                entities = Array.setUp(),
+                arr = null;
             
             if (def.entities) {
-                entities = entities.concat(def.entities);
+                entities.union(def.entities);
             }
             
             if (props && props.entities) {
-                entities = entities.concat(props.entities);
+                entities.union(props.entities);
             } else if (defaultProps && defaultProps.entities) {
-                entities = entities.concat(defaultProps.entities);
+                entities.union(defaultProps.entities);
             }
 
             for (i = 0; i < entities.length; i++) {
-                assets.union(Entity.getAssetList(entities[i]));
+                arr = Entity.getAssetList(entities[i]);
+                assets.union(arr);
+                arr.recycle();
             }
+            
+            entities.recycle();
             
             return assets;
         }

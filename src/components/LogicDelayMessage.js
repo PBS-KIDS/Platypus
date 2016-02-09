@@ -100,8 +100,8 @@ This component allows certain messages to trigger new messages at a later time. 
 
                 for (i = this.queue.length - 1; i > -1; i--) {
                     if (this.queue[i] === cancelEvent) {
-                        this.queueTimes.splice(i, 1);
-                        this.queue.splice(i, 1);
+                        this.queueTimes.greenSplice(i);
+                        this.queue.greenSplice(i);
                     }
                 }
             };
@@ -113,8 +113,8 @@ This component allows certain messages to trigger new messages at a later time. 
         constructor: function (definition) {
             var event = '';
             
-            this.queueTimes = [];
-            this.queue = [];
+            this.queueTimes = Array.setUp();
+            this.queue = Array.setUp();
             
             if (definition.events) {
                 for (event in definition.events) {
@@ -131,9 +131,9 @@ This component allows certain messages to trigger new messages at a later time. 
 
         events: {// These are messages that this component listens for
             "handle-logic":  function (resp) {
-                var i = 0;
+                var i = this.queue.length;
                 
-                for (i = this.queue.length - 1; i > -1; i--) {
+                while (i--) {
                     this.queueTimes[i] -= resp.delta;
                     
                     if (this.queueTimes[i] <= 0) {
@@ -143,8 +143,8 @@ This component allows certain messages to trigger new messages at a later time. 
                             if (this.queue[i].repeat) {
                                 this.queueTimes[i] += this.queue[i].delay;
                             } else {
-                                this.queueTimes.splice(i, 1);
-                                this.queue.splice(i, 1);
+                                this.queueTimes.greenSplice(i);
+                                this.queue.greenSplice(i);
                             }
                         }
                     }
@@ -154,8 +154,8 @@ This component allows certain messages to trigger new messages at a later time. 
         
         methods: {
             destroy: function () {
-                this.queueTimes.length = 0;
-                this.queue.length = 0;
+                this.queueTimes.recycle();
+                this.queue.recycle();
             }
         }
     });

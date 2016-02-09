@@ -70,27 +70,27 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                 if (this.racing) {
                     if (!this.blocked && this.right && this.state.right) {
                         this.owner.x += this.speed * resp.delta;
-                        this.owner.trigger('racing');
+                        this.owner.triggerEvent('racing');
                     } else if (!this.blocked && this.left && this.state.left) {
                         this.owner.x -= this.speed * resp.delta;
-                        this.owner.trigger('racing');
+                        this.owner.triggerEvent('racing');
                     } else {
                         this.racing = false;
-                        this.owner.trigger('stopped-racing');
+                        this.owner.triggerEvent('stopped-racing');
                     }
                 } else {
                     if (this.winding) {
                         if ((this.right && this.state.right) || (this.left && this.state.left)) {
                             this.windProgress += resp.delta;
                         }
-                        this.owner.trigger('winding');
+                        this.owner.triggerEvent('winding');
                     } else {
                         if (this.windProgress) {
                             if (this.windProgress > this.windTime) {
                                 this.racing = true;
                             }
                             this.windProgress = 0;
-                            this.owner.trigger('stopped-winding');
+                            this.owner.triggerEvent('stopped-winding');
                         }
                     }
                 }
@@ -109,7 +109,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             },
             "stop-racing": function (value) {
                 this.racing = false;
-                this.owner.trigger('stopped-racing');
+                this.owner.triggerEvent('stopped-racing');
             },
             "wind-up": function (value) {
                 this.winding = !value || (value.pressed !== false);
@@ -120,7 +120,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                 if (collision.x) {
                     if (this.racing && ((this.right && (collision.x > 0)) || (this.left && (collision.x < 0)))) {
                         this.blocked = true;
-                        this.owner.trigger('blocked', collision);
+                        this.owner.triggerEvent('blocked', collision);
                     }
                 }
             }

@@ -205,8 +205,8 @@
         checkLevel = function (level, ss) {
             var i = 0,
                 j = 0,
-                tilesets = [],
-                assets = [],
+                tilesets = Array.setUp(),
+                assets = Array.setUp(),
                 entity = null,
                 entityAssets = null;
 
@@ -226,9 +226,8 @@
                                 entity = getEntityData(level.layers[i].objects[j], level.tilesets);
                                 if (entity) {
                                     entityAssets = Entity.getAssetList(entity);
-                                    if (entityAssets) {
-                                        assets.union(entityAssets);
-                                    }
+                                    assets.union(entityAssets);
+                                    entityAssets.recycle();
                                 }
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
@@ -240,8 +239,9 @@
                             tilesets.push(level.tilesets[i].name);
                         }
                         assets.union(tilesets);
+                        tilesets.recycle();
                     }
-                    level.assets = assets.slice(); // Save for later in case this level is checked again.
+                    level.assets = assets.greenSlice(); // Save for later in case this level is checked again.
                 }
             }
             
@@ -580,13 +580,11 @@
                             x = 0,
                             y = 0,
                             prop = "",
-                            data = layer.data;
+                            data = null;
                         
-                        if (layer.encoding === 'base64') {
-                            data = layer.data = decodeBase64(data, layer.compression);
-                            layer.encoding = 'csv'; // So we won't have to decode again.
-                        }
-
+                        this.decodeLayer(layer);
+                        data = layer.data;
+                        
                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                         if (layer.properties) {
                             if (layer.properties.width) {
@@ -729,7 +727,7 @@
                         }
                     }
                 } else {
-                    images = images.slice(); //so we do not overwrite settings array
+                    images = images.greenSlice(); //so we do not overwrite settings array
                 }
 
                 if (layer.type === 'tilelayer') {
@@ -886,10 +884,11 @@
                                     w = (entity.width || fallbackWidth) / 2;
                                     h = (entity.height || fallbackHeight) / 2;
                                     a = ((entity.rotation / 180) % 2) * Math.PI;
-                                    v = new platypus.Vector(w, -h).rotate(a);
+                                    v = platypus.Vector.setUp(w, -h).rotate(a);
                                     properties.rotation = entity.rotation;
                                     properties.x = Math.round((properties.x + v.x - w) * 1000) / 1000;
                                     properties.y = Math.round((properties.y + v.y + h) * 1000) / 1000;
+                                    v.recycle();
                                 }
 
                                 if (entityPositionX === 'left') {
@@ -971,14 +970,31 @@
             }
         },
         
+        publicMethods: {
+            /**
+             * This method decodes a Tiled layer and sets its data to CSV format.
+             * 
+             * @method decodeLayer
+             * @param layer {Object} An object describing a Tiled JSON-exported layer.
+             * @return {Object} The same object provided, but with the data field updated.
+             * @chainable
+             * @since 0.7.1
+             */
+            decodeLayer: function (layer) {
+                if (layer.encoding === 'base64') {
+                    layer.data = decodeBase64(layer.data, layer.compression);
+                    layer.encoding = 'csv'; // So we won't have to decode again.
+                }
+                return layer;
+            }            
+        },
+        
         getAssetList: function (def, props, defaultProps) {
             var ps = props || {},
                 dps = defaultProps || {},
                 ss     = def.spriteSheet || ps.spriteSheet || dps.spriteSheet,
                 images = def.images || ps.images || dps.images,
-                assets = [];
-            
-            assets.union(checkLevel(def.level || ps.level || dps.level, ss));
+                assets = checkLevel(def.level || ps.level || dps.level, ss);
             
             if (ss) {
                 if (typeof ss === 'string') {
@@ -1003,7 +1019,7 @@
             if (data && data.level) {
                 return checkLevel(data.level, ss);
             } else {
-                return [];
+                return Array.setUp();
             }
         }
     });

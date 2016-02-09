@@ -12,6 +12,8 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         animationCache = {},
+        baseTextureCache = {},
+        regex = /[\[\]{},-]/g,
         createFramesArray = function (frame, bases) {
             var i = 0,
                 fw = frame.width,
@@ -22,7 +24,7 @@
                 h = 0,
                 x = 0,
                 y = 0,
-                frames = [];
+                frames = Array.setUp();
             
             for (i = 0; i < bases.length; i++) {
                 
@@ -41,32 +43,26 @@
         },
         getBaseTextures = function (images) {
             var i = 0,
-                bts = [],
-                assetData = null,
-                assetCache = Application.instance.assetManager.cache;
+                bts = Array.setUp(),
+                asset = null,
+                assetCache = Application.instance.assetManager.cache,
+                btCache = baseTextureCache,
+                path = null;
             
             for (i = 0; i < images.length; i++) {
-                if (typeof images[i] === 'string') {
-                    if (assetCache.read(images[i])) {
-                        assetData = {
-                            asset: assetCache.read(images[i])
-                        };
-                    } else {
-                        assetData = null;
+                path = images[i];
+                if (typeof path === 'string') {
+                    if (!btCache[path]) {
+                        asset = assetCache.read(path);
+                        if (!asset) {
+                            console.warn('"' + path + '" is not a loaded asset.');
+                            break;
+                        }
+                        btCache[path] = new PIXI.BaseTexture(asset);
                     }
+                    bts.push(btCache[path]);
                 } else {
-                    assetData = {
-                        asset: images[i]
-                    };
-                }
-                
-                if (assetData) {
-                    if (!assetData.texture) {
-                        assetData.texture = new PIXI.BaseTexture(assetData.asset);
-                    }
-                    bts.push(assetData.texture);
-                } else {
-                    console.warn('"' + images[i] + '" is not a loaded asset.');
+                    bts.push(new PIXI.BaseTexture(path));
                 }
             }
             
@@ -76,39 +72,25 @@
             return images[frame[4]] + '-x' + frame[0] + 'y' + frame[1] + 'w' + frame[2] + 'h' + frame[3];
         },
         getTexturesCacheId = function (spriteSheet) {
-            var animations = spriteSheet.animations,
-                i = 0,
-                id = spriteSheet.images.join(","),
-                frames = spriteSheet.frames,
-                key = "";
+            var i = 0;
+            
+            if (spriteSheet.id) {
+                return spriteSheet.id;
+            }
             
             for (i = 0; i < spriteSheet.images.length; i++) {
                 if (typeof spriteSheet.images[i] !== 'string') {
                     return '';
                 }
             }
-
-            if (Array.isArray(frames)) {
-                for (i = 0; i < frames.length; i++) {
-                    id += "-" + frames[i].join(",");
-                }
-            } else {
-                id += "-w" + frames.width + "h" + frames.height + "rx" + frames.regX + "ry" + frames.regY;
-            }
             
-            if (animations) {
-                for (key in animations) {
-                    if (animations.hasOwnProperty(key)) {
-                        id += "-" + key;
-                    }
-                }
-            }
+            spriteSheet.id = JSON.stringify(spriteSheet).replace(regex, '');
 
-            return id;
+            return spriteSheet.id;
         },
         formatAnimation = function (key, animation, textures) {
             var i = 0,
-                frames = [];
+                frames = Array.setUp();
             
             if (!isNaN(animation)) {
                 frames.push(textures[animation] || PIXI.Texture.EMPTY);
@@ -159,12 +141,12 @@
                 frames   = null,
                 images   = spriteSheet.images,
                 texture  = null,
-                textures = [],
+                textures = Array.setUp(),
                 bases    = getBaseTextures(images);
 
             // Set up frames array
             if (Array.isArray(spriteSheet.frames)) {
-                frames = spriteSheet.frames;
+                frames = spriteSheet.frames.greenSlice();
             } else {
                 frames = createFramesArray(spriteSheet.frames, bases);
             }
@@ -187,6 +169,9 @@
                 anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
+            frames.recycle();
+            bases.recycle();
+            
             return {
                 textures: textures,
                 animations: anims
@@ -200,12 +185,12 @@
                 frames   = null,
                 images   = spriteSheet.images,
                 texture  = null,
-                textures = [],
+                textures = Array.setUp(),
                 bases    = getBaseTextures(images);
 
             // Set up frames array
             if (Array.isArray(spriteSheet.frames)) {
-                frames = spriteSheet.frames;
+                frames = spriteSheet.frames.greenSlice();
             } else {
                 frames = createFramesArray(spriteSheet.frames, bases);
             }
@@ -229,6 +214,9 @@
                 anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
+            frames.recycle();
+            bases.recycle();
+            
             return {
                 textures: textures,
                 animations: anims,
@@ -248,6 +236,7 @@
                 this.cacheId = cacheId;
             } else {
                 cache.viable += 1;
+                this.cacheId = cacheId;
             }
             
             PIXI.Sprite.call(this, cache.textures[0].texture);
@@ -336,6 +325,23 @@
                 var frames = this._animation.frames;
                 return frames[Math.floor(this._currentTime) % frames.length];
             }
+        },
+        
+        /**
+        * The PIXIAnimations paused state. If paused, the animation doesn't update.
+        *
+        * @property paused
+        */
+        paused: {
+            get: function() {
+                return !this.playing;
+            },
+            set: function(value) {
+                if ((value && this.playing) || (!value && !this.playing)){
+                    this.playing = !value;
+                    this._syncUpdate();
+                }
+            }
         }
     
     });
@@ -345,12 +351,15 @@
     *
     */
     prototype.stop = function () {
+        this.paused = true;
+        /*
         if (!this.playing) {
             return;
         }
     
         this.playing = false;
         this._syncUpdate();
+        */
     };
     
     /**
@@ -358,12 +367,15 @@
     *
     */
     prototype.play = function () {
+        this.paused = false;
+        /*
         if (this.playing) {
             return;
         }
     
         this.playing = true;
         this._syncUpdate();
+        */
     };
     
     prototype._syncUpdate = function () {
@@ -445,17 +457,38 @@
         }
     };
     
-    /*
-    * Stops the PIXIAnimation and destroys it
-    *
-    */
+    /**
+     * Stops the PIXIAnimation and destroys it
+     * 
+     * @method destroy
+     */
     prototype.destroy = function () {
+        var key = '';
+        
         this.stop();
         PIXI.Sprite.prototype.destroy.call(this);
         if (this.cacheId) {
             animationCache[this.cacheId].viable -= 1;
             if (animationCache[this.cacheId].viable <= 0) {
+                animationCache[this.cacheId].textures.recycle();
+                for (key in animationCache[this.cacheId].animations) {
+                    if (animationCache[this.cacheId].animations.hasOwnProperty(key)) {
+                        animationCache[this.cacheId].animations[key].frames.recycle();
+                    }
+                }
                 delete animationCache[this.cacheId];
+            }
+        }
+    };
+    
+    PIXIAnimation.destroyBaseTextures = function () {
+        var btCache = baseTextureCache,
+            key = '';
+        
+        for (key in btCache) {
+            if (btCache.hasOwnProperty(key)) {
+                btCache[key].destroy();
+                delete btCache[key];
             }
         }
     };

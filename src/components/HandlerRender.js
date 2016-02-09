@@ -9,6 +9,8 @@
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
 
@@ -141,7 +143,7 @@
 
                     if (this.paused > 0) {
                         this.paused -= tick.delta;
-                        if (this.paused < 0) {
+                        if (this.paused <= 0) {
                             this.paused = 0;
                         }
                     }
@@ -159,7 +161,8 @@
                     }
 
                     if (this.container) {
-                        for (x = this.container.children.length - 1; x > -1; x--) {
+                        x = this.container.children.length;
+                        while (x--) {
                             child = this.container.children[x];
 
                             if (child.visible) {
@@ -408,7 +411,7 @@
 
         publicMethods: {
             windowToWorld: function (windowVector, withOffset, vector) {
-                var worldVector = vector || new Vector();
+                var worldVector = vector || Vector.setUp();
                 
                 worldVector.x = windowVector.x * this.worldPerWindowUnitWidth;
                 worldVector.y = windowVector.y * this.worldPerWindowUnitHeight;
@@ -422,7 +425,7 @@
             },
             
             worldToWindow: function (worldVector, withOffset, vector) {
-                var windowVector = vector || new Vector();
+                var windowVector = vector || Vector.setUp();
 
                 windowVector.x = worldVector.x * this.windowPerWorldUnitWidth;
                 windowVector.y = worldVector.y * this.windowPerWorldUnitHeight;

@@ -34,8 +34,10 @@
 
 		events: {
             "handle-logic": function (tick) {
-                if (this.last !== (this.disabled === this.owner.state.disabled)) {
-                    this.last = (this.disabled === this.owner.state.disabled);
+                var eq = (this.disabled === this.owner.state.disabled);
+                
+                if (this.last !== eq) {
+                    this.last = eq;
                 }
             },
             "mousedown": function (eventData) {
@@ -43,6 +45,7 @@
                 if (!this.owner.state.disabled && !(this.useOnce && this.used)) {
                     if (this.onPress) {
                         this.owner.trigger(this.onPress);
+                        eventData.pixiEvent.stopPropagation();
                         this.used = true; //Doing this prevents the Release/Cancel calls from occurring. Need to find a way to let the up and down both call for one use buttons.
                     }
                 }
@@ -61,6 +64,7 @@
                             this.used = true;
                         }
                     }
+                    eventData.pixiEvent.stopPropagation();
                 }
 
                 this.owner.state.down = false;

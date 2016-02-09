@@ -54,7 +54,7 @@ A component that enables an entity to be pushed.
             this.currentPushY = 0;
             this.lastX = this.owner.x;
             this.lastY = this.owner.y;
-            this.pushers = [];
+            this.pushers = Array.setUp();
         },
         events: {
             "handle-logic": function (resp) {
@@ -98,6 +98,12 @@ A component that enables an entity to be pushed.
                     this.vX = 0;
                 }
                 return true;
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.pushers.recycle();
             }
         }
     });

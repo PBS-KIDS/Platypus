@@ -14,7 +14,8 @@
 platypus.ActionState = (function () {
     "use strict";
     
-    var ActionState = function (event, states, trigger) {
+    var Data = include('platypus.Data'),
+        ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.
              * 
@@ -69,7 +70,7 @@ platypus.ActionState = (function () {
              * @property states
              * @type Object
              */
-            this.states    = states || {};
+            this.states    = Data.setUp(states);
 
             /**
              * The list of input toggles to track control input.
@@ -77,7 +78,7 @@ platypus.ActionState = (function () {
              * @property inputs
              * @type Array
              */
-            this.inputs    = [];
+            this.inputs    = Array.setUp();
 
             /**
              * The message that is passed to the Entity if the ActionState is active.
@@ -85,11 +86,11 @@ platypus.ActionState = (function () {
              * @property stateSummary
              * @type Object
              */
-            this.stateSummary = {
-                pressed:   false,
-                released:  false,
-                triggered: false
-            };
+            this.stateSummary = Data.setUp(
+                "pressed",   false,
+                "released",  false,
+                "triggered", false
+            );
         },
         orArray = function (element) {
             return element;
@@ -164,6 +165,36 @@ platypus.ActionState = (function () {
         
         return true;
     };
+    
+    /**
+     * Returns an ActionState from cache or creates a new one if none are available.
+     * 
+     * @method ActionState.setUp
+     * @return {platypus.ActionState} The instantiated ActionState.
+     * @since 0.7.1
+     */
+    /**
+     * Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.
+     * 
+     * @method ActionState.recycle
+     * @param {platypus.ActionState} The ActionState to be recycled.
+     * @since 0.7.1
+     */
+    platypus.setUpRecycle(ActionState, 'ActionState');
+
+    /**
+     * Relinquishes properties of the ActionState and recycles it.
+     * 
+     * @method recycle
+     * @since 0.7.1
+     */
+    proto.recycle = function () {
+        this.states.recycle();
+        this.stateSummary.recycle();
+        this.inputs.recycle();
+        ActionState.recycle(this);
+    };
+    
     
     return ActionState;
 }());

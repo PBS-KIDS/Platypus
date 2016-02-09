@@ -18,7 +18,7 @@
             var x        = 0,
                 y        = 0,
                 z        = 0,
-                combined = levelData.slice();
+                combined = levelData.greenSlice();
 
             if (mergeAxis === 'horizontal') {
                 for (y = nonMergeAxisLength - 1; y >= 0; y--) {
@@ -33,8 +33,8 @@
         },
         mergeObjects  = function (obj1s, obj2s, mergeAxisLength, mergeAxis) {
             var i    = 0,
-                j    = 0,
-                list = obj1s.slice(),
+                j    = '',
+                list = obj1s.greenSlice(),
                 obj  = null;
 
             for (i = 0; i < obj2s.length; i++) {
@@ -53,9 +53,9 @@
             }
             return list;
         },
-        mergeSegment  = function (level, segment, mergeAxis) {
+        mergeSegment  = function (level, segment, mergeAxis, decoder) {
             var i = 0,
-                j = 0;
+                j = '';
 
             if (!level.tilewidth && !level.tileheight) {
                 //set level tile size data if it's not already set.
@@ -82,6 +82,7 @@
             for (i = 0; i < segment.layers.length; i++) {
                 if (!level.layers[i]) {
                     //if the level doesn't have a layer yet, we're creating it and then copying it from the segment.
+                    decoder(segment.layers[i]);
                     level.layers[i] = {};
                     for (j in segment.layers[i]) {
                         if (segment.layers[i].hasOwnProperty(j)) {
@@ -92,6 +93,9 @@
                     if (level.layers[i].type === segment.layers[i].type) {
                         //if the level does have a layer, we're appending the new data to it.
                         if (level.layers[i].data && segment.layers[i].data) {
+                            // Make sure we're not trying to merge compressed levels.
+                            decoder(segment.layers[i]);
+                            
                             if (mergeAxis === 'horizontal') {
                                 level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
                                 level.layers[i].width += segment.width;
@@ -120,13 +124,13 @@
             }
 
             //Go through all the STUFF in segment and copy it to the level if it's not already there.
-            for (i in segment) {
-                if (segment.hasOwnProperty(i) && !level[i]) {
-                    level[i] = segment[i];
+            for (j in segment) {
+                if (segment.hasOwnProperty(j) && !level[j]) {
+                    level[j] = segment[j];
                 }
             }
         },
-        mergeLevels = function (levelSegments) {
+        mergeLevels = function (levelSegments, decoder) {
             var i = 0,
                 j = 0,
                 levelDefinitions = platypus.game.settings.levels,
@@ -154,13 +158,13 @@
                 for (j = 0; j < levelSegments[i].length; j++) {
                     //Merge horizontally
                     if (typeof levelSegments[i][j] === 'string') {
-                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal');
+                        mergeSegment(row, levelDefinitions[levelSegments[i][j]], 'horizontal', decoder);
                     } else {
-                        mergeSegment(row, levelSegments[i][j], 'horizontal');
+                        mergeSegment(row, levelSegments[i][j], 'horizontal', decoder);
                     }
                 }
                 //Then merge vertically
-                mergeSegment(level, row, 'vertical');
+                mergeSegment(level, row, 'vertical', decoder);
             }
             return level;
         };
@@ -273,7 +277,7 @@
                 }
                 
                 if (this.levelMessage.level) {
-                    this.levelMessage.level = mergeLevels(this.levelMessage.level);
+                    this.levelMessage.level = mergeLevels(this.levelMessage.level, this.owner.decodeLayer);
                     /**
                      * Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.
                      *
@@ -308,7 +312,7 @@
                     } else if (pieces.length) {
                         random = Math.floor(Math.random() * pieces.length);
                         if (this.useUniques) {
-                            return (this.levelPieces[type].splice(random, 1))[0];
+                            return this.levelPieces[type].greenSplice(random);
                         } else {
                             return pieces[random];
                         }
@@ -331,22 +335,44 @@
         
         publicMethods: {
             mergeLevels: function (levels) {
-                return mergeLevels(levels);
+                return mergeLevels(levels, this.owner.decodeLayer);
             }
         },
         
         getAssetList: function (def, props, defaultProps) {
-            var assets = [],
+            var i = 0,
+                arr = null,
+                assets = Array.setUp(),
                 key = '',
-                levels = def.levelPieces || props.levelPieces || defaultProps.levelPieces;
+                levels = null;
+            
+            if (def && def.levelPieces) {
+                levels = def.levelPieces;
+            } else if (props && props.levelPieces) {
+                levels = props.levelPieces;
+            } else if (defaultProps && defaultProps.levelPieces) {
+                levels = defaultProps.levelPieces;
+            }
             
             if (levels) {
                 for (key in levels) {
                     if (levels.hasOwnProperty(key)) {
                         // Offload to TiledLoader since it has level-parsing handling
-                        assets.union(platypus.components.TiledLoader.getAssetList({
-                            level: levels[key]
-                        }));
+                        if (Array.isArray(levels[key])) {
+                            for (i = 0; i < levels[key].length; i++) {
+                                arr = platypus.components.TiledLoader.getAssetList({
+                                    level: levels[key][i]
+                                }, props, defaultProps);
+                                assets.union(arr);
+                                arr.recycle();
+                            }
+                        } else {
+                            arr = platypus.components.TiledLoader.getAssetList({
+                                level: levels[key]
+                            }, props, defaultProps);
+                            assets.union(arr);
+                            arr.recycle();
+                        }
                     }
                 }
             }

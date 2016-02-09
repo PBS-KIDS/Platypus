@@ -42,6 +42,7 @@
              */
             "handle-logic": function (tick) {
                 var dT = tick.delta;
+                
                 if (this.destroyed && !this.owner.state.paused) {
                     this.delay -= dT;
                     if (this.delay <= 0) {

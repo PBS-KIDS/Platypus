@@ -12,6 +12,8 @@
     "use strict";
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
+        Data = include('platypus.Data'),
+        spaceRegEx = / /g,
         defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay:     0,
@@ -24,7 +26,13 @@
         },
         playSound = function (soundDefinition) {
             var sound      = '',
-                attributes = null;
+                attributes = null,
+                completed  = function (data, cancelled) {
+                    if (data.audio) {
+                        this.onComplete(data.audio);
+                    }
+                    data.recycle();
+                };
             
             if (typeof soundDefinition === 'string') {
                 sound      = soundDefinition;
@@ -46,34 +54,31 @@
             }
 
             return function (value) {
-                var audio = null;
+                var data = null;
 
                 value = value || attributes;
-
-                audio = this.player.play(sound, {
-                    interrupt:  value.interrupt || attributes.interrupt || defaultSettings.interrupt,
-                    delay:      value.delay     || attributes.delay  || defaultSettings.delay,
-                    loop:       value.loop      || attributes.loop   || defaultSettings.loop,
-                    offset:     value.offset    || attributes.offset || defaultSettings.offset,
-                    volume:     (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
-                    pan:        value.pan       || attributes.pan    || defaultSettings.pan,
-                    mute:       value.mute      || attributes.mute   || defaultSettings.mute,
-                    paused:     value.paused    || attributes.paused || defaultSettings.paused,
-                    complete: function (cancelled) {
-                        if (audio) {
-                            this.onComplete(audio);
-                        }
-                    }.bind(this)
-                });
                 
-                if (audio) {
-                    audio.soundId = sound;
-                    this.activeAudioClips.push(audio);
+                data = Data.setUp(
+                    "interrupt", value.interrupt || attributes.interrupt || defaultSettings.interrupt,
+                    "delay",     value.delay     || attributes.delay  || defaultSettings.delay,
+                    "loop",      value.loop      || attributes.loop   || defaultSettings.loop,
+                    "offset",    value.offset    || attributes.offset || defaultSettings.offset,
+                    "volume",    (typeof value.volume !== 'undefined') ? value.volume : ((typeof attributes.volume !== 'undefined') ? attributes.volume : defaultSettings.volume),
+                    "pan",       value.pan       || attributes.pan    || defaultSettings.pan,
+                    "mute",      value.mute      || attributes.mute   || defaultSettings.mute,
+                    "paused",    value.paused    || attributes.paused || defaultSettings.paused
+                );
+                data.complete = completed.bind(this, data);
+                data.audio = this.player.play(sound, data);
+                
+                if (data.audio) {
+                    data.audio.soundId = sound;
+                    this.activeAudioClips.push(data.audio);
                 }
             };
         },
         createTest = function (testStates, audio, play) {
-            var states = testStates.replace(/ /g, '').split(',');
+            var states = testStates.replace(spaceRegEx, '').greenSplit(',');
             if (testStates === 'default') {
                 return function (state) {
                     play.call(this);
@@ -154,7 +159,7 @@
             var key      = '',
                 playClip = null;
             
-            this.activeAudioClips = [];
+            this.activeAudioClips = Array.setUp();
     
             this.state = this.owner.state;
             this.stateChange = false;
@@ -163,7 +168,7 @@
             this.player = Application.instance.sound;
     
             if (definition.audioMap) {
-                this.checkStates = [];
+                this.checkStates = Array.setUp();
                 for (key in definition.audioMap) {
                     if (definition.audioMap.hasOwnProperty(key)) {
                         playClip = playSound(definition.audioMap[key]);
@@ -403,7 +408,7 @@
                                 clips[i].addEventListener('loop', loopFunc);
                             } else {
                                 clips[i].stop();
-                                clips.splice(i, 1);
+                                clips.greenSplice(i);
                             }
                         }
                     }
@@ -428,33 +433,39 @@
                 for (i = clips.length - 1; i >= 0; i--) {
                     if (clips[i] === instance) {
                         clips[i].stop();
-                        clips.splice(i, 1);
+                        clips.greenSplice(i);
                     }
                 }
             },
             
-            onComplete: function (audioClip) {
-                //clean up active clips
-                this.removeClip(audioClip);
-                
-                /**
-                 * When a sound effect is finished playing, this event is triggered.
-                 * 
-                 * @event clip-complete
-                 */
-                this.owner.triggerEvent('clip-complete');
+            onComplete: function (data) {
+                if (!this.owner.destroyed) {
+                    //clean up active clips
+                    this.removeClip(data.audio);
+                    
+                    /**
+                     * When a sound effect is finished playing, this event is triggered.
+                     * 
+                     * @event clip-complete
+                     */
+                    this.owner.triggerEvent('clip-complete');
+                }
             },
             
             removeClip: function (audioClip) {
                 var i = this.activeAudioClips.indexOf(audioClip);
 
                 if (i >= 0) {
-                    this.activeAudioClips.splice(i, 1);
+                    this.activeAudioClips.greenSplice(i);
                 }
             },
             
             destroy: function () {
                 this.stopAudio();
+                this.activeAudioClips.recycle();
+                if (this.checkStates) {
+                    this.checkStates.recycle();
+                }
             }
         }
     });

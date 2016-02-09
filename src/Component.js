@@ -16,20 +16,18 @@
 platypus.Component = (function () {
     "use strict";
     
-    var getAssetList = (function () {
-            var emptyArray = [];            
-            return function (definition) {
-                return emptyArray;
-            }
-        }()),
+    var Data = include('platypus.Data'),
+        getAssetList = function (definition) {
+            return Array.setUp();
+        },
         Component = function (type, owner) {
             this.type = type;
             this.owner = owner;
-            this.publicMethods = {};
-            this.listener = {
-                events: [],
-                messages: []
-            };
+            this.publicMethods = Data.setUp();
+            this.listener = Data.setUp(
+                "events", Array.setUp(),
+                "messages", Array.setUp()
+            );
         },
         proto = Component.prototype;
     
@@ -63,7 +61,11 @@ platypus.Component = (function () {
                 this.removeMethod(func);
             }
         }
+        this.publicMethods.recycle();
         this.removeEventListeners();
+        this.listener.events.recycle();
+        this.listener.messages.recycle();
+        this.listener.recycle();
     };
     
     /**
@@ -82,12 +84,13 @@ platypus.Component = (function () {
             events   = this.listener.events;
             messages = this.listener.messages;
             for (i = 0; i < events.length; i++) {
-                this.removeEventListener(events[i], messages[i]);
+                this.owner.off(events[i], messages[i]);
             }
+            events.length = 0;
+            messages.length = 0;
         } else {
-            events   = listeners;
-            for (i = 0; i < events.length; i++) {
-                this.removeEventListener(events[i]);
+            for (i = 0; i < listeners.length; i++) {
+                this.removeEventListener(listeners[i]);
             }
         }
     };
@@ -140,9 +143,11 @@ platypus.Component = (function () {
             events   = this.listener.events,
             messages = this.listener.messages;
         
-        for (i = 0; i < events.length; i++) {
+        for (i = events.length - 1; i >= 0; i--) {
             if ((events[i] === event) && (!callback || (messages[i] === callback))) {
                 this.owner.off(event, messages[i]);
+                this.listener.events.greenSplice(i);
+                this.listener.messages.greenSplice(i);
             }
         }
     };

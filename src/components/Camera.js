@@ -330,8 +330,8 @@
             "mousedown": function (event) {
                 if (this.state === 'mouse-pan') {
                     if (!this.mouseVector) {
-                        this.mouseVector = new Vector();
-                        this.mouseWorldOrigin = new Vector();
+                        this.mouseVector = Vector.setUp();
+                        this.mouseWorldOrigin = Vector.setUp();
                     }
                     this.mouse = this.mouseVector;
                     this.mouse.x = event.event.x;
@@ -492,11 +492,14 @@
                         if (this.move(v.x, v.y)) {
                             this.viewportUpdate = true;
                         }
-                    }.bind(this);
+                    }.bind(this),
+                    stop = function () {
+                        v.recycle();
+                    };
 
                 if (location.time && window.createjs && createjs.Tween) {
-                    v = new Vector(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
-                    createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move);
+                    v = Vector.setUp(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
+                    createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move).call(stop);
                 } else {
                     if (this.move(location.x, location.y)) {
                         this.viewportUpdate = true;
@@ -854,6 +857,10 @@
                 this.parentContainer.removeChild(this.container);
                 this.parentContainer = null;
                 this.container = null;
+                if (this.mouseVector) {
+                    this.mouseVector.recycle();
+                    this.mouseWorldOrigin.recycle();
+                }
             }
         }
     });

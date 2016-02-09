@@ -86,9 +86,12 @@ platypus.CollisionShape = (function () {
      * @param ownerY {number} The y position of the owner.
      */
     proto.update = function (ownerX, ownerY) {
-        this.x = ownerX + this.offsetX;
-        this.y = ownerY + this.offsetY;
-        this.aABB.move(this.x, this.y);
+        var x = ownerX + this.offsetX,
+            y = ownerY + this.offsetY;
+
+        this.x = x;
+        this.y = y;
+        this.aABB.move(x, y);
     };
     
     /**
@@ -99,7 +102,7 @@ platypus.CollisionShape = (function () {
      */
     proto.moveX = function (x) {
         this.x = x;
-        this.aABB.moveX(this.x);
+        this.aABB.moveX(x);
     };
     
     /**
@@ -110,7 +113,7 @@ platypus.CollisionShape = (function () {
      */
     proto.moveY = function (y) {
         this.y = y;
-        this.aABB.moveY(this.y);
+        this.aABB.moveY(y);
     };
     
     /**

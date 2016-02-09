@@ -48,20 +48,28 @@
 platypus.Entity = (function () {
     "use strict";
     
-    var entityIds = {},
+    var Data = include('platypus.Data'),
+        entityIds = {},
+        warn = function (content, obj) {
+            if (platypus.game.settings.debug) {
+                console.warn(content, obj);
+            }
+        },
         entity = function (definition, instanceDefinition) {
             var i                    = 0,
                 componentDefinition  = null,
-                def                  = definition || {},
-                componentDefinitions = def.components || [],
-                defaultProperties    = def.properties || {},
-                instance             = instanceDefinition || {},
-                instanceProperties   = instance.properties || {};
+                def                  = Data.setUp(definition),
+                componentDefinitions = def.components,
+                defaultProperties    = Data.setUp(def.properties),
+                instance             = Data.setUp(instanceDefinition),
+                instanceProperties   = Data.setUp(instance.properties),
+                savedEvents          = Array.setUp(),
+                savedMessages        = Array.setUp();
 
             // Set properties of messenger on this entity.
             platypus.Messenger.call(this);
 
-            this.components  = [];
+            this.components  = Array.setUp();
             this.type = def.id || 'none';
 
             this.id = instance.id || instanceProperties.id;
@@ -79,21 +87,35 @@ platypus.Entity = (function () {
                 this.setProperty(keyValuePairs);
             }.bind(this));
 
-            if (!this.state) {
-                this.state = {}; //starts with no state information. This expands with boolean value properties entered by various logic components.
-            }
-            this.lastState = {}; //This is used to determine if the state of the entity has changed.
+            this.state = Data.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
+            this.lastState = Data.setUp(); //This is used to determine if the state of the entity has changed.
 
-            for (i = 0; i < componentDefinitions.length; i++) {
-                componentDefinition = componentDefinitions[i];
-                if (componentDefinition) {
-                    if (platypus.components[componentDefinition.type]) {
-                        this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
-                    } else {
-                        console.warn("Component '" + componentDefinition.type + "' is not defined.", componentDefinition);
+            this.trigger = this.triggerEvent = function (event, message) {
+                savedEvents.push(event);
+                savedMessages.push(message);
+            }
+            
+            if (componentDefinitions) {
+                for (i = 0; i < componentDefinitions.length; i++) {
+                    componentDefinition = componentDefinitions[i];
+                    if (componentDefinition) {
+                        if (platypus.components[componentDefinition.type]) {
+                            this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
+                        } else {
+                            warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
+                        }
                     }
                 }
             }
+            
+            // Trigger saved events that were being fired during component addition.
+            delete this.trigger;
+            delete this.triggerEvent;
+            for (i = 0; i < savedEvents.length; i++) {
+                this.trigger(savedEvents[i], savedMessages[i]);
+            }
+            savedEvents.recycle();
+            savedMessages.recycle();
 
             /**
              * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
@@ -101,6 +123,11 @@ platypus.Entity = (function () {
              * @event load
              */
             this.triggerEvent('load');
+
+            def.recycle();
+            defaultProperties.recycle();
+            instance.recycle();
+            instanceProperties.recycle();
         },
         proto = entity.prototype = new platypus.Messenger();
     
@@ -156,7 +183,7 @@ platypus.Entity = (function () {
             for (i = 0; i < this.components.length; i++) {
                 if (this.components[i].type === component) {
                     component = this.components[i];
-                    this.components.splice(i, 1);
+                    this.components.greenSplice(i);
                     this.triggerEvent('component-removed', component);
                     component.destroy();
                     return component;
@@ -165,7 +192,7 @@ platypus.Entity = (function () {
         } else {
             for (i = 0; i < this.components.length; i++) {
                 if (this.components[i] === component) {
-                    this.components.splice(i, 1);
+                    this.components.greenSplice(i);
                     this.triggerEvent('component-removed', component);
                     component.destroy();
                     return component;
@@ -204,7 +231,11 @@ platypus.Entity = (function () {
         for (i = 0; i < this.components.length; i++) {
             this.components[i].destroy();
         }
-        this.components.length = 0;
+        this.components.recycle();
+        
+        this.state.recycle();
+        this.lastState.recycle();
+        
         this.messengerDestroy();
     };
     
@@ -219,16 +250,27 @@ platypus.Entity = (function () {
     entity.getAssetList = function (def, props) {
         var i = 0,
             component = null,
-            assets = [];
+            arr = null,
+            assets = null,
+            definition = null;
         
         if (def.type) {
-            return entity.getAssetList(platypus.game.settings.entities[def.type], def.properties);
+            definition = platypus.game.settings.entities[def.type];
+            if (!definition) {
+                warn('Entity "' + def.type + '": This entity is not defined.', def);
+                return assets;
+            }
+            return entity.getAssetList(definition, def.properties);
         }
+        
+        assets = Array.setUp();
 
         for (i = 0; i < def.components.length; i++) {
             component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
             if (component) {
-                assets.union(component.getAssetList(def.components[i], def.properties, props));
+                arr = component.getAssetList(def.components[i], def.properties, props);
+                assets.union(arr);
+                arr.recycle();
             }
         }
         
@@ -246,16 +288,21 @@ platypus.Entity = (function () {
     entity.getLateAssetList = function (def, props, data) {
         var i = 0,
             component = null,
-            assets = [];
+            arr = null,
+            assets = null;
         
         if (def.type) {
             return entity.getLateAssetList(platypus.game.settings.entities[def.type], props, data);
         }
+        
+        assets = Array.setUp();
 
         for (i = 0; i < def.components.length; i++) {
             component = def.components[i] && def.components[i].type && platypus.components[def.components[i].type];
             if (component) {
-                assets.union(component.getLateAssetList(def.components[i], def.properties, props, data));
+                arr = component.getLateAssetList(def.components[i], def.properties, props, data);
+                assets.union(arr);
+                arr.recycle();
             }
         }
         

@@ -14,7 +14,7 @@ platypus.Messenger = (function () {
         Messenger = function () {
             EventDispatcher.call(this);
             
-            this.loopCheck   = [];
+            this.loopCheck = Array.setUp();
         },
         proto = extend(Messenger, EventDispatcher);
     
@@ -27,6 +27,48 @@ platypus.Messenger = (function () {
     proto.toString = function () {
         return "[Messenger Object]";
     };
+
+    /**
+     * This method identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
+     * 
+     * @method greenTrigger
+     * @since 0.7.1
+     */
+    proto.greenTrigger = function(type) {
+        var i = 0,
+            listener = null,
+            listeners = null,
+            args = null;
+        
+		if (this._destroyed) {
+            return;
+        }
+
+		if (this._listeners.hasOwnProperty(type) && (this._listeners[type] !== undefined)) {
+			// copy the listeners array
+			listeners = this._listeners[type].greenSlice();
+
+			if (arguments.length > 1) {
+				args = Array.prototype.greenSlice.call(arguments);
+                args.greenSplice(0);
+			}
+
+            i = listeners.length;
+			while (i--) {
+				listener = listeners[i];
+				if (listener._eventDispatcherOnce) {
+					delete listener._eventDispatcherOnce;
+					this.off(type, listener);
+				}
+				listener.apply(this, args);
+			}
+            
+            if (args) {
+                args.recycle();
+            }
+            listeners.recycle();
+		}
+	};
 
     /**
      * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
@@ -68,7 +110,7 @@ platypus.Messenger = (function () {
      */
     proto.triggerEvent = function (event, value, debug) {
         var i = 0,
-            debugLogging = this.debug || debug || (value && value.debug),
+            debugLogging = debug || (value && value.debug),
             debugCount = 0,
             count = 0;
         
@@ -79,12 +121,14 @@ platypus.Messenger = (function () {
         count = (this._listeners[event] && this._listeners[event].length) || 0;
         
         // Debug logging.
-        if (debugLogging) {
-            if (count) {
-                console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
-            } else {
-                console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
-                return 0;
+        if (debugLogging || this.debug) {
+            if (debugLogging) {
+                if (count) {
+                    console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
+                } else {
+                    console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
+                    return 0;
+                }
             }
             
             for (i = 0; i < this.loopCheck.length; i++) {
@@ -99,10 +143,17 @@ platypus.Messenger = (function () {
             }
 
             this.loopCheck.push(event);
-            this._trigger(event, value, debug);
+            if (window.performance) {
+                window.performance.mark("a");
+            }
+            this.greenTrigger(event, value, debug);
+            if (window.performance) {
+                window.performance.mark("b");
+                window.performance.measure(this.type + ":" + event, 'a', 'b');
+            }
             this.loopCheck.length = this.loopCheck.length - 1;
         } else if (count) {
-            this._trigger(event, value, debug);
+            this.greenTrigger(event, value, debug);
         }
         
         return count;
@@ -117,6 +168,18 @@ platypus.Messenger = (function () {
     proto.getMessageIds = function () {
         return Object.keys(this._listeners);
     };
+    
+    /**
+     * This method relinguishes Messenger properties
+     * 
+     * @method destroy
+     * @since 0.7.1
+     */
+    proto.eventDispatcherDestroy = proto.destroy;
+    proto.destroy = function () {
+        this.loopCheck.recycle();
+        this.eventDispatcherDestroy();
+    }
     
     return Messenger;
 }());

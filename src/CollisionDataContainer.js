@@ -17,7 +17,7 @@ platypus.CollisionData = (function () {
             this.aABB = aABB || null;
             this.thisShape = thisShape || null;
             this.thatShape = thatShape || null;
-            this.vector = vector || null;
+            this.vector = platypus.Vector.setUp(vector);
             this.stuck  = stuck || 0;
         },
         proto = collisionData.prototype;
@@ -30,7 +30,7 @@ platypus.CollisionData = (function () {
         this.aABB             = dataToCopy.aABB;
         this.thisShape      = dataToCopy.thisShape;
         this.thatShape      = dataToCopy.thatShape;
-        this.vector         = dataToCopy.vector;
+        this.vector.set(dataToCopy.vector);
         this.stuck          = dataToCopy.stuck;
     };
     proto.clear = function () {
@@ -41,7 +41,7 @@ platypus.CollisionData = (function () {
         this.aABB                = null;
         this.thisShape         = null;
         this.thatShape         = null;
-        this.vector            = null;
+        this.vector.set(0, 0, 0);
         this.stuck             = 0;
     };
     return collisionData;
@@ -51,8 +51,8 @@ platypus.CollisionDataContainer = (function () {
     "use strict";
     
     var collisionDataContainer = function () {
-            this.xData = [new platypus.CollisionData(), new platypus.CollisionData()];
-            this.yData = [new platypus.CollisionData(), new platypus.CollisionData()];
+            this.xData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());
+            this.yData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());
             this.xCount = 0;
             this.yCount = 0;
             this.xDeltaMovement = Infinity;

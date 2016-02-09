@@ -1,144 +1,142 @@
-var path = require('path');
-var _ = require('lodash');
+var path = require('path'),
+    _ = require('lodash');
 
 module.exports = function (grunt) {
-	grunt.initConfig(
-			{
-				pkg: grunt.file.readJSON('package.json'),
+	grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
 
-				// Default values
-				version: 'NEXT',
-				name: 'platypus',
+        // Default values
+        version: 'NEXT',
+        name: 'platypus',
 
-				// Setup doc names / paths.
-				docsName: '<%= pkg.name %>_docs-<%= version %>',
-				docsZip: "<%= docsName %>.zip",
+        // Setup doc names / paths.
+        docsName: '<%= pkg.name %>_docs-<%= version %>',
+        docsZip: "<%= docsName %>.zip",
 
-				// Setup Uglify for JS minification.
-				uglify: {
-					options: {
-						banner: grunt.file.read('LICENSE'),
-						preserveComments: "some",
-						compress: {
-							global_defs: {
-								"DEBUG": false
-							}
-						}
-					},
-					build: {
-						files: {
-							'output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
-						}
-					}
-				},
+        // Setup Uglify for JS minification.
+        uglify: {
+            options: {
+                banner: grunt.file.read('LICENSE'),
+                preserveComments: "some",
+                compress: {
+                    global_defs: {
+                        "DEBUG": false
+                    }
+                }
+            },
+            build: {
+                files: {
+                    'output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
+                }
+            }
+        },
 
-				concat: {
-					options: {
-						separator: '',
-						process: function(src, filepath) {
-							// Remove a few things from each file, they will be added back at the end.
+        concat: {
+            options: {
+                separator: '',
+                process: function(src, filepath) {
+                    // Remove a few things from each file, they will be added back at the end.
 
-							// Strip the license header.
-							var file = src.replace(/^(\/\*\s)[\s\S]+?\*\//, "")
+                    // Strip the license header.
+                    var file = src.replace(/^(\/\*\s)[\s\S]+?\*\//, "")
 
-							// Strip namespace
-							// file = file.replace(/(this.createjs)\s=\s\1.*/, "");
+                    // Strip namespace
+                    // file = file.replace(/(this.createjs)\s=\s\1.*/, "");
 
-							// Strip namespace label
-							file = file.replace(/\/\/\s*namespace:/, "");
+                    // Strip namespace label
+                    file = file.replace(/\/\/\s*namespace:/, "");
 
-							// Strip @module
-							file = file.replace(/\/\*\*[\s\S]+?@module[\s\S]+?\*\//, "");
+                    // Strip @module
+                    file = file.replace(/\/\*\*[\s\S]+?@module[\s\S]+?\*\//, "");
 
-							// Clean up white space
-							file = file.replace(/^\s*/, "");
-							file = file.replace(/\s*$/, "");
+                    // Clean up white space
+                    file = file.replace(/^\s*/, "");
+                    file = file.replace(/\s*$/, "");
 
-							// Append on the class name
-							file =
-								"\n\n//##############################################################################\n"+
-								"// " + path.basename(filepath) + "\n" +
-								"//##############################################################################\n\n"+
-							  	file;
+                    // Append on the class name
+                    file =
+                        "\n\n//##############################################################################\n"+
+                        "// " + path.basename(filepath) + "\n" +
+                        "//##############################################################################\n\n"+
+                        file;
 
-							return file;
-						}
-					},
-					build: {
-						files: {
-							'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource(
-									[
-										{cwd: '', config:'config.json', source:'platypus_source'}
-									]
-							)
-						}
-					}
-				},
+                    return file;
+                }
+            },
+            build: {
+                files: {
+                    'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource(
+                            [
+                                {cwd: '', config:'config.json', source:'platypus_source'}
+                            ]
+                    )
+                }
+            }
+        },
 
-				// Build docs using yuidoc
-				yuidoc: {
-					compile: {
-						name: '<%= pkg.name %>',
-						version: '<%= version %>',
-						description: '<%= pkg.description %>',
-						url: '<%= pkg.url %>',
-						logo: '<%= pkg.logo %>',
-						options: {
-							paths: ['./'],
-							outdir: '<%= docsFolder %>',
-							linkNatives: true,
-							attributesEmit: true,
-							selleck: true,
-							helpers: ["../build/path.js"],
-							themedir: "../build/platypusTheme/"
-						}
-					}
-				},
+        // Build docs using yuidoc
+        yuidoc: {
+            compile: {
+                name: '<%= pkg.name %>',
+                version: '<%= version %>',
+                description: '<%= pkg.description %>',
+                url: '<%= pkg.url %>',
+                logo: '<%= pkg.logo %>',
+                options: {
+                    paths: ['./'],
+                    outdir: '<%= docsFolder %>',
+                    linkNatives: true,
+                    attributesEmit: true,
+                    selleck: true,
+                    helpers: ["../build/path.js"],
+                    themedir: "../build/platypusTheme/"
+                }
+            }
+        },
 
-				compress: {
-					build: {
-						options: {
-							mode:'zip',
-							archive:'output/<%= docsZip %>'
-						},
-						files: [
-							{expand:true, src:'**', cwd:'<%= docsFolder %>'}
-						]
-					}
-				},
+        compress: {
+            build: {
+                options: {
+                    mode:'zip',
+                    archive:'output/<%= docsZip %>'
+                },
+                files: [
+                    {expand:true, src:'**', cwd:'<%= docsFolder %>'}
+                ]
+            }
+        },
 
-				copy: {
-					docsZip: {
-						files: [
-							{expand: true, cwd:'output/', src:'<%= docsZip %>', dest:'../docs/'}
-						]
-					},
-					docsSite: {
-						files: [
-							{expand:true, cwd:'<%= docsFolder %>', src:'**', dest:getConfigValue('docs_out_path')}
-						]
-					},
-					src: {
-						files: [
-							{expand: true, cwd:'./output/', src: '*.js', dest: '../lib/'}
-						]
-					}
-				},
+        copy: {
+            docsZip: {
+                files: [
+                    {expand: true, cwd:'output/', src:'<%= docsZip %>', dest:'../docs/'}
+                ]
+            },
+            docsSite: {
+                files: [
+                    {expand:true, cwd:'<%= docsFolder %>', src:'**', dest:getConfigValue('docs_out_path')}
+                ]
+            },
+            src: {
+                files: [
+                    {expand: true, cwd:'./output/', src: '*.js', dest: '../lib/'}
+                ]
+            }
+        },
 
-				updateversion: {
-					platypus: {
-						file: '../src/platypus.js',
-						version: '<%= version %>'
-					}
-				},
+        updateversion: {
+            platypus: {
+                file: '../src/platypus.js',
+                version: '<%= version %>'
+            }
+        },
 
-				clearversion: {
-					platypus: {
-						file: '../src/platypus.js'
-					}
-				}
-			}
-	);
+        clearversion: {
+            platypus: {
+                file: '../src/platypus.js'
+            }
+        }
+    });
 
 	function getBuildConfig() {
 		// Read the global settings file first.
