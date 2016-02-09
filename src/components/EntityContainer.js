@@ -351,12 +351,21 @@
             },
             
             triggerEventOnChildren: function (event, message, debug) {
+                if (this.destroyed) {
+                    return 0;
+                }
+                
                 if (!this._listeners[event]) {
                     this.addNewPrivateEvent(event);
                 }
                 return this.triggerEvent(event, message, debug);
             },
+
             triggerOnChildren: function (event, message, debug) {
+                if (this.destroyed) {
+                    return 0;
+                }
+                
                 if (!this._listeners[event]) {
                     this.addNewPrivateEvent(event);
                 }
