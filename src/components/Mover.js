@@ -401,14 +401,14 @@
             },
             
             /**
-             * On receiving this message, this component stops velocity in the direction of the collision and sets "grounded" to `true` if colliding with the ground.
+             * On receiving this message, this component stops all velocities along the axis of the collision direction and sets "grounded" to `true` if colliding with the ground.
              * 
              * @method 'hit-solid'
              * @param collisionInfo {Object}
              * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
              */
             "hit-solid": function (collisionInfo) {
-                var i = 0,
+                var i = this.movers.length,
                     m = null,
                     s = 0,
                     v = tempVector;
@@ -417,7 +417,7 @@
                     this.grounded = true;
                 }
                 
-                for (i = 0; i < this.movers.length; i++) {
+                while (i--) {
                     m = this.movers[i];
                     if (m.stopOnCollision) {
                         s = m.velocity.scalarProjection(collisionInfo.direction);

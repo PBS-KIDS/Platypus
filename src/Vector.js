@@ -118,7 +118,7 @@ platypus.Vector = (function () {
      * @param x {number|Array|Vector} The x coordinate or an array or Vector to check against.
      * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of dimensions to check from the array/Vector.
      * @param [z] {number} The z coordinate.
-     * @chainable
+     * @return {Boolean} Whether the vectors are equal.
      * @since 0.7.3
      */
     proto.equals = function (x, y, z) {
