@@ -161,12 +161,12 @@ platypus.Game = (function () {
                     }.bind(this);
                 }.bind(this);
             
-            this.app = applicationInstance;
-            
             if (!definition) {
                 console.warn('No game definition is supplied. Game not created.');
                 return null;
             }
+
+            this.app = applicationInstance;
             
             if (typeof definition === 'string') {
                 loadJSONLinks(definition, load);

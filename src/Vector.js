@@ -110,6 +110,43 @@ platypus.Vector = (function () {
         
         return this;
     };
+
+    /**
+     * Determines whether two vectors are equal.
+     * 
+     * @method equals
+     * @param x {number|Array|Vector} The x coordinate or an array or Vector to check against.
+     * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of dimensions to check from the array/Vector.
+     * @param [z] {number} The z coordinate.
+     * @chainable
+     * @since 0.7.3
+     */
+    proto.equals = function (x, y, z) {
+        var m = null,
+            q = 0,
+            matrix = this.matrix;
+        
+        if (x && Array.isArray(x)) {   // Passing in an array.
+            q = y || x.length;
+            while (q--) {
+                if (matrix[q] !== x[q]) {
+                    return false;
+                }
+            }
+            return true;
+        } else if (x && x.matrix) {   // Passing in a vector.
+            m = x.matrix;
+            q = y || m.length;
+            while (q--) {
+                if (matrix[q] !== m[q]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {                     // Passing in coordinates.
+            return ((typeof x === 'number') && (matrix[0] === x)) && ((typeof y !== 'number') || (matrix[1] === y)) && ((typeof z !== 'number') || (matrix[2] === z));
+        }
+    };
     
     /**
      * Sets the vector to values of the parameter vector.

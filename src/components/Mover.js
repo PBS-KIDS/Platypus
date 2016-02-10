@@ -167,6 +167,7 @@
 
             this.position = this.owner.position;
             this.velocity = this.owner.velocity;
+            this.lastVelocity = Vector.setUp(this.velocity);
             
             this.pause = false;
             
@@ -283,6 +284,11 @@
                     this.addMover(movs[i]);
                 }
                 
+                this.externalForces = this.addMover({
+                    velocity: [0, 0, 0],
+                    orient: false
+                }).velocity;
+                
                 // Set up speed property if supplied.
                 if (this.speed) {
                     if (!isNaN(this.speed)) {
@@ -348,7 +354,12 @@
                     return;
                 }
                 
+                if (!velocity.equals(this.lastVelocity, 2)) {
+                    this.externalForces.addVector(velocity).subtractVector(this.lastVelocity);
+                }
+                
                 velocity.set(0, 0, 0);
+                
                 while (i--) {
                     m = movers[i].update(delta);
                     if (m) {
@@ -376,6 +387,8 @@
                     velocity.multiply(this.drag);
                 }*/
                 this.clamp(velocity, delta);
+                this.lastVelocity.set(velocity);
+                
                 vect = Vector.setUp(velocity).multiply(delta);
                 position.add(vect);
                 vect.recycle();
@@ -464,8 +477,8 @@
                     this.removeMover(this.movers[i]);
                 }
                 this.movers.recycle();
-                
                 this.ground.recycle();
+                this.lastVelocity.recycle();
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;
