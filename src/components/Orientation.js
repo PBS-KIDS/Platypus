@@ -193,14 +193,22 @@
                 this.loadedOrientationMatrix = this.orientationMatrix;
                 
                 // This is the stationary transform
-                this.matrix   = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+                this.matrix = Array.setUp(
+                    Array.setUp(1, 0, 0),
+                    Array.setUp(0, 1, 0),
+                    Array.setUp(0, 0, 1)
+                );
                 
                 // This is the tweening transform
-                this.matrixTween = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+                this.matrixTween = Array.setUp(
+                    Array.setUp(1, 0, 0),
+                    Array.setUp(0, 1, 0),
+                    Array.setUp(0, 0, 1)
+                );
                 
-                this.relocationMessage = {
-                    position: null
-                }
+                this.relocationMessage = Data.setUp(
+                    "position", null
+                );
                 
                 this.vectors  = Array.setUp();
                 this.inverses = Array.setUp();
@@ -638,7 +646,7 @@
             }()),
             
             updateVector: function (vector, inverse) {
-                inverse.set(vector.add(inverse));
+                inverse.set(vector.add(inverse)); // Inverses are stored to return to the original postion, *but* also allow outside changes on the vectors to be retained. This introduces floating point errors on tweened vectors. - DDD 2/10/2016
                 vector.multiply(this.matrixTween);
                 inverse.subtractVector(vector);
             },
@@ -649,11 +657,10 @@
                 this.tweens.recycle();
                 this.orientationVector.recycle();
                 this.orientationMatrix.recycle(2);
+                this.matrix.recycle(2);
+                this.matrixTween.recycle(2);
+                this.relocationMessage.recycle();
             }
-        },
-        
-        publicMethods: {
-            
         }
     });
 }());
