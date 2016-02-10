@@ -177,6 +177,7 @@
             this.position = this.owner.position;
             this.velocity = this.owner.velocity;
             this.lastVelocity = Vector.setUp(this.velocity);
+            this.collision = null;
             
             this.pause = false;
             
@@ -422,31 +423,37 @@
                     s = 0,
                     e = 0,
                     entityV = collisionInfo.entity && collisionInfo.entity.velocity,
-                    v = tempVector;
+                    v = tempVector,
+                    soc = Array.setUp(),
+                    sdi = 0,
+                    direction = collisionInfo.direction;
                 
-                if (collisionInfo.direction.dot(this.ground) > 0) {
+                if (direction.dot(this.ground) > 0) {
                     this.grounded = true;
                 }
 
+                s = this.velocity.scalarProjection(direction);
                 if (entityV) {
-                    e = Math.max(entityV.scalarProjection(collisionInfo.direction), 0);
+                    e = Math.max(entityV.scalarProjection(direction), 0);
+                    s = Math.min(e, s);
                 }
-                
-                while (i--) {
-                    m = this.movers[i];
-                    if (m.stopOnCollision) {
-                        s = m.velocity.scalarProjection(collisionInfo.direction);
-                        if (e) {
-                            if (e < s) {
-                                s -= e;
-                            } else {
-                                s = 0;
-                            }
-                        }
-                        if (s > 0 && v.set(collisionInfo.direction).normalize().multiply(s).dot(m.velocity) > 0) {
-                            m.velocity.subtractVector(v);
+                if (s > 0) {
+                    soc = Array.setUp();
+                    while (i--) {
+                        m = this.movers[i];
+                        if (m.stopOnCollision) {
+                            soc.push(m);
                         }
                     }
+                    i = soc.length;
+                    sdi = s / i;
+                    while (i--) {
+                        m = soc[i];
+                        v.set(direction).normalize().multiply(m.velocity.scalarProjection(direction) - sdi);
+                        m.velocity.subtractVector(v);
+                    }
+                    
+                    soc.recycle();
                 }
             },
             
