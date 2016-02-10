@@ -11,58 +11,58 @@
     "use strict";
     
     var Vector = include('platypus.Vector'),
-    tempVector = Vector.setUp(),
-    updateMax   = function (delta, interim, goal, time) {
-        if (delta && (interim !== goal)) {
-            if (interim < goal) {
-                //console.log("Up   - " + Math.min(interim + delta * time, goal));
-                return Math.min(interim + delta * time, goal);
-            } else {
-                //console.log("Down - " + Math.max(interim - delta * time, goal));
-                return Math.max(interim - delta * time, goal);
+        tempVector = Vector.setUp(),
+        updateMax   = function (delta, interim, goal, time) {
+            if (delta && (interim !== goal)) {
+                if (interim < goal) {
+                    //console.log("Up   - " + Math.min(interim + delta * time, goal));
+                    return Math.min(interim + delta * time, goal);
+                } else {
+                    //console.log("Down - " + Math.max(interim - delta * time, goal));
+                    return Math.max(interim - delta * time, goal);
+                }
             }
-        }
-        
-        return interim;
-    },
-    clampNumber = function (v, d) {
-        var mIn = this.maxMagnitudeInterim = updateMax(this.maxMagnitudeDelta, this.maxMagnitudeInterim, this.maxMagnitude, d);
-        
-        if (v.magnitude() > mIn) {
-            v.normalize().multiply(mIn);
-        }
-    },
-    clampObject = function (v, d) {
-        var max = this.maxMagnitude,
-            mD  = this.maxMagnitudeDelta,
-            mIn = this.maxMagnitudeInterim;
+            
+            return interim;
+        },
+        clampNumber = function (v, d) {
+            var mIn = this.maxMagnitudeInterim = updateMax(this.maxMagnitudeDelta, this.maxMagnitudeInterim, this.maxMagnitude, d);
+            
+            if (v.magnitude() > mIn) {
+                v.normalize().multiply(mIn);
+            }
+        },
+        clampObject = function (v, d) {
+            var max = this.maxMagnitude,
+                mD  = this.maxMagnitudeDelta,
+                mIn = this.maxMagnitudeInterim;
 
-        mIn.up    = updateMax(mD, mIn.up,    max.up,    d);
-        mIn.right = updateMax(mD, mIn.right, max.right, d);
-        mIn.down  = updateMax(mD, mIn.down,  max.down,  d);
-        mIn.left  = updateMax(mD, mIn.left,  max.left,  d);
-        
-        if (v.x > 0) {
-            if (v.x > mIn.right) {
-                v.x = mIn.right;
+            mIn.up    = updateMax(mD, mIn.up,    max.up,    d);
+            mIn.right = updateMax(mD, mIn.right, max.right, d);
+            mIn.down  = updateMax(mD, mIn.down,  max.down,  d);
+            mIn.left  = updateMax(mD, mIn.left,  max.left,  d);
+            
+            if (v.x > 0) {
+                if (v.x > mIn.right) {
+                    v.x = mIn.right;
+                }
+            } else if (v.x < 0) {
+                if (v.x < -mIn.left) {
+                    v.x = -mIn.left;
+                }
             }
-        } else if (v.x < 0) {
-            if (v.x < -mIn.left) {
-                v.x = -mIn.left;
-            }
-        }
 
-        if (v.y > 0) {
-            if (v.y > mIn.down) {
-                v.y = mIn.down;
+            if (v.y > 0) {
+                if (v.y > mIn.down) {
+                    v.y = mIn.down;
+                }
+            } else if (v.y < 0) {
+                if (v.y < -mIn.up) {
+                    v.y = -mIn.up;
+                }
             }
-        } else if (v.y < 0) {
-            if (v.y < -mIn.up) {
-                v.y = -mIn.up;
-            }
-        }
-    };
-    
+        };
+        
     return platypus.createComponentClass({
         
         id: 'Mover',
@@ -420,17 +420,30 @@
                 var i = this.movers.length,
                     m = null,
                     s = 0,
+                    e = 0,
+                    entityV = collisionInfo.entity && collisionInfo.entity.velocity,
                     v = tempVector;
                 
                 if (collisionInfo.direction.dot(this.ground) > 0) {
                     this.grounded = true;
+                }
+
+                if (entityV) {
+                    e = Math.max(entityV.scalarProjection(collisionInfo.direction), 0);
                 }
                 
                 while (i--) {
                     m = this.movers[i];
                     if (m.stopOnCollision) {
                         s = m.velocity.scalarProjection(collisionInfo.direction);
-                        if (v.set(collisionInfo.direction).normalize().multiply(s).dot(m.velocity) > 0) {
+                        if (e) {
+                            if (e < s) {
+                                s -= e;
+                            } else {
+                                s = 0;
+                            }
+                        }
+                        if (s > 0 && v.set(collisionInfo.direction).normalize().multiply(s).dot(m.velocity) > 0) {
                             m.velocity.subtractVector(v);
                         }
                     }

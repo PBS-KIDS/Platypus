@@ -26,7 +26,8 @@
 (function () {
     "use strict";
     
-    var Vector = include('platypus.Vector'),
+    var Data = include('platypus.Data'),
+        Vector = include('platypus.Vector'),
         normal = Vector.setUp(0, 0, 1),
         origin = Vector.setUp(1, 0, 0),
         matrices = {
