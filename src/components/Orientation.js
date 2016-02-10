@@ -292,9 +292,12 @@
                             tween.offset.multiply(tween.endMatrix).addVector(tween.anchor);
                             msg.position = tween.offset;
                             this.owner.triggerEvent('relocate-entity', msg);
-                            tween.offset.recycle();
+                            if (tween.recycleOffset) {
+                                tween.offset.recycle();
+                            }
                         }
                         tween.onFinished(tween.endMatrix);
+                        tween.recycle();
                     }
                     
                     finishedTweening.recycle();
@@ -409,11 +412,21 @@
                     var arr = null,
                         angle  = props.angle || 0,
                         matrix = props.matrix,
-                        offset = null;
+                        tween  = Data.setUp(
+                            "transform", props.transform,
+                            "anchor", props.anchor,
+                            "endTime", props.time || 0,
+                            "time", 0,
+                            "tween", props.tween || linearEase,
+                            "onFinished", props.onFinished || doNothing,
+                            "beforeTick", props.beforeTick || returnTrue,
+                            "afterTick", props.onTick || props.afterTick || doNothing
+                        );
                     
                     if (!matrix) {
                         matrix = matrices[props.transform];
                     }
+                    tween.endMatrix = matrix;
                     
                     if (!angle && (props.transform.indexOf('rotate') === 0)) {
                         switch (props.transform) {
@@ -433,29 +446,17 @@
                             break;
                         }
                     }
+                    tween.angle = angle;
                     
                     if (props.anchor) {
-                        offset = props.offset
-                        if (offset) {
-                            offset = offset.copy();
-                        } else {
-                            offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                        tween.offset = props.offset
+                        if (!tween.offset) {
+                            tween.offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                            tween.recycleOffset = true;
                         }
                     }
                     
-                    this.tweens.push({
-                        transform: props.transform,
-                        anchor: props.anchor,
-                        offset: offset,
-                        endTime: props.time || 0,
-                        time: 0,
-                        endMatrix: matrix,
-                        angle: angle,
-                        tween: props.tween || linearEase,
-                        onFinished: props.onFinished || doNothing,
-                        beforeTick: props.beforeTick || returnTrue,
-                        afterTick: props.onTick || props.afterTick || doNothing
-                    });
+                    this.tweens.push(tween);
                 };
             }()),
             

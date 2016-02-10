@@ -15,10 +15,8 @@
         updateMax   = function (delta, interim, goal, time) {
             if (delta && (interim !== goal)) {
                 if (interim < goal) {
-                    //console.log("Up   - " + Math.min(interim + delta * time, goal));
                     return Math.min(interim + delta * time, goal);
                 } else {
-                    //console.log("Down - " + Math.max(interim - delta * time, goal));
                     return Math.max(interim - delta * time, goal);
                 }
             }
@@ -389,13 +387,7 @@
                         velocity.add(m);
                     }
                 }
-                
-                // Finally, add aggregated velocity to the position
-/*                if (this.grounded) {
-                    velocity.multiply(this.friction);
-                } else {
-                    velocity.multiply(this.drag);
-                }*/
+
                 this.clamp(velocity, delta);
                 this.lastVelocity.set(velocity);
                 
@@ -433,11 +425,18 @@
                 }
 
                 s = this.velocity.scalarProjection(direction);
-                if (entityV) {
-                    e = Math.max(entityV.scalarProjection(direction), 0);
-                    s = Math.min(e, s);
-                }
                 if (s > 0) {
+                    if (entityV) {
+                        e = Math.max(entityV.scalarProjection(direction), 0);
+                        if (e < s) {
+                            s -= e;
+                        } else {
+                            s = 0;
+                        }
+                    } else {
+                        s = 0;
+                    }
+
                     soc = Array.setUp();
                     while (i--) {
                         m = this.movers[i];
