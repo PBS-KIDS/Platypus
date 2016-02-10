@@ -155,7 +155,16 @@
              * @type number
              * @default 0
              */
-            maxMagnitudeDelta: 0
+            maxMagnitudeDelta: 0,
+            
+            /**
+             * This property determines whether orientation changes should apply external velocities from pre-change momentum.
+             * 
+             * @property reorientVelocities
+             * @type Boolean
+             * @default true
+             */
+            reorientVelocities: true
         },
         
         constructor: function (definition) {
@@ -465,6 +474,19 @@
              */
             "unpause-movement": function () {
                 this.paused = false;
+            },
+            
+            /**
+             * Handles velocity change if velocities should not be re-oriented.
+             * 
+             * @method 'orientation-updated'
+             * @param matrix {Array} A 3x3 matrix describing the orientation change.
+             * @since 0.7.3
+             */
+            "orientation-updated": function (matrix) {
+                if (!this.reorientVelocities) {
+                    this.lastVelocity.multiply(matrix);
+                }
             }
         },
         

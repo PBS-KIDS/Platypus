@@ -21,7 +21,7 @@
  * @class Orientation
  * @uses platypus.Component
  */
-/*global platypus */
+/*global platypus, include */
 /*jslint plusplus:true */
 (function () {
     "use strict";
