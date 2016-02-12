@@ -183,6 +183,9 @@
             this.moversCopy = this.movers;
             this.movers = Array.setUp();
 
+            this.velocityChanges = Array.setUp();
+            this.velocityDirections = Array.setUp();
+
             this.ground = Vector.setUp(this.ground);
             
             Object.defineProperty(this.owner, "maxMagnitude", {
@@ -410,15 +413,14 @@
              * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
              */
             "hit-solid": function (collisionInfo) {
-                var i = this.movers.length,
-                    m = null,
-                    s = 0,
+                var s = 0,
                     e = 0,
                     entityV = collisionInfo.entity && collisionInfo.entity.velocity,
-                    v = tempVector,
-                    soc = Array.setUp(),
-                    sdi = 0,
-                    direction = collisionInfo.direction;
+                    direction = collisionInfo.direction,
+                    add = true,
+                    vc = this.velocityChanges,
+                    vd = this.velocityDirections,
+                    i = vc.length;
                 
                 if (direction.dot(this.ground) > 0) {
                     this.grounded = true;
@@ -436,23 +438,63 @@
                     } else {
                         s = 0;
                     }
-
-                    soc = Array.setUp();
+                    
                     while (i--) {
-                        m = this.movers[i];
+                        if ((s < vc[i]) && (vd[i].dot(direction) > 0)) {
+                            vc[i] = s;
+                            vd[i].set(direction);
+                            add = false;
+                            break;
+                        }
+                    }
+                    
+                    if(!this.aaa) {this.aaa = [];}
+                    if (add) {
+                        vc.push(s);
+                        vd.push(Vector.setUp(direction));
+                        this.aaa.push(entityV);
+                    }
+                }
+            },
+            
+            "handle-post-collision-logic": function () {
+                var direction = null,
+                    ms = this.movers,
+                    vc = this.velocityChanges,
+                    vd = this.velocityDirections,
+                    i = vc.length,
+                    j = ms.length,
+                    m = null,
+                    s = 0,
+                    sdi = 0,
+                    soc = null,
+                    v = tempVector;
+                
+                if (i) {
+                    soc = Array.setUp();
+                    
+                    while (j--) {
+                        m = ms[j];
                         if (m.stopOnCollision) {
                             soc.push(m);
                         }
                     }
-                    i = soc.length;
-                    sdi = s / i;
+                    
                     while (i--) {
-                        m = soc[i];
-                        v.set(direction).normalize().multiply(m.velocity.scalarProjection(direction) - sdi);
-                        m.velocity.subtractVector(v);
+                        direction = vd[i];
+                        s = vc[i];
+                        j = soc.length;
+                        sdi = s / j;
+                        while (j--) {
+                            m = soc[j];
+                            v.set(direction).normalize().multiply(m.velocity.scalarProjection(direction) - sdi);
+                            m.velocity.subtractVector(v);
+                        }
+                        direction.recycle();
                     }
                     
-                    soc.recycle();
+                    vc.length = 0;
+                    vd.length = 0;
                 }
             },
             
@@ -520,6 +562,8 @@
                 this.movers.recycle();
                 this.ground.recycle();
                 this.lastVelocity.recycle();
+                this.velocityChanges.recycle();
+                this.velocityDirections.recycle();
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;

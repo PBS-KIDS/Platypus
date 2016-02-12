@@ -429,11 +429,14 @@ platypus.Vector = (function () {
      */
     proto.dot = function (otherVector, limit) {
         var sum = 0,
-            q = 0;
-        limit = limit || this.matrix.length;
+            q = 0,
+            m = this.matrix,
+            oM = otherVector.matrix;
+            
+        q = limit || m.length;
         
-        for (q = 0; q < limit; q++) {
-            sum += this.matrix[q] * (otherVector.matrix[q] || 0);
+        while (q--) {
+            sum += m[q] * (oM[q] || 0);
         }
         
         return sum;
