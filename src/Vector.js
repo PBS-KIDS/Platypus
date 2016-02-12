@@ -226,7 +226,8 @@ platypus.Vector = (function () {
         var mag = this.magnitude();
         
         if (mag === 0) {
-            return this.multiply(0);
+            // Ignores attempt to normalize a vector of zero magnitude.
+            return this;
         } else {
             return this.multiply(1 / mag);
         }
@@ -448,7 +449,14 @@ platypus.Vector = (function () {
     proto.angleTo = function (otherVector) {
         var v1 = this.getUnit(),
             v2 = otherVector.getUnit(),
+            ang = 0;
+            
+        if (v1.magnitude() && v2.magnitude()) { // Probably want a less expensive check here for zero-length vectors.
             ang = Math.acos(v1.dot(v2));
+        } else {
+            console.warn('Vector: Attempted to find the angle of a zero-length vector.');
+            ang = undefined;
+        }
             
         v1.recycle();
         v2.recycle();
@@ -492,13 +500,17 @@ platypus.Vector = (function () {
 
      */
     proto.scalarProjection = function (vectorOrAngle) {
-        var angle = 0;
+        var v = null,
+            d = 0;
+        
         if (typeof vectorOrAngle === "number") {
-            angle = vectorOrAngle;
+            return this.magnitude(2) * Math.cos(vectorOrAngle);
         } else {
-            angle = this.angleTo(vectorOrAngle);
+            v = Vector.setUp(vectorOrAngle).normalize();
+            d = this.dot(v);
+            v.recycle();
+            return d;            
         }
-        return this.magnitude(2) * Math.cos(angle);
     };
     
     /**
