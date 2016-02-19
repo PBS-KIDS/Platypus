@@ -474,7 +474,7 @@
                  * @param world.tile.height {number} The height in world units of a single tile.
                  * @param world.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
                  */
-                this.owner.trigger('world-loaded', {
+                this.owner.triggerEvent('world-loaded', {
                     width: level.width * level.tilewidth * this.unitsPerPixel,
                     height: level.height * level.tileheight * this.unitsPerPixel,
                     tile: {
@@ -695,7 +695,7 @@
                         this.layerZ += this.layerIncrement;
 
                         if ((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
-                            combineRenderLayer.trigger('add-tiles', renderTiles);
+                            combineRenderLayer.triggerEvent('add-tiles', renderTiles);
                             return combineRenderLayer;
                         } else {
                             props = {};

@@ -217,17 +217,17 @@
             },
             
             "mousedown": function (value) {
-                this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
+                this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':down', value.event);
                 if (this.joystick) {
-                    this.owner.trigger('joystick:down', value.event);
+                    this.owner.triggerEvent('joystick:down', value.event);
                     this.handleJoy(value);
                 }
             },
             
             "pressup": function (value) {
-                this.owner.trigger('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+                this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
                 if (this.joystick) {
-                    this.owner.trigger('joystick:up', value.event);
+                    this.owner.triggerEvent('joystick:up', value.event);
                     this.handleJoy(value);
                 }
             },
@@ -266,11 +266,11 @@
                         segment  = Math.PI / this.joystick.directions;
                         accuracy = directions[this.joystick.directions * 2][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
                         if (accuracy !== direction) {
-                            this.owner.trigger(accuracy.replace(direction, '').replace('-', ''), event);  //There's probably a better way to perform this, but the current method is functional. - DDD
+                            this.owner.triggerEvent(accuracy.replace(direction, '').replace('-', ''), event);  //There's probably a better way to perform this, but the current method is functional. - DDD
                         }
                     }
-                    this.owner.trigger(direction, event);
-                    this.owner.trigger("joystick-orientation", orientation);
+                    this.owner.triggerEvent(direction, event);
+                    this.owner.triggerEvent("joystick-orientation", orientation);
                 }
             },
             

@@ -212,7 +212,7 @@ platypus.Game = (function () {
                 sceneInstance.data = data;
                 this.app.manager.addState(id, sceneInstance);
 				this.stage.addChild(sceneInstance.panel);
-    			this.app.trigger('stateAdded', id, sceneInstance);
+    			this.app.triggerEvent('stateAdded', id, sceneInstance);
                 this.app.manager.state = id;
             }
         };

@@ -38,17 +38,17 @@ Requires: ["CollisionGroup"]
         constructor: function (definition) {},
         events: {
             "load": function (resp) {
-                if (!this.owner.trigger('add-collision-entity', this.owner)) {
+                if (!this.owner.triggerEvent('add-collision-entity', this.owner)) {
                     // This message wasn't handled, so add a CollisionGroup component and try again!
                     this.owner.addComponent(new platypus.components.CollisionGroup(this.owner, {}));
-                    this.owner.trigger('add-collision-entity', this.owner);
+                    this.owner.triggerEvent('add-collision-entity', this.owner);
                 }
             },
             "carry-me": function (resp) {
-                this.owner.trigger('add-collision-entity', resp.entity);
+                this.owner.triggerEvent('add-collision-entity', resp.entity);
             },
             "release-me": function (resp) {
-                this.owner.trigger('remove-collision-entity', resp.entity);
+                this.owner.triggerEvent('remove-collision-entity', resp.entity);
             }
         }
     });

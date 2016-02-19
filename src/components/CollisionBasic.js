@@ -47,17 +47,15 @@
          * @event *
          * @param collision {Object} A list of key/value pairs describing the collision.
          */
-        entityBroadcast = function (event, solidOrSoft, collisionType) {
-            if (typeof event === 'string') {
-                return function (value) {
+        entityBroadcast = (function () {
+            var stringBroadcast = function (event, collisionType, solidOrSoft, value) {
                     if (value.myType === collisionType) {
                         if (value.hitType === solidOrSoft) {
                             this.owner.triggerEvent(event, value);
                         }
                     }
-                };
-            } else if (Array.isArray(event)) {
-                return function (value) {
+                },
+                arrayBroadcast = function (event, collisionType, solidOrSoft, value) {
                     var i = 0;
                     
                     if (value.myType === collisionType) {
@@ -67,9 +65,8 @@
                             }
                         }
                     }
-                };
-            } else {
-                return function (collisionInfo) {
+                },
+                directionalBroadcast = function (event, collisionType, solidOrSoft, collisionInfo) {
                     var dx = collisionInfo.x,
                         dy = collisionInfo.y;
 
@@ -81,25 +78,32 @@
                     if (collisionInfo.myType === collisionType) {
                         if (collisionInfo.hitType === solidOrSoft) {
                             if ((dy > 0) && event.bottom) {
-                                this.owner.trigger(event.bottom, collisionInfo);
-                            }
-                            if ((dy < 0) && event.top) {
-                                this.owner.trigger(event.top, collisionInfo);
+                                this.owner.triggerEvent(event.bottom, collisionInfo);
+                            } else if ((dy < 0) && event.top) {
+                                this.owner.triggerEvent(event.top, collisionInfo);
                             }
                             if ((dx > 0) && event.right) {
-                                this.owner.trigger(event.right, collisionInfo);
-                            }
-                            if ((dx < 0) && event.left) {
-                                this.owner.trigger(event.left, collisionInfo);
+                                this.owner.triggerEvent(event.right, collisionInfo);
+                            } else if ((dx < 0) && event.left) {
+                                this.owner.triggerEvent(event.left, collisionInfo);
                             }
                             if (event.all) {
-                                this.owner.trigger(event.all, collisionInfo);
+                                this.owner.triggerEvent(event.all, collisionInfo);
                             }
                         }
                     }
                 };
-            }
-        },
+            
+            return function (self, event, solidOrSoft, collisionType) {
+                if (typeof event === 'string') {
+                    return stringBroadcast.bind(self, event, self.collisionType, solidOrSoft);
+                } else if (Array.isArray(event)) {
+                    return arrayBroadcast.bind(self, event, self.collisionType, solidOrSoft);
+                } else {
+                    return directionalBroadcast.bind(self, event, self.collisionType, solidOrSoft);
+                }
+            };
+        }()),
         setupCollisionFunctions = function (self, entity) {
             // This allows the same component type to be added multiple times.
             if (!entity.collisionFunctions) {
@@ -477,7 +481,7 @@
                     if (this.solidCollisions.hasOwnProperty(key)) {
                         this.owner.solidCollisionMap[this.collisionType].push(key);
                         if (this.solidCollisions[key]) { // To make sure it's not an empty string.
-                            this.addEventListener('hit-by-' + key, entityBroadcast(this.solidCollisions[key], 'solid', this.collisionType));
+                            this.addEventListener('hit-by-' + key, entityBroadcast(this, this.solidCollisions[key], 'solid'));
                         }
                     }
                 }
@@ -490,7 +494,7 @@
                     if (this.softCollisions.hasOwnProperty(key)) {
                         this.owner.softCollisionMap[this.collisionType].push(key);
                         if (this.softCollisions[key]) { // To make sure it's not an empty string.
-                            this.addEventListener('hit-by-' + key, entityBroadcast(this.softCollisions[key], 'soft', this.collisionType));
+                            this.addEventListener('hit-by-' + key, entityBroadcast(this, this.softCollisions[key], 'soft'));
                         }
                     }
                 }
@@ -514,7 +518,7 @@
                  */
                 if (!type || (type === this.collisionType)) {
                     this.owner.collisionTypes.union([this.collisionType]);
-                    this.owner.parent.trigger('add-collision-entity', this.owner);
+                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
                     this.active = true;
                 }
             },
@@ -534,7 +538,7 @@
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
                 if (!type || (type === this.collisionType)) {
-                    this.owner.parent.trigger('remove-collision-entity', this.owner);
+                    this.owner.parent.triggerEvent('remove-collision-entity', this.owner);
                     index = this.owner.collisionTypes.indexOf(this.collisionType);
                     if (index >= 0) {
                         this.owner.collisionTypes.greenSplice(index);
@@ -543,7 +547,7 @@
                 }
 
                 if (this.owner.collisionTypes.length) {
-                    this.owner.parent.trigger('add-collision-entity', this.owner);
+                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
                 }
             },
             
@@ -694,7 +698,7 @@
             destroy: function () {
                 var i = this.owner.collisionTypes.indexOf(this.collisionType);
                 
-                this.owner.parent.trigger('remove-collision-entity', this.owner);
+                this.owner.parent.triggerEvent('remove-collision-entity', this.owner);
 
                 delete this.aabb;
                 delete this.prevAABB;
@@ -717,7 +721,7 @@
                 delete this.entities;
 
                 if (this.owner.collisionTypes.length) {
-                    this.owner.parent.trigger('add-collision-entity', this.owner);
+                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
                 }
             }
         }

@@ -434,7 +434,7 @@
                      * @param message.viewport {platypus.AABB} An AABB describing the world viewport area.
                      * @param message.stationary {Boolean} Whether the camera is moving.
                      **/
-                    this.owner.trigger('camera-update', msg);
+                    this.owner.triggerEvent('camera-update', msg);
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('camera-update', msg);
                     }
@@ -442,7 +442,7 @@
                     this.stationary = true;
                     msg.stationary = true;
 
-                    this.owner.trigger('camera-update', msg);
+                    this.owner.triggerEvent('camera-update', msg);
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('camera-update', msg);
                     }
@@ -453,7 +453,7 @@
                     * @event 'camera-stationary'
                     * @deprecated since 0.6.8 - Listen for "camera-update" instead, with a `stationary` property of `true`.
                     **/
-                    this.owner.trigger('camera-stationary', msg);
+                    this.owner.triggerEvent('camera-stationary', msg);
                 }
                 
                 if (this.lastFollow.begin) {

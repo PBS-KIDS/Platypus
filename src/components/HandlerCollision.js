@@ -1009,7 +1009,7 @@
             
             checkSoftCollisions: (function () {
                 var trigger = function (collision) {
-                        this.trigger('hit-by-' + collision.type, collision);
+                        this.triggerEvent('hit-by-' + collision.type, collision);
                     };
                 
                 return function (resp) {

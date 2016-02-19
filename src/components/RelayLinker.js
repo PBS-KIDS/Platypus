@@ -121,7 +121,7 @@
                         this.links.push(toLink.entity);
                         if (toLink.reciprocate) {
                             this.linkMessage.reciprocate = false;
-                            toLink.entity.trigger('link-entity', this.linkMessage);
+                            toLink.entity.triggerEvent('link-entity', this.linkMessage);
                         }
                     }
                 }
@@ -156,7 +156,7 @@
                 var i = 0;
                 
                 for (i = 0; i < this.links.length; i++) {
-                    this.links[i].trigger('unlink-entity', this.linkMessage);
+                    this.links[i].triggerEvent('unlink-entity', this.linkMessage);
                 }
                 this.links.recycle();
                 this.events = null;
