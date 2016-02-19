@@ -16,6 +16,7 @@ platypus.Messenger = (function () {
             
             this.loopCheck = Array.setUp();
         },
+        debug = !!springroll.Debug,
         proto = extend(Messenger, EventDispatcher);
     
     /**
@@ -27,48 +28,6 @@ platypus.Messenger = (function () {
     proto.toString = function () {
         return "[Messenger Object]";
     };
-
-    /**
-     * This method identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
-     * 
-     * @method greenTrigger
-     * @since 0.7.1
-     */
-    proto.greenTrigger = function(type) {
-        var i = 0,
-            listener = null,
-            listeners = null,
-            args = null;
-        
-		if (this._destroyed) {
-            return;
-        }
-
-		if (this._listeners.hasOwnProperty(type) && (this._listeners[type] !== undefined)) {
-			// copy the listeners array
-			listeners = this._listeners[type].greenSlice();
-
-			if (arguments.length > 1) {
-				args = Array.prototype.greenSlice.call(arguments);
-                args.greenSplice(0);
-			}
-
-            i = listeners.length;
-			while (i--) {
-				listener = listeners[i];
-				if (listener._eventDispatcherOnce) {
-					delete listener._eventDispatcherOnce;
-					this.off(type, listener);
-				}
-				listener.apply(this, args);
-			}
-            
-            if (args) {
-                args.recycle();
-            }
-            listeners.recycle();
-		}
-	};
 
     /**
      * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
@@ -100,64 +59,93 @@ platypus.Messenger = (function () {
     };
     
     /**
-     *  This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate.
-     * 
+     * This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
+     *  
      * @method triggerEvent
      * @param event {String} This is the message to process.
      * @param value {*} This is a message object or other value to pass along to event handler.
      * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
      * @return {number} The number of handlers for the triggered message.
      */
-    proto.triggerEvent = function (event, value, debug) {
-        var i = 0,
-            debugLogging = debug || (value && value.debug),
-            debugCount = 0,
-            count = 0;
+    proto.triggerEvent = function (type) {
+        var count = 0,
+            i = 0,
+            listener = null,
+            listeners = null,
+            args = null;
         
-        if (this.destroyed) {
-            return 0;
-        }
-        
-        count = (this._listeners[event] && this._listeners[event].length) || 0;
-        
-        // Debug logging.
-        if (debugLogging || this.debug) {
-            if (debugLogging) {
-                if (count) {
-                    console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
-                } else {
-                    console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
-                    return 0;
-                }
-            }
-            
-            for (i = 0; i < this.loopCheck.length; i++) {
-                if (this.loopCheck[i] === event) {
-                    debugCount += 1;
-                    if (debugCount > 5) {
-                        throw "Endless loop detected for '" + event + "'.";
-                    } else {
-                        console.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
-                    }
-                }
-            }
+		if (!this._destroyed && this._listeners.hasOwnProperty(type) && (this._listeners[type] !== undefined)) {
+			// copy the listeners array
+			listeners = this._listeners[type].greenSlice();
 
-            this.loopCheck.push(event);
-            if (window.performance) {
-                window.performance.mark("a");
+			if (arguments.length > 1) {
+				args = Array.prototype.greenSlice.call(arguments);
+                args.greenSplice(0);
+			}
+
+            count = i = listeners.length;
+			while (i--) {
+				listener = listeners[i];
+				if (listener._eventDispatcherOnce) {
+					delete listener._eventDispatcherOnce;
+					this.off(type, listener);
+				}
+				listener.apply(this, args);
+			}
+            
+            if (args) {
+                args.recycle();
             }
-            this.greenTrigger(event, value, debug);
-            if (window.performance) {
-                window.performance.mark("b");
-                window.performance.measure(this.type + ":" + event, 'a', 'b');
-            }
-            this.loopCheck.length = this.loopCheck.length - 1;
-        } else if (count) {
-            this.greenTrigger(event, value, debug);
-        }
+            listeners.recycle();
+		}
         
         return count;
     };
+    if (debug) {
+        proto._triggerEvent = proto.triggerEvent;
+        proto.triggerEvent = function (event, value, debug) {
+            var i = 0,
+                debugLogging = debug || (value && value.debug),
+                debugCount = 0,
+                count = 0;
+            
+            // Debug logging.
+            if (debugLogging || this.debug) {
+                for (i = 0; i < this.loopCheck.length; i++) {
+                    if (this.loopCheck[i] === event) {
+                        debugCount += 1;
+                        if (debugCount > 5) {
+                            throw "Endless loop detected for '" + event + "'.";
+                        } else {
+                            console.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
+                        }
+                    }
+                }
+
+                this.loopCheck.push(event);
+                if (window.performance) {
+                    window.performance.mark("a");
+                }
+                count = this._triggerEvent(event, value, debug);
+                if (window.performance) {
+                    window.performance.mark("b");
+                    window.performance.measure(this.type + ":" + event, 'a', 'b');
+                }
+                this.loopCheck.length = this.loopCheck.length - 1;
+                if (debugLogging) {
+                    if (count) {
+                        console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
+                    } else {
+                        console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
+                    }
+                }
+                return count;
+            } else {
+                return this._triggerEvent(event, value, debug);
+            }
+        };
+
+    }
     
     /**
      * This method returns all the messages that this entity is concerned about.

@@ -53,11 +53,12 @@
 			enumerable: false,
 			writable: false,
 			value: function () {
-                var i = 0,
-                    arr = Array.setUp();
+                var arr = Array.setUp(),
+                    i = 0,
+                    length = this.length;
                     
-                for (i = 0; i < this.length; i++) {
-                    arr.push(this[i]);
+                for (i = 0; i < length; i++) {
+                    arr[i] = this[i];
                 }
                 
                 return arr;
@@ -77,13 +78,14 @@
 			writable: false,
 			value: function (index) {
                 var i = 0,
-                    item = this[index];
+                    item = this[index],
+                    length = this.length;
                     
-                for (i = index + 1; i < this.length; i++) {
+                for (i = index + 1; i < length; i++) {
                     this[i - 1] = this[i];
                 }
                 
-                if (this.length) {
+                if (length) {
                     this.length -= 1;
                 }
                 
