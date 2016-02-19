@@ -14,6 +14,7 @@
     
     var Application = include("springroll.Application"),
         AABB = include('platypus.AABB'),
+        Data = include('platypus.Data'),
         Vector = include('platypus.Vector');
     
     return platypus.createComponentClass({
@@ -150,22 +151,22 @@
         },
         constructor: function (definition) {
             //The dimensions of the camera in the window
-            this.viewport = new AABB(0, 0, 0, 0);
+            this.viewport = AABB.setUp(0, 0, 0, 0);
             
             //The dimensions of the camera in the game world
-            this.worldCamera = {
-                viewport: new AABB(this.x, this.y, this.width, this.height),
-                orientation: definition.orientation || 0
-            };
+            this.worldCamera = Data.setUp(
+                "viewport", AABB.setUp(this.x, this.y, this.width, this.height),
+                "orientation", definition.orientation || 0
+            );
             
             //Message object defined here so it's reusable
-            this.message = {
-                viewport: new AABB(),
-                scaleX: 0,
-                scaleY: 0,
-                orientation: 0,
-                stationary: false
-            };
+            this.message = Data.setUp(
+                "viewport", AABB.setUp(),
+                "scaleX", 0,
+                "scaleY", 0,
+                "orientation", 0,
+                "stationary", false
+            );
     
             //Whether the map has finished loading.
             this.worldIsLoaded = false;
@@ -179,7 +180,7 @@
             //FOLLOW MODE VARIABLES
             
             //--Bounding
-            this.boundingBox = new AABB(this.worldCamera.viewport.x, this.worldCamera.viewport.y, this.worldCamera.viewport.width / 2, this.worldCamera.viewport.height / 2);
+            this.boundingBox = AABB.setUp(this.worldCamera.viewport.x, this.worldCamera.viewport.y, this.worldCamera.viewport.width / 2, this.worldCamera.viewport.height / 2);
             
             //Forward Follow
             this.lastX = this.worldCamera.viewport.x;
@@ -194,19 +195,19 @@
             this.offsetX = 0;
             this.offsetY = 0;
             this.offsetAngle = 0;
-            this.forwardFollower = {
-                x: this.lastX,
-                y: this.lastY,
-                orientation: this.lastOrientation
-            };
+            this.forwardFollower = Data.setUp(
+                "x", this.lastX,
+                "y", this.lastY,
+                "orientation", this.lastOrientation
+            );
             
-            this.lastFollow = {
-                entity: null,
-                mode: null,
-                offsetX: 0,
-                offsetY: 0,
-                begin: 0
-            };
+            this.lastFollow = Data.setUp(
+                "entity", null,
+                "mode", null,
+                "offsetX", 0,
+                "offsetY", 0,
+                "begin", 0
+            );
             
             this.xMagnitude = 0;
             this.yMagnitude = 0;
@@ -861,6 +862,16 @@
                     this.mouseVector.recycle();
                     this.mouseWorldOrigin.recycle();
                 }
+                
+                this.boundingBox.recycle();
+                this.viewport.recycle();
+                this.worldCamera.viewport.recycle();
+                this.worldCamera.recycle();
+                this.message.viewport.recycle();
+                this.message.recycle();
+    
+                this.forwardFollower.recycle();
+                this.lastFollow.recycle();
             }
         }
     });

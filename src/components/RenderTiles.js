@@ -27,7 +27,7 @@
         doNothing = function () {
             return null;
         },
-        tempCache = new AABB(),
+        tempCache = AABB.setUp(),
         sort = function (a, b) {
             return a.z - b.z;
         },
@@ -226,14 +226,14 @@
             this.tilesSprite      = null;
             this.cacheTexture     = null;
             this.mapContainer      = null;
-            this.laxCam = new AABB();
+            this.laxCam = AABB.setUp();
 
             // temp values
             this.worldWidth    = this.tileWidth;
             this.worldHeight   = this.tileHeight;
 
-            this.cache = new AABB();
-            this.cachePixels = new AABB();
+            this.cache = AABB.setUp();
+            this.cachePixels = AABB.setUp();
 
             // Set up containers
             if (this.spriteSheet && (typeof this.spriteSheet === 'string')) {
@@ -873,7 +873,11 @@
                         }
                     }
                     map.recycle();
-                }        
+                }
+                
+                this.laxCam.recycle();
+                this.cache.recycle();
+                this.cachePixels.recycle();
             }
         },
         

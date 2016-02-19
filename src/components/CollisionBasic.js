@@ -14,32 +14,8 @@
     
     var AABB = include('platypus.AABB'),
         CollisionShape = include('platypus.CollisionShape'),
+        Data = include('platypus.Data'),
         Vector = include('platypus.Vector'),
-        handleStuck = function (position, data, owner) {
-            var m = 0,
-                s = data.stuck;
-
-            if (s) {
-                m = position.magnitude();
-                if (data.thatShape.owner && (Math.abs(s) > 1)) {
-                    s *= 0.05;
-                }
-                if (!m || (m > Math.abs(s))) {
-                    if (data.vector.x) {
-                        position.x = s;
-                        position.y = 0;
-                    }
-                    if (data.vector.y) {
-                        position.x = 0;
-                        position.y = s;
-                    }
-                    if (owner.stuckWith) {
-                        owner.stuckWith.recycle();
-                    }
-                    owner.stuckWith = Vector.setUp(data.thatShape.x, data.thatShape.y);
-                }
-            }
-        },
 
         /**
          * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
@@ -104,139 +80,176 @@
                 }
             };
         }()),
-        setupCollisionFunctions = function (self, entity) {
-            // This allows the same component type to be added multiple times.
-            if (!entity.collisionFunctions) {
-                entity.collisionFunctions = {};
-                entity.getAABB = function (collisionType) {
-                    var aabb = null,
-                        key  = '';
+        setupCollisionFunctions = (function () {
+            var entityGetAABB = function (aabb, colFuncs, collisionType) {
+                    var key  = '';
 
                     if (!collisionType) {
-                        aabb = entity.aabb = entity.aabb || new AABB();
                         aabb.reset();
-                        for (key in entity.collisionFunctions) {
-                            if (entity.collisionFunctions.hasOwnProperty(key)) {
-                                aabb.include(entity.collisionFunctions[key].getAABB());
+                        for (key in colFuncs) {
+                            if (colFuncs.hasOwnProperty(key)) {
+                                aabb.include(colFuncs[key].getAABB());
                             }
                         }
                         return aabb;
-                    } else if (entity.collisionFunctions[collisionType]) {
-                        return entity.collisionFunctions[collisionType].getAABB();
+                    } else if (colFuncs[collisionType]) {
+                        return colFuncs[collisionType].getAABB();
                     } else {
                         return null;
                     }
-                };
-
-                entity.getPreviousAABB = function (collisionType) {
-                    var colFunc = entity.collisionFunctions[collisionType];
+                },
+                entityGetPreviousAABB = function (colFuncs, collisionType) {
+                    var colFunc = colFuncs[collisionType];
                     
                     if (colFunc) {
                         return colFunc.getPreviousAABB();
                     } else {
                         return null;
                     }
-                };
-
-                entity.getShapes = function (collisionType) {
-                    var colFunc = entity.collisionFunctions[collisionType];
+                },
+                entityGetShapes = function (colFuncs, collisionType) {
+                    var colFunc = colFuncs[collisionType];
                     
                     if (colFunc) {
                         return colFunc.getShapes();
                     } else {
                         return null;
                     }
-                };
-
-                entity.getPrevShapes = function (collisionType) {
-                    var colFunc = entity.collisionFunctions[collisionType];
+                },
+                entityGetPrevShapes = function (colFuncs, collisionType) {
+                    var colFunc = colFuncs[collisionType];
                     
                     if (colFunc) {
                         return colFunc.getPrevShapes();
                     } else {
                         return null;
                     }
-                };
-
-                entity.prepareCollision = function (x, y) {
+                },
+                entityPrepareCollision = function (colFuncs, x, y) {
                     var key = '';
                     
-                    for (key in entity.collisionFunctions) {
-                        if (entity.collisionFunctions.hasOwnProperty(key)) {
-                            entity.collisionFunctions[key].prepareCollision(x, y);
+                    for (key in colFuncs) {
+                        if (colFuncs.hasOwnProperty(key)) {
+                            colFuncs[key].prepareCollision(x, y);
                         }
                     }
-                };
+                },
+                entityRelocateEntity = (function () {
+                    var handleStuck = function (position, data, owner) {
+                            var m = 0,
+                                s = data.stuck;
 
-                entity.relocateEntity = function (vector, collisionData) {
-                    var v = null;
-
-                    if (collisionData.xCount) {
-                        v = Vector.setUp(0, 0, 0);
-                        handleStuck(v, collisionData.getXEntry(0), entity);
-                    }
-
-                    if (collisionData.yCount) {
-                        v = v || Vector.setUp(0, 0, 0);
-                        handleStuck(v, collisionData.getYEntry(0), entity);
-                    }
-
-                    entity.triggerEvent('relocate-entity', {
-                        position: vector,
-                        unstick: v
-                    });
+                            if (s) {
+                                m = position.magnitude();
+                                if (data.thatShape.owner && (Math.abs(s) > 1)) {
+                                    s *= 0.05;
+                                }
+                                if (!m || (m > Math.abs(s))) {
+                                    if (data.vector.x) {
+                                        position.x = s;
+                                        position.y = 0;
+                                    }
+                                    if (data.vector.y) {
+                                        position.x = 0;
+                                        position.y = s;
+                                    }
+                                    if (owner.stuckWith) {
+                                        owner.stuckWith.recycle();
+                                    }
+                                    owner.stuckWith = Vector.setUp(data.thatShape.x, data.thatShape.y);
+                                }
+                            }
+                        },
+                        message = {
+                            position: null,
+                            unstick: null
+                        };
                     
-                    if (v) {
-                        v.recycle();
-                    }
-                };
+                    return function (vector, collisionData) {
+                        var msg = message,
+                            v = null;
 
-                entity.movePreviousX = function (x) {
+                        if (collisionData.xCount) {
+                            v = Vector.setUp(0, 0, 0);
+                            handleStuck(v, collisionData.getXEntry(0), this);
+                        }
+
+                        if (collisionData.yCount) {
+                            v = v || Vector.setUp(0, 0, 0);
+                            handleStuck(v, collisionData.getYEntry(0), this);
+                        }
+
+                        msg.position = vector;
+                        msg.unstick = v;
+                        this.triggerEvent('relocate-entity', msg);
+                        
+                        if (v) {
+                            v.recycle();
+                        }
+                    };
+                }()),
+                entityMovePreviousX = function (colFuncs, x) {
                     var key = '';
                     
-                    for (key in entity.collisionFunctions) {
-                        if (entity.collisionFunctions.hasOwnProperty(key)) {
-                            entity.collisionFunctions[key].movePreviousX(x);
+                    for (key in colFuncs) {
+                        if (colFuncs.hasOwnProperty(key)) {
+                            colFuncs[key].movePreviousX(x);
                         }
                     }
+                },
+                entityGetCollisionTypes = function () {
+                    return this.collisionTypes;
+                },
+                entityGetSolidCollisions = function () {
+                    return this.solidCollisionMap;
+                },
+                getAABB = function () {
+                    return this.getAABB();
+                },
+                getPreviousAABB = function () {
+                    return this.getPreviousAABB();
+                },
+                getShapes = function () {
+                    return this.getShapes();
+                },
+                getPrevShapes = function () {
+                    return this.getPrevShapes();
+                },
+                prepareCollision = function (x, y) {
+                    this.prepareCollision(x, y);
+                },
+                movePreviousX = function (x) {
+                    this.movePreviousX(x);
                 };
-
-                entity.getCollisionTypes = function () {
-                    return entity.collisionTypes;
-                };
-
-                entity.getSolidCollisions = function () {
-                    return entity.solidCollisionMap;
-                };
-            }
-
-            entity.collisionFunctions[self.collisionType] = {
-                getAABB: function () {
-                    return self.getAABB();
-                },
-
-                getPreviousAABB: function () {
-                    return self.getPreviousAABB();
-                },
-
-                getShapes: function () {
-                    return self.getShapes();
-                },
-
-                getPrevShapes: function () {
-                    return self.getPrevShapes();
-                },
-
-                prepareCollision: function (x, y) {
-                    self.prepareCollision(x, y);
-                },
-
-                movePreviousX: function (x) {
-                    self.movePreviousX(x);
+            
+            return function (self, entity) {
+                var colFuncs = entity.collisionFunctions;
+                
+                // This allows the same component type to be added multiple times.
+                if (!colFuncs) {
+                    colFuncs = entity.collisionFunctions = Data.setUp();
+                    entity.aabb = AABB.setUp();
+                    entity.getAABB = entityGetAABB.bind(entity, entity.aabb, colFuncs);
+                    entity.getPreviousAABB = entityGetPreviousAABB.bind(entity, colFuncs);
+                    entity.getShapes = entityGetShapes.bind(entity, colFuncs);
+                    entity.getPrevShapes = entityGetPrevShapes.bind(entity, colFuncs);
+                    entity.prepareCollision = entityPrepareCollision.bind(entity, colFuncs);
+                    entity.relocateEntity = entityRelocateEntity.bind(entity);
+                    entity.movePreviousX = entityMovePreviousX.bind(entity, colFuncs);
+                    entity.getCollisionTypes = entityGetCollisionTypes.bind(entity);
+                    entity.getSolidCollisions = entityGetSolidCollisions.bind(entity);
                 }
-            };
 
-        };
+                colFuncs[self.collisionType] = Data.setUp(
+                    "getAABB", getAABB.bind(self),
+                    "getPreviousAABB", getPreviousAABB.bind(self),
+                    "getShapes", getShapes.bind(self),
+                    "getPrevShapes", getPrevShapes.bind(self),
+                    "prepareCollision", prepareCollision.bind(self),
+                    "movePreviousX", movePreviousX.bind(self)
+                );
+            };
+        }());
 
     return platypus.createComponentClass({
         
@@ -431,8 +444,8 @@
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
-            this.aabb     = new AABB();
-            this.prevAABB = new AABB();
+            this.aabb     = AABB.setUp();
+            this.prevAABB = AABB.setUp();
             
             if (this.shapes) {
                 shapes = this.shapes;
@@ -468,8 +481,8 @@
             for (x = 0; x < shapes.length; x++) {
                 this.shapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
                 this.prevShapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
-                this.prevAABB.include(this.prevShapes[x].getAABB());
-                this.aabb.include(this.shapes[x].getAABB());
+                this.prevAABB.include(this.prevShapes[x].aABB);
+                this.aabb.include(this.shapes[x].aABB);
             }
             
             setupCollisionFunctions(this, this.owner);
@@ -696,11 +709,14 @@
             },
             
             destroy: function () {
-                var i = this.owner.collisionTypes.indexOf(this.collisionType);
+                var colFuncs = this.owner.collisionFunctions,
+                    i = this.owner.collisionTypes.indexOf(this.collisionType);
                 
                 this.owner.parent.triggerEvent('remove-collision-entity', this.owner);
 
+                this.aabb.recycle();
                 delete this.aabb;
+                this.prevAABB.recycle();
                 delete this.prevAABB;
                 
                 if (i >= 0) {
@@ -714,7 +730,9 @@
                     this.owner.softCollisionMap[this.collisionType].recycle();
                     delete this.owner.softCollisionMap[this.collisionType];
                 }
-                delete this.owner.collisionFunctions[this.collisionType];
+
+                colFuncs[this.collisionType].recycle();
+                delete colFuncs[this.collisionType];
                 
                 this.shapes.recycle();
                 this.prevShapes.recycle();
@@ -722,6 +740,9 @@
 
                 if (this.owner.collisionTypes.length) {
                     this.owner.parent.triggerEvent('add-collision-entity', this.owner);
+                } else { //remove collision functions
+                    colFuncs.recycle();
+                    this.owner.aabb.recycle();
                 }
             }
         }

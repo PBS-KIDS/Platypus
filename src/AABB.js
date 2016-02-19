@@ -168,21 +168,26 @@ platypus.AABB = (function () {
      * @chainable
      */
     proto.resize = function (width, height) {
-        this.width  = width || 0;
-        this.height = height || 0;
-        this.halfWidth = this.width / 2;
-        this.halfHeight = this.height / 2;
-        if (isNaN(this.x)) {
-            this.empty = true;
+        var w = width || 0,
+            h = height || 0,
+            hw = w / 2,
+            hh = h / 2;
+        
+        this.width  = w;
+        this.height = h;
+        this.halfWidth = hw;
+        this.halfHeight = hh;
+        if (typeof this.x === 'number') {
+            this.left = -hw + this.x;
+            this.right = hw + this.x;
         } else {
-            this.left = -this.halfWidth + this.x;
-            this.right = this.halfWidth + this.x;
+            this.empty = true;
         }
-        if (isNaN(this.y)) {
-            this.empty = true;
+        if (typeof this.y === 'number') {
+            this.top = -hh + this.y;
+            this.bottom = hh + this.y;
         } else {
-            this.top = -this.halfHeight + this.y;
-            this.bottom = this.halfHeight + this.y;
+            this.empty = true;
         }
         return this;
     };
@@ -195,30 +200,28 @@ platypus.AABB = (function () {
      * @chainable
      */
     proto.include = function (aabb) {
-        if (aabb) {
-            if (this.empty) {
-                this.set(aabb);
-            } else {
-                if (this.left > aabb.left) {
-                    this.left = aabb.left;
-                }
-                if (this.right < aabb.right) {
-                    this.right = aabb.right;
-                }
-                if (this.top > aabb.top) {
-                    this.top = aabb.top;
-                }
-                if (this.bottom < aabb.bottom) {
-                    this.bottom = aabb.bottom;
-                }
-                
-                this.width      = this.right  - this.left;
-                this.height     = this.bottom - this.top;
-                this.halfWidth  = this.width / 2;
-                this.halfHeight = this.height / 2;
-                this.x          = this.left + this.halfWidth;
-                this.y          = this.top  + this.halfHeight;
+        if (this.empty) {
+            this.set(aabb);
+        } else {
+            if (this.left > aabb.left) {
+                this.left = aabb.left;
             }
+            if (this.right < aabb.right) {
+                this.right = aabb.right;
+            }
+            if (this.top > aabb.top) {
+                this.top = aabb.top;
+            }
+            if (this.bottom < aabb.bottom) {
+                this.bottom = aabb.bottom;
+            }
+            
+            this.width      = this.right  - this.left;
+            this.height     = this.bottom - this.top;
+            this.halfWidth  = this.width / 2;
+            this.halfHeight = this.height / 2;
+            this.x          = this.left + this.halfWidth;
+            this.y          = this.top  + this.halfHeight;
         }
         
         return this;
@@ -293,9 +296,10 @@ platypus.AABB = (function () {
      * 
      * @method getCopy
      * @return {AABB} Returns the new AABB object.
+     * @deprecated since 0.7.3 - Create a new AABB and use the `set()` method instead.
      */
     proto.getCopy = function () {
-        return new AABB(this.x, this.y, this.width, this.height);
+        return AABB.setUp(this.x, this.y, this.width, this.height);
     };
 
     /**
@@ -309,7 +313,7 @@ platypus.AABB = (function () {
      * @return {boolean} Returns `true` if the parameters match.
      */
     proto.matches = function (x, y, width, height) {
-        return !((this.x !== x) || (this.y !== y) || (this.width !== width) || (this.height !== height));
+        return (this.x === x) && (this.y === y) && (this.width === width) && (this.height === height);
     };
 
     /**
@@ -361,6 +365,28 @@ platypus.AABB = (function () {
 		
 		return area;
 	};
+    
+    /**
+     * Returns an AABB from cache or creates a new one if none are available.
+     * 
+     * @method AABB.setUp
+     * @return {platypus.AABB} The instantiated AABB.
+     * @since 0.7.3
+     */
+    /**
+     * Returns a AABB back to the cache.
+     * 
+     * @method AABB.recycle
+     * @param {platypus.AABB} The AABB to be recycled.
+     * @since 0.7.3
+     */
+    /**
+     * Relinquishes properties of the AABB and recycles it.
+     * 
+     * @method recycle
+     * @since 0.7.3
+     */
+    platypus.setUpRecycle(AABB, 'AABB');
     
     return AABB;
 }());
