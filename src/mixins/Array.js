@@ -1,14 +1,20 @@
 /**
  * @namespace window
  */
+/*global springroll */
 (function (Array, Object) {
 	/**
 	 * Add methods to Array
 	 * @class Array
 	 */
-    
     var cache = null,
-        prototype = Array.prototype;
+        debug = !!springroll.Debug,
+        prototype = Array.prototype,
+        recycleProp = {
+            enumerable: false,
+            value: false,
+            writable: true
+        };
 
 	/**
 	 * Merges a given array into the current array without duplicating items.
@@ -47,11 +53,12 @@
 			enumerable: false,
 			writable: false,
 			value: function () {
-                var i = 0,
-                    arr = Array.setUp();
+                var arr = Array.setUp(),
+                    i = 0,
+                    length = this.length;
                     
-                for (i = 0; i < this.length; i++) {
-                    arr.push(this[i]);
+                for (i = 0; i < length; i++) {
+                    arr[i] = this[i];
                 }
                 
                 return arr;
@@ -71,13 +78,14 @@
 			writable: false,
 			value: function (index) {
                 var i = 0,
-                    item = this[index];
+                    item = this[index],
+                    length = this.length;
                     
-                for (i = index + 1; i < this.length; i++) {
+                for (i = index + 1; i < length; i++) {
                     this[i - 1] = this[i];
                 }
                 
-                if (this.length) {
+                if (length) {
                     this.length -= 1;
                 }
                 
@@ -104,23 +112,43 @@
          * @return Array
          * @since 0.7.1
          */
-        Array.setUp = function () {
-            var i = 0,
-                arr = null;
-            
-            if (cache.length) {
-                arr = cache.pop();
-                arr.recycled = false;
-            } else {
-                arr = [];
-            }
-            
-            for (i = 0; i < arguments.length; i++) {
-                arr.push(arguments[i]);
-            }
+        if (debug) {
+            Array.setUp = function () {
+                var i = 0,
+                    arr = null;
+                
+                if (cache.length) {
+                    arr = cache.pop();
+                    arr.recycled = false;
+                } else {
+                    arr = [];
+                    Object.defineProperty(arr, 'recycled', recycleProp);
+                }
+                
+                for (i = 0; i < arguments.length; i++) {
+                    arr.push(arguments[i]);
+                }
 
-            return arr;
-        };
+                return arr;
+            };
+        } else {
+            Array.setUp = function () {
+                var i = 0,
+                    arr = null;
+                
+                if (cache.length) {
+                    arr = cache.pop();
+                } else {
+                    arr = [];
+                }
+                
+                for (i = 0; i < arguments.length; i++) {
+                    arr.push(arguments[i]);
+                }
+
+                return arr;
+            };
+        }
 
         /**
          * Save instance for reuse.

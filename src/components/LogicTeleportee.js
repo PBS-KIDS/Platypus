@@ -49,9 +49,9 @@ Requires: ["../Vector.js"]
         events: {// These are messages that this component listens for
             "handle-logic": function () {
                 if (this.teleportNow) {
-                    this.owner.trigger('relocate-entity', this.message);
+                    this.owner.triggerEvent('relocate-entity', this.message);
                     this.teleportNow = false;
-                    this.owner.trigger('teleport-complete');
+                    this.owner.triggerEvent('teleport-complete');
                 }
             },
             "teleport": function () {

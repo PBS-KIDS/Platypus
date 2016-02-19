@@ -473,7 +473,7 @@
                      * @event 'animation-ended'
                      * @param animation {String} The id of the animation that ended.
                      */
-                    this.owner.trigger('animation-ended', animation);
+                    this.owner.triggerEvent('animation-ended', animation);
                     if (this.waitingAnimation) {
                         this.currentAnimation = this.waitingAnimation;
                         this.waitingAnimation = false;
@@ -657,7 +657,7 @@
                      * @event 'attach-pin'
                      * @param pinInfo {Object} Information about the pin.
                      */
-                    this.owner.trigger("attach-pin", this.pins[pinId]);
+                    this.owner.triggerEvent("attach-pin", this.pins[pinId]);
                 }
             },
             
@@ -1159,7 +1159,7 @@
                      * @event 'attach-pin'
                      * @param pin {Object} The created pin.
                      */
-                    this.owner.trigger('attach-pin', pin);
+                    this.owner.triggerEvent('attach-pin', pin);
                 }
             },
 
@@ -1168,7 +1168,7 @@
                 
                 if (this.pins && this.pinsToRemove) {
                     for (i = 0; i < this.pinsToRemove.length; i++) {
-                        this.owner.trigger('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
+                        this.owner.triggerEvent('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
                         if (this.pins[this.pinsToRemove[i]].frames) {
                             this.pins[this.pinsToRemove[i]].frames.recycle();    
                         }

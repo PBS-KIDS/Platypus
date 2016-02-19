@@ -161,12 +161,12 @@ platypus.Game = (function () {
                     }.bind(this);
                 }.bind(this);
             
-            this.app = applicationInstance;
-            
             if (!definition) {
                 console.warn('No game definition is supplied. Game not created.');
                 return null;
             }
+
+            this.app = applicationInstance;
             
             if (typeof definition === 'string') {
                 loadJSONLinks(definition, load);
@@ -212,7 +212,7 @@ platypus.Game = (function () {
                 sceneInstance.data = data;
                 this.app.manager.addState(id, sceneInstance);
 				this.stage.addChild(sceneInstance.panel);
-    			this.app.trigger('stateAdded', id, sceneInstance);
+    			this.app.triggerEvent('stateAdded', id, sceneInstance);
                 this.app.manager.state = id;
             }
         };

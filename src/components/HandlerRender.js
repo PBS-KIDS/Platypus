@@ -238,7 +238,7 @@
                             } else {
                                 // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
                                 self.moveMouse = function () {
-                                    self.owner.trigger('pressmove', {
+                                    self.owner.triggerEvent('pressmove', {
                                         event: nativeEvent,
                                         x: stageX / self.container.transformMatrix.a + self.camera.x,
                                         y: stageY / self.container.transformMatrix.d + self.camera.y,

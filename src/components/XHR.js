@@ -110,7 +110,7 @@
                          * @event 'response'
                          * @param message {String} The message contains the responseText returned by the server.
                          */
-                        this.owner.trigger('response', this.responseText);
+                        this.owner.triggerEvent('response', this.responseText);
                     }
                 }.bind(this);
             },

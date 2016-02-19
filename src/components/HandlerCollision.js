@@ -68,7 +68,7 @@
                     circle = shapeB;
                     rect = shapeA;
                 }
-                rectAabb = rect.getAABB();
+                rectAabb = rect.aABB;
 
                 shapeDistanceX = Math.abs(circle.x - rect.x);
                 shapeDistanceY = Math.abs(circle.y - rect.y);
@@ -101,14 +101,12 @@
             this.nonColliders = Array.setUp();
             
             this.terrain = undefined;
-            this.aabb     = new AABB(this.owner.x, this.owner.y);
-            this.prevAABB = new AABB(this.owner.x, this.owner.y);
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
             this.updateLiveList = true;
-            this.cameraLogicAABB = new AABB(0, 0);
-            this.cameraCollisionAABB = new AABB(0, 0);
+            this.cameraLogicAABB = AABB.setUp(0, 0);
+            this.cameraCollisionAABB = AABB.setUp(0, 0);
             
             this.relocationMessage = {
                 position: Vector.setUp(),
@@ -258,7 +256,8 @@
             },
             
             checkCamera: function (camera, movers) {
-                var i        = 0,
+                var bufferMargin = camera.buffer * 2,
+                    i        = 0,
                     j        = 0,
                     key      = '',
                     list     = null,
@@ -268,11 +267,10 @@
                     solids   = null,
                     nons     = null,
                     groups   = null,
-                    width    = camera.width,
-                    height   = camera.height,
+                    width    = camera.width + bufferMargin,
+                    height   = camera.height + bufferMargin,
                     x        = camera.left + width  / 2,
                     y        = camera.top  + height / 2,
-                    buffer   = camera.buffer,
                     entities      = null,
                     entity        = null,
                     check         = isAABBCollision,
@@ -280,10 +278,6 @@
                     aabbCollision = this.cameraCollisionAABB,
                     types = null,
                     collides = false;
-                
-                // store buffered size since the actual width x height is not used below.
-                width  += buffer * 2;
-                height += buffer * 2;
                 
                 if (this.updateLiveList || !aabbLogic.matches(x, y, width, height)) {
                     
@@ -348,7 +342,7 @@
                     groups.sort(groupSortBySize);
 
                     // add buffer again to capture stationary entities along the border that may be collided against 
-                    aabbCollision.setAll(x, y, width + buffer * 2, height + buffer * 2);
+                    aabbCollision.setAll(x, y, width + bufferMargin, height + bufferMargin);
 
                     for (key in this.entitiesByType) {
                         if (this.entitiesByType.hasOwnProperty(key)) {
@@ -650,7 +644,7 @@
             },
             
             processCollisionStep: (function () {
-                var sweeper       = new AABB(),
+                var sweeper       = AABB.setUp(),
                     includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
                         var i         = 0,
                             otherAABB = otherEntity.getAABB(otherCollisionType);
@@ -848,7 +842,7 @@
                         collisionData.direction = direction;
                         collisionData.position = position;
                         collisionData.deltaMovement = Math.abs(position - initial);
-                        collisionData.aABB = thatShape.getAABB();
+                        collisionData.aABB = thatShape.aABB;
                         collisionData.thisShape = thisShape;
                         collisionData.thatShape = thatShape;
                         collisionData.vector.set(vector);
@@ -926,7 +920,7 @@
 
                             if (thisShape.type === 'rectangle') {
                                 if (thatShape.type === 'rectangle') {
-                                    ri.position = thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.getAABB(), thatShape.getAABB());
+                                    ri.position = thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.aABB, thatShape.aABB);
                                     v.x = 0;
                                     v.y = 0;
                                     v[axis] = direction;
@@ -979,7 +973,7 @@
                         while (i--) {
                             pcShape = potentialCollidingShapes[i];
                             position = goalPoint;
-                            if (isAABBCollision(translatedShape.getAABB(), pcShape.getAABB())) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
+                            if (isAABBCollision(translatedShape.aABB, pcShape.aABB)) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
                                 if (shapeCollision(translatedShape, pcShape)) {
                                     collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, pcShape);
                                     position = collisionInfo.position;
@@ -1009,7 +1003,7 @@
             
             checkSoftCollisions: (function () {
                 var trigger = function (collision) {
-                        this.trigger('hit-by-' + collision.type, collision);
+                        this.triggerEvent('hit-by-' + collision.type, collision);
                     };
                 
                 return function (resp) {
@@ -1110,6 +1104,9 @@
                         this.entitiesByTypeLive[key].recycle();
                     }
                 }
+
+                this.cameraLogicAABB.recycle();
+                this.cameraCollisionAABB.recycle();
             }
         },
         

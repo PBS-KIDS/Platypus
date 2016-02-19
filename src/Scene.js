@@ -148,7 +148,7 @@ platypus.Scene = (function () {
                 
                 if (lateAssets.length) {
                     assets.union(lateAssets);
-                    this.on('exit', unloadAssets.bind(this, lateAssets));
+                    this.once('exit', unloadAssets.bind(this, lateAssets));
                 } else {
                     lateAssets.recycle();
                 }

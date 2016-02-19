@@ -110,6 +110,43 @@ platypus.Vector = (function () {
         
         return this;
     };
+
+    /**
+     * Determines whether two vectors are equal.
+     * 
+     * @method equals
+     * @param x {number|Array|Vector} The x coordinate or an array or Vector to check against.
+     * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of dimensions to check from the array/Vector.
+     * @param [z] {number} The z coordinate.
+     * @return {Boolean} Whether the vectors are equal.
+     * @since 0.7.3
+     */
+    proto.equals = function (x, y, z) {
+        var m = null,
+            q = 0,
+            matrix = this.matrix;
+        
+        if (x && Array.isArray(x)) {   // Passing in an array.
+            q = y || x.length;
+            while (q--) {
+                if (matrix[q] !== x[q]) {
+                    return false;
+                }
+            }
+            return true;
+        } else if (x && x.matrix) {   // Passing in a vector.
+            m = x.matrix;
+            q = y || m.length;
+            while (q--) {
+                if (matrix[q] !== m[q]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {                     // Passing in coordinates.
+            return ((typeof x === 'number') && (matrix[0] === x)) && ((typeof y !== 'number') || (matrix[1] === y)) && ((typeof z !== 'number') || (matrix[2] === z));
+        }
+    };
     
     /**
      * Sets the vector to values of the parameter vector.
@@ -189,7 +226,8 @@ platypus.Vector = (function () {
         var mag = this.magnitude();
         
         if (mag === 0) {
-            return this.multiply(0);
+            // Ignores attempt to normalize a vector of zero magnitude.
+            return this;
         } else {
             return this.multiply(1 / mag);
         }
@@ -391,11 +429,14 @@ platypus.Vector = (function () {
      */
     proto.dot = function (otherVector, limit) {
         var sum = 0,
-            q = 0;
-        limit = limit || this.matrix.length;
+            q = 0,
+            m = this.matrix,
+            oM = otherVector.matrix;
+            
+        q = limit || m.length;
         
-        for (q = 0; q < limit; q++) {
-            sum += this.matrix[q] * (otherVector.matrix[q] || 0);
+        while (q--) {
+            sum += m[q] * (oM[q] || 0);
         }
         
         return sum;
@@ -411,7 +452,14 @@ platypus.Vector = (function () {
     proto.angleTo = function (otherVector) {
         var v1 = this.getUnit(),
             v2 = otherVector.getUnit(),
+            ang = 0;
+            
+        if (v1.magnitude() && v2.magnitude()) { // Probably want a less expensive check here for zero-length vectors.
             ang = Math.acos(v1.dot(v2));
+        } else {
+            console.warn('Vector: Attempted to find the angle of a zero-length vector.');
+            ang = undefined;
+        }
             
         v1.recycle();
         v2.recycle();
@@ -455,13 +503,17 @@ platypus.Vector = (function () {
 
      */
     proto.scalarProjection = function (vectorOrAngle) {
-        var angle = 0;
+        var v = null,
+            d = 0;
+        
         if (typeof vectorOrAngle === "number") {
-            angle = vectorOrAngle;
+            return this.magnitude(2) * Math.cos(vectorOrAngle);
         } else {
-            angle = this.angleTo(vectorOrAngle);
+            v = Vector.setUp(vectorOrAngle).normalize();
+            d = this.dot(v);
+            v.recycle();
+            return d;            
         }
-        return this.magnitude(2) * Math.cos(angle);
     };
     
     /**

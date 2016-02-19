@@ -61,26 +61,26 @@ This component listens for redirected collision messages and fires a message on 
                 switch (this.facing) {
                 case 'up':
                     if (collisionInfo.y < 0) {
-                        collisionInfo.entity.trigger('teleport', this.destination);
+                        collisionInfo.entity.triggerEvent('teleport', this.destination);
                     }
                     break;
                 case 'right':
                     if (collisionInfo.x > 0) {
-                        collisionInfo.entity.trigger('teleport', this.destination);
+                        collisionInfo.entity.triggerEvent('teleport', this.destination);
                     }
                     break;
                 case 'down':
                     if (collisionInfo.y > 0) {
-                        collisionInfo.entity.trigger('teleport', this.destination);
+                        collisionInfo.entity.triggerEvent('teleport', this.destination);
                     }
                     break;
                 case 'left':
                     if (collisionInfo.x < 0) {
-                        collisionInfo.entity.trigger('teleport', this.destination);
+                        collisionInfo.entity.triggerEvent('teleport', this.destination);
                     }
                     break;
                 default:
-                    collisionInfo.entity.trigger('teleport', this.destination);
+                    collisionInfo.entity.triggerEvent('teleport', this.destination);
                     break;
                 }
             }

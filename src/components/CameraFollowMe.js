@@ -130,7 +130,7 @@
                      * @param options {Object}
                      * @param options.time {number} The amount of time to pause before re-enabling logic.
                      */
-                    this.owner.parent.trigger('pause-logic',  this.pauseGame);
+                    this.owner.parent.triggerEvent('pause-logic',  this.pauseGame);
                     
                     /**
                      * This component fires this message on the parent entity to pause rendering if required.
@@ -139,7 +139,7 @@
                      * @param options {Object}
                      * @param options.time {number} The amount of time to pause before re-enabling render updates.
                      */
-                    this.owner.parent.trigger('pause-render', this.pauseGame);
+                    this.owner.parent.triggerEvent('pause-render', this.pauseGame);
                 }
                 
                 /**
@@ -157,7 +157,7 @@
                  * @param options.offsetY {number} How far to offset the camera from the entity vertically.
                  * @param options.time {number} How many milliseconds to follow the entity.
                  */
-                this.owner.parent.trigger('follow', msg);
+                this.owner.parent.triggerEvent('follow', msg);
                 
                 msg.recycle();
             }

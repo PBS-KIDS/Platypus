@@ -54,15 +54,15 @@ This component allows this entity to be carried by other entities with which it 
                 if (this.carrierConnected) {
                     if (this.carrier !== this.lastCarrier) {
                         if (this.lastCarrier) {
-                            this.lastCarrier.trigger('release-me', msg);
+                            this.lastCarrier.triggerEvent('release-me', msg);
                         }
-                        this.carrier.trigger('carry-me', msg);
+                        this.carrier.triggerEvent('carry-me', msg);
                     }
                     
                     this.carrierConnected = false;
                 } else {
                     if (this.carrier) {
-                        this.carrier.trigger('release-me', msg);
+                        this.carrier.triggerEvent('release-me', msg);
                         this.carrier = null;
                     }
                 }

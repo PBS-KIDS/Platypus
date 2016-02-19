@@ -5,7 +5,7 @@
  * @class CollisionGroup
  * @uses platypus.Component
  */
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -25,8 +25,9 @@
             this.prevShapes = Array.setUp();
             
             this.terrain = undefined;
-            this.aabb     = new AABB(this.owner.x, this.owner.y);
-            this.prevAABB = new AABB(this.owner.x, this.owner.y);
+            this.aabb     = AABB.setUp(this.owner.x, this.owner.y);
+            this.prevAABB = AABB.setUp(this.owner.x, this.owner.y);
+            this.filteredAABB = AABB.setUp();
 
             Vector.assign(this.owner, 'position', 'x', 'y', 'z');
             Vector.assign(this.owner, 'previousPosition', 'previousX', 'previousY', 'previousZ');
@@ -217,16 +218,18 @@
             },
             
             getAABB: function (collisionType) {
-                var x           = 0,
-                    aabb        = null,
-                    childEntity = null;
+                var i = 0,
+                    aabb        = this.filteredAABB,
+                    childEntity = null,
+                    sE = this.solidEntities;
                 
                 if (!collisionType) {
                     return this.aabb;
                 } else {
-                    aabb = new AABB();
-                    for (x = 0; x < this.solidEntities.length; x++) {
-                        childEntity = this.solidEntities[x];
+                    aabb.reset();
+                    i = sE.length;
+                    while (i--) {
+                        childEntity = sE[i];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                             childEntity = childEntity.collisionGroup;
                         }
@@ -238,16 +241,18 @@
             },
 
             getPreviousAABB: function (collisionType) {
-                var x           = 0,
-                    aabb        = null,
-                    childEntity = null;
+                var i = 0,
+                    aabb        = this.filteredAABB,
+                    childEntity = null,
+                    sE = this.solidEntities;
                 
                 if (!collisionType) {
                     return this.prevAABB;
                 } else {
-                    aabb = new AABB();
-                    for (x = 0; x < this.solidEntities.length; x++) {
-                        childEntity = this.solidEntities[x];
+                    aabb.reset();
+                    i = sE.length;
+                    while (i--) {
+                        childEntity = sE[i];
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                             childEntity = childEntity.collisionGroup;
                         }
@@ -393,6 +398,9 @@
                 this.collisionTypes.recycle();
                 this.shapes.recycle();
                 this.prevShapes.recycle();
+                this.aabb.recycle();
+                this.prevAABB.recycle();
+                this.filteredAABB.recycle();
             }
         },
         

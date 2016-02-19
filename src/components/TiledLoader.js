@@ -474,7 +474,7 @@
                  * @param world.tile.height {number} The height in world units of a single tile.
                  * @param world.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
                  */
-                this.owner.trigger('world-loaded', {
+                this.owner.triggerEvent('world-loaded', {
                     width: level.width * level.tilewidth * this.unitsPerPixel,
                     height: level.height * level.tileheight * this.unitsPerPixel,
                     tile: {
@@ -569,7 +569,7 @@
                             newWidth = 0,
                             newHeight = 0,
                             tileTypes = 0,
-                            tileDefinition = null,
+                            tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind] || standardEntityLayers[entityKind])), //TODO: a bit of a hack to copy an object instead of overwrite values
                             importAnimation = null,
                             importCollision = null,
                             importRender = null,
@@ -585,6 +585,8 @@
                         this.decodeLayer(layer);
                         data = layer.data;
                         
+                        tileDefinition.properties = tileDefinition.properties || {};
+
                         //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
                         if (layer.properties) {
                             if (layer.properties.width) {
@@ -609,10 +611,9 @@
                                 width  = newWidth;
                                 height = newHeight;
                             }
+                            
+                            mergeAndFormatProperties(layer.properties, tileDefinition.properties);
                         }
-
-                        //TODO: a bit of a hack to copy an object instead of overwrite values
-                        tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind] || standardEntityLayers[entityKind]));
 
                         importAnimation = {};
                         importCollision = [];
@@ -633,8 +634,7 @@
                                 }
                             }
                         }
-
-                        tileDefinition.properties = tileDefinition.properties || {};
+                        
                         tileDefinition.properties.width = tWidth * width * this.unitsPerPixel;
                         tileDefinition.properties.height = tHeight * height * this.unitsPerPixel;
                         tileDefinition.properties.columns = width;
@@ -695,7 +695,7 @@
                         this.layerZ += this.layerIncrement;
 
                         if ((entityKind === 'render-layer') && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
-                            combineRenderLayer.trigger('add-tiles', renderTiles);
+                            combineRenderLayer.triggerEvent('add-tiles', renderTiles);
                             return combineRenderLayer;
                         } else {
                             props = {};

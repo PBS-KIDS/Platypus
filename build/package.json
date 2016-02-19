@@ -1,18 +1,21 @@
 {
-  "name": "Platypus",
-  "version": "0.7.2",
-  "description": "Platypus Docs",
-  "url": "https://github.com/PBS-KIDS/Platypus",
-  "logo": "assets/platypus-title.png",
-  "repository": "git@github.com:PBS-KIDS/Platypus.git",
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-compress": "^0.13.0",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-contrib-yuidoc": "^0.8.0",
-    "lodash": "^3.10.0"
-  },
-  "engine": "node >= 0.10.22"
+    "name": "Platypus",
+    "version": "0.7.2",
+    "description": "Platypus Docs",
+    "url": "https://github.com/PBS-KIDS/Platypus",
+    "logo": "assets/platypus-title.png",
+    "repository": {
+		"type": "git",
+		"url": "https://github.com/PBS-KIDS/Platypus"
+	},
+    "devDependencies": {
+        "grunt": "^0.4.5",
+        "grunt-contrib-compress": "^0.13.0",
+        "grunt-contrib-concat": "^0.5.1",
+        "grunt-contrib-copy": "^0.8.0",
+        "grunt-contrib-uglify": "^0.9.1",
+        "grunt-contrib-yuidoc": "^0.8.0",
+        "lodash": "^3.10.0"
+    },
+    "engine": "node >= 0.10.22"
 }

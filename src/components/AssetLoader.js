@@ -148,7 +148,7 @@
                         * @param load.progress {number} The number of assets finished loading.
                         * @param load.fraction {number} Value of (progress / total) provided for convenience.
                         */
-                        this.owner.trigger('file-load', {
+                        this.owner.triggerEvent('file-load', {
                             asset:    result,
                             complete: (this.progress === this.total),
                             data:     data,

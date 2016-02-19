@@ -47,16 +47,16 @@ This component serves as a switch in the game world, typically tied to collision
                     if (this.pressed && !this.wasPressed) {
                         this.state.pressed = true;
                         this.wasPressed = true;
-                        this.owner.trigger('switch-on');
+                        this.owner.triggerEvent('switch-on');
                     }
                 } else {
                     if (this.pressed !== this.wasPressed) {
                         if (this.pressed) {
                             this.state.pressed = true;
-                            this.owner.trigger('switch-on');
+                            this.owner.triggerEvent('switch-on');
                         } else {
                             this.state.pressed = false;
-                            this.owner.trigger('switch-off');
+                            this.owner.triggerEvent('switch-off');
                         }
                     }
                     this.wasPressed = this.pressed;
@@ -66,7 +66,7 @@ This component serves as a switch in the game world, typically tied to collision
             'switch-pressed': function () {
                 this.pressed = true;
                 if (this.initialPress) {
-                    this.owner.trigger('initial-press');
+                    this.owner.triggerEvent('initial-press');
                     this.initialPress = false;
                 }
             }

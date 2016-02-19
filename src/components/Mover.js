@@ -11,58 +11,56 @@
     "use strict";
     
     var Vector = include('platypus.Vector'),
-    tempVector = Vector.setUp(),
-    updateMax   = function (delta, interim, goal, time) {
-        if (delta && (interim !== goal)) {
-            if (interim < goal) {
-                //console.log("Up   - " + Math.min(interim + delta * time, goal));
-                return Math.min(interim + delta * time, goal);
-            } else {
-                //console.log("Down - " + Math.max(interim - delta * time, goal));
-                return Math.max(interim - delta * time, goal);
+        tempVector = Vector.setUp(),
+        updateMax   = function (delta, interim, goal, time) {
+            if (delta && (interim !== goal)) {
+                if (interim < goal) {
+                    return Math.min(interim + delta * time, goal);
+                } else {
+                    return Math.max(interim - delta * time, goal);
+                }
             }
-        }
-        
-        return interim;
-    },
-    clampNumber = function (v, d) {
-        var mIn = this.maxMagnitudeInterim = updateMax(this.maxMagnitudeDelta, this.maxMagnitudeInterim, this.maxMagnitude, d);
-        
-        if (v.magnitude() > mIn) {
-            v.normalize().multiply(mIn);
-        }
-    },
-    clampObject = function (v, d) {
-        var max = this.maxMagnitude,
-            mD  = this.maxMagnitudeDelta,
-            mIn = this.maxMagnitudeInterim;
+            
+            return interim;
+        },
+        clampNumber = function (v, d) {
+            var mIn = this.maxMagnitudeInterim = updateMax(this.maxMagnitudeDelta, this.maxMagnitudeInterim, this.maxMagnitude, d);
+            
+            if (v.magnitude() > mIn) {
+                v.normalize().multiply(mIn);
+            }
+        },
+        clampObject = function (v, d) {
+            var max = this.maxMagnitude,
+                mD  = this.maxMagnitudeDelta,
+                mIn = this.maxMagnitudeInterim;
 
-        mIn.up    = updateMax(mD, mIn.up,    max.up,    d);
-        mIn.right = updateMax(mD, mIn.right, max.right, d);
-        mIn.down  = updateMax(mD, mIn.down,  max.down,  d);
-        mIn.left  = updateMax(mD, mIn.left,  max.left,  d);
-        
-        if (v.x > 0) {
-            if (v.x > mIn.right) {
-                v.x = mIn.right;
+            mIn.up    = updateMax(mD, mIn.up,    max.up,    d);
+            mIn.right = updateMax(mD, mIn.right, max.right, d);
+            mIn.down  = updateMax(mD, mIn.down,  max.down,  d);
+            mIn.left  = updateMax(mD, mIn.left,  max.left,  d);
+            
+            if (v.x > 0) {
+                if (v.x > mIn.right) {
+                    v.x = mIn.right;
+                }
+            } else if (v.x < 0) {
+                if (v.x < -mIn.left) {
+                    v.x = -mIn.left;
+                }
             }
-        } else if (v.x < 0) {
-            if (v.x < -mIn.left) {
-                v.x = -mIn.left;
-            }
-        }
 
-        if (v.y > 0) {
-            if (v.y > mIn.down) {
-                v.y = mIn.down;
+            if (v.y > 0) {
+                if (v.y > mIn.down) {
+                    v.y = mIn.down;
+                }
+            } else if (v.y < 0) {
+                if (v.y < -mIn.up) {
+                    v.y = -mIn.up;
+                }
             }
-        } else if (v.y < 0) {
-            if (v.y < -mIn.up) {
-                v.y = -mIn.up;
-            }
-        }
-    };
-    
+        };
+        
     return platypus.createComponentClass({
         
         id: 'Mover',
@@ -155,7 +153,16 @@
              * @type number
              * @default 0
              */
-            maxMagnitudeDelta: 0
+            maxMagnitudeDelta: 0,
+            
+            /**
+             * This property determines whether orientation changes should apply external velocities from pre-change momentum.
+             * 
+             * @property reorientVelocities
+             * @type Boolean
+             * @default true
+             */
+            reorientVelocities: true
         },
         
         constructor: function (definition) {
@@ -167,12 +174,17 @@
 
             this.position = this.owner.position;
             this.velocity = this.owner.velocity;
+            this.lastVelocity = Vector.setUp(this.velocity);
+            this.collision = null;
             
             this.pause = false;
             
             // Copy movers so we're not re-using mover definitions
             this.moversCopy = this.movers;
             this.movers = Array.setUp();
+
+            this.velocityChanges = Array.setUp();
+            this.velocityDirections = Array.setUp();
 
             this.ground = Vector.setUp(this.ground);
             
@@ -283,6 +295,11 @@
                     this.addMover(movs[i]);
                 }
                 
+                this.externalForces = this.addMover({
+                    velocity: [0, 0, 0],
+                    orient: false
+                }).velocity;
+                
                 // Set up speed property if supplied.
                 if (this.speed) {
                     if (!isNaN(this.speed)) {
@@ -348,7 +365,12 @@
                     return;
                 }
                 
+                if (!velocity.equals(this.lastVelocity, 2)) {
+                    this.externalForces.addVector(velocity).subtractVector(this.lastVelocity);
+                }
+                
                 velocity.set(0, 0, 0);
+                
                 while (i--) {
                     m = movers[i].update(delta);
                     if (m) {
@@ -368,14 +390,10 @@
                         velocity.add(m);
                     }
                 }
-                
-                // Finally, add aggregated velocity to the position
-/*                if (this.grounded) {
-                    velocity.multiply(this.friction);
-                } else {
-                    velocity.multiply(this.drag);
-                }*/
+
                 this.clamp(velocity, delta);
+                this.lastVelocity.set(velocity);
+                
                 vect = Vector.setUp(velocity).multiply(delta);
                 position.add(vect);
                 vect.recycle();
@@ -388,30 +406,95 @@
             },
             
             /**
-             * On receiving this message, this component stops velocity in the direction of the collision and sets "grounded" to `true` if colliding with the ground.
+             * On receiving this message, this component stops all velocities along the axis of the collision direction and sets "grounded" to `true` if colliding with the ground.
              * 
              * @method 'hit-solid'
              * @param collisionInfo {Object}
              * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
              */
             "hit-solid": function (collisionInfo) {
-                var i = 0,
-                    m = null,
-                    s = 0,
-                    v = tempVector;
+                var s = 0,
+                    e = 0,
+                    entityV = collisionInfo.entity && collisionInfo.entity.velocity,
+                    direction = collisionInfo.direction,
+                    add = true,
+                    vc = this.velocityChanges,
+                    vd = this.velocityDirections,
+                    i = vc.length;
                 
-                if (collisionInfo.direction.dot(this.ground) > 0) {
+                if (direction.dot(this.ground) > 0) {
                     this.grounded = true;
                 }
-                
-                for (i = 0; i < this.movers.length; i++) {
-                    m = this.movers[i];
-                    if (m.stopOnCollision) {
-                        s = m.velocity.scalarProjection(collisionInfo.direction);
-                        if (v.set(collisionInfo.direction).normalize().multiply(s).dot(m.velocity) > 0) {
-                            m.velocity.subtractVector(v);
+
+                s = this.velocity.scalarProjection(direction);
+                if (s > 0) {
+                    if (entityV) {
+                        e = Math.max(entityV.scalarProjection(direction), 0);
+                        if (e < s) {
+                            s -= e;
+                        } else {
+                            s = 0;
+                        }
+                    } else {
+                        s = 0;
+                    }
+                    
+                    while (i--) {
+                        if ((s < vc[i]) && (vd[i].dot(direction) > 0)) {
+                            vc[i] = s;
+                            vd[i].set(direction);
+                            add = false;
+                            break;
                         }
                     }
+                    
+                    if(!this.aaa) {this.aaa = [];}
+                    if (add) {
+                        vc.push(s);
+                        vd.push(Vector.setUp(direction));
+                        this.aaa.push(entityV);
+                    }
+                }
+            },
+            
+            "handle-post-collision-logic": function () {
+                var direction = null,
+                    ms = this.movers,
+                    vc = this.velocityChanges,
+                    vd = this.velocityDirections,
+                    i = vc.length,
+                    j = ms.length,
+                    m = null,
+                    s = 0,
+                    sdi = 0,
+                    soc = null,
+                    v = tempVector;
+                
+                if (i) {
+                    soc = Array.setUp();
+                    
+                    while (j--) {
+                        m = ms[j];
+                        if (m.stopOnCollision) {
+                            soc.push(m);
+                        }
+                    }
+                    
+                    while (i--) {
+                        direction = vd[i];
+                        s = vc[i];
+                        j = soc.length;
+                        sdi = s / j;
+                        while (j--) {
+                            m = soc[j];
+                            v.set(direction).normalize().multiply(m.velocity.scalarProjection(direction) - sdi);
+                            m.velocity.subtractVector(v);
+                        }
+                        direction.recycle();
+                    }
+                    
+                    vc.length = 0;
+                    vd.length = 0;
                 }
             },
             
@@ -452,6 +535,19 @@
              */
             "unpause-movement": function () {
                 this.paused = false;
+            },
+            
+            /**
+             * Handles velocity change if velocities should not be re-oriented.
+             * 
+             * @method 'orientation-updated'
+             * @param matrix {Array} A 3x3 matrix describing the orientation change.
+             * @since 0.7.3
+             */
+            "orientation-updated": function (matrix) {
+                if (!this.reorientVelocities) {
+                    this.lastVelocity.multiply(matrix);
+                }
             }
         },
         
@@ -464,8 +560,10 @@
                     this.removeMover(this.movers[i]);
                 }
                 this.movers.recycle();
-                
                 this.ground.recycle();
+                this.lastVelocity.recycle();
+                this.velocityChanges.recycle();
+                this.velocityDirections.recycle();
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;

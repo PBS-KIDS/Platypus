@@ -61,7 +61,7 @@ A component which changes the scene when activated. When the portal receives an 
                 var i = '';
                 
                 if (!this.used && this.activated) {
-                    this.owner.trigger("port-" + this.destination);
+                    this.owner.triggerEvent("port-" + this.destination);
                     this.used = true;
                 } else if (this.ready && !this.wasReady) {
                     this.owner.triggerEvent('portal-waiting');

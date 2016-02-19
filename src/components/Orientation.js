@@ -21,12 +21,13 @@
  * @class Orientation
  * @uses platypus.Component
  */
-/*global platypus */
+/*global platypus, include */
 /*jslint plusplus:true */
 (function () {
     "use strict";
     
-    var Vector = include('platypus.Vector'),
+    var Data = include('platypus.Data'),
+        Vector = include('platypus.Vector'),
         normal = Vector.setUp(0, 0, 1),
         origin = Vector.setUp(1, 0, 0),
         matrices = {
@@ -193,14 +194,22 @@
                 this.loadedOrientationMatrix = this.orientationMatrix;
                 
                 // This is the stationary transform
-                this.matrix   = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+                this.matrix = Array.setUp(
+                    Array.setUp(1, 0, 0),
+                    Array.setUp(0, 1, 0),
+                    Array.setUp(0, 0, 1)
+                );
                 
                 // This is the tweening transform
-                this.matrixTween = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+                this.matrixTween = Array.setUp(
+                    Array.setUp(1, 0, 0),
+                    Array.setUp(0, 1, 0),
+                    Array.setUp(0, 0, 1)
+                );
                 
-                this.relocationMessage = {
-                    position: null
-                }
+                this.relocationMessage = Data.setUp(
+                    "position", null
+                );
                 
                 this.vectors  = Array.setUp();
                 this.inverses = Array.setUp();
@@ -283,9 +292,12 @@
                             tween.offset.multiply(tween.endMatrix).addVector(tween.anchor);
                             msg.position = tween.offset;
                             this.owner.triggerEvent('relocate-entity', msg);
-                            tween.offset.recycle();
+                            if (tween.recycleOffset) {
+                                tween.offset.recycle();
+                            }
                         }
                         tween.onFinished(tween.endMatrix);
+                        tween.recycle();
                     }
                     
                     finishedTweening.recycle();
@@ -400,11 +412,21 @@
                     var arr = null,
                         angle  = props.angle || 0,
                         matrix = props.matrix,
-                        offset = null;
+                        tween  = Data.setUp(
+                            "transform", props.transform,
+                            "anchor", props.anchor,
+                            "endTime", props.time || 0,
+                            "time", 0,
+                            "tween", props.tween || linearEase,
+                            "onFinished", props.onFinished || doNothing,
+                            "beforeTick", props.beforeTick || returnTrue,
+                            "afterTick", props.onTick || props.afterTick || doNothing
+                        );
                     
                     if (!matrix) {
                         matrix = matrices[props.transform];
                     }
+                    tween.endMatrix = matrix;
                     
                     if (!angle && (props.transform.indexOf('rotate') === 0)) {
                         switch (props.transform) {
@@ -424,29 +446,17 @@
                             break;
                         }
                     }
+                    tween.angle = angle;
                     
                     if (props.anchor) {
-                        offset = props.offset
-                        if (offset) {
-                            offset = offset.copy();
-                        } else {
-                            offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                        tween.offset = props.offset
+                        if (!tween.offset) {
+                            tween.offset = this.owner.position.copy().subtractVector(props.anchor, 2);
+                            tween.recycleOffset = true;
                         }
                     }
                     
-                    this.tweens.push({
-                        transform: props.transform,
-                        anchor: props.anchor,
-                        offset: offset,
-                        endTime: props.time || 0,
-                        time: 0,
-                        endMatrix: matrix,
-                        angle: angle,
-                        tween: props.tween || linearEase,
-                        onFinished: props.onFinished || doNothing,
-                        beforeTick: props.beforeTick || returnTrue,
-                        afterTick: props.onTick || props.afterTick || doNothing
-                    });
+                    this.tweens.push(tween);
                 };
             }()),
             
@@ -638,7 +648,7 @@
             }()),
             
             updateVector: function (vector, inverse) {
-                inverse.set(vector.add(inverse));
+                inverse.set(vector.add(inverse)); // Inverses are stored to return to the original postion, *but* also allow outside changes on the vectors to be retained. This introduces floating point errors on tweened vectors. - DDD 2/10/2016
                 vector.multiply(this.matrixTween);
                 inverse.subtractVector(vector);
             },
@@ -649,11 +659,10 @@
                 this.tweens.recycle();
                 this.orientationVector.recycle();
                 this.orientationMatrix.recycle(2);
+                this.matrix.recycle(2);
+                this.matrixTween.recycle(2);
+                this.relocationMessage.recycle();
             }
-        },
-        
-        publicMethods: {
-            
         }
     });
 }());
