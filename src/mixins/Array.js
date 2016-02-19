@@ -1,14 +1,20 @@
 /**
  * @namespace window
  */
+/*global springroll */
 (function (Array, Object) {
 	/**
 	 * Add methods to Array
 	 * @class Array
 	 */
-    
     var cache = null,
-        prototype = Array.prototype;
+        debug = !!springroll.Debug,
+        prototype = Array.prototype,
+        recycleProp = {
+            enumerable: false,
+            value: false,
+            writable: true
+        };
 
 	/**
 	 * Merges a given array into the current array without duplicating items.
@@ -104,23 +110,43 @@
          * @return Array
          * @since 0.7.1
          */
-        Array.setUp = function () {
-            var i = 0,
-                arr = null;
-            
-            if (cache.length) {
-                arr = cache.pop();
-                arr.recycled = false;
-            } else {
-                arr = [];
-            }
-            
-            for (i = 0; i < arguments.length; i++) {
-                arr.push(arguments[i]);
-            }
+        if (debug) {
+            Array.setUp = function () {
+                var i = 0,
+                    arr = null;
+                
+                if (cache.length) {
+                    arr = cache.pop();
+                    arr.recycled = false;
+                } else {
+                    arr = [];
+                    Object.defineProperty(arr, 'recycled', recycleProp);
+                }
+                
+                for (i = 0; i < arguments.length; i++) {
+                    arr.push(arguments[i]);
+                }
 
-            return arr;
-        };
+                return arr;
+            };
+        } else {
+            Array.setUp = function () {
+                var i = 0,
+                    arr = null;
+                
+                if (cache.length) {
+                    arr = cache.pop();
+                } else {
+                    arr = [];
+                }
+                
+                for (i = 0; i < arguments.length; i++) {
+                    arr.push(arguments[i]);
+                }
+
+                return arr;
+            };
+        }
 
         /**
          * Save instance for reuse.
