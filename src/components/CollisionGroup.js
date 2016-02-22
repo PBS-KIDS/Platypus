@@ -221,6 +221,7 @@
                 var i = 0,
                     aabb        = this.filteredAABB,
                     childEntity = null,
+                    incAABB = null,
                     sE = this.solidEntities;
                 
                 if (!collisionType) {
@@ -233,8 +234,10 @@
                         if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                             childEntity = childEntity.collisionGroup;
                         }
-                        
-                        aabb.include(childEntity.getAABB(collisionType));
+                        incAABB = childEntity.getAABB(collisionType);
+                        if (incAABB) {
+                            aabb.include(incAABB);
+                        }
                     }
                     return aabb;
                 }
@@ -244,6 +247,7 @@
                 var i = 0,
                     aabb        = this.filteredAABB,
                     childEntity = null,
+                    incAABB = null,
                     sE = this.solidEntities;
                 
                 if (!collisionType) {
@@ -257,7 +261,10 @@
                             childEntity = childEntity.collisionGroup;
                         }
 
-                        aabb.include(childEntity.getPreviousAABB(collisionType));
+                        incAABB = childEntity.getPreviousAABB(collisionType);
+                        if (incAABB) {
+                            aabb.include(incAABB);
+                        }
                     }
                     return aabb;
                 }

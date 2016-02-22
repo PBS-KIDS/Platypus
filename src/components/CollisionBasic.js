@@ -521,17 +521,24 @@
              * On receiving this message, the component triggers `add-collision-entity` on the parent.
              * 
              * @method 'collide-on'
+             * @param type {String} If specified, only collision components of this type are added to the collision list.
              */
             "collide-on": function (type) {
+                var owner = this.owner,
+                    colType = this.collisionType,
+                    colTypes = owner.collisionTypes;
+                
                 /**
                  * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
                  * 
                  * @event 'add-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if (!type || (type === this.collisionType)) {
-                    this.owner.collisionTypes.union([this.collisionType]);
-                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
+                if ((typeof type !== 'string') || (type === colType)) {
+                    if (colTypes.indexOf(colType) === -1) {
+                        colTypes.push(colType);
+                    }
+                    owner.parent.triggerEvent('add-collision-entity', owner);
                     this.active = true;
                 }
             },
@@ -540,9 +547,14 @@
              * On receiving this message, the component triggers `remove-collision-entity` on the parent.
              * 
              * @method 'collide-off'
+             * @param type {String} If specified, only collision components of this type are removed from the collision list.
              */
             "collide-off": function (type) {
-                var index = 0;
+                var index = 0,
+                    owner = this.owner,
+                    parent = owner.parent,
+                    colType = this.collisionType,
+                    colTypes = owner.collisionTypes;
                 
                 /**
                  * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
@@ -550,17 +562,17 @@
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if (!type || (type === this.collisionType)) {
-                    this.owner.parent.triggerEvent('remove-collision-entity', this.owner);
-                    index = this.owner.collisionTypes.indexOf(this.collisionType);
+                if ((typeof type !== 'string') || (type === colType)) {
+                    parent.triggerEvent('remove-collision-entity', owner);
+                    index = colTypes.indexOf(colType);
                     if (index >= 0) {
-                        this.owner.collisionTypes.greenSplice(index);
+                        colTypes.greenSplice(index);
                     }
                     this.active = false;
-                }
 
-                if (this.owner.collisionTypes.length) {
-                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
+                    if (colTypes.length) {
+                        parent.triggerEvent('add-collision-entity', owner);
+                    }
                 }
             },
             
@@ -742,7 +754,9 @@
                     this.owner.parent.triggerEvent('add-collision-entity', this.owner);
                 } else { //remove collision functions
                     colFuncs.recycle();
+                    this.owner.collisionFunctions = null;
                     this.owner.aabb.recycle();
+                    this.owner.aabb = null;
                 }
             }
         }
