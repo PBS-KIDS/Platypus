@@ -234,7 +234,10 @@ platypus.Entity = (function () {
         this.components.recycle();
         
         this.state.recycle();
+        this.state = null;
+        
         this.lastState.recycle();
+        this.lastState = null;
         
         this.messengerDestroy();
     };

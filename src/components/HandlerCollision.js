@@ -5,7 +5,7 @@
  * @class HandlerCollision
  * @uses platypus.Component
  */
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -38,9 +38,6 @@
         },
         groupSortBySize = function (a, b) {
             return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
-        },
-        isAABBCollision = function (boxX, boxY) {
-            return !((boxX.left >=  boxY.right) || (boxX.right  <=  boxY.left) || (boxX.top    >=  boxY.bottom) || (boxX.bottom <=  boxY.top));
         },
         circleRectCollision = function (circle, rect) {
             var rectAabb         = rect.aABB,
@@ -265,7 +262,6 @@
                     y        = camera.top  + height / 2,
                     entities      = null,
                     entity        = null,
-                    check         = isAABBCollision,
                     aabbLogic     = this.cameraLogicAABB,
                     aabbCollision = this.cameraCollisionAABB,
                     types = null,
@@ -300,7 +296,7 @@
                     while (i--) {
                         collides = false;
                         entity = all[i];
-                        if (entity.alwaysOn || entity.checkCollision || check(entity.getAABB(), aabbLogic)) {
+                        if (entity.alwaysOn || entity.checkCollision || aabbLogic.collides(entity.getAABB())) {
                             entity.checkCollision = false;
                             allLive[allLive.length] = entity;
 
@@ -344,7 +340,7 @@
                             j = entities.length;
                             while (j--) {
                                 entity = entities[j];
-                                if (entity.alwaysOn  || check(entity.getAABB(), aabbCollision)) {
+                                if (entity.alwaysOn  || aabbCollision.collides(entity.getAABB())) {
                                     list[list.length] = entity;
                                 }
                             }
@@ -656,7 +652,7 @@
                             }
                         }
                         
-                        return isAABBCollision(sweepAABB, otherAABB);
+                        return sweepAABB.collides(otherAABB);
                     };
 
                 return function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY, collisionTypes) {
@@ -951,6 +947,7 @@
                         initialPoint    = prevShape[axis],
                         goalPoint       = currentShape[axis],
                         translatedShape = prevShape,
+                        translatedAABB  = translatedShape.aABB,
                         direction       = ((initialPoint < goalPoint) ? 1 : -1),
                         position        = goalPoint,
                         pcShape         = null,
@@ -967,7 +964,7 @@
                         while (i--) {
                             pcShape = potentialCollidingShapes[i];
                             position = goalPoint;
-                            if (isAABBCollision(translatedShape.aABB, pcShape.aABB)) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
+                            if (translatedAABB.collides(pcShape.aABB)) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
                                 if (shapeCollision(translatedShape, pcShape)) {
                                     collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, pcShape);
                                     position = collisionInfo.position;
@@ -1022,7 +1019,6 @@
                     k   = 0,
                     l   = 0,
                     m   = 0,
-                    checkAABBCollision = isAABBCollision,
                     collisionType = null,
                     softCollisionMap = null,
                     otherEntities  = null,
@@ -1046,7 +1042,7 @@
                             while (k--) {
                                 collisionFound = false;
                                 otherEntity = otherEntities[k];
-                                if ((otherEntity !== ent) && (checkAABBCollision(ent.getAABB(collisionType), otherEntity.getAABB(otherCollisionType)))) {
+                                if ((otherEntity !== ent) && (ent.getAABB(collisionType).collides(otherEntity.getAABB(otherCollisionType)))) {
                                     shapes = ent.getShapes(collisionType);
                                     otherShapes = otherEntity.getShapes(otherCollisionType);
                                     l = shapes.length;

@@ -339,7 +339,19 @@ platypus.AABB = (function () {
     };
     
     /**
-     * Expresses whether this AABB intersects the given AABB.
+     * Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping or touching edges.
+     * 
+     * @method collides
+     * @param aabb {AABB} The AABB to check against
+     * @return {boolean} Returns `true` if this AABB collides with the other AABB.
+     * @since 0.7.4
+     */
+    proto.collides = function (aabb) {
+        return (aabb.bottom > this.top) && (aabb.top < this.bottom) && (aabb.right > this.left) && (aabb.left < this.right);
+    };
+
+    /**
+     * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping only, not touching edges.
      * 
      * @method intersects
      * @param aabb {AABB} The AABB to check against
