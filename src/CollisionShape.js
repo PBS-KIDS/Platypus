@@ -22,61 +22,53 @@
 platypus.CollisionShape = (function () {
     "use strict";
     
-    var Vector = include('platypus.Vector'),
-        collisionShape = function (owner, definition, collisionType) {
+    var AABB = include('platypus.AABB'),
+        Vector = include('platypus.Vector'),
+        CollisionShape = function (owner, definition, collisionType) {
             var regX = definition.regX,
                 regY = definition.regY,
-                width = 0,
-                height = 0;
+                width = definition.width || definition.radius * 2 || 0,
+                height = definition.height || definition.radius * 2 || 0,
+                radius = definition.radius || 0,
+                type = definition.type || 'rectangle';
+
+            // If this shape is recycled, the vectors will already be in place.
+            if (!this.initialized) {
+                this.initialized = true;
+                Vector.assign(this, 'offset', 'offsetX', 'offsetY');
+                Vector.assign(this, 'position', 'x', 'y');
+                Vector.assign(this, 'size', 'width', 'height');
+                this.aABB = AABB.setUp();
+            }
 
             this.owner = owner;
             this.collisionType = collisionType;
-
-            this.width  = definition.width  || definition.radius * 2 || 0;
-            this.height = definition.height || definition.radius * 2 || 0;
-            this.radius = definition.radius || 0;
+            this.type = type;
+            this.subType = '';
+            
+            if (type === 'circle') {
+                width = height = radius * 2;
+            }
+            this.size.set(width, height);
+            this.radius = radius;
 
             if (typeof regX !== 'number') {
-                regX = this.width / 2;
+                regX = width / 2;
             }
             if (typeof regY !== 'number') {
-                regY = this.height / 2;
+                regY = height / 2;
             }
+            this.offset.set(definition.offsetX || ((width  / 2) - regX), definition.offsetY || ((height / 2) - regY));
 
-            Vector.assign(this, 'offset', 'offsetX', 'offsetY');
-            this.offsetX = definition.offsetX || ((this.width  / 2) - regX);
-            this.offsetY = definition.offsetY || ((this.height / 2) - regY);
-
-            Vector.assign(this, 'position', 'x', 'y');
             if (owner) {
-                this.x = owner.x + this.offsetX;
-                this.y = owner.y + this.offsetY;
+                this.position.set(owner.x, owner.y).add(this.offset);
             } else {
-                this.x = definition.x + this.offsetX;
-                this.y = definition.y + this.offsetY;
+                this.position.set(definition.x, definition.y).add(this.offset);
             }
 
-            this.type = definition.type || 'rectangle';
-            this.subType = '';
-            this.aABB = undefined;
-
-            switch (this.type) {
-            case 'circle': //need TL and BR points
-                width = height = this.radius * 2;
-                break;
-            case 'rectangle': //need TL and BR points
-                width = this.width;
-                height = this.height;
-                break;
-            }
-
-            Vector.assign(this, 'size', 'width', 'height');
-            this.width  = width;
-            this.height = height;
-
-            this.aABB     = new platypus.AABB(this.x, this.y, width, height);
+            this.aABB.setAll(this.x, this.y, width, height);
         },
-        proto = collisionShape.prototype;
+        proto = CollisionShape.prototype;
 
     /**
      * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
@@ -89,8 +81,7 @@ platypus.CollisionShape = (function () {
         var x = ownerX + this.offsetX,
             y = ownerY + this.offsetY;
 
-        this.x = x;
-        this.y = y;
+        this.position.set(x, y);
         this.aABB.move(x, y);
     };
     
@@ -152,9 +143,10 @@ platypus.CollisionShape = (function () {
      * Destroys the shape so that it can be memory collected safely.
      * 
      * @method destroy
+     * @deprecated since 0.7.4 - Use `recycle()` instead.
      */
     proto.destroy = function () {
-        this.aABB = undefined;
+        this.recycle();
     };
     
     /**
@@ -164,18 +156,43 @@ platypus.CollisionShape = (function () {
      * @param matrix {Array} A matrix used to transform the shape.
      */
     proto.multiply = function (m) {
-        this.position.subtractVector(this.owner.position);
+        var pos = this.position,
+            own = this.owner.position;
         
-        this.position.multiply(m);
+        pos.subtractVector(own);
+        
+        pos.multiply(m);
         this.offset.multiply(m);
         this.size.multiply(m);
         
-        this.position.addVector(this.owner.position);
+        pos.addVector(own);
         this.width  = Math.abs(this.width);
         this.height = Math.abs(this.height);
         
         this.aABB.setAll(this.x, this.y, this.width, this.height);
     };
     
-    return collisionShape;
+    /**
+     * Returns an CollisionShape from cache or creates a new one if none are available.
+     * 
+     * @method CollisionShape.setUp
+     * @return {platypus.CollisionShape} The instantiated CollisionShape.
+     * @since 0.7.4
+     */
+    /**
+     * Returns a CollisionShape back to the cache.
+     * 
+     * @method CollisionShape.recycle
+     * @param {platypus.CollisionShape} The CollisionShape to be recycled.
+     * @since 0.7.4
+     */
+    /**
+     * Relinquishes properties of the CollisionShape and recycles it.
+     * 
+     * @method recycle
+     * @since 0.7.4
+     */
+    platypus.setUpRecycle(CollisionShape, 'CollisionShape');
+    
+    return CollisionShape;
 }());

@@ -479,8 +479,8 @@
             this.prevShapes = Array.setUp();
             this.entities = undefined;
             for (x = 0; x < shapes.length; x++) {
-                this.shapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
-                this.prevShapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
+                this.shapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
+                this.prevShapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
                 this.prevAABB.include(this.prevShapes[x].aABB);
                 this.aabb.include(this.shapes[x].aABB);
             }
@@ -746,8 +746,16 @@
                 colFuncs[this.collisionType].recycle();
                 delete colFuncs[this.collisionType];
                 
+                i = this.shapes.length;
+                while (i--) {
+                    this.shapes[i].recycle();
+                    this.prevShapes[i].recycle();
+                }
                 this.shapes.recycle();
                 this.prevShapes.recycle();
+                delete this.shapes;
+                delete this.prevShapes;
+
                 delete this.entities;
 
                 if (this.owner.collisionTypes.length) {
