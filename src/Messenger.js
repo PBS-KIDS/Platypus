@@ -17,6 +17,7 @@ platypus.Messenger = (function () {
             this.loopCheck = Array.setUp();
         },
         debug = !!springroll.Debug,
+        perfTools = debug && window.performance && window.performance.mark && window.performance.measure && window.performance, // End with this to set perfTools to window.performance
         proto = extend(Messenger, EventDispatcher);
     
     /**
@@ -123,13 +124,13 @@ platypus.Messenger = (function () {
                 }
 
                 this.loopCheck.push(event);
-                if (window.performance) {
-                    window.performance.mark("a");
+                if (perfTools) {
+                    perfTools.mark("a");
                 }
                 count = this._triggerEvent(event, value, debug);
-                if (window.performance) {
-                    window.performance.mark("b");
-                    window.performance.measure(this.type + ":" + event, 'a', 'b');
+                if (perfTools) {
+                    perfTools.mark("b");
+                    perfTools.measure(this.type + ":" + event, 'a', 'b');
                 }
                 this.loopCheck.length = this.loopCheck.length - 1;
                 if (debugLogging) {
