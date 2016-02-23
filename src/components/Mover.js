@@ -431,7 +431,7 @@
                     if (entityV) {
                         e = Math.max(entityV.scalarProjection(direction), 0);
                         if (e < s) {
-                            s -= e;
+                            s = e;
                         } else {
                             s = 0;
                         }
@@ -448,11 +448,9 @@
                         }
                     }
                     
-                    if(!this.aaa) {this.aaa = [];}
                     if (add) {
                         vc.push(s);
                         vd.push(Vector.setUp(direction));
-                        this.aaa.push(entityV);
                     }
                 }
             },
@@ -487,8 +485,8 @@
                         sdi = s / j;
                         while (j--) {
                             m = soc[j];
-                            v.set(direction).normalize().multiply(m.velocity.scalarProjection(direction) - sdi);
-                            m.velocity.subtractVector(v);
+                            v.set(direction).normalize().multiply(sdi - m.velocity.scalarProjection(direction));
+                            m.velocity.add(v);
                         }
                         direction.recycle();
                     }
