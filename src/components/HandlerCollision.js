@@ -42,48 +42,40 @@
         isAABBCollision = function (boxX, boxY) {
             return !((boxX.left >=  boxY.right) || (boxX.right  <=  boxY.left) || (boxX.top    >=  boxY.bottom) || (boxX.bottom <=  boxY.top));
         },
-        shapeCollision = function (shapeA, shapeB) {
-            var distSquared      = 0,
-                radiiSquared     = 0,
-                circle           = null,
-                rect             = null,
-                shapeDistanceX   = 0,
-                shapeDistanceY   = 0,
-                rectAabb         = null,
-                cornerDistanceSq = 0;
+        circleRectCollision = function (circle, rect) {
+            var rectAabb         = rect.aABB,
+                hh = rectAabb.halfHeight,
+                hw = rectAabb.halfWidth,
+                abs = Math.abs,
+                pow = Math.pow,
+                shapeDistanceX = abs(circle.x - rect.x),
+                shapeDistanceY = abs(circle.y - rect.y),
+                radius = circle.radius;
             
-            if (shapeA.type === 'rectangle' && shapeB.type === 'rectangle') {
-                return true;
-            } else if (shapeA.type === 'circle' && shapeB.type === 'circle') {
-                distSquared = Math.pow((shapeA.x - shapeB.x), 2) + Math.pow((shapeA.y - shapeB.y), 2);
-                radiiSquared = Math.pow((shapeA.radius + shapeB.radius), 2);
-                if (distSquared <= radiiSquared) {
+            /* This checks the following in order:
+                - Is the x or y distance between shapes less than half the width or height respectively of the rectangle? If so, we know they're colliding.
+                - Is the x or y distance between the shapes greater than the half width/height plus the radius of the circle? Then we know they're not colliding.
+                - Otherwise, we check the distance between a corner of the rectangle and the center of the circle. If that distance is less than the radius of the circle, we know that there is a collision; otherwise there is not.
+            */
+            return (shapeDistanceX < hw) || (shapeDistanceY < hh) || ((shapeDistanceX < (hw + radius)) && (shapeDistanceY < (hh + radius)) && ((pow((shapeDistanceX - hw), 2) + pow((shapeDistanceY - hh), 2)) < pow(radius, 2)));
+        },
+        shapeCollision = function (shapeA, shapeB) {
+            var pow = Math.pow;
+            
+            if (shapeA.type === 'rectangle') {
+                if (shapeB.type === 'rectangle') {
                     return true;
+                } else if (shapeB.type === 'circle') {
+                    return circleRectCollision(shapeB, shapeA);
                 }
-            } else if ((shapeA.type === 'circle' && shapeB.type === 'rectangle') || (shapeA.type === 'rectangle' && shapeB.type === 'circle')) {
-                if (shapeA.type === 'circle') {
-                    circle = shapeA;
-                    rect = shapeB;
-                } else {
-                    circle = shapeB;
-                    rect = shapeA;
-                }
-                rectAabb = rect.aABB;
-
-                shapeDistanceX = Math.abs(circle.x - rect.x);
-                shapeDistanceY = Math.abs(circle.y - rect.y);
-
-                if (shapeDistanceX >= (rectAabb.halfWidth + circle.radius)) { return false; }
-                if (shapeDistanceY >= (rectAabb.halfHeight + circle.radius)) { return false; }
-
-                if (shapeDistanceX < (rectAabb.halfWidth)) { return true; }
-                if (shapeDistanceY < (rectAabb.halfHeight)) { return true; }
-
-                cornerDistanceSq = Math.pow((shapeDistanceX - rectAabb.halfWidth), 2) + Math.pow((shapeDistanceY - rectAabb.halfHeight), 2);
-                if (cornerDistanceSq < Math.pow(circle.radius, 2)) {
-                    return true;
+            } else if (shapeA.type === 'circle') {
+                if (shapeB.type === 'rectangle') {
+                    return circleRectCollision(shapeA, shapeB);
+                } else if (shapeB.type === 'circle') {
+                    return (pow((shapeA.x - shapeB.x), 2) + pow((shapeA.y - shapeB.y), 2)) <= pow((shapeA.radius + shapeB.radius), 2);
                 }
             }
+
             return false;
         };
     
@@ -645,10 +637,10 @@
             
             processCollisionStep: (function () {
                 var sweeper       = AABB.setUp(),
-                    includeEntity = function (thisEntity, aabb, otherEntity, otherCollisionType, ignoredEntities) {
-                        var i         = 0,
-                            otherAABB = otherEntity.getAABB(otherCollisionType);
+                    includeEntity = function (thisEntity, aabb, otherEntity, otherAABB, ignoredEntities, sweepAABB) {
+                        var i = 0;
                         
+                        //Chop out all the special case entities we don't want to check against.
                         if (otherEntity === thisEntity) {
                             return false;
                         } else if (otherEntity.jumpThrough && (aabb.bottom > otherAABB.top)) {
@@ -663,7 +655,8 @@
                                 }
                             }
                         }
-                        return true;
+                        
+                        return isAABBCollision(sweepAABB, otherAABB);
                     };
 
                 return function (ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, entityDeltaX, entityDeltaY, collisionTypes) {
@@ -671,6 +664,7 @@
                         j = 0,
                         k = 0,
                         l = 0,
+                        isIncluded = includeEntity,
                         potentialCollision       = false,
                         potentialCollidingShapes = Array.setUp(),
                         pcsGroup                 = null,
@@ -679,6 +673,7 @@
                         collisionType            = null,
                         otherEntity              = null,
                         otherCollisionType       = '',
+                        otherAABB                = null,
                         otherShapes              = null,
                         entitiesByTypeLive       = this.entitiesByTypeLive,
                         otherEntities            = null,
@@ -708,12 +703,11 @@
                             if (otherEntities) {
                                 k = otherEntities.length;
                                 while (k--) {
-
-                                    //Chop out all the special case entities we don't want to check against.
                                     otherEntity = otherEntities[k];
+                                    otherAABB = otherEntity.getAABB(otherCollisionType);
 
                                     //Do our sweep check against the AABB of the other object and add potentially colliding shapes to our list.
-                                    if (includeEntity(ent, previousAABB, otherEntity, otherCollisionType, ignoredEntities) && (isAABBCollision(sweepAABB, otherEntity.getAABB(otherCollisionType)))) {
+                                    if (isIncluded(ent, previousAABB, otherEntity, otherAABB, ignoredEntities, sweepAABB)) {
                                         otherShapes = otherEntity.getShapes(otherCollisionType);
                                         
                                         l = otherShapes.length;
