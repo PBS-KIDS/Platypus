@@ -87,27 +87,65 @@ platypus.Vector = (function () {
      * @chainable
      */
     proto.set = function (x, y, z) {
-        var m = null,
-            q = 0,
+        if (x && Array.isArray(x)) {   // Passing in an array.
+            return this.setArray(x, y);
+        } else if (x && x.matrix) {   // Passing in a vector.
+            return this.setVector(x, y);
+        } else {                     // Passing in coordinates.
+            return this.setXYZ(x, y, z);
+        }
+    };
+
+    /**
+     * Sets the coordinates of the vector.
+     * 
+     * @method setXYZ
+     * @param x {number} The x coordinate.
+     * @param [y] {number} The y coordinate.
+     * @param [z] {number} The z coordinate.
+     * @chainable
+     * @since 0.7.4
+     */
+    proto.setXYZ = function (x, y, z) {
+        var matrix = this.matrix;
+        
+        matrix[0] = x || 0;
+        matrix[1] = y || 0;
+        matrix[2] = z || 0;
+        
+        return this;
+    };
+
+    /**
+     * Sets the coordinates of the vector.
+     * 
+     * @method setVector
+     * @param vector {Vector} The Vector to copy.
+     * @param [dimensions] {number} The number of elements to copy from the Vector.
+     * @chainable
+     * @since 0.7.4
+     */
+    proto.setVector = function (vector, dimensions) {
+        return this.setArray(vector.matrix, dimensions);
+    };
+
+    /**
+     * Sets the coordinates of the vector.
+     * 
+     * @method setArray
+     * @param arr {Array} The array to copy.
+     * @param [dimensions] {number} The number of elements to copy from the Array.
+     * @chainable
+     * @since 0.7.4
+     */
+    proto.setArray = function (arr, dimensions) {
+        var q = dimensions || arr.length,
             matrix = this.matrix;
         
-        if (x && Array.isArray(x)) {   // Passing in an array.
-            q = y || x.length;
-            while (q--) {
-                matrix[q] = x[q];
-            }
-        } else if (x && x.matrix) {   // Passing in a vector.
-            m = x.matrix;
-            q = y || m.length;
-            while (q--) {
-                matrix[q] = m[q];
-            }
-        } else {                     // Passing in coordinates.
-            matrix[0] = x || 0;
-            matrix[1] = y || 0;
-            matrix[2] = z || 0;
+        while (q--) {
+            matrix[q] = arr[q];
         }
-        
+
         return this;
     };
 
@@ -153,10 +191,9 @@ platypus.Vector = (function () {
      * 
      * @param otherVector {platypus.Vector} The other vector.
      * @chainable
+     * @deprecated since 0.7.4 - Use `setVector` instead.
      */
-    proto.copyValues = function (otherVector) {
-        return this.set(otherVector);
-    };
+    proto.copyValues = proto.setVector;
     
     /**
      * Returns the magnitude of the vector.
@@ -290,14 +327,14 @@ platypus.Vector = (function () {
         
         if (a) {
             if (a === 'x') {
-                a = temp.set(1, 0, 0);
+                a = temp.setXYZ(1, 0, 0);
             } else if (a === 'y') {
-                a = temp.set(0, 1, 0);
+                a = temp.setXYZ(0, 1, 0);
             } else if (a === 'z') {
-                a = temp.set(0, 0, 1);
+                a = temp.setXYZ(0, 0, 1);
             }
         } else {
-            a = temp.set(0, 0, 1);
+            a = temp.setXYZ(0, 0, 1);
         }
         
         x     = a.x;

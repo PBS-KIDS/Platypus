@@ -113,7 +113,7 @@
                     }).velocity;
                     
                     if (this.owner.heading !== this.heading) {
-                        this.direction.set(this.initialVector).rotate((this.owner.heading / 180) * Math.PI);
+                        this.direction.setVector(this.initialVector).rotate((this.owner.heading / 180) * Math.PI);
                         this.heading = this.owner.heading;
                     }
                     
@@ -200,7 +200,7 @@
                 }
                 
                 if (this.owner.heading !== this.heading) {
-                    this.direction.set(this.initialVector).rotate((this.heading / 180) * Math.PI);
+                    this.direction.setVector(this.initialVector).rotate((this.heading / 180) * Math.PI);
                     this.reorient(this.heading, this.owner.heading);
                     this.owner.heading = this.heading;
                 }

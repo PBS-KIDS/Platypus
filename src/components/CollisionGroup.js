@@ -135,7 +135,7 @@
              * @method 'relocate-entity'
              */
             "relocate-entity": function () {
-                this.owner.previousPosition.set(this.owner.position);
+                this.owner.previousPosition.setVector(this.owner.position);
                 this.updateAABB();
             }
         },

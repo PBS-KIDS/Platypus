@@ -369,7 +369,7 @@
                     this.externalForces.addVector(velocity).subtractVector(this.lastVelocity);
                 }
                 
-                velocity.set(0, 0, 0);
+                velocity.setXYZ(0, 0, 0);
                 
                 while (i--) {
                     m = movers[i].update(delta);
@@ -392,7 +392,7 @@
                 }
 
                 this.clamp(velocity, delta);
-                this.lastVelocity.set(velocity);
+                this.lastVelocity.setVector(velocity);
                 
                 vect = Vector.setUp(velocity).multiply(delta);
                 position.add(vect);
@@ -442,7 +442,7 @@
                     while (i--) {
                         if ((s < vc[i]) && (vd[i].dot(direction) > 0)) {
                             vc[i] = s;
-                            vd[i].set(direction);
+                            vd[i].setVector(direction);
                             add = false;
                             break;
                         }
@@ -485,7 +485,7 @@
                         sdi = s / j;
                         while (j--) {
                             m = soc[j];
-                            v.set(direction).normalize().multiply(sdi - m.velocity.scalarProjection(direction));
+                            v.setVector(direction).normalize().multiply(sdi - m.velocity.scalarProjection(direction));
                             m.velocity.add(v);
                         }
                         direction.recycle();

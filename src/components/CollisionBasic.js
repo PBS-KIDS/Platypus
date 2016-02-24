@@ -604,9 +604,9 @@
                 }
                 
                 if (resp.relative) {
-                    owner.position.set(owner.previousPosition).add(resp.position);
+                    owner.position.setVector(owner.previousPosition).add(resp.position);
                 } else {
-                    owner.position.set(resp.position);
+                    owner.position.setVector(resp.position);
                 }
 
                 if (this.stuck) {
@@ -628,7 +628,7 @@
                     aabb.include(shape.aABB);
                 }
 
-                owner.previousPosition.set(owner.position);
+                owner.previousPosition.setVector(owner.position);
                 
                 if (um > 0) { // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
                     if (!this.stuck) {

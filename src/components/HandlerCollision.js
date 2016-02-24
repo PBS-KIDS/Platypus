@@ -409,7 +409,7 @@
                 msg.relative = false;
                 while (i--) {
                     entity = nons[i];
-                    msg.position.set(entity.position);
+                    msg.position.setVector(entity.position);
 
                     /**
                      * This message is triggered on an entity that has been repositioned due to a solid collision.
@@ -577,7 +577,7 @@
                     while (step--) {
                         entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
 
-                        finalMovementInfo.set(ent.position);
+                        finalMovementInfo.setVector(ent.position);
                         
                         finalMovementInfo = this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY, collisionTypes);
                         
@@ -799,115 +799,153 @@
                         collisionData.aABB = thatShape.aABB;
                         collisionData.thisShape = thisShape;
                         collisionData.thatShape = thatShape;
-                        collisionData.vector.set(vector);
+                        collisionData.vector.setVector(vector);
                     },
-                    findAxisCollisionPosition = (function () {
-                        var returnInfo = {
-                                position: 0,
-                                contactVector: Vector.setUp()
-                            },
-                            getMovementDistance = function (currentDistance, minimumDistance) {
-                                var pow = Math.pow;
-                                
-                                return Math.sqrt(pow(minimumDistance, 2) - pow(currentDistance, 2));
-                            },
-                            getCorner = function (circlePos, rectanglePos, half) {
-                                var diff = circlePos - rectanglePos;
-                                
-                                return diff - (diff / Math.abs(diff)) * half;
-                            },
-                            getOffsetForAABB = function (axis, thisAABB, thatAABB) {
-                                if (axis === 'x') {
-                                    return thatAABB.halfWidth + thisAABB.halfWidth;
-                                } else if (axis === 'y') {
-                                    return thatAABB.halfHeight + thisAABB.halfHeight;
-                                }
-                            },
-                            getOffsetForCircleVsAABB = function (axis, circle, rect, moving, direction, v) {
-                                var newAxisPosition = 0,
-                                    aabb = rect.aABB;
+                    returnInfo = {
+                        position: 0,
+                        contactVector: Vector.setUp()
+                    },
+                    getMovementDistance = function (currentDistance, minimumDistance) {
+                        var pow = Math.pow;
+                        
+                        return Math.sqrt(pow(minimumDistance, 2) - pow(currentDistance, 2));
+                    },
+                    getCorner = function (circlePos, rectanglePos, half) {
+                        var diff = circlePos - rectanglePos;
+                        
+                        return diff - (diff / Math.abs(diff)) * half;
+                    },
+                    getOffsetForCircleVsAABBX = function (circle, rect, moving, direction, v) {
+                        var newAxisPosition = 0,
+                            aabb = rect.aABB,
+                            hw = aabb.halfWidth,
+                            x = circle.x,
+                            y = circle.y;
 
-                                if (axis === 'x') {
-                                    if (circle.y >= aabb.top && circle.y <= aabb.bottom) {
-                                        return aabb.halfWidth + circle.radius;
-                                    } else {
-                                        v.y = getCorner(circle.y, rect.y, aabb.halfHeight);
-                                        newAxisPosition = aabb.halfWidth + getMovementDistance(v.y, circle.radius);
-                                        if (moving === circle) {
-                                            v.x = -getCorner(circle.x - direction * newAxisPosition, rect.x, aabb.halfWidth) / 2;
-                                            v.y = -v.y;
-                                        } else {
-                                            v.x = getCorner(circle.x, rect.x - direction * newAxisPosition, aabb.halfWidth) / 2;
-                                        }
-                                        v.normalize();
-                                        return newAxisPosition;
-                                    }
-                                } else if (axis === 'y') {
-                                    if (circle.x >= aabb.left && circle.x <= aabb.right) {
-                                        return aabb.halfHeight + circle.radius;
-                                    } else {
-                                        v.x = getCorner(circle.x, rect.x, aabb.halfWidth);
-                                        newAxisPosition = aabb.halfHeight + getMovementDistance(v.x, circle.radius);
-                                        if (moving === circle) {
-                                            v.x = -v.x;
-                                            v.y = -getCorner(circle.y - direction * newAxisPosition, rect.y, aabb.halfWidth) / 2;
-                                        } else {
-                                            v.y = getCorner(circle.y, rect.y - direction * newAxisPosition, aabb.halfWidth) / 2;
-                                        }
-                                        v.normalize();
-                                        return newAxisPosition;
-                                    }
-                                }
-                            },
-                            getOffsetForCircles = function (axis, thisShape, thatShape) {
-                                if (axis === 'x') {
-                                    return getMovementDistance(thisShape.y - thatShape.y, thisShape.radius + thatShape.radius);
-                                } else if (axis === 'y') {
-                                    return getMovementDistance(thisShape.x - thatShape.x, thisShape.radius + thatShape.radius);
-                                }
-                            };
+                        if (y >= aabb.top && y <= aabb.bottom) {
+                            return hw + circle.radius;
+                        } else {
+                            y = getCorner(y, rect.y, aabb.halfHeight); // reusing y.
+                            newAxisPosition = hw + getMovementDistance(y, circle.radius);
+                            if (moving === circle) {
+                                v.x = -getCorner(x - direction * newAxisPosition, rect.x, hw) / 2;
+                                y = -y;
+                            } else {
+                                v.x = getCorner(x, rect.x - direction * newAxisPosition, hw) / 2;
+                            }
+                            v.y = y;
+                            v.normalize();
+                            return newAxisPosition;
+                        }
+                    },
+                    getOffsetForCircleVsAABBY = function (circle, rect, moving, direction, v) {
+                        var newAxisPosition = 0,
+                            aabb = rect.aABB,
+                            hh = aabb.halfHeight,
+                            x = circle.x,
+                            y = circle.y;
 
-                        return function (axis, direction, thisShape, thatShape) {
-                            //Returns the value of the axis at which point thisShape collides with thatShape
-                            var ri = returnInfo,
-                                v  = ri.contactVector;
+                        if (x >= aabb.left && x <= aabb.right) {
+                            return hh + circle.radius;
+                        } else {
+                            x = getCorner(x, rect.x, aabb.halfWidth); // reusing x.
+                            newAxisPosition = hh + getMovementDistance(x, circle.radius);
+                            if (moving === circle) {
+                                x = -x;
+                                v.y = -getCorner(y - direction * newAxisPosition, rect.y, hh) / 2;
+                            } else {
+                                v.y = getCorner(y, rect.y - direction * newAxisPosition, hh) / 2;
+                            }
+                            v.x = x;
+                            v.normalize();
+                            return newAxisPosition;
+                        }
+                    },
+                    getOffsetForCirclesX = function (thisShape, thatShape) {
+                        return getMovementDistance(thisShape.y - thatShape.y, thisShape.radius + thatShape.radius);
+                    },
+                    getOffsetForCirclesY = function (axis, thisShape, thatShape) {
+                        return getMovementDistance(thisShape.x - thatShape.x, thisShape.radius + thatShape.radius);
+                    },
+                    findAxisCollisionPosition = {
+                        x: {
+                            rectangle: {
+                                rectangle: function (direction, thisShape, thatShape) {
+                                    var ri = returnInfo;
 
-                            if (thisShape.type === 'rectangle') {
-                                if (thatShape.type === 'rectangle') {
-                                    ri.position = thatShape[axis] - direction * getOffsetForAABB(axis, thisShape.aABB, thatShape.aABB);
-                                    v.x = 0;
-                                    v.y = 0;
-                                    v[axis] = direction;
+                                    ri.position = thatShape.x - direction * (thatShape.aABB.halfWidth + thisShape.aABB.halfWidth);
+                                    ri.contactVector.setXYZ(direction, 0);
+
                                     return ri;
-                                } else if (thatShape.type === 'circle') {
-                                    v.x = 0;
-                                    v.y = 0;
-                                    v[axis] = direction;
-                                    ri.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thatShape, thisShape, thisShape, direction, v);
+                                },
+                                circle: function (direction, thisShape, thatShape) {
+                                    var ri = returnInfo;
+
+                                    ri.position = thatShape.x - direction * getOffsetForCircleVsAABBX(thatShape, thisShape, thisShape, direction, ri.contactVector.setXYZ(direction, 0));
+
                                     return ri;
                                 }
-                            } else if (thisShape.type === 'circle') {
-                                if (thatShape.type === 'rectangle') {
-                                    v.x = 0;
-                                    v.y = 0;
-                                    v[axis] = direction;
-                                    ri.position = thatShape[axis] - direction * getOffsetForCircleVsAABB(axis, thisShape, thatShape, thisShape, direction, v);
-                                    return ri;
-                                } else if (thatShape.type === 'circle') {
-                                    ri.position = thatShape[axis] - direction * getOffsetForCircles(axis, thisShape, thatShape);
-                                    v.x = thatShape.x - thisShape.x;
-                                    v.y = thatShape.y - thisShape.y;
+                            },
+                            circle: {
+                                rectangle: function (direction, thisShape, thatShape) {
+                                    var ri = returnInfo;
 
-                                    v[axis] = thatShape[axis] - ri.position;
-                                    v.normalize();
+                                    ri.position = thatShape.x - direction * getOffsetForCircleVsAABBX(thisShape, thatShape, thisShape, direction, ri.contactVector.setXYZ(direction, 0));
+
+                                    return ri;
+                                },
+                                circle: function (direction, thisShape, thatShape) {
+                                    var position = thatShape.x - direction * getOffsetForCirclesX(thisShape, thatShape),
+                                        ri = returnInfo;
+                                        
+                                    ri.contactVector.setXYZ(thatShape.x - position, thatShape.y - thisShape.y).normalize();
+                                    ri.position = position;
+
                                     return ri;
                                 }
                             }
-                        };
-                    }());
+                        },
+                        y: {
+                            rectangle: {
+                                rectangle: function (direction, thisShape, thatShape) {
+                                    var ri = returnInfo;
+
+                                    ri.position = thatShape.y - direction * (thatShape.aABB.halfHeight + thisShape.aABB.halfHeight);
+                                    ri.contactVector.setXYZ(0, direction);
+                                    
+                                    return ri;
+                                },
+                                circle: function (direction, thisShape, thatShape) {
+                                    var ri = returnInfo;
+
+                                    ri.position = thatShape.y - direction * getOffsetForCircleVsAABBY(thatShape, thisShape, thisShape, direction, ri.contactVector.setXYZ(0, direction));
+
+                                    return ri;
+                                }
+                            },
+                            circle: {
+                                rectangle: function (direction, thisShape, thatShape) {
+                                    var ri = returnInfo;
+
+                                    ri.position = thatShape.y - direction * getOffsetForCircleVsAABBY(thisShape, thatShape, thisShape, direction, ri.contactVector.setXYZ(0, direction));
+
+                                    return ri;
+                                },
+                                circle: function (direction, thisShape, thatShape) {
+                                    var position = thatShape.y - direction * getOffsetForCirclesY(thisShape, thatShape),
+                                        ri = returnInfo;
+                                        
+                                    ri.contactVector.setXYZ(thatShape.x - thisShape.x, thatShape.y - position).normalize();
+                                    ri.position = position;
+
+                                    return ri;
+                                }
+                            }
+                        }
+                    };
                 
                 return function (prevShape, currentShape, axis, potentialCollidingShapes, collisionData) {
-                    var i = potentialCollidingShapes.length,
+                    var i = 0,
                         initialPoint    = prevShape[axis],
                         goalPoint       = currentShape[axis],
                         translatedShape = prevShape,
@@ -915,20 +953,24 @@
                         position        = goalPoint,
                         pcShape         = null,
                         collisionInfo   = null,
-                        finalPosition   = goalPoint;
+                        finalPosition   = goalPoint,
+                        findACP         = null;
                     
                     if (initialPoint !== goalPoint) {
+                        findACP = findAxisCollisionPosition[axis][translatedShape.type];
+                        
                         if (axis === 'x') {
                             translatedShape.moveX(goalPoint);
                         } else if (axis === 'y') {
                             translatedShape.moveY(goalPoint);
                         }
                         
+                        i = potentialCollidingShapes.length;
                         while (i--) {
                             pcShape = potentialCollidingShapes[i];
                             position = goalPoint;
                             if (translatedShape.collides(pcShape)) {
-                                collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, pcShape);
+                                collisionInfo = findACP[pcShape.type](direction, translatedShape, pcShape);
                                 position = collisionInfo.position;
                                 if (direction > 0) {
                                     if (position < finalPosition) {

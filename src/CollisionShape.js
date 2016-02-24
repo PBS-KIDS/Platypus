@@ -96,7 +96,7 @@ platypus.CollisionShape = (function () {
             } else {
                 this.collides = collidesDefault;
             }
-            this.size.set(width, height);
+            this.size.setXYZ(width, height);
             this.radius = radius;
 
             if (typeof regX !== 'number') {
@@ -105,12 +105,12 @@ platypus.CollisionShape = (function () {
             if (typeof regY !== 'number') {
                 regY = height / 2;
             }
-            this.offset.set(definition.offsetX || ((width  / 2) - regX), definition.offsetY || ((height / 2) - regY));
+            this.offset.setXYZ(definition.offsetX || ((width  / 2) - regX), definition.offsetY || ((height / 2) - regY));
 
             if (owner) {
-                this.position.set(owner.x, owner.y).add(this.offset);
+                this.position.setXYZ(owner.x, owner.y).add(this.offset);
             } else {
-                this.position.set(definition.x, definition.y).add(this.offset);
+                this.position.setXYZ(definition.x, definition.y).add(this.offset);
             }
 
             this.aABB.setAll(this.x, this.y, width, height);
@@ -128,7 +128,7 @@ platypus.CollisionShape = (function () {
         var x = ownerX + this.offsetX,
             y = ownerY + this.offsetY;
 
-        this.position.set(x, y);
+        this.position.setXYZ(x, y);
         this.aABB.move(x, y);
     };
     

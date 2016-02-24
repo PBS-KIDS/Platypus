@@ -174,13 +174,13 @@
                         return vector.signedAngleTo(origin, normal);
                     },
                     set: function (value) {
-                        vector.set(origin).rotate(value);
+                        vector.setVector(origin).rotate(value);
                     },
                     enumerable: true
                 });
 
                 if (orientation) {
-                    if (isNaN(orientation)) {
+                    if (typeof orientation !== 'number') {
                         vector.set(orientation);
                     } else {
                         vector.rotate(orientation);
@@ -648,7 +648,7 @@
             }()),
             
             updateVector: function (vector, inverse) {
-                inverse.set(vector.add(inverse)); // Inverses are stored to return to the original postion, *but* also allow outside changes on the vectors to be retained. This introduces floating point errors on tweened vectors. - DDD 2/10/2016
+                inverse.setVector(vector.add(inverse)); // Inverses are stored to return to the original postion, *but* also allow outside changes on the vectors to be retained. This introduces floating point errors on tweened vectors. - DDD 2/10/2016
                 vector.multiply(this.matrixTween);
                 inverse.subtractVector(vector);
             },
