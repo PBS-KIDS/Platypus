@@ -454,23 +454,24 @@
                         entities    = this.groupsLive,
                         x           = entities.length,
                         entity      = null,
-                        messageData = null;
+                        messageData = null,
+                        entityCDC   = entityCollisionDataContainer;
                     
                     while (x--) {
                         entity = entities[x];
                         if (entity.collisionGroup.getSize() > 1) {
-                            entityCollisionDataContainer.reset();
-                            this.checkSolidEntityCollision(entity, entity.collisionGroup, entityCollisionDataContainer);
+                            entityCDC.reset();
+                            this.checkSolidEntityCollision(entity, entity.collisionGroup, entityCDC);
                             
-                            i = entityCollisionDataContainer.xCount;
+                            i = entityCDC.xCount;
                             while (i--) {
-                                messageData = entityCollisionDataContainer.getXEntry(i);
+                                messageData = entityCDC.getXEntry(i);
                                 triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
                             }
                             
-                            i = entityCollisionDataContainer.yCount;
+                            i = entityCDC.yCount;
                             while (i--) {
-                                messageData = entityCollisionDataContainer.getYEntry(i);
+                                messageData = entityCDC.getYEntry(i);
                                 triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
                             }
                         }
@@ -510,31 +511,32 @@
                         entities    = this.solidEntitiesLive,
                         x           = entities.length,
                         entity      = null,
-                        messageData = null;
+                        messageData = null,
+                        entityCDC   = entityCollisionDataContainer,
+                        trigger = triggerCollisionMessages;
                     
                     while (x--) {
                         entity = entities[x];
-                        entityCollisionDataContainer.reset();
-                        this.checkSolidEntityCollision(entity, entity, entityCollisionDataContainer);
+                        entityCDC.reset();
+                        this.checkSolidEntityCollision(entity, entity, entityCDC);
                         
-                        i = entityCollisionDataContainer.xCount;
+                        i = entityCDC.xCount;
                         while (i--) {
-                            messageData = entityCollisionDataContainer.getXEntry(i);
-                            triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
+                            messageData = entityCDC.getXEntry(i);
+                            trigger(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
                         }
                         
-                        i = entityCollisionDataContainer.yCount;
+                        i = entityCDC.yCount;
                         while (i--) {
-                            messageData = entityCollisionDataContainer.getYEntry(i);
-                            triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
+                            messageData = entityCDC.getYEntry(i);
+                            trigger(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
                         }
                     }
                 };
             }()),
             
             checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection) {
-                var abs               = Math.abs,
-                    step              = 0,
+                var step              = 0,
                     finalMovementInfo = null,
                     aabb              = null,
                     dX                = ent.x - ent.previousX,
@@ -542,9 +544,9 @@
                     sW                = Infinity,
                     sH                = Infinity,
                     collisionTypes    = entityOrGroup.getCollisionTypes(),
-                    i                 = collisionTypes.length,
+                    i                 = 0,
                     ignoredEntities   = false,
-                    min               = Math.min;
+                    min               = null;
                 
                 if (entityOrGroup.getSolidEntities) {
                     ignoredEntities = entityOrGroup.getSolidEntities();
@@ -555,6 +557,9 @@
                 if (dX || dY) {
                     
                     if (ent.bullet) {
+                        min = Math.min;
+                        
+                        i = collisionTypes.length;
                         while (i--) {
                             aabb = entityOrGroup.getAABB(collisionTypes[i]);
                             sW = min(sW, aabb.width);
@@ -562,7 +567,7 @@
                         }
 
                         //Stepping to catch really fast entities - this is not perfect, but should prevent the majority of fallthrough cases.
-                        step = Math.ceil(Math.max(abs(dX) / sW, abs(dY) / sH));
+                        step = Math.ceil(Math.max(Math.abs(dX) / sW, Math.abs(dY) / sH));
                         step = min(step, 100); //Prevent memory overflow if things move exponentially far.
                         dX   = dX / step;
                         dY   = dY / step;
@@ -582,7 +587,7 @@
                         }
                     } else {
                         entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
-                        entityOrGroup.relocateEntity(this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo.setVector(ent.position), dX, dY, collisionTypes), collisionDataCollection);
+                        entityOrGroup.relocateEntity(this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY, collisionTypes), collisionDataCollection);
                     }
                 }
                 

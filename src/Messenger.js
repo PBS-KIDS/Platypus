@@ -5,7 +5,7 @@
  * @class Messenger
  * @extends springroll.EventDispatcher
  */
-/*global console, platypus */
+/*global console, extend, platypus */
 /*jslint plusplus:true */
 platypus.Messenger = (function () {
     "use strict";
@@ -72,12 +72,12 @@ platypus.Messenger = (function () {
         var count = 0,
             i = 0,
             listener = null,
-            listeners = null,
+            listeners = this._listeners,
             args = null;
         
-		if (!this._destroyed && this._listeners.hasOwnProperty(type) && (this._listeners[type] !== undefined)) {
-			// copy the listeners array
-			listeners = this._listeners[type].greenSlice();
+		if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type] !== undefined)) {
+			// copy the listeners array; reusing `listeners` variable
+			listeners = listeners[type].greenSlice();
 
 			if (arguments.length > 1) {
 				args = Array.prototype.greenSlice.call(arguments);
