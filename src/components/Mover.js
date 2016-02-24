@@ -369,7 +369,7 @@
                     this.externalForces.addVector(velocity).subtractVector(this.lastVelocity);
                 }
                 
-                velocity.set(0, 0, 0);
+                velocity.setXYZ(0, 0, 0);
                 
                 while (i--) {
                     m = movers[i].update(delta);
@@ -392,7 +392,7 @@
                 }
 
                 this.clamp(velocity, delta);
-                this.lastVelocity.set(velocity);
+                this.lastVelocity.setVector(velocity);
                 
                 vect = Vector.setUp(velocity).multiply(delta);
                 position.add(vect);
@@ -431,7 +431,7 @@
                     if (entityV) {
                         e = Math.max(entityV.scalarProjection(direction), 0);
                         if (e < s) {
-                            s -= e;
+                            s = e;
                         } else {
                             s = 0;
                         }
@@ -442,17 +442,15 @@
                     while (i--) {
                         if ((s < vc[i]) && (vd[i].dot(direction) > 0)) {
                             vc[i] = s;
-                            vd[i].set(direction);
+                            vd[i].setVector(direction);
                             add = false;
                             break;
                         }
                     }
                     
-                    if(!this.aaa) {this.aaa = [];}
                     if (add) {
                         vc.push(s);
                         vd.push(Vector.setUp(direction));
-                        this.aaa.push(entityV);
                     }
                 }
             },
@@ -487,8 +485,8 @@
                         sdi = s / j;
                         while (j--) {
                             m = soc[j];
-                            v.set(direction).normalize().multiply(m.velocity.scalarProjection(direction) - sdi);
-                            m.velocity.subtractVector(v);
+                            v.setVector(direction).normalize().multiply(sdi - m.velocity.scalarProjection(direction));
+                            m.velocity.add(v);
                         }
                         direction.recycle();
                     }

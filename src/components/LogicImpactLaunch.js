@@ -88,7 +88,7 @@ This component will cause the entity to move in a certain direction on colliding
                 }
 
                 if (this.justJumped) {
-                    this.direction.set(this.vector);
+                    this.direction.setVector(this.vector);
                     this.justJumped = false;
                     this.stunned = true;
                 }

@@ -123,7 +123,7 @@
 
                         if (this.ready && this.enact && state) {
                             this.ready = false; // to insure a single instance until things are reset
-                            this.velocity.set(this.instant);
+                            this.velocity.setVector(this.instant);
                             if (instantSuccess) {
                                 this.owner.triggerEvent(instantSuccess);
                             }
@@ -406,7 +406,7 @@
             if (this.instant) {
                 this.enact = false;
                 this.instant = Vector.setUp(this.velocity);
-                this.velocity.set(0, 0, 0);
+                this.velocity.setXYZ(0, 0, 0);
             }
 
             if (this.orient) { // Orient vectors in case the entity is in a transformed position.

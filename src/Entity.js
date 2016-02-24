@@ -226,17 +226,23 @@ platypus.Entity = (function () {
     **/
     proto.messengerDestroy = proto.destroy;
     proto.destroy = function () {
-        var i = 0;
+        var components = this.components,
+            i = components.length;
         
-        for (i = 0; i < this.components.length; i++) {
-            this.components[i].destroy();
+        if (!this._destroyed) {
+            while (i--) {
+                components[i].destroy();
+            }
+            components.recycle();
+            
+            this.state.recycle();
+            this.state = null;
+            
+            this.lastState.recycle();
+            this.lastState = null;
+            
+            this.messengerDestroy();
         }
-        this.components.recycle();
-        
-        this.state.recycle();
-        this.lastState.recycle();
-        
-        this.messengerDestroy();
     };
     
     /**

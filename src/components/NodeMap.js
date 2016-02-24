@@ -269,7 +269,7 @@
                     d = Infinity;
                 
                 for (i = 0; i < list.length; i++) {
-                    m = p2.set(p1).subtractVector(list[i].position).magnitude();
+                    m = p2.setVector(p1).subtractVector(list[i].position).magnitude();
                     if (m < d) {
                         if (excluding) {
                             j = excluding.indexOf(list[i]);

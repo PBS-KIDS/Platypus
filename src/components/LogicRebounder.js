@@ -83,8 +83,8 @@ Requires: ["../Vector.js"]
                 }
                 this.hitThisTick.push(other);
                 
-                this.v.set(this.owner.velocity);
-                this.incidentVector.set(collData.direction);
+                this.v.setVector(this.owner.velocity);
+                this.incidentVector.setVector(collData.direction);
                 
                 magnitude = this.v.scalarProjection(this.incidentVector);
                 if (!isNaN(magnitude)) {
@@ -92,7 +92,7 @@ Requires: ["../Vector.js"]
                     this.v.subtractVector(this.incidentVector);
                 }
                 
-                this.owner.velocity.set(this.v);
+                this.owner.velocity.setVector(this.v);
             },
             "hit-non-static": function (collData) {
                 var x = 0,
@@ -110,19 +110,19 @@ Requires: ["../Vector.js"]
                 
                 for (x = 0; x < this.otherVelocityData.length; x++) {
                     if (other === this.otherVelocityData[x].entity) {
-                        this.otherV.set(this.otherVelocityData[x].velocity);
+                        this.otherV.setVector(this.otherVelocityData[x].velocity);
                         otherVSet = true;
                         break;
                     }
                 }
                 
                 if (!otherVSet) {
-                    this.otherV.set(other.velocity);
+                    this.otherV.setVector(other.velocity);
                     other.triggerEvent('share-velocity', this.owner);
                 }
                 
-                this.v.set(this.owner.velocity);
-                this.incidentVector.set(collData.direction);
+                this.v.setVector(this.owner.velocity);
+                this.incidentVector.setVector(collData.direction);
                 
                 
                 relevantV = this.v.scalarProjection(this.incidentVector);
@@ -134,7 +134,7 @@ Requires: ["../Vector.js"]
                 
                 this.incidentVector.scale(reboundV - relevantV);
                 
-                this.owner.velocity.set(this.incidentVector);
+                this.owner.velocity.setVector(this.incidentVector);
                 
             },
             "share-velocity": function (other) {

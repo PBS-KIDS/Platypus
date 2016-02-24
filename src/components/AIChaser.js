@@ -86,7 +86,7 @@
 
                     if (m) {
                         c = true;
-                        this.direction.set(v).normalize().multiply(this.speed);
+                        this.direction.setVector(v).normalize().multiply(this.speed);
                     }
 
                     v.recycle();

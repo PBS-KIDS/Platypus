@@ -54,17 +54,17 @@
                     if (collisionInfo.myType === collisionType) {
                         if (collisionInfo.hitType === solidOrSoft) {
                             if ((dy > 0) && event.bottom) {
-                                this.owner.triggerEvent(event.bottom, collisionInfo);
+                                this.owner.trigger(event.bottom, collisionInfo);
                             } else if ((dy < 0) && event.top) {
-                                this.owner.triggerEvent(event.top, collisionInfo);
+                                this.owner.trigger(event.top, collisionInfo);
                             }
                             if ((dx > 0) && event.right) {
-                                this.owner.triggerEvent(event.right, collisionInfo);
+                                this.owner.trigger(event.right, collisionInfo);
                             } else if ((dx < 0) && event.left) {
-                                this.owner.triggerEvent(event.left, collisionInfo);
+                                this.owner.trigger(event.left, collisionInfo);
                             }
                             if (event.all) {
-                                this.owner.triggerEvent(event.all, collisionInfo);
+                                this.owner.trigger(event.all, collisionInfo);
                             }
                         }
                     }
@@ -479,8 +479,8 @@
             this.prevShapes = Array.setUp();
             this.entities = undefined;
             for (x = 0; x < shapes.length; x++) {
-                this.shapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
-                this.prevShapes.push(new CollisionShape(this.owner, shapes[x], this.collisionType));
+                this.shapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
+                this.prevShapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
                 this.prevAABB.include(this.prevShapes[x].aABB);
                 this.aabb.include(this.shapes[x].aABB);
             }
@@ -521,17 +521,24 @@
              * On receiving this message, the component triggers `add-collision-entity` on the parent.
              * 
              * @method 'collide-on'
+             * @param type {String} If specified, only collision components of this type are added to the collision list.
              */
             "collide-on": function (type) {
+                var owner = this.owner,
+                    colType = this.collisionType,
+                    colTypes = owner.collisionTypes;
+                
                 /**
                  * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
                  * 
                  * @event 'add-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if (!type || (type === this.collisionType)) {
-                    this.owner.collisionTypes.union([this.collisionType]);
-                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
+                if ((typeof type !== 'string') || (type === colType)) {
+                    if (colTypes.indexOf(colType) === -1) {
+                        colTypes.push(colType);
+                    }
+                    owner.parent.triggerEvent('add-collision-entity', owner);
                     this.active = true;
                 }
             },
@@ -540,9 +547,14 @@
              * On receiving this message, the component triggers `remove-collision-entity` on the parent.
              * 
              * @method 'collide-off'
+             * @param type {String} If specified, only collision components of this type are removed from the collision list.
              */
             "collide-off": function (type) {
-                var index = 0;
+                var index = 0,
+                    owner = this.owner,
+                    parent = owner.parent,
+                    colType = this.collisionType,
+                    colTypes = owner.collisionTypes;
                 
                 /**
                  * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
@@ -550,17 +562,17 @@
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if (!type || (type === this.collisionType)) {
-                    this.owner.parent.triggerEvent('remove-collision-entity', this.owner);
-                    index = this.owner.collisionTypes.indexOf(this.collisionType);
+                if ((typeof type !== 'string') || (type === colType)) {
+                    parent.triggerEvent('remove-collision-entity', owner);
+                    index = colTypes.indexOf(colType);
                     if (index >= 0) {
-                        this.owner.collisionTypes.greenSplice(index);
+                        colTypes.greenSplice(index);
                     }
                     this.active = false;
-                }
 
-                if (this.owner.collisionTypes.length) {
-                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
+                    if (colTypes.length) {
+                        parent.triggerEvent('add-collision-entity', owner);
+                    }
                 }
             },
             
@@ -592,9 +604,9 @@
                 }
                 
                 if (resp.relative) {
-                    owner.position.set(owner.previousPosition).add(resp.position);
+                    owner.position.setVector(owner.previousPosition).add(resp.position);
                 } else {
-                    owner.position.set(resp.position);
+                    owner.position.setVector(resp.position);
                 }
 
                 if (this.stuck) {
@@ -616,7 +628,7 @@
                     aabb.include(shape.aABB);
                 }
 
-                owner.previousPosition.set(owner.position);
+                owner.previousPosition.setVector(owner.position);
                 
                 if (um > 0) { // to force check in all directions for ultimate stuck resolution (esp. for stationary entities)
                     if (!this.stuck) {
@@ -734,15 +746,25 @@
                 colFuncs[this.collisionType].recycle();
                 delete colFuncs[this.collisionType];
                 
+                i = this.shapes.length;
+                while (i--) {
+                    this.shapes[i].recycle();
+                    this.prevShapes[i].recycle();
+                }
                 this.shapes.recycle();
                 this.prevShapes.recycle();
+                delete this.shapes;
+                delete this.prevShapes;
+
                 delete this.entities;
 
                 if (this.owner.collisionTypes.length) {
                     this.owner.parent.triggerEvent('add-collision-entity', this.owner);
                 } else { //remove collision functions
                     colFuncs.recycle();
+                    this.owner.collisionFunctions = null;
                     this.owner.aabb.recycle();
+                    this.owner.aabb = null;
                 }
             }
         }

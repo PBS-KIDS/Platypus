@@ -86,17 +86,19 @@ This component changes the (x, y) position of an object according to its current
                 this.owner.x += (vX * resp.delta);
                 this.owner.y += (vY * resp.delta);
                 
-                if (this.state.moving !== this.moving) {
-                    this.state.moving = this.moving;
-                }
-                if (this.state.turningLeft !== this.turningLeft) {
-                    this.state.turningLeft = this.turningLeft;
-                }
-                if (this.state.turningRight !== this.turningRight) {
-                    this.state.turningRight = this.turningRight;
-                }
-                if (this.owner.rotation !== this.angle) {
-                    this.owner.rotation = this.angle;
+                if (this.state) {
+                    if (this.state.moving !== this.moving) {
+                        this.state.moving = this.moving;
+                    }
+                    if (this.state.turningLeft !== this.turningLeft) {
+                        this.state.turningLeft = this.turningLeft;
+                    }
+                    if (this.state.turningRight !== this.turningRight) {
+                        this.state.turningRight = this.turningRight;
+                    }
+                    if (this.owner.rotation !== this.angle) {
+                        this.owner.rotation = this.angle;
+                    }
                 }
             },
             "turn-right": function (state) {
@@ -146,6 +148,12 @@ This component changes the (x, y) position of an object according to its current
                     this.turningLeft = false;
                     this.turningRight = false;
                 }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.state = null;
             }
         }
     });

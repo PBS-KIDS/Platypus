@@ -50,22 +50,26 @@ platypus.Component = (function () {
     proto.destroy = function () {
         var func = '';
         
-        // Handle component's destroy method before removing messaging and methods.
-        if (this._destroy) {
-            this._destroy();
-        }
-        
-        // Now remove event listeners and methods.
-        for (func in this.publicMethods) {
-            if (this.publicMethods.hasOwnProperty(func)) {
-                this.removeMethod(func);
+        if (this.listener) {
+            // Handle component's destroy method before removing messaging and methods.
+            if (this._destroy) {
+                this._destroy();
             }
+            
+            // Now remove event listeners and methods.
+            for (func in this.publicMethods) {
+                if (this.publicMethods.hasOwnProperty(func)) {
+                    this.removeMethod(func);
+                }
+            }
+            this.publicMethods.recycle();
+            
+            this.removeEventListeners();
+            this.listener.events.recycle();
+            this.listener.messages.recycle();
+            this.listener.recycle();
+            this.listener = null;
         }
-        this.publicMethods.recycle();
-        this.removeEventListeners();
-        this.listener.events.recycle();
-        this.listener.messages.recycle();
-        this.listener.recycle();
     };
     
     /**

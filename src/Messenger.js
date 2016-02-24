@@ -5,7 +5,7 @@
  * @class Messenger
  * @extends springroll.EventDispatcher
  */
-/*global console, platypus */
+/*global console, extend, platypus */
 /*jslint plusplus:true */
 platypus.Messenger = (function () {
     "use strict";
@@ -17,6 +17,7 @@ platypus.Messenger = (function () {
             this.loopCheck = Array.setUp();
         },
         debug = !!springroll.Debug,
+        perfTools = debug && window.performance && window.performance.mark && window.performance.measure && window.performance, // End with this to set perfTools to window.performance
         proto = extend(Messenger, EventDispatcher);
     
     /**
@@ -71,12 +72,12 @@ platypus.Messenger = (function () {
         var count = 0,
             i = 0,
             listener = null,
-            listeners = null,
+            listeners = this._listeners,
             args = null;
         
-		if (!this._destroyed && this._listeners.hasOwnProperty(type) && (this._listeners[type] !== undefined)) {
-			// copy the listeners array
-			listeners = this._listeners[type].greenSlice();
+		if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type] !== undefined)) {
+			// copy the listeners array; reusing `listeners` variable
+			listeners = listeners[type].greenSlice();
 
 			if (arguments.length > 1) {
 				args = Array.prototype.greenSlice.call(arguments);
@@ -123,13 +124,13 @@ platypus.Messenger = (function () {
                 }
 
                 this.loopCheck.push(event);
-                if (window.performance) {
-                    window.performance.mark("a");
+                if (perfTools) {
+                    perfTools.mark("a");
                 }
                 count = this._triggerEvent(event, value, debug);
-                if (window.performance) {
-                    window.performance.mark("b");
-                    window.performance.measure(this.type + ":" + event, 'a', 'b');
+                if (perfTools) {
+                    perfTools.mark("b");
+                    perfTools.measure(this.type + ":" + event, 'a', 'b');
                 }
                 this.loopCheck.length = this.loopCheck.length - 1;
                 if (debugLogging) {

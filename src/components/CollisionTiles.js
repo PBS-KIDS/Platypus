@@ -5,15 +5,13 @@
  * @class CollisionTiles
  * @uses platypus.Component
  */
-// Requires: ["../CollisionShape.js"]
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
     
-    var storedTiles = Array.setUp(),
-        storedTileIndex = 0,
-        serveTiles      = Array.setUp(),
+    var CollisionShape = include('platypus.CollisionShape'),
+        Data = include('platypus.Data'),
         flip = function (num, arr) {
             if (num < -1) {
                 num = Math.abs(num) - 2;
@@ -215,6 +213,16 @@
         constructor: function (definition) {
             this.tileHalfWidth  = this.tileWidth  / 2;
             this.tileHalfHeight = this.tileHeight / 2;
+            this.shapeDefinition = Data.setUp(
+                "x", 0,
+                "y", 0,
+                "type", 'rectangle',
+                "width", this.tileWidth,
+                "height", this.tileHeight
+            );
+            this.storedTiles = Array.setUp();
+            this.serveTiles = Array.setUp();
+            this.storedTileIndex = 0;
         },
         
         events: {
@@ -251,55 +259,70 @@
         },
         
         methods: {
-            getShape: function (prevAABB, x, y) {
-                var shape = null;
+            getShape: function (x, y) {
+                var i = this.storedTileIndex,
+                    shape = null,
+                    storedTiles = this.storedTiles;
                 
-                if (storedTileIndex < storedTiles.length) {
-                    shape = storedTiles[storedTileIndex];
-                    shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
-                } else {
-                    storedTiles.push(new platypus.CollisionShape(null, {
-                        x:      x * this.tileWidth  + this.tileHalfWidth,
-                        y:      y * this.tileHeight + this.tileHalfHeight,
-                        type:   'rectangle',
-                        width:  this.tileWidth,
-                        height: this.tileHeight
-                    }, 'tiles'));
-                    shape = storedTiles[storedTileIndex];
+                if (i === storedTiles.length) {
+                    storedTiles.push(CollisionShape.setUp(null, this.shapeDefinition, 'tiles'));
                 }
-                storedTileIndex += 1;
+                
+                shape = storedTiles[i];
+                shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
+
+                this.storedTileIndex += 1;
                 
                 return shape;
             },
             
             addShape: function (shapes, prevAABB, x, y) {
-                if (this.collisionMap[x][y] > -1) {
-                    shapes.push(this.getShape(prevAABB, x, y));
-                } else if (this.collisionMap[x][y] < -1) {
-                    switch (this.collisionMap[x][y]) {
+                var xy = this.collisionMap[x][y];
+                
+                if (xy > -1) {
+                    shapes.push(this.getShape(x, y));
+                } else if (xy < -1) {
+                    switch (xy) {
                     case -2: //Top
                         if (prevAABB.bottom <= y * this.tileHeight) {
-                            shapes.push(this.getShape(prevAABB, x, y));
+                            shapes.push(this.getShape(x, y));
                         }
                         break;
                     case -3: //Right
                         if (prevAABB.left >= (x + 1) * this.tileWidth) {
-                            shapes.push(this.getShape(prevAABB, x, y));
+                            shapes.push(this.getShape(x, y));
                         }
                         break;
                     case -4: //Bottom
                         if (prevAABB.top >= (y + 1) * this.tileHeight) {
-                            shapes.push(this.getShape(prevAABB, x, y));
+                            shapes.push(this.getShape(x, y));
                         }
                         break;
                     case -5: //Left
                         if (prevAABB.right <= x * this.tileWidth) {
-                            shapes.push(this.getShape(prevAABB, x, y));
+                            shapes.push(this.getShape(x, y));
                         }
                         break;
                     }
                 }
                 return shapes;
+            },
+            
+            destroy: function () {
+                var store = this.storedTiles,
+                    i = store.length;
+                
+                this.shapeDefinition.recycle();
+                delete this.shapeDefinition;
+                
+                while (i--) {
+                    store[i].recycle();
+                }
+                store.recycle();
+                delete this.storedTiles;
+
+                this.serveTiles.recycle();
+                delete this.serveTiles;
             }
         },
         
@@ -346,10 +369,10 @@
                     bottom = Math.min(Math.ceil(aabb.bottom  / this.tileHeight), this.collisionMap[0].length),
                     x      = 0,
                     y      = 0,
-                    shapes = serveTiles;
+                    shapes = this.serveTiles;
                 
-                serveTiles.length = 0;
-                storedTileIndex   = 0;
+                shapes.length = 0;
+                this.storedTileIndex = 0;
                 
                 for (x = left; x < right; x++) {
                     for (y = top; y < bottom; y++) {
