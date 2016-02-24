@@ -54,17 +54,17 @@
                     if (collisionInfo.myType === collisionType) {
                         if (collisionInfo.hitType === solidOrSoft) {
                             if ((dy > 0) && event.bottom) {
-                                this.owner.triggerEvent(event.bottom, collisionInfo);
+                                this.owner.trigger(event.bottom, collisionInfo);
                             } else if ((dy < 0) && event.top) {
-                                this.owner.triggerEvent(event.top, collisionInfo);
+                                this.owner.trigger(event.top, collisionInfo);
                             }
                             if ((dx > 0) && event.right) {
-                                this.owner.triggerEvent(event.right, collisionInfo);
+                                this.owner.trigger(event.right, collisionInfo);
                             } else if ((dx < 0) && event.left) {
-                                this.owner.triggerEvent(event.left, collisionInfo);
+                                this.owner.trigger(event.left, collisionInfo);
                             }
                             if (event.all) {
-                                this.owner.triggerEvent(event.all, collisionInfo);
+                                this.owner.trigger(event.all, collisionInfo);
                             }
                         }
                     }

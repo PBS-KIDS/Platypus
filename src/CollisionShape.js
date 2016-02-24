@@ -24,6 +24,40 @@ platypus.CollisionShape = (function () {
     
     var AABB = include('platypus.AABB'),
         Vector = include('platypus.Vector'),
+        circleRectCollision = function (circle, rect) {
+            var rectAabb         = rect.aABB,
+                hh = rectAabb.halfHeight,
+                hw = rectAabb.halfWidth,
+                abs = Math.abs,
+                pow = Math.pow,
+                shapeDistanceX = abs(circle.x - rect.x),
+                shapeDistanceY = abs(circle.y - rect.y),
+                radius = circle.radius;
+            
+            /* This checks the following in order:
+                - Is the x or y distance between shapes less than half the width or height respectively of the rectangle? If so, we know they're colliding.
+                - Is the x or y distance between the shapes greater than the half width/height plus the radius of the circle? Then we know they're not colliding.
+                - Otherwise, we check the distance between a corner of the rectangle and the center of the circle. If that distance is less than the radius of the circle, we know that there is a collision; otherwise there is not.
+            */
+            return (shapeDistanceX < hw) || (shapeDistanceY < hh) || ((shapeDistanceX < (hw + radius)) && (shapeDistanceY < (hh + radius)) && ((pow((shapeDistanceX - hw), 2) + pow((shapeDistanceY - hh), 2)) < pow(radius, 2)));
+        },
+        collidesCircle = function (shape) {
+            var pow = Math.pow;
+            
+            return this.aABB.collides(shape.aABB) && (
+                ((shape.type === 'rectangle') && circleRectCollision(this, shape)) ||
+                ((shape.type === 'circle')    && ((pow((this.x - shape.x), 2) + pow((this.y - shape.y), 2)) <= pow((this.radius + shape.radius), 2)))
+            );
+        },
+        collidesDefault = function () {
+            return false;
+        },
+        collidesRectangle = function (shape) {
+            return this.aABB.collides(shape.aABB) && (
+                (shape.type === 'rectangle') ||
+                ((shape.type === 'circle') && circleRectCollision(shape, this))
+            );
+        },
         CollisionShape = function (owner, definition, collisionType) {
             var regX = definition.regX,
                 regY = definition.regY,
@@ -46,8 +80,21 @@ platypus.CollisionShape = (function () {
             this.type = type;
             this.subType = '';
             
+            /**
+             * Determines whether shapes collide.
+             * 
+             * @method collides
+             * @param shape {platypus.CollisionShape} The shape to check against for collision.
+             * @return {Boolean} Whether the shapes collide.
+             * @since 0.7.4
+             */
             if (type === 'circle') {
                 width = height = radius * 2;
+                this.collides = collidesCircle;
+            } else if (type === 'rectangle') {
+                this.collides = collidesRectangle;
+            } else {
+                this.collides = collidesDefault;
             }
             this.size.set(width, height);
             this.radius = radius;

@@ -38,42 +38,6 @@
         },
         groupSortBySize = function (a, b) {
             return a.collisionGroup.getAllEntities() - b.collisionGroup.getAllEntities();
-        },
-        circleRectCollision = function (circle, rect) {
-            var rectAabb         = rect.aABB,
-                hh = rectAabb.halfHeight,
-                hw = rectAabb.halfWidth,
-                abs = Math.abs,
-                pow = Math.pow,
-                shapeDistanceX = abs(circle.x - rect.x),
-                shapeDistanceY = abs(circle.y - rect.y),
-                radius = circle.radius;
-            
-            /* This checks the following in order:
-                - Is the x or y distance between shapes less than half the width or height respectively of the rectangle? If so, we know they're colliding.
-                - Is the x or y distance between the shapes greater than the half width/height plus the radius of the circle? Then we know they're not colliding.
-                - Otherwise, we check the distance between a corner of the rectangle and the center of the circle. If that distance is less than the radius of the circle, we know that there is a collision; otherwise there is not.
-            */
-            return (shapeDistanceX < hw) || (shapeDistanceY < hh) || ((shapeDistanceX < (hw + radius)) && (shapeDistanceY < (hh + radius)) && ((pow((shapeDistanceX - hw), 2) + pow((shapeDistanceY - hh), 2)) < pow(radius, 2)));
-        },
-        shapeCollision = function (shapeA, shapeB) {
-            var pow = Math.pow;
-            
-            if (shapeA.type === 'rectangle') {
-                if (shapeB.type === 'rectangle') {
-                    return true;
-                } else if (shapeB.type === 'circle') {
-                    return circleRectCollision(shapeB, shapeA);
-                }
-            } else if (shapeA.type === 'circle') {
-                if (shapeB.type === 'rectangle') {
-                    return circleRectCollision(shapeA, shapeB);
-                } else if (shapeB.type === 'circle') {
-                    return (pow((shapeA.x - shapeB.x), 2) + pow((shapeA.y - shapeB.y), 2)) <= pow((shapeA.radius + shapeB.radius), 2);
-                }
-            }
-
-            return false;
         };
     
     return platypus.createComponentClass({
@@ -947,7 +911,6 @@
                         initialPoint    = prevShape[axis],
                         goalPoint       = currentShape[axis],
                         translatedShape = prevShape,
-                        translatedAABB  = translatedShape.aABB,
                         direction       = ((initialPoint < goalPoint) ? 1 : -1),
                         position        = goalPoint,
                         pcShape         = null,
@@ -964,27 +927,23 @@
                         while (i--) {
                             pcShape = potentialCollidingShapes[i];
                             position = goalPoint;
-                            if (translatedAABB.collides(pcShape.aABB)) { //TML - Could potentially shove this back into the rectangle shape check, but I'll leave it here.
-                                if (shapeCollision(translatedShape, pcShape)) {
-                                    collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, pcShape);
-                                    position = collisionInfo.position;
-                                    if (direction > 0) {
-                                        if (position < finalPosition) {
-                                            if (position < initialPoint) { // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
-                                                position = initialPoint;
-                                            }
-                                            finalPosition = position;
-                                            storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, pcShape, collisionInfo.contactVector);
+                            if (translatedShape.collides(pcShape)) {
+                                collisionInfo = findAxisCollisionPosition(axis, direction, translatedShape, pcShape);
+                                position = collisionInfo.position;
+                                if (direction > 0) {
+                                    if (position < finalPosition) {
+                                        if (position < initialPoint) { // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
+                                            position = initialPoint;
                                         }
-                                    } else {
-                                        if (position > finalPosition) {
-                                            if (position > initialPoint) { // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
-                                                position = initialPoint;
-                                            }
-                                            finalPosition = position;
-                                            storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, pcShape, collisionInfo.contactVector);
-                                        }
+                                        finalPosition = position;
+                                        storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, pcShape, collisionInfo.contactVector);
                                     }
+                                } else if (position > finalPosition) {
+                                    if (position > initialPoint) { // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
+                                        position = initialPoint;
+                                    }
+                                    finalPosition = position;
+                                    storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, pcShape, collisionInfo.contactVector);
                                 }
                             }
                         }
@@ -1040,16 +999,16 @@
                         if (otherEntities) {
                             k = otherEntities.length;
                             while (k--) {
-                                collisionFound = false;
                                 otherEntity = otherEntities[k];
                                 if ((otherEntity !== ent) && (ent.getAABB(collisionType).collides(otherEntity.getAABB(otherCollisionType)))) {
+                                    collisionFound = false;
                                     shapes = ent.getShapes(collisionType);
                                     otherShapes = otherEntity.getShapes(otherCollisionType);
                                     l = shapes.length;
                                     while (l--) {
                                         m = otherShapes.length;
                                         while (m--) {
-                                            if (shapeCollision(shapes[l], otherShapes[m])) {
+                                            if (shapes[l].collides(otherShapes[m])) {
                                                 //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                                 message.entity  = otherEntity;
                                                 message.type    = otherCollisionType;
