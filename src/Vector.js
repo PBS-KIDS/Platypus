@@ -14,7 +14,9 @@ platypus.Vector = (function () {
     "use strict";
     
     var Vector = function (x, y, z) {
-            this.matrix = Array.setUp(0, 0, 0);
+            if (!this.matrix) { // Recycled vectors will already have a matrix array
+                this.matrix = Array.setUp();
+            }
             this.set(x, y, z);
         },
         proto = Vector.prototype;
@@ -87,11 +89,11 @@ platypus.Vector = (function () {
      * @chainable
      */
     proto.set = function (x, y, z) {
-        if (x && Array.isArray(x)) {   // Passing in an array.
-            return this.setArray(x, y);
-        } else if (x && x.matrix) {   // Passing in a vector.
+        if (x && x.matrix) {                // Passing in a vector.
             return this.setVector(x, y);
-        } else {                     // Passing in coordinates.
+        } else if (x && Array.isArray(x)) { // Passing in an array.
+            return this.setArray(x, y);
+        } else {                            // Passing in coordinates.
             return this.setXYZ(x, y, z);
         }
     };
@@ -644,7 +646,7 @@ platypus.Vector = (function () {
      * @since 0.7.1
      */
     proto.recycle = function () {
-        this.matrix.recycle();
+        this.matrix.length = 0;
         Vector.recycle(this);
     };
     

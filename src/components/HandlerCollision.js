@@ -536,11 +536,9 @@
                 var abs               = Math.abs,
                     step              = 0,
                     finalMovementInfo = null,
-                    entityDeltaX      = ent.x - ent.previousX,
-                    entityDeltaY      = ent.y - ent.previousY,
                     aabb              = null,
-                    dX                = 0,
-                    dY                = 0,
+                    dX                = ent.x - ent.previousX,
+                    dY                = ent.y - ent.previousY,
                     sW                = Infinity,
                     sH                = Infinity,
                     collisionTypes    = entityOrGroup.getCollisionTypes(),
@@ -554,7 +552,7 @@
                 
                 finalMovementInfo = Vector.setUp(ent.position);
 
-                if (entityDeltaX || entityDeltaY) {
+                if (dX || dY) {
                     
                     if (ent.bullet) {
                         while (i--) {
@@ -564,31 +562,27 @@
                         }
 
                         //Stepping to catch really fast entities - this is not perfect, but should prevent the majority of fallthrough cases.
-                        step = Math.ceil(Math.max(abs(entityDeltaX) / sW, abs(entityDeltaY) / sH));
+                        step = Math.ceil(Math.max(abs(dX) / sW, abs(dY) / sH));
                         step = min(step, 100); //Prevent memory overflow if things move exponentially far.
-                        dX   = entityDeltaX / step;
-                        dY   = entityDeltaY / step;
-                    } else {
-                        step = 1;
-                        dX    = entityDeltaX;
-                        dY    = entityDeltaY;
-                    }
-                    
-                    while (step--) {
-                        entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
+                        dX   = dX / step;
+                        dY   = dY / step;
 
-                        finalMovementInfo.setVector(ent.position);
-                        
-                        finalMovementInfo = this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY, collisionTypes);
-                        
-                        
-                        if ((finalMovementInfo.x === ent.previousX) && (finalMovementInfo.y === ent.previousY)) {
-                            entityOrGroup.relocateEntity(finalMovementInfo, collisionDataCollection);
-                            //No more movement so we bail!
-                            break;
-                        } else {
-                            entityOrGroup.relocateEntity(finalMovementInfo, collisionDataCollection);
+                        while (step--) {
+                            entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
+
+                            finalMovementInfo = this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo.setVector(ent.position), dX, dY, collisionTypes);
+                            
+                            if ((finalMovementInfo.x === ent.previousX) && (finalMovementInfo.y === ent.previousY)) {
+                                entityOrGroup.relocateEntity(finalMovementInfo, collisionDataCollection);
+                                //No more movement so we bail!
+                                break;
+                            } else {
+                                entityOrGroup.relocateEntity(finalMovementInfo, collisionDataCollection);
+                            }
                         }
+                    } else {
+                        entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
+                        entityOrGroup.relocateEntity(this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo.setVector(ent.position), dX, dY, collisionTypes), collisionDataCollection);
                     }
                 }
                 
@@ -770,7 +764,7 @@
                         cd.clear();
                         this.findMinShapeMovementCollision(prevShapes[i], shapes[i], axis, potentialCollidingShapes, cd);
                         
-                        if (cd.occurred && (!bestCollisionData.occurred //if a collision occurred and we haven't already have a collision.
+                        if (cd.occurred && (!bestCollisionData.occurred //if a collision occurred and we haven't already had a collision.
                             || (cd.deltaMovement < bestCollisionData.deltaMovement))) { //if a collision occurred and the diff is smaller than our best diff.
                             bestCollisionData.copy(cd);
                         }
@@ -861,13 +855,7 @@
                             return newAxisPosition;
                         }
                     },
-                    getOffsetForCirclesX = function (thisShape, thatShape) {
-                        return getMovementDistance(thisShape.y - thatShape.y, thisShape.radius + thatShape.radius);
-                    },
-                    getOffsetForCirclesY = function (axis, thisShape, thatShape) {
-                        return getMovementDistance(thisShape.x - thatShape.x, thisShape.radius + thatShape.radius);
-                    },
-                    findAxisCollisionPosition = {
+                    findAxisCollisionPosition = { // Decision tree for quicker access, optimized for mobile devices.
                         x: {
                             rectangle: {
                                 rectangle: function (direction, thisShape, thatShape) {
@@ -895,10 +883,11 @@
                                     return ri;
                                 },
                                 circle: function (direction, thisShape, thatShape) {
-                                    var position = thatShape.x - direction * getOffsetForCirclesX(thisShape, thatShape),
+                                    var y = thatShape.y - thisShape.y,
+                                        position = thatShape.x - direction * getMovementDistance(y, thisShape.radius + thatShape.radius),
                                         ri = returnInfo;
                                         
-                                    ri.contactVector.setXYZ(thatShape.x - position, thatShape.y - thisShape.y).normalize();
+                                    ri.contactVector.setXYZ(thatShape.x - position, y).normalize();
                                     ri.position = position;
 
                                     return ri;
@@ -932,10 +921,11 @@
                                     return ri;
                                 },
                                 circle: function (direction, thisShape, thatShape) {
-                                    var position = thatShape.y - direction * getOffsetForCirclesY(thisShape, thatShape),
+                                    var x = thatShape.x - thisShape.x,
+                                        position = thatShape.y - direction * getMovementDistance(x, thisShape.radius + thatShape.radius),
                                         ri = returnInfo;
                                         
-                                    ri.contactVector.setXYZ(thatShape.x - thisShape.x, thatShape.y - position).normalize();
+                                    ri.contactVector.setXYZ(x, thatShape.y - position).normalize();
                                     ri.position = position;
 
                                     return ri;
