@@ -11,7 +11,6 @@
         debug = !!springroll.Debug,
         prototype = Array.prototype,
         recycleProp = {
-            enumerable: false,
             value: false,
             writable: true
         };
@@ -25,8 +24,6 @@
 	 */
 	if (!prototype.union) {
 		Object.defineProperty(prototype, 'union', {
-			enumerable: false,
-			writable: false,
 			value: function (array) {
                 var i = 0,
                     bL = array.length;
@@ -50,8 +47,6 @@
      */
 	if (!prototype.greenSlice) {
 		Object.defineProperty(prototype, 'greenSlice', {
-			enumerable: false,
-			writable: false,
 			value: function () {
                 var arr = Array.setUp(),
                     i = 0,
@@ -74,8 +69,6 @@
      */
 	if (!prototype.greenSplice) {
 		Object.defineProperty(prototype, 'greenSplice', {
-			enumerable: false,
-			writable: false,
 			value: function (index) {
                 var i = 0,
                     item = this[index],
@@ -102,7 +95,26 @@
          * @param instance {Array} The instance to recycle.
          * @since 0.7.1
          */
-        cache = platypus.setUpRecycle(Array, 'Array');
+        /**
+         * Save instance for reuse.
+         * 
+         * @method recycle
+         * @param [depth] {Number} The dimensions of the array.
+         * @since 0.7.1
+         */
+        cache = platypus.setUpRecycle(Array, 'Array', function (depth) {
+            var i = 0;
+            
+            if (depth > 1) {
+                i = this.length;
+                depth -= 1;
+                while (i--) {
+                    this[i].recycle(depth);
+                }
+            }
+            this.length = 0;
+            Array.recycle(this);
+        });
         
         /**
          * Create a new instance or reuse an old instance if available.
@@ -149,30 +161,5 @@
                 return arr;
             };
         }
-
-        /**
-         * Save instance for reuse.
-         * 
-         * @method recycle
-         * @param [depth] {Number} The dimensions of the array.
-         * @since 0.7.1
-         */
-		Object.defineProperty(prototype, 'recycle', {
-			enumerable: false,
-			writable: false,
-			value: function (depth) {
-                var i = 0;
-                
-                if (depth > 1) {
-                    i = this.length;
-                    depth -= 1;
-                    while (i--) {
-                        this[i].recycle(depth);
-                    }
-                }
-                this.length = 0;
-                Array.recycle(this);
-            }
-		});
 	}
 }(Array, Object));

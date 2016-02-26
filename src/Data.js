@@ -50,15 +50,13 @@ platypus.Data = (function () {
      * @param {platypus.Data} The Data to be recycled.
      * @since 0.7.1
      */
-    platypus.setUpRecycle(Data, 'Data');
-    
     /**
      * Relinquishes Data properties and recycles it.
      * 
      * @method recycle
      * @since 0.7.1
      */
-    proto.recycle = function () {
+    platypus.setUpRecycle(Data, 'Data', function () {
         var key = '';
         
         for (key in this) {
@@ -67,7 +65,7 @@ platypus.Data = (function () {
             }
         }
         Data.recycle(this);
-    };
+    });
     
     return Data;
 }());

@@ -8,7 +8,7 @@
  * @param y {number} The y position of the AABB. The y is always located in the center of the object.
  * @param width {number} The width of the AABB.
  * @param height {number} The height of the AABB.
- * @return {AABB} Returns the new aabb object.
+ * @return {platypus.AABB} Returns the new aabb object.
  */
 /*global platypus */
 platypus.AABB = (function () {
@@ -196,7 +196,7 @@ platypus.AABB = (function () {
      * Changes the size and position of the bounding box so that it contains the current area and the area described in the incoming AABB.
      * 
      * @method include
-     * @param aabb {AABB} The AABB whose area will be included in the area of the current AABB.
+     * @param aabb {platypus.AABB} The AABB whose area will be included in the area of the current AABB.
      * @chainable
      */
     proto.include = function (aabb) {
@@ -295,7 +295,7 @@ platypus.AABB = (function () {
      * Creates a new AABB with the same properties as this AABB.
      * 
      * @method getCopy
-     * @return {AABB} Returns the new AABB object.
+     * @return {platypus.AABB} Returns the new AABB object.
      * @deprecated since 0.7.3 - Create a new AABB and use the `set()` method instead.
      */
     proto.getCopy = function () {
@@ -320,7 +320,7 @@ platypus.AABB = (function () {
      * Expresses whether this AABB contains the given AABB.
      * 
      * @method contains
-     * @param aabb {AABB} The AABB to check against
+     * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB contains the other AABB.
      */
     proto.contains = function (aabb) {
@@ -331,7 +331,7 @@ platypus.AABB = (function () {
      * Expresses whether this AABB contains the given point.
      * 
      * @method containsVector
-     * @param vector {Vector} The vector to check.
+     * @param vector {platypus.Vector} The vector to check.
      * @return {boolean} Returns `true` if this AABB contains the vector.
      */
     proto.containsVector = function (vector) {
@@ -342,7 +342,7 @@ platypus.AABB = (function () {
      * Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping or touching edges.
      * 
      * @method collides
-     * @param aabb {AABB} The AABB to check against
+     * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB collides with the other AABB.
      * @since 0.7.4
      */
@@ -354,7 +354,7 @@ platypus.AABB = (function () {
      * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping only, not touching edges.
      * 
      * @method intersects
-     * @param aabb {AABB} The AABB to check against
+     * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB intersects the other AABB.
      */
     proto.intersects = function (aabb) {
@@ -389,7 +389,7 @@ platypus.AABB = (function () {
      * Returns a AABB back to the cache.
      * 
      * @method AABB.recycle
-     * @param {platypus.AABB} The AABB to be recycled.
+     * @param aabb {platypus.AABB} The AABB to be recycled.
      * @since 0.7.3
      */
     /**

@@ -30,19 +30,6 @@
                 }
             }
         },
-        updateState = function (entity) {
-            var state   = null,
-                changed = false;
-            
-            for (state in entity.state) {
-                if (entity.state[state] !== entity.lastState[state]) {
-                    entity.lastState[state] = entity.state[state];
-                    changed = true;
-                }
-            }
-            
-            return changed;
-        },
         hasLogic = function (item, index, arr) {
             return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic');
         };
@@ -212,7 +199,6 @@
                     cycles = 0,
                     entity = null,
                     msg = this.message,
-                    update = updateState,
                     actives = this.activeEntities,
                     stepLength = this.stepLength;
                 
@@ -313,14 +299,14 @@
                             while (i--) {
                                 entity = actives[i];
                                 entity.triggerEvent('handle-post-collision-logic', msg);
-                                if (update(entity)) {
+                                if (entity.lastState && entity.lastState.update(entity.state)) {
                                     entity.triggerEvent('state-changed', entity.state);
                                 }
                             }
                         } else {
                             while (i--) {
                                 entity = actives[i];
-                                if (update(entity)) {
+                                if (entity.lastState && entity.lastState.update(entity.state)) {
                                     entity.triggerEvent('state-changed', entity.state);
                                 }
                             }

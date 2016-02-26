@@ -17,8 +17,6 @@
      */
 	if (!prototype.greenSplit) {
 		Object.defineProperty(prototype, 'greenSplit', {
-			enumerable: false,
-			writable: false,
 			value: function (splitter) {
                 var str = this,
                     d = 0,

@@ -637,19 +637,16 @@ platypus.Vector = (function () {
      * @param {platypus.Vector} The Vector to be recycled.
      * @since 0.7.1
      */
-    platypus.setUpRecycle(Vector, 'Vector');
-
     /**
      * Relinquishes properties of the vector and recycles it.
      * 
      * @method recycle
      * @since 0.7.1
      */
-    proto.recycle = function () {
+    platypus.setUpRecycle(Vector, 'Vector', function () {
         this.matrix.length = 0;
         Vector.recycle(this);
-    };
-    
+    });
     
     return Vector;
 }());
