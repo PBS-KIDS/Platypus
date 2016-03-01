@@ -647,9 +647,6 @@
                 if (this.move) {
                     this.owner.position.add(this.move); // By trying to move into it, we should get pushed back out.
                 }
-                
-                // Sets a flag to make sure this entity is checked against
-                this.owner.checkCollision = true;
             },
             
             /**

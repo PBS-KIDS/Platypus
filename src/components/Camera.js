@@ -15,7 +15,10 @@
     var Application = include("springroll.Application"),
         AABB = include('platypus.AABB'),
         Data = include('platypus.Data'),
-        Vector = include('platypus.Vector');
+        Vector = include('platypus.Vector'),
+        doNothing = function () {
+            return false;
+        };
     
     return platypus.createComponentClass({
         id: 'Camera',
@@ -137,6 +140,7 @@
              * @property worldWidth
              * @type number
              * @default 0
+             * @deprecated since 0.7.5
              **/
             "worldWidth": 0,
             
@@ -146,6 +150,7 @@
              * @property worldHeight
              * @type number
              * @default 0
+             * @deprecated since 0.7.5
              **/
             "worldHeight": 0
         },
@@ -160,12 +165,20 @@
             );
             
             //Message object defined here so it's reusable
+            this.worldDimensions = AABB.setUp();
             this.message = Data.setUp(
                 "viewport", AABB.setUp(),
                 "scaleX", 0,
                 "scaleY", 0,
                 "orientation", 0,
-                "stationary", false
+                "stationary", false,
+                "world", this.worldDimensions
+            );
+            this.cameraLoadedMessage = Data.setUp(
+                "worldWidth", 0, //deprecate in 0.8.0
+                "worldHeight", 0, //deprecate in 0.8.0
+                "viewport", this.message.viewport,
+                "world", this.worldDimensions
             );
     
             //Whether the map has finished loading.
@@ -277,12 +290,9 @@
                      * @param message
                      * @param message.worldWidth {number} The width of the loaded world.
                      * @param message.worldHeight {number} The height of the loaded world.
+                     * @param message.world {platypus.AABB} The dimensions of the world map.
                      **/
-                    entity.triggerEvent('camera-loaded', {
-                        worldWidth: this.worldWidth,
-                        worldHeight: this.worldHeight,
-                        viewport: this.message.viewport
-                    });
+                    entity.triggerEvent('camera-loaded', this.cameraLoadedMessage);
                 }
             },
 
@@ -313,6 +323,9 @@
             "world-loaded": function (values) {
                 var msg = this.message;
                 
+                msg.viewport.set(this.worldCamera.viewport);
+                this.worldDimensions.set(values.world);
+                
                 this.worldIsLoaded = true;
                 this.worldWidth    = values.width;
                 this.worldHeight   = values.height;
@@ -320,12 +333,11 @@
                     this.follow(values.camera);
                 }
                 if (this.owner.triggerEventOnChildren) {
-                    this.owner.triggerEventOnChildren('camera-loaded', {
-                        viewport: msg.viewport.set(this.worldCamera.viewport),
-                        worldWidth: this.worldWidth,
-                        worldHeight: this.worldHeight
-                    });
+                    this.cameraLoadedMessage.worldWidth = this.worldWidth;
+                    this.cameraLoadedMessage.worldHeight = this.worldHeight;
+                    this.owner.triggerEventOnChildren('camera-loaded', this.cameraLoadedMessage);
                 }
+                this.updateMovementMethods();
             },
             
             "mousedown": function (event) {
@@ -347,8 +359,6 @@
                     if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transformMatrix.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transformMatrix.d)) {
                         this.viewportUpdate = true;
                     }
-//                    this.mouse.x = event.x;
-//                    this.mouse.y = event.y;
                 }
             },
 
@@ -429,6 +439,7 @@
                      * 
                      * @event 'camera-update'
                      * @param message {Object}
+                     * @param message.world {platypus.AABB} The dimensions of the world map.
                      * @param message.orientation {Number} Number describing the orientation of the camera.
                      * @param message.scaleX {Number} Number of window pixels that comprise a single world coordinate on the x-axis.
                      * @param message.scaleY {Number} Number of window pixels that comprise a single world coordinate on the y-axis.
@@ -663,41 +674,9 @@
                 return moved;
             },
             
-            moveX: function (x) {
-                var aabb = this.worldCamera.viewport;
-                
-                if (Math.abs(aabb.x - x) > this.threshold) {
-                    if (this.worldWidth && this.worldWidth !== 0 && this.worldWidth < aabb.width) {
-                        aabb.moveX(this.worldWidth / 2);
-                    } else if (this.worldWidth && this.worldWidth !== 0 && (x + aabb.halfWidth > this.worldWidth)) {
-                        aabb.moveX(this.worldWidth - aabb.halfWidth);
-                    } else if (this.worldWidth && this.worldWidth !== 0 && (x < aabb.halfWidth)) {
-                        aabb.moveX(aabb.halfWidth);
-                    } else {
-                        aabb.moveX(x);
-                    }
-                    return true;
-                }
-                return false;
-            },
+            moveX: doNothing,
             
-            moveY: function (y) {
-                var aabb = this.worldCamera.viewport;
-                
-                if (Math.abs(aabb.y - y) > this.threshold) {
-                    if (this.worldHeight && this.worldHeight !== 0 && this.worldHeight < aabb.height) {
-                        aabb.moveY(this.worldHeight / 2);
-                    } else if (this.worldHeight && this.worldHeight !== 0 && (y + aabb.halfHeight > this.worldHeight)) {
-                        aabb.moveY(this.worldHeight - aabb.halfHeight);
-                    } else if (this.worldHeight && this.worldHeight !== 0 && (y < aabb.halfHeight)) {
-                        aabb.moveY(aabb.halfHeight);
-                    } else {
-                        aabb.moveY(y);
-                    }
-                    return true;
-                }
-                return false;
-            },
+            moveY: doNothing,
             
             reorient: function (newOrientation) {
                 if (Math.abs(this.worldCamera.orientation - newOrientation) > 0.0001) {
@@ -852,7 +831,105 @@
                 this.matrix.ty = this.viewport.y - this.viewport.halfHeight;
                 
                 this.viewportUpdate = true;
+                
+                this.updateMovementMethods();
             },
+            
+            updateMovementMethods: (function () {
+                // This is used to change movement modes as needed rather than doing a check every tick to determine movement type. - DDD 2/29/2016
+                var doNot = doNothing,
+                    centerX = function () {
+                        var world = this.worldDimensions;
+                        
+                        this.worldCamera.viewport.moveX(world.width / 2 + world.left);
+                        this.moveX = doNot;
+                        return true;
+                    },
+                    centerY = function () {
+                        var world = this.worldDimensions;
+                        
+                        this.worldCamera.viewport.moveY(world.height / 2 + world.top);
+                        this.moveY = doNot;
+                        return true;
+                    },
+                    containX = function (x) {
+                        var aabb = this.worldCamera.viewport,
+                            d = this.worldDimensions,
+                            w = d.width,
+                            l = d.left;
+                        
+                        if (Math.abs(aabb.x - x) > this.threshold) {
+                            if (x + aabb.halfWidth > w + l) {
+                                aabb.moveX(w - aabb.halfWidth + l);
+                            } else if (x < aabb.halfWidth + l) {
+                                aabb.moveX(aabb.halfWidth + l);
+                            } else {
+                                aabb.moveX(x);
+                            }
+                            return true;
+                        }
+                        return false;
+                    },
+                    containY = function (y) {
+                        var aabb = this.worldCamera.viewport,
+                            d = this.worldDimensions,
+                            h = d.height,
+                            t = d.top;
+                        
+                        if (Math.abs(aabb.y - y) > this.threshold) {
+                            if (y + aabb.halfHeight > h + t) {
+                                aabb.moveY(h - aabb.halfHeight + t);
+                            } else if (y < aabb.halfHeight + t) {
+                                aabb.moveY(aabb.halfHeight + t);
+                            } else {
+                                aabb.moveY(y);
+                            }
+                            return true;
+                        }
+                        return false;
+                    },
+                    allX = function (x) {
+                        var aabb = this.worldCamera.viewport;
+                        
+                        if (Math.abs(aabb.x - x) > this.threshold) {
+                            aabb.moveX(x);
+                            return true;
+                        }
+                        return false;
+                    },
+                    allY = function (y) {
+                        var aabb = this.worldCamera.viewport;
+                        
+                        if (Math.abs(aabb.y - y) > this.threshold) {
+                            aabb.moveY(y);
+                            return true;
+                        }
+                        return false;
+                    };
+                
+                return function () {
+                    var worldVP = this.worldCamera.viewport,
+                        world = this.worldDimensions,
+                        w = world.width,
+                        h = world.height;
+                    
+                    if (!w) {
+                        this.moveX = allX;
+                    } else if (w < worldVP.width) {
+                        this.moveX = centerX;
+                    } else {
+                        this.moveX = containX;
+                    }
+
+                    if (!h) {
+                        this.moveY = allY;
+                    } else if (h < worldVP.height) {
+                        this.moveY = centerY;
+                    } else {
+                        this.moveY = containY;
+                    }
+                };
+            }()),
             
             destroy: function () {
                 this.parentContainer.removeChild(this.container);
@@ -869,6 +946,8 @@
                 this.worldCamera.recycle();
                 this.message.viewport.recycle();
                 this.message.recycle();
+                this.cameraLoadedMessage.recycle();
+                this.worldDimensions.recycle();
     
                 this.forwardFollower.recycle();
                 this.lastFollow.recycle();

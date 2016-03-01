@@ -42,6 +42,8 @@
     "use strict";
 
     var Application = include('springroll.Application'), // Import SpringRoll classes
+        AABB        = include('platypus.AABB'),
+        Data        = include('platypus.Data'),
         Entity      = include('platypus.Entity'),
         decodeBase64 = (function () {
             var decodeString = function (str) {
@@ -72,6 +74,15 @@
                 return arr;
             };
         }()),
+        getPowerOfTen = function (amount) {
+            var x = 1;
+
+            while (x < amount) {
+                x *= 10;
+            }
+
+            return x;
+        },
         transformCheck = function (v) {
             var a = !!(0x20000000 & v),
                 b = !!(0x40000000 & v),
@@ -305,6 +316,16 @@
 
         properties: {
             /**
+             * This causes the entire map to be offset automatically by an order of magnitude higher than the height and width of the world so that the number of digits below zero is constant throughout the world space. This fixes potential floating point issues when, for example, 97 is added to 928.0000000000001 giving 1025 since a significant digit was lost when going into the thousands.
+             * 
+             * @property offsetMap
+             * @type Boolean
+             * @default false
+             * @since 0.7.5
+             */
+            offsetMap: false,
+            
+            /**
              * If set to `true` and if the game is running in debug mode, this causes the collision layer to appear.
              *
              * @property showCollisionTiles
@@ -448,15 +469,34 @@
             loadLevel: function (levelData) {
                 var level = levelData.level,
                     actionLayer = 0,
-                    layer = false;
-
+                    height = 0,
+                    layer = false,
+                    width = 0,
+                    x = 0,
+                    y = 0,
+                    message = Data.setUp(
+                        "world", AABB.setUp(),
+                        "width", 0, // deprecate in 0.8.0
+                        "height", 0, // deprecate in 0.8.0
+                        "tile", AABB.setUp(),
+                        "camera", this.followEntity
+                    );
+                    
                 //format level appropriately
                 if (typeof level === 'string') {
                     level = platypus.game.settings.levels[level];
                 }
 
+                width = level.width * level.tilewidth * this.unitsPerPixel;
+                height = level.height * level.tileheight * this.unitsPerPixel;
+
+                if (this.offsetMap) {
+                    x = getPowerOfTen(width);
+                    y = getPowerOfTen(height);
+                }
+
                 for (actionLayer = 0; actionLayer < level.layers.length; actionLayer++) {
-                    layer = this.setupLayer(level.layers[actionLayer], level, layer);
+                    layer = this.setupLayer(level.layers[actionLayer], level, layer, x, y);
                     if (this.separateTiles) {
                         layer = false;
                     }
@@ -466,27 +506,26 @@
                  * Once finished loading the map, this message is triggered on the entity to notify other components of completion.
                  *
                  * @event 'world-loaded'
-                 * @param world {Object} World data.
-                 * @param world.width {number} The width of the world in world units.
-                 * @param world.height {number} The height of the world in world units.
-                 * @param world.tile {Object} Properties of the world tiles.
-                 * @param world.tile.width {number} The width in world units of a single tile.
-                 * @param world.tile.height {number} The height in world units of a single tile.
-                 * @param world.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+                 * @param message {platypus.Data} World data.
+                 * @param message.width {number} The width of the world in world units.
+                 * @param message.height {number} The height of the world in world units.
+                 * @param message.tile {platypus.AABB} Dimensions of the world tiles.
+                 * @param message.world {platypus.AABB} Dimensions of the world.
+                 * @param message.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
                  */
-                this.owner.triggerEvent('world-loaded', {
-                    width: level.width * level.tilewidth * this.unitsPerPixel,
-                    height: level.height * level.tileheight * this.unitsPerPixel,
-                    tile: {
-                        width: level.tilewidth,
-                        height: level.tileheight
-                    },
-                    camera: this.followEntity
-                });
+                message.width = width;
+                message.height = height;
+                message.world.setBounds(x, y, x + width, y + height);
+                message.tile.setBounds(0, 0, level.tilewidth, level.tileheight);
+                this.owner.triggerEvent('world-loaded', message);
+                message.world.recycle();
+                message.tile.recycle();
+                message.recycle();
+                
                 this.owner.removeComponent(this);
             },
 
-            setupLayer: function (layer, level, combineRenderLayer) {
+            setupLayer: function (layer, level, combineRenderLayer, mapOffsetX, mapOffsetY) {
                 var images = this.images || [],
                     tilesets = level.tilesets,
                     tileWidth = level.tilewidth,
@@ -560,7 +599,7 @@
 
                         return tileLayer;
                     }.bind(this),
-                    createLayer = function (entityKind, layer) {
+                    createLayer = function (entityKind, layer, mapOffsetX, mapOffsetY) {
                         var props = null,
                             width = layer.width,
                             height = layer.height,
@@ -644,6 +683,8 @@
                         tileDefinition.properties.scaleX = this.imagesScale;
                         tileDefinition.properties.scaleY = this.imagesScale;
                         tileDefinition.properties.layerZ = this.layerZ;
+                        tileDefinition.properties.left = tileDefinition.properties.x || mapOffsetX;
+                        tileDefinition.properties.top = tileDefinition.properties.y || mapOffsetY;
                         tileDefinition.properties.z = tileDefinition.properties.z || this.layerZ;
 
                         tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
@@ -755,16 +796,16 @@
                     }
 
                     if (entity === 'tile-layer' || (this.showCollisionTiles && platypus.game.settings.debug)) {
-                        createLayer('collision-layer', layer);
-                        return createLayer('render-layer', layer);
+                        createLayer('collision-layer', layer, mapOffsetX, mapOffsetY);
+                        return createLayer('render-layer', layer, mapOffsetX, mapOffsetY);
                     } else if (entity === 'collision-layer') {
-                        createLayer('collision-layer', layer);
+                        createLayer('collision-layer', layer, mapOffsetX, mapOffsetY);
                     } else {
-                        return createLayer(entity, layer);
+                        return createLayer(entity, layer, mapOffsetX, mapOffsetY);
                     }
                 } else if (layer.type === 'imagelayer') {
                     // set up temp tile layer to pass in image layer as if it's tiled.
-                    return createLayer('image-layer', convertImageLayer(layer));
+                    return createLayer('image-layer', convertImageLayer(layer), mapOffsetX, mapOffsetY);
                 } else if (layer.type === 'objectgroup') {
                     entityPositionX = this.entityPositionX;
                     entityPositionY = this.entityPositionY;
@@ -825,8 +866,8 @@
                                 properties.width = properties.width * this.unitsPerPixel;
                                 properties.height = properties.height * this.unitsPerPixel;
 
-                                properties.x = properties.x * this.unitsPerPixel;
-                                properties.y = properties.y * this.unitsPerPixel;
+                                properties.x = properties.x * this.unitsPerPixel + mapOffsetX;
+                                properties.y = properties.y * this.unitsPerPixel + mapOffsetY;
 
                                 if (entity.polygon) {
                                     properties.shape = {};
@@ -834,8 +875,8 @@
                                     properties.shape.points = [];
                                     for (p = 0; p < polyPoints.length; p++) {
                                         properties.shape.points.push({
-                                            "x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel),
-                                            "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel)
+                                            "x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel + mapOffsetX),
+                                            "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel + mapOffsetY)
                                         });
                                     }
                                 } else if (entity.polyline) {
@@ -844,8 +885,8 @@
                                     properties.shape.points = [];
                                     for (p = 0; p < polyPoints.length; p++) {
                                         properties.shape.points.push({
-                                            "x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel),
-                                            "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel)
+                                            "x": ((polyPoints[p].x - smallestX) * this.unitsPerPixel + mapOffsetX),
+                                            "y": ((polyPoints[p].y - smallestY) * this.unitsPerPixel + mapOffsetY)
                                         });
                                     }
                                 }
@@ -900,6 +941,7 @@
                                     properties.regX = properties.width;
                                     properties.x += widthOffset;
                                 }
+                                properties.x += mapOffsetX;
 
                                 if (gid === -1) {
                                     properties.y += properties.height;
@@ -913,6 +955,7 @@
                                     properties.regY = 0;
                                     properties.y -= heightOffset;
                                 }
+                                properties.y += mapOffsetY;
 
                                 if (entity.ellipse) {
                                     properties.shape = {};

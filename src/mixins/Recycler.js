@@ -1,13 +1,12 @@
 /*global springroll */
 (function () {
     var recycleProp = {
-            enumerable: false,
             value: false,
             writable: true
         },
         caches = {};
     
-    platypus.setUpRecycle = function (ClassObject, name) {
+    platypus.setUpRecycle = function (ClassObject, name, recycle) {
         var cache = [],
             debug = !!springroll.Debug;
         
@@ -58,9 +57,11 @@
             };
         }
 
-        ClassObject.prototype.recycle = function () {
-            ClassObject.recycle(this);
-        };
+        Object.defineProperty(ClassObject.prototype, 'recycle', {
+            value: recycle || function () {
+                ClassObject.recycle(this);
+            }
+        });
         
         return cache;
     }

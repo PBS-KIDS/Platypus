@@ -10,38 +10,29 @@
 (function () {
     "use strict";
 
-    var addAll = function (all, active) {
-            var j = 0;
+    var AABB = include('platypus.AABB'),
+        addAll = function (all, active) {
+            var j = all.length;
             
             active.length = 0;
-            for (j = all.length - 1; j > -1; j--) {
+            while (j--) {
                 active.push(all[j]);
             }
         },
+        withinBounds = function (child, camera) {
+            return child.alwaysOn || (child.aabb && camera.collides(child.getAABB())) || (typeof child.x === 'undefined') || camera.containsPoint(child.x, child.y);
+        },
         checkCamera = function (all, active, camera) {
-            var j = 0,
+            var j = all.length,
                 child = null;
             
             active.length = 0;
-            for (j = all.length - 1; j > -1; j--) {
+            while (j--) {
                 child = all[j];
-                if (child.alwaysOn  || (typeof child.x === 'undefined') || ((child.x >= camera.left - camera.buffer) && (child.x <= camera.left + camera.width + camera.buffer) && (child.y >= camera.top - camera.buffer) && (child.y <= camera.top + camera.height + camera.buffer))) {
+                if (withinBounds(child, camera)) {
                     active.push(child);
                 }
             }
-        },
-        updateState = function (entity) {
-            var state   = null,
-                changed = false;
-            
-            for (state in entity.state) {
-                if (entity.state[state] !== entity.lastState[state]) {
-                    entity.lastState[state] = entity.state[state];
-                    changed = true;
-                }
-            }
-            
-            return changed;
         },
         hasLogic = function (item, index, arr) {
             return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic');
@@ -101,20 +92,15 @@
         constructor: function (definition) {
             this.entities = Array.setUp();
             this.activeEntities = Array.setUp();
+            
+            this.inLogicLoop = false;
 
             if (this.alwaysOn) {
                 this.updateList = addAll;
                 this.camera = null;
             } else {
                 this.updateList = checkCamera;
-                this.camera = {
-                    left: 0,
-                    top: 0,
-                    width: 0,
-                    height: 0,
-                    buffer:     this.buffer,
-                    active: false
-                };
+                this.camera = AABB.setUp();
             }
             
             this.paused = 0;
@@ -123,7 +109,7 @@
                 delta: this.stepLength,
                 tick: null,
                 camera: this.camera,
-                movers: this.activeEntities
+                entities: this.activeEntities
             };
         },
         
@@ -137,6 +123,11 @@
             "child-entity-added": function (entity) {
                 if (entity.getMessageIds().some(hasLogic)) {
                     this.entities.push(entity);
+                    
+                    // Add to the active entities list so that the collision loop is aware of and can handle the addition.
+                    if (this.inLogicLoop && (!this.camera || withinBounds(entity, this.camera))) {
+                        this.activeEntities.push(entity);
+                    }
                 }
             },
 
@@ -186,17 +177,17 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                if (this.camera) {
-                    this.camera.left   = camera.viewport.left;
-                    this.camera.top    = camera.viewport.top;
-                    this.camera.width  = camera.viewport.width;
-                    this.camera.height = camera.viewport.height;
-                    
-                    if (this.camera.buffer === -1) {
-                        this.camera.buffer = this.camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+                var buffer = this.buffer,
+                    cam = this.camera,
+                    vp = null;
+                
+                if (cam) {
+                    if (buffer === -1) {
+                        buffer = camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
                     }
                     
-                    this.camera.active = true;
+                    vp = camera.viewport;
+                    cam.setBounds(vp.left - buffer, vp.top - buffer, vp.right + buffer, vp.bottom + buffer);
                 }
             },
             
@@ -212,7 +203,6 @@
                     cycles = 0,
                     entity = null,
                     msg = this.message,
-                    update = updateState,
                     actives = this.activeEntities,
                     stepLength = this.stepLength;
                 
@@ -253,74 +243,86 @@
                             this.owner.triggerEventOnChildren('handle-ai', msg);
                         }
 
+                        this.inLogicLoop = true;
                         i = actives.length;
                         while (i--) {
                             entity = actives[i];
                             
                             /**
-                            * This event is triggered on children entities to run anything that should occur before "handle-logic". For example, removing or adding components should happen here and not in "handle-logic".
-                            * 
-                            * @event 'prepare-logic'
-                            * @param tick {Object}
-                            * @param tick.delta {Number} The time that has passed since the last tick.
-                            * @since 0.6.8
-                            */
+                             * This event is triggered on children entities to run anything that should occur before "handle-logic". For example, removing or adding components should happen here and not in "handle-logic".
+                             * 
+                             * @event 'prepare-logic'
+                             * @param tick {Object}
+                             * @param tick.delta {Number} The time that has passed since the last tick.
+                             * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                             * @param tick.entities {Array} This is a list of all the logically active entities.
+                             * @since 0.6.8
+                             */
                             entity.triggerEvent('prepare-logic', msg);
 
                             /**
-                            * This event is triggered on children entities to run their logic.
-                            * 
-                            * @event 'handle-logic'
-                            * @param tick {Object}
-                            * @param tick.delta {Number} The time that has passed since the last tick.
-                            */
+                             * This event is triggered on children entities to run their logic.
+                             * 
+                             * @event 'handle-logic'
+                             * @param tick {Object}
+                             * @param tick.delta {Number} The time that has passed since the last tick.
+                             * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                             * @param tick.entities {Array} This is a list of all the logically active entities.
+                             */
                             entity.triggerEvent('handle-logic', msg);
 
                             /**
-                            * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
-                            * 
-                            * @event 'handle-movement'
-                            * @param tick {Object}
-                            * @param tick.delta {Number} The time that has passed since the last tick.
-                            * @since 0.6.8
-                            */
+                             * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
+                             * 
+                             * @event 'handle-movement'
+                             * @param tick {Object}
+                             * @param tick.delta {Number} The time that has passed since the last tick.
+                             * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                             * @param tick.entities {Array} This is a list of all the logically active entities.
+                             * @since 0.6.8
+                             */
                             entity.triggerEvent('handle-movement', msg);
                         }
+                        this.inLogicLoop = false;
                         
                         i = actives.length;
                         /**
-                            * This event is triggered on the entity (layer) to test collisions once logic has been completed.
-                            * 
-                            * @event 'check-collision-group'
-                            * @param tick {Object}
-                            * @param tick.delta {Number} The time that has passed since the last tick.
-                            */
+                         * This event is triggered on the entity (layer) to test collisions once logic has been completed.
+                         * 
+                         * @event 'check-collision-group'
+                         * @param tick {Object}
+                         * @param tick.delta {Number} The time that has passed since the last tick.
+                         * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                         * @param tick.entities {Array} This is a list of all the logically active entities.
+                         */
                         if (this.owner.triggerEvent('check-collision-group', msg)) { // If a collision group is attached, make sure collision is processed on each logic tick.
                             /**
-                                * This event is triggered on entities to run logic that may depend upon collision responses.
-                                * 
-                                * @event 'handle-post-collision-logic'
-                                * @param tick {Object}
-                                * @param tick.delta {Number} The time that has passed since the last tick.
-                                */
+                             * This event is triggered on entities to run logic that may depend upon collision responses.
+                             * 
+                             * @event 'handle-post-collision-logic'
+                             * @param tick {Object}
+                             * @param tick.delta {Number} The time that has passed since the last tick.
+                             * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                             * @param tick.entities {Array} This is a list of all the logically active entities.
+                             */
                                 
                             /**
-                                * Triggered on entities when the entity's state has been changed.
-                                * 
-                                * @event 'state-changed'
-                                * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
-                                */
+                             * Triggered on entities when the entity's state has been changed.
+                             * 
+                             * @event 'state-changed'
+                             * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
+                             */
                             while (i--) {
                                 entity = actives[i];
                                 entity.triggerEvent('handle-post-collision-logic', msg);
-                                if (update(entity)) {
+                                if (entity.lastState && entity.lastState.update(entity.state)) {
                                     entity.triggerEvent('state-changed', entity.state);
                                 }
                             }
                         } else {
                             while (i--) {
                                 entity = actives[i];
-                                if (update(entity)) {
+                                if (entity.lastState && entity.lastState.update(entity.state)) {
                                     entity.triggerEvent('state-changed', entity.state);
                                 }
                             }

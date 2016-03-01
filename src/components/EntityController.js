@@ -61,6 +61,7 @@
 
     var Data = include('platypus.Data'),
         ActionState = include('platypus.ActionState'),
+        State = include('platypus.State'),
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
@@ -89,27 +90,6 @@
             ['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
         ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
-        createFilter = function (states) {
-            var arr = states.greenSplit(','),
-                i = arr.length,
-                filter = Data.setUp(),
-                str = '';
-            
-            while (i--) {
-                str = arr[i];
-                if (str) {
-                    if (str.substr(0, 1) === '!') {
-                        filter[str.substr(1)] = false;
-                    } else {
-                        filter[str] = true;
-                    }
-                }
-            }
-            
-            arr.recycle();
-            
-            return filter;
-        },
         trigger = function (event, message) {
             if (!this.paused) {
                 this.owner.trigger(event, message);
@@ -176,7 +156,7 @@
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
                     if (this.stateMaps.hasOwnProperty(key)) {
-                        filter = createFilter(key);
+                        filter = State.setUp(key);
                         this.addMap(this.stateMaps[key], filter);
                         filter.recycle();
                     }

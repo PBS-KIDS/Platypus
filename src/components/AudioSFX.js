@@ -13,7 +13,7 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Data = include('platypus.Data'),
-        spaceRegEx = / /g,
+        State = include('platypus.State'),
         defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay:     0,
@@ -77,25 +77,16 @@
                 }
             };
         },
-        createTest = function (testStates, audio, play) {
-            var states = testStates.replace(spaceRegEx, '').greenSplit(',');
-            if (testStates === 'default') {
-                return function (state) {
-                    play.call(this);
-                    return testStates;
-                };
-            } else {
-                return function (state) {
-                    var i = 0;
+        stateAudioPlay = function (checkData, audioId, play, state) {
+            var active = state.includes(checkData.states);
 
-                    for (i = 0; i < states.length; i++) {
-                        if (!state[states[i]]) {
-                            return false;
-                        }
-                    }
-                    play.call(this);
-                    return testStates;
-                };
+            if (active !== checkData.playing) {
+                if (active) {
+                    play();
+                } else {
+                    this.stopAudio(audioId, this.forcePlaythrough);
+                }
+                checkData.playing = active;
             }
         };
     
@@ -152,26 +143,52 @@
              * @type boolean
              * @default true
              */
-            forcePlayThrough: true
+            forcePlayThrough: true,
+
+            /**
+             * Optional. Specifies whether this component should listen to events matching the animationMap to animate. Set this to true if the component should animate for on events.
+             *
+             * @property eventBased
+             * @type Boolean
+             * @default true
+             * @since 0.7.5
+             */
+            eventBased: true,
+
+            /**
+             * Optional. Specifies whether this component should listen to changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on this.owner.state.
+             *
+             * @property stateBased
+             * @type Boolean
+             * @default true
+             * @since 0.7.5 - Will default to `false` in version 0.8.0
+             */
+            stateBased: true
         },
             
         constructor: function (definition) {
             var key      = '',
-                playClip = null;
+                playClip = null,
+                sound    = null;
             
             this.activeAudioClips = Array.setUp();
     
             this.state = this.owner.state;
             this.stateChange = false;
-            this.currentState = false;
             
             this.player = Application.instance.sound;
     
             if (definition.audioMap) {
-                this.checkStates = Array.setUp();
+                if (this.stateBased) {
+                    this.checkStates = Array.setUp();
+                }
                 for (key in definition.audioMap) {
                     if (definition.audioMap.hasOwnProperty(key)) {
-                        playClip = playSound(definition.audioMap[key]);
+                        sound = definition.audioMap[key];
+                        playClip = playSound(sound);
+                        if (sound.sound) {
+                            sound = sound.sound;
+                        }
                         
                         /**
                          * Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with SoundJS play parameters.
@@ -186,8 +203,12 @@
                          * @param message.pan (float) - Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.
                          * @param message.next (string) - Optional. Used to specify the next audio clip to play once this one is complete.
                          */
-                        this.addEventListener(key, playClip);
-                        this.checkStates.push(createTest(key, definition.audioMap[key], playClip));
+                        if (this.eventBased) {
+                            this.addEventListener(key, playClip);
+                        }
+                        if (this.stateBased) {
+                            this.addStateCheck(key, sound, playClip);
+                        }
                     }
                 }
             }
@@ -202,26 +223,19 @@
              * @method 'handle-render'
              */
             "handle-render": function () {
-                var i         = 0,
-                    audioClip = null;
+                var i = 0,
+                    cs = null,
+                    state = this.state;
                 
                 if (this.paused) {
                     return;
                 }
                 
-                if (this.stateChange) {
-                    if (this.checkStates) {
-                        if (this.currentState) {
-                            this.stopAudio(this.currentState.soundId, this.forcePlaythrough);
-                        }
-                        this.currentState = false;
-                        for (i = 0; i < this.checkStates.length; i++) {
-                            audioClip = this.checkStates[i].call(this, this.state);
-                            if (audioClip) {
-                                this.currentState = audioClip;
-                                break;
-                            }
-                        }
+                if (this.stateBased && this.stateChange) {
+                    cs = this.checkStates;
+                    i = cs.length;
+                    while (i--) {
+                        cs[i].check(state);
                     }
                     this.stateChange = false;
                 }
@@ -394,47 +408,48 @@
                 return clips;
             },
             
-            stopAudio: function (audioId, playthrough) {
-                var i        = 0,
-                    clips    = this.activeAudioClips,
-                    loopFunc = function (instance) {
+            stopAudio: (function () {
+                var loopFunc = function (instance) {
                         this.stopAudioInstance(instance.currentTarget);
-                    }.bind(this);
+                    };
                 
-                if (audioId) {
-                    for (i = clips.length - 1; i >= 0; i--) {
-                        if (clips[i].soundId === audioId) {
-                            if (playthrough) {
-                                clips[i].addEventListener('loop', loopFunc);
-                            } else {
-                                clips[i].stop();
-                                clips.greenSplice(i);
+                return function (audioId, playthrough) {
+                    var clips = this.activeAudioClips,
+                        func = null,
+                        i = clips.length;
+                    
+                    if (audioId) {
+                        func = loopFunc.bind(this);
+                        while (i--) {
+                            if (clips[i].soundId === audioId) {
+                                if (playthrough) {
+                                    clips[i].addEventListener('loop', func);
+                                } else {
+                                    clips[i].stop();
+                                    clips.greenSplice(i);
+                                }
                             }
                         }
-                    }
-                } else {
-                    if (playthrough) {
-                        for (i = 0; i < clips.length; i++) {
-                            clips[i].addEventListener('loop', loopFunc);
+                    } else if (playthrough) {
+                        func = loopFunc.bind(this);
+                        while (i--) {
+                            clips[i].addEventListener('loop', func);
                         }
                     } else {
-                        for (i = 0; i < this.activeAudioClips.length; i++) {
+                        while (i--) {
                             clips[i].stop();
                         }
                         clips.length = 0;
                     }
-                }
-            },
+                };
+            }()),
             
             stopAudioInstance: function (instance) {
-                var i     = 0,
-                    clips = this.activeAudioClips;
+                var clips = this.activeAudioClips,
+                    i     = clips.indexOf(instance);
                 
-                for (i = clips.length - 1; i >= 0; i--) {
-                    if (clips[i] === instance) {
-                        clips[i].stop();
-                        clips.greenSplice(i);
-                    }
+                if (i >= 0) {
+                    clips.greenSplice(i).stop();
                 }
             },
             
@@ -460,11 +475,36 @@
                 }
             },
             
+            addStateCheck: function (key, value, play) {
+                var states = State.setUp(key),
+                    checkData = Data.setUp(
+                        "states", states,
+                        "playing", false
+                    );
+                
+                checkData.check = stateAudioPlay.bind(this, checkData, value, play.bind(this));
+                this.checkStates.push(checkData);
+            },
+            
             destroy: function () {
+                var c = this.checkStates,
+                    ci = null,
+                    i = 0;
+                
                 this.stopAudio();
                 this.activeAudioClips.recycle();
-                if (this.checkStates) {
-                    this.checkStates.recycle();
+                
+                this.state = null;
+
+                if (c) {
+                    i = c.length;
+                    while (i--) {
+                        ci = c[i];
+                        ci.states.recycle();
+                        ci.recycle();
+                    }
+                    c.recycle();
+                    this.checkStates = null;
                 }
             }
         }
