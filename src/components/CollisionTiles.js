@@ -10,7 +10,8 @@
 (function () {
     "use strict";
     
-    var CollisionShape = include('platypus.CollisionShape'),
+    var AABB = include('platypus.AABB'),
+        CollisionShape = include('platypus.CollisionShape'),
         Data = include('platypus.Data'),
         flip = function (num, arr) {
             if (num < -1) {
@@ -182,6 +183,28 @@
     return platypus.createComponentClass({
         id: 'CollisionTiles',
         
+        properties: {
+            /**
+             * The map's top offset.
+             * 
+             * @property top
+             * @type Number
+             * @default 0
+             * @since 0.7.5
+             */
+            top: 0,
+            
+            /**
+             * The map's left offset.
+             * 
+             * @property left
+             * @type Number
+             * @default 0
+             * @since 0.7.5
+             */
+            left: 0
+        },
+        
         publicProperties: {
             /**
              * A 2D array describing the tile-map with off (-1) and on (!-1) states. Numbers > -1 are solid and numbers -2, -3, -4, and -5 provide for jumpthrough tiles with the solid side being top, right, bottom, and left respectively. Example: `[[-1,-1,-1], [1,-1,-1], [1,1,1]]`. Available on the entity as `entity.collisionMap`.
@@ -211,8 +234,12 @@
             tileHeight: 10
         },
         constructor: function (definition) {
-            this.tileHalfWidth  = this.tileWidth  / 2;
-            this.tileHalfHeight = this.tileHeight / 2;
+            this.tileOffsetLeft  = this.tileWidth / 2 + this.left;
+            this.tileOffsetTop = this.tileHeight / 2 + this.top;
+            
+            this.columns = this.collisionMap.length;
+            this.rows = this.collisionMap[0].length;
+            
             this.shapeDefinition = Data.setUp(
                 "x", 0,
                 "y", 0,
@@ -220,9 +247,13 @@
                 "width", this.tileWidth,
                 "height", this.tileHeight
             );
+            
             this.storedTiles = Array.setUp();
             this.serveTiles = Array.setUp();
             this.storedTileIndex = 0;
+            
+            this.aabb = AABB.setUp();
+            this.aabb.setBounds(this.left, this.top, this.tileWidth * this.columns + this.left, this.tileHeight * this.rows + this.top);
         },
         
         events: {
@@ -269,7 +300,7 @@
                 }
                 
                 shape = storedTiles[i];
-                shape.update(x * this.tileWidth + this.tileHalfWidth, y * this.tileHeight + this.tileHalfHeight);
+                shape.update(x * this.tileWidth + this.tileOffsetLeft, y * this.tileHeight + this.tileOffsetTop);
 
                 this.storedTileIndex += 1;
                 
@@ -284,22 +315,22 @@
                 } else if (xy < -1) {
                     switch (xy) {
                     case -2: //Top
-                        if (prevAABB.bottom <= y * this.tileHeight) {
+                        if (prevAABB.bottom <= y * this.tileHeight + this.top) {
                             shapes.push(this.getShape(x, y));
                         }
                         break;
                     case -3: //Right
-                        if (prevAABB.left >= (x + 1) * this.tileWidth) {
+                        if (prevAABB.left >= (x + 1) * this.tileWidth + this.left) {
                             shapes.push(this.getShape(x, y));
                         }
                         break;
                     case -4: //Bottom
-                        if (prevAABB.top >= (y + 1) * this.tileHeight) {
+                        if (prevAABB.top >= (y + 1) * this.tileHeight + this.top) {
                             shapes.push(this.getShape(x, y));
                         }
                         break;
                     case -5: //Left
-                        if (prevAABB.right <= x * this.tileWidth) {
+                        if (prevAABB.right <= x * this.tileWidth + this.left) {
                             shapes.push(this.getShape(x, y));
                         }
                         break;
@@ -323,6 +354,9 @@
 
                 this.serveTiles.recycle();
                 delete this.serveTiles;
+                
+                this.aabb.recycle();
+                delete this.aabb;
             }
         },
         
@@ -331,15 +365,10 @@
              * Returns the axis-aligned bounding box of the entire map.
              * 
              * @method getAABB
-             * @return aabb {AABB} The returned object provides the top, left, width, and height of the collision map.
+             * @return aabb {platypus.AABB} The returned object provides the top, left, width, and height of the collision map.
              */
             getAABB: function () {
-                return {
-                    left: 0,
-                    top:  0,
-                    right: this.tileWidth * this.collisionMap.length,
-                    bottom: this.tileHeight * this.collisionMap.length[0]
-                };
+                return this.aabb;
             },
             
             /**
@@ -351,7 +380,7 @@
              * @return {boolean} Returns `true` if the coordinate contains a collision tile, `false` if it does not.
              */
             isTile: function (x, y) {
-                return !((x < 0) || (y < 0) || (x >= this.collisionMap.length) || (y >= this.collisionMap[0].length) || (this.collisionMap[x][y] === -1));
+                return !((x < 0) || (y < 0) || (x >= this.columns) || (y >= this.rows) || (this.collisionMap[x][y] === -1));
             },
             
             /**
@@ -363,10 +392,14 @@
              * @return {Array} Each returned object provides the [CollisionShape](CollisionShape.html) of a tile.
              */
             getTileShapes: function (aabb, prevAABB) {
-                var left   = Math.max(Math.floor(aabb.left   / this.tileWidth),  0),
-                    top    = Math.max(Math.floor(aabb.top    / this.tileHeight), 0),
-                    right  = Math.min(Math.ceil(aabb.right   / this.tileWidth),  this.collisionMap.length),
-                    bottom = Math.min(Math.ceil(aabb.bottom  / this.tileHeight), this.collisionMap[0].length),
+                var l = this.left,
+                    t = this.top,
+                    th = this.tileHeight,
+                    tw = this.tileWidth,
+                    left   = Math.max(Math.floor((aabb.left - l) / tw),  0),
+                    top    = Math.max(Math.floor((aabb.top - t) / th), 0),
+                    right  = Math.min(Math.ceil((aabb.right - l) / tw),  this.columns),
+                    bottom = Math.min(Math.ceil((aabb.bottom - t) / th), this.rows),
                     x      = 0,
                     y      = 0,
                     shapes = this.serveTiles;
@@ -398,8 +431,8 @@
                 var t      = transform || {},
                     x      = t.left    || 0,
                     y      = t.top     || 0,
-                    width  = t.width   || this.collisionMap[0].length,
-                    height = t.height  || this.collisionMap.length,
+                    width  = t.width   || this.rows,
+                    height = t.height  || this.columns,
                     type   = t.type    || "horizontal";
                 
                 if (transforms[type]) {
@@ -425,8 +458,8 @@
                 var t      = translate || {},
                     x      = t.left    || 0,
                     y      = t.top     || 0,
-                    width  = t.width   || this.collisionMap[0].length,
-                    height = t.height  || this.collisionMap.length,
+                    width  = t.width   || this.rows,
+                    height = t.height  || this.columns,
                     dx     = t.dx      || 0,
                     dy     = t.dy      || 0;
                 
