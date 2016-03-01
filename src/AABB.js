@@ -311,9 +311,22 @@ platypus.AABB = (function () {
      * @param width {number} Width of a bounding box
      * @param height {number} Height of a bounding box
      * @return {boolean} Returns `true` if the parameters match.
+     * @deprecated since 0.7.5 in favor of AABB to AABB checks using `equals()`
      */
     proto.matches = function (x, y, width, height) {
         return (this.x === x) && (this.y === y) && (this.width === width) && (this.height === height);
+    };
+
+    /**
+     * Expresses whether this AABB matches the provided AABB.
+     * 
+     * @method equals
+     * @param aabb {platypus.AABB} The AABB to check against.
+     * @return {Boolean} Returns `true` if the AABB's match.
+     * @since 0.7.5
+     */
+    proto.equals = function (aabb) {
+        return (this.left === aabb.left) && (this.top === aabb.top) && (this.right === aabb.right) && (this.bottom === aabb.bottom);
     };
 
     /**
@@ -324,7 +337,7 @@ platypus.AABB = (function () {
      * @return {boolean} Returns `true` if this AABB contains the other AABB.
      */
     proto.contains = function (aabb) {
-        return !((aabb.top < this.top) || (aabb.bottom > this.bottom) || (aabb.left < this.left) || (aabb.right > this.right));
+        return (aabb.top >= this.top) && (aabb.bottom <= this.bottom) && (aabb.left >= this.left) && (aabb.right <= this.right);
     };
     
     /**
@@ -335,7 +348,19 @@ platypus.AABB = (function () {
      * @return {boolean} Returns `true` if this AABB contains the vector.
      */
     proto.containsVector = function (vector) {
-        return !((vector.y < this.top) || (vector.y > this.bottom) || (vector.x < this.left) || (vector.x > this.right));
+        return this.containsPoint(vector.x, vector.y);
+    };
+    
+    /**
+     * Expresses whether this AABB contains the given point.
+     * 
+     * @method containsVector
+     * @param vector {platypus.Vector} The vector to check.
+     * @return {boolean} Returns `true` if this AABB contains the vector.
+     * @since 0.7.5
+     */
+    proto.containsPoint = function (x, y) {
+        return (y >= this.top) && (y <= this.bottom) && (x >= this.left) && (x <= this.right);
     };
     
     /**
@@ -358,11 +383,11 @@ platypus.AABB = (function () {
      * @return {boolean} Returns `true` if this AABB intersects the other AABB.
      */
     proto.intersects = function (aabb) {
-        return !((aabb.bottom < this.top) || (aabb.top > this.bottom) || (aabb.right < this.left) || (aabb.left > this.right));
+        return (aabb.bottom >= this.top) && (aabb.top <= this.bottom) && (aabb.right >= this.left) && (aabb.left <= this.right);
     };
 
     /**
-     * Returns the area of the intersection.
+     * Returns the area of the intersection. If the AABB's do not intersect, `0` is returned.
      * 
      * @method getIntersectionArea
      * @param aabb {AABB} The AABB this AABB intersects with.
@@ -370,12 +395,13 @@ platypus.AABB = (function () {
      */
 	proto.getIntersectionArea = function(aabb){
 		var max    = Math.max,
-            min    = Math.min,
-            width  = min(this.bottom, aabb.bottom) - max(this.top,  aabb.top),
-            height = min(this.right,  aabb.right)  - max(this.left, aabb.left),
-            area   = width * height;
+            min    = Math.min;
 		
-		return area;
+        if (this.intersects(aabb)) {
+            return (min(this.bottom, aabb.bottom) - max(this.top,  aabb.top)) * (min(this.right,  aabb.right) - max(this.left, aabb.left));
+        } else {
+            return 0;
+        }
 	};
     
     /**
