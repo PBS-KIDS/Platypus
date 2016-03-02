@@ -5,14 +5,14 @@
  * @class Data
  * @constructor
  * @return {Data} Returns the new Data object.
+ * @since 0.7.1
  */
 /*global platypus */
 platypus.Data = (function () {
     "use strict";
     
-    var Data = function () {
+    var Data = function (first) {
             var i = arguments.length,
-                first = arguments[0],
                 key = '';
             
             if (first) {
@@ -33,8 +33,7 @@ platypus.Data = (function () {
                     }
                 }
             }
-        },
-        proto = Data.prototype;
+        };
     
     /**
      * Returns Data from cache or creates a new one if none are available.

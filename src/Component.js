@@ -13,6 +13,8 @@
  * @class Component
  * @static
  */
+/*global console, include, platypus */
+/*jslint plusplus:true */
 platypus.Component = (function () {
     "use strict";
     
@@ -32,11 +34,11 @@ platypus.Component = (function () {
         proto = Component.prototype;
     
     /**
-    * Returns a string describing the component.
-    *
-    * @method toString
-    * @return {String} Returns the component type as a string of the form "[Component ComponentType]".
-    **/
+     * Returns a string describing the component.
+     *
+     * @method toString
+     * @return {String} Returns the component type as a string of the form "[Component ComponentType]".
+     **/
     proto.toString = function () {
         return "[Component " + this.type + "]";
     };
