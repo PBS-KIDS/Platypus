@@ -458,14 +458,6 @@
                     if (this.owner.triggerEventOnChildren) {
                         this.owner.triggerEventOnChildren('camera-update', msg);
                     }
-                    
-                    /**
-                    * This component triggers "camera-stationary" on the entity when the camera stops moving.
-                    *
-                    * @event 'camera-stationary'
-                    * @deprecated since 0.6.8 - Listen for "camera-update" instead, with a `stationary` property of `true`.
-                    **/
-                    this.owner.triggerEvent('camera-stationary', msg);
                 }
                 
                 if (this.lastFollow.begin) {
