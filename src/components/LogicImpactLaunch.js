@@ -59,8 +59,8 @@ This component will cause the entity to move in a certain direction on colliding
             this.stunned = false;
             
             this.state = this.owner.state;
-            this.state.impact  = false;
-            this.state[this.stunState] = false;
+            this.state.set('impact', false);
+            this.state.set(this.stunState, false);
         },
         
         events: {
@@ -80,12 +80,8 @@ This component will cause the entity to move in a certain direction on colliding
             },
 
             "handle-logic": function () {
-                if (this.state.impact !== this.justJumped) {
-                    this.state.impact = this.justJumped;
-                }
-                if (this.state[this.stunState] !== this.stunned) {
-                    this.state[this.stunState] = this.stunned;
-                }
+                this.state.set('impact', this.justJumped);
+                this.state.set(this.stunState, this.stunned);
 
                 if (this.justJumped) {
                     this.direction.setVector(this.vector);
@@ -130,6 +126,7 @@ This component will cause the entity to move in a certain direction on colliding
         methods: {
             destroy: function () {
                 this.vector.recycle();
+                this.state = null;
             }
         }
     });

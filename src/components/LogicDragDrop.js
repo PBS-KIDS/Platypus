@@ -49,8 +49,9 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             this.nextY = this.owner.y;
             this.grabOffsetX = 0;
             this.grabOffsetY = 0;
-            this.owner.state.dragging = false;
-            this.owner.state.noDrop = false;
+            this.state = this.owner.state;
+            this.state.set('dragging', false);
+            this.state.set('noDrop', false);
             
             this.tryDrop = false;
             this.hitSomething = false;
@@ -61,7 +62,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 this.owner.x = this.nextX;
                 this.owner.y = this.nextY;
                 
-                this.owner.state.noDrop = false;
+                this.state.set('noDrop', false);
             },
 
             "handle-post-collision-logic": function (resp) {
@@ -69,22 +70,22 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                     this.tryDrop = false;
                     if (this.hitSomething) {
                         this.dropFailed = false;
-                        this.owner.state.noDrop = true;
-                        this.owner.state.dragging = true;
+                        this.state.set('noDrop', true);
+                        this.state.set('dragging', true);
                     } else {
-                        this.owner.state.noDrop = false;
-                        this.owner.state.dragging = false;
+                        this.state.set('noDrop', false);
+                        this.state.set('dragging', false);
                     }
                     
                 } else if (this.hitSomething) {
-                    this.owner.state.noDrop = true;
+                    this.state.set('noDrop', true);
                 }
                 this.hitSomething = false;
             },
             "mousedown": function (eventData) {
                 this.grabOffsetX = eventData.x - this.owner.x;
                 this.grabOffsetY = eventData.y - this.owner.y;
-                this.owner.state.dragging = true;
+                this.state.set('dragging', true);
             },
             "mouseup": function (eventData) {
                 this.tryDrop = true;
@@ -100,15 +101,10 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         
         methods: {// These are methods that are called by this component.
             destroy: function () {
-                this.owner.state.dragging = null;
-                this.owner.state.noDrop = null;
+                this.state.set('dragging', false);
+                this.state.set('noDrop', false);
+                this.state = null;
             }
-            
-        },
-        
-        publicMethods: {// These are methods that are available on the entity.
-            
-            
         }
     });
 }());

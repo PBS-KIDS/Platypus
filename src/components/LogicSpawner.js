@@ -52,7 +52,7 @@ This component creates an entity and propels it away. This is useful for casting
             this.entityClass = platypus.game.settings.entities[className];
             this.speed = definition.speed || this.owner.speed || 0;
 
-            this.state[this.stateName] = false;
+            this.state.set(this.stateName, false);
             
             this.spawneeProperties = {
                 x:  0,
@@ -96,28 +96,28 @@ This component creates an entity and propels it away. This is useful for casting
                     this.spawneeProperties.z = this.owner.z + classZ;
                     
                     offset = this.offsetX;
-                    if (state.left) {
+                    if (state.get('left')) {
                         offset *= -1;
                     }
                     this.spawneeProperties.x += offset;
                     
                     offset = this.offsetY;
-                    if (state.top) {
+                    if (state.get('top')) {
                         offset *= -1;
                     }
                     this.spawneeProperties.y += offset;
                     
                     if (this.speed) {
-                        if (state.top) {
+                        if (state.get('top')) {
                             this.spawneeProperties.dy = -this.speed;
-                        } else if (state.bottom) {
+                        } else if (state.get('bottom')) {
                             this.spawneeProperties.dy = this.speed;
                         } else {
                             delete this.spawneeProperties.dy;
                         }
-                        if (state.left) {
+                        if (state.get('left')) {
                             this.spawneeProperties.dx = -this.speed;
-                        } else if (state.right) {
+                        } else if (state.get('right')) {
                             this.spawneeProperties.dx = this.speed;
                         } else {
                             delete this.spawneeProperties.dx;
@@ -132,9 +132,7 @@ This component creates an entity and propels it away. This is useful for casting
                     }
                 }
                 
-                if (state[this.stateName] !== this.firing) {
-                    state[this.stateName] = this.firing;
-                }
+                state.set(this.stateName, this.firing);
 
                 this.firing = false;
             },
@@ -142,6 +140,12 @@ This component creates an entity and propels it away. This is useful for casting
                 this.firing = !value || (value.pressed !== false);
                 
                 this.parent = this.owner.parent; //proofing against this entity being destroyed prior to spawned entity. For example, when a destroyed entity spawns a drop.
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.state = null;
             }
         },
         

@@ -11,8 +11,8 @@
     "use strict";
     
     var Data = include('platypus.Data'),
+        StateMap = include('platypus.StateMap'),
         tempMatrix = new PIXI.Matrix(),
-        spaceRegEx = / /g,
         changeState = function (state) {
             return function (value) {
                 //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
@@ -30,23 +30,21 @@
                 //}
             };
         },
-        createTest = function (testStates, animation) { //TODO: Better clean-up: Create a lot of these closures without removing them later... DDD 2/5/2016
-            var i = 0,
-                states = testStates.replace(spaceRegEx, '').greenSplit(',');
-            
+        defaultTest = function (animation) {
+            return animation;
+        },
+        stateTest = function (animation, states, ownerState) {
+            if (ownerState.includes(states)) {
+                return animation;
+            }
+            return false;
+        },
+        createTest = function (testStates, animation) {
             if (testStates === 'default') {
-                return function (state) {
-                    return animation;
-                };
+                return defaultTest.bind(null, animation);
             } else {
-                return function (state) {
-                    for (i = 0; i < states.length; i++) {
-                        if (!state[states[i]]) {
-                            return false;
-                        }
-                    }
-                    return animation;
-                };
+                //TODO: Better clean-up: Create a lot of these without removing them later... DDD 2/5/2016
+                return stateTest.bind(null, animation, StateMap.setUp(testStates));
             }
         },
         processGraphics = (function () {
@@ -885,8 +883,8 @@
                     }
                     
                     if (this.stateBased && this.stateChange) {
-                        if (this.state.visible !== undefined) {
-                            this.visible = this.state.visible;
+                        if (this.state.has('visible')) {
+                            this.visible = this.state.get('visible');
                         }
                         if (this.checkStates) {
                             for (i = 0; i < this.checkStates.length; i++) {
@@ -1266,6 +1264,7 @@
                     this.sprite.destroy();
                 }
                 this.sprite = null;
+                this.state = null;
             }
         },
         

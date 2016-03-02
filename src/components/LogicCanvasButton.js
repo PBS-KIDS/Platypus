@@ -24,8 +24,11 @@
 		},
 
 		constructor: function (definition) {
-            this.owner.state.disabled = this.disabled;
-            this.owner.state.down = false;
+            var state = this.owner.state;
+            
+            this.state = state;
+            state.set('disabled', this.disabled);
+            state.set('down', false);
             this.owner.buttonMode = !this.disabled;
             this.cancelled = false;
             this.used = false;
@@ -34,15 +37,15 @@
 
 		events: {
             "handle-logic": function (tick) {
-                var eq = (this.disabled === this.owner.state.disabled);
+                var eq = (this.disabled === this.state.get('disabled'));
                 
                 if (this.last !== eq) {
                     this.last = eq;
                 }
             },
             "mousedown": function (eventData) {
-                this.owner.state.down = true;
-                if (!this.owner.state.disabled && !(this.useOnce && this.used)) {
+                this.state.down = true;
+                if (!this.state.get('disabled') && !(this.useOnce && this.used)) {
                     if (this.onPress) {
                         this.owner.trigger(this.onPress);
                         eventData.pixiEvent.stopPropagation();
@@ -52,7 +55,7 @@
             },
             "pressup": function (eventData) {
 
-                if (!this.owner.state.disabled && !(this.useOnce && this.used)) {
+                if (!this.state.get('disabled') && !(this.useOnce && this.used)) {
                     if (this.cancelled) {
                         if (this.onCancel) {
                             this.owner.trigger(this.onCancel);
@@ -67,31 +70,39 @@
                     eventData.pixiEvent.stopPropagation();
                 }
 
-                this.owner.state.down = false;
+                this.state.set('down', false);
                 this.cancelled = false;
             },
             "mouseover": function () {
-                if (this.owner.state.down) {
+                if (this.state.get('down')) {
                     this.cancelled = false;
                 }
 			},
 			"mouseout": function () {
-                if (this.owner.state.down) {
+                if (this.state.get('down')) {
                     this.cancelled = true;
                 }
 			},
 			"disable": function () {
-                this.owner.state.disabled = true;
+                this.state.set('disabled', true);
                 this.owner.buttonMode = false;
 			},
 			"enable": function () {
-                this.owner.state.disabled = false;
+                this.state.set('disabled', false);
                 this.owner.buttonMode = true;
 			},
 			"toggle-disabled": function () {
-                this.owner.buttonMode = this.owner.state.disabled;
-                this.owner.state.disabled = !this.owner.state.disabled;
+                var value = this.state.get('disabled');
+                
+                this.owner.buttonMode = value;
+                this.state.set('disabled', !value);
 			}
-		}
+		},
+        
+        methods: {
+            destroy: function () {
+                this.state = null;
+            }
+        }
 	});
 }());

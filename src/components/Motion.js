@@ -10,11 +10,6 @@
     "use strict";
     
     var Vector = include('platypus.Vector'),
-        depWarning = function (ownerType, oldProperty, oldValue, newProperty) {
-            if (platypus.game.settings.debug) {
-                console.warn('"' + ownerType + '" Motion: The "' + oldProperty + '" property has been deprecated. Use "aliases": {"' + oldValue + '": "' + newProperty + '"} instead.');
-            }
-        },
         isTrue = function () {
             return true;
         },
@@ -28,93 +23,23 @@
                 instantSuccess = definition.instantSuccess;
 
             if (controlState) {
-                if (self.accelerator) {
-                    getActiveAccelerationState = function () {
-                        return state[controlState];
-                    };
-                } else {
                     getActiveVelocityState = function () {
-                        return state[controlState];
+                        return state.get(controlState);
                     };
-                }
             } 
 
-            if (definition.event) {
-                /**
-                 * This event controls whether this motion is active or inactive.
-                 * 
-                 * @method '[defined by event property]'
-                 * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-                 * @deprecated since 0.6.7
-                 */
-                depWarning(self.owner.type, "event", definition.event, "control-" + (self.accelerator?"acceleration":"velocity"));
-                self.addEventListener(definition.event, function (control) {
-                    this.active = (control && (control.pressed !== false));
-                });
-            }
-
-            if (self.instant || definition.instantEvent || instantState || definition.instantBegin || definition.instantEnd) {
+            if (self.instant || instantState) {
                 if (instantState) {
                     getInstantState = function () {
-                        return state[instantState];
+                        return state.get(instantState);
                     };
                 }
                 
                 self.instant = true;
 
-                if (definition.instantEvent || definition.instantBegin || definition.instantEnd) {
-                    if (definition.instantEvent) {
-                        /**
-                        * This event triggers an instant motion.
-                        *
-                        * @method '[defined by instantEvent property]'
-                        * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-                        * @deprecated since 0.6.7
-                        */
-                        depWarning(self.owner.type, "instantEvent", definition.instantEvent, "instant-motion");
-                        self.addEventListener(definition.instantEvent, function (control) {
-                            this.enact = (control && (control.pressed !== false));
-                        });
-                    }
-                    if (definition.instantBegin) {
-                        /**
-                        * This event triggers the beginning of an instant motion.
-                        *
-                        * @method '[defined by instantBegin property]'
-                        * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-                        * @deprecated since 0.6.7
-                        */
-                        depWarning(self.owner.type, "instantBegin", definition.instantBegin, "instant-begin");
-                        self.addEventListener(definition.instantBegin, function () {
-                            this.enact = true;
-                        });
-                    }
-                    if (definition.instantEnd) {
-                        /**
-                        * This event triggers the end of an instant motion.
-                        *
-                        * @method '[defined by instantEnd property]'
-                        * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
-                        * @deprecated since 0.6.7
-                        */
-                        depWarning(self.owner.type, "instantEnd", definition.instantEnd, "instant-end");
-                        self.addEventListener(definition.instantEnd, function () {
-                            this.enact = false;
-                        });
-                    }
-                }
-
                 self.update = function (delta) {
                     var state  = getInstantState(),
                         vState = getActiveVelocityState();
-                    
-                    if (this.vector) {
-                        if (this.accelerator) {
-                            this.activeAcceleration = this.active;
-                        } else {
-                            this.activeVelocity = this.active;
-                        }
-                    }
                     
                     if (this.activeVelocity) {
                         if (this.enact && !vState) { // Turn off ready if the state doesn't allow it.
@@ -140,14 +65,6 @@
                 };
             } else {
                 self.update = function (delta) {
-                    if (this.vector) {
-                        if (this.accelerator) {
-                            this.activeAcceleration = this.active;
-                        } else {
-                            this.activeVelocity = this.active;
-                        }
-                    }
-
                     if (this.activeVelocity && getActiveVelocityState()) {
                         if (this.activeAcceleration && getActiveAccelerationState()) {
                             this.move(delta);
@@ -186,26 +103,6 @@
             acceleration: 0,
             
             /**
-             * Whether this motion accelerates the entity (versus a flat velocity addition).
-             * 
-             * @property accelerator
-             * @type boolean
-             * @default true
-             * @deprecated since 0.6.8 - use "velocity" or "acceleration" to specify motion instead.
-             */
-            accelerator: false,
-            
-            /**
-             * Whether this motion is current acting on the entity. This boolean value can be tied to a specific entity state and/or event using the `event` and `controlState` properties.
-             * 
-             * @property active
-             * @type boolean
-             * @default true
-             * @deprecated since 0.6.8 - use "activeAcceleration" and "activeVelocity" instead.
-             */
-            active: true,
-            
-            /**
              * Whether this motion should apply acceleration to the entity. Defaults to `true` unless an initial acceleration is left unset.
              * 
              * @property activeAcceleration
@@ -233,16 +130,6 @@
             maxMagnitude: Infinity,
             
             /**
-             * When this event is triggered on the entity, this motion can be turned on or off. Sending `true` or `{pressed: true}` makes the motion active. Sending `false` or `{pressed: false}` makes the motion inactive.
-             * 
-             * @property event
-             * @type String
-             * @default ""
-             * @deprecated since 0.6.7
-             */
-            event: "",
-            
-            /**
              * When this state on the entity changes, this motion's active state is changed to match. If an "event" property is also set on this component, both the event and the state must be true for the motion to be active.
              * 
              * @property controlState
@@ -251,36 +138,6 @@
              */
             controlState: "",
             
-            /**
-             * If instantEvent or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. Sending `true` or `{pressed: true}` makes the motion active.
-             * 
-             * @property instantEvent
-             * @type String
-             * @default ""
-             * @deprecated since 0.6.7
-             */
-            instantEvent: "",
-            
-            /**
-             * If instantBeing is set, the motion is triggered for a single step and must be re-triggered to activate again. The motion cannot begin again until it is ended by instantEnd or instant Event.
-             *
-             * @property instantBegin
-             * @type String
-             * @default ""
-             * @deprecated since 0.6.7
-             */
-            instantBegin: "",
-
-            /**
-             * If instantEnd is set, when triggered it will reset the event so that it can triggered again.
-             *
-             * @property instantEnd
-             * @type String
-             * @default ""
-             * @deprecated since 0.6.7
-             */
-            instantEnd: "",
-
             /**
              * If instant or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instantState" property is also set on this component, both the event and the state must be true for the motion to be active.
              * 
@@ -301,7 +158,7 @@
             instantState: "",
             
             /**
-             * If instantEvent or instantState are set, this event is triggered when the intance of motion occurs on the entity.
+             * If instantState is set, this event is triggered when the intance of motion occurs on the entity.
              * 
              * @property instantSuccess
              * @type String
@@ -310,15 +167,7 @@
             instantSuccess: "",
             
             /**
-             * This determines if setting active to `false` (via the control event or state) should dampen velocity. This is a ratio applied to the vector magnitude between 0 and 1. This is useful for events like jumping where a longer keypress should jump farther than a shorter keypress. Here's an example for a variable-height jump motion:
-             * 
-             *      {
-             *          vector: [0, -1.6, 0],
-             *          accelerator: true,
-             *          controlState: "grounded",
-             *          instantEvent: "jump",
-             *          instantDecay: 0.2
-             *      }
+             * This determines if setting active to `false` (via the control event or state) should dampen velocity. This is a ratio applied to the vector magnitude between 0 and 1. This is useful for events like jumping where a longer keypress should jump farther than a shorter keypress.
              * 
              * @property instantDecay
              * @type number
@@ -329,17 +178,7 @@
             /**
              * A vector, Array, or number specifying the direction and magnitude of the motion. Numbers apply magnitude along the x-axis. Arrays map to [x, y, z] on the vector.
              * 
-             * @property vector
-             * @type platypus.Vector|Array|number
-             * @default Vector(0, 0, 0)
-             * @deprecated since 0.6.8 - use "velocity" or "acceleration" instead.
-             */
-            vector: 0,
-            
-            /**
-             * A vector, Array, or number specifying the direction and magnitude of the motion. Numbers apply magnitude along the x-axis. Arrays map to [x, y, z] on the vector.
-             * 
-             * @property vector
+             * @property velocity
              * @type platypus.Vector|Array|number
              * @default Vector(0, 0, 0)
              * @since 0.6.8
@@ -353,8 +192,6 @@
         },
         
         constructor: function (definition) {
-            var depVect = this.vector;
-            
             if (!this.acceleration) {
                 this.activeAcceleration = false;
             }
@@ -372,37 +209,6 @@
             
             createController(this, definition);
             
-            if (this.vector) { // deprecated behavior
-                if (this.accelerator && !this.instant) {
-                    this.activeAcceleration = true;
-                    if (platypus.game.settings.debug) {
-                        console.warn('"' + this.owner.type + '" Motion: "vector" and "accelerator" are deprecated. Set "acceleration" to "' + this.vector.toString() + '" instead.');
-                    }
-                    Object.defineProperty(this, "vector", {
-                        get: function () {
-                                return this.acceleration;
-                            }.bind(this),
-                        set: function (value) {
-                                this.acceleration = value;
-                            }.bind(this)
-                    });
-                } else {
-                    this.activeAcceleration = false;
-                    if (platypus.game.settings.debug) {
-                        console.warn('"' + this.owner.type + '" Motion: "vector" and "accelerator" are deprecated. Set "velocity" to "' + this.vector.toString() + '" instead.');
-                    }
-                    Object.defineProperty(this, "vector", {
-                        get: function () {
-                                return this.velocity;
-                            }.bind(this),
-                        set: function (value) {
-                                this.velocity = value;
-                            }.bind(this)
-                    });
-                }
-                this.vector.set(depVect);
-            }
-
             if (this.instant) {
                 this.enact = false;
                 this.instant = Vector.setUp(this.velocity);
@@ -507,30 +313,6 @@
             */
             "instant-end": function () {
                 this.enact = false;
-            },
-            
-            /**
-            * This event swaps in a new velocity vector.
-            *
-            * @method 'set-vector'
-            * @since 0.6.7
-            * @deprecated since 0.6.8 - Use "set-motion" instead with an acceleration or velocity property.
-            */
-            "set-vector": function (newVector) {
-                this.vector.set(newVector);
-                if (typeof this.instantDecay === "number") {
-                    this.capMagnitude = this.vector.magnitude() * this.instantDecay;
-                } else {
-                    this.capMagnitude = -1;
-                }
-                if (platypus.game.settings.debug && !this.setVectorWarning) {
-                    this.setVectorWarning = true;
-                    if (this.accelerator) {
-                        console.warn('"' + this.owner.type + '" Motion: The "set-vector" message is deprecated. Trigger "set-motion" with a {"acceleration": ' + JSON.stringify(newVector) + '} message instead.');
-                    } else {
-                        console.warn('"' + this.owner.type + '" Motion: The "set-vector" message is deprecated. Trigger "set-motion" with a {"velocity": ' + JSON.stringify(newVector) + '} message instead.');
-                    }
-                }
             },
             
             /**

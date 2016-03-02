@@ -49,7 +49,7 @@ platypus.Entity = (function () {
     "use strict";
     
     var Data = include('platypus.Data'),
-        State = include('platypus.State'),
+        StateMap = include('platypus.StateMap'),
         entityIds = {},
         warn = function (content, obj) {
             if (platypus.game.settings.debug) {
@@ -88,8 +88,8 @@ platypus.Entity = (function () {
                 this.setProperty(keyValuePairs);
             }.bind(this));
 
-            this.state = State.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
-            this.lastState = State.setUp(); //This is used to determine if the state of the entity has changed.
+            this.state = StateMap.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
+            this.lastState = StateMap.setUp(); //This is used to determine if the state of the entity has changed.
 
             this.trigger = this.triggerEvent = function (event, message) {
                 savedEvents.push(event);

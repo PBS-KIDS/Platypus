@@ -59,9 +59,10 @@
 (function () {
     "use strict";
 
-    var Data = include('platypus.Data'),
-        ActionState = include('platypus.ActionState'),
-        State = include('platypus.State'),
+    var ActionState = include('platypus.ActionState'),
+        Data = include('platypus.Data'),
+        Map = include('platypus.Map'),
+        StateMap = include('platypus.StateMap'),
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
@@ -88,7 +89,7 @@
             ['east', 'south', 'west', 'north'], null, null, null,
             ['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
             ['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
-        ],
+            ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
         trigger = function (event, message) {
             if (!this.paused) {
@@ -151,12 +152,12 @@
             var key = '',
                 filter = null;
             
-            this.actions = Data.setUp();
+            this.actions = Map.setUp();
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
                     if (this.stateMaps.hasOwnProperty(key)) {
-                        filter = State.setUp(key);
+                        filter = StateMap.setUp(key);
                         this.addMap(this.stateMaps[key], filter);
                         filter.recycle();
                     }
@@ -177,19 +178,22 @@
         
         events: {
             "handle-controller": function () {
-                var i = 0,
+                var actions = this.actions,
+                    keys = actions.keys,
+                    i = keys.length,
                     action = '',
-                    resolution = Array.setUp();
+                    resolution = Array.setUp(),
+                    state = this.owner.state;
                 
-                for (action in this.actions) {
-                    if (this.actions.hasOwnProperty(action)) {
-                        if (this.actions[action].update(this.owner.state)) {
-                            resolution.push(this.actions[action]);
-                        }
+                while (i--) {
+                    action = actions.get(keys[i]);
+                    if (action.update(state)) {
+                        resolution.push(action);
                     }
                 }
                 
-                for (i = 0; i < resolution.length; i++) {
+                i = resolution.length;
+                while (i--) {
                     resolution[i].resolve();
                 }
                 
@@ -270,9 +274,9 @@
                     // Otherwise create a new state storage object
                     if (!actionState) {
                         if (controllerState) {
-                            actionState = actions[id] = ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState));
+                            actionState = actions.set(id, ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState)));
                         } else {
-                            actionState = actions[id] = ActionState.setUp(controller, states, trigger.bind(this));
+                            actionState = actions.set(id, ActionState.setUp(controller, states, trigger.bind(this)));
                         }
                     }
                     
@@ -319,14 +323,14 @@
             },
             
             destroy: function () {
-                var action = '';
+                var actions = this.actions,
+                    keys = actions.keys,
+                    i = keys.length;
                 
-                for (action in this.actions) {
-                    if (this.actions.hasOwnProperty(action)) {
-                        this.actions[action].recycle();
-                    }
+                while (i--) {
+                    actions.get(keys[i]).recycle();
                 }
-                this.actions.recycle();
+                actions.recycle();
                 if (this.joystick) {
                     this.joystick.recycle();
                 }

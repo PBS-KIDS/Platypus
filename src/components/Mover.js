@@ -167,7 +167,8 @@
         
         constructor: function (definition) {
             var maxMagnitude = Infinity,
-                max = this.maxMagnitude;
+                max = this.maxMagnitude,
+                thisState = this.owner.state;
             
             platypus.Vector.assign(this.owner, 'position',  'x',  'y',  'z');
             platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
@@ -187,6 +188,9 @@
             this.velocityDirections = Array.setUp();
 
             this.ground = Vector.setUp(this.ground);
+            
+            this.state = thisState;
+            thisState.set('grounded', false);
             
             Object.defineProperty(this.owner, "maxMagnitude", {
                 get: function () {
@@ -355,13 +359,14 @@
             "handle-movement": function (tick) {
                 var delta    = tick.delta,
                     m        = null,
+                    thisState = this.state,
                     vect     = null,
                     velocity = this.velocity,
                     position = this.position,
                     movers   = this.movers,
                     i        = movers.length;
                 
-                if (this.owner.state.paused || this.paused) {
+                if (thisState.get('paused') || this.paused) {
                     return;
                 }
                 
@@ -398,9 +403,7 @@
                 position.add(vect);
                 vect.recycle();
                 
-                if (this.grounded !== this.owner.state.grounded) {
-                    this.owner.state.grounded = this.grounded;
-                }
+                thisState.set('grounded', this.grounded);
                 
                 this.grounded = false;
             },
@@ -565,6 +568,8 @@
                 
                 delete this.owner.maxMagnitude; // remove property handlers
                 this.owner.maxMagnitude = max;
+                
+                this.state = null;
             }
         },
         

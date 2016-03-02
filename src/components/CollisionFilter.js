@@ -9,19 +9,15 @@
 (function () {
     "use strict";
 
-    var collidePos = function (entity, state, event) {
-            return function (collInfo) {
-                if (entity.state[state]) {
-                    entity.trigger(event, collInfo);
-                }
-            };
+    var collidePos = function (state, event, collInfo) {
+            if (this.state.get(state)) {
+                this.trigger(event, collInfo);
+            }
         },
-        collideNeg = function (entity, state, event) {
-            return function (collInfo) {
-                if (!entity.state[state]) {
-                    entity.trigger(event, collInfo);
-                }
-            };
+        collideNeg = function (state, event, collInfo) {
+            if (!this.state.get(state)) {
+                this.trigger(event, collInfo);
+            }
         };
     
     return platypus.createComponentClass({
@@ -71,13 +67,13 @@
                     state = state.substring(1);
                     for (event in collisions) {
                         if (collisions.hasOwnProperty(event)) {
-                            this.addEventListener(event, collideNeg(this.owner, state, collisions[event]));
+                            this.addEventListener(event, collideNeg.bind(this.owner, state, collisions[event]));
                         }
                     }
                 } else {
                     for (event in collisions) {
                         if (collisions.hasOwnProperty(event)) {
-                            this.addEventListener(event, collidePos(this.owner, state, collisions[event]));
+                            this.addEventListener(event, collidePos.bind(this.owner, state, collisions[event]));
                         }
                     }
                 }

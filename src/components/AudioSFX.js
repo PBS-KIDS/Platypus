@@ -13,7 +13,7 @@
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Data = include('platypus.Data'),
-        State = include('platypus.State'),
+        StateMap = include('platypus.StateMap'),
         defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
             delay:     0,
@@ -476,7 +476,7 @@
             },
             
             addStateCheck: function (key, value, play) {
-                var states = State.setUp(key),
+                var states = StateMap.setUp(key),
                     checkData = Data.setUp(
                         "states", states,
                         "playing", false

@@ -49,15 +49,17 @@ This component changes the (x, y) position of an object according to its current
     return platypus.createComponentClass({
         id: 'LogicRotationalMovement',
         constructor: function (definition) {
+            var state = this.owner.state;
+            
             this.speed = definition.speed || 0.3;
             this.magnitude = 0;
             this.degree = definition.degree || 1;
             this.angle = definition.angle || 0;
             
-            this.state = this.owner.state;
-            this.state.moving       = false;
-            this.state.turningRight = false;
-            this.state.turningLeft  = false;
+            this.state = state;
+            state.set('moving', false);
+            state.set('turningRight', false);
+            state.set('turningLeft', false);
     
             this.owner.orientation  = 0;
             
@@ -67,7 +69,8 @@ This component changes the (x, y) position of an object according to its current
         },
         events: {
             "handle-logic": function (resp) {
-                var vX = 0,
+                var state = this.state,
+                    vX = 0,
                     vY = 0;
                 
                 if (this.turningRight) {
@@ -86,19 +89,12 @@ This component changes the (x, y) position of an object according to its current
                 this.owner.x += (vX * resp.delta);
                 this.owner.y += (vY * resp.delta);
                 
-                if (this.state) {
-                    if (this.state.moving !== this.moving) {
-                        this.state.moving = this.moving;
-                    }
-                    if (this.state.turningLeft !== this.turningLeft) {
-                        this.state.turningLeft = this.turningLeft;
-                    }
-                    if (this.state.turningRight !== this.turningRight) {
-                        this.state.turningRight = this.turningRight;
-                    }
-                    if (this.owner.rotation !== this.angle) {
-                        this.owner.rotation = this.angle;
-                    }
+                state.set('moving', this.moving);
+                state.set('turningLeft', this.turningLeft);
+                state.set('turningRight', this.turningRight);
+                
+                if (this.owner.rotation !== this.angle) {
+                    this.owner.rotation = this.angle;
                 }
             },
             "turn-right": function (state) {

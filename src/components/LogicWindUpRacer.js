@@ -47,6 +47,8 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
         id: 'LogicWindUpRacer',
         
         constructor: function (definition) {
+            var thisState = this.owner.state;
+            
             this.windTime = definition.windTime || 500;
             this.raceTime = definition.raceTime || 5000;
             this.speed = definition.speed || this.owner.speed || 0.3;
@@ -59,19 +61,21 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             this.right = false;
             this.left = false;
             
-            this.state = this.owner.state;
-            this.state.windingUp = false;
-            this.state.racing = false;
-            this.state.blocked = false;
+            this.state = thisState;
+            thisState.set('windingUp', false);
+            thisState.set('racing', false);
+            thisState.set('blocked', false);
         },
 
         events: {// These are messages that this component listens for
             "handle-logic": function (resp) {
+                var thisState = this.state;
+                
                 if (this.racing) {
-                    if (!this.blocked && this.right && this.state.right) {
+                    if (!this.blocked && this.right && thisState.get('right')) {
                         this.owner.x += this.speed * resp.delta;
                         this.owner.triggerEvent('racing');
-                    } else if (!this.blocked && this.left && this.state.left) {
+                    } else if (!this.blocked && this.left && thisState.get('left')) {
                         this.owner.x -= this.speed * resp.delta;
                         this.owner.triggerEvent('racing');
                     } else {
@@ -80,7 +84,7 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                     }
                 } else {
                     if (this.winding) {
-                        if ((this.right && this.state.right) || (this.left && this.state.left)) {
+                        if ((this.right && thisState.get('right')) || (this.left && thisState.get('left'))) {
                             this.windProgress += resp.delta;
                         }
                         this.owner.triggerEvent('winding');
@@ -95,16 +99,9 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                     }
                 }
                 
-                if (this.state.windingUp !== this.winding) {
-                    this.state.windingUp = this.winding;
-                }
-                if (this.state.racing !== this.racing) {
-                    this.state.racing = this.racing;
-                }
-                if (this.state.blocked !== this.blocked) {
-                    this.state.blocked = this.blocked;
-                }
-                
+                thisState.set('windingUp', this.winding);
+                thisState.set('racing', this.racing);
+                thisState.set('blocked', this.blocked);
                 this.blocked = false;
             },
             "stop-racing": function (value) {
@@ -113,8 +110,8 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             },
             "wind-up": function (value) {
                 this.winding = !value || (value.pressed !== false);
-                this.right = this.state.right;
-                this.left  = this.state.left;
+                this.right = this.state.get('right');
+                this.left  = this.state.get('left');
             },
             "hit-solid": function (collision) {
                 if (collision.x) {
@@ -128,9 +125,10 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
     
         methods: {
             destroy: function () {
-                this.state.windingUp = false;
-                this.state.racing = false;
-                this.state.blocked = false;
+                this.state.set('windingUp', false);
+                this.state.set('racing', false);
+                this.state.set('blocked', false);
+                this.state = null;
             }
         }
     });

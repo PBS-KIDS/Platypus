@@ -72,61 +72,87 @@ This component is a general purpose state-machine for an entity, taking in vario
       }
     }
 */
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
 
-    var changeState = function (changes, state) {
-            return function (value) {
-                var i = null;
-
-                for (i in changes) {
-                    if (changes.hasOwnProperty(i)) {
-                        state[i] = changes[i];
-                    }
-                }
-            };
+    var Map = include('platypus.Map'),
+        StateMap = include('platypus.StateMap'),
+        changeState = function (changes, state) {
+            state.update(changes);
         },
         changeSustainedState = function (change, state) {
-            return function (value) {
-                state[change] = true;
-            };
+            state.set(change, true);
         },
         handleResult = null,
-        handleOutput = null;
+        handleOutput = null,
+        setUpOutputs = function (outs) {
+            var data = null,
+                key = '';
+            
+            if ((typeof outs !== 'object') || Array.isArray(outs)) {
+                return outs;
+            } else {
+                data = Map.setUp();
+                for (key in outs) {
+                    if (outs.hasOwnProperty(key)) {
+                        data.set(key, setUpOutputs(outs[key]));
+                    }
+                }
+                return data;
+            }
+        },
+        recycleOutputs = function (outs) {
+            var keys = outs.keys,
+                i = keys.length;
+
+            if (outs instanceof Map) {
+                while (i--) {
+                    recycleOutputs(outs[keys[i]]);
+                }
+                outs.recycle();
+            }
+        };
     
     handleResult = function (title, state, last, checks, changed, self, queue) {
         var i = 0,
-            key      = '',
-            resolved = false,
-            message  = checks.message || (checks.message === 0) || (checks.message === false);
+            key = '',
+            keys = null,
+            message = checks.message || (checks.message === 0) || (checks.message === false),
+            value = null;
 
         if (changed) {
             if (typeof checks === 'string') {
-                self.trigger(checks);
-                resolved = true;
+                self.triggerEvent(checks);
+                return;
             } else if (Array.isArray(checks)) {
                 for (i = 0; i < checks.length; i++) {
                     handleResult(title, state, last, checks[i], changed, self, queue);
                 }
-                resolved = true;
+                return;
             } else if (checks.event && (message || checks.delay)) {
                 if (checks.delay) {
                     queue.push(checks);
                 } else {
                     self.trigger(checks.event, checks.message);
                 }
-                resolved = true;
-            } else if (checks['true']) {
-                handleResult(title, state, last, checks['true'], changed, self, queue);
+                return;
+            } else if (checks.get) {
+                value = checks.get('true');
+                if (value) {
+                    handleResult(title, state, last, value, changed, self, queue);
+                }
             }
         }
 
-        if (!resolved) {
-            for (key in checks) {
-                if (checks.hasOwnProperty(key) && (key !== 'true')) {
-                    handleOutput(key, state, last, checks[key], changed, self, queue);
+        keys = checks.keys;
+        if (keys) {
+            i = keys.length;
+            while (i--) {
+                key = keys[i];
+                if (key !== 'true') {
+                    handleOutput(key, state, last, checks.get(key), changed, self, queue);
                 }
             }
         }
@@ -135,17 +161,20 @@ This component is a general purpose state-machine for an entity, taking in vario
     handleOutput = function (title, state, last, checks, changed, self, queue) {
         var c     = changed,
             value = false,
-            st = "";
+            st = "",
+            stateValue = false;
 
         if (title.charAt(0) === '!') {
             st = title.substring(1);
-            value = (state[st] === false);
-            if ((title !== 'outputs') && (last[st] !== state[st])) {
+            stateValue = state.get(st);
+            value = (stateValue === false);
+            if ((title !== 'outputs') && (last.get(st) !== stateValue)) {
                 c = true;
             }
         } else {
-            value = (state[title] === true);
-            if ((title !== 'outputs') && (last[title] !== state[title])) {
+            stateValue = state.get(title);
+            value = (stateValue === true);
+            if ((title !== 'outputs') && (last.get(title) !== stateValue)) {
                 c = true;
             }
         }
@@ -158,50 +187,89 @@ This component is a general purpose state-machine for an entity, taking in vario
     return platypus.createComponentClass({
         id: 'LogicStateMachine',
         
+        properties: {
+            /**
+             * This is the list of events containing key/value pairs that describe state changes to make for the given event.
+             * 
+             *     {
+             *         "smell-toast": {
+             *             "smelling-food": true,
+             *             "smelling-nothing": false
+             *         },
+             *         "go-to-store": {
+             *             "at-store": true
+             *         }
+             *     }
+             * 
+             * @property inputs
+             * @type Object
+             * @default null
+             */
+            inputs: null
+        },
+        
         constructor: function (definition) {
-            var i = null;
+            var i = 0,
+                inputDefinition = this.inputs,
+                key = '',
+                keys = null,
+                state = null,
+                stateObjects = null,
+                susDef = definition["sustained-inputs"],
+                thisState = this.owner.state;
             
-            this.state = this.owner.state;
+            this.state = thisState;
             
-            if (definition.inputs) {
-                for (i in definition.inputs) {
-                    if (definition.inputs.hasOwnProperty(i)) {
-                        this.addEventListener(i, changeState(definition.inputs[i], this.state));
+            if (inputDefinition) {
+                stateObjects = Array.setUp();
+                for (key in inputDefinition) {
+                    if (inputDefinition.hasOwnProperty(key)) {
+                        state = StateMap.setUp(inputDefinition[key]);
+                        stateObjects.push(state);
+                        this.addEventListener(key, changeState.bind(this, state, thisState));
+                        keys = state.keys;
+                        i = keys.length;
+                        while (i--) {
+                            thisState.set(keys[i], false);
+                        }
+                    }
+                }
+                this.stateObjects = stateObjects;
+            }
+
+            this.sustainedState = StateMap.setUp();
+            if (susDef) {
+                for (key in susDef) {
+                    if (susDef.hasOwnProperty(key)) {
+                        this.addEventListener(key, changeSustainedState.bind(this, susDef[key], this.sustainedState));
+                        this.sustainedState.set(susDef[key], false);
+                        thisState.set(susDef[key], false);
                     }
                 }
             }
 
-            this.sustainedState = {};
-            if (definition["sustained-inputs"]) {
-                for (i in definition["sustained-inputs"]) {
-                    if (definition["sustained-inputs"].hasOwnProperty(i)) {
-                        this.addEventListener(i, changeSustainedState(definition["sustained-inputs"][i], this.sustainedState));
-                        this.sustainedState[definition["sustained-inputs"][i]] = false;
-                    }
-                }
-            }
-
-            this.snapshot = {};
-            this.last = {};
+            this.snapshot = StateMap.setUp();
+            this.last = StateMap.setUp();
             this.queueTimes = Array.setUp();
             this.queue = Array.setUp();
-            this.outputs = definition.outputs || null;
+            this.outputs = setUpOutputs(this.outputs);
         },
 
         events: {
             "handle-logic":  function (resp) {
-                var i = this.queue.length,
-                    state = '';
+                var susState = this.sustainedState,
+                    key = '',
+                    keys = susState.keys,
+                    i = keys.length,
+                    state = this.state;
                 
-                for (state in this.sustainedState) {
-                    if (this.sustainedState.hasOwnProperty(state)) {
-                        if (this.owner.state[state] !== this.sustainedState[state]) {
-                            this.owner.state[state] = this.sustainedState[state];
-                        }
-                        this.sustainedState[state] = false;
-                    }
+                while (i--) {
+                    key = keys[i];
+                    state.set(key, susState.get(key));
+                    susState.set(key, false);
                 }
                 
+                i = this.queue.length;
                 while (i--) {
                     this.queueTimes[i] -= resp.delta;
                     
@@ -213,45 +281,59 @@ This component is a general purpose state-machine for an entity, taking in vario
                 }
             },
             
+            /**
+             * 
+             */
             "update-state": function (state) {
-                var i = '';
-                
-                for (i in state) {
-                    if (state.hasOwnProperty(i)) {
-                        this.state[i] = state[i];
-                    }
-                }
+                this.state.update(state);
             },
             
             "state-changed": function (state) {
-                var i = null,
-                    queue = null;
+                var i = 0,
+                    queue = null,
+                    ss = this.snapshot;
                 
                 if (this.outputs) {
-                    for (i in state) {
-                        if (state[i] !== this.snapshot[i]) {
-                            this.snapshot[i] = state[i];
-                        }
-                    }
+                    ss.update(state)
+                    
                     queue = Array.setUp();
-                    handleOutput('outputs', this.snapshot, this.last, this.outputs, false, this.owner, queue);
-                    for (i = 0; i < queue.length; i++) {
+                    handleOutput('outputs', ss, this.last, this.outputs, false, this.owner, queue); //TODO: change this.outputs tree to Data in constructor for faster key iteration.
+                    i = queue.length;
+                    while (i--) {
                         this.queue.push(queue[i]);
                         this.queueTimes.push(queue[i].delay);
                     }
                     queue.recycle();
-                    for (i in this.snapshot) {
-                        if (this.snapshot[i] !== this.last[i]) {
-                            this.last[i] = this.snapshot[i];
-                        }
-                    }
+                    
+                    this.last.update(ss);
                 }
             }
         },
         
-        methods: function () {
-            this.queueTimes.recycle();
-            this.queue.recycle();
+        methods: {
+            destroy: function () {
+                var i = 0,
+                    so = this.stateObjects;
+                
+                this.queueTimes.recycle();
+                this.queue.recycle();
+                
+                if (so) {
+                    i = so.length;
+                    while (i--) {
+                        so[i].recycle();
+                    }
+                    so.recycle();
+                    this.stateObjects = null;
+                }
+
+                this.sustainedState.recycle();
+                this.snapshot.recycle();
+                this.last.recycle();
+                
+                this.state = null;
+                this.inputs = null;
+            }
         }
     });
 }());

@@ -15,7 +15,7 @@ platypus.ActionState = (function () {
     "use strict";
     
     var Data = include('platypus.Data'),
-        State = include('platypus.State'),
+        StateMap = include('platypus.StateMap'),
         ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.
@@ -69,9 +69,9 @@ platypus.ActionState = (function () {
              * The state of the Entity that is valid for this ActionState.
              * 
              * @property states
-             * @type {platypus.State}
+             * @type platypus.StateMap
              */
-            this.states    = State.setUp(states);
+            this.states = StateMap.setUp(states);
 
             /**
              * The list of input toggles to track control input.
@@ -79,13 +79,13 @@ platypus.ActionState = (function () {
              * @property inputs
              * @type Array
              */
-            this.inputs    = Array.setUp();
+            this.inputs = Array.setUp();
 
             /**
              * The message that is passed to the Entity if the ActionState is active.
              * 
              * @property stateSummary
-             * @type Object
+             * @type platypus.Data
              */
             this.stateSummary = Data.setUp(
                 "pressed",   false,

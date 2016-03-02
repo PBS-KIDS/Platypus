@@ -30,35 +30,47 @@ A component which changes the scene when activated. When the portal receives an 
       //Required - The destination scene to which the portal will take us. In most cases this will come into the portal from Tiled where you'll set a property on the portal you place.
     }
 */
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
+    
+    var Map = include('platypus.Data');
 
     return platypus.createComponentClass({
         id: 'LogicPortal',
         constructor: function (definition) {
             var i = 0,
-                entrants = definition.entrants || definition.entrant;
+                entrants = definition.entrants || definition.entrant || 'no one',
+                state = this.owner.state;
              
             this.destination = this.owner.destination || definition.destination;
             this.used = false;
             this.ready = false;
             this.wasReady = false;
-            if (entrants) {
-                this.entrants = {};
-                if (Array.isArray(entrants)) {
-                    for (i = 0; i < entrants.length; i++) {
-                        this.entrants[entrants[i]] = false;
-                    }
-                } else {
-                    this.entrants[entrants] = false;
+
+            this.entrants = Map.setUp();
+            if (Array.isArray(entrants)) {
+                for (i = 0; i < entrants.length; i++) {
+                    this.entrants.set(entrants[i], false);
                 }
+            } else {
+                this.entrants.set(entrants, false);
             }
+            
+            this.state = state;
+
+            state.set('occupied', false);
+            state.set('ready', true);
         },
         events: {
             "handle-logic": function () {
-                var i = '';
+                var entrants = this.entrants,
+                    keys = entrants.keys,
+                    i = keys.length,
+                    occupied = false,
+                    ready = true,
+                    state = this.state;
                 
                 if (!this.used && this.activated) {
                     this.owner.triggerEvent("port-" + this.destination);
@@ -71,29 +83,29 @@ A component which changes the scene when activated. When the portal receives an 
                     this.wasReady = false;
                 }
                 
-                this.owner.state.occupied = false;
-                this.owner.state.ready = true;
                 
                 //Reset portal for next collision run.
-                for (i in this.entrants) {
-                    if (this.entrants.hasOwnProperty(i)) {
-                        if (this.entrants[i]) {
-                            this.owner.state.occupied = true;
-                            this.entrants[i] = false;
-                        } else {
-                            this.owner.state.ready = false;
-                        }
+                while (i--) {
+                    if (entrants[keys[i]]) {
+                        occupied = true;
+                        entrants.set(keys[i], false);
+                    } else {
+                        ready = false;
                     }
                 }
+                state.set('occupied', occupied);
+                state.set('ready', ready);
                 this.ready = false;
             },
             "occupied-portal": function (collision) {
-                var i = '';
+                var entrants = this.entrants,
+                    keys = entrants.keys,
+                    i = keys.length;
                 
-                this.entrants[collision.entity.type] = true;
+                entrants.set(collision.entity.type, true);
                 
-                for (i in this.entrants) {
-                    if (this.entrants.hasOwnProperty(i) && !this.entrants[i]) {
+                while (i--) {
+                    if (!entrants.get(keys[i])) {
                         return;
                     }
                 }
@@ -102,6 +114,13 @@ A component which changes the scene when activated. When the portal receives an 
             },
             "activate-portal": function () {
                 this.activated = true;
+            }
+        },
+        methods: {
+            destroy: function () {
+                this.state = null;
+                this.entrants.recycle();
+                this.entrants = null;
             }
         }
     });
