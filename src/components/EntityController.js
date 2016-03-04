@@ -61,7 +61,7 @@
 
     var ActionState = include('platypus.ActionState'),
         Data = include('platypus.Data'),
-        Map = include('platypus.Map'),
+        DataMap = include('platypus.DataMap'),
         StateMap = include('platypus.StateMap'),
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
@@ -152,7 +152,7 @@
             var key = '',
                 filter = null;
             
-            this.actions = Map.setUp();
+            this.actions = DataMap.setUp();
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {

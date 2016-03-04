@@ -27,7 +27,7 @@
         CollisionData = include('platypus.CollisionData'),
         CollisionDataContainer = include('platypus.CollisionDataContainer'),
         Data = include('platypus.Data'),
-        Map = include('platypus.Map'),
+        DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector'),
         entityCollisionDataContainer = new CollisionDataContainer(),
         triggerMessage = {
@@ -46,8 +46,8 @@
         id: 'HandlerCollision',
         
         constructor: function (definition) {
-            this.entitiesByType = Map.setUp();
-            this.entitiesByTypeLive = Map.setUp();
+            this.entitiesByType = DataMap.setUp();
+            this.entitiesByTypeLive = DataMap.setUp();
             this.solidEntitiesLive = Array.setUp();
             this.softEntitiesLive = Array.setUp();
             this.allEntitiesLive = Array.setUp();

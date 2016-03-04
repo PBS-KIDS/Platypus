@@ -9,7 +9,7 @@
         "../src/mixins/String.js",
         "../src/polyfills/Map.js",
 		"../src/Data.js",
-		"../src/Map.js",
+		"../src/DataMap.js",
 		"../src/StateMap.js",
 		"../src/Component.js",
 		"../src/Messenger.js",

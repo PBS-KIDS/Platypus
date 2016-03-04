@@ -48,7 +48,7 @@ This component is a general purpose state-machine for an entity, taking in vario
 (function () {
     "use strict";
 
-    var Map = include('platypus.Map'),
+    var DataMap = include('platypus.DataMap'),
         StateMap = include('platypus.StateMap'),
         changeState = function (changes, state) {
             state.update(changes);
@@ -62,10 +62,10 @@ This component is a general purpose state-machine for an entity, taking in vario
             var data = null,
                 key = '';
             
-            if ((typeof outs !== 'object') || Array.isArray(outs)) {
+            if (!outs || (typeof outs !== 'object') || Array.isArray(outs) || outs.event) {
                 return outs;
             } else {
-                data = Map.setUp();
+                data = DataMap.setUp();
                 for (key in outs) {
                     if (outs.hasOwnProperty(key)) {
                         data.set(key, setUpOutputs(outs[key]));
@@ -78,7 +78,7 @@ This component is a general purpose state-machine for an entity, taking in vario
             var keys = outs.keys,
                 i = keys.length;
 
-            if (outs instanceof Map) {
+            if (outs instanceof DataMap) {
                 while (i--) {
                     recycleOutputs(outs[keys[i]]);
                 }

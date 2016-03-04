@@ -5,7 +5,7 @@
  * @class StateMap
  * @constructor
  * @return {platypus.StateMap} Returns the new StateMap object.
- * @extends platypus.Map
+ * @extends platypus.DataMap
  * @since 0.8.0
  */
 /*global extend, include, platypus */
@@ -13,22 +13,22 @@
 platypus.StateMap = (function () {
     "use strict";
     
-    var Map = include('platypus.Map'),
+    var DataMap = include('platypus.DataMap'),
         StateMap = function (first) {
             var l = arguments.length;
             
             if (l) {
                 if ((l === 1) && (typeof first === 'string')) {
-                    Map.call(this);
-                    this.setState(first);
+                    DataMap.call(this);
+                    this.updateFromString(first);
                 } else {
-                    Map.apply(this, arguments);
+                    DataMap.apply(this, arguments);
                 }
             } else {
-                Map.call(this);
+                DataMap.call(this);
             }
         },
-        proto = extend(StateMap, Map);
+        proto = extend(StateMap, DataMap);
         
     /**
      * Sets the state using the provided string value which is a comma-delimited list such that `"blue,red,!green"` sets the following state values:
@@ -39,11 +39,11 @@ platypus.StateMap = (function () {
      *          green: false
      *      }
      * 
-     * @method setState
+     * @method updateFromString
      * @param states {String} A comma-delimited list of true/false state values.
      * @chainable
      */
-    Object.defineProperty(proto, 'setState', {
+    Object.defineProperty(proto, 'updateFromString', {
         value: function (states) {
             var arr = states.greenSplit(','),
                 i = arr.length,

@@ -143,7 +143,7 @@
                     this.attachment = null;
                 }
                 
-                this.isAttached = state.get(this.attachState);
+                state.set(this.attachState, this.isAttached);
             },
 
             /**

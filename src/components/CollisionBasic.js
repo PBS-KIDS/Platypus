@@ -15,7 +15,7 @@
     var AABB = include('platypus.AABB'),
         CollisionShape = include('platypus.CollisionShape'),
         Data = include('platypus.Data'),
-        Map = include('platypus.Map'),
+        DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector'),
 
         /**
@@ -229,7 +229,7 @@
                 
                 // This allows the same component type to be added multiple times.
                 if (!colFuncs) {
-                    colFuncs = entity.collisionFunctions = Map.setUp();
+                    colFuncs = entity.collisionFunctions = DataMap.setUp();
                     entity.aabb = AABB.setUp();
                     entity.getAABB = entityGetAABB.bind(entity, entity.aabb, colFuncs);
                     entity.getPreviousAABB = entityGetPreviousAABB.bind(entity, colFuncs);
@@ -490,7 +490,7 @@
             
             setupCollisionFunctions(this, this.owner);
             
-            this.owner.solidCollisionMap = this.owner.solidCollisionMap || Map.setUp();
+            this.owner.solidCollisionMap = this.owner.solidCollisionMap || DataMap.setUp();
             arr = this.owner.solidCollisionMap.set(this.collisionType, Array.setUp());
             if (this.solidCollisions) {
                 for (key in this.solidCollisions) {
@@ -503,7 +503,7 @@
                 }
             }
     
-            this.owner.softCollisionMap = this.owner.softCollisionMap || Map.setUp();
+            this.owner.softCollisionMap = this.owner.softCollisionMap || DataMap.setUp();
             arr = this.owner.softCollisionMap.set(this.collisionType, Array.setUp());
             if (this.softCollisions) {
                 for (key in this.softCollisions) {

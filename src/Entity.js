@@ -90,7 +90,7 @@ platypus.Entity = (function () {
 
             this.state = StateMap.setUp(this.state); //starts with no state information. This expands with boolean value properties entered by various logic components.
             this.lastState = StateMap.setUp(); //This is used to determine if the state of the entity has changed.
-
+            
             this.trigger = this.triggerEvent = function (event, message) {
                 savedEvents.push(event);
                 savedMessages.push(message);

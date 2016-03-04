@@ -1,15 +1,15 @@
 /**
- * This class defines a generic data object. It behaves similarly to (and extends) Map but maintains a list of keys as an Array. It includes recycle methods to encourage reuse.
+ * This class defines a generic iterable data object. It behaves similarly to Map but maintains a list of keys as an Array. It includes recycle methods to encourage reuse.
  * 
  * @namespace platypus
- * @class Map
+ * @class DataMap
  * @constructor
- * @return {Map} Returns the new Map object.
+ * @return {DataMap} Returns the new DataMap object.
  * @since 0.8.0
  */
 /*global platypus */
 /*jslint plusplus:true */
-platypus.Map = (function () {
+platypus.DataMap = (function () {
     "use strict";
     
     var mapSet = function (keys, key, value) {
@@ -60,7 +60,7 @@ platypus.Map = (function () {
                 value: null
             }
         },
-        Map = function (first) {
+        DataMap = function (first) {
             var i = arguments.length,
                 key = '',
                 keys = null,
@@ -115,26 +115,26 @@ platypus.Map = (function () {
         };
     
     /**
-     * Returns Map from cache or creates a new one if none are available.
+     * Returns DataMap from cache or creates a new one if none are available.
      * 
-     * @method Map.setUp
-     * @return {platypus.Map} The instantiated Map.
+     * @method DataMap.setUp
+     * @return {platypus.DataMap} The instantiated DataMap.
      */
     /**
-     * Returns Map back to the cache. Prefer the Map's recycle method since it recycles property objects as well.
+     * Returns DataMap back to the cache. Prefer the DataMap's recycle method since it recycles property objects as well.
      * 
-     * @method Map.recycle
-     * @param {platypus.Map} The Map to be recycled.
+     * @method DataMap.recycle
+     * @param {platypus.DataMap} The DataMap to be recycled.
      */
     /**
-     * Relinquishes Map properties and recycles it.
+     * Relinquishes DataMap properties and recycles it.
      * 
      * @method recycle
      */
-    platypus.setUpRecycle(Map, 'Map', function () {
+    platypus.setUpRecycle(DataMap, 'DataMap', function () {
         this.clear();
-        Map.recycle(this);
+        DataMap.recycle(this);
     });
     
-    return Map;
+    return DataMap;
 }());

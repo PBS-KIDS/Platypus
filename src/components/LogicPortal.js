@@ -35,7 +35,7 @@ A component which changes the scene when activated. When the portal receives an 
 (function () {
     "use strict";
     
-    var Map = include('platypus.Data');
+    var DataMap = include('platypus.DataMap');
 
     return platypus.createComponentClass({
         id: 'LogicPortal',
@@ -49,7 +49,7 @@ A component which changes the scene when activated. When the portal receives an 
             this.ready = false;
             this.wasReady = false;
 
-            this.entrants = Map.setUp();
+            this.entrants = DataMap.setUp();
             if (Array.isArray(entrants)) {
                 for (i = 0; i < entrants.length; i++) {
                     this.entrants.set(entrants[i], false);

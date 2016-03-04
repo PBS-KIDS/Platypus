@@ -11,6 +11,7 @@
     "use strict";
 
     var AABB = include('platypus.AABB'),
+        DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector');
     
     return platypus.createComponentClass({
@@ -199,7 +200,7 @@
                     key          = '',
                     keys = null,
                     childEntity  = null,
-                    compiledList = Map.setUp(),
+                    compiledList = DataMap.setUp(),
                     entityList   = null,
                     i = 0,
                     toList = null,
