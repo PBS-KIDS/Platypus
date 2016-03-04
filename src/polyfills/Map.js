@@ -33,7 +33,7 @@ if (!window.Map) {
             set: {
                 value: function (key, value) {
                     this.map[key] = value;
-                    return value;
+                    return this;
                 }
             },
             delete: {

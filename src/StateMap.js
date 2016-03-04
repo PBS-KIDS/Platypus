@@ -13,19 +13,19 @@
 platypus.StateMap = (function () {
     "use strict";
     
-    var Data = include('platypus.Data'),
+    var Map = include('platypus.Map'),
         StateMap = function (first) {
             var l = arguments.length;
             
             if (l) {
                 if ((l === 1) && (typeof first === 'string')) {
-                    Data.call(this);
+                    Map.call(this);
                     this.setState(first);
                 } else {
-                    Data.apply(this, arguments);
+                    Map.apply(this, arguments);
                 }
             } else {
-                Data.call(this);
+                Map.call(this);
             }
         },
         proto = extend(StateMap, Map);

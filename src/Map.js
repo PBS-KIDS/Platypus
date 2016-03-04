@@ -12,15 +12,62 @@
 platypus.Map = (function () {
     "use strict";
     
-    var keysDefinition = {
-            value: null
+    var mapSet = function (keys, key, value) {
+            if (this.get(key) !== value) {
+                if (!this.has(key)) {
+                    keys.push(key);
+                }
+                this.set(key, value);
+            }
+            return value;
+        },
+        mapDelete = function (keys, key) {
+            var i = keys.indexOf(key);
+            
+            if (i >= 0) {
+                keys.greenSplice(i);
+                return this.delete(key);
+            }
+        },
+        mapClear = function (keys) {
+            var i = keys.length;
+            
+            while (i--) {
+                this.delete(keys[i]);
+            }
+            keys.length = 0;
+        },
+        mapMethods = {
+            get: {
+                value: null
+            },
+            has: {
+                value: null
+            },
+            keys: {
+                value: null
+            },
+            set: {
+                value: null
+            },
+            delete: {
+                value: null
+            },
+            clear: {
+                value: null
+            }
         },
         Map = function (first) {
             var i = arguments.length,
                 key = '',
-                keys = null;
+                keys = null,
+                map = null,
+                mm = null;
             
-            if (!this.keys) {
+            if (!this.map) {
+                mm = mapMethods;
+                map = this.map = new window.Map;
+                
                 /**
                  * Tracks keys on this object to make iteration faster.
                  * 
@@ -28,9 +75,13 @@ platypus.Map = (function () {
                  * @type Array
                  * @default []
                  */
-                keysDefinition.value = Array.setUp();
-                Object.defineProperty(this, 'keys', keysDefinition);
-                Map.call(this);
+                keys = mm.keys.value = Array.setUp();
+                mm.get.value = map.get.bind(map);
+                mm.has.value = map.has.bind(map);
+                mm.set.value = mapSet.bind(map, keys);
+                mm.delete.value = mapDelete.bind(map, keys);
+                mm.clear.value = mapClear.bind(map, keys);
+                Object.defineProperties(this, mm);
             }
             
             if (first) {
@@ -58,47 +109,8 @@ platypus.Map = (function () {
                     }
                 }
             }
-        },
-        proto = extend(Map, window.Map);
+        };
     
-    proto.mapSet = proto.set;
-    proto.mapDelete = proto.delete;
-
-    Object.defineProperties(proto, {
-        set: {
-            value: function (key, value) {
-                if (this.get(key) !== value) {
-                    if (!this.has(key)) {
-                        this.keys.push(key);
-                    }
-                    this.mapSet(key, value);
-                }
-                return value;
-            }
-        },
-        delete: {
-            value: function (key) {
-                var i = this.keys.indexOf(key);
-                
-                if (i >= 0) {
-                    this.keys.greenSplice(i);
-                    return this.mapDelete(key);
-                }
-            }
-        },
-        clear: {
-            value: function () {
-                var keys = this.keys,
-                    i = keys.length;
-                
-                while (i--) {
-                    this.mapDelete(keys[i]);
-                }
-                keys.length = 0;
-            }
-        }
-    });
-        
     /**
      * Returns Map from cache or creates a new one if none are available.
      * 
