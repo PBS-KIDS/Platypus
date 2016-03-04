@@ -146,8 +146,9 @@
                     types = entity.collisionTypes;
                 
                 if (types) {
-                    for (i = 0; i < types.length; i++) {
-                        if (entity.solidCollisionMap[types[i]].length && !entity.immobile) {
+                    i = types.length;
+                    while (i--) {
+                        if (entity.solidCollisionMap.get(types[i]).length && !entity.immobile) {
                             this.solidEntities[this.solidEntities.length] = entity;
                         }
                     }
@@ -161,8 +162,9 @@
                     types = entity.collisionTypes;
 
                 if (types) {
-                    for (i = 0; i < types.length; i++) {
-                        if (entity.solidCollisionMap[types[i]].length) {
+                    i = types.length;
+                    while (i--) {
+                        if (entity.solidCollisionMap.get(types[i]).length) {
                             x = this.solidEntities.indexOf(entity);
                             if (x >= 0) {
                                 this.solidEntities.greenSplice(x);
@@ -174,14 +176,15 @@
             },
             
             getCollisionTypes: function () {
-                var x            = 0,
-                    childEntity  = null,
-                    compiledList = this.collisionTypes;
+                var childEntity  = null,
+                    compiledList = this.collisionTypes,
+                    se = this.solidEntities,
+                    i = se.length;
                 
                 compiledList.length = 0;
                 
-                for (x = 0; x < this.solidEntities.length; x++) {
-                    childEntity = this.solidEntities[x];
+                while (i--) {
+                    childEntity = se[i];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }

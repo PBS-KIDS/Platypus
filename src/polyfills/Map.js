@@ -7,7 +7,6 @@
  * @class Map
  * 
  */
-/*global springroll */
 if (!window.Map) {
     (function (Object) {
         var mapDefinition = {

@@ -18,7 +18,7 @@
 	if (!prototype.greenSplit) {
 		Object.defineProperty(prototype, 'greenSplit', {
 			value: function (splitter) {
-                var str = this,
+                var str = this.toString(),
                     d = 0,
                     i = 0,
                     arr = Array.setUp();

@@ -40,35 +40,6 @@ This component is a general purpose state-machine for an entity, taking in vario
       "sustained-inputs":{
       // These are messages that must be triggered every tick for the state to remain true: if not, they become false.
         "near-grover": "smelling-trash"
-      },
-      
-      "outputs":{
-      //These are messages that should be triggered when certain conditions are met. The messages are only triggered the instant the condition is met, until the conditions are no longer met and then once again met.
-      
-        "smelling-food":{
-        // Keys map to states, and if true, the value of the key is processed. In this case, the value of the "smelling-food" key is another object of key/value pairs, giving us another layer of checks.
-        
-          "!smelling-trash": "time-to-eat",
-          // This key is an inverse check, meaning that the "smelling-trash" state of the entity must be false to continue along this path. This time the value is a string, so the string "time-to-eat" is treated as a message to be broadcast if the entity is both "smelling-food" and not "smelling-trash".
-          
-          "true": "belly-rumble"
-          // In some cases, a message should be triggered for a set of states, while still doing deeper state checks like above. "true" will always handle the next layer of values if the parent key was true. 
-        },
-        
-        "smelling-trash": "feeling-sick"
-        // Multiple states can be handled to multiple depths, like a list of if () statements
-        
-        "!smelling-nothing":{
-          "!smelling-trash":{
-            "!at-store": "go-to-store",
-            // Note that the "go-to-store" message will change this entity's state to "at-store" according to "inputs" above, but LogicStateMachine uses a cache of states when broadcasting output messages, so the next section will not be processed until the next state check.
-            
-            "at-store":{
-              "have-money": "buy-more-food",
-              "!have-money": "buy-less-food"
-            }
-          }
-        }
       }
     }
 */
@@ -205,7 +176,33 @@ This component is a general purpose state-machine for an entity, taking in vario
              * @type Object
              * @default null
              */
-            inputs: null
+            inputs: null,
+            
+            /**
+             * These are messages that should be triggered when certain conditions are met. The messages are only triggered the instant the condition is met, until the conditions are no longer met and then once again met. Example:
+             * 
+             *     {
+             *         "smelling-food": { // Keys map to states, and if true, the value of the key is processed. In this case, the value of the "smelling-food" key is another object of key/value pairs, giving us another layer of checks.
+             *             "!smelling-trash": "time-to-eat", // This key is an inverse check, meaning that the "smelling-trash" state of the entity must be false to continue along this path. This time the value is a string, so the string "time-to-eat" is treated as a message to be broadcast if the entity is both "smelling-food" and not "smelling-trash".
+             *             "true": "belly-rumble" // In some cases, a message should be triggered for a set of states, while still doing deeper state checks like above. "true" will always handle the next layer of values if the parent key was true.
+             *         },
+             *         "smelling-trash": "feeling-sick" // Multiple states can be handled to multiple depths, like a list of if () statements
+             *         "!smelling-nothing": {
+             *             "!smelling-trash":{
+             *                 "!at-store": "go-to-store", // Note that the "go-to-store" message will change this entity's state to "at-store" according to "inputs" above, but LogicStateMachine uses a cache of states when broadcasting output messages, so the next section will not be processed until the next state check.
+             *                 "at-store":{
+             *                     "have-money": "buy-more-food",
+             *                     "!have-money": "buy-less-food"
+             *                 }
+             *             }
+             *         }
+             *     }
+             * 
+             * @property outputs
+             * @type Object
+             * @default null
+             */
+            outputs: null
         },
         
         constructor: function (definition) {
@@ -297,7 +294,7 @@ This component is a general purpose state-machine for an entity, taking in vario
                     ss.update(state)
                     
                     queue = Array.setUp();
-                    handleOutput('outputs', ss, this.last, this.outputs, false, this.owner, queue); //TODO: change this.outputs tree to Data in constructor for faster key iteration.
+                    handleOutput('outputs', ss, this.last, this.outputs, false, this.owner, queue);
                     i = queue.length;
                     while (i--) {
                         this.queue.push(queue[i]);

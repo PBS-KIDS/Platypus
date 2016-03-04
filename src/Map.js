@@ -22,12 +22,15 @@ platypus.Map = (function () {
             return value;
         },
         mapDelete = function (keys, key) {
-            var i = keys.indexOf(key);
+            var i = keys.indexOf(key),
+                value = this.get(key);
             
             if (i >= 0) {
                 keys.greenSplice(i);
-                return this.delete(key);
+                this.delete(key);
             }
+            
+            return value;
         },
         mapClear = function (keys) {
             var i = keys.length;
@@ -99,7 +102,7 @@ platypus.Map = (function () {
                 } else if (keys) {
                     i = keys.length;
                     while (i--) {
-                        this.set(keys[i], first[keys[i]]);
+                        this.set(keys[i], first.get(keys[i]));
                     }
                 } else {
                     for (key in first) {

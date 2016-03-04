@@ -103,7 +103,7 @@
                     }
                 },
                 entityGetPreviousAABB = function (colFuncs, collisionType) {
-                    var colFunc = colFuncs[collisionType];
+                    var colFunc = colFuncs.get(collisionType);
                     
                     if (colFunc) {
                         return colFunc.getPreviousAABB();
@@ -112,7 +112,7 @@
                     }
                 },
                 entityGetShapes = function (colFuncs, collisionType) {
-                    var colFunc = colFuncs[collisionType];
+                    var colFunc = colFuncs.get(collisionType);
                     
                     if (colFunc) {
                         return colFunc.getShapes();
@@ -121,7 +121,7 @@
                     }
                 },
                 entityGetPrevShapes = function (colFuncs, collisionType) {
-                    var colFunc = colFuncs[collisionType];
+                    var colFunc = colFuncs.get(collisionType);
                     
                     if (colFunc) {
                         return colFunc.getPrevShapes();

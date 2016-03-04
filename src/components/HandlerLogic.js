@@ -92,6 +92,7 @@
         constructor: function (definition) {
             this.entities = Array.setUp();
             this.activeEntities = Array.setUp();
+            this.removals = Array.setUp();
             
             this.inLogicLoop = false;
 
@@ -142,6 +143,9 @@
                 
                 if (j >= 0) {
                     this.entities.greenSplice(j);
+                    if (this.inLogicLoop) {
+                        this.removals.push(entity);
+                    }
                 }
             },
             
@@ -200,10 +204,12 @@
              */
             "tick": function (resp) {
                 var i = 0,
+                    j = 0,
                     cycles = 0,
                     entity = null,
                     msg = this.message,
                     actives = this.activeEntities,
+                    removals = this.removals,
                     stepLength = this.stepLength;
                 
                 this.leftoverTime += (resp.delta * this.timeMultiplier);
@@ -285,6 +291,18 @@
                         }
                         this.inLogicLoop = false;
                         
+                        // This handles removing active entities from the list before collision checking, state-changing, etc.
+                        if (removals.length) {
+                            i = removals.length;
+                            while (i--) {
+                                j = actives.indexOf(removals[i]);
+                                if (j >= 0) {
+                                    actives.greenSplice(j);
+                                }
+                            }
+                            removals.length = 0;
+                        }
+                        
                         i = actives.length;
                         /**
                          * This event is triggered on the entity (layer) to test collisions once logic has been completed.
@@ -336,6 +354,7 @@
             destroy: function () {
                 this.entities.recycle();
                 this.activeEntities.recycle();
+                this.removals.recycle();
             }
         }
     });

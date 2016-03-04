@@ -815,8 +815,6 @@
                         m        = this.affine.copy(this.container.transformMatrix),
                         temp     = PIXI.Matrix.TEMP_MATRIX;
                     
-                    
-                    
                     if (this.buttonMode !== this.container.buttonMode) {
                         this.container.buttonMode = this.buttonMode;
                     }

@@ -44,7 +44,7 @@
                 }
             },
             "mousedown": function (eventData) {
-                this.state.down = true;
+                this.state.set('down', true);
                 if (!this.state.get('disabled') && !(this.useOnce && this.used)) {
                     if (this.onPress) {
                         this.owner.trigger(this.onPress);

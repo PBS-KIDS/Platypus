@@ -229,7 +229,7 @@
                         if (entity !== this.owner) {
                             j = types.length;
                             while (j--) {
-                                if (entity.solidCollisionMap[types[j]].length) {
+                                if (entity.solidCollisionMap.get(types[j]).length) {
                                     solids[solids.length] = entity;
                                     collides = true;
                                     break;
@@ -238,7 +238,7 @@
                         }
                         j = types.length;
                         while (j--) {
-                            if (entity.softCollisionMap[types[j]].length) {
+                            if (entity.softCollisionMap.get(types[j]).length) {
                                 softs.push(entity);
                                 break;
                             }
@@ -547,7 +547,7 @@
                         sweepAABB.set(currentAABB);
                         sweepAABB.include(previousAABB);
                         
-                        collisionSubTypes = solidCollisionMap[collisionType];
+                        collisionSubTypes = solidCollisionMap.get(collisionType);
                         j = collisionSubTypes.length;
                         while (j--) {
                             otherCollisionType = collisionSubTypes[j];
@@ -922,7 +922,7 @@
 
                 while (i--) {
                     collisionType = ent.collisionTypes[i];
-                    softCollisionMap = ent.softCollisionMap[collisionType];
+                    softCollisionMap = ent.softCollisionMap.get(collisionType);
                     j = softCollisionMap.length;
                     while (j--) {
                         otherCollisionType = softCollisionMap[j];

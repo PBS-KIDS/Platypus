@@ -158,13 +158,13 @@
                 for (key in this.stateMaps) {
                     if (this.stateMaps.hasOwnProperty(key)) {
                         filter = StateMap.setUp(key);
-                        this.addMap(this.stateMaps[key], filter);
+                        this.addMap(this.stateMaps[key], key, filter);
                         filter.recycle();
                     }
                 }
             }
             
-            this.addMap(this.controlMap);
+            this.addMap(this.controlMap, 'default');
 
             if (definition.joystick) {
                 this.joystick = Data.setUp(
@@ -269,7 +269,7 @@
                 return function (key, stateId, controller, states, controllerState) {
                     var actions = this.actions,
                         id = stateId + '-' + controller + '-' + (controllerState || 'all'),
-                        actionState = actions[id]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
+                        actionState = actions.get(id); // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
                         
                     // Otherwise create a new state storage object
                     if (!actionState) {
@@ -287,31 +287,30 @@
                 };
             }()),
 
-            addMap: function (map, states) {
+            addMap: function (map, id, states) {
                 var controller = null,
                     i = 0,
                     j = '',
-                    key = '',
-                    hash = JSON.stringify(states) || 'default';
+                    key = '';
                 
                 for (key in map) {
                     if (map.hasOwnProperty(key)) {
                         controller = map[key];
                         if (typeof controller === 'string') {
-                            this.addController(key, hash, controller, states);
+                            this.addController(key, id, controller, states);
                         } else {
                             if (Array.isArray(controller)) {
                                 for (i = 0; i < controller.length; i++) {
-                                    this.addController(key, hash, controller[i], states);
+                                    this.addController(key, id, controller[i], states);
                                 }
                             } else {
                                 for (j in controller) {
                                     if (controller.hasOwnProperty(j)) {
                                         if (typeof controller[j] === 'string') {
-                                            this.addController(key, hash, controller[j], states, j);
+                                            this.addController(key, id, controller[j], states, j);
                                         } else {
                                             for (i = 0; i < controller[j].length; i++) {
-                                                this.addController(key, hash, controller[j][i], states, j);
+                                                this.addController(key, id, controller[j][i], states, j);
                                             }
                                         }
                                     }
