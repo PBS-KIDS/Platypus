@@ -59,8 +59,10 @@
 (function () {
     "use strict";
 
-    var Data = include('platypus.Data'),
-        ActionState = include('platypus.ActionState'),
+    var ActionState = include('platypus.ActionState'),
+        Data = include('platypus.Data'),
+        DataMap = include('platypus.DataMap'),
+        StateMap = include('platypus.StateMap'),
         distance = function (origin, destination) {
             var x = destination.x - origin.x,
                 y = destination.y - origin.y;
@@ -87,29 +89,8 @@
             ['east', 'south', 'west', 'north'], null, null, null,
             ['east', 'southeast', 'south', 'southwest', 'west', 'northwest', 'north', 'northeast'], null, null, null, null, null, null, null,
             ['east', 'east-southeast', 'southeast', 'south-southeast', 'south', 'south-southwest', 'southwest', 'west-southwest', 'west', 'west-northwest', 'northwest', 'north-northwest', 'north', 'north-northeast', 'northeast', 'east-northeast']
-        ],
+            ],
         mouseMap = ['left-button', 'middle-button', 'right-button'],
-        createFilter = function (states) {
-            var arr = states.greenSplit(','),
-                i = arr.length,
-                filter = Data.setUp(),
-                str = '';
-            
-            while (i--) {
-                str = arr[i];
-                if (str) {
-                    if (str.substr(0, 1) === '!') {
-                        filter[str.substr(1)] = false;
-                    } else {
-                        filter[str] = true;
-                    }
-                }
-            }
-            
-            arr.recycle();
-            
-            return filter;
-        },
         trigger = function (event, message) {
             if (!this.paused) {
                 this.owner.trigger(event, message);
@@ -171,19 +152,19 @@
             var key = '',
                 filter = null;
             
-            this.actions = Data.setUp();
+            this.actions = DataMap.setUp();
             
             if (this.stateMaps) {
                 for (key in this.stateMaps) {
                     if (this.stateMaps.hasOwnProperty(key)) {
-                        filter = createFilter(key);
-                        this.addMap(this.stateMaps[key], filter);
+                        filter = StateMap.setUp(key);
+                        this.addMap(this.stateMaps[key], key, filter);
                         filter.recycle();
                     }
                 }
             }
             
-            this.addMap(this.controlMap);
+            this.addMap(this.controlMap, 'default');
 
             if (definition.joystick) {
                 this.joystick = Data.setUp(
@@ -197,19 +178,22 @@
         
         events: {
             "handle-controller": function () {
-                var i = 0,
+                var actions = this.actions,
+                    keys = actions.keys,
+                    i = keys.length,
                     action = '',
-                    resolution = Array.setUp();
+                    resolution = Array.setUp(),
+                    state = this.owner.state;
                 
-                for (action in this.actions) {
-                    if (this.actions.hasOwnProperty(action)) {
-                        if (this.actions[action].update(this.owner.state)) {
-                            resolution.push(this.actions[action]);
-                        }
+                while (i--) {
+                    action = actions.get(keys[i]);
+                    if (action.update(state)) {
+                        resolution.push(action);
                     }
                 }
                 
-                for (i = 0; i < resolution.length; i++) {
+                i = resolution.length;
+                while (i--) {
                     resolution[i].resolve();
                 }
                 
@@ -285,14 +269,14 @@
                 return function (key, stateId, controller, states, controllerState) {
                     var actions = this.actions,
                         id = stateId + '-' + controller + '-' + (controllerState || 'all'),
-                        actionState = actions[id]; // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
+                        actionState = actions.get(id); // If there's already a state storage object for this action, reuse it: there are multiple keys mapped to the same action.
                         
                     // Otherwise create a new state storage object
                     if (!actionState) {
                         if (controllerState) {
-                            actionState = actions[id] = ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState));
+                            actionState = actions.set(id, ActionState.setUp(controller, states, filteredTrigger.bind(this, controllerState)));
                         } else {
-                            actionState = actions[id] = ActionState.setUp(controller, states, trigger.bind(this));
+                            actionState = actions.set(id, ActionState.setUp(controller, states, trigger.bind(this)));
                         }
                     }
                     
@@ -303,31 +287,30 @@
                 };
             }()),
 
-            addMap: function (map, states) {
+            addMap: function (map, id, states) {
                 var controller = null,
                     i = 0,
                     j = '',
-                    key = '',
-                    hash = JSON.stringify(states) || 'default';
+                    key = '';
                 
                 for (key in map) {
                     if (map.hasOwnProperty(key)) {
                         controller = map[key];
                         if (typeof controller === 'string') {
-                            this.addController(key, hash, controller, states);
+                            this.addController(key, id, controller, states);
                         } else {
                             if (Array.isArray(controller)) {
                                 for (i = 0; i < controller.length; i++) {
-                                    this.addController(key, hash, controller[i], states);
+                                    this.addController(key, id, controller[i], states);
                                 }
                             } else {
                                 for (j in controller) {
                                     if (controller.hasOwnProperty(j)) {
                                         if (typeof controller[j] === 'string') {
-                                            this.addController(key, hash, controller[j], states, j);
+                                            this.addController(key, id, controller[j], states, j);
                                         } else {
                                             for (i = 0; i < controller[j].length; i++) {
-                                                this.addController(key, hash, controller[j][i], states, j);
+                                                this.addController(key, id, controller[j][i], states, j);
                                             }
                                         }
                                     }
@@ -339,14 +322,14 @@
             },
             
             destroy: function () {
-                var action = '';
+                var actions = this.actions,
+                    keys = actions.keys,
+                    i = keys.length;
                 
-                for (action in this.actions) {
-                    if (this.actions.hasOwnProperty(action)) {
-                        this.actions[action].recycle();
-                    }
+                while (i--) {
+                    actions.get(keys[i]).recycle();
                 }
-                this.actions.recycle();
+                actions.recycle();
                 if (this.joystick) {
                     this.joystick.recycle();
                 }

@@ -182,8 +182,9 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 			this.algorithm = definition.algorithm || distance;
 			
 			this.state = this.owner.state;
+            this.state.set('moving', false);
+            this.state.set('on-node', false);
 			this.currentState = '';
-			
 		},
 		
 		events: {
@@ -215,7 +216,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 					node = this.followEntity.node || this.followEntity;
 					if (node && node.isNode && (node !== this.node)) {
 						this.lag = 0;
-						this.state.moving = this.gotoNode();
+						this.state.set('moving', this.gotoNode());
 						if (this.followDistance) {
 							momentum = this.lag;
 						}
@@ -235,7 +236,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 				}
 				
 				if (this.destinationNodes.length) {
-					this.state.moving = (this.speed !== 0);
+					this.state.set('moving', (this.speed !== 0));
 					if (this.node) {
 						//console.log('Leaving ' + this.node.id);
 						this.onEdge(this.destinationNodes[0]);
@@ -243,7 +244,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 						this.owner.triggerEvent('on-node', this.destinationNodes[0]);
 						this.destinationNodes.greenSplice(0);
 						if (!this.destinationNodes.length) {
-							this.state.moving = false;
+							this.state.set('moving', false);
 							return;
 						}
 					}
@@ -278,7 +279,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 						}
 					}
 				} else {
-					this.state.moving = false;
+					this.state.set('moving', false);
 				}
 			},
 			"on-node": function (node) {
@@ -615,14 +616,14 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 			},
 			setState: function (state) {
 				if (state === 'on-node') {
-					this.state['on-node'] = true;
+					this.state.set('on-node', true);
 				} else {
-					this.state['on-node'] = false;
+					this.state.set('on-node', false);
 					if (this.currentState) {
-						this.state[this.currentState] = false;
+						this.state.set(this.currentState, false);
 					}
 					this.currentState = state;
-					this.state[state] = true;
+					this.state.set(state, true);
 				}
 			},
 			onEdge: function (toNode) {
@@ -636,6 +637,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 			},
             destroy: function () {
                 this.destinationNodes.recycle();
+                this.state = null;
             }
 		}
 	});

@@ -23,7 +23,6 @@
         ParticleContainer = include('PIXI.ParticleContainer'),
         RenderTexture     = include('PIXI.RenderTexture'),
         Sprite            = include('PIXI.Sprite'),
-
         doNothing = function () {
             return null;
         },
@@ -210,7 +209,27 @@
              * @type number
              * @default 10
              */
-            tileWidth: 10
+            tileWidth: 10,
+            
+            /**
+             * The map's top offset.
+             * 
+             * @property top
+             * @type Number
+             * @default 0
+             * @since 0.7.5
+             */
+            top: 0,
+            
+            /**
+             * The map's left offset.
+             * 
+             * @property left
+             * @type Number
+             * @default 0
+             * @since 0.7.5
+             */
+            left: 0
         },
 
         constructor: function (definition) {
@@ -274,7 +293,9 @@
             "handle-render-load": function (resp) {
                 var z = this.owner.z,
                     renderer = this.renderer,
-                    parentContainer = null;
+                    parentContainer = null,
+                    mapContainer = this.mapContainer,
+                    sprite = null;
 
                 if (resp && resp.container) {
                     parentContainer = this.parentContainer = resp.container;
@@ -289,67 +310,35 @@
                     if (!this.tileCache) {
                         this.render = doNothing;
 
-                        this.mapContainer.scaleX = this.scaleX;
-                        this.mapContainer.scaleY = this.scaleY;
-                        this.mapContainer.z = z;
-                        parentContainer.addChild(this.mapContainer);
+                        mapContainer.scaleX = this.scaleX;
+                        mapContainer.scaleY = this.scaleY;
+                        mapContainer.x = this.left;
+                        mapContainer.y = this.top;
+                        mapContainer.z = z;
+                        parentContainer.addChild(mapContainer);
                     } else {
                         this.render = this.renderCache;
 
                         this.mapContainerWrapper = new Container();
-                        this.mapContainerWrapper.addChild(this.mapContainer);
+                        this.mapContainerWrapper.addChild(mapContainer);
 
                         if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                             this.cacheAll   = true;
 
                             this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
 
-                            this.tilesSprite = new Sprite(this.cacheTexture);
-                            this.tilesSprite.scaleX = this.scaleX;
-                            this.tilesSprite.scaleY = this.scaleY;
-                            this.tilesSprite.z = z;
+                            this.tilesSprite = sprite = new Sprite(this.cacheTexture);
+                            sprite.scaleX = this.scaleX;
+                            sprite.scaleY = this.scaleY;
+                            sprite.z = z;
 
                             this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
                             this.update(this.cacheTexture, this.cache);
-                            parentContainer.addChild(this.tilesSprite);
+                            parentContainer.addChild(sprite);
                         } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
                             this.cacheAll = true;
 
-                            this.cacheGrid = Array.setUp();
-
-                            // Creating this here but instantiating the grid later so that the previous scene has a chance to release gpu textures and reduce memory overhead. - DDD 9-18-15
-                            this.createGrid = function () {
-                                var w = 0,
-                                    h = 0,
-                                    x = 0,
-                                    y = 0,
-                                    z = this.owner.z,
-                                    col = null,
-                                    ct = null;
-
-                                for (x = 0; x < this.tilesWidth; x += this.cacheTilesWidth) {
-                                    col = Array.setUp();
-                                    this.cacheGrid.push(col);
-                                    for (y = 0; y < this.tilesHeight; y += this.cacheTilesHeight) {
-                                        // This prevents us from using too large of a cache for the right and bottom edges of the map.
-                                        w = Math.min(getPowerOfTwo((this.tilesWidth  - x) * this.tileWidth),  this.cacheWidth);
-                                        h = Math.min(getPowerOfTwo((this.tilesHeight - y) * this.tileHeight), this.cacheHeight);
-
-                                        ct = new RenderTexture(renderer, w, h);
-
-                                        ct = new Sprite(ct);
-                                        ct.x = x * this.tileWidth;
-                                        ct.y = y * this.tileHeight;
-                                        ct.z = z;
-                                        ct.scaleX = this.scaleX;
-                                        ct.scaleY = this.scaleY;
-                                        col.push(ct);
-                                        parentContainer.addChild(ct);
-
-                                        z -= 0.000001; // so that tiles of large caches overlap consistently.
-                                    }
-                                }
-                            }.bind(this);
+                            this.cacheGrid = this.createGrid(parentContainer, renderer);
 
                             this.updateCache = true;
                         } else {
@@ -413,13 +402,12 @@
              *
              * @method 'camera-loaded'
              * @param camera {Object}
-             * @param camera.worldWidth {number} The width of the world.
-             * @param camera.worldHeight {number} The height of the world.
+             * @param camera.world {platypus.AABB} The dimensions of the world.
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-loaded": function (camera) {
-                this.worldWidth  = camera.worldWidth;
-                this.worldHeight = camera.worldHeight;
+                this.worldWidth  = camera.world.width;
+                this.worldHeight = camera.world.height;
 
                 if (this.buffer && !this.cacheAll) { // do this here to set the correct mask before the first caching.
                     this.updateBufferRegion(camera.viewport);
@@ -459,7 +447,7 @@
                     cth2    = cth / 2;
 
                     //only attempt to draw children that are relevant
-                    tempC.setAll(Math.round(laxCam.x / this.tileWidth - ctw2) + ctw2, Math.round(laxCam.y / this.tileHeight - cth2) + cth2, ctw, cth);
+                    tempC.setAll(Math.round((laxCam.x - this.left) / this.tileWidth - ctw2) + ctw2, Math.round((laxCam.y - this.top) / this.tileHeight - cth2) + cth2, ctw, cth);
                     if (tempC.left < 0) {
                         tempC.moveX(tempC.halfWidth);
                     } else if (tempC.right > this.tilesWidth - 1) {
@@ -481,14 +469,14 @@
                     }
 
                     // Store pixel bounding box for checking later.
-                    cacheP.set(cache).setAll((cacheP.x + 0.5) * this.tileWidth, (cacheP.y + 0.5) * this.tileHeight, (cacheP.width + 1) * this.tileWidth, (cacheP.height + 1) * this.tileHeight);
+                    cacheP.setAll((cache.x + 0.5) * this.tileWidth + this.left, (cache.y + 0.5) * this.tileHeight + this.top, (cache.width + 1) * this.tileWidth, (cache.height + 1) * this.tileHeight);
                 }
 
                 if (this.cacheGrid) {
                     for (x = 0; x < this.cacheGrid.length; x++) {
                         for (y = 0; y < this.cacheGrid[x].length; y++) {
                             sprite = this.cacheGrid[x][y];
-                            cacheP.setAll((x + 0.5) * this.cacheClipWidth, (y + 0.5) * this.cacheClipHeight, this.cacheClipWidth, this.cacheClipHeight);
+                            cacheP.setAll((x + 0.5) * this.cacheClipWidth + this.left, (y + 0.5) * this.cacheClipHeight + this.top, this.cacheClipWidth, this.cacheClipHeight);
 
                             inFrame = cacheP.intersects(laxCam);
                             if (sprite.visible && !inFrame) {
@@ -498,14 +486,14 @@
                             }
                             
                             if (sprite.visible && inFrame) {
-                                sprite.x = camera.viewport.left - laxCam.left + x * this.cacheClipWidth;
-                                sprite.y = camera.viewport.top  - laxCam.top  + y * this.cacheClipHeight;
+                                sprite.x = vp.left - laxCam.left + x * this.cacheClipWidth + this.left;
+                                sprite.y = vp.top  - laxCam.top  + y * this.cacheClipHeight + this.top;
                             }
                         }
                     }
                 } else if (this.tileCache) {
-                    this.tilesSprite.x = camera.viewport.left - laxCam.left + cache.left * this.tileWidth;
-                    this.tilesSprite.y = camera.viewport.top  - laxCam.top  + cache.top  * this.tileHeight;
+                    this.tilesSprite.x = vp.left - laxCam.left + cache.left * this.tileWidth + this.left;
+                    this.tilesSprite.y = vp.top  - laxCam.top  + cache.top  * this.tileHeight + this.top;
                 }
             },
 
@@ -548,6 +536,8 @@
 
                     // Determine range:
                     bounds = object.getBounds(object.transformMatrix);
+                    bounds.x -= this.left;
+                    bounds.y -= this.top;
                     top    = Math.max(0, Math.floor(bounds.y / this.tileHeight));
                     bottom = Math.min(this.tilesHeight, Math.ceil((bounds.y + bounds.height) / this.tileHeight));
                     left   = Math.max(0, Math.floor(bounds.x / this.tileWidth));
@@ -583,13 +573,13 @@
                 if ((worldWidth === this.layerWidth) || !worldPosX) {
                     laxCam.moveX(camera.x);
                 } else {
-                    laxCam.moveX(camera.left * (this.layerWidth - camera.width) / worldPosX + camera.halfWidth);
+                    laxCam.moveX((camera.left - this.left) * (this.layerWidth - camera.width) / worldPosX + camera.halfWidth + this.left);
                 }
 
                 if ((worldHeight === this.layerHeight) || !worldPosY) {
                     laxCam.moveY(camera.y);
                 } else {
-                    laxCam.moveY(camera.top * (this.layerHeight - camera.height) / worldPosY + camera.halfHeight);
+                    laxCam.moveY((camera.top - this.top) * (this.layerHeight - camera.height) / worldPosY + camera.halfHeight + this.top);
                 }
 
                 if (camera.width !== laxCam.width || camera.height !== laxCam.height) {
@@ -646,6 +636,48 @@
                 return map;
             },
 
+            createGrid: function (parentContainer, renderer) {
+                var ch = this.cacheHeight,
+                    cw = this.cacheWidth,
+                    cth = this.cacheTilesHeight,
+                    ctw = this.cacheTilesWidth,
+                    h = 0,
+                    w = 0,
+                    sx = this.scaleX,
+                    sy = this.scaleY,
+                    th = this.tileHeight,
+                    tw = this.tileWidth,
+                    tsh = this.tilesHeight,
+                    tsw = this.tilesWidth,
+                    x = 0,
+                    y = 0,
+                    z = this.owner.z,
+                    col = null,
+                    ct = null,
+                    cg = Array.setUp();
+
+                for (x = 0; x < tsw; x += ctw) {
+                    col = Array.setUp();
+                    cg.push(col);
+                    for (y = 0; y < tsh; y += cth) {
+                        // This prevents us from using too large of a cache for the right and bottom edges of the map.
+                        w = Math.min(getPowerOfTwo((tsw - x) * tw), cw);
+                        h = Math.min(getPowerOfTwo((tsh - y) * th), ch);
+
+                        ct = new Sprite(new RenderTexture(renderer, w, h));
+                        ct.z = z;
+                        ct.scaleX = sx;
+                        ct.scaleY = sy;
+                        col.push(ct);
+                        parentContainer.addChild(ct);
+
+                        z -= 0.000001; // so that tiles of large caches overlap consistently.
+                    }
+                }
+                
+                return cg;
+            },
+            
             updateRegion: function () {
                 var clipW = Math.floor(this.cacheWidth  / this.tileWidth),
                     clipH = Math.floor(this.cacheHeight / this.tileHeight);
@@ -801,19 +833,19 @@
             },
             
             updateGrid: function () {
-                var x = 0,
+                var cache = this.cache,
+                    cth = this.cacheTilesHeight,
+                    ctw = this.cacheTilesWidth,
+                    tsh = this.tilesHeight - 1,
+                    tsw = this.tilesWidth - 1,
+                    x = 0,
                     y = 0,
                     grid = this.cacheGrid;
 
-                if (this.createGrid) {
-                    this.createGrid();
-                    this.createGrid = null;
-                }
-
                 for (x = 0; x < grid.length; x++) {
                     for (y = 0; y < grid[x].length; y++) {
-                        this.cache.setBounds(x * this.cacheTilesWidth, y * this.cacheTilesHeight, Math.min((x + 1) * this.cacheTilesWidth, this.tilesWidth - 1), Math.min((y + 1) * this.cacheTilesHeight, this.tilesHeight - 1));
-                        this.update(grid[x][y].texture, this.cache);
+                        cache.setBounds(x * ctw, y * cth, Math.min((x + 1) * ctw, tsw), Math.min((y + 1) * cth, tsh));
+                        this.update(grid[x][y].texture, cache);
                     }
                 }
             },

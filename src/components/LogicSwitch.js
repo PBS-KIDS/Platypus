@@ -37,7 +37,7 @@ This component serves as a switch in the game world, typically tied to collision
             this.pressed = false;
             this.wasPressed = this.pressed;
             this.sticky = definition.sticky || false;
-            this.state.pressed = false;
+            this.state.set('pressed', false);
             this.initialPress = true;
         },
 
@@ -45,17 +45,17 @@ This component serves as a switch in the game world, typically tied to collision
             "handle-logic": function () {
                 if (this.sticky) {
                     if (this.pressed && !this.wasPressed) {
-                        this.state.pressed = true;
+                        this.state.set('pressed', true);
                         this.wasPressed = true;
                         this.owner.triggerEvent('switch-on');
                     }
                 } else {
                     if (this.pressed !== this.wasPressed) {
                         if (this.pressed) {
-                            this.state.pressed = true;
+                            this.state.set('pressed', true);
                             this.owner.triggerEvent('switch-on');
                         } else {
-                            this.state.pressed = false;
+                            this.state.set('pressed', false);
                             this.owner.triggerEvent('switch-off');
                         }
                     }
@@ -69,6 +69,12 @@ This component serves as a switch in the game world, typically tied to collision
                     this.owner.triggerEvent('initial-press');
                     this.initialPress = false;
                 }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                this.state = null;
             }
         }
     });

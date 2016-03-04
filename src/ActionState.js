@@ -15,6 +15,7 @@ platypus.ActionState = (function () {
     "use strict";
     
     var Data = include('platypus.Data'),
+        StateMap = include('platypus.StateMap'),
         ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.
@@ -68,9 +69,9 @@ platypus.ActionState = (function () {
              * The state of the Entity that is valid for this ActionState.
              * 
              * @property states
-             * @type Object
+             * @type platypus.StateMap
              */
-            this.states    = Data.setUp(states);
+            this.states = StateMap.setUp(states);
 
             /**
              * The list of input toggles to track control input.
@@ -78,13 +79,13 @@ platypus.ActionState = (function () {
              * @property inputs
              * @type Array
              */
-            this.inputs    = Array.setUp();
+            this.inputs = Array.setUp();
 
             /**
              * The message that is passed to the Entity if the ActionState is active.
              * 
              * @property stateSummary
-             * @type Object
+             * @type platypus.Data
              */
             this.stateSummary = Data.setUp(
                 "pressed",   false,
@@ -107,7 +108,7 @@ platypus.ActionState = (function () {
     proto.update = function (state) {
         var ss = this.stateSummary;
         
-        this.valid     = this.isStateValid(state);
+        this.valid     = state.includes(this.states);
         this.active    = this.inputs.some(orArray);
         
         ss.pressed     = this.valid && this.active;
@@ -152,18 +153,10 @@ platypus.ActionState = (function () {
      * 
      * @method isStateValid
      * @return {Boolean} Whether the current Entity state is valid for this ActionState.
+     * @deprecated since 0.7.5 - use `includes` method provided by `platypus.State` to perform this test.
      */
     proto.isStateValid = function (ownerState) {
-        var key = '',
-            states = this.states;
-        
-        for (key in states) {
-            if (states.hasOwnProperty(key) && ownerState.hasOwnProperty(key) && (states[key] !== ownerState[key])) {
-                return false;
-            }
-        }
-        
-        return true;
+        return ownerState.includes(this.states);
     };
     
     /**
@@ -180,21 +173,18 @@ platypus.ActionState = (function () {
      * @param {platypus.ActionState} The ActionState to be recycled.
      * @since 0.7.1
      */
-    platypus.setUpRecycle(ActionState, 'ActionState');
-
     /**
      * Relinquishes properties of the ActionState and recycles it.
      * 
      * @method recycle
      * @since 0.7.1
      */
-    proto.recycle = function () {
+    platypus.setUpRecycle(ActionState, 'ActionState', function () {
         this.states.recycle();
         this.stateSummary.recycle();
         this.inputs.recycle();
         ActionState.recycle(this);
-    };
-    
-    
+    });
+
     return ActionState;
 }());

@@ -38,13 +38,14 @@ This component handles the pressed/released state of a button according to input
         id: 'LogicButton',
         constructor: function (definition) {
             this.state = this.owner.state;
-            this.state.released = true;
-            this.state.pressed  = false;
             this.toggle = !!definition.toggle;
 
             if (definition.state === 'pressed') {
-                this.state.released = false;
-                this.state.pressed  = true;
+                this.state.set('released', false);
+                this.state.set('pressed', true);
+            } else {
+                this.state.set('released', true);
+                this.state.set('pressed', false);
             }
         },
         events: {
@@ -58,7 +59,7 @@ This component handles the pressed/released state of a button according to input
             "pressup": function (event) {
                 if (!platypus.supports.mobile || (event.event.type === 'touchend') || (event.event.type === 'touchcancel')) {
                     if (this.toggle) {
-                        if (this.state.pressed) {
+                        if (this.state.get('pressed')) {
                             this.updateState('released');
                         } else {
                             this.updateState('pressed');
@@ -75,15 +76,17 @@ This component handles the pressed/released state of a button according to input
         
         methods: {
             updateState: function (state) {
-                if (this.state.released && (state === 'pressed')) {
-                    this.state.pressed = true;
-                    this.state.released = false;
-                    this.owner.triggerEvent(state, this.state);
-                } else if (this.state.pressed && (state === 'released')) {
-                    this.state.pressed = false;
-                    this.state.released = true;
-                    this.owner.triggerEvent(state, this.state);
+                var thisState = this.state;
+                
+                if (thisState.get('released') && (state === 'pressed')) {
+                    thisState.set('pressed', true);
+                    thisState.set('released', false);
+                } else if (thisState.get('pressed') && (state === 'released')) {
+                    thisState.set('pressed', false);
+                    thisState.set('released', true);
                 }
+
+                this.owner.triggerEvent(state, thisState);
             }
         }
     });

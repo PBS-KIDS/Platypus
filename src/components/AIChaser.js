@@ -49,6 +49,8 @@
         constructor: function (definition) {
             this.target = this.owner.target || null;
             this.offset = Vector.setUp(0, 0);
+            this.state = this.owner.state;
+            this.state.set('chasing', false);
         },
 
         events: {
@@ -92,8 +94,8 @@
                     v.recycle();
                 }
                 
-                if (c !== this.owner.state.chasing) {
-                    this.owner.state.chasing = c;
+                if (c !== this.state.get('chasing')) {
+                    this.state.set('chasing', c);
                     
                     /**
                      * This event is triggered whenever the entity begins chasing another entity or stops chasing another entity.
@@ -157,6 +159,7 @@
             destroy: function () {
                 this.target = null;
                 this.offset.recycle();
+                this.state = null;
             }
         }
     });

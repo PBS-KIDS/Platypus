@@ -72,7 +72,7 @@
                 linkId += 1;
             }
 
-            this.state[this.attachState] = false;
+            this.state.set(this.attachState, false);
             this.attachmentPosition = {
                 x:  0,
                 y:  0,
@@ -117,20 +117,20 @@
                     } else {
                         this.attachment.x = this.owner.x;
                         offset = this.offsetX;
-                        if (state.left) {
+                        if (state.get('left')) { //TODO: Base this on object orientation. - DDD 3/2/2016
                             offset *= -1;
                             this.attachment.rotation = 180;
-                        } else if (state.right) {
+                        } else if (state.get('right')) {
                             this.attachment.rotation = 0;
                         }
                         this.attachment.x += offset;
 
                         this.attachment.y = this.owner.y;
                         offset = this.offsetY;
-                        if (state.top) {
+                        if (state.get('top')) {
                             offset *= -1;
                             this.attachment.rotation = 90;
-                        } else if (state.bottom) {
+                        } else if (state.get('bottom')) {
                             this.attachment.rotation = -90;
                         }
                         this.attachment.y += offset;
@@ -142,10 +142,8 @@
                     this.owner.parent.removeEntity(this.attachment);
                     this.attachment = null;
                 }
-
-                if (state[this.attachState] !== this.isAttached) {
-                    state[this.attachState] = this.isAttached;
-                }
+                
+                state.set(this.attachState, this.isAttached);
             },
 
             /**
@@ -170,12 +168,13 @@
 
         methods: {
             destroy: function () {
-                this.state[this.attachState] = false;
+                this.state.set(this.attachState, false);
                 if (this.attachment) {
                     this.owner.parent.removeEntity(this.attachment);
                     this.attachment = null;
                 }
                 this.isAttached = false;
+                this.state = null;
             }
         },
         

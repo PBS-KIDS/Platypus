@@ -43,10 +43,10 @@ This component listens for redirected collision messages and fires a message on 
             
             this.destination = undefined;
             this.linkId = this.owner.teleportId || definition.teleportId;
-            this.facing = this.owner.facing || definition.facing || false;
+            this.facing = this.owner.facing || definition.facing || false; //TODO: Should probably deprecate this in favor of orientation. - DDD 3/2/2016
         
             if (this.facing) {
-                this.owner.state['facing-' + this.facing] = true;
+                this.owner.state.set('facing-' + this.facing, true);
             }
         },
 

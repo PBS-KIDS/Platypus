@@ -11,6 +11,7 @@
     "use strict";
 
     var AABB = include('platypus.AABB'),
+        DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector');
     
     return platypus.createComponentClass({
@@ -146,8 +147,9 @@
                     types = entity.collisionTypes;
                 
                 if (types) {
-                    for (i = 0; i < types.length; i++) {
-                        if (entity.solidCollisionMap[types[i]].length && !entity.immobile) {
+                    i = types.length;
+                    while (i--) {
+                        if (entity.solidCollisionMap.get(types[i]).length && !entity.immobile) {
                             this.solidEntities[this.solidEntities.length] = entity;
                         }
                     }
@@ -161,8 +163,9 @@
                     types = entity.collisionTypes;
 
                 if (types) {
-                    for (i = 0; i < types.length; i++) {
-                        if (entity.solidCollisionMap[types[i]].length) {
+                    i = types.length;
+                    while (i--) {
+                        if (entity.solidCollisionMap.get(types[i]).length) {
                             x = this.solidEntities.indexOf(entity);
                             if (x >= 0) {
                                 this.solidEntities.greenSplice(x);
@@ -174,14 +177,15 @@
             },
             
             getCollisionTypes: function () {
-                var x            = 0,
-                    childEntity  = null,
-                    compiledList = this.collisionTypes;
+                var childEntity  = null,
+                    compiledList = this.collisionTypes,
+                    se = this.solidEntities,
+                    i = se.length;
                 
                 compiledList.length = 0;
                 
-                for (x = 0; x < this.solidEntities.length; x++) {
-                    childEntity = this.solidEntities[x];
+                while (i--) {
+                    childEntity = se[i];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
@@ -194,23 +198,39 @@
             getSolidCollisions: function () {
                 var x            = 0,
                     key          = '',
+                    keys = null,
                     childEntity  = null,
-                    compiledList = {},
-                    entityList   = null;
+                    compiledList = DataMap.setUp(),
+                    entityList   = null,
+                    i = 0,
+                    toList = null,
+                    fromList = null,
+                    recycle = false;
                 
                 for (x = 0; x < this.solidEntities.length; x++) {
+                    recycle = false;
                     childEntity = this.solidEntities[x];
                     if ((childEntity !== this.owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
+                        recycle = true;
                     }
                     entityList = childEntity.getSolidCollisions();
-                    for (key in entityList) {
-                        if (entityList.hasOwnProperty(key)) {
-                            if (!compiledList[key]) {
-                                compiledList[key] = Array.setUp();
-                            }
-                            compiledList[key].union(entityList[key]);
+                    keys = entityList.keys;
+                    i = keys.length;
+                    while (i--) {
+                        key = keys[i];
+                        toList = compiledList.get(key);
+                        fromList = entityList.get(key);
+                        if (!toList) {
+                            toList = compiledList.set(key, Array.setUp());
                         }
+                        toList.union(fromList);
+                        if (recycle) {
+                            fromList.recycle();
+                        }
+                    }
+                    if (recycle) {
+                        entityList.recycle();
                     }
                 }
                 

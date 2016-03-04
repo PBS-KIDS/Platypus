@@ -37,13 +37,13 @@
             /**
              * On a `tick` logic message, the component checks whether it should be removed or not.
              * 
-             * @method 'handle-logic'
+             * @method 'prepare-logic'
              * @param message.delta {number} To measure the delay before removal, the component keeps a running count of step lengths.
              */
-            "handle-logic": function (tick) {
+            "prepare-logic": function (tick) {
                 var dT = tick.delta;
                 
-                if (this.destroyed && !this.owner.state.paused) {
+                if (this.destroyed && !this.owner.state.get('paused')) {
                     this.delay -= dT;
                     if (this.delay <= 0) {
                         this.owner.parent.removeEntity(this.owner);

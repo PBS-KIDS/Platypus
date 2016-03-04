@@ -74,11 +74,11 @@
                 this.reorient = doNothing;
             }
             
-            this.moving = state.moving = false;
-            this.left   = state.left   = false;
-            this.right  = state.right  = false;
-            this.up     = state.up     = false;
-            this.down   = state.down   = false;
+            this.moving = state.set('moving', false);
+            this.left   = state.set('left', false);
+            this.right  = state.set('right', false);
+            this.up     = state.set('up', false);
+            this.down   = state.set('down', false);
 
             this.upLeft = false;
             this.upRight = false;
@@ -127,7 +127,8 @@
              * @method 'handle-logic'
              */
             "handle-logic": function () {
-                var up        = this.up        || this.upLeft || this.downLeft,
+                var state = this.state,
+                    up        = this.up        || this.upLeft || this.downLeft,
                     upLeft    = this.upLeft    || (this.up   && this.left),
                     left      = this.left      || this.upLeft || this.downLeft,
                     downLeft  = this.downLeft  || (this.down && this.left),
@@ -206,23 +207,15 @@
                 }
                 
                 //TODO: possibly remove the separation of this.state.direction and this.direction to just use state?
-                if (this.state.moving !== this.moving) {
+                if (state.get('moving') !== this.moving) {
                     this.owner.triggerEvent('moving', this.moving);
-                    this.state.moving = this.moving;
+                    state.set('moving', this.moving);
                 }
 
-                if (this.state.up !== up) {
-                    this.state.up = up;
-                }
-                if (this.state.right !== right) {
-                    this.state.right = right;
-                }
-                if (this.state.down !== down) {
-                    this.state.down = down;
-                }
-                if (this.state.left !== left) {
-                    this.state.left = left;
-                }
+                state.set('up', up);
+                state.set('right', right);
+                state.set('down', down);
+                state.set('left', left);
             },
 
             /**
@@ -418,6 +411,7 @@
         methods: {
             destroy: function () {
                 this.initialVector.recycle();
+                this.state = null;
             }
         }
     });

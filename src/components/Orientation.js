@@ -217,6 +217,8 @@
                 
                 this.orientationVector = setupOrientation(this, this.orientation);
                 this.owner.triggerEvent('orient-vector', this.orientationVector);
+                
+                this.owner.state.set('reorienting', false);
             };
         }()),
 
@@ -270,7 +272,7 @@
                 
                 if (i) {
                     finishedTweening = Array.setUp();
-                    state.reorienting = true;
+                    state.set('reorienting', true);
                     identitize(this.matrixTween);
                     
                     while (i--) {
@@ -301,9 +303,9 @@
                     }
                     
                     finishedTweening.recycle();
-                } else if (state.reorienting) {
+                } else if (state.get('reorienting')) {
                     identitize(this.matrixTween);
-                    state.reorienting = false;
+                    state.set('reorienting', false);
                 }
             },
             

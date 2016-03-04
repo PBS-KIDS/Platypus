@@ -5,14 +5,14 @@
  * @class Data
  * @constructor
  * @return {Data} Returns the new Data object.
+ * @since 0.7.1
  */
 /*global platypus */
 platypus.Data = (function () {
     "use strict";
     
-    var Data = function () {
+    var Data = function (first) {
             var i = arguments.length,
-                first = arguments[0],
                 key = '';
             
             if (first) {
@@ -33,8 +33,7 @@ platypus.Data = (function () {
                     }
                 }
             }
-        },
-        proto = Data.prototype;
+        };
     
     /**
      * Returns Data from cache or creates a new one if none are available.
@@ -50,15 +49,13 @@ platypus.Data = (function () {
      * @param {platypus.Data} The Data to be recycled.
      * @since 0.7.1
      */
-    platypus.setUpRecycle(Data, 'Data');
-    
     /**
      * Relinquishes Data properties and recycles it.
      * 
      * @method recycle
      * @since 0.7.1
      */
-    proto.recycle = function () {
+    platypus.setUpRecycle(Data, 'Data', function () {
         var key = '';
         
         for (key in this) {
@@ -67,7 +64,7 @@ platypus.Data = (function () {
             }
         }
         Data.recycle(this);
-    };
+    });
     
     return Data;
 }());

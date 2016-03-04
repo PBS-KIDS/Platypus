@@ -7,7 +7,7 @@
  * @class CollisionBasic
  * @uses platypus.Component
  */
-/*global platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -15,6 +15,7 @@
     var AABB = include('platypus.AABB'),
         CollisionShape = include('platypus.CollisionShape'),
         Data = include('platypus.Data'),
+        DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector'),
 
         /**
@@ -82,24 +83,27 @@
         }()),
         setupCollisionFunctions = (function () {
             var entityGetAABB = function (aabb, colFuncs, collisionType) {
-                    var key  = '';
+                    var keys = colFuncs.keys,
+                        i = keys.length,
+                        funcs = null;
 
                     if (!collisionType) {
                         aabb.reset();
-                        for (key in colFuncs) {
-                            if (colFuncs.hasOwnProperty(key)) {
-                                aabb.include(colFuncs[key].getAABB());
-                            }
+                        while (i--) {
+                            aabb.include(colFuncs.get(keys[i]).getAABB());
                         }
                         return aabb;
-                    } else if (colFuncs[collisionType]) {
-                        return colFuncs[collisionType].getAABB();
                     } else {
-                        return null;
+                        funcs = colFuncs.get(collisionType);
+                        if (funcs) {
+                            return funcs.getAABB();
+                        } else {
+                            return null;
+                        }
                     }
                 },
                 entityGetPreviousAABB = function (colFuncs, collisionType) {
-                    var colFunc = colFuncs[collisionType];
+                    var colFunc = colFuncs.get(collisionType);
                     
                     if (colFunc) {
                         return colFunc.getPreviousAABB();
@@ -108,7 +112,7 @@
                     }
                 },
                 entityGetShapes = function (colFuncs, collisionType) {
-                    var colFunc = colFuncs[collisionType];
+                    var colFunc = colFuncs.get(collisionType);
                     
                     if (colFunc) {
                         return colFunc.getShapes();
@@ -117,7 +121,7 @@
                     }
                 },
                 entityGetPrevShapes = function (colFuncs, collisionType) {
-                    var colFunc = colFuncs[collisionType];
+                    var colFunc = colFuncs.get(collisionType);
                     
                     if (colFunc) {
                         return colFunc.getPrevShapes();
@@ -126,12 +130,11 @@
                     }
                 },
                 entityPrepareCollision = function (colFuncs, x, y) {
-                    var key = '';
+                    var keys = colFuncs.keys,
+                        i = keys.length;
                     
-                    for (key in colFuncs) {
-                        if (colFuncs.hasOwnProperty(key)) {
-                            colFuncs[key].prepareCollision(x, y);
-                        }
+                    while (i--) {
+                        colFuncs.get(keys[i]).prepareCollision(x, y);
                     }
                 },
                 entityRelocateEntity = (function () {
@@ -189,12 +192,11 @@
                     };
                 }()),
                 entityMovePreviousX = function (colFuncs, x) {
-                    var key = '';
+                    var keys = colFuncs.keys,
+                        i = keys.length;
                     
-                    for (key in colFuncs) {
-                        if (colFuncs.hasOwnProperty(key)) {
-                            colFuncs[key].movePreviousX(x);
-                        }
+                    while (i--) {
+                        colFuncs.get(keys[i]).movePreviousX(x);
                     }
                 },
                 entityGetCollisionTypes = function () {
@@ -227,7 +229,7 @@
                 
                 // This allows the same component type to be added multiple times.
                 if (!colFuncs) {
-                    colFuncs = entity.collisionFunctions = Data.setUp();
+                    colFuncs = entity.collisionFunctions = DataMap.setUp();
                     entity.aabb = AABB.setUp();
                     entity.getAABB = entityGetAABB.bind(entity, entity.aabb, colFuncs);
                     entity.getPreviousAABB = entityGetPreviousAABB.bind(entity, colFuncs);
@@ -240,14 +242,14 @@
                     entity.getSolidCollisions = entityGetSolidCollisions.bind(entity);
                 }
 
-                colFuncs[self.collisionType] = Data.setUp(
+                colFuncs.set(self.collisionType, Data.setUp(
                     "getAABB", getAABB.bind(self),
                     "getPreviousAABB", getPreviousAABB.bind(self),
                     "getShapes", getShapes.bind(self),
                     "getPrevShapes", getPrevShapes.bind(self),
                     "prepareCollision", prepareCollision.bind(self),
                     "movePreviousX", movePreviousX.bind(self)
-                );
+                ));
             };
         }());
 
@@ -406,7 +408,8 @@
         },
         
         constructor: function (definition) {
-            var x            = 0,
+            var arr = null,
+                x            = 0,
                 key          = '',
                 shapes       = null,
                 regX         = this.regX,
@@ -487,12 +490,12 @@
             
             setupCollisionFunctions(this, this.owner);
             
-            this.owner.solidCollisionMap = this.owner.solidCollisionMap || {};
-            this.owner.solidCollisionMap[this.collisionType] = Array.setUp();
+            this.owner.solidCollisionMap = this.owner.solidCollisionMap || DataMap.setUp();
+            arr = this.owner.solidCollisionMap.set(this.collisionType, Array.setUp());
             if (this.solidCollisions) {
                 for (key in this.solidCollisions) {
                     if (this.solidCollisions.hasOwnProperty(key)) {
-                        this.owner.solidCollisionMap[this.collisionType].push(key);
+                        arr.push(key);
                         if (this.solidCollisions[key]) { // To make sure it's not an empty string.
                             this.addEventListener('hit-by-' + key, entityBroadcast(this, this.solidCollisions[key], 'solid'));
                         }
@@ -500,12 +503,12 @@
                 }
             }
     
-            this.owner.softCollisionMap = this.owner.softCollisionMap || {};
-            this.owner.softCollisionMap[this.collisionType] = Array.setUp();
+            this.owner.softCollisionMap = this.owner.softCollisionMap || DataMap.setUp();
+            arr = this.owner.softCollisionMap.set(this.collisionType, Array.setUp());
             if (this.softCollisions) {
                 for (key in this.softCollisions) {
                     if (this.softCollisions.hasOwnProperty(key)) {
-                        this.owner.softCollisionMap[this.collisionType].push(key);
+                        arr.push(key);
                         if (this.softCollisions[key]) { // To make sure it's not an empty string.
                             this.addEventListener('hit-by-' + key, entityBroadcast(this, this.softCollisions[key], 'soft'));
                         }
@@ -647,9 +650,6 @@
                 if (this.move) {
                     this.owner.position.add(this.move); // By trying to move into it, we should get pushed back out.
                 }
-                
-                // Sets a flag to make sure this entity is checked against
-                this.owner.checkCollision = true;
             },
             
             /**
@@ -722,9 +722,11 @@
             
             destroy: function () {
                 var colFuncs = this.owner.collisionFunctions,
-                    i = this.owner.collisionTypes.indexOf(this.collisionType);
+                    collisionType = this.collisionType,
+                    i = this.owner.collisionTypes.indexOf(collisionType),
+                    owner = this.owner;
                 
-                this.owner.parent.triggerEvent('remove-collision-entity', this.owner);
+                owner.parent.triggerEvent('remove-collision-entity', owner);
 
                 this.aabb.recycle();
                 delete this.aabb;
@@ -732,19 +734,17 @@
                 delete this.prevAABB;
                 
                 if (i >= 0) {
-                    this.owner.collisionTypes.greenSplice(i);
+                    owner.collisionTypes.greenSplice(i);
                 }
-                if (this.owner.solidCollisionMap[this.collisionType]) {
-                    this.owner.solidCollisionMap[this.collisionType].recycle();
-                    delete this.owner.solidCollisionMap[this.collisionType];
+                
+                if (owner.solidCollisionMap.has(collisionType)) {
+                    owner.solidCollisionMap.delete(collisionType).recycle();
                 }
-                if (this.owner.softCollisionMap[this.collisionType]) {
-                    this.owner.softCollisionMap[this.collisionType].recycle();
-                    delete this.owner.softCollisionMap[this.collisionType];
+                if (owner.softCollisionMap.has(collisionType)) {
+                    owner.softCollisionMap.delete(collisionType).recycle();
                 }
 
-                colFuncs[this.collisionType].recycle();
-                delete colFuncs[this.collisionType];
+                colFuncs.delete(collisionType).recycle();
                 
                 i = this.shapes.length;
                 while (i--) {
@@ -758,13 +758,17 @@
 
                 delete this.entities;
 
-                if (this.owner.collisionTypes.length) {
-                    this.owner.parent.triggerEvent('add-collision-entity', this.owner);
+                if (owner.collisionTypes.length) {
+                    owner.parent.triggerEvent('add-collision-entity', owner);
                 } else { //remove collision functions
                     colFuncs.recycle();
-                    this.owner.collisionFunctions = null;
-                    this.owner.aabb.recycle();
-                    this.owner.aabb = null;
+                    owner.collisionFunctions = null;
+                    owner.solidCollisionMap.recycle();
+                    owner.solidCollisionMap = null;
+                    owner.softCollisionMap.recycle();
+                    owner.softCollisionMap = null;
+                    owner.aabb.recycle();
+                    owner.aabb = null;
                 }
             }
         }
