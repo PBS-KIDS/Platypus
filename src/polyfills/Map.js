@@ -44,5 +44,7 @@ if (!window.Map) {
                 }
             }
         });
+        
+        window.Map = Map;
     }(Object));
 }
