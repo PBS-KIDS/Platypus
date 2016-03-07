@@ -87,10 +87,10 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                         if ((this.right && thisState.get('right')) || (this.left && thisState.get('left'))) {
                             this.windProgress += resp.delta;
                         }
-                        this.owner.triggerEvent('winding');
+                        this.owner.triggerEvent('winding', this.windProgress / this.windTime);
                     } else {
                         if (this.windProgress) {
-                            if (this.windProgress > this.windTime) {
+                            if (this.windProgress >= this.windTime) {
                                 this.racing = true;
                             }
                             this.windProgress = 0;
