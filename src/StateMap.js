@@ -4,7 +4,7 @@
  * @namespace platypus
  * @class StateMap
  * @constructor
- * @return {platypus.StateMap} Returns the new StateMap object.
+ * @return stateMap {platypus.StateMap} Returns the new StateMap object.
  * @extends platypus.DataMap
  * @since 0.8.0
  */
@@ -122,13 +122,13 @@ platypus.StateMap = (function () {
      * Returns StateMap from cache or creates a new one if none are available.
      * 
      * @method StateMap.setUp
-     * @return {platypus.StateMap} The instantiated StateMap.
+     * @return stateMap {platypus.StateMap} The instantiated StateMap.
      */
     /**
      * Returns StateMap back to the cache. Prefer the StateMap's recycle method since it recycles property objects as well.
      * 
      * @method StateMap.recycle
-     * @param {platypus.StateMap} The StateMap to be recycled.
+     * @param stateMap {platypus.StateMap} The StateMap to be recycled.
      */
     /**
      * Relinquishes StateMap properties and recycles it.

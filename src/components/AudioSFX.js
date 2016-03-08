@@ -161,7 +161,7 @@
              * @property stateBased
              * @type Boolean
              * @default true
-             * @since 0.7.5 - Will default to `false` in version 0.8.0
+             * @since 0.7.5 - Will default to `false` in version 0.9.0
              */
             stateBased: true
         },
