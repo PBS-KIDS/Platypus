@@ -187,7 +187,7 @@
                 
                 if (cam) {
                     if (buffer === -1) {
-                        buffer = camera.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
+                        buffer = camera.viewport.width / 10; // sets a default buffer based on the size of the world units if the buffer was not explicitly set.
                     }
                     
                     vp = camera.viewport;
