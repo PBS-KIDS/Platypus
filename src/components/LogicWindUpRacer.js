@@ -1,43 +1,10 @@
 /**
-# COMPONENT **LogicWindUpRacer**
-Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its location.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its charging counter if necessary.
-  - @param message.delta - To determine how much to charge, the component checks the length of the tick.
-- **wind-up** - creates and connects the shield entity to this entity.
-  - @param message.pressed (boolean) - Optional. If `message` is included, the component checks the value of `pressed`: false causes a "drop-shield" behavior.
-- **stop-racing** - stops the entity movement.
-- **hit-solid** - On receiving this message, the entity stops racing.
-  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
-
-### Local Broadcasts:
-- **winding** - This message is triggered when the entity begins winding up.
-- **stopped-winding** - This message is triggered when the entity stops winding.
-- **racing** - This message is triggered when winding is finished and the entity begins racing.
-- **stopped-racing** - This message is triggered when the entity stops racing.
-- **blocked** - This message is triggered if the entity collides while racing.
-  - @param message (object) - Collision information from the "hit-solid" message. 
-
-## JSON Definition
-    {
-      "type": "LogicWindUpRacer",
-
-      "windTime": 1000,
-      // Optional. Time in milliseconds that entity needs to receive wind-up calls before racing can begin. Defaults to 500.
-      
-      "raceTime": 4000,
-      // Optional. Time in milliseconds that entity will race before coming to a stop. Defaults to 5000.
-      
-      "speed": 1
-      // Optional. Velocity at which the entity should travel while racing. Defaults to 0.3.
-    }
-*/
+ * Replicates logic for a wind-up toy: listens for a wind-up message over a series of ticks to charge, and then begins racing once the charge is complete.
+ *
+ * @namespace platypus.components
+ * @class LogicWindUpRacer
+ * @uses platypus.Component
+ */
 /*global platypus */
 (function () {
     "use strict";
@@ -46,12 +13,37 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
         
         id: 'LogicWindUpRacer',
         
+        properties: {
+            /**
+             * Velocity at which the entity should travel while racing.
+             * 
+             * @property speed
+             * @type Number
+             * @default 0.3
+             */
+            speed: 0.3,
+            
+            /**
+             * Time in milliseconds that entity will race before coming to a stop.
+             * 
+             * @property raceTime
+             * @type Number
+             * @default 5000
+             */
+            raceTime: 5000,
+            
+            /**
+             * Time in milliseconds that entity needs to receive wind-up calls before racing can begin.
+             * 
+             * @property windTime
+             * @type Number
+             * @default 500
+             */
+            windTime: 500
+        },
+        
         constructor: function (definition) {
             var thisState = this.owner.state;
-            
-            this.windTime = definition.windTime || 500;
-            this.raceTime = definition.raceTime || 5000;
-            this.speed = definition.speed || this.owner.speed || 0.3;
             
             this.windProgress = 0;
             
@@ -67,11 +59,23 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
             thisState.set('blocked', false);
         },
 
-        events: {// These are messages that this component listens for
+        events: {
+            /**
+             * On a `tick` logic message, the component updates its charging counter if necessary.
+             * 
+             * @method 'handle-logic'
+             * @param message.delta {Number} To determine how much to charge, the component checks the length of the tick.
+             */
             "handle-logic": function (resp) {
                 var thisState = this.state;
                 
                 if (this.racing) {
+
+                    /**
+                     * This event is triggered when winding is finished and the entity begins racing.
+                     * 
+                     * @event 'racing' 
+                     */
                     if (!this.blocked && this.right && thisState.get('right')) {
                         this.owner.x += this.speed * resp.delta;
                         this.owner.triggerEvent('racing');
@@ -80,6 +84,12 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                         this.owner.triggerEvent('racing');
                     } else {
                         this.racing = false;
+
+                        /**
+                         * This event is triggered when the entity stops racing.
+                         * 
+                         * @event 'stopped-racing'
+                         */
                         this.owner.triggerEvent('stopped-racing');
                     }
                 } else {
@@ -87,13 +97,26 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                         if ((this.right && thisState.get('right')) || (this.left && thisState.get('left'))) {
                             this.windProgress += resp.delta;
                         }
-                        this.owner.triggerEvent('winding');
+
+                        /**
+                         * This event is triggered as the entity winds up.
+                         * 
+                         * @event 'winding'
+                         * @param fraction {Number} The amount of progress that has been made from 0 to 1.
+                         */
+                        this.owner.triggerEvent('winding', this.windProgress / this.windTime);
                     } else {
                         if (this.windProgress) {
-                            if (this.windProgress > this.windTime) {
+                            if (this.windProgress >= this.windTime) {
                                 this.racing = true;
                             }
                             this.windProgress = 0;
+
+                            /**
+                             * This event is triggered when the entity stops winding.
+                             * 
+                             * @event 'stopped-winding'
+                             */
                             this.owner.triggerEvent('stopped-winding');
                         }
                     }
@@ -104,19 +127,46 @@ Replicates logic for a wind-up toy: listens for a wind-up message over a series 
                 thisState.set('blocked', this.blocked);
                 this.blocked = false;
             },
-            "stop-racing": function (value) {
+            
+            /**
+             * Causes the entity to stop racing.
+             * 
+             * @method 'stop-racing'
+             */
+            "stop-racing": function () {
                 this.racing = false;
                 this.owner.triggerEvent('stopped-racing');
             },
+            
+            /**
+             * Causes the entity to wind up for a race.
+             * 
+             * @method 'wind-up'
+             * @param message.pressed {Boolean} If `message` is included, the component checks the value of `pressed`: `false` causes winding to stop.
+             */
             "wind-up": function (value) {
                 this.winding = !value || (value.pressed !== false);
                 this.right = this.state.get('right');
                 this.left  = this.state.get('left');
             },
+            
+            /**
+             * On receiving this message, the entity stops racing.
+             * 
+             * @method 'hit-solid'
+             * @param collision.x {Number} Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.
+             */
             "hit-solid": function (collision) {
                 if (collision.x) {
                     if (this.racing && ((this.right && (collision.x > 0)) || (this.left && (collision.x < 0)))) {
                         this.blocked = true;
+                        
+                        /**
+                         * This message is triggered if the entity collides while racing.
+                         * 
+                         * @event 'blocked'
+                         * @param collision {platypus.CollisionData} Collision information from the entity or tile that blocked movement.
+                         */
                         this.owner.triggerEvent('blocked', collision);
                     }
                 }

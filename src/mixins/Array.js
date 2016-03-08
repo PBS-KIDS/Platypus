@@ -74,6 +74,10 @@
                     item = this[index],
                     length = this.length;
                     
+                if ((index < 0) || (index >= length)) {
+                    return;
+                }
+                
                 for (i = index + 1; i < length; i++) {
                     this[i - 1] = this[i];
                 }

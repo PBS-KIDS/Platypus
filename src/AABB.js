@@ -326,7 +326,7 @@ platypus.AABB = (function () {
      * @since 0.7.5
      */
     proto.equals = function (aabb) {
-        return (this.left === aabb.left) && (this.top === aabb.top) && (this.right === aabb.right) && (this.bottom === aabb.bottom);
+        return !this.empty && !aabb.empty && (this.left === aabb.left) && (this.top === aabb.top) && (this.right === aabb.right) && (this.bottom === aabb.bottom);
     };
 
     /**
