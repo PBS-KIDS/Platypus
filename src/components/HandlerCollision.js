@@ -161,32 +161,34 @@
                 return aabb1.setBounds(aabb2.left >> gb, aabb2.top >> gb, aabb2.right >> gb, aabb2.bottom >> gb);
             },
             
-            getAgainstGrid: function (sweep, types) {
+            getAgainstGrid: function (entity, sweep, types) {
                 var aabb = this.mapDown(sweep),
                     arr = null,
-                    data = DataMap.setUp(),
+                    data = Data.setUp(),
                     i = 0,
-                    id = 0,
                     list = null,
                     thisAgainstGrid = this.againstGrid,
                     tList = null,
                     type = '',
                     x = 0,
                     y = 0;
+                
+                if (sweep.equals(entity.againstAABB)) {
+                    return this.getEntityAgainstGrid(entity, types);
+                }
 
                 for (x = aabb.left; x <= aabb.right; x++) {
                     for (y = aabb.top; y <= aabb.bottom; y++) {
-                        id = ((y << 16) ^ x) >>> 0;
-                        list = thisAgainstGrid[id];
+                        list = thisAgainstGrid[((y << 16) ^ x) >>> 0];
                         if (list) {
                             i = types.length;
                             while (i--) {
                                 type = types[i];
                                 arr = list.get(type);
-                                if (arr) {
-                                    tList = data.get(type);
+                                if (arr && arr.length) {
+                                    tList = data[type];
                                     if (!tList) {
-                                        data.set(type, Array.setUp().union(arr));
+                                        data[type] = Array.setUp.apply(null, arr);
                                     } else {
                                         tList.union(arr);
                                     }
@@ -197,6 +199,36 @@
                 }
                 
                 aabb.recycle();
+                return data;
+            },
+            
+            getEntityAgainstGrid: function (entity, types) {
+                var ag = entity.againstGrid,
+                    arr = null,
+                    data = Data.setUp(),
+                    i = ag.length,
+                    j = 0,
+                    list = null,
+                    tList = null,
+                    type = '';
+
+                while (i--) {
+                    list = ag[i];
+                    j = types.length;
+                    while (j--) {
+                        type = types[j];
+                        arr = list.get(type);
+                        if (arr && arr.length) {
+                            tList = data[type];
+                            if (!tList) {
+                                data[type] = Array.setUp.apply(null, arr);
+                            } else {
+                                tList.union(arr);
+                            }
+                        }
+                    }
+                }
+                
                 return data;
             },
             
@@ -607,11 +639,11 @@
                         sweepAABB.include(previousAABB);
                         
                         collisionSubTypes = solidCollisionMap.get(collisionType);
-                        againstGrid = this.getAgainstGrid(sweepAABB, collisionSubTypes);
+                        againstGrid = this.getAgainstGrid(ent, sweepAABB, collisionSubTypes);
                         j = collisionSubTypes.length;
                         while (j--) {
                             otherCollisionType = collisionSubTypes[j];
-                            otherEntities = againstGrid.get(otherCollisionType);
+                            otherEntities = againstGrid[otherCollisionType];
 
                             if (otherEntities) {
                                 k = otherEntities.length;
@@ -985,11 +1017,11 @@
                 while (i--) {
                     collisionType = ent.collisionTypes[i];
                     softCollisionMap = ent.softCollisionMap.get(collisionType);
-                    againstGrid = this.getAgainstGrid(ent.getAABB(), softCollisionMap);
+                    againstGrid = this.getEntityAgainstGrid(ent, softCollisionMap);
                     j = softCollisionMap.length;
                     while (j--) {
                         otherCollisionType = softCollisionMap[j];
-                        otherEntities = againstGrid.get(otherCollisionType);
+                        otherEntities = againstGrid[otherCollisionType];
                         if (otherEntities) {
                             k = otherEntities.length;
                             while (k--) {
