@@ -45,9 +45,16 @@
     return platypus.createComponentClass({
         id: 'HandlerCollision',
         
+        properties: {
+            /**
+             * 
+             */
+            gridBits: 8
+        },
+        
         constructor: function (definition) {
-            this.entitiesByType = DataMap.setUp();
-            this.entitiesByTypeLive = DataMap.setUp();
+            this.againstGrid = Data.setUp();
+            
             this.solidEntitiesLive = Array.setUp();
             this.softEntitiesLive = Array.setUp();
             this.allEntitiesLive = Array.setUp();
@@ -57,8 +64,6 @@
             this.terrain = undefined;
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
-            
-            this.cameraCollisionAABB = AABB.setUp();
             
             this.relocationMessage = Data.setUp(
                 "position", Vector.setUp(),
@@ -149,67 +154,148 @@
         },
         
         methods: {
-            addCollisionEntity: function (entity) {
-                var arr = null,
-                    i = 0,
-                    type = '',
-                    types = entity.collisionTypes,
-                    byType = this.entitiesByType,
-                    byTypeLive = this.entitiesByTypeLive;
+            mapDown: function (aabb2) {
+                var aabb1 = AABB.setUp(),
+                    gb = this.gridBits;
                 
-                if (entity.getTileShapes) { // Has a CollisionTiles component
-                    this.terrain = entity;
-                } else if (types) {
-                    i = types.length;
-                    while (i--) {
-                        type = types[i];
-                        arr = byType.get(type);
-                        if (!arr) {
-                            arr = byType.set(type, Array.setUp());
-                            byTypeLive.set(type, Array.setUp());
-                        }
-                        arr.push(entity);
-                    }
-                }
+                return aabb1.setBounds(aabb2.left >> gb, aabb2.top >> gb, aabb2.right >> gb, aabb2.bottom >> gb);
             },
+            
+            getAgainstGrid: function (sweep, types) {
+                var aabb = this.mapDown(sweep),
+                    arr = null,
+                    data = DataMap.setUp(),
+                    i = 0,
+                    id = 0,
+                    list = null,
+                    thisAgainstGrid = this.againstGrid,
+                    tList = null,
+                    type = '',
+                    x = 0,
+                    y = 0;
 
-            removeCollisionEntity: function (entity) {
-                var arr = null,
-                    byType = this.entitiesByType,
-                    x     = 0,
-                    i     = 0,
-                    types = entity.collisionTypes;
-
-                if (types) {
-                    i = types.length;
-                    while (i--) {
-                        arr = byType.get(types[i]);
-                        if (arr) {
-                            x = arr.indexOf(entity);
-                            if (x >= 0) {
-                                arr.greenSplice(x);
+                for (x = aabb.left; x <= aabb.right; x++) {
+                    for (y = aabb.top; y <= aabb.bottom; y++) {
+                        id = ((y << 16) ^ x) >>> 0;
+                        list = thisAgainstGrid[id];
+                        if (list) {
+                            i = types.length;
+                            while (i--) {
+                                type = types[i];
+                                arr = list.get(type);
+                                if (arr) {
+                                    tList = data.get(type);
+                                    if (!tList) {
+                                        data.set(type, Array.setUp().union(arr));
+                                    } else {
+                                        tList.union(arr);
+                                    }
+                                }
                             }
                         }
                     }
                 }
+                
+                aabb.recycle();
+                return data;
+            },
+            
+            removeAgainst: function (entity) {
+                var ag = entity.againstGrid,
+                    types = entity.collisionTypes,
+                    arr = null,
+                    i = ag.length,
+                    j = 0,
+                    id = 0,
+                    len = types.length,
+                    list = null;
+                    
+                while (i--) {
+                    list = ag[i];
+                    j = len;
+                    while (j--) {
+                        arr = list.get(types[j]);
+                        if (arr) {
+                            id = arr.indexOf(entity);
+                            if (id >= 0) {
+                                arr.greenSplice(id);
+                            }
+                        }
+                    }
+                }
+                ag.length = 0;
+            },
+            
+            updateAgainst: function (entity) {
+                var arr = null,
+                    i = 0,
+                    type = '',
+                    types = entity.collisionTypes,
+                    aabb = this.mapDown(entity.getAABB()),
+                    ag = entity.againstGrid,
+                    id = 0,
+                    list = null,
+                    thisAgainstGrid = this.againstGrid,
+                    x = 0,
+                    y = 0;
+                
+                if (!aabb.equals(entity.againstAABB)) {
+                    entity.againstAABB.set(aabb);
+                    this.removeAgainst(entity);
+
+                    for (x = aabb.left; x <= aabb.right; x++) {
+                        for (y = aabb.top; y <= aabb.bottom; y++) {
+                            id = ((y << 16) ^ x) >>> 0;
+                            list = thisAgainstGrid[id];
+                            if (!list) {
+                                list = thisAgainstGrid[id] = DataMap.setUp();
+                            }
+                            i = types.length;
+                            while (i--) {
+                                type = types[i];
+                                arr = list.get(type);
+                                if (!arr) {
+                                    arr = list.set(type, Array.setUp());
+                                }
+                                arr.push(entity);
+                            }
+                            ag.push(list);
+                        }
+                    }
+                }
+                
+                aabb.recycle();
+            },
+            
+            addCollisionEntity: function (entity) {
+                if (entity.getTileShapes) { // Has a CollisionTiles component
+                    this.terrain = entity;
+                } else if (entity.collisionTypes) {
+                    entity.againstGrid = Array.setUp();
+                    entity.againstAABB = AABB.setUp();
+                    this.updateAgainst(entity);
+                }
+            },
+
+            removeCollisionEntity: function (entity) {
+                if (entity.againstGrid) {
+                    this.removeAgainst(entity);
+                    entity.againstGrid.recycle();
+                    entity.againstGrid = null;
+                    entity.againstAABB.recycle();
+                    entity.againstAABB = null;
+                }
             },
             
             checkCamera: function (camera, all) {
-                var byType = this.entitiesByType,
-                    byTypeLive = this.entitiesByTypeLive,
-                    i        = all.length,
+                var i        = all.length,
                     j        = 0,
-                    key      = '',
-                    keys = byType.keys,
-                    list     = null,
                     allLive  = this.allEntitiesLive,
                     softs    = this.softEntitiesLive,
                     solids   = this.solidEntitiesLive,
                     nons     = this.nonColliders,
                     groups   = this.groupsLive,
-                    entities      = null,
                     entity        = null,
-                    aabbCollision = this.cameraCollisionAABB,
                     types = null,
                     collides = false;
                 
@@ -230,7 +316,7 @@
                             j = types.length;
                             while (j--) {
                                 if (entity.solidCollisionMap.get(types[j]).length) {
-                                    solids[solids.length] = entity;
+                                    solids.push(entity);
                                     collides = true;
                                     break;
                                 }
@@ -255,43 +341,6 @@
                 }
                 
                 groups.sort(groupSortBySize);
-
-                if (camera) {
-                    aabbCollision.reset();
-                    i = allLive.length;
-                    while (i--) {
-                        aabbCollision.include(allLive[i].aabb);
-                    }
-                    i = keys.length;
-                    while (i--) {
-                        key = keys[i];
-                        list = byTypeLive.get(key);
-                        list.length = 0;
-                        if (!aabbCollision.empty) {
-                            entities = byType.get(key);
-                            j = entities.length;
-                            while (j--) {
-                                entity = entities[j];
-                                if (entity.alwaysOn || aabbCollision.collides(entity.getAABB())) {
-                                    list.push(entity);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    i = keys.length;
-                    while (i--) {
-                        key = keys[i];
-                        list = byTypeLive.get(key);
-                        list.length = 0;
-                        entities = byType.get(key);
-                        j = entities.length;
-                        while (j--) {
-                            entity = entities[j];
-                            list.push(entity);
-                        }
-                    }
-                }
             },
             
             resolveNonCollisions: function () {
@@ -303,16 +352,19 @@
                 msg.relative = false;
                 while (i--) {
                     entity = nons[i];
-                    msg.position.setVector(entity.position);
+                    if ((entity.position.x !== entity.previousPosition.x) || (entity.position.y !== entity.previousPosition.y)) {
+                        msg.position.setVector(entity.position);
 
-                    /**
-                     * This message is triggered on an entity that has been repositioned due to a solid collision.
-                     * 
-                     * @event 'relocate-entity'
-                     * @param object {Object}
-                     * @param object.position {Vector} The relocated position of the entity.
-                     */
-                    entity.triggerEvent('relocate-entity', msg);
+                        /**
+                         * This message is triggered on an entity that has been repositioned due to a solid collision.
+                         * 
+                         * @event 'relocate-entity'
+                         * @param object {Object}
+                         * @param object.position {Vector} The relocated position of the entity.
+                         */
+                        entity.triggerEvent('relocate-entity', msg);
+                        this.updateAgainst(entity);
+                    }
                 }
             },
             
@@ -433,8 +485,10 @@
                 var step              = 0,
                     finalMovementInfo = null,
                     aabb              = null,
-                    dX                = ent.x - ent.previousX,
-                    dY                = ent.y - ent.previousY,
+                    pX                = ent.previousX,
+                    pY                = ent.previousY,
+                    dX                = ent.x - pX,
+                    dY                = ent.y - pY,
                     sW                = Infinity,
                     sH                = Infinity,
                     collisionTypes    = entityOrGroup.getCollisionTypes(),
@@ -481,7 +535,12 @@
                         }
                     } else {
                         entityOrGroup.prepareCollision(ent.previousX + dX, ent.previousY + dY);
-                        entityOrGroup.relocateEntity(this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY, collisionTypes), collisionDataCollection);
+                        finalMovementInfo = this.processCollisionStep(ent, entityOrGroup, ignoredEntities, collisionDataCollection, finalMovementInfo, dX, dY, collisionTypes);
+                        entityOrGroup.relocateEntity(finalMovementInfo, collisionDataCollection);
+                    }
+
+                    if ((finalMovementInfo.x !== pX) || (finalMovementInfo.y !== pY)) {
+                        this.updateAgainst(ent);
                     }
                 }
                 
@@ -528,9 +587,9 @@
                         otherCollisionType       = '',
                         otherAABB                = null,
                         otherShapes              = null,
-                        entitiesByTypeLive       = this.entitiesByTypeLive,
                         otherEntities            = null,
                         terrain                  = this.terrain,
+                        againstGrid          = null,
                         solidCollisionMap        = entityOrGroup.getSolidCollisions(),
                         collisionSubTypes        = null,
                         sweepAABB                = sweeper;
@@ -548,10 +607,11 @@
                         sweepAABB.include(previousAABB);
                         
                         collisionSubTypes = solidCollisionMap.get(collisionType);
+                        againstGrid = this.getAgainstGrid(sweepAABB, collisionSubTypes);
                         j = collisionSubTypes.length;
                         while (j--) {
                             otherCollisionType = collisionSubTypes[j];
-                            otherEntities = entitiesByTypeLive.get(otherCollisionType);
+                            otherEntities = againstGrid.get(otherCollisionType);
 
                             if (otherEntities) {
                                 k = otherEntities.length;
@@ -571,6 +631,7 @@
                                         potentialCollision = true;
                                     }
                                 }
+                                otherEntities.recycle();
                             } else if (terrain && (otherCollisionType === 'tiles')) {
                                 //Do our sweep check against the tiles and add potentially colliding shapes to our list.
                                 otherShapes = terrain.getTileShapes(sweepAABB, previousAABB);
@@ -582,6 +643,7 @@
                                 }
                             }
                         }
+                        againstGrid.recycle();
                     }
 
                     if (potentialCollision) {
@@ -889,20 +951,20 @@
                 
                 return function (resp) {
                     var softs = this.softEntitiesLive,
-                        entities = this.getWorldEntities(),
                         entity = null,
                         i = softs.length,
                         t = trigger;
                         
                     while (i--) {
                         entity = softs[i];
-                        this.checkEntityForSoftCollisions(entity, entities, t.bind(entity));
+                        this.checkEntityForSoftCollisions(entity, t.bind(entity));
                     }
                 };
             }()),
             
-            checkEntityForSoftCollisions: function (ent, entitiesByTypeLive, callback) {
-                var otherEntity = null,
+            checkEntityForSoftCollisions: function (ent, callback) {
+                var againstGrid = null,
+                    otherEntity = null,
                     message = triggerMessage,
                     i   = ent.collisionTypes.length,
                     j   = 0,
@@ -923,10 +985,11 @@
                 while (i--) {
                     collisionType = ent.collisionTypes[i];
                     softCollisionMap = ent.softCollisionMap.get(collisionType);
+                    againstGrid = this.getAgainstGrid(ent.getAABB(), softCollisionMap);
                     j = softCollisionMap.length;
                     while (j--) {
                         otherCollisionType = softCollisionMap[j];
-                        otherEntities = entitiesByTypeLive.get(otherCollisionType);
+                        otherEntities = againstGrid.get(otherCollisionType);
                         if (otherEntities) {
                             k = otherEntities.length;
                             while (k--) {
@@ -959,17 +1022,19 @@
                                     }
                                 }
                             }
+                            otherEntities.recycle();
                         }
                     }
+                    againstGrid.recycle();
                 }
             },
             
             destroy: function () {
-                var byType = this.entitiesByType,
-                    byTypeLive = this.entitiesByTypeLive,
+                var ag = this.againstGrid,
+                    data = null,
                     key = '',
-                    keys = byType.keys,
-                    i = keys.length;
+                    keys = null,
+                    i = 0;
                 
                 this.groupsLive.recycle();
                 this.nonColliders.recycle();
@@ -978,29 +1043,32 @@
                 this.solidEntitiesLive.recycle();
                 this.relocationMessage.position.recycle();
                 this.relocationMessage.recycle();
-                this.cameraCollisionAABB.recycle();
                 
-                while (i--) {
-                    key = keys[i];
-                    byType.get(key).recycle();
-                    byTypeLive.get(key).recycle();
+                for (key in ag) {
+                    if (ag.hasOwnProperty(key)) {
+                        data = ag[key];
+                        keys = data.keys;
+                        i = keys.length;
+                        while (i--) {
+                            data.get(keys[i]).recycle();
+                        }
+                        data.recycle();
+                    }
                 }
-                byType.recycle();
-                byTypeLive.recycle();
-                delete this.entitiesByType;
-                delete this.entitiesByTypeLive;
+                ag.recycle();
+                this.againstGrid = null;
             }
         },
         
         publicMethods: {
             /**
-             * This method returns an object containing world entities grouped by collision type.
+             * This method returns an object containing world entities.
              * 
              * @method getWorldEntities
-             * @return {Object} A list of key/value pairs where the keys are collision types and the values are arrays of entities of that type.
+             * @return {Array} A list of all world collision entities.
              */
             getWorldEntities: function () {
-                return this.entitiesByTypeLive;
+                return this.allEntitiesLive;
             },
             
             /**
@@ -1018,13 +1086,12 @@
              * 
              * @method getEntityCollisions
              * @param entity {Entity} The entity to test against the world.
-             * @param [entities] {Array} The list of entities to check against. By default this is all the entities in the world.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
              */
-            getEntityCollisions: function (entity, entities) {
+            getEntityCollisions: function (entity) {
                 var collisions = Array.setUp();
                 
-                this.checkEntityForSoftCollisions(entity, entities || this.entitiesByTypeLive, function (collision) {
+                this.checkEntityForSoftCollisions(entity, function (collision) {
                     collisions.push(Data.setUp(collision));
                 });
                 
