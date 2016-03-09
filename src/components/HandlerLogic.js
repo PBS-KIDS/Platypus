@@ -244,6 +244,16 @@
                     }
                     
                     if (!this.paused) {
+                        /**
+                         * This event is triggered on the top-level layer to signify a "handle-logic" event is about to be triggered on children. This is unique from the layer's "tick" event in that it occurs the same number of times as the "handle-logic" event and will not occur if HandlerLogic is paused.
+                         * 
+                         * @event 'logic-tick'
+                         * @param tick.delta {Number} The time that has passed since the last tick.
+                         * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
+                         * @param tick.entities {Array} This is a list of all the logically active entities.
+                         * @since 0.8.1
+                         */
+                        this.owner.triggerEvent('logic-tick', msg);
                     
                         if (this.owner.triggerEventOnChildren) {
                             this.owner.triggerEventOnChildren('handle-ai', msg);
