@@ -104,9 +104,9 @@ platypus.Messenger = (function () {
     };
     if (debug) {
         proto._triggerEvent = proto.triggerEvent;
-        proto.triggerEvent = function (event, value, debug) {
+        proto.triggerEvent = function (event, value) {
             var i = 0,
-                debugLogging = debug || (value && value.debug),
+                debugLogging = value && value.debug,
                 debugCount = 0,
                 count = 0;
             
@@ -127,7 +127,7 @@ platypus.Messenger = (function () {
                 if (perfTools) {
                     perfTools.mark("a");
                 }
-                count = this._triggerEvent(event, value, debug);
+                count = this._triggerEvent.apply(this, arguments);
                 if (perfTools) {
                     perfTools.mark("b");
                     perfTools.measure(this.type + ":" + event, 'a', 'b');
@@ -142,7 +142,7 @@ platypus.Messenger = (function () {
                 }
                 return count;
             } else {
-                return this._triggerEvent(event, value, debug);
+                return this._triggerEvent.apply(this, arguments);
             }
         };
 
