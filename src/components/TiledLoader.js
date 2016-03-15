@@ -479,7 +479,7 @@
                         "width", 0, // deprecate in 0.8.0
                         "height", 0, // deprecate in 0.8.0
                         "tile", AABB.setUp(),
-                        "camera", this.followEntity
+                        "camera", null
                     );
                     
                 //format level appropriately
@@ -513,6 +513,7 @@
                  * @param message.world {platypus.AABB} Dimensions of the world.
                  * @param message.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
                  */
+                message.camera = this.followEntity;
                 message.width = width;
                 message.height = height;
                 message.world.setBounds(x, y, x + width, y + height);
