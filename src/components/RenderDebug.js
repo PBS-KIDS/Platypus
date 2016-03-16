@@ -55,7 +55,7 @@ This component is attached to entities that will appear in the game world. It se
     
     var types = {
             "aabb":      0xff88ff,
-            "render":    0x888888,
+            "render":    0x0000ff,
             "collision": 0xff00ff,
             "group":     0x00ff00
         },
