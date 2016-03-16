@@ -35,7 +35,7 @@
             }
         },
         hasLogic = function (item, index, arr) {
-            return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic');
+            return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic' || item === 'state-changed' || item === 'handle-movement');
         };
 
     return platypus.createComponentClass({

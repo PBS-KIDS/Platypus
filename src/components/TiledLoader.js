@@ -442,6 +442,7 @@
              *
              * @method 'scene-loaded'
              * @param persistentData {Object} Data passed from the last scene into this one.
+             * @param persistentData.level {Object} A level name or definition to load if the level is not already specified.
              */
             "scene-loaded": function (persistentData) {
                 if (!this.manuallyLoad) {
