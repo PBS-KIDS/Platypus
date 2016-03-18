@@ -916,11 +916,13 @@
         getAssetList: function (component, props, defaultProps) {
             var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
             
-            if (typeof ss === 'string') {
+            if (typeof ss === 'string' && (ss !== 'import')) {
                 return platypus.game.settings.spriteSheets[ss].images.greenSlice();
-            } else {
+            } else if (ss.images) {
                 return ss.images.greenSlice();
             }
+            
+            return Array.setUp();
         }
     });
 }());

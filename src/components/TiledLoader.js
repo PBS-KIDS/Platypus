@@ -217,7 +217,9 @@
             var i = 0,
                 j = 0,
                 tilesets = Array.setUp(),
+                arr = null,
                 assets = Array.setUp(),
+                data = null,
                 entity = null,
                 entityAssets = null;
 
@@ -243,6 +245,12 @@
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
                             assets.union([level.layers[i].name]);
+                        } else if (level.layers[i].properties && level.layers[i].properties.entity) {
+                            data = Data.setUp('type', level.layers[i].properties.entity);
+                            arr = Entity.getAssetList(data);
+                            assets.union(arr);
+                            arr.recycle();
+                            data.recycle();
                         }
                     }
                     if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
