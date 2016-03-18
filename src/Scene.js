@@ -34,6 +34,7 @@ platypus.Scene = (function () {
     "use strict";
     
     var Entity = include('platypus.Entity'),
+        PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
         fn = /([\w-]+)\.(\w+)$/,
         formatAsset = function (asset) {
@@ -127,6 +128,9 @@ platypus.Scene = (function () {
              * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
              */
             this.triggerOnChildren('scene-loaded', this.data);
+            
+            // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
+            PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
         },
         Scene  = function (panel, definition) {
             var assets = this.getAssetList(definition);
@@ -287,7 +291,7 @@ platypus.Scene = (function () {
         this.layers.recycle();
         this.layers = null;
         
-        platypus.PIXIAnimation.destroyBaseTextures();
+        PIXIAnimation.destroyBaseTextures();
         
         platypus.game.currentScene = null;
     };

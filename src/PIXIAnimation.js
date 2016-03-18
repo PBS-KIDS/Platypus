@@ -481,6 +481,25 @@
         }
     };
     
+    /**
+     * This method makes sure that all the base textures are in the gpu to prevent framerate lurches later due to loading base textures as their textures appear.
+     * 
+     * @method PIXIAnimation.preloadBaseTextures
+     * @param renderer {PIXI.WebGLRenderer}
+     */
+    PIXIAnimation.preloadBaseTextures = function (renderer) {
+        var btCache = baseTextureCache,
+            key = '';
+        
+        if (renderer.updateTexture) {
+            for (key in btCache) {
+                if (btCache.hasOwnProperty(key)) {
+                    renderer.updateTexture(btCache[key]);
+                }
+            }
+        }
+    };
+    
     PIXIAnimation.destroyBaseTextures = function () {
         var btCache = baseTextureCache,
             key = '';
