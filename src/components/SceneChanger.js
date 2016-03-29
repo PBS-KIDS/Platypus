@@ -1,36 +1,10 @@
 /**
-# COMPONENT **SceneChanger**
-This component allows the entity to initiate a change from the current scene to another scene.
-
-## Messages
-
-### Listens for:
-- **new-scene** - On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
-  - @param message.scene (string) - This is a label corresponding with a predefined scene.
-  - @param message.transition (string) - This can be "instant" or "fade-to-black". Defaults to an instant transition.
-  - @param message.persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
-- **set-scene** - On receiving this message, a scene value is stored, waiting for a `new-scene` to make the transition.
-  - @param scene (string) - This is a label corresponding with a predefined scene.
-- **set-persistent-scene-data** - On receiving this message, persistent data is stored, waiting for a `new-scene` to make the transition.
-  - @param persistentData (object) - Any JavaScript value(s) that should be passed to the next scene via the "scene-loaded" call.
-
-## JSON Definition:
-    {
-      "type": "SceneChanger",
-      
-      "scene": "scene-menu",
-      // Optional (but must be provided by a "SceneChanger" parameter if not defined here). This causes the "new-scene" trigger to load this scene.
-      
-      "transition": "fade-to-black",
-      // Optional. This can be "instant" or "fade-to-black". Defaults to an "instant" transition.
-      
-      "preload": true,
-      // Optional. Whether the scene should already be loaded in the background.
-      
-      "persistentData": {"runningScore": 1400}
-      // Optional. An object containing key/value pairs of information that should be passed into the new scene on the new scenes "scene-loaded" call.
-    }
-*/
+ * This component allows the entity to initiate a change from the current scene to another scene.
+ * 
+ * @namespace platypus.components
+ * @class SceneChanger
+ * @extends platypus.Component
+ */
 /*global console */
 /*global platypus */
 (function () {
@@ -39,44 +13,76 @@ This component allows the entity to initiate a change from the current scene to 
     return platypus.createComponentClass({
         id: 'SceneChanger',
         
+        properties: {
+            /**
+             * Optional, but must be provided by a "new-scene" parameter if not defined here. This causes a "new-scene" event to load this scene.
+             *
+             * @property scene
+             * @type String
+             * @default ""
+             */
+            scene: "",
+
+            /**
+             * An object containing key/value pairs of information that should be passed into the new scene on the new scene's "scene-loaded" and "scene-live" events.
+             *
+             * @property persistentData
+             * @type platypus.Data|Object
+             * @default null
+             */
+            persistentData: null
+        },
+        
         constructor: function (definition) {
-            this.scene = this.owner.scene || definition.scene;
-            //this.transition = this.owner.transition || definition.transition || 'instant';
-            this.persistentData = definition.persistentData || {};
-            this.preload = definition.preload || false;
-            
-            // Notes definition changes from older versions of this component.
-            if (definition.message) {
-                console.warn('"' + this.type + '" components no longer accept "message": "' + definition.message + '" as a definition parameter. Use "aliases": {"' + definition.message + '": "new-scene"} instead.');
-            }
+            this.persistentData = Data.setUp(this.persistentData);
         },
 
         events: {
-            "scene-live": function () {
-                //Makes sure we're in the current scene before preloading the next one.
-                if (this.preload) {
-                    platypus.game.loadScene(this.scene, this.transition, this.persistentData, true);
-                }
-            },
+            /**
+             * On receiving this message, a new scene is loaded according to provided parameters or previously determined component settings.
+             *
+             * @method 'new-scene'
+             * @param message.scene {String} This is a label corresponding with a predefined scene.
+             * @param message.persistentData {Object} Any values that should be passed to the next scene on the new scene's "scene-loaded" and "scene-live" events.
+             */
             "new-scene": function (response) {
                 var resp       = response || this,
                     scene      = resp.scene || this.scene,
-                    //transition = resp.transition || this.transition,
                     data       = resp.persistentData || this.persistentData;
             
                 platypus.game.loadScene(scene, data);
             },
+
+            /**
+             * On receiving this message, a scene value is stored, waiting for a `new-scene` to make the transition.
+             * @method 'set-scene'
+             * @param scene {String} This is a label corresponding with a predefined scene.
+             */
             "set-scene": function (scene) {
                 this.scene = scene;
             },
-            "set-persistent-scene-data": function (dataObj) {
-                var key = '';
+
+            /**
+             * On receiving this message, persistent data is stored, waiting for a `new-scene` to make the transition.
+             * 
+             * @method 'set-persistent-scene-data'
+             * @param persistentData {Object} Any values that should be passed to the next scene via the "scene-loaded" and "scene-live" events.
+             */
+            "set-persistent-scene-data": function (data) {
+                var thisData = this.persistentData,
+                    key = '';
                 
-                for (key in dataObj) {
-                    if (dataObj.hasOwnProperty(key)) {
-                        this.persistentData[key] = dataObj[key];
+                for (key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        thisData[key] = data[key];
                     }
                 }
+            }
+        },
+        
+        methods: {
+            destroy: function () {
+                //data.recycle() - can't do this here since it may be in use by the next scene.
             }
         }
     });

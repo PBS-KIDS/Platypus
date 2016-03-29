@@ -46,8 +46,8 @@
         Data        = include('platypus.Data'),
         Entity      = include('platypus.Entity'),
         decodeBase64 = (function () {
-            var decodeString = function (str) {
-                    return (((str.charCodeAt(0)) + (str.charCodeAt(1) << 8) + (str.charCodeAt(2) << 16) + (str.charCodeAt(3) << 24 )) >>> 0);
+            var decodeString = function (str, index) {
+                    return (((str.charCodeAt(index)) + (str.charCodeAt(index + 1) << 8) + (str.charCodeAt(index + 2) << 16) + (str.charCodeAt(index + 3) << 24 )) >>> 0);
                 },
                 decodeArray = function (arr, index) {
                     return ((arr[index] + (arr[index + 1] << 8) + (arr[index + 2] << 16) + (arr[index + 3] << 24 )) >>> 0);
@@ -66,7 +66,7 @@
                     }
                 } else {
                     while (index <= step1.length) {
-                        arr.push(decodeString(step1.substr(index - 4, 4)));
+                        arr.push(decodeString(step1, index - 4));
                         index += 4;
                     }
                 }
