@@ -12,36 +12,19 @@
     "use strict";
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
+        Data = include('platypus.Data'),
         sortByTime = function (a, b) {
             return a.time - b.time;
-        },
-        offsetEvents = function (fromList, toList, player) {
-            return function () {
-                var i = 0,
-                    offset = player.getElapsed();
-                
-                for (i = 0; i < fromList.length; i++) {
-                    toList.push({
-                        event: fromList[i].event,
-                        time: (fromList[i].time || 0) + offset,
-                        message: fromList[i].message || null
-                    });
-                }
-                
-                if (i) {
-                    toList.sort(sortByTime);
-                }
-            };
         },
         addEvents = function (fromList, toList) {
             var i = 0;
             
             for (i = 0; i < fromList.length; i++) {
-                toList.push({
-                    event: fromList[i].event,
-                    time: fromList[i].time || 0,
-                    message: fromList[i].message
-                });
+                toList.push(Data.setUp(
+                    'event', fromList[i].event,
+                    'time', fromList[i].time || 0,
+                    'message', fromList[i].message
+                ));
             }
             
             if (i) {
@@ -50,59 +33,79 @@
             
             return toList;
         },
-        playSound = function (soundDefinition) {
-            var sound      = null,
-                eventList  = Array.setUp(),
-                isArray = false;
-                
-            if (typeof soundDefinition === 'string') {
-                sound = soundDefinition;
-            } else if (Array.isArray(soundDefinition)) {
-                sound = soundDefinition;
-                isArray = true;
-            } else {
-                sound = soundDefinition.sound;
-                if (soundDefinition.events) {
-                    eventList.union(soundDefinition.events);
-                    eventList.sort(sortByTime);
-                }
-                if (Array.isArray(sound)) {
-                    sound = sound;
-                    isArray = true;
+        offsetEvents = function (fromList, toList, player) {
+            var i = 0,
+                offset = player.getElapsed();
+            
+            for (i = 0; i < fromList.length; i++) {
+                toList.push(Data.setUp(
+                    'event', fromList[i].event,
+                    'time', (fromList[i].time || 0) + offset,
+                    'message', fromList[i].message || null
+                ));
+            }
+            
+            if (i) {
+                toList.sort(sortByTime);
+            }
+        },
+        setupEventList = function (sounds, eventList, player) { // This function merges events from individual sounds into a full list queued to sync with the SpringRoll voPlayer.
+            var i = 0,
+                soundList = Array.setUp();
+            
+            // Create alias-only sound list.
+            for (i = 0; i < sounds.length; i++) {
+                if (sounds[i].sound) {
+                    if (sounds[i].events) {
+                        soundList.push(offsetEvents.bind(sounds[i].events, eventList, player));
+                    }
+                    soundList.push(sounds[i].sound);
                 } else {
-                    sound = soundDefinition.sound;
+                    soundList.push(sounds[i]);
+                }
+            }
+            return soundList;
+        },
+        onComplete = function (complete, soundList) {
+            this.playingAudio = false;
+            if (!this.owner.destroyed) {
+                this.checkTimeEvents(true);
+                
+                /**
+                 * When an audio sequence is finished playing, this event is triggered.
+                 * 
+                 * @event sequence-complete
+                 */
+                this.owner.triggerEvent('sequence-complete');
+            }
+            soundList.recycle();
+        },
+        playSound = function (soundDefinition, value) {
+            var soundList = null,
+                eventList = this.eventList,
+                player = this.player;
+            
+            if (typeof soundDefinition === 'string') {
+                soundList = Array.setUp(soundDefinition);
+            } else if (Array.isArray(soundDefinition)) {
+                soundList = setupEventList(soundDefinition, eventList, player);
+            } else {
+                if (soundDefinition.events) {
+                    addEvents(soundDefinition.events, eventList);
+                }
+                if (Array.isArray(soundDefinition.sound)) {
+                    soundList = setupEventList(soundDefinition.sound, eventList, player);
+                } else {
+                    soundList = Array.setUp(soundDefinition.sound);
                 }
             }
             
-            return function (value) {
-                var soundList   = null;
-                
-                this.eventList.recycle();
-                this.eventList = eventList.greenSlice();
-                if (value && value.events) {
-                    addEvents(value.events, this.eventList);
-                }
+            if (value && value.events) {
+                addEvents(value.events, eventList);
+            }
 
-                if (isArray) {
-                    soundList = this.setupEventList(sound);
-                } else {
-                    soundList = sound;
-                }
-                this.playingAudio = true;                
-                this.player.play(soundList, function () {
-                    this.playingAudio = false;
-                    this.onComplete(true);
-                    if (isArray) {
-                        soundList.recycle();
-                    }
-                }.bind(this), function () {
-                    this.playingAudio = false;
-                    this.onComplete(false);
-                    if (isArray) {
-                        soundList.recycle();
-                    }
-                }.bind(this));
-            };
+            this.playingAudio = true;                
+            player.play(soundList, onComplete.bind(this, true, soundList), onComplete.bind(this, false, soundList));
         };
     
     return platypus.createComponentClass({
@@ -155,7 +158,7 @@
                          * @method '*'
                          * @param [message.events] {Array} Used to specify the list of events to trigger while playing this audio sequence.
                          */
-                        this.addEventListener(key, playSound(definition.audioMap[key]));
+                        this.addEventListener(key, playSound.bind(this, definition.audioMap[key]));
                     }
                 }
             }
@@ -170,11 +173,9 @@
              * @method 'handle-render'
              */
             "handle-render": function () {
-                if (this.paused) {
-                    return;
+                if (!this.paused) {
+                    this.checkTimeEvents(false);
                 }
-                
-                this.checkTimeEvents(false);
             },
 
             /**
@@ -189,54 +190,22 @@
         
         methods: {
             checkTimeEvents: function (finished) {
-                var events      = this.eventList,
-                    currentTime = 0;
+                var event = null,
+                    events = this.eventList,
+                    currentTime = 0,
+                    owner = this.owner;
                 
                 if (events && events.length) {
                     currentTime = this.player.getElapsed();
 
                     while (events.length && (finished || (events[0].time <= currentTime))) {
-                        this.owner.trigger(events[0].event, events[0].message);
-                        events.greenSplice(0);
+                        event = events.greenSplice(0);
+                        owner.trigger(event.event, event.message);
+                        event.recycle();
                     }
                 }
-            },
-            
-            /**
-            * This function merges events from individual sounds into a full list queued to sync with the SpringRoll voPlayer.
-            */
-            setupEventList: function (sounds) {
-                var i = 0,
-                    soundList = Array.setUp();
-                
-                // Create alias-only sound list.
-                for (i = 0; i < sounds.length; i++) {
-                    if (sounds[i].sound) {
-                        if (sounds[i].events) {
-                            soundList.push(offsetEvents(sounds[i].events, this.eventList, this.player));
-                        }
-                        soundList.push(sounds[i].sound);
-                    } else {
-                        soundList.push(sounds[i]);
-                    }
-                }
-                return soundList;
             },
 
-        
-            onComplete: function (successful) {
-                if (!this.owner.destroyed) {
-                    this.checkTimeEvents(true);
-                    
-                    /**
-                     * When an audio sequence is finished playing, this event is triggered.
-                     * 
-                     * @event sequence-complete
-                     */
-                    this.owner.triggerEvent('sequence-complete');
-                }
-            },
-            
             destroy: function () {
                 if (this.playingAudio) {
                     this.player.stop();  
