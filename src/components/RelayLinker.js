@@ -10,14 +10,14 @@
 (function () {
     "use strict";
 
-    var broadcast = function (event) {
-        return function (value, debug) {
-            var i = 0;
-            
-            for (i = 0; i < this.links.length; i++) {
-                this.links[i].trigger(event, value, debug);
-            }
-        };
+    var broadcast = function () {
+        var i = 0,
+            link = null;
+        
+        for (i = 0; i < this.links.length; i++) {
+            link = this.links[i];
+            link.trigger.apply(link, arguments);
+        }
     };
 
     return platypus.createComponentClass({
@@ -58,7 +58,7 @@
             if (this.events) {
                 for (event in this.events) {
                     if (this.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, broadcast(this.events[event]));
+                        this.addEventListener(event, broadcast.bind(this, this.events[event]));
                     }
                 }
             }
@@ -67,7 +67,7 @@
                 this.owner.linkId = this.linkId;
             }
             
-            this.addEventListener('to-' + this.linkId + '-entities', broadcast('from-' + this.linkId + '-entities'));
+            this.addEventListener('to-' + this.linkId + '-entities', broadcast.bind(this, 'from-' + this.linkId + '-entities'));
             this.addEventListener('from-' + this.linkId + '-entities', function (resp) {
                 this.owner.trigger(resp.message, resp.value, resp.debug);
             }.bind(this));

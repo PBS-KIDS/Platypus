@@ -5,7 +5,7 @@
  * @class Messenger
  * @extends springroll.EventDispatcher
  */
-/*global console, extend, platypus */
+/*global console, extend, include, platypus, springroll, window */
 /*jslint plusplus:true */
 platypus.Messenger = (function () {
     "use strict";
@@ -41,15 +41,19 @@ platypus.Messenger = (function () {
      */
     proto._trigger = proto.trigger;
     proto.trigger = function (events, message, debug) {
-        var i = 0,
+        var args = null,
+            i = 0,
             count = 0;
         
         if (typeof events === 'string') {
-            return this.triggerEvent(events, message, debug);
+            return this.triggerEvent.apply(this, arguments);
         } else if (Array.isArray(events)) {
+            args = Array.prototype.greenSlice.call(arguments);
+            args.greenSplice(0);
             for (i = 0; i < events.length; i++) {
-                count += this.trigger(events[i], message, debug);
+                count += this.trigger(events[i], args);
             }
+            args.recycle();
             return count;
         } else if (events.event) {
             return this.triggerEvent(events.event, events.message || message, events.debug || debug);
@@ -61,7 +65,7 @@ platypus.Messenger = (function () {
     
     /**
      * This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.
-     *  
+     *
      * @method triggerEvent
      * @param event {String} This is the message to process.
      * @param value {*} This is a message object or other value to pass along to event handler.
@@ -75,30 +79,30 @@ platypus.Messenger = (function () {
             listeners = this._listeners,
             args = null;
         
-		if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type] !== undefined)) {
-			// copy the listeners array; reusing `listeners` variable
-			listeners = listeners[type].greenSlice();
+        if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type] !== undefined)) {
+            // copy the listeners array; reusing `listeners` variable
+            listeners = listeners[type].greenSlice();
 
-			if (arguments.length > 1) {
-				args = Array.prototype.greenSlice.call(arguments);
+            if (arguments.length > 1) {
+                args = Array.prototype.greenSlice.call(arguments);
                 args.greenSplice(0);
-			}
+            }
 
             count = i = listeners.length;
-			while (i--) {
-				listener = listeners[i];
-				if (listener._eventDispatcherOnce) {
-					delete listener._eventDispatcherOnce;
-					this.off(type, listener);
-				}
-				listener.apply(this, args);
-			}
+            while (i--) {
+                listener = listeners[i];
+                if (listener._eventDispatcherOnce) {
+                    delete listener._eventDispatcherOnce;
+                    this.off(type, listener);
+                }
+                listener.apply(this, args);
+            }
             
             if (args) {
                 args.recycle();
             }
             listeners.recycle();
-		}
+        }
         
         return count;
     };
@@ -150,7 +154,7 @@ platypus.Messenger = (function () {
     
     /**
      * This method returns all the messages that this entity is concerned about.
-     * 
+     *
      * @method getMessageIds
      * @return {Array} An array of strings listing all the messages for which this Messenger has handlers.
      */
@@ -160,7 +164,7 @@ platypus.Messenger = (function () {
     
     /**
      * This method relinguishes Messenger properties
-     * 
+     *
      * @method destroy
      * @since 0.7.1
      */
@@ -168,7 +172,7 @@ platypus.Messenger = (function () {
     proto.destroy = function () {
         this.loopCheck.recycle();
         this.eventDispatcherDestroy();
-    }
+    };
     
     return Messenger;
 }());

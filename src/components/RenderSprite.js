@@ -948,7 +948,7 @@
                     
                     // Set isCameraOn of sprite if within camera bounds
                     if (this.sprite && ((!this.wasVisible && this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
-                        //TODO: This check is running twice when an object is moving and the camera is moving. 
+                        //TODO: This check is running twice when an object is moving and the camera is moving.
                         //Find a way to remove the duplication!
                         this.checkCameraBounds();
                     }
@@ -976,7 +976,7 @@
                 );
 
                 this.owner.trigger(eventName, msg);
-                msg.recycle();                
+                msg.recycle();
             },
             
             addInputs: function () {

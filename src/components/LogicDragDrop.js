@@ -16,12 +16,12 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
   - @param resp (object) - The tick coming from the scene.
 - **mousedown** - The mousedown event passed from the render component. Fired when we're grabbing the object. Starts the drag.
   - @param eventData (object) - The event data.
-- **mouseup** - The mouseup event passed from the render component. Fired when we're trying to drop the object. 
+- **mouseup** - The mouseup event passed from the render component. Fired when we're trying to drop the object.
   - @param eventData (object) - The event data.
 - **pressmove** - The pressmove event passed from the render component. Tells us when we're dragging the object.
   - @param eventData (object) - The event data.
-- **no-drop** - The message passed from the collision system letting us know the object is currently in a location that it cannot be dropped. 
-  - @param collisionData (object) - The event data.  
+- **no-drop** - The message passed from the collision system letting us know the object is currently in a location that it cannot be dropped.
+  - @param collisionData (object) - The event data.
   
 ## JSON Definition
     {
@@ -38,6 +38,11 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         properties: {
             /**
              * Sets whether a click-move should start the dragging behavior in addition to click-drag.
+             *
+             * @property stickyClick
+             * @type Boolean
+             * @default false
+             * @since 0.8.3
              */
             stickyClick: false
         },
@@ -65,8 +70,10 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             },
             
             "handle-logic": function () {
-                this.owner.x = this.nextX;
-                this.owner.y = this.nextY;
+                if (this.state.get('dragging')) {
+                    this.owner.x = this.nextX;
+                    this.owner.y = this.nextY;
+                }
                 
                 this.state.set('noDrop', false);
             },
