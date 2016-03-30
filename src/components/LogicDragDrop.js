@@ -33,16 +33,14 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
     "use strict";
 
     return platypus.createComponentClass({
-        /*********************************************************************
-         "createComponentClass" creates the component class and adds the
-         following methods and properties that can be referenced from your
-         own methods and events:
-         
-         Property this.owner - a reference to the component's Entity
-         Property this.type  - identical to the id provided below
-        *********************************************************************/
-        
         id: 'LogicDragDrop',
+        
+        properties: {
+            /**
+             * Sets whether a click-move should start the dragging behavior in addition to click-drag.
+             */
+            stickyClick: false
+        },
         
         constructor: function () {
             this.nextX = this.owner.x;
@@ -90,25 +88,39 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 this.hitSomething = false;
             },
             "mousedown": function (eventData) {
-                this.grabOffsetX = eventData.x - this.owner.x;
-                this.grabOffsetY = eventData.y - this.owner.y;
-                this.state.set('dragging', true);
-                
-                eventData.pixiEvent.stopPropagation();
-            },
-            "pressup": function (eventData) {
-                if (this.hasCollision) {
-                    this.tryDrop = true;
+                if (this.sticking) {
+                    this.sticking = false;
+                    this.release();
                 } else {
-                    this.state.set('noDrop', false);
-                    this.state.set('dragging', false);
+                    this.grabOffsetX = eventData.x - this.owner.x;
+                    this.grabOffsetY = eventData.y - this.owner.y;
+                    this.state.set('dragging', true);
+                    this.sticking = this.stickyClick;
                 }
                 
                 eventData.pixiEvent.stopPropagation();
             },
+            "pressup": function (eventData) {
+                if (!this.sticking) {
+                    this.release();
+                }
+                
+                eventData.pixiEvent.stopPropagation();
+            },
+            "mousemove": function (eventData) {
+                if (this.sticking) {
+                    this.nextX = eventData.x - this.grabOffsetX;
+                    this.nextY = eventData.y - this.grabOffsetY;
+                    
+                    eventData.pixiEvent.stopPropagation();
+                }
+            },
             "pressmove": function (eventData) {
                 this.nextX = eventData.x - this.grabOffsetX;
                 this.nextY = eventData.y - this.grabOffsetY;
+                if (this.nextX !== this.owner.x || this.nextY !== this.owner.y) {
+                    this.sticking = false;
+                }
                 
                 eventData.pixiEvent.stopPropagation();
             },
@@ -118,6 +130,15 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         },
         
         methods: {// These are methods that are called by this component.
+            release: function () {
+                if (this.hasCollision) {
+                    this.tryDrop = true;
+                } else {
+                    this.state.set('noDrop', false);
+                    this.state.set('dragging', false);
+                }
+            },
+            
             destroy: function () {
                 this.state.set('dragging', false);
                 this.state.set('noDrop', false);
