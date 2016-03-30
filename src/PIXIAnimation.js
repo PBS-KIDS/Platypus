@@ -11,8 +11,17 @@
     "use strict";
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
+        BaseTexture = include('PIXI.BaseTexture'),
+        Point = include('PIXI.Point'),
+        Rectangle = include('PIXI.Rectangle'),
+        Sprite = include('PIXI.Sprite'),
+        Texture = include('PIXI.Texture'),
         animationCache = {},
         baseTextureCache = {},
+        emptyFrame = {
+            texture: Texture.EMPTY,
+            anchor: new Point(0, 0)
+        },
         regex = /[\[\]{},-]/g,
         createFramesArray = function (frame, bases) {
             var i = 0,
@@ -58,11 +67,11 @@
                             console.warn('"' + path + '" is not a loaded asset.');
                             break;
                         }
-                        btCache[path] = new PIXI.BaseTexture(asset);
+                        btCache[path] = new BaseTexture(asset);
                     }
                     bts.push(btCache[path]);
                 } else {
-                    bts.push(new PIXI.BaseTexture(path));
+                    bts.push(new BaseTexture(path));
                 }
             }
             
@@ -92,8 +101,8 @@
             var i = 0,
                 frames = Array.setUp();
             
-            if (!isNaN(animation)) {
-                frames.push(textures[animation] || PIXI.Texture.EMPTY);
+            if (typeof animation === 'number') {
+                frames.push(textures[animation] || emptyFrame);
                 return {
                     id: key,
                     frames: frames,
@@ -102,7 +111,7 @@
                 };
             } else if (Array.isArray(animation)) {
                 for (i = animation[0]; i < animation[1] + 1; i++) {
-                    frames.push(textures[i] || PIXI.Texture.EMPTY);
+                    frames.push(textures[i] || emptyFrame);
                 }
                 return {
                     id: key,
@@ -112,7 +121,7 @@
                 };
             } else {
                 for (i = 0; i < animation.frames.length; i++) {
-                    frames.push(textures[animation.frames[i]] || PIXI.Texture.EMPTY);
+                    frames.push(textures[animation.frames[i]] || emptyFrame);
                 }
                 return {
                     id: key,
@@ -154,10 +163,10 @@
             // Set up texture for each frame
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
-                texture = new PIXI.Texture(bases[frame[4]], new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]));
+                texture = new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]));
                 textures.push({
                     texture: texture,
-                    anchor: new PIXI.Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
+                    anchor: new Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
                 });
             }
 
@@ -199,10 +208,10 @@
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
                 id = getCacheId(images, frame);
-                texture = new PIXI.Texture(bases[frame[4]], new PIXI.Rectangle(frame[0], frame[1], frame[2], frame[3]));
+                texture = new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]));
                 textures.push({
                     texture: texture,
-                    anchor: new PIXI.Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
+                    anchor: new Point((frame[5] || 0) / texture.width, (frame[6] || 0) / texture.height)
                 });
             }
 
@@ -239,7 +248,7 @@
                 this.cacheId = cacheId;
             }
             
-            PIXI.Sprite.call(this, cache.textures[0].texture);
+            Sprite.call(this, cache.textures[0].texture);
         
             /**
             * @private
@@ -291,7 +300,7 @@
                 this.gotoAndPlay(animation);
             }
         },
-        prototype = PIXIAnimation.prototype = Object.create(PIXI.Sprite.prototype);
+        prototype = PIXIAnimation.prototype = Object.create(Sprite.prototype);
     
     PIXIAnimation.prototype.constructor = PIXIAnimation;
     platypus.PIXIAnimation = PIXIAnimation;
@@ -466,7 +475,7 @@
         var key = '';
         
         this.stop();
-        PIXI.Sprite.prototype.destroy.call(this);
+        Sprite.prototype.destroy.call(this);
         if (this.cacheId) {
             animationCache[this.cacheId].viable -= 1;
             if (animationCache[this.cacheId].viable <= 0) {
