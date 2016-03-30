@@ -44,7 +44,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         
         id: 'LogicDragDrop',
         
-        constructor: function (definition) {
+        constructor: function () {
             this.nextX = this.owner.x;
             this.nextY = this.owner.y;
             this.grabOffsetX = 0;
@@ -55,17 +55,25 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             
             this.tryDrop = false;
             this.hitSomething = false;
+            
+            this.hasCollision = false;
         },
 
         events: {// These are messages that this component listens for
-            "handle-logic": function (resp) {
+            "component-added": function (component) {
+                if (component.type === 'CollisionBasic') {
+                    this.hasCollision = true;
+                }
+            },
+            
+            "handle-logic": function () {
                 this.owner.x = this.nextX;
                 this.owner.y = this.nextY;
                 
                 this.state.set('noDrop', false);
             },
 
-            "handle-post-collision-logic": function (resp) {
+            "handle-post-collision-logic": function () {
                 if (this.tryDrop) {
                     this.tryDrop = false;
                     if (this.hitSomething) {
@@ -76,7 +84,6 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                         this.state.set('noDrop', false);
                         this.state.set('dragging', false);
                     }
-                    
                 } else if (this.hitSomething) {
                     this.state.set('noDrop', true);
                 }
@@ -86,15 +93,26 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 this.grabOffsetX = eventData.x - this.owner.x;
                 this.grabOffsetY = eventData.y - this.owner.y;
                 this.state.set('dragging', true);
+                
+                eventData.pixiEvent.stopPropagation();
             },
-            "mouseup": function (eventData) {
-                this.tryDrop = true;
+            "pressup": function (eventData) {
+                if (this.hasCollision) {
+                    this.tryDrop = true;
+                } else {
+                    this.state.set('noDrop', false);
+                    this.state.set('dragging', false);
+                }
+                
+                eventData.pixiEvent.stopPropagation();
             },
             "pressmove": function (eventData) {
                 this.nextX = eventData.x - this.grabOffsetX;
                 this.nextY = eventData.y - this.grabOffsetY;
+                
+                eventData.pixiEvent.stopPropagation();
             },
-            "no-drop": function (collisionData) {
+            "no-drop": function () {
                 this.hitSomething = true;
             }
         },
