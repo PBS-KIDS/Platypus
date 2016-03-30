@@ -1,6 +1,6 @@
 /**
  * This component acts as a simple AI that will reverse the movement direction of an object when it collides with something.
- * 
+ *
  * @namespace platypus.components
  * @class AIPacer
  * @uses platypus.Component
@@ -15,7 +15,7 @@
         properties: {
             /**
              * This determines the direction of movement. Can be "horizontal", "vertical", or "both".
-             * 
+             *
              * @property movement
              * @type String
              * @default "both"
@@ -24,7 +24,7 @@
             
             /**
              * This sets the initial direction of movement. Defaults to "up", or "left" if movement is horizontal.
-             * 
+             *
              * @property direction
              * @type String
              * @default "up"
@@ -32,7 +32,7 @@
             direction: null
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             this.lastDirection    = '';
             this.currentDirection = this.direction || ((this.movement === 'horizontal') ? 'left' : 'up');
         },
@@ -40,7 +40,7 @@
         events: {
             /**
              * This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
-             * 
+             *
              * @method 'handle-ai'
              */
             "handle-ai": function () {
@@ -49,29 +49,29 @@
                     
                     /**
                      * Triggers this event prior to changing direction.
-                     * 
+                     *
                      * @event 'stop'
                      */
                     this.owner.triggerEvent('stop');
                     
                     /**
                      * Triggers this event when the entity is moving right and collides with something.
-                     * 
+                     *
                      * @event 'go-left'
                      */
                     /**
                      * Triggers this event when the entity is moving left and collides with something.
-                     * 
+                     *
                      * @event 'go-right'
                      */
                     /**
                      * Triggers this event when the entity is moving up and collides with something.
-                     * 
+                     *
                      * @event 'go-down'
                      */
                     /**
                      * Triggers this event when the entity is moving down and collides with something.
-                     * 
+                     *
                      * @event 'go-up'
                      */
                     this.owner.triggerEvent('go-' + this.currentDirection);
@@ -80,9 +80,9 @@
             
             /**
              * On receiving this message, the component will check the collision side and re-orient itself accordingly.
-             * 
+             *
              * @method 'turn-around'
-             * @param message {CollisionData} Uses direction of collision to determine whether to turn around.
+             * @param collisionInfo {platypus.CollisionData} Uses direction of collision to determine whether to turn around.
              */
             "turn-around": function (collisionInfo) {
                 if ((this.movement === 'both') || (this.movement === 'horizontal')) {

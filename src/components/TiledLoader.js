@@ -1,8 +1,8 @@
 /**
  * This component is attached to a top-level entity (loaded by the [Scene](platypus.Scene.html)) and, once its peer components are loaded, ingests a JSON file exported from the [Tiled map editor](http://www.mapeditor.org/) and creates the tile maps and entities. Once it has finished loading the map, it removes itself from the list of components on the entity.
- * 
+ *
  * This component requires an [EntityContainer](platypus.components.EntityContainer.html) since it calls `entity.addEntity()` on the entity, provided by `EntityContainer`.
- * 
+ *
  * This component looks for the following entities, and if not found will load default versions:
 
         {
@@ -36,7 +36,7 @@
  * @class TiledLoader
  * @uses platypus.Component
  */
-/*global console, include, pako, platypus */
+/*global atob, console, include, pako, platypus */
 /*jslint bitwise: true, plusplus: true */
 (function () {
     "use strict";
@@ -45,6 +45,10 @@
         AABB        = include('platypus.AABB'),
         Data        = include('platypus.Data'),
         Entity      = include('platypus.Entity'),
+        maskId = 0x0fffffff,
+        maskJumpThrough = 0x10000000, // This is not passed in via Tiled - rather it's additional information sent to CollisionTiles.
+        maskXFlip = 0x80000000,
+        maskYFlip = 0x40000000,
         decodeBase64 = (function () {
             var decodeString = function (str, index) {
                     return (((str.charCodeAt(index)) + (str.charCodeAt(index + 1) << 8) + (str.charCodeAt(index + 2) << 16) + (str.charCodeAt(index + 3) << 24 )) >>> 0);
@@ -83,21 +87,6 @@
 
             return x;
         },
-        transformCheck = function (v) {
-            var a = !!(0x20000000 & v),
-                b = !!(0x40000000 & v),
-                c = !!(0x80000000 & v);
-
-            if (a && c) {
-                return -3;
-            } else if (a) {
-                return -5;
-            } else if (b) {
-                return -4;
-            } else {
-                return -2;
-            }
-        },
         transform = {
             x: 1,
             y: 1,
@@ -105,11 +94,10 @@
         },
         entityTransformCheck = function (v) {
             var resp = transform,
-                //        a = !!(0x20000000 & v),
-                b = !!(0x40000000 & v),
-                c = !!(0x80000000 & v);
+                b = !!(maskYFlip & v),
+                c = !!(maskXFlip & v);
 
-            resp.id = 0x0fffffff & v;
+            resp.id = maskId & v;
             resp.x = 1;
             resp.y = 1;
 
@@ -325,7 +313,7 @@
         properties: {
             /**
              * This causes the entire map to be offset automatically by an order of magnitude higher than the height and width of the world so that the number of digits below zero is constant throughout the world space. This fixes potential floating point issues when, for example, 97 is added to 928.0000000000001 giving 1025 since a significant digit was lost when going into the thousands.
-             * 
+             *
              * @property offsetMap
              * @type Boolean
              * @default false
@@ -371,7 +359,7 @@
             
             /**
              * If a particular sprite sheet should be used that's not defined by the level images themselves. This is useful for making uniquely-themed variations of the same level. This is overridden by `"spriteSheet": "import"` in the "render-layer" Entity definition, so be sure to remove that when setting this property.
-             * 
+             *
              * @property spriteSheet
              * @type String | Object
              * @default null
@@ -436,7 +424,7 @@
             manuallyLoad: false
         },
 
-        constructor: function (definition) {
+        constructor: function () {
             this.assetCache = Application.instance.assetManager.cache;
             this.layerZ = 0;
             this.followEntity = false;
@@ -570,10 +558,11 @@
                     importCollision[x] = [];
                     importRender[x] = [];
                     for (y = 0; y < height; y++) {
-                        index = +data[x + y * width] - 1;
+                        index = +data[x + y * width] - 1; // -1 from original src to make it zero-based.
                         importRender[x][y] = 'tile' + index;
-                        if (jumpthroughs && jumpthroughs.length && (jumpthroughs[0] === (0x0fffffff & index))) {
-                            index = transformCheck(index);
+                        index += 1; // So collision map matches original src indexes. Render (above) should probably be changed at some point as well. DDD 3/30/2016
+                        if (jumpthroughs && jumpthroughs.length && (jumpthroughs[0] === (maskId & index))) {
+                            index = maskJumpThrough | index;
                         }
                         importCollision[x][y] = index;
                     }
@@ -748,20 +737,20 @@
                 for (i = 0; i < layers.length; i++) {
                     layerDefinition = layers[i];
                     switch (layerDefinition.type) {
-                        case 'imagelayer':
-                            layer = this.createLayer('image-layer', this.convertImageLayer(layer, tileHeight, tileWidth), x, y, tileWidth, tileHeight, tilesets, images, layer);
-                            break;
-                        case 'objectgroup':
-                            this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, progress);
-                            layer = null;
-                            break;
-                        case 'tilelayer':
-                            layer = this.setupLayer(layerDefinition, actionLayerCollides, layer, x, y, tileWidth, tileHeight, tilesets, images);
-                            break;
-                        default:
-                            if (platypus.game.settings.debug) {
-                                console.warn('TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
-                            }
+                    case 'imagelayer':
+                        layer = this.createLayer('image-layer', this.convertImageLayer(layerDefinition, tileHeight, tileWidth), x, y, tileWidth, tileHeight, tilesets, images, layer);
+                        break;
+                    case 'objectgroup':
+                        this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, progress);
+                        layer = null;
+                        break;
+                    case 'tilelayer':
+                        layer = this.setupLayer(layerDefinition, actionLayerCollides, layer, x, y, tileWidth, tileHeight, tilesets, images);
+                        break;
+                    default:
+                        if (platypus.game.settings.debug) {
+                            console.warn('TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
+                        }
                     }
                     this.updateLoadingProgress(progress);
                 }
@@ -793,7 +782,8 @@
             },
             
             setUpEntities: function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, progress) {
-                var widthOffset = 0,
+                var clamp = 1000,
+                    widthOffset = 0,
                     heightOffset = 0,
                     x = 0,
                     p = 0,
@@ -944,8 +934,8 @@
                                 a = ((entity.rotation / 180) % 2) * Math.PI;
                                 v = platypus.Vector.setUp(w, -h).rotate(a);
                                 properties.rotation = entity.rotation;
-                                properties.x = Math.round((properties.x + v.x - w) * 1000) / 1000;
-                                properties.y = Math.round((properties.y + v.y + h) * 1000) / 1000;
+                                properties.x = Math.round((properties.x + v.x - w) * clamp) / clamp;
+                                properties.y = Math.round((properties.y + v.y + h) * clamp) / clamp;
                                 v.recycle();
                             }
 
@@ -1075,7 +1065,7 @@
         publicMethods: {
             /**
              * This method decodes a Tiled layer and sets its data to CSV format.
-             * 
+             *
              * @method decodeLayer
              * @param layer {Object} An object describing a Tiled JSON-exported layer.
              * @return {Object} The same object provided, but with the data field updated.
@@ -1088,7 +1078,7 @@
                     layer.encoding = 'csv'; // So we won't have to decode again.
                 }
                 return layer;
-            }            
+            }
         },
         
         getAssetList: function (def, props, defaultProps) {

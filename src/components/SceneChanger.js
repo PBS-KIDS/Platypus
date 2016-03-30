@@ -1,14 +1,15 @@
 /**
  * This component allows the entity to initiate a change from the current scene to another scene.
- * 
+ *
  * @namespace platypus.components
  * @class SceneChanger
  * @extends platypus.Component
  */
-/*global console */
-/*global platypus */
+/*global include, platypus */
 (function () {
     "use strict";
+    
+    var Data = include('platypus.Data');
 
     return platypus.createComponentClass({
         id: 'SceneChanger',
@@ -33,7 +34,7 @@
             persistentData: null
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             this.persistentData = Data.setUp(this.persistentData);
         },
 
@@ -55,6 +56,7 @@
 
             /**
              * On receiving this message, a scene value is stored, waiting for a `new-scene` to make the transition.
+             *
              * @method 'set-scene'
              * @param scene {String} This is a label corresponding with a predefined scene.
              */
@@ -64,7 +66,7 @@
 
             /**
              * On receiving this message, persistent data is stored, waiting for a `new-scene` to make the transition.
-             * 
+             *
              * @method 'set-persistent-scene-data'
              * @param persistentData {Object} Any values that should be passed to the next scene via the "scene-loaded" and "scene-live" events.
              */

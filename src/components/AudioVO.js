@@ -1,6 +1,6 @@
 /**
  * This component plays audio using the SpringRoll VOPlayer instance. Audio is played by triggering specific messages defined in the audio component definition.
- * 
+ *
  * @namespace platypus.components
  * @class AudioVO
  * @uses platypus.Component
@@ -73,7 +73,7 @@
                 
                 /**
                  * When an audio sequence is finished playing, this event is triggered.
-                 * 
+                 *
                  * @event sequence-complete
                  */
                 this.owner.triggerEvent('sequence-complete');
@@ -104,7 +104,7 @@
                 addEvents(value.events, eventList);
             }
 
-            this.playingAudio = true;                
+            this.playingAudio = true;
             player.play(soundList, onComplete.bind(this, true, soundList), onComplete.bind(this, false, soundList));
         };
     
@@ -114,17 +114,17 @@
         properties: {
             /**
              * Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play. Here is an example audioMap object:
-             * 
+             *
              *       {
              *           "message-triggered": "audio-id",
              *           // This simple form is useful to listen for "message-triggered" and play "audio-id" using default audio properties.
-             * 
+             *
              *           "another-message": {
              *           // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to SoundJS play parameters.
-             * 
+             *
              *               "sound": "another-audio-id",
              *               // Required. This is the audio clip to play when "another-message" is triggered.
-             * 
+             *
              *               "events": [{
              *                   "event": "walk-to-the-left",
              *                   "time": 1500
@@ -132,7 +132,7 @@
              *               // Optional. Used to specify a list of events to play once the VO begins.
              *           }
              *       }
-             * 
+             *
              * @property audioMap
              * @type Object
              * @default null
@@ -154,7 +154,7 @@
 
                         /**
                          * Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips.
-                         * 
+                         *
                          * @method '*'
                          * @param [message.events] {Array} Used to specify the list of events to trigger while playing this audio sequence.
                          */
@@ -169,7 +169,7 @@
         events: {
             /**
              * On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.
-             * 
+             *
              * @method 'handle-render'
              */
             "handle-render": function () {
@@ -180,7 +180,7 @@
 
             /**
              * On receiving this message, audio will stop playing.
-             * 
+             *
              * @method 'stop-audio'
              */
             "stop-audio": function () {
@@ -208,7 +208,7 @@
 
             destroy: function () {
                 if (this.playingAudio) {
-                    this.player.stop();  
+                    this.player.stop();
                 }
                 this.eventList.recycle();
             }
