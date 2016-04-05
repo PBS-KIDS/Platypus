@@ -683,7 +683,7 @@
                     x = 0,
                     y = 0,
                     message = Data.setUp(
-                        "level", levelData,
+                        "level", null,
                         "world", AABB.setUp(),
                         "width", 0, // deprecate in 0.8.0
                         "height", 0, // deprecate in 0.8.0
@@ -770,6 +770,7 @@
                  * @param message.world {platypus.AABB} Dimensions of the world.
                  * @param message.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
                  */
+                message.level = level;
                 message.camera = this.followEntity; // TODO: in 0.9.0 this should probably be removed, using something like "child-entity-added" instead. Currently this is particular to TiledLoader and Camera and should be generalized. - DDD 3/15/2016
                 message.width = width;
                 message.height = height;
