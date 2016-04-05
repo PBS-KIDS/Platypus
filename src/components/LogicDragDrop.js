@@ -37,6 +37,16 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         
         properties: {
             /**
+             * Sets the z-order of the item while being dragged.
+             * 
+             * @property dragZ
+             * @type Number
+             * @default 10000
+             * @since 0.8.3
+             */
+            dragZ: 10000,
+            
+            /**
              * Sets whether a click-move should start the dragging behavior in addition to click-drag.
              *
              * @property stickyClick
@@ -50,6 +60,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         constructor: function () {
             this.nextX = this.owner.x;
             this.nextY = this.owner.y;
+            this.lastZ = this.owner.z;
             this.grabOffsetX = 0;
             this.grabOffsetY = 0;
             this.state = this.owner.state;
@@ -73,6 +84,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 if (this.state.get('dragging')) {
                     this.owner.x = this.nextX;
                     this.owner.y = this.nextY;
+                    this.owner.triggerEvent('hovering');
                 }
                 
                 this.state.set('noDrop', false);
@@ -99,8 +111,12 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                     this.sticking = false;
                     this.release();
                 } else {
+                    this.nextX = this.owner.x;
+                    this.nextY = this.owner.y;
+                    this.lastZ = this.owner.z;
                     this.grabOffsetX = eventData.x - this.owner.x;
                     this.grabOffsetY = eventData.y - this.owner.y;
+                    this.owner.z = this.dragZ;
                     this.state.set('dragging', true);
                     this.sticking = this.stickyClick;
                 }
@@ -143,6 +159,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 } else {
                     this.state.set('noDrop', false);
                     this.state.set('dragging', false);
+                    this.owner.z = this.lastZ;
                 }
             },
             
@@ -150,6 +167,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 this.state.set('dragging', false);
                 this.state.set('noDrop', false);
                 this.state = null;
+                this.owner.z = this.lastZ;
             }
         }
     });

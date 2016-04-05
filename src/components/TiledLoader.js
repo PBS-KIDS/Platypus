@@ -683,6 +683,7 @@
                     x = 0,
                     y = 0,
                     message = Data.setUp(
+                        "level", levelData,
                         "world", AABB.setUp(),
                         "width", 0, // deprecate in 0.8.0
                         "height", 0, // deprecate in 0.8.0
@@ -762,6 +763,7 @@
                  *
                  * @event 'world-loaded'
                  * @param message {platypus.Data} World data.
+                 * @param message.level {Object} The Tiled level data used to load the level.
                  * @param message.width {number} The width of the world in world units.
                  * @param message.height {number} The height of the world in world units.
                  * @param message.tile {platypus.AABB} Dimensions of the world tiles.
