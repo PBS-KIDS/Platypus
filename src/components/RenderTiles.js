@@ -398,6 +398,24 @@
             },
 
             /**
+             * This event edits the tile index of a rendered tile.
+             *
+             * @method 'change-tile'
+             * @param tile {String} A string representing the name of the tile to switch to.
+             * @param x {Number} The column of the tile to edit.
+             * @param y {Number} The row of the tile to edit.
+             * @param [z] {Number} If RenderTiles has multiple layers, this value specifies the layer, with `0` being the bottom-most layer.
+             */
+            "change-tile": function (tile, x, y, z) {
+                var map = this.imageMap;
+
+                if (map) {
+                    this.updateTile(tile, map[z || 0], x, y);
+                    this.updateCache = true;
+                }
+            },
+
+            /**
              * Provides the width and height of the world.
              *
              * @method 'camera-loaded'
@@ -609,9 +627,7 @@
                 var x = 0,
                     y = 0,
                     index = '',
-                    map   = null,
-                    tiles = this.tiles,
-                    tile  = null;
+                    map   = null;
 
                 if (typeof mapDefinition[0][0] !== 'string') { // This is not a map definition: it's an actual RenderTiles map.
                     return mapDefinition;
@@ -622,18 +638,25 @@
                     map[x] = Array.setUp();
                     for (y = 0; y < mapDefinition[x].length; y++) {
                         index = mapDefinition[x][y];
-                        if (index.id) {
-                            index = index.id;
-                        }
-                        tile = tiles[index];
-                        if (!tile && (tile !== null)) { // Empty grid spaces are null, so we needn't create a new tile.
-                            tile = tiles[index] = this.createTile(index);
-                        }
-                        map[x][y] = tiles[index];
+                        this.updateTile(index, map, x, y);
                     }
                 }
                 
                 return map;
+            },
+            
+            updateTile: function (index, map, x, y) {
+                var tile = null,
+                    tiles = this.tiles;
+                
+                if (index.id) {
+                    index = index.id;
+                }
+                tile = tiles[index];
+                if (!tile && (tile !== null)) { // Empty grid spaces are null, so we needn't create a new tile.
+                    tile = tiles[index] = this.createTile(index);
+                }
+                map[x][y] = tile;
             },
 
             createGrid: function (parentContainer, renderer) {
