@@ -57,7 +57,7 @@
             for (i = 0; i < sounds.length; i++) {
                 if (sounds[i].sound) {
                     if (sounds[i].events) {
-                        soundList.push(offsetEvents.bind(sounds[i].events, eventList, player));
+                        soundList.push(offsetEvents.bind(this, sounds[i].events, eventList, player));
                     }
                     soundList.push(sounds[i].sound);
                 } else {
