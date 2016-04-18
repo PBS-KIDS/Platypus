@@ -31,8 +31,7 @@ This component creates an entity and propels it away. This is useful for casting
       // Optional. Location relative to the entity where the should be located once created. Defaults to (0, 0).
     }
 */
-/*global platypus */
-/*jslint plusplus:true */
+/*global include, platypus */
 (function () {
     "use strict";
 

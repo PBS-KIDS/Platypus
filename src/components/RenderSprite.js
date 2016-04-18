@@ -205,7 +205,7 @@
             /**
              * Optional. The offset of the z-index of the sprite from the entity's z-index. Will default to 0.
              *
-             * @property scaleY
+             * @property offsetZ
              * @type Number
              * @default 0
              */
