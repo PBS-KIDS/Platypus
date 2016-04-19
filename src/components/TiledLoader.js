@@ -690,7 +690,7 @@
                         "tile", AABB.setUp(),
                         "camera", null
                     );
-                    
+                
                 //format level appropriately
                 if (typeof levelData.level === 'string') {
                     level = platypus.game.settings.levels[levelData.level];
@@ -701,6 +701,10 @@
                 tilesets = importTilesetData(level.tilesets);
                 tileWidth = level.tilewidth;
                 tileHeight = level.tileheight;
+
+                if (level.properties) {
+                    mergeAndFormatProperties(level.properties, this.owner);
+                }
                 
                 if (this.images) {
                     images = this.images.greenSlice();
