@@ -97,9 +97,11 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                         this.dropFailed = false;
                         this.state.set('noDrop', true);
                         this.state.set('dragging', true);
+                        this.owner.dragMode = true;
                     } else {
                         this.state.set('noDrop', false);
                         this.state.set('dragging', false);
+                        this.owner.dragMode = false;
                     }
                 } else if (this.hitSomething) {
                     this.state.set('noDrop', true);
@@ -118,6 +120,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                     this.grabOffsetY = eventData.y - this.owner.y;
                     this.owner.z = this.dragZ;
                     this.state.set('dragging', true);
+                    this.owner.dragMode = true;
                     this.sticking = this.stickyClick;
                 }
                 
@@ -159,12 +162,14 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                 } else {
                     this.state.set('noDrop', false);
                     this.state.set('dragging', false);
+                    this.owner.dragMode = false;
                     this.owner.z = this.lastZ;
                 }
             },
             
             destroy: function () {
                 this.state.set('dragging', false);
+                this.owner.dragMode = false;
                 this.state.set('noDrop', false);
                 this.state = null;
                 this.owner.z = this.lastZ;
