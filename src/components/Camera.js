@@ -1,13 +1,13 @@
 /**
  * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
- * 
+ *
  * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
- * 
+ *
  * @namespace platypus.components
  * @class Camera
  * @uses platypus.Component
 */
-/*global console, createjs, PIXI, platypus, include */
+/*global console, createjs, PIXI, platypus, include, window */
 /*jslint plusplus:true */
 (function () {
     "use strict";
@@ -16,6 +16,27 @@
         AABB = include('platypus.AABB'),
         Data = include('platypus.Data'),
         Vector = include('platypus.Vector'),
+        anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
+            var aabb = AABB.setUp(entity.x + entityOffsetX, entity.y + entityOffsetY, entity.width, entity.height),
+                x = anchorAABB.x,
+                y = anchorAABB.y;
+
+            if (aabb.top < anchorAABB.top) {
+                y -= (anchorAABB.top - aabb.top);
+            } else if (aabb.bottom > anchorAABB.bottom) {
+                y += (anchorAABB.bottom - aabb.bottom);
+            }
+            
+            if (aabb.left < anchorAABB.left) {
+                x -= (anchorAABB.left - aabb.left);
+            } else if (aabb.right > anchorAABB.right) {
+                x += (anchorAABB.right - aabb.right);
+            }
+            
+            aabb.recycle();
+            
+            return this.move(x, y, 0);
+        },
         doNothing = function () {
             return false;
         };
@@ -25,7 +46,7 @@
         properties: {
             /**
              * Number specifying width of viewport in world coordinates.
-             * 
+             *
              * @property width
              * @type number
              * @default 0
@@ -34,7 +55,7 @@
              
             /**
              * Number specifying height of viewport in world coordinates.
-             * 
+             *
              * @property height
              * @type number
              * @default 0
@@ -45,7 +66,7 @@
             
             /**
              * Whether camera overflows to cover the whole canvas or remains contained within its aspect ratio's boundary.
-             * 
+             *
              * @property overflow
              * @type boolean
              * @default false
@@ -54,7 +75,7 @@
             
             /**
              * Boolean value that determines whether the camera should stretch the world viewport when window is resized. Defaults to false which maintains the proper aspect ratio.
-             * 
+             *
              * @property stretch
              * @type boolean
              * @default: false
@@ -63,7 +84,7 @@
             
             /**
              * Sets how many units the followed entity can move before the camera will re-center. This should be lowered for small-value coordinate systems such as Box2D.
-             * 
+             *
              * @property threshold
              * @type number
              * @default 1
@@ -72,7 +93,7 @@
             
             /**
              * Whether, when following an entity, the camera should rotate to match the entity's orientation.
-             * 
+             *
              * @property rotate
              * @type boolean
              * @default false
@@ -81,7 +102,7 @@
 
             /**
              * Number specifying the horizontal center of viewport in world coordinates.
-             * 
+             *
              * @property x
              * @type number
              * @default 0
@@ -90,7 +111,7 @@
              
             /**
              * Number specifying the vertical center of viewport in world coordinates.
-             * 
+             *
              * @property y
              * @type number
              * @default 0
@@ -100,7 +121,7 @@
         publicProperties: {
             /**
              * The entity's canvas element is used to determine the window size of the camera.
-             * 
+             *
              * @property canvas
              * @type DOMElement Canvas
              * @default null
@@ -109,7 +130,7 @@
             
             /**
              * Sets how quickly the camera should pan to a new position in the horizontal direction.
-             * 
+             *
              * @property transitionX
              * @type number
              * @default 400
@@ -118,7 +139,7 @@
             
             /**
              * Sets how quickly the camera should pan to a new position in the vertical direction.
-             * 
+             *
              * @property transitionY
              * @type number
              * @default 600
@@ -127,7 +148,7 @@
              
             /**
              * Sets how quickly the camera should rotate to a new orientation.
-             * 
+             *
              * @property transitionAngle
              * @type number
              * @default: 600
@@ -136,7 +157,7 @@
 
             /**
              * Number specifying width of the world in units. This property is available on the Entity.
-             * 
+             *
              * @property worldWidth
              * @type number
              * @default 0
@@ -146,7 +167,7 @@
             
             /**
              * Number specifying height of the world in units. This property is available on the Entity.
-             * 
+             *
              * @property worldHeight
              * @type number
              * @default 0
@@ -184,7 +205,7 @@
             //Whether the map has finished loading.
             this.worldIsLoaded = false;
             
-            this.following = undefined;
+            this.following = null;
             this.state = 'static';//'roaming';
             if (this.mode === 'pan') {
                 this.state = 'mouse-pan';
@@ -253,7 +274,7 @@
         events: {
             /**
              * Sets up the camera window size on load.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
@@ -262,7 +283,7 @@
             
             /**
              * On receiving this message, the camera begins viewing the world.
-             * 
+             *
              * @method 'render-world'
              * @param data {Object} Information about the world.
              * @param data.world {PIXI.Container} The container containing world entities.
@@ -275,7 +296,7 @@
             
             /**
              * If children entities are listening for a `camera-update` message, they are added to an internal list.
-             * 
+             *
              * @method 'child-entity-added'
              * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
               **/
@@ -285,7 +306,7 @@
                 if (this.worldIsLoaded) {
                     /**
                      * On receiving a "world-loaded" message, the camera broadcasts the world size to all children in the world.
-                     * 
+                     *
                      * @event 'camera-loaded'
                      * @param message
                      * @param message.worldWidth {number} The width of the loaded world.
@@ -298,7 +319,7 @@
 
             /**
              * Triggers "camera-update" on newly changed entities.
-             * 
+             *
              * @method 'child-entity-updated'
              * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
              * @since 0.6.8
@@ -313,7 +334,7 @@
 
             /**
              * On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [TiledLoader](platypus.components.TiledLoader.html) component.
-             * 
+             *
              * @method 'world-loaded'
              * @param message {Object}
              * @param [message.width] {number} The width of the loaded world.
@@ -362,13 +383,13 @@
                 }
             },
 
-            "pressup": function (event) {
+            "pressup": function () {
                 this.mouse = null;
             },
             
             /**
              * On a "tick" step event, the camera updates its location according to its current state.
-             * 
+             *
              * @method 'tick'
              * @param message {Object}
              * @param message.delta {Number} If necessary, the current camera update function may require the length of the tick to adjust movement rate.
@@ -436,7 +457,7 @@
                     
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
-                     * 
+                     *
                      * @event 'camera-update'
                      * @param message {Object}
                      * @param message.world {platypus.AABB} The dimensions of the world map.
@@ -504,10 +525,8 @@
                 if (location.time && window.createjs && createjs.Tween) {
                     v = Vector.setUp(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
                     createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move).call(stop);
-                } else {
-                    if (this.move(location.x, location.y)) {
-                        this.viewportUpdate = true;
-                    }
+                } else if (this.move(location.x, location.y)) {
+                    this.viewportUpdate = true;
                 }
             },
             
@@ -516,7 +535,7 @@
             *
             * @method 'follow'
             * @param message {Object}
-            * @param message.mode {String} Can be "locked", "forward", "bounding", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
+            * @param message.mode {String} Can be "locked", "forward", "bounding", "anchor-bound", or "static". "static" suspends following, but the other three settings require that the entity parameter be defined. Also set the bounding area parameters if sending "bounding" as the following method and the movement parameters if sending "forward" as the following method.
             * @param [message.entity] {platypus.Entity} The entity that the camera should commence following.
             * @param [message.top] {number} The top of a bounding box following an entity.
             * @param [message.left] {number} The left of a bounding box following an entity.
@@ -549,6 +568,7 @@
                     yMag    = def.yMagnitude || 0,
                     xFreq   = def.xFrequency || 0, //Cycles per second
                     yFreq   = def.yFrequency || 0, //Cycles per second
+                    second  = 1000,
                     time    = def.time || 0;
                 
                 this.viewportUpdate = true;
@@ -562,7 +582,7 @@
                     this.xWaveLength = 1;
                     this.xShakeTime = 0;
                 } else {
-                    this.xWaveLength = (1000 / xFreq);
+                    this.xWaveLength = (second / xFreq);
                     this.xShakeTime = Math.ceil(time / this.xWaveLength) * this.xWaveLength;
                 }
                 
@@ -570,7 +590,7 @@
                     this.yWaveLength = 1;
                     this.yShakeTime = 0;
                 } else {
-                    this.yWaveLength = (1000 / yFreq);
+                    this.yWaveLength = (second / yFreq);
                     this.yShakeTime = Math.ceil(time / this.yWaveLength) * this.yWaveLength;
                 }
                 
@@ -580,6 +600,8 @@
         
         methods: {
             follow: function (def) {
+                var portion = 0.1;
+                
                 if (def.time) { //save current follow
                     if (!this.lastFollow.begin) {
                         this.lastFollow.entity = this.following;
@@ -588,10 +610,8 @@
                         this.lastFollow.offsetY = this.offsetY;
                     }
                     this.lastFollow.begin  = Date.now() + def.time;
-                } else {
-                    if (this.lastFollow.begin) {
-                        this.lastFollow.begin = 0;
-                    }
+                } else if (this.lastFollow.begin) {
+                    this.lastFollow.begin = 0;
                 }
                 
                 this.mode = def.mode;
@@ -612,8 +632,8 @@
                     this.lastX           = def.entity.x - def.offsetX || 0;
                     this.lastY           = def.entity.y - def.offsetY || 0;
                     this.lastOrientation = def.entity.orientation || 0;
-                    this.forwardX  = def.movementX || (this.transitionX / 10);
-                    this.forwardY  = def.movementY || (this.transitionY / 10);
+                    this.forwardX  = def.movementX || (this.transitionX * portion);
+                    this.forwardY  = def.movementY || (this.transitionY * portion);
                     this.averageOffsetX = 0;
                     this.averageOffsetY = 0;
                     this.averageOffsetAngle = 0;
@@ -631,10 +651,15 @@
                     this.boundingBox.setAll(def.x, def.y, def.width, def.height);
                     this.followingFunction = this.boundingFollow;
                     break;
+                case 'anchor-bound':
+                    this.state = 'following';
+                    this.following = def.entity;
+                    this.followingFunction = anchorBound.bind(this, def.anchorAABB, def.offsetX || 0, def.offsetY || 0);
+                    break;
                 case 'pan':
                     this.state = 'mouse-pan';
-                    this.following = undefined;
-                    this.followingFunction = undefined;
+                    this.following = null;
+                    this.followingFunction = null;
                     if (def && (typeof def.x === 'number') && (typeof def.y === 'number')) {
                         this.move(def.x, def.y, def.orientation || 0);
                         this.viewportUpdate = true;
@@ -642,8 +667,8 @@
                     break;
                 default:
                     this.state = 'static';
-                    this.following = undefined;
-                    this.followingFunction = undefined;
+                    this.following = null;
+                    this.followingFunction = null;
                     if (def && (typeof def.x === 'number') && (typeof def.y === 'number')) {
                         this.move(def.x, def.y, def.orientation || 0);
                         this.viewportUpdate = true;
@@ -671,7 +696,9 @@
             moveY: doNothing,
             
             reorient: function (newOrientation) {
-                if (Math.abs(this.worldCamera.orientation - newOrientation) > 0.0001) {
+                var errMargin = 0.0001;
+                
+                if (Math.abs(this.worldCamera.orientation - newOrientation) > errMargin) {
                     this.worldCamera.orientation = newOrientation;
                     return true;
                 }
@@ -693,7 +720,7 @@
                         }
                     };
                 
-                return function (entity, time, slowdown) {
+                return function (entity, time) {
                     var x = getTransitionalPoint(this.worldCamera.viewport.x, entity.x, getRatio(this.transitionX, time)),
                         y = getTransitionalPoint(this.worldCamera.viewport.y, entity.y, getRatio(this.transitionY, time));
 
@@ -706,9 +733,12 @@
             }()),
             
             forwardFollow: function (entity, time) {
-                var ff = this.forwardFollower,
-                    standardizeTimeDistance = 15 / time, //This allows the camera to pan appropriately on slower devices or longer ticks
+                var avgFraction = 0.9,
+                    avgFractionFlip = 1 - avgFraction,
+                    ff = this.forwardFollower,
                     moved  = false,
+                    ms = 15,
+                    standardizeTimeDistance = ms / time, //This allows the camera to pan appropriately on slower devices or longer ticks
                     x = entity.x + this.offsetX,
                     y = entity.y + this.offsetY,
                     a = (entity.orientation || 0) + this.offsetAngle;
@@ -717,10 +747,10 @@
                     return this.lockedFollow(ff, time);
                 } else {
                     // span over last 10 ticks to prevent jerkiness
-                    this.averageOffsetX *= 0.9;
-                    this.averageOffsetY *= 0.9;
-                    this.averageOffsetX += 0.1 * (x - this.lastX) * standardizeTimeDistance;
-                    this.averageOffsetY += 0.1 * (y - this.lastY) * standardizeTimeDistance;
+                    this.averageOffsetX *= avgFraction;
+                    this.averageOffsetY *= avgFraction;
+                    this.averageOffsetX += avgFractionFlip * (x - this.lastX) * standardizeTimeDistance;
+                    this.averageOffsetY += avgFractionFlip * (y - this.lastY) * standardizeTimeDistance;
 
                     if (Math.abs(this.averageOffsetX) > (this.worldCamera.viewport.width / (this.forwardX * 2))) {
                         this.averageOffsetX = 0;
@@ -730,8 +760,8 @@
                     }
                     
                     if (this.rotate) {
-                        this.averageOffsetAngle *= 0.9;
-                        this.averageOffsetAngle += 0.1 * (a - this.lastOrientation) * standardizeTimeDistance;
+                        this.averageOffsetAngle *= avgFraction;
+                        this.averageOffsetAngle += avgFractionFlip * (a - this.lastOrientation) * standardizeTimeDistance;
                         if (Math.abs(this.averageOffsetAngle) > (this.worldCamera.orientation / (this.forwardAngle * 2))) {
                             this.averageOffsetAngle = 0;
                         }
@@ -804,12 +834,10 @@
                         } else {
                             this.viewport.resize(this.viewport.height * worldAspectRatio, this.viewport.height);
                         }
+                    } else if (this.overflow) {
+                        this.worldCamera.viewport.resize(this.width, this.width / windowAspectRatio);
                     } else {
-                        if (this.overflow) {
-                            this.worldCamera.viewport.resize(this.width, this.width / windowAspectRatio);
-                        } else {
-                            this.viewport.resize(this.viewport.width, this.viewport.width / worldAspectRatio);
-                        }
+                        this.viewport.resize(this.viewport.width, this.viewport.width / worldAspectRatio);
                     }
                 }
                 
