@@ -77,9 +77,6 @@
             
             return bts;
         },
-        getCacheId = function (images, frame) {
-            return images[frame[4]] + '-x' + frame[0] + 'y' + frame[1] + 'w' + frame[2] + 'h' + frame[3];
-        },
         getTexturesCacheId = function (spriteSheet) {
             var i = 0;
             
@@ -174,8 +171,8 @@
             anims = standardizeAnimations(spriteSheet.animations || {}, textures);
 
             // Set up a default animation that plays through all frames
-            if (!anims['default']) {
-                anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
+            if (!anims.default) {
+                anims.default = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
             frames.recycle();
@@ -188,7 +185,6 @@
         },
         cacheAnimations = function (spriteSheet, cacheId) {
             var i = 0,
-                id = '',
                 anims    = null,
                 frame    = null,
                 frames   = null,
@@ -207,7 +203,6 @@
             // Set up texture for each frame
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
-                id = getCacheId(images, frame);
                 texture = new Texture(bases[frame[4]], new Rectangle(frame[0], frame[1], frame[2], frame[3]));
                 textures.push({
                     texture: texture,
@@ -219,8 +214,8 @@
             anims = standardizeAnimations(spriteSheet.animations || {}, textures);
 
             // Set up a default animation that plays through all frames
-            if (!anims['default']) {
-                anims['default'] = formatAnimation('default', [0, textures.length - 1], textures);
+            if (!anims.default) {
+                anims.default = formatAnimation('default', [0, textures.length - 1], textures);
             }
             
             frames.recycle();
@@ -234,9 +229,10 @@
             };
         },
         PIXIAnimation = function (spriteSheet, animation) {
-            var cacheId = getTexturesCacheId(spriteSheet),
-                cache   = (cacheId ? animationCache[cacheId] : null),
-                speed   = (spriteSheet.framerate || 60) / 60;
+            var FR = 60,
+                cacheId = getTexturesCacheId(spriteSheet),
+                cache = (cacheId ? animationCache[cacheId] : null),
+                speed = (spriteSheet.framerate || FR) / FR;
             
             if (!cacheId) {
                 cache = getAnimations(spriteSheet);
@@ -342,11 +338,11 @@
         * @property paused
         */
         paused: {
-            get: function() {
+            get: function () {
                 return !this.playing;
             },
-            set: function(value) {
-                if ((value && this.playing) || (!value && !this.playing)){
+            set: function (value) {
+                if ((value && this.playing) || (!value && !this.playing)) {
                     this.playing = !value;
                     this._syncUpdate();
                 }
@@ -412,7 +408,7 @@
         this._currentTime = 0;
         this._animation = this._animations[animation];
         if (!this._animation) {
-            this._animation = this._animations['default'];
+            this._animation = this._animations.default;
         }
         this._texture = this._animation.frames[0].texture;
         this.anchor =  this._animation.frames[0].anchor;
@@ -420,7 +416,7 @@
     
     /**
     * Goes to a specific frame and begins playing the PIXIAnimation
-    * 
+    *
     * @method gotoAndPlay
     * @param animation {string} The animation to begin playing.
     */
@@ -428,7 +424,7 @@
         this._currentTime = 0;
         this._animation = this._animations[animation];
         if (!this._animation) {
-            this._animation = this._animations['default'];
+            this._animation = this._animations.default;
         }
         this._texture = this._animation.frames[0].texture;
         this.anchor = this._animation.frames[0].anchor;
@@ -468,7 +464,7 @@
     
     /**
      * Stops the PIXIAnimation and destroys it
-     * 
+     *
      * @method destroy
      */
     prototype.destroy = function () {
@@ -492,7 +488,7 @@
     
     /**
      * This method makes sure that all the base textures are in the gpu to prevent framerate lurches later due to loading base textures as their textures appear.
-     * 
+     *
      * @method PIXIAnimation.preloadBaseTextures
      * @param renderer {PIXI.WebGLRenderer}
      */
