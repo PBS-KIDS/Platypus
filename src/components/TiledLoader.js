@@ -261,7 +261,7 @@
                 "components": [{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
-                    "imageMap":    "import",
+                    "imageMap": "import",
                     "entityCache": true
                 }]
             },
@@ -277,7 +277,7 @@
                 "components": [{
                     "type": "RenderTiles",
                     "spriteSheet": "import",
-                    "imageMap":    "import"
+                    "imageMap": "import"
                 }]
             }
         },
@@ -1114,7 +1114,7 @@
             var ps  = props || {},
                 dps = defaultProps || {},
                 ss  = def.spriteSheet || ps.spriteSheet || dps.spriteSheet;
-                
+
             if (data && data.level) {
                 return checkLevel(data.level, ss);
             } else {

@@ -28,7 +28,7 @@
  * @param {Array} [definition.assets] This lists the assets that this scene requires.
  * @return {Scene} Returns the new scene made up of the provided layers.
  */
-/* global console, extend, include, platypus */
+/* global extend, include, platypus */
 platypus.Scene = (function () {
     "use strict";
     
@@ -36,11 +36,6 @@ platypus.Scene = (function () {
         PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
         fn = /([\w-]+)\.(\w+)$/,
-        log = function () {
-            if (platypus.game.settings.debug) {
-                console.log.apply(this, arguments);
-            }
-        },
         formatAsset = function (asset) {
             var match = asset.match(fn),
                 a = {
@@ -121,7 +116,7 @@ platypus.Scene = (function () {
             messages.recycle();
             this.storedMessages = null;
 
-            log('Scene loaded: ' + this.id);
+            platypus.debug.olive('Scene loaded: ' + this.id);
             
             /**
              * This event is triggered on the layers once the Scene is finished loading.
@@ -191,7 +186,7 @@ platypus.Scene = (function () {
      */
     proto.enterDone = function () {
         platypus.game.currentScene = this;
-        log('Scene live: ' + this.id);
+        platypus.debug.olive('Scene live: ' + this.id);
         
         /**
          * This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.
@@ -208,7 +203,7 @@ platypus.Scene = (function () {
      * @method exitStart
      */
     proto.exitStart = function () {
-        log('Scene ending: ' + this.id);
+        platypus.debug.olive('Scene ending: ' + this.id);
         
         /**
          * This event is triggered on the layers once the Scene is over.

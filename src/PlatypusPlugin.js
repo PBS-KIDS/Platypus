@@ -1,6 +1,6 @@
 /**
  * This plugin instantiates a Platypus game using the configuration file. Configurations should be placed within the SpringRoll config with the following structure:
- * 
+ *
  *      {
  *          "platypus": {
  *              "entities": {},
@@ -10,24 +10,26 @@
  *          },
  *          "sounds": {} // Platypus uses the SpringRoll audio system and syntax for audio assets.
  *      }
- * 
+ *
  * The Platypus game instance is `app.platypus` on the SpringRoll Application and `platypus.game` within the platypus namespace.
- * 
+ *
  * @namespace platypus
  * @class PlatypusPlugin
  */
-/*global console, include, platypus, PIXI */
+/*global console, document, include, platypus, PIXI */
 (function () {
     "use strict";
     
     var Application = include('springroll.Application'),
-	    ApplicationPlugin = include('springroll.ApplicationPlugin'),
-	    updateFunction = null,
+        ApplicationPlugin = include('springroll.ApplicationPlugin'),
+        updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
         sayHello = (function () {
             var getPortion = function (num, max) {
-                    return Math.floor(204 * num / max);
+                    var min = 204;
+                
+                    return Math.floor(min * num / max);
                 },
                 getStyle = function (title, version) {
                     var max = 0,
@@ -87,12 +89,10 @@
                     }
                 }
     
-                if (settings.debug) {
-                    console.log("Game config loaded.", settings);
-                }
+                platypus.debug.olive("Game config loaded.", settings);
             };
         }()),
-        flattenEntityList = function(entityList) {
+        flattenEntityList = function (entityList) {
             var entity = null,
                 folder = null,
                 folderEntity = null,
@@ -102,10 +102,12 @@
                 if (!entityList[entity].id) {
                     folder = flattenEntityList(entityList[entity]);
                     for (folderEntity in folder) {
-                        resultList[folderEntity] = folder[folderEntity]
+                        if (folder.hasOwnProperty(folderEntity)) {
+                            resultList[folderEntity] = folder[folderEntity];
+                        }
                     }
                 } else {
-                    resultList[entity] = entityList[entity]
+                    resultList[entity] = entityList[entity];
                 }
             }
             return resultList;
@@ -122,7 +124,7 @@
     
     PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
 
-	plugin.setup = function() {
+    plugin.setup = function () {
         var author = '',
             authorTag = document.getElementsByName('author'),
             options = this.options;
@@ -131,22 +133,22 @@
             author = authorTag[0].getAttribute('content') || '';
         }
         
-		/**
-		 * Sets credit for the game. Defaults to the "author" META tag if present on the document.
-         * 
-		 * @property {String} options.author
-		 * @default ''
-		 */
-		options.add('author', author, true);
+        /**
+         * Sets credit for the game. Defaults to the "author" META tag if present on the document.
+         *
+         * @property {String} options.author
+         * @default ''
+         */
+        options.add('author', author, true);
 
-		/**
-		 * Hides console hello for the game.
-		 * 
+        /**
+         * Hides console hello for the game.
+         *
          * @property {Boolean} options.hideHello
-		 * @default false
-		 */
-		options.add('hideHello', false, true);
-	};
+         * @default false
+         */
+        options.add('hideHello', false, true);
+    };
     
     // Preload is an optional asynchronous call for doing any loading
     // before the application is init. Make sure that done() is called
@@ -154,6 +156,7 @@
     plugin.preload = function (done) {
         var config = this.config.platypus || this.config,
             game = null,
+            priority = 320,
             time = {
                 delta: 0
             };
@@ -179,7 +182,7 @@
                 time.delta = elapsed;
                 game.tick(time);
             };
-            this.on('update', updateFunction, 320); // Needs to occur before PIXI's ticker update so rendered objects can be positioned correctly.
+            this.on('update', updateFunction, priority); // Needs to occur before PIXI's ticker update so rendered objects can be positioned correctly.
     
             resizeFunction = function (event) {
                 if (game.currentScene) {

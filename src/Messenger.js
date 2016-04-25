@@ -1,6 +1,6 @@
 /**
  * The Messenger object facilitates communication between components and other game objects. Messenger is currently used by [Entity](platypus.Entity.html) and [EntityContainer](platypus.components.EntityContainer).
- * 
+ *
  * @namespace platypus
  * @class Messenger
  * @extends springroll.EventDispatcher
@@ -22,7 +22,7 @@ platypus.Messenger = (function () {
     
     /**
      * Returns a string describing the Messenger as "[Messenger object]".
-     * 
+     *
      * @method toString
      * @return String
      */
@@ -32,7 +32,7 @@ platypus.Messenger = (function () {
 
     /**
      * This method is used by both internal components and external entities to trigger messages. When triggered, Messenger checks through bound handlers to run as appropriate. This handles multiple event structures: "", [], and {}
-     * 
+     *
      * @method trigger
      * @param event {String|Array|Object} This is the message(s) to process. This can be a string, an object containing an "event" property (and optionally a "message" property, overriding the value below), or an array of the same.
      * @param value {*} This is a message object or other value to pass along to event handler.
@@ -110,6 +110,7 @@ platypus.Messenger = (function () {
         proto._triggerEvent = proto.triggerEvent;
         proto.triggerEvent = function (event, value) {
             var i = 0,
+                debugLimit = 5,
                 debugLogging = value && value.debug,
                 debugCount = 0,
                 count = 0;
@@ -119,10 +120,10 @@ platypus.Messenger = (function () {
                 for (i = 0; i < this.loopCheck.length; i++) {
                     if (this.loopCheck[i] === event) {
                         debugCount += 1;
-                        if (debugCount > 5) {
+                        if (debugCount > debugLimit) {
                             throw "Endless loop detected for '" + event + "'.";
                         } else {
-                            console.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
+                            platypus.debug.warn("Event '" + event + "' is nested inside another '" + event + "' event.");
                         }
                     }
                 }
@@ -139,9 +140,9 @@ platypus.Messenger = (function () {
                 this.loopCheck.length = this.loopCheck.length - 1;
                 if (debugLogging) {
                     if (count) {
-                        console.log('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
+                        platypus.debug.olive('Entity "' + this.type + '": Event "' + event + '" has ' + count + ' subscriber' + ((count > 1) ? 's' : '') + '.', value);
                     } else {
-                        console.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
+                        platypus.debug.warn('Entity "' + this.type + '": Event "' + event + '" has no subscribers.', value);
                     }
                 }
                 return count;

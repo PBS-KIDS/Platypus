@@ -38,7 +38,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
         properties: {
             /**
              * Sets the z-order of the item while being dragged.
-             * 
+             *
              * @property dragZ
              * @type Number
              * @default 10000
@@ -138,6 +138,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                     this.nextX = eventData.x - this.grabOffsetX;
                     this.nextY = eventData.y - this.grabOffsetY;
                     
+                    eventData.event.preventDefault();
                     eventData.pixiEvent.stopPropagation();
                 }
             },
@@ -148,6 +149,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
                     this.sticking = false;
                 }
                 
+                eventData.event.preventDefault();
                 eventData.pixiEvent.stopPropagation();
             },
             "no-drop": function () {

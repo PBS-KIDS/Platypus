@@ -1,73 +1,34 @@
 /**
-# COMPONENT **RenderDebug**
-This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates location of the object. By default it uses the specified position and dimensions of the object (in grey), if the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a [[Logic-Carrier]] component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the user to click on an object and it will print the object in the debug console. 
-
-## Dependencies
-- [[HandlerRender]] (on entity's parent) - This component listens for a render "handle-render" and "handle-render-load" message to setup and display the content.
-
-## Messages
-
-### Listens for:
-- **handle-render** - Repositions the pieces of the component in preparation for rendering
-- **handle-render-load** - The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too. 
-  - @param resp.stage ([createjs.Stage][link1]) - This is the stage on which the component will be displayed.
-
-### Local Broadcasts:
-- **mousedown** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-- **mouseup** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-- **mousemove** - Render-debug captures this message and uses it and then passes it on to the rest of the object in case it needs to do something else with it.
-  - @param event (event object) - The event from Javascript.
-  - @param over (boolean) - Whether the mouse is over the object or not.
-  - @param x (number) - The x-location of the mouse in stage coordinates.
-  - @param y (number) - The y-location of the mouse in stage coordinates.
-  - @param entity ([[Entity]]) - The entity clicked on.  
-
-## JSON Definition
-    {
-      "type": "RenderDebug",
-      "acceptInput": {
-          //Optional - What types of input the object should take.
-          "hover": false;
-          "click": false; 
-      }, 
-      "regX": 0,
-      //Optional - The X offset from X position for the displayed shape. If you're using the AABB this is set automatically.
-      "regY": 0
-      //Optional - The Y offset from Y position for the displayed shape. If you're using the AABB this is set automatically.
-    }
-    
-[link1]: http://createjs.com/Docs/EaselJS/Stage.html
-*/
-/*global console, createjs, PIXI, platypus */
-/*jslint plusplus:true */
+ * This component is attached to entities that will appear in the game world. It serves two purposes. First, it displays a rectangle that indicates the location of the entity. By default it uses the specified position and dimensions of the object (in grey). If the object has a collision component it will display the AABB of the collision shape (in pink). If the entity has a LogicCarrier component and is/was carrying an object, a green rectangle will be drawn showing the collision group. The RenderDebug component also allows the developer to right-click on an entity and it will print the object in the debug console.
+ *
+ * @namespace platypus.components
+ * @class RenderDebug
+ * @uses platypus.Component
+ */
+/*global console, include, platypus */
 (function () {
     "use strict";
     
-    var types = {
-            "aabb":      0xff88ff,
-            "render":    0x0000ff,
+    var Graphics = include('PIXI.Graphics'),
+        defaultHeight = 100,
+        defaultWidth = 100,
+        defaultZ = 10000,
+        types = {
+            "aabb": 0xff88ff,
+            "render": 0x0000ff,
             "collision": 0xff00ff,
-            "group":     0x00ff00
+            "group": 0x00ff00
         },
         createShape = function (shape, type, left, top, width, height, z) {
-            var newShape = null;
+            var newShape = null,
+                opacity = 0.1;
 
             switch (shape) {
             case 'rectangle':
-                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawRect(left, top, width, height);
+                newShape = new Graphics().beginFill(types[type], opacity).drawRect(left, top, width, height);
                 break;
             case 'circle':
-                newShape = new PIXI.Graphics().beginFill(types[type], 0.1).drawCircle(0, 0, width);
+                newShape = new Graphics().beginFill(types[type], opacity).drawCircle(0, 0, width);
                 break;
             }
             newShape.z = z;
@@ -79,27 +40,39 @@ This component is attached to entities that will appear in the game world. It se
         
         id: 'RenderDebug',
         
-        constructor: function (definition) {
-            this.regX = definition.regX || 0;
-            this.regY = definition.regY || 0;
+        constructor: function () {
             this.parentContainer = null;
             this.shapes = Array.setUp();
-            
             this.isOutdated = true;
         },
         
         events: {// These are messages that this component listens for
-            "handle-render-load": function (resp) {
+            /**
+             * The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too.
+             *
+             * @method 'handle-render-load'
+             * @param handlerData {Object} Data from the render handler
+             * @param handlerData.container {PIXI.Container} The parent container.
+             */
+            "handle-render-load": function (handlerData) {
                 if (!platypus.game.settings.debug) {
                     this.owner.removeComponent(this);
-                } else if (!this.parentContainer && resp && resp.container) {
-                    this.parentContainer = resp.container;
+                } else if (!this.parentContainer && handlerData && handlerData.container) {
+                    this.parentContainer = handlerData.container;
                 }
             },
             
+            /**
+             * Repositions the pieces of the component in preparation for rendering
+             *
+             * @method 'handle-render'
+             * @param renderData {Object} Data from the render handler
+             * @param renderData.container {PIXI.Container} The parent container.
+             */
             "handle-render": function (renderData) {
                 var i = 0,
-                    aabb = null;
+                    aabb = null,
+                    offset = -0.5;
 
                 if (!this.parentContainer) {
                     if (!platypus.game.settings.debug) {
@@ -127,8 +100,8 @@ This component is attached to entities that will appear in the game world. It se
                 if (this.owner.getCollisionGroupAABB) {
                     aabb = this.owner.getCollisionGroupAABB();
                     if (!this.groupShape) {
-                        this.groupShape = new PIXI.Graphics().beginFill("rgba(255,255,0,0.2)").drawRect(-0.5, -0.5, 1, 1);
-                        this.groupShape.z     = (this.owner.z || 0) + 10000;
+                        this.groupShape = new Graphics().beginFill("rgba(255,255,0,0.2)").drawRect(offset, offset, 1, 1);
+                        this.groupShape.z = (this.owner.z || 0) + defaultZ;
                         this.parentContainer.addChild(this.groupShape);
                     }
                     this.groupShape.scaleX = aabb.width;
@@ -138,6 +111,11 @@ This component is attached to entities that will appear in the game world. It se
                 }
             },
             
+            /**
+             * On receiving this message, will re-orient itself on the next update.
+             *
+             * @method 'orientation-updated'
+             */
             "orientation-updated": function () {
                 this.isOutdated = true;
             }
@@ -146,11 +124,11 @@ This component is attached to entities that will appear in the game world. It se
         
         methods: {
             updateSprites: function () {
-                var z        = (this.owner.z || 0) + 10000,
+                var z        = (this.owner.z || 0) + defaultZ,
                     i        = 0,
                     j        = 0,
-                    width    = this.owner.width  = this.owner.width  || 300,
-                    height   = this.owner.height = this.owner.height || 100,
+                    width    = this.owner.width  = this.owner.width  || defaultWidth,
+                    height   = this.owner.height = this.owner.height || defaultHeight,
                     shapes   = null,
                     aabb     = null,
                     shape    = null;
@@ -189,20 +167,18 @@ This component is attached to entities that will appear in the game world. It se
             
             addInput: (function () {
                 var lastEntityLog = null,
-                    createHandler = function (self) {
-                        return function (event) {
-                            if (lastEntityLog !== self.owner) {
-                                lastEntityLog = self.owner;
-                                console.log('Entity "' + lastEntityLog.type + '":', lastEntityLog);
-                            }
+                    handler = function () {
+                        if (lastEntityLog !== this.owner) {
+                            lastEntityLog = this.owner;
+                            platypus.debug.olive('Entity "' + lastEntityLog.type + '":', lastEntityLog);
+                        }
 
-                            return false;
-                        };
+                        return false;
                     };
                 
                 return function (sprite) {
                     sprite.interactive = true;
-                    sprite.addListener('rightdown', createHandler(this));
+                    sprite.addListener('rightdown', handler.bind(this));
                 };
             }()),
             
@@ -213,7 +189,7 @@ This component is attached to entities that will appear in the game world. It se
                     this.parentContainer.removeChild(this.shapes[i]);
                 }
                 this.shapes.recycle();
-                this.parentContainer = undefined;
+                this.parentContainer = null;
             }
         }
     });

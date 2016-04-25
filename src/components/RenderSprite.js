@@ -5,8 +5,7 @@
  * @class RenderSprite
  * @uses platypus.Component
  */
-/*global console, PIXI, platypus */
-/*jslint plusplus:true, nomen:true */
+/* global console, include, PIXI, platypus */
 (function () {
     "use strict";
     
@@ -14,21 +13,19 @@
         StateMap = include('platypus.StateMap'),
         tempMatrix = new PIXI.Matrix(),
         changeState = function (state) {
-            return function (value) {
-                //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
-                //                We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
-                //if (this.currentAnimation !== state) {
-                if (this.animationFinished || (this.lastState >= -1)) {
-                    this.currentAnimation = state;
-                    this.lastState = -1;
-                    this.animationFinished = false;
-                    this.sprite.gotoAndPlay(state);
-                } else {
-                    this.waitingAnimation = state;
-                    this.waitingState = -1;
-                }
-                //}
-            };
+            //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
+            //                We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
+            //if (this.currentAnimation !== state) {
+            if (this.animationFinished || (this.lastState >= -1)) {
+                this.currentAnimation = state;
+                this.lastState = -1;
+                this.animationFinished = false;
+                this.sprite.gotoAndPlay(state);
+            } else {
+                this.waitingAnimation = state;
+                this.waitingState = -1;
+            }
+            //}
         },
         defaultTest = function (animation) {
             return animation;
@@ -427,7 +424,7 @@
                             }
 
                             if (component.eventBased) {
-                                component.addEventListener(anim, changeState(animation));
+                                component.addEventListener(anim, changeState.bind(component, animation));
                             }
                             if (component.stateBased) {
                                 component.checkStates.push(createTest(anim, animation));
@@ -467,7 +464,7 @@
 
                 if (this.eventBased || this.stateBased) {
                     setupEventsAndStates(this, map);
-                    this.currentAnimation = map['default'] || '';
+                    this.currentAnimation = map.default || '';
                 }
                 
                 /*
@@ -477,7 +474,7 @@
                 this.sprite.onComplete = function (animation) {
                     /**
                      * This event fires each time an animation completes.
-                     * 
+                     *
                      * @event 'animation-ended'
                      * @param animation {String} The id of the animation that ended.
                      */
@@ -747,21 +744,21 @@
             
             /**
              * Stops the sprite's animation.
-             * 
+             *
              * @method 'stop-sprite'
              * @since 0.7.1
              */
-            "stop-sprite": function() {
+            "stop-sprite": function () {
                 this.sprite.stop();
             },
             
             /**
              * Starts the sprite's animation.
-             * 
+             *
              * @method 'play-sprite'
              * @since 0.7.1
              */
-            "play-sprite": function() {
+            "play-sprite": function () {
                 this.sprite.play();
             }
         },
@@ -1089,7 +1086,8 @@
                     pin   = null,
                     regX  = frames.regX || 0,
                     regY  = frames.regY || 0,
-                    isArray = Array.isArray(frames);
+                    isArray = Array.isArray(frames),
+                    zFix = 0.00000001;
                 
                 this.pinsToRemove = this.pinsToRemove || Array.setUp();
                 
@@ -1113,7 +1111,7 @@
                         pin.defaultPin = {
                             x: (pins[i].x - regX),
                             y: (pins[i].y - regY),
-                            z: pins[i].z || 0.00000001, //force z to prevent flickering z-order issues.
+                            z: pins[i].z || zFix, //force z to prevent flickering z-order issues.
                             angle: (pins[i].angle || 0)
                         };
                     }
@@ -1130,7 +1128,7 @@
                                     pin.frames.push({
                                         x: (pins[i].frames[j].x - regX),
                                         y: (pins[i].frames[j].y - regY),
-                                        z: pins[i].frames[j].z || (pin.defaultPin ? pin.defaultPin.z : 0.00000001),
+                                        z: pins[i].frames[j].z || (pin.defaultPin ? pin.defaultPin.z : zFix),
                                         angle: pins[i].frames[j].angle || (pin.defaultPin ? pin.defaultPin.angle : 0)
                                     });
                                 } else if (pin.defaultPin) {
@@ -1176,7 +1174,7 @@
                     for (i = 0; i < this.pinsToRemove.length; i++) {
                         this.owner.triggerEvent('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
                         if (this.pins[this.pinsToRemove[i]].frames) {
-                            this.pins[this.pinsToRemove[i]].frames.recycle();    
+                            this.pins[this.pinsToRemove[i]].frames.recycle();
                         }
                         delete this.pins[this.pinsToRemove[i]];
                     }
