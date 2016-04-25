@@ -4,16 +4,16 @@
  *     {
  *         "layers":[
  *         // Required array listing the entities that should be loaded as scene layers. These can be actual entity JSON definitions as shown in Entity or references to entities by using the following specification.
- * 
+ *
  *             {
  *                 "type": "entity-id",
  *                 // This value maps to an entity definition with a matching "id" value as shown in Entity and will load that definition.
- *                 
+ *
  *                 "properties": {"x": 400}
  *                 // Optional. If properties are passed in this reference, they override the entity definition's properties of the same name.
  *             }
  *         ],
- * 
+ *
  *         "assets": []
  *         // Optional list of assets this scene requires.
  *     }
@@ -26,10 +26,9 @@
  * @param {String} [definition.id] This declares the id of the scene.
  * @param {Array} [definition.layers] This lists the layers that comprise the scene.
  * @param {Array} [definition.assets] This lists the assets that this scene requires.
- * @return {Scene} Returns the new scene made up of the provided layers. 
+ * @return {Scene} Returns the new scene made up of the provided layers.
  */
-/*global extend, platypus */
-/*jslint plusplus:true */
+/* global console, extend, include, platypus */
 platypus.Scene = (function () {
     "use strict";
     
@@ -37,6 +36,11 @@ platypus.Scene = (function () {
         PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
         fn = /([\w-]+)\.(\w+)$/,
+        log = function () {
+            if (platypus.game.settings.debug) {
+                console.log.apply(this, arguments);
+            }
+        },
         formatAsset = function (asset) {
             var match = asset.match(fn),
                 a = {
@@ -117,13 +121,11 @@ platypus.Scene = (function () {
             messages.recycle();
             this.storedMessages = null;
 
-            if (platypus.game.settings.debug) {
-                console.log('Scene loaded: ' + this.id);
-            }
-        
+            log('Scene loaded: ' + this.id);
+            
             /**
              * This event is triggered on the layers once the Scene is finished loading.
-             * 
+             *
              * @event 'scene-loaded'
              * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
              */
@@ -131,6 +133,32 @@ platypus.Scene = (function () {
             
             // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
             PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
+        },
+        loading = function (definition, assets) {
+            var lateAssets = this.getLateAssetList(definition),
+                i = lateAssets.length,
+                j = 0,
+                preload = this.preload;
+            
+            // We need to make sure that the late list only includes new items, not anything already loaded.
+            if (preload.length) {
+                while (i--) {
+                    j = preload.length;
+                    while (j--) {
+                        if (preload[j].id === lateAssets[i].id) {
+                            lateAssets.greenSplice(i);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (lateAssets.length) {
+                assets.union(lateAssets);
+                this.once('exit', unloadAssets.bind(this, lateAssets));
+            } else {
+                lateAssets.recycle();
+            }
         },
         Scene  = function (panel, definition) {
             var assets = this.getAssetList(definition);
@@ -147,16 +175,7 @@ platypus.Scene = (function () {
             this.assets = definition.assets || null;
             
             // If the scene has dynamically added assets such as level data
-            this.on('loading', function (assets) {
-                var lateAssets = this.getLateAssetList(definition);
-                
-                if (lateAssets.length) {
-                    assets.union(lateAssets);
-                    this.once('exit', unloadAssets.bind(this, lateAssets));
-                } else {
-                    lateAssets.recycle();
-                }
-            });
+            this.on('loading', loading.bind(this, definition));
 
             // Load scene
             this.on('loaded', loadScene);
@@ -167,18 +186,16 @@ platypus.Scene = (function () {
         
     /**
      * Triggers "scene-live" on the Scene layers once the Scene is finished loading and the transition into the Scene has finished.
-     * 
+     *
      * @method enterDone
      */
     proto.enterDone = function () {
         platypus.game.currentScene = this;
-        if (platypus.game.settings.debug) {
-            console.log('Scene live: ' + this.id);
-        }
+        log('Scene live: ' + this.id);
         
         /**
          * This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.
-         * 
+         *
          * @event 'scene-live'
          * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
          */
@@ -186,18 +203,16 @@ platypus.Scene = (function () {
     };
     
     /**
-     * Logs the end of the Scene to the console in debug mode.
-     * 
+     * Triggers 'scene-ended' on the layer.
+     *
      * @method exitStart
      */
     proto.exitStart = function () {
-        if (platypus.game.settings.debug) {
-            console.log('Scene ending: ' + this.id);
-        }
-
+        log('Scene ending: ' + this.id);
+        
         /**
          * This event is triggered on the layers once the Scene is over.
-         * 
+         *
          * @event 'scene-ended'
          * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
          * @since 0.7.1
@@ -207,7 +222,7 @@ platypus.Scene = (function () {
     
 /**
  * This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.
- * 
+ *
  * @method triggerOnChildren
  * @param {String} eventId This is the message to process.
  * @param {*} event This is a message object or other value to pass along to component functions.
@@ -229,7 +244,7 @@ platypus.Scene = (function () {
     
 /**
  * This method will return the first entity it finds with a matching id.
- * 
+ *
  * @method getEntityById
  * @param {string} id The entity id to find.
  * @return {Entity} Returns the entity that matches the specified entity id.
@@ -249,12 +264,12 @@ platypus.Scene = (function () {
                 }
             }
         }
-        return undefined;
+        return null;
     };
 
 /**
  * This method will return all game entities that match the provided type.
- * 
+ *
  * @method getEntitiesByType
  * @param {String} type The entity type to find.
  * @return entities {Array} Returns the entities that match the specified entity type.
@@ -279,7 +294,7 @@ platypus.Scene = (function () {
 
 /**
  * This method destroys all the layers in the scene.
- * 
+ *
  * @method exit
  **/
     proto.exit = function () {
@@ -298,7 +313,7 @@ platypus.Scene = (function () {
     
     /**
      * Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets.
-     * 
+     *
      * @method getAssetList
      * @param definition {Object} The definition for the Scene.
      * @return {Array} A list of the necessary assets to load.
@@ -327,7 +342,7 @@ platypus.Scene = (function () {
     
     /**
      * Returns all of the dynamic assets required for the Scene.
-     * 
+     *
      * @method getLateAssetList
      * @return {Array} A list of the necessary assets to load.
      */
