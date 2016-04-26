@@ -529,7 +529,7 @@
                             for (prop in tileset.tileproperties) {
                                 if (tileset.tileproperties.hasOwnProperty(prop)) {
                                     if (tileset.tileproperties[prop].jumpThrough) {
-                                        jumpthroughs.push(tileset.firstgid + parseInt(prop, 10) - 1);
+                                        jumpthroughs.push(tileset.firstgid + parseInt(prop, 10));
                                     }
                                 }
                             }

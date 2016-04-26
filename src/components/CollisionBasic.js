@@ -1,8 +1,8 @@
 /**
  * This component causes this entity to collide with other entities. It must be part of a collision group and will receive messages when colliding with other entities in the collision group.
- * 
- * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance. 
- * 
+ *
+ * Multiple collision components may be added to a single entity if distinct messages should be triggered for certain collision areas on the entity or if the soft collision area is a different shape from the solid collision area. Be aware that too many additional collision areas may adversely affect performance.
+ *
  * @namespace platypus.components
  * @class CollisionBasic
  * @uses platypus.Component
@@ -20,7 +20,7 @@
 
         /**
          * On receiving a 'hit-by' message, custom messages are triggered on the entity corresponding with the component's `solidCollisions` and `softCollisions` key/value mappings.
-         * 
+         *
          * @event *
          * @param collision {Object} A list of key/value pairs describing the collision.
          */
@@ -71,7 +71,7 @@
                     }
                 };
             
-            return function (self, event, solidOrSoft, collisionType) {
+            return function (self, event, solidOrSoft) {
                 if (typeof event === 'string') {
                     return stringBroadcast.bind(self, event, self.collisionType, solidOrSoft);
                 } else if (Array.isArray(event)) {
@@ -260,7 +260,7 @@
         properties: {
             /**
              * Defines how this entity should be recognized by other colliding entities.
-             * 
+             *
              * @property collisionType
              * @type String
              * @default "none"
@@ -269,7 +269,7 @@
 
             /**
              * Defines the type of colliding shape.
-             * 
+             *
              * @property shapeType
              * @type String
              * @default "rectangle"
@@ -278,7 +278,7 @@
             
             /**
              * Determines whether the collision area should transform on orientation changes.
-             * 
+             *
              * @property ignoreOrientation
              * @type boolean
              * @default false
@@ -287,7 +287,7 @@
             
             /**
              * Determines the x-axis center of the collision shape.
-             * 
+             *
              * @property regX
              * @type number
              * @default width / 2
@@ -296,7 +296,7 @@
             
             /**
              * Determines the y-axis center of the collision shape.
-             * 
+             *
              * @property regY
              * @type number
              * @default height / 2
@@ -305,7 +305,7 @@
             
             /**
              * Sets the width of the collision area in world coordinates.
-             * 
+             *
              * @property width
              * @type number
              * @default 0
@@ -314,7 +314,7 @@
             
             /**
              * Sets the height of the collision area in world coordinates.
-             * 
+             *
              * @property height
              * @type number
              * @default 0
@@ -323,7 +323,7 @@
             
             /**
              * Sets the radius of a circle collision area in world coordinates.
-             * 
+             *
              * @property radius
              * @type number
              * @default 0
@@ -332,12 +332,12 @@
             
             /**
              * Determines which collision types this entity should consider soft, meaning this entity may pass through them, but triggers collision messages on doing so. Example:
-             * 
+             *
              *     {
              *         "water": "soaked",       // This triggers a "soaked" message on the entity when it passes over a "water" collision-type entity.
              *         "lava": ["burn", "ouch"] // This triggers both messages on the entity when it passes over a "lava" collision-type entity.
              *     }
-             * 
+             *
              * @property softCollisions
              * @type Object
              * @default null
@@ -346,13 +346,13 @@
             
             /**
              * Determines which collision types this entity should consider solid, meaning this entity should not pass through them. Example:
-             * 
+             *
              *     {
              *         "boulder": "",                       // This specifies that this entity should not pass through other "boulder" collision-type entities.
              *         "diamond": "crack-up",               // This specifies that this entity should not pass through "diamond" collision-type entities, but if it touches one, it triggers a "crack-up" message on the entity.
              *         "marble": ["flip", "dance", "crawl"] // This specifies that this entity should not pass through "marble" collision-type entities, but if it touches one, it triggers all three specified messages on the entity.
              *     }
-             * 
+             *
              * @property solidCollisions
              * @type Object
              * @default null
@@ -361,7 +361,7 @@
             
             /**
              * This is the margin around the entity's width and height. This is an alternative method for specifying the collision shape in terms of the size of the entity. Can also pass in an object specifying the following parameters if the margins vary per side: top, bottom, left, and right.
-             * 
+             *
              * @property margin
              * @type number|Object
              * @default 0
@@ -370,7 +370,7 @@
             
             /**
              * Defines one or more shapes to create the collision area. Defaults to a single shape with the width, height, regX, and regY properties of the entity if not specified. See [CollisionShape](CollisionShape.html) for the full list of properties.
-             * 
+             *
              * @property shapes
              * @type Array
              * @default null
@@ -381,7 +381,7 @@
         publicProperties: {
             /**
              * This property should be set to true if entity doesn't move for better optimization. This causes other entities to check against this entity, but this entity performs no checks of its own. Available on the entity as `entity.immobile`.
-             * 
+             *
              * @property immobile
              * @type boolean
              * @default false
@@ -390,7 +390,7 @@
 
             /**
              * Whether this entity should be tested across its entire movement path. This is necessary for fast-moving entities, but shouldn't be used for others due to the processing overhead. Available on the entity as `entity.bullet`.
-             * 
+             *
              * @property bullet
              * @type boolean
              * @default false
@@ -399,7 +399,7 @@
             
             /**
              * Whether the entity is only solid when being collided with from the top.
-             * 
+             *
              * @property jumpThrough
              * @type boolean
              * @default: false
@@ -452,27 +452,25 @@
             
             if (this.shapes) {
                 shapes = this.shapes;
+            } else if (this.shapeType === 'circle') {
+                radius = radius || (((width || 0) + (height || 0)) / 4);
+                shapes = [{
+                    regX: (isNaN(regX) ? radius : regX) - (marginRight - marginLeft) / 2,
+                    regY: (isNaN(regY) ? radius : regY) - (marginBottom - marginTop) / 2,
+                    radius: radius,
+                    type: this.shapeType
+                }];
             } else {
-                if (this.shapeType === 'circle') {
-                    radius = radius || (((width || 0) + (height || 0)) / 4);
-                    shapes = [{
-                        regX: (isNaN(regX) ? radius : regX) - (marginRight - marginLeft) / 2,
-                        regY: (isNaN(regY) ? radius : regY) - (marginBottom - marginTop) / 2,
-                        radius: radius,
-                        type: this.shapeType
-                    }];
-                } else {
-                    shapes = [{
-                        //regX: (isNaN(regX) ? (width  || 0) / 2 : regX) - (marginRight  - marginLeft) / 2,
-                        //regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
-                        regX: (isNaN(regX) ? (width  || 0) / 2 : regX) + marginLeft,
-                        regY: (isNaN(regY) ? (height || 0) / 2 : regY) + marginTop,
-                        points: definition.points,
-                        width:  (width  || 0) + marginLeft + marginRight,
-                        height: (height || 0) + marginTop  + marginBottom,
-                        type: this.shapeType
-                    }];
-                }
+                shapes = [{
+                    //regX: (isNaN(regX) ? (width  || 0) / 2 : regX) - (marginRight  - marginLeft) / 2,
+                    //regY: (isNaN(regY) ? (height || 0) / 2 : regY) - (marginBottom - marginTop)  / 2,
+                    regX: (isNaN(regX) ? (width  || 0) / 2 : regX) + marginLeft,
+                    regY: (isNaN(regY) ? (height || 0) / 2 : regY) + marginTop,
+                    points: definition.points,
+                    width: (width  || 0) + marginLeft + marginRight,
+                    height: (height || 0) + marginTop  + marginBottom,
+                    type: this.shapeType
+                }];
             }
             
             this.owner.collisionTypes = this.owner.collisionTypes || Array.setUp();
@@ -480,7 +478,7 @@
             
             this.shapes = Array.setUp();
             this.prevShapes = Array.setUp();
-            this.entities = undefined;
+            this.entities = null;
             for (x = 0; x < shapes.length; x++) {
                 this.shapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
                 this.prevShapes.push(CollisionShape.setUp(this.owner, shapes[x], this.collisionType));
@@ -522,7 +520,7 @@
         events: {
             /**
              * On receiving this message, the component triggers `add-collision-entity` on the parent.
-             * 
+             *
              * @method 'collide-on'
              * @param type {String} If specified, only collision components of this type are added to the collision list.
              */
@@ -533,7 +531,7 @@
                 
                 /**
                  * On receiving 'collide-on', this message is triggered on the parent to turn on collision.
-                 * 
+                 *
                  * @event 'add-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
@@ -548,7 +546,7 @@
             
             /**
              * On receiving this message, the component triggers `remove-collision-entity` on the parent.
-             * 
+             *
              * @method 'collide-off'
              * @param type {String} If specified, only collision components of this type are removed from the collision list.
              */
@@ -561,7 +559,7 @@
                 
                 /**
                  * On receiving 'collide-off', this message is triggered on the parent to turn off collision.
-                 * 
+                 *
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
@@ -581,7 +579,7 @@
             
             /**
              * This message causes the entity's x,y coordinates to update.
-             * 
+             *
              * @method 'relocate-entity'
              * @param position {platypus.Vector} The new coordinates.
              * @param [position.relative=false] {boolean} Determines whether the provided x,y coordinates are relative to the entity's current position.
@@ -643,7 +641,7 @@
             
             /**
              * If the entity is stuck to another entity, this component tries to unstick the entity on each logic step.
-             * 
+             *
              * @method 'handle-logic'
              */
             "handle-logic": function () {
@@ -654,7 +652,7 @@
             
             /**
              * Collision shapes are updated to reflect the new orientation when this message occurs.
-             * 
+             *
              * @method 'orientation-updated'
              * @param matrix {Array} A 2D matrix describing the new orientation.
              */

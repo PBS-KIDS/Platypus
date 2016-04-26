@@ -1,6 +1,6 @@
 /**
  * This component checks for collisions between entities which typically have either a [CollisionTiles](platypus.components.CollisionTiles.html) component for tile maps or a [CollisionBasic](platypus.components.CollisionBasic.html) component for other entities. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
- * 
+ *
  * @namespace platypus.components
  * @class HandlerCollision
  * @uses platypus.Component
@@ -14,7 +14,7 @@
     
     /**
      * When an entity collides with an entity of a listed collision-type, this message is triggered on the entity. * is the other entity's collision-type.
-     * 
+     *
      * @event 'hit-by-*'
      * @param collision {Object}
      * @param collision.entity {Entity} The entity with which the collision occurred.
@@ -32,7 +32,7 @@
         entityCollisionDataContainer = new CollisionDataContainer(),
         triggerMessage = {
             entity: null,
-            type:   null,
+            type: null,
             x: 0,
             y: 0,
             hitType: null,
@@ -47,12 +47,12 @@
         
         properties: {
             /**
-             * 
+             *
              */
             gridBits: 8
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             this.againstGrid = Data.setUp();
             
             this.solidEntitiesLive = Array.setUp();
@@ -61,7 +61,7 @@
             this.groupsLive = Array.setUp();
             this.nonColliders = Array.setUp();
             
-            this.terrain = undefined;
+            this.terrain = null;
             this.owner.previousX = this.owner.previousX || this.owner.x;
             this.owner.previousY = this.owner.previousY || this.owner.y;
             
@@ -74,7 +74,7 @@
         events: {
             /**
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             * 
+             *
              * @method 'child-entity-added'
              * @param entity {Entity} The entity to be added.
              */
@@ -86,7 +86,7 @@
             
             /**
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             * 
+             *
              * @method 'add-collision-entity'
              * @param entity {Entity} The entity to be added.
              */
@@ -96,7 +96,7 @@
             
             /**
              * On receiving this message, the component looks for the entity in its collision group and removes it.
-             * 
+             *
              * @method 'child-entity-removed'
              * @param message {platypus.Entity} The entity to be removed.
              */
@@ -106,7 +106,7 @@
             
             /**
              * On receiving this message, the component looks for the entity in its collision group and removes it.
-             * 
+             *
              * @method 'remove-collision-entity'
              * @param message {platypus.Entity} The entity to be removed.
              */
@@ -116,7 +116,7 @@
             
             /**
              * On receiving this message, the component looks for the entity in its collision group and updates it.
-             * 
+             *
              * @method 'child-entity-updated'
              * @param message {platypus.Entity} The entity to be updated.
              */
@@ -127,7 +127,7 @@
             
             /**
              * This message causes the component to go through the entities and check for collisions.
-             * 
+             *
              * @method 'check-collision-group'
              * @param options {Object}
              * @param [options.camera] {Object} Specifies a region in which to check for collisions. Expects the camera object to contain the following properties: top, left, width, height, and buffer.
@@ -137,7 +137,7 @@
 
                 /**
                  * This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
-                 * 
+                 *
                  * @event 'prepare-for-collision'
                  * @param tick {Object} Object containing information about the current logic step.
                  * @deprecated since 0.7.1
@@ -389,7 +389,7 @@
 
                         /**
                          * This message is triggered on an entity that has been repositioned due to a solid collision.
-                         * 
+                         *
                          * @event 'relocate-entity'
                          * @param object {Object}
                          * @param object.position {Vector} The relocated position of the entity.
@@ -400,7 +400,7 @@
                 }
             },
             
-            checkGroupCollisions:  (function () {
+            checkGroupCollisions: (function () {
                 var triggerCollisionMessages = function (entity, otherEntity, thisType, thatType, x, y, hitType, vector) {
                     var msg = triggerMessage;
                     
@@ -664,9 +664,9 @@
                                     }
                                 }
                                 otherEntities.recycle();
-                            } else if (terrain && (otherCollisionType === 'tiles')) {
+                            } else if (terrain) {
                                 //Do our sweep check against the tiles and add potentially colliding shapes to our list.
-                                otherShapes = terrain.getTileShapes(sweepAABB, previousAABB);
+                                otherShapes = terrain.getTileShapes(sweepAABB, previousAABB, otherCollisionType);
                                 k = otherShapes.length;
                                 while (k--) {
                                     //Push the shapes on the end!
@@ -768,13 +768,13 @@
             /**
              * Find the earliest point at which this shape collides with one of the potential colliding shapes along this axis.
              * For example, cycles through shapes a, b, and c to find the earliest position:
-             * 
+             *
              *    O---->   [b]  [a]     [c]
-             *    
+             *
              *    Returns collision location for:
-             *    
+             *
              *            O[b]
-             * 
+             *
              */
             findMinShapeMovementCollision: (function () {
 
@@ -977,11 +977,12 @@
             }()),
             
             checkSoftCollisions: (function () {
-                var trigger = function (collision) {
+                var
+                    trigger = function (collision) {
                         this.triggerEvent('hit-by-' + collision.type, collision);
                     };
                 
-                return function (resp) {
+                return function () {
                     var softs = this.softEntitiesLive,
                         entity = null,
                         i = softs.length,
@@ -1095,7 +1096,7 @@
         publicMethods: {
             /**
              * This method returns an object containing world entities.
-             * 
+             *
              * @method getWorldEntities
              * @return {Array} A list of all world collision entities.
              */
@@ -1105,7 +1106,7 @@
             
             /**
              * This method returns an entity representing the collision map of the world.
-             * 
+             *
              * @method getWorldTerrain
              * @return {Entity} - An entity describing the collision map of the world. This entity typically includes a `CollisionTiles` component.
              */
@@ -1115,7 +1116,7 @@
             
             /**
              * This method returns a list of collision objects describing soft collisions between an entity and a list of other entities.
-             * 
+             *
              * @method getEntityCollisions
              * @param entity {Entity} The entity to test against the world.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.

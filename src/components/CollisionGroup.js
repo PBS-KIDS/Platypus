@@ -1,6 +1,6 @@
 /**
  * This component groups other entities with this entity for collision checking. This is useful for carrying and moving platforms. It uses `EntityContainer` component messages if triggered to add to its collision list and also listens for explicit add/remove messages (useful in the absence of an `EntityContainer` component).
- * 
+ *
  * @namespace platypus.components
  * @class CollisionGroup
  * @uses platypus.Component
@@ -17,7 +17,7 @@
     return platypus.createComponentClass({
         id: 'CollisionGroup',
         
-        constructor: function (definition) {
+        constructor: function () {
             this.solidEntities = Array.setUp();
             
             // These are used as return values for methods, but are instantiated here for recycling later.
@@ -25,7 +25,7 @@
             this.shapes = Array.setUp();
             this.prevShapes = Array.setUp();
             
-            this.terrain = undefined;
+            this.terrain  = null;
             this.aabb     = AABB.setUp(this.owner.x, this.owner.y);
             this.prevAABB = AABB.setUp(this.owner.x, this.owner.y);
             this.filteredAABB = AABB.setUp();
@@ -92,7 +92,7 @@
         events: {
             /**
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             * 
+             *
              * @method 'child-entity-added'
              * @param entity {platypus.Entity} The entity to be added.
              */
@@ -102,7 +102,7 @@
             
             /**
              * On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.
-             * 
+             *
              * @method 'add-collision-entity'
              * @param entity {platypus.Entity} The entity to be added.
              */
@@ -112,7 +112,7 @@
             
             /**
              * On receiving this message, the component looks for the entity in its collision group and removes it.
-             * 
+             *
              * @method 'child-entity-removed'
              * @param entity {platypus.Entity} The entity to be removed.
              */
@@ -122,7 +122,7 @@
             
             /**
              * On receiving this message, the component looks for the entity in its collision group and removes it.
-             * 
+             *
              * @method 'remove-collision-entity'
              * @param entity {platypus.Entity} The entity to be removed.
              */
@@ -132,7 +132,7 @@
             
             /**
              * When this message is triggered, the collision group updates its record of the owner's last (x, y) coordinate.
-             * 
+             *
              * @method 'relocate-entity'
              */
             "relocate-entity": function () {
@@ -299,7 +299,7 @@
                 
                 aabb.reset();
                 while (x--) {
-                    entity = sE[x],
+                    entity = sE[x];
                     aabb.include(((entity !== owner) && entity.getCollisionGroupAABB) ? entity.getCollisionGroupAABB() : entity.getAABB());
                 }
             },
@@ -434,7 +434,7 @@
         publicMethods: {
             /**
              * Gets the bounding box of the group of entities.
-             * 
+             *
              * @method getCollisionGroupAABB
              * @return platypus.AABB
              */
@@ -444,7 +444,7 @@
             
             /**
              * Gets a list of all the entities in the world.
-             * 
+             *
              * @method getWorldEntities
              * @return Array
              */
@@ -454,7 +454,7 @@
             
             /**
              * Gets the collision entity representing the world's terrain.
-             * 
+             *
              * @method getWorldTerrain
              * @return platypus.Entity
              */

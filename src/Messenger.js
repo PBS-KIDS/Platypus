@@ -68,8 +68,8 @@ platypus.Messenger = (function () {
      *
      * @method triggerEvent
      * @param event {String} This is the message to process.
-     * @param value {*} This is a message object or other value to pass along to event handler.
-     * @param debug {boolean} This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
+     * @param [value] {*} This is a message object or other value to pass along to event handler.
+     * @param [value.debug] {boolean} This flags whether to output message contents and subscriber information to the console during game development.
      * @return {number} The number of handlers for the triggered message.
      */
     proto.triggerEvent = function (type) {
@@ -79,7 +79,7 @@ platypus.Messenger = (function () {
             listeners = this._listeners,
             args = null;
         
-        if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type] !== undefined)) {
+        if (!this._destroyed && listeners.hasOwnProperty(type) && (listeners[type])) {
             // copy the listeners array; reusing `listeners` variable
             listeners = listeners[type].greenSlice();
 

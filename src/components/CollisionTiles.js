@@ -17,17 +17,65 @@
         maskRotation = 0x20000000,
         maskXFlip = 0x80000000,
         maskYFlip = 0x40000000,
-        flip = function (num, flipX, flipY, rotate) { //TODO: calls to this need to be tested before 0.8.3 release - DDD 3/30/2016
-            if (flipX) {
-                num ^= maskXFlip;
+        maskIndex = 0x0fffffff,
+        getDefaultType = function () {
+            return this.collisionType;
+        },
+        getCollisionType = function (index) {
+            return this.collisionTypeMap[index & maskIndex] || this.collisionType;
+        },
+        flipDiagonal = function (num) {
+            if (num === 0) {
+                return num;
+            } else {
+                return num ^ maskYFlip ^ maskRotation;
             }
-            if (flipY) {
-                num ^= maskYFlip;
+        },
+        flipDiagonalInverse = function (num) {
+            if (num === 0) {
+                return num;
+            } else {
+                return num ^ maskXFlip ^ maskRotation;
             }
-            if (rotate) {
-                num ^= maskRotation;
+        },
+        flipX = function (num) {
+            if (num === 0) {
+                return num;
+            } else {
+                return num ^ maskXFlip;
             }
-            return num;
+        },
+        flipY = function (num) {
+            if (num === 0) {
+                return num;
+            } else {
+                return num ^ maskYFlip;
+            }
+        },
+        rotate90 = function (num) {
+            if (num === 0) {
+                return num;
+            } else if (maskRotation & num) {
+                return num ^ maskYFlip ^ maskRotation;
+            } else {
+                return num ^ maskXFlip ^ maskRotation;
+            }
+        },
+        rotate180 = function (num) {
+            if (num === 0) {
+                return num;
+            } else {
+                return num ^ maskXFlip ^ maskYFlip;
+            }
+        },
+        rotate270 = function (num) {
+            if (num === 0) {
+                return num;
+            } else if (maskRotation & num) {
+                return num ^ maskXFlip ^ maskRotation;
+            } else {
+                return num ^ maskYFlip ^ maskRotation;
+            }
         },
         copySection = function (array, originX, originY, width, height) {
             var x   = 0,
@@ -70,12 +118,13 @@
         transforms = {
             "diagonal": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    fD    = flipDiagonal,
                     x     = 0,
                     y     = 0;
 
                 for (x = 0; x < width; x++) {
                     for (y = 0; y < height; y++) {
-                        array[originX + x][originY + y] = flip(arr[x][y], false, true, true);
+                        array[originX + x][originY + y] = fD(arr[x][y]);
                     }
                 }
                 arr.recycle(2);
@@ -83,12 +132,13 @@
             },
             "diagonal-inverse": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    fDI   = flipDiagonalInverse,
                     x     = 0,
                     y     = 0;
 
                 for (x = 0; x < width; x++) {
                     for (y = 0; y < height; y++) {
-                        array[originX + width - x - 1][originY + height - y - 1] = flip(arr[x][y], true, false, true);
+                        array[originX + width - x - 1][originY + height - y - 1] = fDI(arr[x][y]);
                     }
                 }
                 arr.recycle(2);
@@ -96,12 +146,13 @@
             },
             "horizontal": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    fX    = flipX,
                     x     = 0,
                     y     = 0;
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
-                        array[originX + width - x - 1][originY + y] = flip(arr[y][x], true, false, false);
+                        array[originX + width - x - 1][originY + y] = fX(arr[y][x]);
                     }
                 }
                 arr.recycle(2);
@@ -109,12 +160,13 @@
             },
             "vertical": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    fY    = flipY,
                     x     = 0,
                     y     = 0;
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
-                        array[originX + x][originY + height - y - 1] = flip(arr[y][x], false, true, true);
+                        array[originX + x][originY + height - y - 1] = fY(arr[y][x]);
                     }
                 }
                 arr.recycle(2);
@@ -122,12 +174,13 @@
             },
             "rotate-90": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    r90   = rotate90,
                     x     = 0,
                     y     = 0;
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
-                        array[originX + height - y - 1][originY + x] = flip(arr[y][x], true, true, true);
+                        array[originX + height - y - 1][originY + x] = r90(arr[y][x]);
                     }
                 }
                 arr.recycle(2);
@@ -135,12 +188,13 @@
             },
             "rotate-180": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    r180  = rotate180,
                     x     = 0,
                     y     = 0;
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
-                        array[originX + width - x - 1][originY + height - y - 1] = flip(arr[y][x], true, true, false);
+                        array[originX + width - x - 1][originY + height - y - 1] = r180(arr[y][x]);
                     }
                 }
                 arr.recycle(2);
@@ -148,12 +202,13 @@
             },
             "rotate-270": function (array, originX, originY, width, height) {
                 var arr   = copySection(array, originX, originY, width, height),
+                    r270  = rotate270,
                     x     = 0,
                     y     = 0;
 
                 for (y = 0; y < height; y++) {
                     for (x = 0; x < width; x++) {
-                        array[originX + y][originY + width - x - 1] = flip(arr[y][x], false, false, true);
+                        array[originX + y][originY + width - x - 1] = r270(arr[y][x]);
                     }
                 }
                 arr.recycle(2);
@@ -179,6 +234,26 @@
         
         properties: {
             /**
+             * Maps tile indexes to particular collision types. This defaults to a "tiles" collision type for all non-zero values if a particular collision map is not provided.
+             *
+             * @property collisionTypeMap
+             * @type Object
+             * @default null
+             * @since 0.8.3
+             */
+            collisionTypeMap: null,
+            
+            /**
+             * Sets the default collision type for non-zero map tiles.
+             *
+             * @property collisionType
+             * @type String
+             * @default "tiles"
+             * @since 0.8.3
+             */
+            collisionType: 'tiles',
+            
+            /**
              * The map's top offset.
              *
              * @property top
@@ -201,7 +276,7 @@
         
         publicProperties: {
             /**
-             * A 2D array describing the tile-map with off (-1) and on (!-1) states. Numbers > -1 are solid and numbers -2, -3, -4, and -5 provide for jumpthrough tiles with the solid side being top, right, bottom, and left respectively. Example: `[[-1,-1,-1], [1,-1,-1], [1,1,1]]`. Available on the entity as `entity.collisionMap`.
+             * A 2D array describing the tile-map with off (0) and on (!0) states. The indexes match Tiled map data indexes with an additional bit setting (0x2000000) for jumpthrough tiles. Example: `[[0, 0, 0], [1, 0, 0], [1, 1, 1]]`. Available on the entity as `entity.collisionMap`.
              *
              * @property collisionMap
              * @type Array
@@ -248,6 +323,12 @@
             
             this.aabb = AABB.setUp();
             this.aabb.setBounds(this.left, this.top, this.tileWidth * this.columns + this.left, this.tileHeight * this.rows + this.top);
+            
+            if (this.collisionTypeMap) {
+                this.getType = getCollisionType;
+            } else {
+                this.getType = getDefaultType;
+            }
         },
         
         events: {
@@ -284,16 +365,19 @@
         },
         
         methods: {
-            getShape: function (x, y) {
+            getShape: function (x, y, type) {
                 var i = this.storedTileIndex,
                     shape = null,
                     storedTiles = this.storedTiles;
                 
                 if (i === storedTiles.length) {
-                    storedTiles.push(CollisionShape.setUp(null, this.shapeDefinition, 'tiles'));
+                    shape = CollisionShape.setUp(null, this.shapeDefinition, type);
+                    storedTiles.push(shape);
+                } else {
+                    shape = storedTiles[i];
+                    shape.collisionType = type;
                 }
                 
-                shape = storedTiles[i];
                 shape.update(x * this.tileWidth + this.tileOffsetLeft, y * this.tileHeight + this.tileOffsetTop);
 
                 this.storedTileIndex += 1;
@@ -301,14 +385,15 @@
                 return shape;
             },
             
-            addShape: function (shapes, prevAABB, x, y) {
+            addShape: function (shapes, prevAABB, x, y, collisionType) {
                 var xy = this.collisionMap[x][y],
+                    index = xy & maskIndex,
                     jumpThrough = maskJumpThrough,
                     rotation = maskRotation,
                     xFlip = maskXFlip,
                     yFlip = maskYFlip;
                 
-                if (xy) {
+                if (xy && (this.getType(index) === collisionType)) {
                     jumpThrough &= xy;
                     if (jumpThrough) {
                         rotation &= xy;
@@ -316,21 +401,21 @@
                         yFlip &= xy;
                         if (rotation && xFlip) { // Right
                             if (prevAABB.left >= (x + 1) * this.tileWidth + this.left) {
-                                shapes.push(this.getShape(x, y));
+                                shapes.push(this.getShape(x, y, collisionType));
                             }
                         } else if (rotation) { // Left
                             if (prevAABB.right <= x * this.tileWidth + this.left) {
-                                shapes.push(this.getShape(x, y));
+                                shapes.push(this.getShape(x, y, collisionType));
                             }
                         } else if (yFlip) { // Bottom
                             if (prevAABB.top >= (y + 1) * this.tileHeight + this.top) {
-                                shapes.push(this.getShape(x, y));
+                                shapes.push(this.getShape(x, y, collisionType));
                             }
                         } else if (prevAABB.bottom <= y * this.tileHeight + this.top) { // Top
-                            shapes.push(this.getShape(x, y));
+                            shapes.push(this.getShape(x, y, collisionType));
                         }
                     } else {
-                        shapes.push(this.getShape(x, y));
+                        shapes.push(this.getShape(x, y, collisionType));
                     }
                 }
 
@@ -387,10 +472,12 @@
              * @method getTileShapes
              * @param aabb {platypus.AABB} The axis-aligned bounding box for which tiles should be returned.
              * @param prevAABB {platypus.AABB} The axis-aligned bounding box for a previous location to test for jump-through tiles.
+             * @param [collisionType] {String} The type of collision to check for. If not specified, "tiles" is used. (Since 0.8.3)
              * @return {Array} Each returned object provides the [CollisionShape](CollisionShape.html) of a tile.
              */
-            getTileShapes: function (aabb, prevAABB) {
-                var l = this.left,
+            getTileShapes: function (aabb, prevAABB, collisionType) {
+                var colType = collisionType || 'tiles',
+                    l = this.left,
                     t = this.top,
                     th = this.tileHeight,
                     tw = this.tileWidth,
@@ -407,7 +494,7 @@
                 
                 for (x = left; x < right; x++) {
                     for (y = top; y < bottom; y++) {
-                        this.addShape(shapes, prevAABB, x, y);
+                        this.addShape(shapes, prevAABB, x, y, colType);
                     }
                 }
                 
