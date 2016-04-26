@@ -96,7 +96,9 @@
         },
         formatAnimation = function (key, animation, textures) {
             var i = 0,
-                frames = Array.setUp();
+                first = 0,
+                frames = Array.setUp(),
+                last = 0;
             
             if (typeof animation === 'number') {
                 frames.push(textures[animation] || emptyFrame);
@@ -107,7 +109,9 @@
                     speed: 1
                 };
             } else if (Array.isArray(animation)) {
-                for (i = animation[0]; i < animation[1] + 1; i++) {
+                first = animation[0] || 0;
+                last = (animation[1] || first) + 1;
+                for (i = first; i < last; i++) {
                     frames.push(textures[i] || emptyFrame);
                 }
                 return {

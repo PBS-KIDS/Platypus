@@ -1,14 +1,14 @@
 /**
  * This is the extendable Component class. Typically specific component classes should be created using `platypus.createComponentClass()`. This method accepts component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
- * 
+ *
  * To create an extended component class, use the following syntax:
- * 
+ *
  *      platypus.createComponentClass(componentDefinition, prototype);
- * 
+ *
  *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
  *  * `prototype` is an optional prototype that this component extends.
  * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
- * 
+ *
  * @namespace platypus
  * @class Component
  * @static
@@ -19,7 +19,7 @@ platypus.Component = (function () {
     "use strict";
     
     var Data = include('platypus.Data'),
-        getAssetList = function (definition) {
+        getAssetList = function () {
             return Array.setUp();
         },
         Component = function (type, owner) {
@@ -45,7 +45,7 @@ platypus.Component = (function () {
 
     /**
      * This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.
-     * 
+     *
      * @method destroy
      * @private
      */
@@ -76,7 +76,7 @@ platypus.Component = (function () {
     
     /**
      * This method removes multiple event listeners from the entity.
-     * 
+     *
      * @method removeEventListeners
      * @param [listeners] {Array} The list of listeners to remove. If not supplied, all event listeners are removed.
      * @private
@@ -103,7 +103,7 @@ platypus.Component = (function () {
     
     /**
      * This method adds an event listener to the entity.
-     * 
+     *
      * @method addEventListener
      * @param event {String} The event that this component should listen for.
      * @param callback {Function} The handler for the event.
@@ -119,7 +119,7 @@ platypus.Component = (function () {
     
     /**
      * This method adds a method to the entity.
-     * 
+     *
      * @method addMethod
      * @param name {String} The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as `entity.turnYellow()`.
      * @param func {Function} The function describing the method.
@@ -138,7 +138,7 @@ platypus.Component = (function () {
 
     /**
      * This method removes an event listener from the entity.
-     * 
+     *
      * @method removeEventListener
      * @param event {String} The event for which to remove a listener.
      * @param callback {Function} The listener to remove. If not supplied, all event listeners for the provided event are removed.
@@ -160,7 +160,7 @@ platypus.Component = (function () {
     
     /**
      * This method removes a method from the entity.
-     * 
+     *
      * @method removeMethod
      * @param name {String} The name of the method to be removed.
      * @private
@@ -176,7 +176,7 @@ platypus.Component = (function () {
 
     /**
      * This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-     * 
+     *
      * @method getAssetList
      * @param definition {Object} The definition for the component.
      * @param properties {Object} The properties of the Entity.
@@ -187,7 +187,7 @@ platypus.Component = (function () {
 
     /**
      * This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
-     * 
+     *
      * @method getLateAssetList
      * @param data {Object} Scene data that affects the list of assets.
      * @return {Array} A list of the necessary assets to load.
