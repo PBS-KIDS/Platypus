@@ -1,21 +1,21 @@
 /**
  * This class is used to create the `platypus.game` object and loads the Platypus game as described by the game configuration files.
- * 
+ *
  * @namespace platypus
  * @class Game
  * @constructor
  * @param definition {Object} Collection of configuration settings, typically from config.json.
  * @param applicationInstance {springroll.Application} The Spring Roll application that the Platypus game is in.
  * @param [onFinishedLoading] {Function} An optional function to run once the game has begun.
- * @return {platypus.Game} Returns the instantiated game. 
+ * @return {platypus.Game} Returns the instantiated game.
  */
-/*global console, createjs, PIXI, platypus, springroll */
-/*jslint plusplus:true */
+/* global include, platypus, window */
 platypus.Game = (function () {
-    "use strict";
+    'use strict';
     
-    var Container   = include('PIXI.Container'),
-        Scene       = include('platypus.Scene'),
+    var Container      = include('PIXI.Container'),
+        Scene          = include('platypus.Scene'),
+        XMLHttpRequest = include ('window.XMLHttpRequest'),
         getJSON = function (path, callback) {
             var xhr = new XMLHttpRequest();
             
@@ -28,10 +28,10 @@ platypus.Game = (function () {
                     try {
                         obj = JSON.parse(xhr.responseText);
                     } catch (e) {
-                        console.warn('Error parsing "' + path + '": ' + e.message);
+                        platypus.debug.warn('Error parsing "' + path + '": ' + e.message);
                     }
                 } else {
-                    console.warn('Error opening "' + path + '": ' + xhr.description);
+                    platypus.debug.warn('Error opening "' + path + '": ' + xhr.description);
                 }
                 
                 callback(obj);
@@ -42,7 +42,7 @@ platypus.Game = (function () {
             var i = 0,
                 key = '',
                 callbacks = 0,
-                resolve = function (result) {
+                resolve = function () {
                     callbacks -= 1;
                     if (!callbacks) {
                         callback(obj);
@@ -106,7 +106,8 @@ platypus.Game = (function () {
             callback(obj);
         },
         game = function (definition, applicationInstance, onFinishedLoading) {
-            var load = function (settings) {
+            var
+                load = function (settings) {
                     var id = '',
                         scene  = '',
                         states = this.app.states || {};
@@ -162,8 +163,8 @@ platypus.Game = (function () {
                 }.bind(this);
             
             if (!definition) {
-                console.warn('No game definition is supplied. Game not created.');
-                return null;
+                platypus.debug.warn('No game definition is supplied. Game not created.');
+                return;
             }
 
             this.app = applicationInstance;
@@ -211,16 +212,16 @@ platypus.Game = (function () {
                 sceneInstance = new Scene(new Container(), scene);
                 sceneInstance.data = data;
                 this.app.manager.addState(id, sceneInstance);
-				this.stage.addChild(sceneInstance.panel);
-    			this.app.trigger('stateAdded', id, sceneInstance);
+                this.stage.addChild(sceneInstance.panel);
+                this.app.trigger('stateAdded', id, sceneInstance);
                 this.app.manager.state = id;
             }
         };
         
         return function (scene, data) {
             // Delay load so it doesn't end a scene mid-tick.
-            setTimeout(load.bind(this, scene, data), 1);
-        }
+            window.setTimeout(load.bind(this, scene, data), 1);
+        };
     }());
     
     /**

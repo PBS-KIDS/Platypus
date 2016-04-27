@@ -8,7 +8,7 @@
 /*global include, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     //set here to make them reusable objects
     

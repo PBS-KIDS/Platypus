@@ -9,7 +9,7 @@
  */
 /*global platypus */
 platypus.Data = (function () {
-    "use strict";
+    'use strict';
     
     var
         Data = function (first) {

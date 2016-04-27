@@ -56,7 +56,7 @@ This component allows certain messages to trigger new messages at a later time. 
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var createMessage = function (event) {
             var includeMessage = function (event, message) {

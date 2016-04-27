@@ -18,7 +18,7 @@
 */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var createTrigger = function (eventList) {
         return function (value, debug) {

@@ -1,7 +1,7 @@
 /*global PIXI */
 /*jslint plusplus:true, nomen:true */
 (function () {
-	"use strict";
+	'use strict';
 	
 	var prototype = PIXI.Container.prototype;
 	

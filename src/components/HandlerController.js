@@ -1,84 +1,84 @@
 /**
  * This component handles capturing and relaying input information to the entities that care about it. It takes mouse, keyboard, and custom input messages. State messages are sent immediately to the entities when they are received, the 'HandlerController' message is sent to demarcate ticks.
- * 
+ *
  * @namespace platypus.components
  * @class HandlerController
  * @uses platypus.Component
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global platypus, window */
 (function () {
-    "use strict";
+    'use strict';
 
-    var keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
-            kc0:   'unknown',
-            kc8:   'backspace',
-            kc9:   'tab',
-            kc12:  'numpad-5-shift',
-            kc13:  'enter',
-            kc16:  'shift',
-            kc17:  'ctrl',
-            kc18:  'alt',
-            kc19:  'pause',
-            kc20:  'caps-lock',
-            kc27:  'esc',
-            kc32:  'space',
-            kc33:  'page-up',
-            kc34:  'page-down',
-            kc35:  'end',
-            kc36:  'home',
-            kc37:  'left-arrow',
-            kc38:  'up-arrow',
-            kc39:  'right-arrow',
-            kc40:  'down-arrow',
-            kc42:  'numpad-multiply',
-            kc43:  'numpad-add',
-            kc44:  'print-screen',
-            kc45:  'insert',
-            kc46:  'delete',
-            kc47:  'numpad-division',
-            kc48:  '0',
-            kc49:  '1',
-            kc50:  '2',
-            kc51:  '3',
-            kc52:  '4',
-            kc53:  '5',
-            kc54:  '6',
-            kc55:  '7',
-            kc56:  '8',
-            kc57:  '9',
-            kc59:  'semicolon',
-            kc61:  'equals',
-            kc65:  'a',
-            kc66:  'b',
-            kc67:  'c',
-            kc68:  'd',
-            kc69:  'e',
-            kc70:  'f',
-            kc71:  'g',
-            kc72:  'h',
-            kc73:  'i',
-            kc74:  'j',
-            kc75:  'k',
-            kc76:  'l',
-            kc77:  'm',
-            kc78:  'n',
-            kc79:  'o',
-            kc80:  'p',
-            kc81:  'q',
-            kc82:  'r',
-            kc83:  's',
-            kc84:  't',
-            kc85:  'u',
-            kc86:  'v',
-            kc87:  'w',
-            kc88:  'x',
-            kc89:  'y',
-            kc90:  'z',
-            kc91:  'left-windows-start',
-            kc92:  'right-windows-start',
-            kc93:  'windows-menu',
-            kc96:  'back-quote',
+    var
+        keyMap = { //Note: if this list is changed, be sure to update https://github.com/PBS-KIDS/Platypus/wiki/Handler-controller-key-list
+            kc0: 'unknown',
+            kc8: 'backspace',
+            kc9: 'tab',
+            kc12: 'numpad-5-shift',
+            kc13: 'enter',
+            kc16: 'shift',
+            kc17: 'ctrl',
+            kc18: 'alt',
+            kc19: 'pause',
+            kc20: 'caps-lock',
+            kc27: 'esc',
+            kc32: 'space',
+            kc33: 'page-up',
+            kc34: 'page-down',
+            kc35: 'end',
+            kc36: 'home',
+            kc37: 'left-arrow',
+            kc38: 'up-arrow',
+            kc39: 'right-arrow',
+            kc40: 'down-arrow',
+            kc42: 'numpad-multiply',
+            kc43: 'numpad-add',
+            kc44: 'print-screen',
+            kc45: 'insert',
+            kc46: 'delete',
+            kc47: 'numpad-division',
+            kc48: '0',
+            kc49: '1',
+            kc50: '2',
+            kc51: '3',
+            kc52: '4',
+            kc53: '5',
+            kc54: '6',
+            kc55: '7',
+            kc56: '8',
+            kc57: '9',
+            kc59: 'semicolon',
+            kc61: 'equals',
+            kc65: 'a',
+            kc66: 'b',
+            kc67: 'c',
+            kc68: 'd',
+            kc69: 'e',
+            kc70: 'f',
+            kc71: 'g',
+            kc72: 'h',
+            kc73: 'i',
+            kc74: 'j',
+            kc75: 'k',
+            kc76: 'l',
+            kc77: 'm',
+            kc78: 'n',
+            kc79: 'o',
+            kc80: 'p',
+            kc81: 'q',
+            kc82: 'r',
+            kc83: 's',
+            kc84: 't',
+            kc85: 'u',
+            kc86: 'v',
+            kc87: 'w',
+            kc88: 'x',
+            kc89: 'y',
+            kc90: 'z',
+            kc91: 'left-windows-start',
+            kc92: 'right-windows-start',
+            kc93: 'windows-menu',
+            kc96: 'back-quote',
             kc106: 'numpad-multiply',
             kc107: 'numpad-add',
             kc109: 'numpad-minus',
@@ -115,7 +115,7 @@
         
         id: 'HandlerController',
         
-        constructor: function (definition) {
+        constructor: function () {
             this.callbackKeyUp   = null;
             this.callbackKeyDown = null;
             
@@ -143,7 +143,7 @@
         events: {
             /**
              * Sends a 'handle-controller' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-             * 
+             *
              * @method 'tick'
              * @param tick {Object} An object containing tick data.
              */
@@ -151,7 +151,7 @@
 
                 /**
                  * Sent to entities on each tick to handle whatever they need to regarding controls.
-                 * 
+                 *
                  * @event 'handle-controller'
                  * @param tick {Object} An object containing tick data.
                  */
@@ -165,7 +165,7 @@
 
                 /**
                  *  Message sent to an entity when a key goes from up to down.
-                 * 
+                 *
                  * @event 'key:[keyId]:down'
                  * @param event {DOMEvent} The DOM event that triggered the keydown event.
                  */
@@ -177,7 +177,7 @@
 
                 /**
                  * Message sent to child entities when a key goes from down to up.
-                 * 
+                 *
                  * @event 'key:[keyId]:up'
                  * @param event {DOMEvent} The DOM event that triggered the keyup event.
                  */

@@ -7,7 +7,7 @@
  */
 /*global console, include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Graphics = include('PIXI.Graphics'),
         defaultHeight = 100,
@@ -81,7 +81,7 @@
                     } else if (renderData.container) {
                         this.parentContainer = renderData.container;
                     } else {
-                        console.warn('No Container, removing render debug component from "' + this.owner.type + '".');
+                        platypus.debug.warn('No Container, removing render debug component from "' + this.owner.type + '".');
                         this.owner.removeComponent(this);
                         return;
                     }

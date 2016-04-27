@@ -8,7 +8,7 @@
 /*global console, include, PIXI, platypus */
 /*jslint plusplus:true, nomen:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         BaseTexture = include('PIXI.BaseTexture'),
@@ -64,7 +64,7 @@
                     if (!btCache[path]) {
                         asset = assetCache.read(path);
                         if (!asset) {
-                            console.warn('"' + path + '" is not a loaded asset.');
+                            platypus.debug.warn('"' + path + '" is not a loaded asset.');
                             break;
                         }
                         btCache[path] = new BaseTexture(asset);

@@ -7,7 +7,7 @@
  */
 /*global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data');
 

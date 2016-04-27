@@ -25,19 +25,17 @@ This component causes an entity to teleport when receiving a teleport message.
     {
       "type": "LogicTeleportee"
     }
-
-Requires: ["../Vector.js"]
 */
-/*global platypus */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
         id: 'LogicTeleportee',
         
-        constructor: function (definition) {
+        constructor: function () {
             this.teleportDestination = Vector.setUp();
             this.teleportNow = false;
             this.DestinationSet = false;

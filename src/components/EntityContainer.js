@@ -1,6 +1,6 @@
 /**
  * This component allows the entity to contain child entities. It will add several methods to the entity to manage adding and removing entities.
- * 
+ *
  * @namespace platypus.components
  * @class EntityContainer
  * @extends platypus.Messenger
@@ -45,10 +45,9 @@
   - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A "value" object parameter (above) will also set this flag if value.debug is set to true.
   - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.
 */
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var Data = include('platypus.Data'),
         Entity = include('platypus.Entity'),
@@ -64,7 +63,7 @@
         properties: {
             /**
              * An Array listing messages that are triggered on the entity and should be triggered on the children as well.
-             * 
+             *
              * @property childEvents
              * @type Array
              * @default []
@@ -97,7 +96,7 @@
         events: {
             /**
              * This component waits until all other entity components are loaded before it begins adding children entities. This allows other entity components to listen to entity-added messages and handle them if necessary.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
@@ -116,17 +115,17 @@
             
             /**
              * This message will added the given entity to this component's list of entities.
-             * 
+             *
              * @method 'add-entity'
              * @param entity {platypus.Entity} This is the entity to be added as a child.
-             */            
+             */
             "add-entity": function (entity) {
                 this.addEntity(entity);
             },
             
             /**
              * On receiving this message, the provided entity will be removed from the list of child entities.
-             * 
+             *
              * @method 'remove-entity'
              * @param entity {platypus.Entity} The entity to remove.
              */
@@ -153,11 +152,13 @@
                 this.childEvents.push(event);
                 /**
                  * Listens for specified messages and on receiving them, re-triggers them on child entities.
-                 * 
+                 *
                  * @method '*'
                  * @param message {Object} Accepts a message object that it will include in the new message to be triggered.
                  */
                 this.addEventListener(event, childBroadcast(event));
+                
+                return true;
             },
             
             addNewPrivateEvent: function (event) {
@@ -178,6 +179,8 @@
                         }
                     }
                 }
+                
+                return true;
             },
             
             updateChildEventListeners: function (entity) {
@@ -272,7 +275,7 @@
                         }
                     }
                 }
-                return undefined;
+                return null;
             },
 
             getEntitiesByType: function (type) {

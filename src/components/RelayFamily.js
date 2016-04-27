@@ -8,7 +8,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var trigger = function (entities, event, value, debug) {
             var i = 0;

@@ -26,7 +26,7 @@ This component serves as a switch in the game world, typically tied to collision
 */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     return platypus.createComponentClass({
         

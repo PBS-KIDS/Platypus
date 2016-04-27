@@ -33,7 +33,7 @@ A component which changes the scene when activated. When the portal receives an 
 /*global include, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var DataMap = include('platypus.DataMap');
 

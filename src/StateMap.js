@@ -11,7 +11,7 @@
 /*global extend, include, platypus */
 /*jslint plusplus:true */
 platypus.StateMap = (function () {
-    "use strict";
+    'use strict';
     
     var DataMap = include('platypus.DataMap'),
         StateMap = function (first) {

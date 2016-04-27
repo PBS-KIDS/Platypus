@@ -33,7 +33,7 @@ This component creates an entity and propels it away. This is useful for casting
 */
 /*global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var Entity = include('platypus.Entity');
 

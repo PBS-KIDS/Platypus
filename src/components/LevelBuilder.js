@@ -12,7 +12,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {
             var x        = 0,
@@ -62,20 +62,20 @@
                 level.tilewidth  = segment.tilewidth;
                 level.tileheight = segment.tileheight;
             } else if (level.tilewidth !== segment.tilewidth || level.tileheight !== segment.tileheight) {
-                console.warn('Tiled-Loader: Your map has segments with different tile sizes. All tile sizes must match. Segment: ' + segment);
+                platypus.debug.warn('Tiled-Loader: Your map has segments with different tile sizes. All tile sizes must match. Segment: ' + segment);
             }
 
             if (mergeAxis === 'horizontal') {
                 if (level.height === 0) {
                     level.height = segment.height;
                 } else if (level.height !== segment.height) {
-                    console.warn('Tiled-Loader: You are trying to merge segments with different heights. All segments need to have the same height. Level: ' + level + ' Segment: ' + segment);
+                    platypus.debug.warn('Tiled-Loader: You are trying to merge segments with different heights. All segments need to have the same height. Level: ' + level + ' Segment: ' + segment);
                 }
             } else if (mergeAxis === 'vertical') {
                 if (level.width === 0) {
                     level.width = segment.width;
                 } else if (level.width !== segment.width) {
-                    console.warn('Tiled-Loader: You are trying to merge segments with different widths. All segments need to have the same width. Level: ' + level + ' Segment: ' + segment);
+                    platypus.debug.warn('Tiled-Loader: You are trying to merge segments with different widths. All segments need to have the same width. Level: ' + level + ' Segment: ' + segment);
                 }
             }
 
@@ -111,7 +111,7 @@
                             }
                         }
                     } else {
-                        console.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
+                        platypus.debug.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
                     }
 
                 }
@@ -148,7 +148,7 @@
 
             for (i = 0; i < levelSegments.length; i++) {
                 if (segmentsWide !== levelSegments[i].length) {
-                    console.warn('Tiled-Loader: Your map is not square. Maps must have an equal number of segments in every row.');
+                    platypus.debug.warn('Tiled-Loader: Your map is not square. Maps must have an equal number of segments in every row.');
                 }
                 row = {
                     height: 0,

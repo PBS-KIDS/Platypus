@@ -9,7 +9,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var processDirection = function (direction) {
             return function (state) {
@@ -97,7 +97,7 @@
             "component-added": function (component) {
                 if (component === this) {
                     if (!this.owner.addMover) {
-                        console.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
+                        platypus.debug.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
                         return;
                     }
 

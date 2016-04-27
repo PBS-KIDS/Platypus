@@ -18,7 +18,7 @@
  */
 /*global console, document, include, platypus, PIXI */
 (function () {
-    "use strict";
+    'use strict';
     
     var Application = include('springroll.Application'),
         ApplicationPlugin = include('springroll.ApplicationPlugin'),
@@ -162,7 +162,7 @@
             };
         
         if (!config) {
-            console.warn('PlatypusPlugin: Platypus requires a game configuration.');
+            platypus.debug.warn('PlatypusPlugin: Platypus requires a game configuration.');
         } else {
             if (this.options.debug) { // Set debug property on game configuration.
                 config.debug = true;

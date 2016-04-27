@@ -10,7 +10,7 @@
 /*global console, createjs, PIXI, platypus, include, window */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var Application = include("springroll.Application"),
         AABB = include('platypus.AABB'),
@@ -265,7 +265,7 @@
                 this.owner.width  = this.canvas.width;
                 this.owner.height = this.canvas.height;
             } else {
-                console.warn('Camera: There appears to be no Container on this entity for the camera to display.');
+                platypus.debug.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
             this.container = new PIXI.Container();
             this.matrix = this.container.transformMatrix = new PIXI.Matrix();

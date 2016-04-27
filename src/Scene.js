@@ -30,7 +30,7 @@
  */
 /* global extend, include, platypus */
 platypus.Scene = (function () {
-    "use strict";
+    'use strict';
     
     var Entity = include('platypus.Entity'),
         PIXIAnimation = include('platypus.PIXIAnimation'),

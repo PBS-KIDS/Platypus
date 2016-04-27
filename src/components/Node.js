@@ -25,7 +25,7 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
 	return platypus.createComponentClass({
 		

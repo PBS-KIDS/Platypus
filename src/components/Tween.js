@@ -38,7 +38,7 @@ Tween takes a list of tween definitions and plays them as needed.
 /*global createjs, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var createTrigger = function (entity, event, message, debug) {
             return function () {

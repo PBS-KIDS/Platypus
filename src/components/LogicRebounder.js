@@ -34,10 +34,9 @@ This component works with `CollisionBasic` to cause entities to bounce away on s
 
 Requires: ["../Vector.js"]
 */
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector');
 
@@ -62,7 +61,7 @@ Requires: ["../Vector.js"]
         },
 
         events: {// These are messages that this component listens for
-            "handle-logic": function (resp) {
+            "handle-logic": function () {
                 var i = 0;
                 
                 this.hitThisTick.length = 0;

@@ -30,7 +30,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
 */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     return platypus.createComponentClass({
         id: 'LogicDragDrop',

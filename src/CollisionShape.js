@@ -20,7 +20,7 @@
  */
 /*global include, platypus */
 platypus.CollisionShape = (function () {
-    "use strict";
+    'use strict';
     
     var AABB = include('platypus.AABB'),
         Vector = include('platypus.Vector'),

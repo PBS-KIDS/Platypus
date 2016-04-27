@@ -1,6 +1,6 @@
 /**
  * This component handles the orientation of an entity. It maintains an `orientationMatrix` property on the owner to describe the entity's orientation using an affine transformation matrix.
- * 
+ *
  * Several methods on this component accept either a 3x3 2D Array or a string to describe orientation changes. Accepted strings include:
  *  - "horizontal"       - This flips the entity around the y-axis.
  *  - "vertical"         - This flips the entity around the x-axis.
@@ -8,50 +8,49 @@
  *  - "diagonal-inverse" - This flips the entity around the x=-y axis.
  *  - "rotate-90"        - This rotates the entity 90 degrees clockwise.
  *  - "rotate-180"       - This rotates the entity 180 degrees clockwise (noticeable when tweening).
- *  - "rotate-270"       - This rotates the entity 90 degrees counter-clockwise. 
- * 
+ *  - "rotate-270"       - This rotates the entity 90 degrees counter-clockwise.
+ *
  * NOTE: This component absorbs specific properties already on the entity into orientation:
  *  - **orientationMatrix**: 3x3 2D array describing an affine transformation.
  *  - If the above is not provided, these properties are used to set initial orientation. This is useful when importing Tiled maps.
  *     - **scaleX**: absorb -1 if described
  *     - **scaleY**: absorb -1 if described
  *     - **rotation**: absorb 90 degree rotations
- * 
+ *
  * @namespace platypus.components
  * @class Orientation
  * @uses platypus.Component
  */
-/*global platypus, include */
-/*jslint plusplus:true */
+/* global platypus, include */
 (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data'),
         Vector = include('platypus.Vector'),
         normal = Vector.setUp(0, 0, 1),
         origin = Vector.setUp(1, 0, 0),
         matrices = {
-            'horizontal':              [[ -1,  0,  0],
-                                        [  0,  1,  0],
-                                        [  0,  0, -1]],
-            'vertical':                [[  1,  0,  0],
-                                        [  0, -1,  0],
-                                        [  0,  0, -1]],
-            'diagonal':                [[  0,  1,  0],
-                                        [  1,  0,  0],
-                                        [  0,  0, -1]],
-            'diagonal-inverse':        [[  0, -1,  0],
-                                        [ -1,  0,  0],
-                                        [  0,  0, -1]],
-            'rotate-90':               [[  0, -1,  0],
-                                        [  1,  0,  0],
-                                        [  0,  0,  1]],
-            'rotate-180':              [[ -1,  0,  0],
-                                        [  0, -1,  0],
-                                        [  0,  0,  1]],
-            'rotate-270':              [[  0,  1,  0],
-                                        [ -1,  0,  0],
-                                        [  0,  0,  1]]
+            'horizontal': [[ -1,  0,  0],
+                           [  0,  1,  0],
+                           [  0,  0, -1]],
+            'vertical': [[  1,  0,  0],
+                         [  0, -1,  0],
+                         [  0,  0, -1]],
+            'diagonal': [[  0,  1,  0],
+                         [  1,  0,  0],
+                         [  0,  0, -1]],
+            'diagonal-inverse': [[  0, -1,  0],
+                                 [ -1,  0,  0],
+                                 [  0,  0, -1]],
+            'rotate-90': [[  0, -1,  0],
+                          [  1,  0,  0],
+                          [  0,  0,  1]],
+            'rotate-180': [[ -1,  0,  0],
+                           [  0, -1,  0],
+                           [  0,  0,  1]],
+            'rotate-270': [[  0,  1,  0],
+                           [ -1,  0,  0],
+                           [  0,  0,  1]]
         },
         multiply = (function () {
             var cell = function (row, column, m) {
@@ -107,7 +106,7 @@
         publicProperties: {
             /**
              * The Entity's scale along the X-axis will mirror the entity's initial orientation if it is negative. This value is available via `entity.scaleX`, but is not manipulated by this component after instantiation.
-             * 
+             *
              * @property scaleX
              * @type number
              * @default 1
@@ -116,7 +115,7 @@
 
             /**
              * The Entity's scale along the Y-axis will flip the entity's initial orientation if it is negative. This value is available via `entity.scaleY`, but is not manipulated by this component after instantiation.
-             * 
+             *
              * @property scaleY
              * @type number
              * @default 1
@@ -125,7 +124,7 @@
 
             /**
              * The Entity's rotation will rotate entity's initial orientation if it is a multiple of 90 degrees. This value is available via `entity.rotation`, but is not manipulated by this component after instantiation.
-             * 
+             *
              * @property rotation
              * @type number
              * @default 0
@@ -134,7 +133,7 @@
 
             /**
              * The Entity's orientation is an angle in radians describing an entity's orientation around the Z-axis. This property is affected by a changing `entity.orientationMatrix` but does not itself change the orientation matrix.
-             * 
+             *
              * @property orientation
              * @type number
              * @default 0
@@ -143,7 +142,7 @@
             
             /**
              * The entity's orientation matrix determines the orientation of an entity and its vectors. It's a 3x3 2D Array describing an affine transformation of the entity.
-             * 
+             *
              * @property orientationMatrix
              * @type Array
              * @default 3x3 identity matrix
@@ -190,7 +189,7 @@
                 return vector;
             };
             
-            return function (definition) {
+            return function () {
                 this.loadedOrientationMatrix = this.orientationMatrix;
                 
                 // This is the stationary transform
@@ -225,7 +224,7 @@
         events: {
             /**
              * This component listens for this event prior to loading initial transformations.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
@@ -258,7 +257,7 @@
             
             /**
              * On the 'handle-logic' event, this component updates any transformational tweening of the entity.
-             * 
+             *
              * @method 'handle-logic'
              * @param tick.delta {number} Time passed since the last logic step.
              */
@@ -311,7 +310,7 @@
             
             /**
              * On receiving this message, any currently running orientation tweens are immediately completed to give the entity a new stable position.
-             * 
+             *
              * @method 'complete-tweens'
              * @since 0.7.1
              */
@@ -325,7 +324,7 @@
             
             /**
              * On receiving this message, any currently running orientation tweens are discarded, returning the entity to its last stable position.
-             * 
+             *
              * @method 'drop-tweens'
              */
             "drop-tweens": function () {
@@ -347,7 +346,7 @@
             
             /**
              * On receiving a vector via this event, the component will transform the vector using the current orientation matrix and then store the vector and continue manipulating it as the orientation matrix changes.
-             * 
+             *
              * @method 'orient-vector'
              * @param vector {platypus.Vector} The vector whose orientation will be maintained.
              */
@@ -369,7 +368,7 @@
             
             /**
              * On receiving this message, the maintained vector is immediately dropped from the list of maintained vectors.
-             * 
+             *
              * @method 'remove-vector'
              * @param vector {platypus.Vector} The vector to be removed.
              */
@@ -384,7 +383,7 @@
             
             /**
              * This message causes the component to begin tweening the entity's orientation over a span of time into the new orientation.
-             * 
+             *
              * @method 'tween-transform'
              * @param options {Object} A list of key/value pairs describing the tween options.
              * @param options.matrix {Array} A transformation matrix: only required if `transform` is not provided
@@ -451,7 +450,7 @@
                     tween.angle = angle;
                     
                     if (props.anchor) {
-                        tween.offset = props.offset
+                        tween.offset = props.offset;
                         if (!tween.offset) {
                             tween.offset = this.owner.position.copy().subtractVector(props.anchor, 2);
                             tween.recycleOffset = true;
@@ -464,7 +463,7 @@
             
             /**
              * This message performs an immediate transform of the entity by performing the transformation via a prepended matrix multiplication.
-             * 
+             *
              * @method 'transform'
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
@@ -474,7 +473,7 @@
             
             /**
              * This message performs an immediate transform of the entity by performing the transformation via a prepended matrix multiplication.
-             * 
+             *
              * @method 'prepend-transform'
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
@@ -484,7 +483,7 @@
             
             /**
              * This message performs an immediate transform of the entity by performing the transformation via an appended matrix multiplication.
-             * 
+             *
              * @method 'append-transform'
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
@@ -494,7 +493,7 @@
             
             /**
              * This message performs an immediate transform of the entity by returning the entity to an identity transform before performing a matrix multiplication.
-             * 
+             *
              * @method 'replace-transform'
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
@@ -531,7 +530,7 @@
                     
                     /**
                      * Once a transform is complete, this event is triggered to notify the entity of the completed transformation.
-                     * 
+                     *
                      * @event 'orientation-updated'
                      * @param matrix {Array} A 3x3 2D array describing the change in orientation.
                      */
@@ -646,6 +645,8 @@
                     tween.afterTick(t, matrix);
                     
                     matrix.recycle(2);
+                    
+                    return false;
                 };
             }()),
             

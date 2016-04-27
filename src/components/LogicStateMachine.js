@@ -46,7 +46,7 @@ This component is a general purpose state-machine for an entity, taking in vario
 /*global include, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var DataMap = include('platypus.DataMap'),
         StateMap = include('platypus.StateMap'),
@@ -291,7 +291,7 @@ This component is a general purpose state-machine for an entity, taking in vario
                     ss = this.snapshot;
                 
                 if (this.outputs) {
-                    ss.update(state)
+                    ss.update(state);
                     
                     queue = Array.setUp();
                     handleOutput('outputs', ss, this.last, this.outputs, false, this.owner, queue);

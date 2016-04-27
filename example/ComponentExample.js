@@ -6,7 +6,7 @@
  */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     /*********************************************************************
      TODO: Place helper functions here that are suitable across all

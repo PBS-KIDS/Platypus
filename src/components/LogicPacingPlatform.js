@@ -30,7 +30,7 @@ This component changes the (x, y) position of an object according to its speed a
 */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     return platypus.createComponentClass({
         

@@ -9,7 +9,7 @@
 /*global include, createjs, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         Data = include('platypus.Data'),

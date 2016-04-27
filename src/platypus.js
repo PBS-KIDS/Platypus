@@ -6,7 +6,7 @@
 this.platypus = this.platypus || {};
 
 (function (platypus) {
-    "use strict";
+    'use strict';
 
     var doNothing = function () {},
         uagent    = navigator.userAgent.toLowerCase(),

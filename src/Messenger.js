@@ -8,7 +8,7 @@
 /*global console, extend, include, platypus, springroll, window */
 /*jslint plusplus:true */
 platypus.Messenger = (function () {
-    "use strict";
+    'use strict';
 
     var EventDispatcher = include('springroll.EventDispatcher'),
         Messenger = function () {
@@ -58,7 +58,7 @@ platypus.Messenger = (function () {
         } else if (events.event) {
             return this.triggerEvent(events.event, events.message || message, events.debug || debug);
         } else {
-            console.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.', events);
+            platypus.debug.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.', events);
             return 0;
         }
     };

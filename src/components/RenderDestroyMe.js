@@ -8,7 +8,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     return platypus.createComponentClass({
         id: 'RenderDestroyMe',

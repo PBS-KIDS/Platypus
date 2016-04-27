@@ -1,13 +1,13 @@
 /**
  * This component can request that the camera focus on this entity.
- * 
+ *
  * @namespace platypus.components
  * @class CameraFollowMe
  * @uses platypus.Component
  */
-/*global platypus */
+/*global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data');
 
@@ -17,7 +17,7 @@
         properties: {
             /**
              * Sets initial camera settings when the entity is being followed. This can be over-written by the "follow-me" call itself. If any of these attributes are not provided, the following are used by default:
-             * 
+             *
                   {
                       "time": 500,
                       // Optional. Time in milliseconds that the camera should focus before returning to the original focus.
@@ -43,7 +43,7 @@
                       "offsetY": 40
                       // Optional number setting how far to offset the camera from the entity vertically.
                   }
-             * 
+             *
              * @property camera
              * @type Object
              * @default {}
@@ -52,7 +52,7 @@
             
             /**
              * Camera mode that the camera should use.
-             * 
+             *
              * @property mode
              * @type String
              * @default "forward"
@@ -61,7 +61,7 @@
 
             /**
              * Whether to pause the game while the camera is focused.
-             * 
+             *
              * @property pause
              * @type boolean
              * @default false
@@ -69,7 +69,7 @@
             pause: false
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             this.pauseGame = (this.pause && this.camera.time) ? {
                 time: this.camera.time
             } : null;
@@ -90,7 +90,7 @@
         events: {
             /**
              * On receiving this message, the component will trigger a message requesting that the parent camera begin following this entity.
-             * 
+             *
              * @method 'follow-me'
              * @param [options] {Object} A list of key/value paris describing camera options to set.
              * @param [options.mode] {String} Camera following mode.
@@ -125,7 +125,7 @@
 
                     /**
                      * This component fires this message on the parent entity to pause logic if required.
-                     * 
+                     *
                      * @event 'pause-logic'
                      * @param options {Object}
                      * @param options.time {number} The amount of time to pause before re-enabling logic.
@@ -134,7 +134,7 @@
                     
                     /**
                      * This component fires this message on the parent entity to pause rendering if required.
-                     * 
+                     *
                      * @event 'pause-render'
                      * @param options {Object}
                      * @param options.time {number} The amount of time to pause before re-enabling render updates.
@@ -144,7 +144,7 @@
                 
                 /**
                  * This component fires this message on this entity's parent so the camera will begin following this entity.
-                 * 
+                 *
                  * @event 'follow'
                  * @param options {Object} A list of key/value pairs describing camera options to set.
                  * @param options.entity {platypus.Entity} Sends this entity for the camera to follow.

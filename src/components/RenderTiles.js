@@ -12,7 +12,7 @@
 /*global include, platypus */
 /*jslint nomen:true, bitwise:true, plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var AABB              = include('platypus.AABB'),
         PIXIAnimation     = include('platypus.PIXIAnimation'),

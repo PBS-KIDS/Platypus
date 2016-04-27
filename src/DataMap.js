@@ -1,6 +1,6 @@
 /**
  * This class defines a generic iterable data object. It behaves similarly to Map but maintains a list of keys as an Array. It includes recycle methods to encourage reuse.
- * 
+ *
  * @namespace platypus
  * @class DataMap
  * @constructor
@@ -8,12 +8,12 @@
  * @uses Map
  * @since 0.8.0
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 platypus.DataMap = (function () {
-    "use strict";
+    'use strict';
     
-    var mapSet = function (keys, key, value) {
+    var Map = include('window.Map'),
+        mapSet = function (keys, key, value) {
             if (this.get(key) !== value) {
                 if (!this.has(key)) {
                     keys.push(key);
@@ -70,11 +70,11 @@ platypus.DataMap = (function () {
             
             if (!this.map) {
                 mm = mapMethods;
-                map = this.map = new window.Map;
+                map = this.map = new Map;
                 
                 /**
                  * Tracks keys on this object to make iteration faster.
-                 * 
+                 *
                  * @property keys
                  * @type Array
                  * @default []
@@ -83,7 +83,7 @@ platypus.DataMap = (function () {
                 
                 /**
                  * Returns the value of the provided key.
-                 * 
+                 *
                  * @method get
                  * @param key {String} The key to lookup.
                  * @return value {any} The value of the provded key.
@@ -92,7 +92,7 @@ platypus.DataMap = (function () {
                 
                 /**
                  * Determines whether the provided key is available on this DataMap.
-                 * 
+                 *
                  * @method has
                  * @param key {String} The key to lookup.
                  * @return value {Boolean} Whether the key is listed in this DataMap.
@@ -101,7 +101,7 @@ platypus.DataMap = (function () {
                 
                 /**
                  * Sets a value to a key in the DataMap.
-                 * 
+                 *
                  * @method set
                  * @param key {String} The key to associate with the provided value.
                  * @param value {any} The value to be stored by the DataMap.
@@ -111,7 +111,7 @@ platypus.DataMap = (function () {
                 
                 /**
                  * Deletes a key (and value) from the DataMap.
-                 * 
+                 *
                  * @method delete
                  * @param key {String} The key to delete from the DataMap.
                  * @return value {any} The value of the key is returned.
@@ -120,7 +120,7 @@ platypus.DataMap = (function () {
                 
                 /**
                  * Clears out of keys (and values) from the DataMap.
-                 * 
+                 *
                  * @method clear
                  */
                 mm.clear.value = mapClear.bind(map, keys);
@@ -157,19 +157,19 @@ platypus.DataMap = (function () {
     
     /**
      * Returns DataMap from cache or creates a new one if none are available.
-     * 
+     *
      * @method DataMap.setUp
      * @return dataMap {platypus.DataMap} The instantiated DataMap.
      */
     /**
      * Returns DataMap back to the cache. Prefer the DataMap's recycle method since it recycles property objects as well.
-     * 
+     *
      * @method DataMap.recycle
      * @param dataMap {platypus.DataMap} The DataMap to be recycled.
      */
     /**
      * Relinquishes DataMap properties and recycles it.
-     * 
+     *
      * @method recycle
      */
     platypus.setUpRecycle(DataMap, 'DataMap', function () {

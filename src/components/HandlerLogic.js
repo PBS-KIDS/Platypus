@@ -1,14 +1,13 @@
 /**
  * A component that handles updating logic components. Each tick it calls all the entities that accept 'handle-logic' messages. This component is usually used on an "action-layer".
- * 
+ *
  * @namespace platypus.components
  * @class HandlerLogic
  * @uses platypus.Component
  **/
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var AABB = include('platypus.AABB'),
         addAll = function (all, active) {
@@ -34,7 +33,7 @@
                 }
             }
         },
-        hasLogic = function (item, index, arr) {
+        hasLogic = function (item/*, index, arr*/) {
             return (item === 'handle-logic' || item === 'handle-post-collision-logic' || item === 'prepare-logic' || item === 'state-changed' || item === 'handle-movement');
         };
 
@@ -43,7 +42,7 @@
         properties: {
             /**
              * Whether logic should always run on all entities or only run on entities within the visible camera area (plus the buffer amount specified by the `buffer` property).
-             * 
+             *
              * @property alwaysOn
              * @type Boolean
              * @default false
@@ -54,7 +53,7 @@
         publicProperties: {
             /**
              * The buffer area around the camera in which entity logic is active. This property is available on the Entity as `entity.buffer`.
-             * 
+             *
              * @property buffer
              * @type number
              * @default camera width / 10
@@ -63,7 +62,7 @@
             
             /**
              * The length in milliseconds of a single logic step. If the framerate drops too low, logic is run for each step of this many milliseconds. This property is available on the Entity as `entity.stepLength`.
-             * 
+             *
              * @property stepLength
              * @type number
              * @default 5
@@ -72,7 +71,7 @@
             
             /**
              * The maximum number of steps to take for a given tick, to prevent lag overflow.
-             * 
+             *
              * @property maxStepsPerTick
              * @type number
              * @default 100
@@ -81,7 +80,7 @@
             
             /**
              * Whether logic should occur at an alternate speed. This is useful for simulations where the game should speed up or slow down.
-             * 
+             *
              * @property timeMultiplier
              * @type number
              * @default 1
@@ -89,7 +88,7 @@
              */
             timeMultiplier: 1
         },
-        constructor: function (definition) {
+        constructor: function () {
             this.entities = Array.setUp();
             this.activeEntities = Array.setUp();
             this.removals = Array.setUp();
@@ -117,7 +116,7 @@
         events: {
             /**
              * Called when a new entity has been added and should be considered for addition to the handler. If the entity has a 'handle-logic' message id it's added to the list of entities.
-             * 
+             *
              * @method 'child-entity-added'
              * @param entity {platypus.Entity} The entity that is being considered for addition to the handler.
              */
@@ -134,7 +133,7 @@
 
             /**
              * Called when an entity should be removed from the list of logically updated entities.
-             * 
+             *
              * @method 'child-entity-removed'
              * @param entity {platypus.Entity} The entity to be removed from the handler.
              */
@@ -151,7 +150,7 @@
             
             /**
              * When this event is triggered, `handle-logic` messages cease to be triggered on each tick.
-             * 
+             *
              * @method 'pause-logic'
              * @param [options] {Object}
              * @param [options.time] {number} If set, this will pause the logic for this number of milliseconds. If not set, logic is paused until an `unpause-logic` message is triggered.
@@ -166,7 +165,7 @@
             
             /**
              * When this event is triggered, `handle-logic` messages begin firing each tick.
-             * 
+             *
              * @method 'unpause-logic'
              */
             "unpause-logic": function () {
@@ -175,7 +174,7 @@
             
             /**
              * Changes the active logic area when the camera location changes.
-             * 
+             *
              * @method 'camera-update'
              * @param camera {Object}
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
@@ -197,7 +196,7 @@
             
             /**
              * Sends a 'handle-logic' message to all the entities the component is handling. If an entity does not handle the message, it's removed it from the entity list.
-             * 
+             *
              * @method 'tick'
              * @param tick {Object} Tick information that is passed on to children entities via "handle-logic" events.
              * @param tick.delta {number} The time passed since the last tick.
@@ -246,7 +245,7 @@
                     if (!this.paused) {
                         /**
                          * This event is triggered on the top-level layer to signify a "handle-logic" event is about to be triggered on children. This is unique from the layer's "tick" event in that it occurs the same number of times as the "handle-logic" event and will not occur if HandlerLogic is paused.
-                         * 
+                         *
                          * @event 'logic-tick'
                          * @param tick.delta {Number} The time that has passed since the last tick.
                          * @param tick.camera {null|platypus.AABB} The range of the logic camera area. This is typically larger than the visible camera. This value is `null` if `alwaysOn` is set to `true` on this component.
@@ -266,7 +265,7 @@
                             
                             /**
                              * This event is triggered on children entities to run anything that should occur before "handle-logic". For example, removing or adding components should happen here and not in "handle-logic".
-                             * 
+                             *
                              * @event 'prepare-logic'
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
@@ -278,7 +277,7 @@
 
                             /**
                              * This event is triggered on children entities to run their logic.
-                             * 
+                             *
                              * @event 'handle-logic'
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
@@ -289,7 +288,7 @@
 
                             /**
                              * This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.
-                             * 
+                             *
                              * @event 'handle-movement'
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
@@ -316,7 +315,7 @@
                         i = actives.length;
                         /**
                          * This event is triggered on the entity (layer) to test collisions once logic has been completed.
-                         * 
+                         *
                          * @event 'check-collision-group'
                          * @param tick {Object}
                          * @param tick.delta {Number} The time that has passed since the last tick.
@@ -326,7 +325,7 @@
                         if (this.owner.triggerEvent('check-collision-group', msg)) { // If a collision group is attached, make sure collision is processed on each logic tick.
                             /**
                              * This event is triggered on entities to run logic that may depend upon collision responses.
-                             * 
+                             *
                              * @event 'handle-post-collision-logic'
                              * @param tick {Object}
                              * @param tick.delta {Number} The time that has passed since the last tick.
@@ -336,7 +335,7 @@
                                 
                             /**
                              * Triggered on entities when the entity's state has been changed.
-                             * 
+                             *
                              * @event 'state-changed'
                              * @param state {Object} A list of key/value pairs representing the owner's state (this value equals `entity.state`).
                              */

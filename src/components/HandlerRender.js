@@ -5,12 +5,12 @@
  * @class HandlerRender
  * @uses platypus.Component
  */
-/*global PIXI, platypus */
-/*jslint plusplus:true */
+/*global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
-    var Vector = include('platypus.Vector');
+    var Container = include('PIXI.Container'),
+        Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
 
@@ -38,8 +38,8 @@
 
         },
 
-        constructor: function (definition) {
-            this.container = new PIXI.Container();
+        constructor: function () {
+            this.container = new Container();
 
             this.camera = {
                 x: 0,

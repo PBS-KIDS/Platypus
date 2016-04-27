@@ -1,13 +1,13 @@
 /**
  * This component works in tandem with the [Mover](platypus.components.Mover.html) component by adding a vector of motion to the entity. This component is typically created by `Mover` and doesn't need to be added separately.
- * 
+ *
  * @namespace platypus.components
  * @class Motion
  * @uses platypus.Component
  */
-/*global platypus */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector'),
         isTrue = function () {
@@ -23,10 +23,10 @@
                 instantSuccess = definition.instantSuccess;
 
             if (controlState) {
-                    getActiveVelocityState = function () {
-                        return state.get(controlState);
-                    };
-            } 
+                getActiveVelocityState = function () {
+                    return state.get(controlState);
+                };
+            }
 
             if (self.instant || instantState) {
                 if (instantState) {
@@ -37,7 +37,7 @@
                 
                 self.instant = true;
 
-                self.update = function (delta) {
+                self.update = function () {
                     var state  = getInstantState(),
                         vState = getActiveVelocityState();
                     
@@ -61,7 +61,7 @@
                         return this.velocity;
                     } else {
                         return null;
-                    }                    
+                    }
                 };
             } else {
                 self.update = function (delta) {
@@ -85,7 +85,7 @@
         properties: {
             /**
              * Whether this motion should automatically re-orient when the entity re-orients.
-             * 
+             *
              * @property orient
              * @type boolean
              * @default true
@@ -94,7 +94,7 @@
             
             /**
              * A vector, Array, or number specifying the acceleration of the motion. Numbers apply magnitude along the x-axis. Arrays map to [x, y, z] on the vector.
-             * 
+             *
              * @property acceleration
              * @type platypus.Vector|Array|number
              * @default Vector(0, 0, 0)
@@ -104,7 +104,7 @@
             
             /**
              * Whether this motion should apply acceleration to the entity. Defaults to `true` unless an initial acceleration is left unset.
-             * 
+             *
              * @property activeAcceleration
              * @type boolean
              * @default true
@@ -113,7 +113,7 @@
             
             /**
              * Whether this motion should apply acceleration to the entity.
-             * 
+             *
              * @property activeVelocity
              * @type boolean
              * @default true
@@ -122,7 +122,7 @@
             
             /**
              * This is the highest magnitude allowed for the motion vector.
-             * 
+             *
              * @property maxMagnitude
              * @type number
              * @default Infinity
@@ -131,7 +131,7 @@
             
             /**
              * When this state on the entity changes, this motion's active state is changed to match. If an "event" property is also set on this component, both the event and the state must be true for the motion to be active.
-             * 
+             *
              * @property controlState
              * @type String
              * @default ""
@@ -140,7 +140,7 @@
             
             /**
              * If instant or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instantState" property is also set on this component, both the event and the state must be true for the motion to be active.
-             * 
+             *
              * @property instant
              * @type Boolean
              * @default false
@@ -150,7 +150,7 @@
             
             /**
              * If instant or instantState are set, the motion is only triggered for a single step and must be re-triggered to activate again. When the instantState on the entity becomes `true`, this motion's active state is changed to match. If an "instant" property is also set on this component, both the event and the state must be true for the motion to be active. If "event" or "controlState" are also defined, they must also be `true` to trigger an instant motion on the entity.
-             * 
+             *
              * @property instantState
              * @type String
              * @default ""
@@ -159,7 +159,7 @@
             
             /**
              * If instantState is set, this event is triggered when the intance of motion occurs on the entity.
-             * 
+             *
              * @property instantSuccess
              * @type String
              * @default ""
@@ -168,7 +168,7 @@
             
             /**
              * This determines if setting active to `false` (via the control event or state) should dampen velocity. This is a ratio applied to the vector magnitude between 0 and 1. This is useful for events like jumping where a longer keypress should jump farther than a shorter keypress.
-             * 
+             *
              * @property instantDecay
              * @type number
              * @default null
@@ -177,7 +177,7 @@
             
             /**
              * A vector, Array, or number specifying the direction and magnitude of the motion. Numbers apply magnitude along the x-axis. Arrays map to [x, y, z] on the vector.
-             * 
+             *
              * @property velocity
              * @type platypus.Vector|Array|number
              * @default Vector(0, 0, 0)
@@ -224,7 +224,7 @@
         events: {
             /**
              * This event controls whether this velocity is active or inactive.
-             * 
+             *
              * @method 'control-velocity'
              * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
              * @since 0.6.8
@@ -235,7 +235,7 @@
             
             /**
              * This event sets the velocity to inactive.
-             * 
+             *
              * @method 'stop-velocity'
              * @since 0.6.8
              */
@@ -245,7 +245,7 @@
             
             /**
              * This event sets the velocity to active.
-             * 
+             *
              * @method 'start-velocity'
              * @since 0.6.8
              */
@@ -255,7 +255,7 @@
             
             /**
              * This event controls whether the acceleration is active or inactive.
-             * 
+             *
              * @method 'control-acceleration'
              * @param control {Object|boolean} If `true`, this motion becomes active. If `false` or `{pressed: false}`, the motion becomes inactive.
              * @since 0.6.8
@@ -266,7 +266,7 @@
             
             /**
              * This event sets the acceleration to inactive.
-             * 
+             *
              * @method 'stop-acceleration'
              * @since 0.6.8
              */
@@ -276,7 +276,7 @@
             
             /**
              * This event sets the acceleration to active.
-             * 
+             *
              * @method 'start-acceleration'
              * @since 0.6.8
              */

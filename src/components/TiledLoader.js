@@ -39,7 +39,7 @@
 /*global atob, console, include, pako, platypus */
 /*jslint bitwise: true, plusplus: true */
 (function () {
-    "use strict";
+    'use strict';
 
     var Application = include('springroll.Application'), // Import SpringRoll classes
         AABB        = include('platypus.AABB'),
@@ -659,7 +659,7 @@
                     tileLayer.tileheight = this.assetCache.read(imageLayer.name).height;
                     tileLayer.tilewidth = this.assetCache.read(imageLayer.name).width;
                 } else {
-                    console.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
+                    platypus.debug.warn('Component TiledLoader: Cannot find the "' + imageLayer.name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + imageLayer.name + '".');
                     tileLayer.image = imageLayer.image;
                 }
 
@@ -716,7 +716,7 @@
                         if (this.assetCache.read(tilesets[i].name)) { // Prefer to have name in tiled match image id in game
                             images.push(tilesets[i].name);
                         } else {
-                            console.warn('Component TiledLoader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
+                            platypus.debug.warn('Component TiledLoader: Cannot find the "' + tilesets[x].name + '" sprite sheet. Add it to the list of assets in config.json and give it the id "' + tilesets[x].name + '".');
                             images.push(tilesets[i].image);
                         }
                     }
@@ -753,9 +753,7 @@
                         layer = this.setupLayer(layerDefinition, actionLayerCollides, layer, x, y, tileWidth, tileHeight, tilesets, images);
                         break;
                     default:
-                        if (platypus.game.settings.debug) {
-                            console.warn('TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
-                        }
+                        platypus.debug.warn('TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
                     }
                     this.updateLoadingProgress(progress);
                 }

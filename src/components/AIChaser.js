@@ -7,7 +7,7 @@
  */
 /*global console, include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector');
 
@@ -61,7 +61,7 @@
              */
             "load": function () {
                 if (!this.owner.addMover) {
-                    console.warn('The "AIChaser" component requires a "Mover" component to function correctly.');
+                    platypus.debug.warn('The "AIChaser" component requires a "Mover" component to function correctly.');
                     return;
                 }
                 

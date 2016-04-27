@@ -27,7 +27,7 @@
  */
 /*global console, platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     return platypus.createComponentClass({
         
@@ -55,9 +55,7 @@
         },
         
         constructor: function (definition) {
-            if (platypus.game.settings.debug) {
-                console.warn('"' + this.owner.type + '" is using the AudioMobile component which has been deprecated.');
-            }
+            platypus.debug.warn('"' + this.owner.type + '" is using the AudioMobile component which has been deprecated.');
         },
 
         events: {

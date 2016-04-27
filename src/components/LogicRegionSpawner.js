@@ -31,10 +31,9 @@ This component spawns new entities within a given area at set intervals.
       }
     }
 */
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Entity = include('platypus.Entity');
 

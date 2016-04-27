@@ -1,5 +1,7 @@
-/*global springroll */
+/*global platypus, springroll */
 (function () {
+    'use strict';
+    
     var recycleProp = {
             value: false,
             writable: true
@@ -31,7 +33,7 @@
             
             ClassObject.recycle = function (instance) {
                 if (instance.recycled) {
-                    console.warn('WHOA! I have already been recycled!', instance);
+                    platypus.debug.warn('WHOA! I have already been recycled!', instance);
                 } else {
                     instance.recycled = true;
                     cache.push(instance);
@@ -64,7 +66,7 @@
         });
         
         return cache;
-    }
+    };
     
     platypus.getObjectCaches = function () {
         return caches;

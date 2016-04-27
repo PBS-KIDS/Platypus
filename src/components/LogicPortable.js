@@ -31,7 +31,7 @@ This component allows this entity to be carried by other entities with which it 
 */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var defaultOrientation = {
             down: true //default is false, 'true' means as soon as carrier is connected downward

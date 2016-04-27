@@ -5,9 +5,9 @@
  * @class LogicAttachment
  * @uses platypus.Component
  */
-/*global platypus */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var Entity = include('platypus.Entity'),
         linkId = 0;
@@ -64,7 +64,7 @@
 
         },
 
-        constructor: function (definition) {
+        constructor: function () {
             this.state = this.owner.state;
 
             if (!this.owner.linkId) {
@@ -74,9 +74,9 @@
 
             this.state.set(this.attachState, false);
             this.attachmentPosition = {
-                x:  0,
-                y:  0,
-                z:  0,
+                x: 0,
+                y: 0,
+                z: 0,
                 dx: 0,
                 dy: 0,
                 linkId: this.owner.linkId
@@ -96,9 +96,8 @@
              * On receiving this message, updates the attached entity's position.
              *
              * @method 'handle-logic'
-             * @param tick {Object} The tick data.
              */
-            "handle-logic": function (tick) {
+            "handle-logic": function () {
                 var offset = 0,
                     state  = this.state;
 

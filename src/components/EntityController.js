@@ -57,7 +57,7 @@
 /*global include, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var ActionState = include('platypus.ActionState'),
         Data = include('platypus.Data'),

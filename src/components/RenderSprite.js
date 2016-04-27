@@ -7,7 +7,7 @@
  */
 /* global console, include, PIXI, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data'),
         StateMap = include('platypus.StateMap'),
@@ -445,7 +445,7 @@
                     }
                 } else {
                     ss = {};
-                    console.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');
+                    platypus.debug.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');
                 }
                 
                 map      = createAnimationMap(this.animationMap, ss);
@@ -560,7 +560,7 @@
                      */
                     this.owner.parent.triggerEventOnChildren('cache-sprite', this.owner);
                 } else {
-                    console.warn('Unable to cache sprite for ' + this.owner.type);
+                    platypus.debug.warn('Unable to cache sprite for ' + this.owner.type);
                 }
             },
 
@@ -609,7 +609,7 @@
                 if (!this.parentContainer) {
                     if (!this.pinTo) { //In case this component was added after handler-render is initiated
                         if (!this.addStage(renderData.container)) {
-                            console.warn('No PIXI Stage, removing render component from "' + this.owner.type + '".');
+                            platypus.debug.warn('No PIXI Stage, removing render component from "' + this.owner.type + '".');
                             this.owner.removeComponent(this);
                             return;
                         }

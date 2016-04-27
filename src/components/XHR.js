@@ -1,13 +1,15 @@
 /**
  * This component provides component-based XHR communication with a server.
- * 
+ *
  * @namespace platypus.components
  * @class XHR
  * @uses platypus.Component
  */
-/*global platypus */
+/*global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
+    
+    var XMLHttpRequest = include('window.XMLHttpRequest');
 
     return platypus.createComponentClass({
         id: 'XHR',
@@ -15,7 +17,7 @@
         properties: {
             /**
              * Sets the XHR method to use.
-             * 
+             *
              * @property method
              * @type String
              * @default "GET"
@@ -24,7 +26,7 @@
             
             /**
              * Sets the path to connect to the server.
-             * 
+             *
              * @property path
              * @type String
              * @default ""
@@ -33,7 +35,7 @@
             
             /**
              * Sets the XHR response type.
-             * 
+             *
              * @property responseType
              * @type String
              * @default "text"
@@ -42,7 +44,7 @@
             
             /**
              * Whether cookies should be retained on cross-domain calls.
-             * 
+             *
              * @property withCredentials
              * @type boolean
              * @default false
@@ -57,7 +59,7 @@
         events: {// These are messages that this component listens for
             /**
              * On receiving this message, this component makes a request from the server using the provided information. Note that properties set here will reset the properties set by this component's JSON definition.
-             * 
+             *
              * @method 'request'
              * @param message {Object}
              * @param message.method {String} XHR method to use: must be "GET" or "POST".
@@ -102,11 +104,11 @@
                     this.data = '';
                 }
                 
-                this.onload = props.onload || this.onload || function (e) {
+                this.onload = props.onload || this.onload || function () {
                     if (this.status === 200) {
                         /**
                          * This message is triggered on receiving a response from the server (if "onload" is not set by the original "request" message).
-                         * 
+                         *
                          * @event 'response'
                          * @param message {String} The message contains the responseText returned by the server.
                          */

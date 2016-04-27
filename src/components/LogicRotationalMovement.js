@@ -35,7 +35,7 @@ This component changes the (x, y) position of an object according to its current
 */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var cos = Math.cos,
         sin = Math.sin,

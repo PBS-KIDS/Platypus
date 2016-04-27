@@ -1,6 +1,6 @@
 /**
  * The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.
- * 
+ *
  * ## JSON Definition Example
      {
          "id": "entity-id",
@@ -30,7 +30,7 @@
              // Optional. This filter specifies that this entity should not be loaded on mobile browsers/devices that. More than one setting can be added to the array.
          }
      }
- * 
+ *
  * @namespace platypus
  * @class Entity
  * @constructor
@@ -40,22 +40,16 @@
  * @param {Object} [definition.components] This lists the components that should be attached to this entity.
  * @param {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
  * @param {Object} [instanceDefinition] Specific instance definition including properties that override the base definition properties.
- * @return {Entity} Returns the new entity made up of the provided components. 
+ * @return {Entity} Returns the new entity made up of the provided components.
 **/
 
-/*global console, platypus */
-/*jslint plusplus:true */
+/*global include, platypus */
 platypus.Entity = (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data'),
         StateMap = include('platypus.StateMap'),
         entityIds = {},
-        warn = function (content, obj) {
-            if (platypus.game.settings.debug) {
-                console.warn(content, obj);
-            }
-        },
         entity = function (definition, instanceDefinition) {
             var i                    = 0,
                 componentDefinition  = null,
@@ -94,7 +88,7 @@ platypus.Entity = (function () {
             this.trigger = this.triggerEvent = function (event, message) {
                 savedEvents.push(event);
                 savedMessages.push(message);
-            }
+            };
             
             if (componentDefinitions) {
                 for (i = 0; i < componentDefinitions.length; i++) {
@@ -103,7 +97,7 @@ platypus.Entity = (function () {
                         if (platypus.components[componentDefinition.type]) {
                             this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
                         } else {
-                            warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
+                            platypus.debug.warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
                         }
                     }
                 }
@@ -248,7 +242,7 @@ platypus.Entity = (function () {
     
     /**
      * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
-     * 
+     *
      * @method getAssetList
      * @param definition {Object} The definition for the Entity.
      * @param properties {Object} Properties for this instance of the Entity.
@@ -264,7 +258,7 @@ platypus.Entity = (function () {
         if (def.type) {
             definition = platypus.game.settings.entities[def.type];
             if (!definition) {
-                warn('Entity "' + def.type + '": This entity is not defined.', def);
+                platypus.debug.warn('Entity "' + def.type + '": This entity is not defined.', def);
                 return assets;
             }
             return entity.getAssetList(definition, def.properties);
@@ -286,7 +280,7 @@ platypus.Entity = (function () {
     
     /**
      * Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.
-     * 
+     *
      * @method getLateAssetList
      * @param definition {Object} The definition for the Entity.
      * @param data {Object} Scene data that affects asset list.

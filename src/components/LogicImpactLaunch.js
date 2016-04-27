@@ -10,7 +10,7 @@ This component will cause the entity to move in a certain direction on colliding
 ### Listens for:
 - **handle-logic** - On a `tick` logic message, the component updates its location according to its current state.
 - **impact-launch** - On receiving this message, the component causes the entity's position to change according to the preset behavior.
-  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all. 
+  - @param collisionInfo.x (number) - Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.
   - @param collisionInfo.y (number) - Either 1,0, or -1. 1 if we're colliding with an object on our bottom. -1 if on our top. 0 if not at all.
 - **hit-solid** - On receiving this message, the component discontinues its impact-launch behavior.
   - @param collisionInfo.y (number) - Either 1,0, or -1. If colliding below, impact-launch behavior ceases.
@@ -32,10 +32,9 @@ This component will cause the entity to move in a certain direction on colliding
     }
 
 */
-/*global console */
-/*global platypus */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector');
 
@@ -67,7 +66,7 @@ This component will cause the entity to move in a certain direction on colliding
             "component-added": function (component) {
                 if (component === this) {
                     if (!this.owner.addMover) {
-                        console.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
+                        platypus.debug.warn('The "LogicDirectionalMovement" component requires a "Mover" component to function correctly.');
                         return;
                     }
 

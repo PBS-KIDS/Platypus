@@ -7,7 +7,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 platypus.CollisionData = (function () {
-    "use strict";
+    'use strict';
     
     var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck) {
             this.occurred = occurred || false;
@@ -48,7 +48,7 @@ platypus.CollisionData = (function () {
 }());
 
 platypus.CollisionDataContainer = (function () {
-    "use strict";
+    'use strict';
     
     var collisionDataContainer = function () {
             this.xData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());

@@ -9,7 +9,7 @@
 /*global console, include, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
@@ -89,9 +89,7 @@
             this.total = 0;
             this.assetInterface = null;
             
-            if (platypus.game.settings.debug) {
-                console.warn('"' + this.owner.type + '" is using the AssetLoader component which has been deprecated in favor of Spring Roll preloading and scene-specific asset loading.');
-            }
+            platypus.debug.warn('"' + this.owner.type + '" is using the AssetLoader component which has been deprecated in favor of Spring Roll preloading and scene-specific asset loading.');
         },
 
         events: {

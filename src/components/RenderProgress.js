@@ -7,7 +7,7 @@
  */
 /*global console, PIXI, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     return platypus.createComponentClass({
         
@@ -84,7 +84,7 @@
                         this.parentContainer = resp.container;
                         this.parentContainer.addChild(this.container);
                     } else {
-                        console.warn('No PIXI Stage, removing ProgressRender component from "' + this.owner.type + '".');
+                        platypus.debug.warn('No PIXI Stage, removing ProgressRender component from "' + this.owner.type + '".');
                         this.owner.removeComponent(this);
                     }
                 }

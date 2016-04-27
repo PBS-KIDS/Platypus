@@ -1,14 +1,13 @@
 /**
  * This component handles entity motion via velocity and acceleration changes. This is useful for directional movement, gravity, bounce-back collision reactions, jumping, etc.
- * 
+ *
  * @namespace platypus.components
  * @class Mover
  * @uses platypus.Component
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector'),
         tempVector = Vector.setUp(),
@@ -67,7 +66,7 @@
 
         properties: {
             /** This is a normalized vector describing the direction the ground should face away from the entity.
-             * 
+             *
              * @property ground
              * @type Array|Vector
              * @default Vector(0, 1)
@@ -78,7 +77,7 @@
         publicProperties: {
             /**
              * A list of key/value pairs describing vectors or vector-like objects describing acceleration and velocity on the entity. See the ["Motion"]("Motion"%20Component.html) component for properties.
-             * 
+             *
              * @property movers
              * @type Array
              * @default []
@@ -87,7 +86,7 @@
             
             /**
              * If specified, the property adds gravity motion to the entity.
-             * 
+             *
              * @property gravity
              * @type number|Array|Vector
              * @default: 0
@@ -96,7 +95,7 @@
             
             /**
              * If specified, the property adds jumping motion to the entity.
-             * 
+             *
              * @property jump
              * @type number|Array|Vector
              * @default: 0
@@ -105,7 +104,7 @@
             
             /**
              * If specified, the property adds velocity to the entity.
-             * 
+             *
              * @property speed
              * @type number|Array|Vector
              * @default: 0
@@ -114,7 +113,7 @@
             
             /**
              * This property determines how quickly velocity is dampened when the entity is not in a "grounded" state. This should be a value between 1 (no motion) and 0 (no drag).
-             * 
+             *
              * @property drag
              * @type number
              * @default 0.01
@@ -123,7 +122,7 @@
             
             /**
              * This property determines how quickly velocity is dampened when the entity is in a "grounded" state. This should be a value between 1 (no motion) and 0 (no friction).
-             * 
+             *
              * @property friction
              * @type number
              * @default 0.06
@@ -132,14 +131,14 @@
             
             /**
              * This property determines the maximum amount of velocity this entity can maintain. This can be a number or an object describing maximum velocity in a particular direction. For example:
-             *     
+             *
              *     {
              *         "up": 8,
              *         "right": 12,
              *         "down": 0.4,
              *         "left": 12
              *     }
-             * 
+             *
              * @property maxMagnitude
              * @type number|Object
              * @default Infinity
@@ -148,7 +147,7 @@
             
             /**
              * This property determines the rate of change to new maximum amount of velocities.
-             * 
+             *
              * @property maxMagnitudeDelta
              * @type number
              * @default 0
@@ -157,7 +156,7 @@
             
             /**
              * This property determines whether orientation changes should apply external velocities from pre-change momentum.
-             * 
+             *
              * @property reorientVelocities
              * @type Boolean
              * @default true
@@ -165,7 +164,7 @@
             reorientVelocities: true
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             var maxMagnitude = Infinity,
                 max = this.maxMagnitude,
                 thisState = this.owner.state;
@@ -211,7 +210,7 @@
                                 right: maxMagnitude,
                                 down: maxMagnitude,
                                 left: maxMagnitude
-                            }
+                            };
                         }
                         if (typeof max.up === 'number') {
                             maxMagnitude.up = max.up;
@@ -229,17 +228,17 @@
                         if (typeof this.maxMagnitudeInterim === 'number') {
                             if (this.maxMagnitudeDelta) {
                                 this.maxMagnitudeInterim = {
-                                    up:    this.maxMagnitudeInterim,
+                                    up: this.maxMagnitudeInterim,
                                     right: this.maxMagnitudeInterim,
-                                    down:  this.maxMagnitudeInterim,
-                                    left:  this.maxMagnitudeInterim
+                                    down: this.maxMagnitudeInterim,
+                                    left: this.maxMagnitudeInterim
                                 };
                             } else {
                                 this.maxMagnitudeInterim = {
-                                    up:    maxMagnitude.up,
+                                    up: maxMagnitude.up,
                                     right: maxMagnitude.right,
-                                    down:  maxMagnitude.down,
-                                    left:  maxMagnitude.left
+                                    down: maxMagnitude.down,
+                                    left: maxMagnitude.left
                                 };
                             }
                         } else if (!this.maxMagnitudeDelta) {
@@ -258,7 +257,7 @@
         events: {
             /**
              * When a ["Motion"]("Motion"%20Component.html) component is added, this component adds it to its list of movers.
-             * 
+             *
              * @method 'component-added'
              * @param component {"Motion" Component} The motion to add as a mover on this entity.
              */
@@ -270,7 +269,7 @@
             
             /**
              * When a ["Motion"]("Motion"%20Component.html) component is removed, this component removes it from its list of movers.
-             * 
+             *
              * @method 'component-removed'
              * @param component {"Motion" Component} The motion to remove as a mover from this entity.
              */
@@ -287,7 +286,7 @@
             
             /**
              * This component listens for a "load" event before setting up its mover list.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
@@ -350,7 +349,7 @@
             
             /**
              * On each "handle-movement" event, this component moves the entity according to the list of movers on the entity.
-             * 
+             *
              * @method 'handle-movement'
              * @param tick {Object}
              * @param tick.delta {number} The amount of time in milliseconds since the last tick.
@@ -381,16 +380,14 @@
                     if (m) {
                         if (this.grounded) { // put this in here to match earlier behavior
                             if (movers[i].friction !== -1) {
-                                m.multiply(1 - movers[i].friction)
+                                m.multiply(1 - movers[i].friction);
                             } else {
                                 m.multiply(1 - this.friction);
                             }
+                        } else if (movers[i].drag !== -1) {
+                            m.multiply(1 - movers[i].drag);
                         } else {
-                            if (movers[i].drag !== -1) {
-                                m.multiply(1 - movers[i].drag);
-                            } else {
-                                m.multiply(1 - this.drag);
-                            }
+                            m.multiply(1 - this.drag);
                         }
                         velocity.add(m);
                     }
@@ -410,7 +407,7 @@
             
             /**
              * On receiving this message, this component stops all velocities along the axis of the collision direction and sets "grounded" to `true` if colliding with the ground.
-             * 
+             *
              * @method 'hit-solid'
              * @param collisionInfo {Object}
              * @param collisionInfo.direction {platypus.Vector} The direction of collision from the entity's position.
@@ -501,7 +498,7 @@
             
             /**
              * Update mover properties.
-             * 
+             *
              * @method 'set-mover'
              * @param mover {Object}
              * @param [mover.maxMagnitude] {Number|Object} New maximums for magnitude.
@@ -520,7 +517,7 @@
             
             /**
              * Stops all movement on the Entity.
-             * 
+             *
              * @method 'pause-movment'
              * @since 0.6.8
              */
@@ -530,7 +527,7 @@
             
             /**
              * Unpauses all movement on the Entity.
-             * 
+             *
              * @method 'unpause-movment'
              * @since 0.6.8
              */
@@ -540,7 +537,7 @@
             
             /**
              * Handles velocity change if velocities should not be re-oriented.
-             * 
+             *
              * @method 'orientation-updated'
              * @param matrix {Array} A 3x3 matrix describing the orientation change.
              * @since 0.7.3
@@ -576,7 +573,7 @@
         publicMethods: {
             /**
              * This method adds a mover to the entity in the form of a ["Motion"]("Motion"%20Component.html) component definition.
-             * 
+             *
              * @method addMover
              * @param mover {Object} For motion definition properties, see the ["Motion"]("Motion"%20Component.html) component.
              * @return motion {"Motion" Component}
@@ -589,7 +586,7 @@
             
             /**
              * This method removes a mover from the entity.
-             * 
+             *
              * @method removeMover
              * @param motion {"Motion" Component}
              */

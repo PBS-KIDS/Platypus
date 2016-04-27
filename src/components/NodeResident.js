@@ -64,7 +64,8 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
+    
     var createGateway = function (nodeDefinition, map, gateway) {
             return function () {
                 // ensure it's a node if one is available at this gateway

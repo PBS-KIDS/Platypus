@@ -7,7 +7,8 @@
  */
 /*global platypus */
 (function () {
-	"use strict";
+	'use strict';
+    
 	return platypus.createComponentClass({
 
 		id: 'LogicCanvasButton',

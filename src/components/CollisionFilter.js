@@ -7,7 +7,7 @@
  */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var collidePos = function (state, event, collInfo) {
             if (this.state.get(state)) {

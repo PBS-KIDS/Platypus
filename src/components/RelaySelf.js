@@ -7,7 +7,7 @@
  */
 /*global platypus */
 (function () {
-    "use strict";
+    'use strict';
 
     var broadcast = function (event) {
         return function (value, debug) {

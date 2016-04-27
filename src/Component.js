@@ -13,10 +13,10 @@
  * @class Component
  * @static
  */
-/*global console, include, platypus */
+/*global include, platypus */
 /*jslint plusplus:true */
 platypus.Component = (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data'),
         getAssetList = function () {
@@ -127,7 +127,7 @@ platypus.Component = (function () {
      */
     proto.addMethod = function (name, func) {
         if (this.owner[name]) {
-            console.warn(this.owner.type + ': Entity already has a method called "' + name + '". Method not added.');
+            platypus.debug.warn(this.owner.type + ': Entity already has a method called "' + name + '". Method not added.');
         } else {
             this.owner[name] = function () {
                 return func.apply(this, arguments);
@@ -167,7 +167,7 @@ platypus.Component = (function () {
      */
     proto.removeMethod = function (name) {
         if (!this.owner[name]) {
-            console.warn(this.owner.type + ': Entity does not have a method called "' + name + '".');
+            platypus.debug.warn(this.owner.type + ': Entity does not have a method called "' + name + '".');
         } else {
             delete this.owner[name];
         }

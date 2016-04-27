@@ -33,7 +33,7 @@ A component that enables an entity to be pushed.
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var setMagnitude = function (direction, magnitude) {
         return (direction / Math.abs(direction)) * magnitude;

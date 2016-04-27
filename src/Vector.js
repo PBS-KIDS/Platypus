@@ -11,7 +11,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 platypus.Vector = (function () {
-    "use strict";
+    'use strict';
     
     var Vector = function (x, y, z) {
             if (!this.matrix) { // Recycled vectors will already have a matrix array
@@ -496,7 +496,7 @@ platypus.Vector = (function () {
         if (v1.magnitude() && v2.magnitude()) { // Probably want a less expensive check here for zero-length vectors.
             ang = Math.acos(v1.dot(v2));
         } else {
-            console.warn('Vector: Attempted to find the angle of a zero-length vector.');
+            platypus.debug.warn('Vector: Attempted to find the angle of a zero-length vector.');
             ang = undefined;
         }
             

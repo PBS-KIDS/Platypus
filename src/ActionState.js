@@ -1,6 +1,6 @@
 /**
  * This class defines an action state based on one or more inputs. This is used by [EntityController](platypus.components.EntityController.html) to produce event messages listing whether a particular action is "triggered", "pressed", and/or "released".
- * 
+ *
  * @namespace platypus
  * @class ActionState
  * @constructor
@@ -10,16 +10,16 @@
  * @return {ActionState} Returns the new ActionState object.
  * @since 0.6.8
  */
-/*global platypus */
+/*global include, platypus */
 platypus.ActionState = (function () {
-    "use strict";
+    'use strict';
     
     var Data = include('platypus.Data'),
         StateMap = include('platypus.StateMap'),
         ActionState = function (event, states, trigger) {
             /**
              * The name of the event to trigger on the Entity.
-             * 
+             *
              * @property event
              * @type String
              */
@@ -27,7 +27,7 @@ platypus.ActionState = (function () {
 
             /**
              * The function to call if the ActionState is active.
-             * 
+             *
              * @property trigger
              * @type Function
              */
@@ -35,7 +35,7 @@ platypus.ActionState = (function () {
             
             /**
              * Whether any of the ActionState's inputs are active.
-             * 
+             *
              * @property active
              * @type Boolean
              */
@@ -43,7 +43,7 @@ platypus.ActionState = (function () {
 
             /**
              * Whether any of the ActionState's inputs were active last update.
-             * 
+             *
              * @property wasActive
              * @type Boolean
              */
@@ -51,7 +51,7 @@ platypus.ActionState = (function () {
 
             /**
              * Whether the Entity's state is valid for this ActionState.
-             * 
+             *
              * @property valid
              * @type Boolean
              */
@@ -59,7 +59,7 @@ platypus.ActionState = (function () {
 
             /**
              * Whether the Entity's state was valid for this ActionState last update.
-             * 
+             *
              * @property wasValid
              * @type Boolean
              */
@@ -67,7 +67,7 @@ platypus.ActionState = (function () {
 
             /**
              * The state of the Entity that is valid for this ActionState.
-             * 
+             *
              * @property states
              * @type platypus.StateMap
              */
@@ -75,7 +75,7 @@ platypus.ActionState = (function () {
 
             /**
              * The list of input toggles to track control input.
-             * 
+             *
              * @property inputs
              * @type Array
              */
@@ -83,7 +83,7 @@ platypus.ActionState = (function () {
 
             /**
              * The message that is passed to the Entity if the ActionState is active.
-             * 
+             *
              * @property stateSummary
              * @type platypus.Data
              */
@@ -100,7 +100,7 @@ platypus.ActionState = (function () {
 
     /**
      * Updates the state of the action by checking the state of the Entity and whether any inputs are active.
-     * 
+     *
      * @method update
      * @param state {Object} The Entity's `state` property to compare against the ActionState's valid state.
      * @return {Boolean} Whether the ActionState is triggered, pressed, or released.
@@ -123,15 +123,15 @@ platypus.ActionState = (function () {
     
     /**
      * Triggers events on the Entity related to the ActionState's state. This is necessarily separate from the `update` method since triggered events could affect entity state. The messages have the following form and are only triggered if one of the values is `true`:
-     * 
+     *
      *     {
      *         "triggered": true,
      *         "pressed": true,
      *         "released": false
      *     }
-     * 
+     *
      * Here is a mapping of the various event messages depending on the ActionState's state.
-     * 
+     *
      *     ActionState State:
      *          wasValid:  0 0 0 0  0 0 0 0  1 1 1 1  1 1 1 1
      *             valid:  0 0 0 0  1 1 1 1  0 0 0 0  1 1 1 1
@@ -141,7 +141,7 @@ platypus.ActionState = (function () {
      *         triggered:  0 0 0 0  0 1 0 0  0 0 0 0  0 1 0 0
      *           pressed:  0 0 0 0  0 1 0 1  0 0 0 0  0 1 0 1
      *          released:  0 0 0 0  0 0 1 0  0 0 1 1  0 0 1 0
-     * 
+     *
      * @method resolve
      */
     proto.resolve = function () {
@@ -150,7 +150,7 @@ platypus.ActionState = (function () {
 
     /**
      * Determines whether the ActionState is valid for the Entity's current state.
-     * 
+     *
      * @method isStateValid
      * @return {Boolean} Whether the current Entity state is valid for this ActionState.
      * @deprecated since 0.7.5 - use `includes` method provided by `platypus.State` to perform this test.
@@ -161,21 +161,21 @@ platypus.ActionState = (function () {
     
     /**
      * Returns an ActionState from cache or creates a new one if none are available.
-     * 
+     *
      * @method ActionState.setUp
      * @return {platypus.ActionState} The instantiated ActionState.
      * @since 0.7.1
      */
     /**
      * Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.
-     * 
+     *
      * @method ActionState.recycle
      * @param {platypus.ActionState} The ActionState to be recycled.
      * @since 0.7.1
      */
     /**
      * Relinquishes properties of the ActionState and recycles it.
-     * 
+     *
      * @method recycle
      * @since 0.7.1
      */

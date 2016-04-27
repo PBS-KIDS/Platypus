@@ -13,7 +13,7 @@
 /*global extend, include, platypus */
 /*jslint nomen:true, plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var Component = include('platypus.Component'),
         key = '',

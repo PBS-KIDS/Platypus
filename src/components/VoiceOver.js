@@ -10,7 +10,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var getEventName = function (msg, VO) {
             if (VO === ' ') {

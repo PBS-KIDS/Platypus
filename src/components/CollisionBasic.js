@@ -10,7 +10,7 @@
 /*global include, platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
     
     var AABB = include('platypus.AABB'),
         CollisionShape = include('platypus.CollisionShape'),

@@ -12,7 +12,7 @@
  */
 /*global platypus */
 platypus.AABB = (function () {
-    "use strict";
+    'use strict';
     
     var AABB = function (x, y, width, height) {
             this.empty = true;

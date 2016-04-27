@@ -8,7 +8,7 @@
 /*global platypus */
 /*jslint plusplus:true */
 (function () {
-    "use strict";
+    'use strict';
 
     var broadcast = function () {
         var i = 0,

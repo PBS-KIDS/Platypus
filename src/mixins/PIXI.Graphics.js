@@ -3,7 +3,7 @@
  */
 /* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Graphics = include('PIXI.Graphics'),
         debug = function (param) {

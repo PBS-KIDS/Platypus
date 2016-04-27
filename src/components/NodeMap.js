@@ -1,14 +1,13 @@
 /**
  * This component sets up a NodeMap to be used by the [NodeResident](platypus.components.NodeResident.html) component on this entity's child entities.
- * 
+ *
  * @namespace platypus.components
  * @class NodeMap
  * @uses platypus.Component
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
-    "use strict";
+    'use strict';
     
     var Vector = include('platypus.Vector'),
         Node = function (definition, map) { // This is a basic node object, but can be replaced by entities having a `Node` component if more functionality is needed.
@@ -98,31 +97,25 @@
         publicProperties: {
             /**
              * An array of node definitions to create the NodeMap. A node definition can take the following form:
-             * 
+             *
              *         {
              *           "NodeId": "Node1",
              *           // A string or array that becomes the id of the Node. Arrays are joined using "|" to create the id string.
-             *           
              *           "type": "path",
              *           // A string that determines the type of the node.
-             *           
              *           "x": 0,
              *           // Sets the x axis position of the node.
-             *           
              *           "y": 0,
              *           // Sets the y axis position of the node.
-             *           
              *           "z": 0,
              *           // Sets the z axis position of the node.
-             * 
              *           "neighbors": {
              *           // A list of key/value pairs where the keys are directions from the node and values are node ids.
-             *             
              *             "west": "node0",
              *             "east": "node2"
              *           }
              *         }
-             * 
+             *
              * @property map
              * @type Array
              * @default []
@@ -130,7 +123,7 @@
             map: []
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             var i   = 0,
                 map = this.map;
             
@@ -146,7 +139,7 @@
         events: {
             /**
              * Expects a node definition to create a node in the NodeMap.
-             * 
+             *
              * @method 'add-node'
              * @param definition {Object} Key/value pairs.
              * @param definition.nodeId {String|Array} This value becomes the id of the Node. Arrays are joined using "|" to create the id string.
@@ -182,7 +175,7 @@
 
             /**
              * Checks the child entity for a nodeId and if found adds the child to the corresponding node.
-             * 
+             *
              * @method 'child-entity-added'
              * @param entity {platypus.Entity} The entity that may be placed on a node, or if the entity is a node it is added to the map of nodes.
              */
@@ -224,7 +217,7 @@
         publicMethods: {
             /**
              * Gets a node by node id.
-             * 
+             *
              * @method getNode
              * @param id {String|Array|Node} This id of the node to retrieve. If an array or more than one parameter is supplied, values are concatenated with "|" to create a single string id. Supplying a node returns the same node (useful for processing a mixed list of nodes and node ids).
              */
@@ -252,7 +245,7 @@
             
             /**
              * Finds the closest node to a given point, with respect to any inclusion or exclusion lists.
-             * 
+             *
              * method getClosestNode
              * @param point {platypus.Vector} A location for which a closest node is being found.
              * @param [including] {Array} A list of nodes to include in the search. If not set, the entire map is searched.
