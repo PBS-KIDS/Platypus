@@ -16,7 +16,7 @@
  * @namespace platypus
  * @class PlatypusPlugin
  */
-/*global console, document, include, platypus, PIXI */
+/*global console, document, include, platypus, window */
 (function () {
     'use strict';
     
@@ -65,28 +65,66 @@
                     max = Math.max(r, g, b, 1);
 
                     return style + ' background: rgb(' + getPortion(r, max) + ',' + getPortion(g, max) + ',' + getPortion(b, max) + ');';
+                },
+                getVersions = function (text, title, arr) {
+                    var i = 0,
+                        str = '',
+                        versions = Array.setUp(text, getStyle(title, title.substr(title.lastIndexOf(' ') - title.length + 1)), '');
+                    
+                    for (i = 0; i < arr.length; i++) {
+                        str = arr[i];
+                        versions.push(getStyle(str, str.substr(str.lastIndexOf(' ') - str.length + 1)), '');
+                    }
+                    
+                    return versions;
                 };
             
             return function (settings, app) {
-                var options = app.options,
+                var cJS     = window.createjs,
+                    options = app.options,
                     author  = (options.author ? 'by ' + options.author : ''),
+                    pixi    = window.PIXI,
                     title   = app.name || document.title || '',
-                    srV     = Application.version || '(?)',
                     engine  = 'Platypus ' + platypus.version,
-                    pixi    = 'Pixi.js ' + PIXI.VERSION,
-                    spring  = 'SpringRoll ' + srV,
-                    version = options.version || '(?)';
+                    version = options.version || '(?)',
+                    using   = Array.setUp(),
+                    usingV  = Array.setUp();
                 
                 if (!options.hideHello) {
+                    using   = Array.setUp('SpringRoll ' + Application.version);
+                    
+                    if (pixi) {
+                        using.push('Pixi.js ' + pixi.VERSION);
+                    }
+                    if (cJS) {
+                        if (cJS.EaselJS) {
+                            using.push('EaselJS ' + cJS.EaselJS.version);
+                        }
+                        if (cJS.PreloadJS) {
+                            using.push('PreloadJS ' + cJS.PreloadJS.version);
+                        }
+                        if (cJS.SoundJS) {
+                            using.push('SoundJS ' + cJS.SoundJS.version);
+                        }
+                        if (cJS.TweenJS) {
+                            using.push('TweenJS ' + cJS.TweenJS.version);
+                        }
+                    }
+                    
                     if (version !== '(?)') {
                         title += ' ' + version;
                     }
                     
                     if (platypus.supports.firefox || platypus.supports.chrome) {
-                        console.log('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + spring + ' %c %c ' + pixi + ' %c %c ' + engine + ' %c\n\n', getStyle(title, version), '', getStyle(spring, srV), '', getStyle(pixi, PIXI.VERSION), '', getStyle(engine, platypus.version), '');
+                        using.push(engine);
+                        usingV = getVersions('\n%c ' + title + ' %c ' + author + ' \n\nUsing %c ' + using.join(' %c %c ') + ' %c\n\n', title, using);
+                        console.log.apply(console, usingV);
+                        usingV.recycle();
                     } else {
-                        console.log('--- "' + title + '" ' + author + ' - Using ' + spring + ', ' + pixi + ', and ' + engine + ' ---');
+                        console.log('--- "' + title + '" ' + author + ' - Using ' + using.join(', ') + ', and ' + engine + ' ---');
                     }
+
+                    using.recycle();
                 }
     
                 platypus.debug.olive("Game config loaded.", settings);
@@ -122,7 +160,9 @@
             }
         };
     
-    PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
+    if (window.PIXI) {
+        window.PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
+    }
 
     plugin.setup = function () {
         var author = '',
