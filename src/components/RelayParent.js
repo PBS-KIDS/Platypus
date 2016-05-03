@@ -9,12 +9,12 @@
 (function () {
     'use strict';
 
-    var broadcast = function (event) {
-        return function (value, debug) {
-            if (this.owner.parent) {
-                this.owner.parent.trigger(event, value, debug);
-            }
-        };
+    var broadcast = function () {
+        var parent = this.owner.parent;
+        
+        if (parent) {
+            parent.trigger.apply(parent, arguments);
+        }
     };
     
     return platypus.createComponentClass({
@@ -31,18 +31,21 @@
              *
              * @property events
              * @type Object
-             * @default {}
+             * @default null
              */
-            events: {}
+            events: null
         },
 
         constructor: function () {
-            var event = '';
+            var event = '',
+                events = this.events;
             
             // Messages that this component listens for and then broadcasts to parent.
-            for (event in this.events) {
-                if (this.events.hasOwnProperty(event)) {
-                    this.addEventListener(event, broadcast(this.events[event]));
+            if (events) {
+                for (event in events) {
+                    if (events.hasOwnProperty(event)) {
+                        this.addEventListener(event, broadcast.bind(this, events[event]));
+                    }
                 }
             }
         }

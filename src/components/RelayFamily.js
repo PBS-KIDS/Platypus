@@ -6,22 +6,8 @@
  * @uses platypus.Component
  */
 /*global platypus */
-/*jslint plusplus:true */
 (function () {
     'use strict';
-
-    var trigger = function (entities, event, value, debug) {
-            var i = 0;
-
-            for (i = 0; i < entities.length; i++) {
-                entities[i].trigger(event, value, debug);
-            }
-        },
-        broadcast = function (event) {
-            return function (value, debug) {
-                trigger(this.owner.familyLinks, event, value, debug);
-            };
-        };
 
     return platypus.createComponentClass({
         id: 'RelayFamily',
@@ -42,17 +28,13 @@
             events: null
         },
 
-        publicProperties: {
-
-        },
-
-        constructor: function (definition) {
+        constructor: function () {
             var event = '';
             
             if (this.events) {
                 for (event in this.events) {
                     if (this.events.hasOwnProperty(event)) {
-                        this.addEventListener(event, broadcast(this.events[event]));
+                        this.addEventListener(event, this.broadcast.bind(this, null, this.events[event]));
                     }
                 }
             }
@@ -61,8 +43,6 @@
         },
         
         events: {
-
-
             /**
              * Called when linking a new member to the family, this event accepts a list of family members from the new member and uses it to link all the family members together.
              *
@@ -77,8 +57,8 @@
                 for (i = 0; i < newList.length; i++) {
                     newList[i].familyLinks = newList;
                 }
-                trigger(links,   'family-members-added', oldList);
-                trigger(oldList, 'family-members-added', links);
+                this.broadcast(links,   'family-members-added', oldList);
+                this.broadcast(oldList, 'family-members-added', links);
                 oldList.recycle();
             },
             
@@ -90,20 +70,35 @@
              */
             "entity-created": function (entity) {
                 if (!entity.triggerEvent('link-family', this.owner.familyLinks)) {
-                    entity.addComponent(new platypus.components['RelayFamily'](entity, {}));
+                    entity.addComponent(new platypus.components.RelayFamily(entity, {}));
                     entity.triggerEvent('link-family', this.owner.familyLinks);
                 }
             }
         },
         
         methods: {
+            broadcast: function (links) {
+                var entities = links || this.owner.familyLinks,
+                    i = 0,
+                    args = Array.prototype.greenSlice.call(arguments);
+
+                args.greenSplice(0);
+
+                for (i = 0; i < entities.length; i++) {
+                    entities[i].trigger.apply(entities[i], args);
+                }
+                
+                args.recycle();
+            },
+            
             destroy: function () {
-                var i = this.owner.familyLinks.indexOf(this.owner);
+                var familyLinks = this.owner.familyLinks,
+                    i = familyLinks.indexOf(this.owner);
                 
                 if (i >= 0) {
-                    this.owner.familyLinks.greenSplice(i);
+                    familyLinks.greenSplice(i);
                 }
-                trigger(this.owner.familyLinks, 'family-member-removed', this.owner);
+                this.broadcast(familyLinks, 'family-member-removed', this.owner);
                 this.events = null;
             }
         }

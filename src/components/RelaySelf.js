@@ -9,12 +9,6 @@
 (function () {
     'use strict';
 
-    var broadcast = function (event) {
-        return function (value, debug) {
-            this.owner.trigger(event, value, debug);
-        };
-    };
-    
     return platypus.createComponentClass({
         id: 'RelaySelf',
         
@@ -29,18 +23,22 @@
              *
              * @property events
              * @type Object
-             * @default {}
+             * @default null
              */
-            events: {}
+            events: null
         },
 
         constructor: function () {
-            var event = '';
+            var event = '',
+                events = this.events,
+                owner = this.owner;
             
             // Messages that this component listens for and then triggers on itself as a renamed message - useful as a logic place-holder for simple entities.
-            for (event in this.events) {
-                if (this.events.hasOwnProperty(event)) {
-                    this.addEventListener(event, broadcast(this.events[event]));
+            if (events) {
+                for (event in events) {
+                    if (events.hasOwnProperty(event)) {
+                        this.addEventListener(event, owner.trigger.bind(owner, events[event]));
+                    }
                 }
             }
         }

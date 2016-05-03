@@ -9,12 +9,12 @@
 (function () {
     'use strict';
 
-    var broadcast = function (event) {
-        return function (value, debug) {
-            platypus.game.currentScene.triggerOnChildren(event, value, debug);
-        };
+    var broadcast = function () {
+        var currentScene = platypus.game.currentScene;
+        
+        currentScene.triggerOnChildren.apply(currentScene, arguments);
     };
-    
+
     return platypus.createComponentClass({
         id: 'RelayGame',
         
@@ -29,18 +29,21 @@
              *
              * @property events
              * @type Object
-             * @default {}
+             * @default null
              */
-            events: {}
+            events: null
         },
 
         constructor: function () {
-            var event = '';
+            var event = '',
+                events = this.events;
             
             // Messages that this component listens for and then broadcasts to all layers.
-            for (event in this.events) {
-                if (this.events.hasOwnProperty(event)) {
-                    this.addEventListener(event, broadcast(this.events[event]));
+            if (events) {
+                for (event in events) {
+                    if (events.hasOwnProperty(event)) {
+                        this.addEventListener(event, broadcast.bind(this, events[event]));
+                    }
                 }
             }
         }

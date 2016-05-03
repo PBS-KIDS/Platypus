@@ -6,7 +6,6 @@
  * @uses platypus.Component
  */
 /*global platypus */
-/*jslint plusplus:true */
 (function () {
     'use strict';
 
@@ -32,6 +31,7 @@
              * @default 'linked'
              */
             linkId: 'linked',
+            
             /**
              * This is an object of key/value pairs. The keys are events this component is listening for locally, the value is the event to be broadcast to its linked entities. The value can also be an array of events to be fired on linked entities.
              *
@@ -47,11 +47,7 @@
             events: null
         },
 
-        publicProperties: {
-
-        },
-
-        constructor: function (definition) {
+        constructor: function () {
             var i = 0,
                 event = '';
 
@@ -143,7 +139,7 @@
         },
         
         methods: {
-            resolveAdoption: function (owner) {
+            resolveAdoption: function () {
                 var grandparent = this.owner.parent;
                 while (grandparent.parent) {
                     grandparent = grandparent.parent;

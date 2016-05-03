@@ -49,9 +49,9 @@ platypus.Messenger = (function () {
             return this.triggerEvent.apply(this, arguments);
         } else if (Array.isArray(events)) {
             args = Array.prototype.greenSlice.call(arguments);
-            args.greenSplice(0);
             for (i = 0; i < events.length; i++) {
-                count += this.trigger(events[i], args);
+                args[0] = events[i];
+                count += this.trigger.apply(this, args);
             }
             args.recycle();
             return count;
