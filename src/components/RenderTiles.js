@@ -232,7 +232,7 @@
             left: 0
         },
 
-        constructor: function (definition) {
+        constructor: function () {
             var imgMap = this.imageMap;
 
             this.doMap            = null; //list of display objects that should overlay tile map.
@@ -255,9 +255,7 @@
             this.cachePixels = AABB.setUp();
 
             // Set up containers
-            if (this.spriteSheet && (typeof this.spriteSheet === 'string')) {
-                this.spriteSheet = platypus.game.settings.spriteSheets[this.spriteSheet];
-            }
+            this.spriteSheet = PIXIAnimation.formatSpriteSheet(this.spriteSheet);
             this.tileContainer = ((this.spriteSheet.images.length > 1) || (this.renderer instanceof CanvasRenderer)) ? new Container() : new ParticleContainer(15000, {position: true, rotation: true, scale: true});
             this.mapContainer = new Container();
             this.mapContainer.addChild(this.tileContainer);
@@ -910,6 +908,7 @@
                 this.tiles = null;
                 this.parentContainer = null;
                 this.tilesSprite = null;
+                this.spriteSheet.recycleSpriteSheet();
                 
                 if (map) {
                     for (x = 0; x < this.cachedDisplayObjects.length; x++) {
@@ -936,16 +935,46 @@
             }
         },
         
-        getAssetList: function (component, props, defaultProps) {
-            var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+        getAssetList: (function () {
+            var
+                getImages = function (ss, spriteSheets) {
+                    if (ss) {
+                        if (typeof ss === 'string') {
+                            return getImages(spriteSheets[ss], spriteSheets);
+                        } else if (ss.images) {
+                            return ss.images.greenSlice();
+                        }
+                    }
+
+                    return Array.setUp();
+                };
             
-            if (typeof ss === 'string' && (ss !== 'import')) {
-                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
-            } else if (ss.images) {
-                return ss.images.greenSlice();
-            }
-            
-            return Array.setUp();
-        }
+            return function (component, props, defaultProps) {
+                var arr = null,
+                    i = 0,
+                    images = null,
+                    spriteSheets = platypus.game.settings.spriteSheets,
+                    ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+                
+                if (ss) {
+                    if (typeof ss === 'string' && (ss !== 'import')) {
+                        return getImages(ss, spriteSheets);
+                    } else if (Array.isArray(ss)) {
+                        i = ss.length;
+                        images = Array.setUp();
+                        while (i--) {
+                            arr = getImages(ss[i], spriteSheets);
+                            images.union(arr);
+                            arr.recycle();
+                        }
+                        return images;
+                    } else if (ss.images) {
+                        return ss.images.greenSlice();
+                    }
+                }
+                
+                return Array.setUp();
+            };
+        }())
     });
 }());

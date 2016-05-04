@@ -5,13 +5,13 @@
  * @extends PIXI.Sprite
  */
 //TODO: Document!
-/*global console, include, PIXI, platypus */
-/*jslint plusplus:true, nomen:true */
+/*global include, PIXI, platypus */
 (function () {
     'use strict';
     
     var Application = include('springroll.Application'), // Import SpringRoll classes
         BaseTexture = include('PIXI.BaseTexture'),
+        Data = include('platypus.Data'),
         Point = include('PIXI.Point'),
         Rectangle = include('PIXI.Rectangle'),
         Sprite = include('PIXI.Sprite'),
@@ -23,33 +23,6 @@
             anchor: new Point(0, 0)
         },
         regex = /[\[\]{},-]/g,
-        createFramesArray = function (frame, bases) {
-            var i = 0,
-                fw = frame.width,
-                fh = frame.height,
-                rx = frame.regX || 0,
-                ry = frame.regY || 0,
-                w = 0,
-                h = 0,
-                x = 0,
-                y = 0,
-                frames = Array.setUp();
-            
-            for (i = 0; i < bases.length; i++) {
-                
-                // Subtract the size of a frame so that margin slivers aren't returned as frames.
-                w = bases[i].realWidth - fw;
-                h = bases[i].realHeight - fh;
-                
-                for (y = 0; y <= h; y += fh) {
-                    for (x = 0; x <= w; x += fw) {
-                        frames.push([x, y, fw, fh, i, rx, ry]);
-                    }
-                }
-            }
-            
-            return frames;
-        },
         getBaseTextures = function (images) {
             var i = 0,
                 bts = Array.setUp(),
@@ -94,51 +67,41 @@
 
             return spriteSheet.id;
         },
-        formatAnimation = function (key, animation, textures) {
-            var i = 0,
-                first = 0,
-                frames = Array.setUp(),
-                last = 0;
+        getDefaultAnimation = function (length, textures) {
+            var frames = Array.setUp(),
+                i = 0;
             
-            if (typeof animation === 'number') {
-                frames.push(textures[animation] || emptyFrame);
-                return {
-                    id: key,
-                    frames: frames,
-                    next: key,
-                    speed: 1
-                };
-            } else if (Array.isArray(animation)) {
-                first = animation[0] || 0;
-                last = (animation[1] || first) + 1;
-                for (i = first; i < last; i++) {
-                    frames.push(textures[i] || emptyFrame);
-                }
-                return {
-                    id: key,
-                    frames: frames,
-                    next: animation[2] || key,
-                    speed: animation[3] || 1
-                };
-            } else {
-                for (i = 0; i < animation.frames.length; i++) {
-                    frames.push(textures[animation.frames[i]] || emptyFrame);
-                }
-                return {
-                    id: key,
-                    frames: frames,
-                    next: animation.next || key,
-                    speed: animation.speed || 1
-                };
+            for (i = 0; i < length; i++) {
+                frames.push(textures[i] || emptyFrame);
             }
+            return Data.setUp(
+                "id", "default",
+                "frames", frames,
+                "next", "default",
+                "speed", 1
+            );
         },
         standardizeAnimations = function (def, textures) {
-            var key = '',
-                anims = {};
+            var animation = '',
+                anims = Data.setUp(),
+                i = 0,
+                frames = null,
+                key = '';
             
             for (key in def) {
                 if (def.hasOwnProperty(key)) {
-                    anims[key] = formatAnimation(key, def[key], textures);
+                    animation = def[key];
+                    frames = animation.frames.greenSlice();
+                    i = frames.length;
+                    while (i--) {
+                        frames[i] = textures[frames[i]] || emptyFrame;
+                    }
+                    anims[key] = Data.setUp(
+                        "id", key,
+                        "frames", frames,
+                        "next", animation.next,
+                        "speed", animation.speed
+                    );
                 }
             }
             
@@ -148,19 +111,12 @@
             var i = 0,
                 anims    = null,
                 frame    = null,
-                frames   = null,
+                frames   = spriteSheet.frames,
                 images   = spriteSheet.images,
                 texture  = null,
                 textures = Array.setUp(),
                 bases    = getBaseTextures(images);
 
-            // Set up frames array
-            if (Array.isArray(spriteSheet.frames)) {
-                frames = spriteSheet.frames.greenSlice();
-            } else {
-                frames = createFramesArray(spriteSheet.frames, bases);
-            }
-            
             // Set up texture for each frame
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
@@ -172,38 +128,30 @@
             }
 
             // Set up animations
-            anims = standardizeAnimations(spriteSheet.animations || {}, textures);
+            anims = standardizeAnimations(spriteSheet.animations, textures);
 
             // Set up a default animation that plays through all frames
             if (!anims.default) {
-                anims.default = formatAnimation('default', [0, textures.length - 1], textures);
+                anims.default = getDefaultAnimation(textures.length, textures);
             }
             
-            frames.recycle();
             bases.recycle();
             
-            return {
-                textures: textures,
-                animations: anims
-            };
+            return Data.setUp(
+                "textures", textures,
+                "animations", anims
+            );
         },
         cacheAnimations = function (spriteSheet, cacheId) {
             var i = 0,
                 anims    = null,
                 frame    = null,
-                frames   = null,
+                frames   = spriteSheet.frames,
                 images   = spriteSheet.images,
                 texture  = null,
                 textures = Array.setUp(),
                 bases    = getBaseTextures(images);
 
-            // Set up frames array
-            if (Array.isArray(spriteSheet.frames)) {
-                frames = spriteSheet.frames.greenSlice();
-            } else {
-                frames = createFramesArray(spriteSheet.frames, bases);
-            }
-            
             // Set up texture for each frame
             for (i = 0; i < frames.length; i++) {
                 frame = frames[i];
@@ -215,22 +163,21 @@
             }
 
             // Set up animations
-            anims = standardizeAnimations(spriteSheet.animations || {}, textures);
+            anims = standardizeAnimations(spriteSheet.animations, textures);
 
             // Set up a default animation that plays through all frames
             if (!anims.default) {
-                anims.default = formatAnimation('default', [0, textures.length - 1], textures);
+                anims.default = getDefaultAnimation(textures.length, textures);
             }
             
-            frames.recycle();
             bases.recycle();
             
-            return {
-                textures: textures,
-                animations: anims,
-                viable: 1,
-                cacheId: cacheId
-            };
+            return Data.setUp(
+                "textures", textures,
+                "animations", anims,
+                "viable", 1,
+                "cacheId", cacheId
+            );
         },
         PIXIAnimation = function (spriteSheet, animation) {
             var FR = 60,
@@ -520,4 +467,229 @@
             }
         }
     };
+    
+    PIXIAnimation.EmptySpriteSheet = {
+        framerate: 60,
+        frames: [],
+        images: [],
+        animations: {},
+        recycleSpriteSheet: function () {
+            // We don't recycle this sprite sheet.
+        }
+    };
+    
+    /**
+     * This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.
+     *
+     * @method formatSpriteSheet
+     * @param spriteSheet {String|Array|Object} The value to cast to a valid Sprite Sheet.
+     * @return {Object}
+     * @since 0.8.4
+     */
+    PIXIAnimation.formatSpriteSheet = (function () {
+        var imageParts = /([\w-]+)\.(\w+)$/,
+            addAnimations = function (source, destination, speedRatio, firstFrameIndex, id) {
+                var key = '';
+                
+                for (key in source) {
+                    if (source.hasOwnProperty(key)) {
+                        if (destination[key]) {
+                            destination[key].frames.recycle();
+                            destination[key].recycle();
+                            platypus.debug.olive('PIXIAnimation "' + id + '": Overwriting duplicate animation for "' + key + '".');
+                        }
+                        destination[key] = formatAnimation(key, source[key], speedRatio, firstFrameIndex);
+                    }
+                }
+            },
+            addFrameObject = function (source, destination, firstImageIndex, bases) {
+                var i = 0,
+                    fw = source.width,
+                    fh = source.height,
+                    rx = source.regX || 0,
+                    ry = source.regY || 0,
+                    w = 0,
+                    h = 0,
+                    x = 0,
+                    y = 0;
+                
+                for (i = 0; i < bases.length; i++) {
+                    
+                    // Subtract the size of a frame so that margin slivers aren't returned as frames.
+                    w = bases[i].realWidth - fw;
+                    h = bases[i].realHeight - fh;
+                    
+                    for (y = 0; y <= h; y += fh) {
+                        for (x = 0; x <= w; x += fw) {
+                            destination.push([x, y, fw, fh, i + firstImageIndex, rx, ry]);
+                        }
+                    }
+                }
+            },
+            addFrameArray = function (source, destination, firstImageIndex) {
+                var frame = null,
+                    i = 0;
+                
+                for (i = 0; i < source.length; i++) {
+                    frame = source[i];
+                    destination.push(Array.setUp(
+                        frame[0],
+                        frame[1],
+                        frame[2],
+                        frame[3],
+                        frame[4] + firstImageIndex,
+                        frame[5],
+                        frame[6]
+                    ));
+                }
+            },
+            format = function (source, destination) {
+                var bases = null,
+                    dAnims = destination.animations,
+                    dImages = destination.images,
+                    dFR = destination.framerate || 60,
+                    dFrames = destination.frames,
+                    i = 0,
+                    images = Array.setUp(),
+                    firstImageIndex = dImages.length,
+                    firstFrameIndex = dFrames.length,
+                    sAnims = source.animations,
+                    sImages = source.images,
+                    sFR = source.framerate || 60,
+                    sFrames = source.frames;
+                
+                // Set up id
+                if (destination.id) {
+                    destination.id += ';' + (source.id || source.images.join(','));
+                } else {
+                    destination.id = source.id || source.images.join(',');
+                }
+                
+                // Set up images array
+                for (i = 0; i < sImages.length; i++) {
+                    images.push(formatImages(sImages[i]));
+                    dImages.push(images[i]);
+                }
+
+                // Set up frames array
+                if (Array.isArray(sFrames)) {
+                    addFrameArray(sFrames, dFrames, firstImageIndex);
+                } else {
+                    bases = getBaseTextures(images);
+                    addFrameObject(sFrames, dFrames, firstImageIndex, bases);
+                    bases.recycle();
+                }
+                
+                // Set up animations object
+                addAnimations(sAnims, dAnims, sFR / dFR, firstFrameIndex, destination.id);
+                
+                images.recycle();
+                
+                return destination;
+            },
+            formatAnimation = function (key, animation, speedRatio, firstFrameIndex) {
+                var i = 0,
+                    first = 0,
+                    frames = Array.setUp(),
+                    last = 0;
+                
+                if (typeof animation === 'number') {
+                    frames.push(animation + firstFrameIndex);
+                    return Data.setUp(
+                        "frames", frames,
+                        "next", key,
+                        "speed", speedRatio
+                    );
+                } else if (Array.isArray(animation)) {
+                    first = animation[0] || 0;
+                    last = (animation[1] || first) + 1 + firstFrameIndex;
+                    first += firstFrameIndex;
+                    for (i = first; i < last; i++) {
+                        frames.push(i);
+                    }
+                    return Data.setUp(
+                        "frames", frames,
+                        "next", animation[2] || key,
+                        "speed", (animation[3] || 1) * speedRatio
+                    );
+                } else {
+                    for (i = 0; i < animation.frames.length; i++) {
+                        frames.push(animation.frames[i] + firstFrameIndex);
+                    }
+                    return Data.setUp(
+                        "frames", frames,
+                        "next", animation.next || key,
+                        "speed", (animation.speed || 1) * speedRatio
+                    );
+                }
+            },
+            formatImages = function (name) {
+                var match = name.match(imageParts);
+
+                if (match) {
+                    return match[1];
+                } else {
+                    return name;
+                }
+            },
+            recycle = function () {
+                var animations = this.animations,
+                    key = '';
+                
+                for (key in animations) {
+                    if (animations.hasOwnProperty(key)) {
+                        animations[key].frames.recycle();
+                    }
+                    animations[key].recycle();
+                }
+                
+                this.frames.recycle(2);
+                this.images.recycle();
+                this.recycle();
+            },
+            merge = function (spriteSheets, destination) {
+                var i = spriteSheets.length,
+                    ss = null;
+                
+                while (i--) {
+                    ss = spriteSheets[i];
+                    if (typeof ss === 'string') {
+                        ss = platypus.game.settings.spriteSheets[ss];
+                    }
+                    if (ss) {
+                        format(ss, destination);
+                    }
+                }
+                
+                return destination;
+            };
+        
+        return function (spriteSheet) {
+            var response = PIXIAnimation.EmptySpriteSheet,
+                ss = spriteSheet;
+            
+            if (typeof ss === 'string') {
+                ss = platypus.game.settings.spriteSheets[spriteSheet];
+            }
+            
+            if (ss) {
+                response = Data.setUp(
+                    "animations", Data.setUp(),
+                    "framerate", 60,
+                    "frames", Array.setUp(),
+                    "id", '',
+                    "images", Array.setUp(),
+                    "recycleSpriteSheet", recycle
+                );
+                    
+                if (Array.isArray(ss)) {
+                    return merge(ss, response);
+                } else if (ss) {
+                    return format(ss, response);
+                }
+            }
+
+            return response;
+        };
+    }());
 }());

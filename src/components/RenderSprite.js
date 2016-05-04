@@ -5,13 +5,19 @@
  * @class RenderSprite
  * @uses platypus.Component
  */
-/* global console, include, PIXI, platypus */
+/* global include, platypus */
 (function () {
     'use strict';
     
-    var Data = include('platypus.Data'),
+    var Circle = include('PIXI.Circle'),
+        Container = include('PIXI.Container'),
+        Data = include('platypus.Data'),
+        Graphics = include('PIXI.Graphics'),
+        Matrix = include('PIXI.Matrix'),
+        PIXIAnimation = include('platypus.PIXIAnimation'),
+        Rectangle = include('PIXI.Rectangle'),
         StateMap = include('platypus.StateMap'),
-        tempMatrix = new PIXI.Matrix(),
+        tempMatrix = new Matrix(),
         changeState = function (state) {
             //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
             //                We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
@@ -103,8 +109,11 @@
              *          "swing": {"frames": [3, 4, 5], "speed": 4}
              *      }
              *  }
+             *
+             *  -OR- an Array of the above (since 0.8.4)
+             *
              * @property spriteSheet
-             * @type String or Object
+             * @type String|Array|Object
              * @default null
              */
             spriteSheet: null,
@@ -434,21 +443,14 @@
                 };
             
             return function () {
-                var ss   = null,
+                var ss   = PIXIAnimation.formatSpriteSheet(this.spriteSheet),
                     map  = null;
                 
-                if (this.spriteSheet) {
-                    if (typeof this.spriteSheet === 'string') {
-                        ss = platypus.game.settings.spriteSheets[this.spriteSheet];
-                    } else {
-                        ss = this.spriteSheet;
-                    }
-                } else {
-                    ss = {};
+                if (ss === PIXIAnimation.EmptySpriteSheet) {
                     platypus.debug.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');
                 }
                 
-                map      = createAnimationMap(this.animationMap, ss);
+                map = createAnimationMap(this.animationMap, ss);
                 
                 this.parentContainer      = null;
                 this.stateBased = map && this.stateBased;
@@ -470,7 +472,7 @@
                 /*
                  * PIXIAnimation created here:
                  */
-                this.sprite = new platypus.PIXIAnimation(ss, this.currentAnimation || 0);
+                this.sprite = new PIXIAnimation(ss, this.currentAnimation || 0);
                 this.sprite.onComplete = function (animation) {
                     /**
                      * This event fires each time an animation completes.
@@ -491,20 +493,20 @@
                     }
                 }.bind(this);
 
-                this.affine = new PIXI.Matrix();
+                this.affine = new Matrix();
                 
                 // add pins to sprite and setup this.container if needed.
                 if (this.pinLocations) {
-                    this.container = new PIXI.Container();
-                    this.container.transformMatrix = new PIXI.Matrix();
+                    this.container = new Container();
+                    this.container.transformMatrix = new Matrix();
                     this.container.addChild(this.sprite);
                     this.sprite.z = 0;
 
                     this.addPins(this.pinLocations, ss.frames);
-                    this.sprite.transformMatrix = new PIXI.Matrix();
+                    this.sprite.transformMatrix = new Matrix();
                 } else {
                     this.container = this.sprite;
-                    this.sprite.transformMatrix = new PIXI.Matrix();
+                    this.sprite.transformMatrix = new Matrix();
                 }
     
                 // pin to another RenderSprite
@@ -538,6 +540,8 @@
                     this.updateSprite(false);
                     this.owner.cacheRender = this.container;
                 }
+                
+                ss.recycleSpriteSheet();
             };
         }()),
         
@@ -820,7 +824,7 @@
                         flipped  = 1,
                         angle    = null,
                         m        = this.affine.copy(this.container.transformMatrix),
-                        temp     = PIXI.Matrix.TEMP_MATRIX;
+                        temp     = Matrix.TEMP_MATRIX;
                     
                     if (this.buttonMode !== this.container.buttonMode) {
                         this.container.buttonMode = this.buttonMode;
@@ -1194,10 +1198,10 @@
                     return;
                 }
                 
-                if (shape instanceof PIXI.Graphics) {
+                if (shape instanceof Graphics) {
                     gfx = shape;
                 } else {
-                    gfx = new PIXI.Graphics();
+                    gfx = new Graphics();
                     gfx.beginFill(0x000000, 1);
                     if (typeof shape === 'string') {
                         processGraphics(gfx, shape);
@@ -1231,9 +1235,9 @@
 
                     if (!ha) {
                         if (shape.radius) {
-                            ha = new PIXI.Circle(shape.x || 0, shape.y || 0, shape.radius);
+                            ha = new Circle(shape.x || 0, shape.y || 0, shape.radius);
                         } else {
-                            ha = new PIXI.Rectangle(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
+                            ha = new Rectangle(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
                         }
                         
                         savedHitAreas[sav] = ha;
@@ -1274,14 +1278,40 @@
             }
         },
         
-        getAssetList: function (component, props, defaultProps) {
-            var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+        getAssetList: (function () {
+            var
+                getImages = function (ss, spriteSheets) {
+                    if (ss) {
+                        if (typeof ss === 'string') {
+                            return getImages(spriteSheets[ss], spriteSheets);
+                        } else if (ss.images) {
+                            return ss.images.greenSlice();
+                        }
+                    }
+
+                    return Array.setUp();
+                };
             
-            if (typeof ss === 'string') {
-                return platypus.game.settings.spriteSheets[ss].images.greenSlice();
-            } else {
-                return ss.images.greenSlice();
-            }
-        }
+            return function (component, props, defaultProps) {
+                var arr = null,
+                    i = 0,
+                    images = null,
+                    spriteSheets = platypus.game.settings.spriteSheets,
+                    ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+                
+                if (Array.isArray(ss)) {
+                    i = ss.length;
+                    images = Array.setUp();
+                    while (i--) {
+                        arr = getImages(ss[i], spriteSheets);
+                        images.union(arr);
+                        arr.recycle();
+                    }
+                    return images;
+                } else {
+                    return getImages(ss, spriteSheets);
+                }
+            };
+        }())
     });
 }());

@@ -47,7 +47,7 @@ platypus.Scene = (function () {
             if (match) {
                 a.id = match[1];
             } else {
-                a.src = 'assets/images/' + asset + '.png';
+                a.src = 'assets/images/' + asset + '.png'; // Deprecate in 0.9.x - asset source file reference can be handled in project compilation.
             }
             
             return a;
