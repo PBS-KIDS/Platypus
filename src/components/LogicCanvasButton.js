@@ -7,24 +7,24 @@
  */
 /*global platypus */
 (function () {
-	'use strict';
+    'use strict';
     
-	return platypus.createComponentClass({
+    return platypus.createComponentClass({
 
-		id: 'LogicCanvasButton',
+        id: 'LogicCanvasButton',
 
         properties: {
             "onPress": "",
-			"onRelease": "",
+            "onRelease": "",
             "onCancel": "",
             "useOnce": false,
             "disabled": false
-		},
-		publicProperties: {
+        },
+        publicProperties: {
 
-		},
+        },
 
-		constructor: function (definition) {
+        constructor: function () {
             var state = this.owner.state;
             
             this.state = state;
@@ -34,10 +34,10 @@
             this.cancelled = false;
             this.used = false;
             this.last = null;
-		},
+        },
 
-		events: {
-            "handle-logic": function (tick) {
+        events: {
+            "handle-logic": function () {
                 var eq = (this.disabled === this.state.get('disabled'));
                 
                 if (this.last !== eq) {
@@ -62,11 +62,9 @@
                             this.owner.trigger(this.onCancel);
                             this.used = true;
                         }
-                    } else {
-                        if (this.onRelease) {
-                            this.owner.trigger(this.onRelease);
-                            this.used = true;
-                        }
+                    } else if (this.onRelease) {
+                        this.owner.trigger(this.onRelease);
+                        this.used = true;
                     }
                     eventData.pixiEvent.stopPropagation();
                 }
@@ -78,32 +76,32 @@
                 if (this.state.get('down')) {
                     this.cancelled = false;
                 }
-			},
-			"mouseout": function () {
+            },
+            "mouseout": function () {
                 if (this.state.get('down')) {
                     this.cancelled = true;
                 }
-			},
-			"disable": function () {
+            },
+            "disable": function () {
                 this.state.set('disabled', true);
                 this.owner.buttonMode = false;
-			},
-			"enable": function () {
+            },
+            "enable": function () {
                 this.state.set('disabled', false);
                 this.owner.buttonMode = true;
-			},
-			"toggle-disabled": function () {
+            },
+            "toggle-disabled": function () {
                 var value = this.state.get('disabled');
                 
                 this.owner.buttonMode = value;
                 this.state.set('disabled', !value);
-			}
-		},
+            }
+        },
         
         methods: {
             destroy: function () {
                 this.state = null;
             }
         }
-	});
+    });
 }());

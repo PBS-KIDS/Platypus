@@ -177,8 +177,10 @@
             /**
              * A sprite sheet describing all the tile images.
              *
+             * Accepts an array of sprite sheet data since 0.8.4
+             *
              * @property spriteSheet
-             * @type Object | String
+             * @type Object|Array|String
              * @default null
              */
             spriteSheet: null,
@@ -213,7 +215,7 @@
             
             /**
              * The map's top offset.
-             * 
+             *
              * @property top
              * @type Number
              * @default 0
@@ -223,7 +225,7 @@
             
             /**
              * The map's left offset.
-             * 
+             *
              * @property left
              * @type Number
              * @default 0
@@ -518,7 +520,7 @@
              *
              * @method 'handle-render'
              */
-            "handle-render": function (camera) {
+            "handle-render": function () {
                 if (this.updateCache) {
                     this.updateCache = false;
                     if (this.cacheGrid) {

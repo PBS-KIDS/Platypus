@@ -1,5 +1,5 @@
 /**
- * @module Platypus
+ * @module platypus
  * @namespace platypus
  */
 /* global include, navigator, window */
