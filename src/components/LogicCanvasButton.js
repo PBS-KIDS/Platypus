@@ -32,7 +32,8 @@
             state.set('down', false);
             this.owner.buttonMode = !this.disabled;
             this.cancelled = false;
-            this.used = false;
+            this.usedPress = false;
+            this.usedRelease = false;
             this.last = null;
         },
 
@@ -46,25 +47,25 @@
             },
             "mousedown": function (eventData) {
                 this.state.set('down', true);
-                if (!this.state.get('disabled') && !(this.useOnce && this.used)) {
+                if (!this.state.get('disabled') && !(this.useOnce && this.usedPress)) {
                     if (this.onPress) {
                         this.owner.trigger(this.onPress);
-                        this.used = true; //Doing this prevents the Release/Cancel calls from occurring. Need to find a way to let the up and down both call for one use buttons.
+                        this.usedPress = true; //Doing this prevents the Release/Cancel calls from occurring. Need to find a way to let the up and down both call for one use buttons.
                     }
                     eventData.pixiEvent.stopPropagation();
                 }
             },
             "pressup": function (eventData) {
 
-                if (!this.state.get('disabled') && !(this.useOnce && this.used)) {
+                if (!this.state.get('disabled') && !(this.useOnce && this.usedRelease)) {
                     if (this.cancelled) {
                         if (this.onCancel) {
                             this.owner.trigger(this.onCancel);
-                            this.used = true;
+                            this.usedRelease = true;
                         }
                     } else if (this.onRelease) {
                         this.owner.trigger(this.onRelease);
-                        this.used = true;
+                        this.usedRelease = true;
                     }
                     eventData.pixiEvent.stopPropagation();
                 }
