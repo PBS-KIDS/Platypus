@@ -161,6 +161,15 @@
                 } else {
                     this.paused = -1;
                 }
+                if (this.owner.triggerEventOnChildren) {
+                    /**
+                     * Notifies children entities that logic has been paused.
+                     *
+                     * @event 'logic-paused'
+                     * @since 0.8.4
+                     */
+                    this.owner.triggerEventOnChildren('logic-paused');
+                }
             },
             
             /**
@@ -170,6 +179,15 @@
              */
             "unpause-logic": function () {
                 this.paused = 0;
+                if (this.owner.triggerEventOnChildren) {
+                    /**
+                     * Notifies children entities that logic has been unpaused.
+                     *
+                     * @event 'logic-unpaused'
+                     * @since 0.8.4
+                     */
+                    this.owner.triggerEventOnChildren('logic-unpaused');
+                }
             },
             
             /**

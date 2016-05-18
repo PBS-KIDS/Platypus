@@ -112,15 +112,33 @@
                 } else {
                     this.paused = -1;
                 }
+                if (this.owner.triggerEventOnChildren) {
+                    /**
+                     * Notifies children entities that rendering updates have been paused.
+                     *
+                     * @event 'render-paused'
+                     * @since 0.8.4
+                     */
+                    this.owner.triggerEventOnChildren('render-paused');
+                }
             },
 
             /**
              * Unpauses the children of this render Container.
              *
-             * @method 'pause-render'
+             * @method 'unpause-render'
              */
             "unpause-render": function () {
                 this.paused = 0;
+                if (this.owner.triggerEventOnChildren) {
+                    /**
+                     * Notifies children entities that rendering updates have been unpaused.
+                     *
+                     * @event 'render-unpaused'
+                     * @since 0.8.4
+                     */
+                    this.owner.triggerEventOnChildren('render-unpaused');
+                }
             },
 
             /**
