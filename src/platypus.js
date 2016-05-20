@@ -2,7 +2,7 @@
  * @module platypus
  * @namespace platypus
  */
-/* global include, navigator, window */
+/* global springroll, navigator, window */
 this.platypus = this.platypus || {};
 
 (function (platypus) {
@@ -47,7 +47,7 @@ this.platypus = this.platypus || {};
      * @property debug
      * @type Object
      */
-    platypus.debug = include('springroll.Debug') || {
+    platypus.debug = springroll.Debug || {
         error: doNothing,
         log: doNothing,
         olive: doNothing, // Platypus favors olive output to distinguish its output from other console logs.
