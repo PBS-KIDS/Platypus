@@ -32,7 +32,8 @@
 platypus.Scene = (function () {
     'use strict';
     
-    var Entity = include('platypus.Entity'),
+    var Application = include('springroll.Application'),
+        Entity = include('platypus.Entity'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
         fn = /([\w-]+)\.(\w+)$/,
@@ -307,7 +308,7 @@ platypus.Scene = (function () {
     };
     
     /**
-     * Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets.
+     * Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.
      *
      * @method getAssetList
      * @param definition {Object} The definition for the Scene.
@@ -316,7 +317,10 @@ platypus.Scene = (function () {
     proto.getAssetList = function (def) {
         var i = 0,
             arr = null,
-            assets = Array.setUp();
+            asset = null,
+            assets = Array.setUp(),
+            cache = Application.instance.assetManager.cache._cache,
+            formattedAssets = Array.setUp();
         
         if (def.assets) {
             assets.union(def.assets);
@@ -329,10 +333,13 @@ platypus.Scene = (function () {
         }
         
         for (i = 0; i < assets.length; i++) {
-            assets[i] = formatAsset(assets[i]);
+            asset = formatAsset(assets[i]);
+            if (!cache[asset.id]) {
+                formattedAssets.push(asset);
+            }
         }
         
-        return assets;
+        return formattedAssets;
     };
     
     /**
