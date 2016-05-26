@@ -30,6 +30,7 @@
             this.state = state;
             state.set('disabled', this.disabled);
             state.set('down', false);
+            state.set('highlighted', false);
             this.owner.buttonMode = !this.disabled;
             this.cancelled = false;
             this.usedPress = false;
@@ -96,7 +97,17 @@
                 
                 this.owner.buttonMode = value;
                 this.state.set('disabled', !value);
+            },
+            "highlight": function() {
+                this.state.set('highlighted', true);
+            },
+            "unhighlight": function() {
+                this.state.set('highlighted', false);
+            },
+            "toggle-highlight": function() {
+                this.state.set('highlighted', !this.state.get('highlighted'));
             }
+            
         },
         
         methods: {
