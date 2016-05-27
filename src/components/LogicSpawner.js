@@ -54,9 +54,9 @@ This component creates an entity and propels it away. This is useful for casting
             this.state.set(this.stateName, false);
             
             this.spawneeProperties = {
-                x:  0,
-                y:  0,
-                z:  0,
+                x: 0,
+                y: 0,
+                z: 0,
                 dx: 0,
                 dy: 0,
                 spawner: this.owner

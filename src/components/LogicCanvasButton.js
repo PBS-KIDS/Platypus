@@ -14,14 +14,50 @@
         id: 'LogicCanvasButton',
 
         properties: {
+            /**
+             * The event to trigger when pressed.
+             *
+             * @property onPress
+             * @type String
+             * @default ""
+             */
             "onPress": "",
-            "onRelease": "",
-            "onCancel": "",
-            "useOnce": false,
-            "disabled": false
-        },
-        publicProperties: {
 
+            /**
+             * The event to trigger when released.
+             *
+             * @property onRelease
+             * @type String
+             * @default ""
+             */
+            "onRelease": "",
+
+            /**
+             * The event to trigger when cancelled.
+             *
+             * @property onCancel
+             * @type String
+             * @default ""
+             */
+            "onCancel": "",
+
+            /**
+             * Whether this button's actions should be limited to the initial press/release.
+             *
+             * @property useOnce
+             * @type Boolean
+             * @default false
+             */
+            "useOnce": false,
+
+            /**
+             * Whether this button should start disabled.
+             *
+             * @property disabled
+             * @type Boolean
+             * @default false
+             */
+            "disabled": false
         },
 
         constructor: function () {
@@ -39,6 +75,11 @@
         },
 
         events: {
+            /**
+             * Handles `disabled` state changes.
+             *
+             * @method 'handle-logic'
+             */
             "handle-logic": function () {
                 var eq = (this.disabled === this.state.get('disabled'));
                 
@@ -46,6 +87,12 @@
                     this.last = eq;
                 }
             },
+
+            /**
+             * Triggers events per the component's definition when a press is made.
+             *
+             * @method 'mousedown'
+             */
             "mousedown": function (eventData) {
                 this.state.set('down', true);
                 if (!this.state.get('disabled') && !(this.useOnce && this.usedPress)) {
@@ -56,8 +103,13 @@
                     eventData.pixiEvent.stopPropagation();
                 }
             },
-            "pressup": function (eventData) {
 
+            /**
+             * Triggers events per the component's definition when a press is released.
+             *
+             * @method 'pressup'
+             */
+            "pressup": function (eventData) {
                 if (!this.state.get('disabled') && !(this.useOnce && this.usedRelease)) {
                     if (this.cancelled) {
                         if (this.onCancel) {
@@ -74,40 +126,90 @@
                 this.state.set('down', false);
                 this.cancelled = false;
             },
+
+            /**
+             * If a press moves over the button, it's not cancelled.
+             *
+             * @method 'mouseover'
+             */
             "mouseover": function () {
                 if (this.state.get('down')) {
                     this.cancelled = false;
                 }
             },
+
+            /**
+             * If a press moves off of the button, it's cancelled.
+             *
+             * @method 'mouseout'
+             */
             "mouseout": function () {
                 if (this.state.get('down')) {
                     this.cancelled = true;
                 }
             },
+            
+            /**
+             * Disables the entity.
+             *
+             * @method 'disable'
+             */
             "disable": function () {
                 this.state.set('disabled', true);
                 this.owner.buttonMode = false;
             },
+            
+            /**
+             * Enables the entity.
+             *
+             * @method 'enable'
+             */
             "enable": function () {
                 this.state.set('disabled', false);
                 this.owner.buttonMode = true;
             },
+
+            /**
+             * Toggles whether the entity is disabled.
+             *
+             * @method 'toggle-disabled'
+             */
             "toggle-disabled": function () {
                 var value = this.state.get('disabled');
                 
                 this.owner.buttonMode = value;
                 this.state.set('disabled', !value);
             },
-            "highlight": function() {
+            
+            /**
+             * Sets the entity's highlighted state to `true`.
+             *
+             * @method 'highlight'
+             * @since 0.8.6
+             */
+            "highlight": function () {
                 this.state.set('highlighted', true);
             },
-            "unhighlight": function() {
+            
+            /**
+             * Sets the entity's highlighted state to `false`.
+             *
+             * @method 'unhighlight'
+             * @since 0.8.6
+             */
+            "unhighlight": function () {
                 this.state.set('highlighted', false);
             },
-            "toggle-highlight": function() {
+            
+            /**
+             * Toggles the entity's highlighted state.
+             *
+             * @method 'toggle-highlight'
+             * @since 0.8.6
+             */
+            "toggle-highlight": function () {
                 this.state.set('highlighted', !this.state.get('highlighted'));
             }
-            
         },
         
         methods: {
