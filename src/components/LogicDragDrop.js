@@ -47,7 +47,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             dragZ: 10000,
             
             /**
-             * Sets whether a click-move should start the dragging behavior in addition to click-drag.
+             * Sets whether a click-move should start the dragging behavior in addition to click-drag. This value is ignored for mobile devices.
              *
              * @property stickyClick
              * @type Boolean
@@ -66,11 +66,13 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             this.state = this.owner.state;
             this.state.set('dragging', false);
             this.state.set('noDrop', false);
-            
             this.tryDrop = false;
             this.hitSomething = false;
-            
             this.hasCollision = false;
+            
+            if (platypus.supports.mobile) {
+                this.stickyClick = false;
+            }
         },
 
         events: {// These are messages that this component listens for
