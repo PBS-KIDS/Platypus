@@ -5,7 +5,7 @@
  * @class RenderDebug
  * @uses platypus.Component
  */
-/*global console, include, platypus */
+/*global include, platypus */
 (function () {
     'use strict';
     

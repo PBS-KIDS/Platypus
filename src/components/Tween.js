@@ -35,8 +35,7 @@ Tween takes a list of tween definitions and plays them as needed.
         }
     }
 */
-/*global createjs, platypus */
-/*jslint plusplus:true */
+/* global createjs, platypus */
 (function () {
     'use strict';
 
@@ -72,12 +71,10 @@ Tween takes a list of tween definitions and plays them as needed.
                             tween[tweenDef[0]].apply(tween, arr);
                             arr.recycle();
                         }
+                    } else if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
+                        tween.call(createTrigger(this.owner, tweenDef.params));
                     } else {
-                        if (tweenDef.method === 'call' && typeof tweenDef.params === 'string') {
-                            tween.call(createTrigger(this.owner, tweenDef.params));
-                        } else {
-                            tween[tweenDef.method].apply(tween, tweenDef.params);
-                        }
+                        tween[tweenDef.method].apply(tween, tweenDef.params);
                     }
                 }
             };

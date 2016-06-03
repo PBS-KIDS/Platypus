@@ -22,7 +22,7 @@
              * @type Number
              * @default 3
              */
-            maxVelocity : 3,
+            maxVelocity: 3,
 
             /**
              * The rate of acceleration.
@@ -31,7 +31,7 @@
              * @type Number
              * @default 0.01
              */
-            acceleration : 0.01,
+            acceleration: 0.01,
 
             /**
              * The offset between the rotation value of the entity and the rotation of the art.
@@ -40,7 +40,7 @@
              * @type Number
              * @default 0
              */
-            visualOffset : 0,
+            visualOffset: 0,
 
             /**
              * The starting heading at which the entity will accelerate. In radians.
@@ -49,14 +49,14 @@
              * @type Number
              * @default 0
              */
-            startAngle : 0
+            startAngle: 0
         },
 
         publicProperties: {
 
         },
 
-        constructor: function (definition) {
+        constructor: function () {
             this.angle     = this.startAngle;
             this.v         = Array.setUp(0, 0);
             this.moving    = false;

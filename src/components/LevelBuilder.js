@@ -7,14 +7,12 @@
  * @class LevelBuilder
  * @uses platypus.Component
  */
-
-/*global console */
 /*global platypus */
-/*jslint plusplus:true */
 (function () {
     'use strict';
 
-    var mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {
+    var
+        mergeData = function (levelData, levelMergeAxisLength, segmentData, segmentMergeAxisLength, nonMergeAxisLength, mergeAxis) {
             var x        = 0,
                 y        = 0,
                 z        = 0,
@@ -30,6 +28,8 @@
             } else if (mergeAxis === 'vertical') {
                 return levelData.concat(segmentData);
             }
+            
+            return null;
         },
         mergeObjects  = function (obj1s, obj2s, mergeAxisLength, mergeAxis) {
             var i    = 0,
@@ -89,31 +89,28 @@
                             level.layers[i][j] = segment.layers[i][j];
                         }
                     }
-                } else {
-                    if (level.layers[i].type === segment.layers[i].type) {
-                        //if the level does have a layer, we're appending the new data to it.
-                        if (level.layers[i].data && segment.layers[i].data) {
-                            // Make sure we're not trying to merge compressed levels.
-                            decoder(segment.layers[i]);
-                            
-                            if (mergeAxis === 'horizontal') {
-                                level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
-                                level.layers[i].width += segment.width;
-                            } else if (mergeAxis === 'vertical') {
-                                level.layers[i].data = mergeData(level.layers[i].data, level.height, segment.layers[i].data, segment.height, level.width, mergeAxis);
-                                level.layers[i].height += segment.height;
-                            }
-                        } else if (level.layers[i].objects && segment.layers[i].objects) {
-                            if (mergeAxis === 'horizontal') {
-                                level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.width * level.tilewidth, mergeAxis);
-                            } else if (mergeAxis === 'vertical') {
-                                level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.height * level.tileheight, mergeAxis);
-                            }
+                } else if (level.layers[i].type === segment.layers[i].type) {
+                    //if the level does have a layer, we're appending the new data to it.
+                    if (level.layers[i].data && segment.layers[i].data) {
+                        // Make sure we're not trying to merge compressed levels.
+                        decoder(segment.layers[i]);
+                        
+                        if (mergeAxis === 'horizontal') {
+                            level.layers[i].data = mergeData(level.layers[i].data, level.width, segment.layers[i].data, segment.width, level.height, mergeAxis);
+                            level.layers[i].width += segment.width;
+                        } else if (mergeAxis === 'vertical') {
+                            level.layers[i].data = mergeData(level.layers[i].data, level.height, segment.layers[i].data, segment.height, level.width, mergeAxis);
+                            level.layers[i].height += segment.height;
                         }
-                    } else {
-                        platypus.debug.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
+                    } else if (level.layers[i].objects && segment.layers[i].objects) {
+                        if (mergeAxis === 'horizontal') {
+                            level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.width * level.tilewidth, mergeAxis);
+                        } else if (mergeAxis === 'vertical') {
+                            level.layers[i].objects = mergeObjects(level.layers[i].objects, segment.layers[i].objects, level.height * level.tileheight, mergeAxis);
+                        }
                     }
-
+                } else {
+                    platypus.debug.warn('Tiled-Loader: The layers in your level segments do not match. Level: ' + level + ' Segment: ' + segment);
                 }
             }
 
@@ -134,14 +131,14 @@
             var i = 0,
                 j = 0,
                 levelDefinitions = platypus.game.settings.levels,
-                row              = {
+                row = {
                     height: 0,
-                    width:  0,
+                    width: 0,
                     layers: []
                 },
-                level            = {
+                level = {
                     height: 0,
-                    width:  0,
+                    width: 0,
                     layers: []
                 },
                 segmentsWide = levelSegments[i].length;
@@ -152,7 +149,7 @@
                 }
                 row = {
                     height: 0,
-                    width:  0,
+                    width: 0,
                     layers: []
                 };
                 for (j = 0; j < levelSegments[i].length; j++) {
@@ -210,7 +207,7 @@
         publicProperties: {
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             this.levelMessage = {level: null, persistentData: null};
         },
 
@@ -247,7 +244,7 @@
                                     this.levelPieces[x].push(piecesToCopy[x][y]);
                                 }
                             } else {
-                                throw('Level Builder: Level pieces of incorrect type: ' + piecesToCopy[x]);
+                                throw ('Level Builder: Level pieces of incorrect type: ' + piecesToCopy[x]);
                             }
                         }
                     }
@@ -266,14 +263,14 @@
                                     this.levelMessage.level[i][j] = this.getLevelPiece(templateRow[j]);
                                 }
                             } else {
-                                throw('Level Builder: Template row is neither a string or array. What is it?');
+                                throw ('Level Builder: Template row is neither a string or array. What is it?');
                             }
                         }
                     } else {
-                        throw('Level Builder: Template is not defined');
+                        throw ('Level Builder: Template is not defined');
                     }
                 } else {
-                    throw('Level Builder: There is no level template.');
+                    throw ('Level Builder: There is no level template.');
                 }
                 
                 if (this.levelMessage.level) {
@@ -317,14 +314,11 @@
                             return pieces[random];
                         }
                     } else {
-                        throw('Level Builder: There are no MORE level pieces of type: ' + type);
+                        throw ('Level Builder: There are no MORE level pieces of type: ' + type);
                     }
-                    
                 } else {
-                    throw('Level Builder: There are no level pieces of type: ' + type);
+                    throw ('Level Builder: There are no level pieces of type: ' + type);
                 }
-                
-                return null;
             },
             destroy: function () {
                 this.levelMessage.level = null;

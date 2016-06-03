@@ -1,6 +1,6 @@
 /**
  * This class defines an axis-aligned bounding box (AABB) which is used during the collision process to determine if two objects are colliding. This is used in a few places including [CollisionBasic](platypus.components.CollisionBasic.html) and [[Collision-Shape]].
- * 
+ *
  * @namespace platypus
  * @class AABB
  * @constructor
@@ -22,7 +22,7 @@ platypus.AABB = (function () {
     
     /**
      * Sets all of the properties of the AABB.
-     * 
+     *
      * @method setAll
      * @param x {number} The x position of the AABB. The x is always located in the center of the object.
      * @param y {number} The y position of the AABB. The y is always located in the center of the object.
@@ -40,7 +40,7 @@ platypus.AABB = (function () {
     
     /**
      * Sets bounds of the AABB.
-     * 
+     *
      * @method setBounds
      * @param left {number} The left side of the AABB.
      * @param top {number} The top side of the AABB.
@@ -59,7 +59,7 @@ platypus.AABB = (function () {
     proto.set = function (aabb) {
         /**
          * Whether the AABB encloses a valid space.
-         * 
+         *
          * @property empty
          * @type boolean
          */
@@ -67,7 +67,7 @@ platypus.AABB = (function () {
         
         /**
          * The x position of the AABB. The x is always located in the center of the object.
-         * 
+         *
          * @property x
          * @type number
          */
@@ -75,7 +75,7 @@ platypus.AABB = (function () {
         
         /**
          * The y position of the AABB. The y is always located in the center of the object.
-         * 
+         *
          * @property y
          * @type number
          */
@@ -83,7 +83,7 @@ platypus.AABB = (function () {
         
         /**
          * The width of the AABB.
-         * 
+         *
          * @property width
          * @type number
          */
@@ -91,7 +91,7 @@ platypus.AABB = (function () {
         
         /**
          * The height of the AABB.
-         * 
+         *
          * @property height
          * @type number
          */
@@ -99,7 +99,7 @@ platypus.AABB = (function () {
         
         /**
          * Half the width of the AABB.
-         * 
+         *
          * @property halfWidth
          * @type number
          */
@@ -107,7 +107,7 @@ platypus.AABB = (function () {
         
         /**
          * Half the height of the AABB.
-         * 
+         *
          * @property halfHeight
          * @type number
          */
@@ -115,7 +115,7 @@ platypus.AABB = (function () {
         
         /**
          * The x-position of the left edge of the AABB.
-         * 
+         *
          * @property left
          * @type number
          */
@@ -123,7 +123,7 @@ platypus.AABB = (function () {
         
         /**
          * The x-position of the right edge of the AABB.
-         * 
+         *
          * @property right
          * @type number
          */
@@ -131,7 +131,7 @@ platypus.AABB = (function () {
         
         /**
          * The y-position of the top edge of the AABB.
-         * 
+         *
          * @property top
          * @type number
          */
@@ -139,7 +139,7 @@ platypus.AABB = (function () {
         
         /**
          * The y-position of the bottom edge of the AABB.
-         * 
+         *
          * @property bottom
          * @type number
          */
@@ -150,7 +150,7 @@ platypus.AABB = (function () {
     
     /**
      * Resets all the values in the AABB so that the AABB can be reused.
-     * 
+     *
      * @method reset
      * @chainable
      */
@@ -161,7 +161,7 @@ platypus.AABB = (function () {
     
     /**
      * Resizes the AABB.
-     * 
+     *
      * @method reset
      * @param width {number} The new width of the AABB
      * @param height {number} The new height of the AABB
@@ -194,7 +194,7 @@ platypus.AABB = (function () {
     
     /**
      * Changes the size and position of the bounding box so that it contains the current area and the area described in the incoming AABB.
-     * 
+     *
      * @method include
      * @param aabb {platypus.AABB} The AABB whose area will be included in the area of the current AABB.
      * @chainable
@@ -229,7 +229,7 @@ platypus.AABB = (function () {
     
     /**
      * Moves the AABB to the specified location.
-     * 
+     *
      * @method move
      * @param x {number} The new x position of the AABB.
      * @param y {number} The new y position of the AABB.
@@ -243,7 +243,7 @@ platypus.AABB = (function () {
 
     /**
      * Moves the AABB to the specified location.
-     * 
+     *
      * @method moveX
      * @param x {number} The new x position of the AABB.
      * @chainable
@@ -257,7 +257,7 @@ platypus.AABB = (function () {
 
     /**
      * Moves the AABB to the specified location.
-     * 
+     *
      * @method moveY
      * @param y {number} The new y position of the AABB.
      * @chainable
@@ -271,7 +271,7 @@ platypus.AABB = (function () {
     
     /**
      * Moves the AABB to the specified location.
-     * 
+     *
      * @method moveXBy
      * @param deltaX {number} The change in x position of the AABB.
      * @chainable
@@ -282,7 +282,7 @@ platypus.AABB = (function () {
 
     /**
      * Moves the AABB to the specified location.
-     * 
+     *
      * @method moveYBy
      * @param deltaY {number} The change in y position of the AABB.
      * @chainable
@@ -293,7 +293,7 @@ platypus.AABB = (function () {
     
     /**
      * Creates a new AABB with the same properties as this AABB.
-     * 
+     *
      * @method getCopy
      * @return {platypus.AABB} Returns the new AABB object.
      * @deprecated since 0.7.3 - Create a new AABB and use the `set()` method instead.
@@ -304,7 +304,7 @@ platypus.AABB = (function () {
 
     /**
      * Expresses whether this AABB matches parameters describing an AABB.
-     * 
+     *
      * @method matches
      * @param x {number} X coordinate of a bounding box
      * @param y {number} Y coordinate of a bounding box
@@ -319,7 +319,7 @@ platypus.AABB = (function () {
 
     /**
      * Expresses whether this AABB matches the provided AABB.
-     * 
+     *
      * @method equals
      * @param aabb {platypus.AABB} The AABB to check against.
      * @return {Boolean} Returns `true` if the AABB's match.
@@ -331,7 +331,7 @@ platypus.AABB = (function () {
 
     /**
      * Expresses whether this AABB contains the given AABB.
-     * 
+     *
      * @method contains
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB contains the other AABB.
@@ -342,7 +342,7 @@ platypus.AABB = (function () {
     
     /**
      * Expresses whether this AABB contains the given point.
-     * 
+     *
      * @method containsVector
      * @param vector {platypus.Vector} The vector to check.
      * @return {boolean} Returns `true` if this AABB contains the vector.
@@ -353,7 +353,7 @@ platypus.AABB = (function () {
     
     /**
      * Expresses whether this AABB contains the given point.
-     * 
+     *
      * @method containsVector
      * @param vector {platypus.Vector} The vector to check.
      * @return {boolean} Returns `true` if this AABB contains the vector.
@@ -365,7 +365,7 @@ platypus.AABB = (function () {
     
     /**
      * Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping or touching edges.
-     * 
+     *
      * @method collides
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB collides with the other AABB.
@@ -377,7 +377,7 @@ platypus.AABB = (function () {
 
     /**
      * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping only, not touching edges.
-     * 
+     *
      * @method intersects
      * @param aabb {platypus.AABB} The AABB to check against
      * @return {boolean} Returns `true` if this AABB intersects the other AABB.
@@ -388,39 +388,39 @@ platypus.AABB = (function () {
 
     /**
      * Returns the area of the intersection. If the AABB's do not intersect, `0` is returned.
-     * 
+     *
      * @method getIntersectionArea
      * @param aabb {AABB} The AABB this AABB intersects with.
      * @return {Number} Returns the area of the intersected AABB's.
      */
-	proto.getIntersectionArea = function(aabb){
-		var max    = Math.max,
+    proto.getIntersectionArea = function (aabb) {
+        var max    = Math.max,
             min    = Math.min;
-		
+        
         if (this.intersects(aabb)) {
             return (min(this.bottom, aabb.bottom) - max(this.top,  aabb.top)) * (min(this.right,  aabb.right) - max(this.left, aabb.left));
         } else {
             return 0;
         }
-	};
+    };
     
     /**
      * Returns an AABB from cache or creates a new one if none are available.
-     * 
+     *
      * @method AABB.setUp
      * @return {platypus.AABB} The instantiated AABB.
      * @since 0.7.3
      */
     /**
      * Returns a AABB back to the cache.
-     * 
+     *
      * @method AABB.recycle
      * @param aabb {platypus.AABB} The AABB to be recycled.
      * @since 0.7.3
      */
     /**
      * Relinquishes properties of the AABB and recycles it.
-     * 
+     *
      * @method recycle
      * @since 0.7.3
      */

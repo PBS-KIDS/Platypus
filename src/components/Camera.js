@@ -7,8 +7,7 @@
  * @class Camera
  * @uses platypus.Component
 */
-/*global console, createjs, PIXI, platypus, include, window */
-/*jslint plusplus:true */
+/*global createjs, PIXI, platypus, include, window */
 (function () {
     'use strict';
     

@@ -2,22 +2,23 @@
  * @namespace window
  */
 (function (String, Object) {
-	/**
-	 * Add methods to String
-	 * @class String
-	 */
+    'use strict';
+    /**
+     * Add methods to String
+     * @class String
+     */
     
     var prototype = String.prototype;
 
     /**
      * Splits, but uses a recycled array.
-     * 
+     *
      * @method greenSplit
      * @return Array
      */
-	if (!prototype.greenSplit) {
-		Object.defineProperty(prototype, 'greenSplit', {
-			value: function (splitter) {
+    if (!prototype.greenSplit) {
+        Object.defineProperty(prototype, 'greenSplit', {
+            value: function (splitter) {
                 var str = this.toString(),
                     d = 0,
                     i = 0,
@@ -45,6 +46,6 @@
                 
                 return arr;
             }
-		});
-	}
+        });
+    }
 }(String, Object));

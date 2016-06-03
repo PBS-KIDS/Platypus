@@ -7,8 +7,7 @@
  * @class VoiceOver
  * @uses platypus.Component
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global platypus */
 (function () {
     'use strict';
 
@@ -68,7 +67,7 @@
                 definitions = Array.setUp();
 
             if (!events[' ']) {
-                events[' '] = events['default'];
+                events[' '] = events.default;
             }
 
             if (Array.isArray(sound)) {
@@ -145,25 +144,25 @@
             var i = '',
                 audioDefinition     = {
                     audioMap: {},
-                    aliases:  definition.aliases
+                    aliases: definition.aliases
                 },
                 animationDefinition = {
-                    acceptInput:   definition.acceptInput,
-                    aliases:       definition.aliases,
-                    animationMap:  {},
-                    eventBased:    true, // VO triggers events for changing lip-sync frames.
-                    flip:          definition.flip,
-                    hidden:        definition.hidden,
-                    mask:          definition.mask,
-                    mirror:        definition.mirror,
-                    offsetZ:       definition.offsetZ,
-                    pins:          definition.pins,
-                    pinTo:         definition.pinTo,
-                    rotate:        definition.rotate,
-                    scaleX:        definition.scaleX,
-                    scaleY:        definition.scaleY,
-                    spriteSheet:   definition.spriteSheet,
-                    stateBased:    definition.stateBased || false
+                    acceptInput: definition.acceptInput,
+                    aliases: definition.aliases,
+                    animationMap: {},
+                    eventBased: true, // VO triggers events for changing lip-sync frames.
+                    flip: definition.flip,
+                    hidden: definition.hidden,
+                    mask: definition.mask,
+                    mirror: definition.mirror,
+                    offsetZ: definition.offsetZ,
+                    pins: definition.pins,
+                    pinTo: definition.pinTo,
+                    rotate: definition.rotate,
+                    scaleX: definition.scaleX,
+                    scaleY: definition.scaleY,
+                    spriteSheet: definition.spriteSheet,
+                    stateBased: definition.stateBased || false
                 };
             
             this.message = this.messagePrefix + '-';
@@ -173,7 +172,7 @@
                     animationDefinition.animationMap[getEventName(this.message, i)] = this.animationMap[i];
                 }
             }
-            animationDefinition.animationMap['default'] = this.animationMap['default'];
+            animationDefinition.animationMap.default = this.animationMap.default;
             this.owner.addComponent(new platypus.components.RenderSprite(this.owner, animationDefinition));
 
             for (i in this.voiceOverMap) {

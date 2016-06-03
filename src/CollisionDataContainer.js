@@ -1,11 +1,10 @@
 /**
  * CollisionData holds collision data passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collision occur.
- * 
+ *
  * @namespace platypus
  * @class CollisionData
  */
 /*global platypus */
-/*jslint plusplus:true */
 platypus.CollisionData = (function () {
     'use strict';
     

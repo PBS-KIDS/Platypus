@@ -53,8 +53,7 @@ This component allows certain messages to trigger new messages at a later time. 
       }
     }
 */
-/*global platypus */
-/*jslint plusplus:true */
+/* global platypus */
 (function () {
     'use strict';
 
@@ -130,7 +129,7 @@ This component allows certain messages to trigger new messages at a later time. 
         },
 
         events: {// These are messages that this component listens for
-            "handle-logic":  function (resp) {
+            "handle-logic": function (resp) {
                 var i = this.queue.length;
                 
                 while (i--) {

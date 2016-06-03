@@ -5,8 +5,7 @@
  * @class HandlerCollision
  * @uses platypus.Component
  */
-/*global include, platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
     'use strict';
     

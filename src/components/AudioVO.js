@@ -7,7 +7,6 @@
  * @since 0.6.0
  */
 /*global include, platypus */
-/*jslint plusplus:true */
 (function () {
     'use strict';
     

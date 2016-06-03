@@ -1,11 +1,11 @@
 /**
  * This component acts as a simple AI that will chase another entity.
- * 
+ *
  * @namespace platypus.components
  * @class AIChaser
  * @uses platypus.Component
  */
-/*global console, include, platypus */
+/* global include, platypus */
 (function () {
     'use strict';
     
@@ -18,7 +18,7 @@
         properties: {
             /**
              * Sets whether the speed property should enact acceleration upon the entity rather than velocity.
-             * 
+             *
              * @property accelerate
              * @type boolean
              * @default false
@@ -27,7 +27,7 @@
             
             /**
              * Whether the entity is in a chasing state.
-             * 
+             *
              * @property chasing
              * @type boolean
              * @default true
@@ -38,7 +38,7 @@
         publicProperties: {
             /**
              * Sets the velocity of the entity. This property is accessible on the entity as `entity.speed`.
-             * 
+             *
              * @property speed
              * @type number
              * @default 0.3
@@ -46,7 +46,7 @@
             speed: 0.3
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             this.target = this.owner.target || null;
             this.offset = Vector.setUp(0, 0);
             this.state = this.owner.state;
@@ -56,7 +56,7 @@
         events: {
             /**
              * This component listens for this event to initialize movement.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
@@ -74,7 +74,7 @@
         
             /**
              * This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.
-             * 
+             *
              * @method 'handle-ai'
              */
             "handle-ai": function () {
@@ -99,7 +99,7 @@
                     
                     /**
                      * This event is triggered whenever the entity begins chasing another entity or stops chasing another entity.
-                     * 
+                     *
                      * @event 'chase'
                      * @param chasing {boolean} Whether the entity is chasing another entity.
                      */
@@ -109,7 +109,7 @@
             
             /**
              * On receiving this message, the component will change its target and begin chasing the new entity.
-             * 
+             *
              * @method 'set-target'
              * @param entity {platypus.Entity} Sets this entity's target to the provided entity.
              */
@@ -121,7 +121,7 @@
             
             /**
              * On receiving this message, the component will change its target offset.
-             * 
+             *
              * @method 'set-target-offset'
              * @param offset {Object|Vector} Sets the chased entity's offset to the provided offset.
              * @param offset.x {number} The offset along the x-axis.
@@ -134,7 +134,7 @@
             
             /**
              * On receiving this message, the component will begin chasing the entity.
-             * 
+             *
              * @method 'start-chasing'
              * @param [entity] {platypus.Entity} Sets the entity if it's provided.
              */
@@ -147,7 +147,7 @@
             
             /**
              * On receiving this message, the component will cease chasing the entity.
-             * 
+             *
              * @method 'stop-chasing'
              */
             "stop-chasing": function () {

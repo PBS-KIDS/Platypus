@@ -1,17 +1,16 @@
 /**
  * The component factory takes in component definitions and creates component classes that can be used to create components by entities.  It adds properties and methods that are common to all components so that component definitions can focus on unique properties and methods.
- * 
+ *
  * To create an extended component class, use the following syntax:
- * 
+ *
  *      platypus.createComponentClass(componentDefinition, prototype);
- * 
+ *
  *  * `componentDefinition` is list of key/value pairs that describe the component's behavior.
  *  * `prototype` is an optional prototype that this component extends.
  * See [component-template.js]("component-template"%20Component.html) for an example componentDefinition that can be sent into this component class factory.
- * 
+ *
  */
-/*global extend, include, platypus */
-/*jslint nomen:true, plusplus:true */
+/* global extend, include, platypus */
 (function () {
     'use strict';
     

@@ -14,7 +14,6 @@
  * @static
  */
 /*global include, platypus */
-/*jslint plusplus:true */
 platypus.Component = (function () {
     'use strict';
     

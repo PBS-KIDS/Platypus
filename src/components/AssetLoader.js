@@ -6,8 +6,7 @@
  * @uses platypus.Component
  * @deprecated since 0.7.0
  */
-/*global console, include, platypus */
-/*jslint plusplus:true */
+/*global include, platypus */
 (function () {
     'use strict';
     
@@ -45,7 +44,7 @@
         properties: {
             /**
              * Determines whether to automatically load assets when this component loads.
-             * 
+             *
              * @property automatic
              * @type boolean
              * @default true
@@ -54,14 +53,14 @@
             
             /**
              * A list of assets to load. If not provided, the asset list is pulled directly from the game configuration file's asset list.
-             * 
+             *
              * The list of assets should use PreloadJS syntax such as:
              *       [
              *           {"id": "item-1",         "src": "images/item-1.png"},
              *           {"id": "item-2",         "src": "images/item-2.png"},
              *           {"id": "item-3",         "src": "images/item-3.png"}
              *       ]
-             * 
+             *
              * @property assets
              * @type Array
              * @default []
@@ -70,7 +69,7 @@
             
             /**
              * Determines whether to store the loaded assets automatically in platypus.assets for later retrieval.
-             * 
+             *
              * @property cache
              * @type boolean
              * @default true
@@ -78,7 +77,7 @@
             cache: true
         },
 
-        constructor: function (definition) {
+        constructor: function () {
             this.assets = this.assets || platypus.game.settings.assets || [];
             
             this.app = Application.instance;
@@ -95,14 +94,14 @@
         events: {
             /**
              * On receiving this event, the asset loader begins downloading the list of assets if the "automatic" property is not set to `false`.
-             * 
+             *
              * @method 'load'
              */
             "load": function () {
                 if (this.automatic) {
                     /**
                      * This event is triggered as soon as the entity loads if the "automatic" property is not set to `false`.
-                     * 
+                     *
                      * @event 'load-assets'
                      */
                     this.owner.triggerEvent('load-assets');
@@ -111,16 +110,17 @@
 
             /**
              * On receiving this event, the asset loader begins downloading the list of assets.
-             * 
+             *
              * @method 'load-assets'
              */
             "load-assets": function () {
-                var onFileLoad = function (result, data) {
+                var
+                    onFileLoad = function (result, data) {
                         var asset = null;
                         
                         if (data && data.id) {
                             asset = this.owner.assets[data.id] = {
-                                data:  data,
+                                data: data,
                                 asset: result
                             };
                         
@@ -136,29 +136,29 @@
                         
                         /**
                         * This message is broadcast when an asset has been loaded.
-                        * 
+                        *
                         * @event 'file-load'
-                        * @param load {Object} 
+                        * @param load {Object}
                         * @param load.asset {Object} Loaded asset. (`null` for audio)
-                        * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio) 
+                        * @param load.data {Object} Key/value pairs containing asset data. (`null` for audio)
                         * @param load.complete {boolean} Whether this is the final asset to be loaded.
                         * @param load.total {number} The total number of assets being loaded.
                         * @param load.progress {number} The number of assets finished loading.
                         * @param load.fraction {number} Value of (progress / total) provided for convenience.
                         */
                         this.owner.triggerEvent('file-load', {
-                            asset:    result,
+                            asset: result,
                             complete: (this.progress === this.total),
-                            data:     data,
+                            data: data,
                             fraction: this.progress / this.total,
                             progress: this.progress,
-                            total:    this.total
+                            total: this.total
                         });
                         
                         if (this.progress === this.total) {
                             /**
                             * This message is triggered when the asset loader is finished loading assets.
-                            * 
+                            *
                             * @event 'complete'
                             */
                             this.owner.triggerEvent('complete');

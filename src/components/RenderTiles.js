@@ -9,8 +9,7 @@
  * @class RenderTiles
  * @uses platypus.Component
  */
-/*global include, platypus */
-/*jslint nomen:true, bitwise:true, plusplus:true */
+/* global include, platypus */
 (function () {
     'use strict';
 

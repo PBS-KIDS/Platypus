@@ -16,7 +16,7 @@
         properties: {
             /**
              * Velocity at which the entity should travel while racing.
-             * 
+             *
              * @property speed
              * @type Number
              * @default 0.3
@@ -25,7 +25,7 @@
             
             /**
              * Time in milliseconds that entity will race before coming to a stop.
-             * 
+             *
              * @property raceTime
              * @type Number
              * @default 5000
@@ -34,7 +34,7 @@
             
             /**
              * Time in milliseconds that entity needs to receive wind-up calls before racing can begin.
-             * 
+             *
              * @property windTime
              * @type Number
              * @default 500
@@ -42,7 +42,7 @@
             windTime: 500
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             var thisState = this.owner.state;
             
             this.windProgress = 0;
@@ -62,7 +62,7 @@
         events: {
             /**
              * On a `tick` logic message, the component updates its charging counter if necessary.
-             * 
+             *
              * @method 'handle-logic'
              * @param message.delta {Number} To determine how much to charge, the component checks the length of the tick.
              */
@@ -73,8 +73,8 @@
 
                     /**
                      * This event is triggered when winding is finished and the entity begins racing.
-                     * 
-                     * @event 'racing' 
+                     *
+                     * @event 'racing'
                      */
                     if (!this.blocked && this.right && thisState.get('right')) {
                         this.owner.x += this.speed * resp.delta;
@@ -87,39 +87,35 @@
 
                         /**
                          * This event is triggered when the entity stops racing.
-                         * 
+                         *
                          * @event 'stopped-racing'
                          */
                         this.owner.triggerEvent('stopped-racing');
                     }
-                } else {
-                    if (this.winding) {
-                        if ((this.right && thisState.get('right')) || (this.left && thisState.get('left'))) {
-                            this.windProgress += resp.delta;
-                        }
-
-                        /**
-                         * This event is triggered as the entity winds up.
-                         * 
-                         * @event 'winding'
-                         * @param fraction {Number} The amount of progress that has been made from 0 to 1.
-                         */
-                        this.owner.triggerEvent('winding', this.windProgress / this.windTime);
-                    } else {
-                        if (this.windProgress) {
-                            if (this.windProgress >= this.windTime) {
-                                this.racing = true;
-                            }
-                            this.windProgress = 0;
-
-                            /**
-                             * This event is triggered when the entity stops winding.
-                             * 
-                             * @event 'stopped-winding'
-                             */
-                            this.owner.triggerEvent('stopped-winding');
-                        }
+                } else if (this.winding) {
+                    if ((this.right && thisState.get('right')) || (this.left && thisState.get('left'))) {
+                        this.windProgress += resp.delta;
                     }
+
+                    /**
+                     * This event is triggered as the entity winds up.
+                     *
+                     * @event 'winding'
+                     * @param fraction {Number} The amount of progress that has been made from 0 to 1.
+                     */
+                    this.owner.triggerEvent('winding', this.windProgress / this.windTime);
+                } else if (this.windProgress) {
+                    if (this.windProgress >= this.windTime) {
+                        this.racing = true;
+                    }
+                    this.windProgress = 0;
+
+                    /**
+                     * This event is triggered when the entity stops winding.
+                     *
+                     * @event 'stopped-winding'
+                     */
+                    this.owner.triggerEvent('stopped-winding');
                 }
                 
                 thisState.set('windingUp', this.winding);
@@ -130,7 +126,7 @@
             
             /**
              * Causes the entity to stop racing.
-             * 
+             *
              * @method 'stop-racing'
              */
             "stop-racing": function () {
@@ -140,7 +136,7 @@
             
             /**
              * Causes the entity to wind up for a race.
-             * 
+             *
              * @method 'wind-up'
              * @param message.pressed {Boolean} If `message` is included, the component checks the value of `pressed`: `false` causes winding to stop.
              */
@@ -152,7 +148,7 @@
             
             /**
              * On receiving this message, the entity stops racing.
-             * 
+             *
              * @method 'hit-solid'
              * @param collision.x {Number} Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.
              */
@@ -163,7 +159,7 @@
                         
                         /**
                          * This message is triggered if the entity collides while racing.
-                         * 
+                         *
                          * @event 'blocked'
                          * @param collision {platypus.CollisionData} Collision information from the entity or tile that blocked movement.
                          */

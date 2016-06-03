@@ -5,8 +5,7 @@
  * @class Messenger
  * @extends springroll.EventDispatcher
  */
-/*global console, extend, include, platypus, springroll, window */
-/*jslint plusplus:true */
+/* global extend, include, platypus, springroll, window */
 platypus.Messenger = (function () {
     'use strict';
 

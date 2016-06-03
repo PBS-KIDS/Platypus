@@ -41,7 +41,7 @@ This component listens for redirected collision messages and fires a message on 
 
         constructor: function (definition) {
             
-            this.destination = undefined;
+            this.destination = null;
             this.linkId = this.owner.teleportId || definition.teleportId;
             this.facing = this.owner.facing || definition.facing || false; //TODO: Should probably deprecate this in favor of orientation. - DDD 3/2/2016
         
@@ -88,7 +88,7 @@ This component listens for redirected collision messages and fires a message on 
         
         methods: {// These are methods that are called on the component
             "destroy": function () {
-                this.destination = undefined;
+                this.destination = null;
             }
         }
         

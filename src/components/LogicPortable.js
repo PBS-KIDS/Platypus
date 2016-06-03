@@ -29,11 +29,12 @@ This component allows this entity to be carried by other entities with which it 
       // This is an object specifying the directions that this portable entity can be carried on. Default is {down:true}, but "up", "down", "left", and/or "right" can be specified as object properties set to `true`.
     }
 */
-/*global platypus */
+/* global platypus */
 (function () {
     'use strict';
     
-    var defaultOrientation = {
+    var
+        defaultOrientation = {
             down: true //default is false, 'true' means as soon as carrier is connected downward
         };
 
@@ -48,7 +49,7 @@ This component allows this entity to be carried by other entities with which it 
             };
         },
         events: {
-            "handle-logic": function (resp) {
+            "handle-logic": function () {
                 var msg = this.message;
                 
                 if (this.carrierConnected) {
@@ -60,11 +61,9 @@ This component allows this entity to be carried by other entities with which it 
                     }
                     
                     this.carrierConnected = false;
-                } else {
-                    if (this.carrier) {
-                        this.carrier.triggerEvent('release-me', msg);
-                        this.carrier = null;
-                    }
+                } else if (this.carrier) {
+                    this.carrier.triggerEvent('release-me', msg);
+                    this.carrier = null;
                 }
                 this.lastCarrier = this.carrier;
             },

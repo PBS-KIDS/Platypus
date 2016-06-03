@@ -1,6 +1,6 @@
 /**
  * This component allows an entity to be removed from the stage when "destroy-me" is triggered.
- * 
+ *
  * @namespace platypus.components
  * @class LogicDestroyMe
  * @uses platypus.Component
@@ -15,7 +15,7 @@
         properties: {
             /**
              * Time in milliseconds after the "destroy-me" message is heard before entity should be removed.
-             * 
+             *
              * @property delay
              * @type number
              * @default 0
@@ -24,7 +24,7 @@
 
             /**
              * Whether this entity has been destroyed. Typically `false` until a "destroy-me" event has been triggered.
-             * 
+             *
              * @property destroyed
              * @type boolean
              * @default false
@@ -36,7 +36,7 @@
 
             /**
              * On a `tick` logic message, the component checks whether it should be removed or not.
-             * 
+             *
              * @method 'prepare-logic'
              * @param message.delta {number} To measure the delay before removal, the component keeps a running count of step lengths.
              */
@@ -53,7 +53,7 @@
             
             /**
              * This component will set the entity up for removal on receiving this message.
-             * 
+             *
              * @method 'destroy-me'
              */
             "destroy-me": function () {
