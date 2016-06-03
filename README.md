@@ -3,7 +3,7 @@
 
 2D tile based game framework in HTML5
 
-The Platypus Engine allows rapid development of 2D orthogonal tile based games for deployment in HTML5 compatible browsers. The engine uses a component based model, and includes many ready to use components to allow users to start adding assets and editing levels right away. The component based model lends itself to community members adding new funcitonality, we hope you'll share what you've done!
+The Platypus Engine allows rapid development of 2D orthogonal tile based games for deployment in HTML5 compatible browsers. The engine uses a component based model, and includes many ready to use components to allow users to start adding assets and editing levels right away. The component based model lends itself to community members adding new functionality, we hope you'll share what you've done!
 
 Platypus uses:
 
