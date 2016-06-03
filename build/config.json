@@ -20,6 +20,7 @@
 		"../src/Vector.js",
 		"../src/AABB.js",
 		"../src/ActionState.js",
+		"../src/CollisionData.js",
 		"../src/CollisionDataContainer.js",
 		"../src/CollisionShape.js",
 		"../src/factory.js",

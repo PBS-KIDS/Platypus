@@ -5,7 +5,7 @@
  * @class RenderProgress
  * @uses platypus.Component
  */
-/*global console, PIXI, platypus */
+/*global PIXI, platypus */
 (function () {
     'use strict';
     
@@ -42,7 +42,7 @@
             z: 0
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             var b   = new PIXI.Graphics(),
                 f   = new PIXI.Graphics(),
                 con = new PIXI.Container();

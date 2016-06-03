@@ -43,8 +43,7 @@ This component is a general purpose state-machine for an entity, taking in vario
       }
     }
 */
-/*global include, platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
     'use strict';
 
@@ -161,7 +160,7 @@ This component is a general purpose state-machine for an entity, taking in vario
         properties: {
             /**
              * This is the list of events containing key/value pairs that describe state changes to make for the given event.
-             * 
+             *
              *     {
              *         "smell-toast": {
              *             "smelling-food": true,
@@ -171,7 +170,7 @@ This component is a general purpose state-machine for an entity, taking in vario
              *             "at-store": true
              *         }
              *     }
-             * 
+             *
              * @property inputs
              * @type Object
              * @default null
@@ -180,7 +179,7 @@ This component is a general purpose state-machine for an entity, taking in vario
             
             /**
              * These are messages that should be triggered when certain conditions are met. The messages are only triggered the instant the condition is met, until the conditions are no longer met and then once again met. Example:
-             * 
+             *
              *     {
              *         "smelling-food": { // Keys map to states, and if true, the value of the key is processed. In this case, the value of the "smelling-food" key is another object of key/value pairs, giving us another layer of checks.
              *             "!smelling-trash": "time-to-eat", // This key is an inverse check, meaning that the "smelling-trash" state of the entity must be false to continue along this path. This time the value is a string, so the string "time-to-eat" is treated as a message to be broadcast if the entity is both "smelling-food" and not "smelling-trash".
@@ -197,7 +196,7 @@ This component is a general purpose state-machine for an entity, taking in vario
              *             }
              *         }
              *     }
-             * 
+             *
              * @property outputs
              * @type Object
              * @default null
@@ -253,7 +252,7 @@ This component is a general purpose state-machine for an entity, taking in vario
         },
 
         events: {
-            "handle-logic":  function (resp) {
+            "handle-logic": function (resp) {
                 var susState = this.sustainedState,
                     key = '',
                     keys = susState.keys,
@@ -278,9 +277,6 @@ This component is a general purpose state-machine for an entity, taking in vario
                 }
             },
             
-            /**
-             * 
-             */
             "update-state": function (state) {
                 this.state.update(state);
             },

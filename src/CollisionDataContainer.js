@@ -1,131 +1,142 @@
 /**
- * CollisionData holds collision data passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collision occur.
- * 
+ * CollisionDataContainer holds lists of CollisionData passed to entities during collisions with other entities. This class is primarily used by the ["HandlerCollision"]("HandlerCollision"%20Component.html) Component to trigger messages on child entities as collisions occur.
+ *
  * @namespace platypus
- * @class CollisionData
+ * @class CollisionDataContainer
+ * @constructor
+ * @return {platypus.CollisionDataContainer} Returns the new aabb object.
  */
-/*global platypus */
-/*jslint plusplus:true */
-platypus.CollisionData = (function () {
-    'use strict';
-    
-    var collisionData = function (occurred, direction, position, deltaMovement, aABB, thisShape, thatShape, vector, stuck) {
-            this.occurred = occurred || false;
-            this.direction = direction || null;
-            this.position = position || null;
-            this.deltaMovement = deltaMovement || null;
-            this.aABB = aABB || null;
-            this.thisShape = thisShape || null;
-            this.thatShape = thatShape || null;
-            this.vector = platypus.Vector.setUp(vector);
-            this.stuck  = stuck || 0;
-        },
-        proto = collisionData.prototype;
-    
-    proto.copy = function (dataToCopy) {
-        this.occurred         = dataToCopy.occurred;
-        this.direction         = dataToCopy.direction;
-        this.position         = dataToCopy.position;
-        this.deltaMovement     = dataToCopy.deltaMovement;
-        this.aABB             = dataToCopy.aABB;
-        this.thisShape      = dataToCopy.thisShape;
-        this.thatShape      = dataToCopy.thatShape;
-        this.vector.setVector(dataToCopy.vector);
-        this.stuck          = dataToCopy.stuck;
-    };
-    proto.clear = function () {
-        this.occurred            = false;
-        this.direction            = null;
-        this.position            = null;
-        this.deltaMovement        = null;
-        this.aABB                = null;
-        this.thisShape         = null;
-        this.thatShape         = null;
-        this.vector.setXYZ(0, 0, 0);
-        this.stuck             = 0;
-    };
-    return collisionData;
-}());
-
+/* global platypus */
 platypus.CollisionDataContainer = (function () {
     'use strict';
     
-    var collisionDataContainer = function () {
-            this.xData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());
-            this.yData = Array.setUp(new platypus.CollisionData(), new platypus.CollisionData());
-            this.xCount = 0;
-            this.yCount = 0;
-            this.xDeltaMovement = Infinity;
-            this.yDeltaMovement = Infinity;
+    var CollisionDataContainer = function () {
+            if (!this.xData && !this.yData) {
+                this.xData = Array.setUp();
+                this.yData = Array.setUp();
+                this.xDeltaMovement = Infinity;
+                this.yDeltaMovement = Infinity;
+            } else {
+                this.reset();
+            }
         },
-        proto = collisionDataContainer.prototype;
+        proto = CollisionDataContainer.prototype;
     
+    // deprecated since 0.8.7
     proto.getXEntry = function (index) {
         return this.xData[index];
     };
     
+    // deprecated since 0.8.7
     proto.getYEntry = function (index) {
         return this.yData[index];
     };
     
-    proto.tryToAddX = function (dataToCopy) {
-        if (dataToCopy.deltaMovement < this.xDeltaMovement) {
-            this.xDeltaMovement = dataToCopy.deltaMovement;
-            this.xData[0].copy(dataToCopy);
-            this.xCount = 1;
-            return true;
-        } else if (dataToCopy.deltaMovement === this.xDeltaMovement) {
-            this.ensureRoomX();
-            this.xData[this.xCount].copy(dataToCopy);
-            this.xCount += 1;
-            return true;
+    /**
+     * Adds a CollisionData object to the container's X-axis if the movement distance is less than or equal to collision data collected so far.
+     *
+     * @method tryToAddX
+     * @param collisionData {platypus.CollisionData} The collision data to add.
+     * @return {Boolean} Whether the collision data was added.
+     */
+    proto.tryToAddX = function (collisionData) {
+        if (collisionData.deltaMovement > this.xDeltaMovement) {
+            return false;
+        } else if (collisionData.deltaMovement < this.xDeltaMovement) {
+            this.resetX(collisionData.deltaMovement);
         }
-        return false;
+
+        this.xData.push(collisionData);
+
+        return true;
     };
     
-    proto.tryToAddY = function (dataToCopy) {
-        if (dataToCopy.deltaMovement < this.yDeltaMovement) {
-            this.yDeltaMovement = dataToCopy.deltaMovement;
-            this.yData[0].copy(dataToCopy);
-            this.yCount = 1;
-            return true;
-        } else if (dataToCopy.deltaMovement === this.yDeltaMovement) {
-            this.ensureRoomY();
-            this.yData[this.yCount].copy(dataToCopy);
-            this.yCount += 1;
-            return true;
+    /**
+     * Adds a CollisionData object to the container's Y-axis if the movement distance is less than or equal to collision data collected so far.
+     *
+     * @method tryToAddY
+     * @param collisionData {platypus.CollisionData} The collision data to add.
+     * @return {Boolean} Whether the collision data was added.
+     */
+    proto.tryToAddY = function (collisionData) {
+        if (collisionData.deltaMovement > this.yDeltaMovement) {
+            return false;
+        } else if (collisionData.deltaMovement < this.yDeltaMovement) {
+            this.resetY(collisionData.deltaMovement);
         }
-        return false;
-    };
-    
-    proto.ensureRoomX = function () {
-        var j = 0,
-            goalLength = this.xData.length * 2;
         
-        if (this.xData.length <= this.xCount) {
-            for (j = this.xData.length; j < goalLength; j++) {
-                this.xData[j] = new platypus.CollisionData();
-            }
-        }
-    };
-    
-    proto.ensureRoomY = function () {
-        var j = 0,
-            goalLength = this.yData.length * 2;
+        this.yData.push(collisionData);
         
-        if (this.yData.length <= this.yCount) {
-            for (j = this.yData.length; j < goalLength; j++) {
-                this.yData[j] = new platypus.CollisionData();
-            }
-        }
+        return true;
     };
     
+    /**
+     * Resets the X and Y axes.
+     *
+     * @method reset
+     */
     proto.reset = function () {
-        this.xCount = 0;
-        this.yCount = 0;
-        this.xDeltaMovement = Infinity;
-        this.yDeltaMovement = Infinity;
+        this.resetX(Infinity);
+        this.resetY(Infinity);
     };
     
-    return collisionDataContainer;
+    /**
+     * Resets the X axis.
+     *
+     * @param delta {Number} The delta value of the X-axis.
+     * @method resetX
+     * @since 0.8.7
+     */
+    proto.resetX = function (delta) {
+        var xData = this.xData,
+            i = xData.length;
+        
+        while (i--) {
+            xData[i].recycle();
+        }
+        xData.length = 0;
+        this.xDeltaMovement = delta;
+    };
+    
+    /**
+     * Resets the Y axis.
+     *
+     * @param delta {Number} The delta value of the Y-axis.
+     * @method resetY
+     * @since 0.8.7
+     */
+    proto.resetY = function (delta) {
+        var yData = this.yData,
+            i = yData.length;
+        
+        while (i--) {
+            yData[i].recycle();
+        }
+        yData.length = 0;
+        this.yDeltaMovement = delta;
+    };
+    
+    /**
+     * Returns an CollisionDataContainer from cache or creates a new one if none are available.
+     *
+     * @method CollisionDataContainer.setUp
+     * @return {platypus.CollisionDataContainer} The instantiated CollisionDataContainer.
+     * @since 0.8.7
+     */
+    /**
+     * Returns a CollisionDataContainer back to the cache.
+     *
+     * @method CollisionDataContainer.recycle
+     * @param CollisionDataContainer {platypus.CollisionDataContainer} The CollisionDataContainer to be recycled.
+     * @since 0.8.7
+     */
+    /**
+     * Relinquishes properties of the CollisionDataContainer and recycles it.
+     *
+     * @method recycle
+     * @since 0.8.7
+     */
+    platypus.setUpRecycle(CollisionDataContainer, 'CollisionDataContainer');
+
+    return CollisionDataContainer;
 }());

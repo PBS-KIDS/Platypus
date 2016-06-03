@@ -1,6 +1,6 @@
 /**
  * This class defines a collision shape, which defines the 'space' an entity occupies in the collision system. Currently only rectangle and circle shapes can be created. Collision shapes include an axis-aligned bounding box (AABB) that tightly wraps the shape. The AABB is used for initial collision checks.
- * 
+ *
  * @namespace platypus
  * @class CollisionShape
  * @constructor
@@ -82,7 +82,7 @@ platypus.CollisionShape = (function () {
             
             /**
              * Determines whether shapes collide.
-             * 
+             *
              * @method collides
              * @param shape {platypus.CollisionShape} The shape to check against for collision.
              * @return {Boolean} Whether the shapes collide.
@@ -119,7 +119,7 @@ platypus.CollisionShape = (function () {
 
     /**
      * Updates the location of the shape and AABB. The position you send should be that of the owner, the offset of the shape is added inside the function.
-     * 
+     *
      * @method update
      * @param ownerX {number} The x position of the owner.
      * @param ownerY {number} The y position of the owner.
@@ -134,7 +134,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Move the shape's x position.
-     * 
+     *
      * @method moveX
      * @param x {number} The x position to which the shape should be moved.
      */
@@ -145,7 +145,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Move the shape's y position.
-     * 
+     *
      * @method moveY
      * @param y {number} The y position to which the shape should be moved.
      */
@@ -156,7 +156,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Returns the axis-aligned bounding box of the shape.
-     * 
+     *
      * @method getAABB
      * @return {platypus.AABB} The AABB of the shape.
      */
@@ -166,7 +166,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Set the shape's position as if the entity's x position is in a certain location.
-     * 
+     *
      * @method setXWithEntityX
      * @param entityX {number} The x position of the entity.
      */
@@ -177,7 +177,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Set the shape's position as if the entity's y position is in a certain location.
-     * 
+     *
      * @method setYWithEntityY
      * @param entityY {number} The y position of the entity.
      */
@@ -188,7 +188,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Destroys the shape so that it can be memory collected safely.
-     * 
+     *
      * @method destroy
      * @deprecated since 0.7.4 - Use `recycle()` instead.
      */
@@ -198,7 +198,7 @@ platypus.CollisionShape = (function () {
     
     /**
      * Transform the shape using a matrix transformation.
-     * 
+     *
      * @method multiply
      * @param matrix {Array} A matrix used to transform the shape.
      */
@@ -221,21 +221,21 @@ platypus.CollisionShape = (function () {
     
     /**
      * Returns an CollisionShape from cache or creates a new one if none are available.
-     * 
+     *
      * @method CollisionShape.setUp
      * @return {platypus.CollisionShape} The instantiated CollisionShape.
      * @since 0.7.4
      */
     /**
      * Returns a CollisionShape back to the cache.
-     * 
+     *
      * @method CollisionShape.recycle
      * @param {platypus.CollisionShape} The CollisionShape to be recycled.
      * @since 0.7.4
      */
     /**
      * Relinquishes properties of the CollisionShape and recycles it.
-     * 
+     *
      * @method recycle
      * @since 0.7.4
      */

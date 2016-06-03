@@ -1,6 +1,6 @@
 /**
  * This component listens for input messages triggered on the entity and updates the state of any controller inputs it is listening for. It then broadcasts messages on the entity corresponding to the input it received.
- * 
+ *
  * @namespace platypus.components
  * @class EntityController
  * @uses platypus.Component
@@ -54,8 +54,7 @@
       }
     }
 */
-/*global include, platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
     'use strict';
 
@@ -108,18 +107,18 @@
         properties: {
             /**
              * Use the controlMap property object to map inputs to messages that should be triggered. At least one control mapping should be included. The following are a few examples:
-             * 
+             *
              *       {
              *           "key:x": "run-left",
              *           // This causes an "x" keypress to fire "run-left" on the entity. For a full listing of key names, check out the `HandlerController` component.
-             *           
+             *
              *           "button-pressed": "throw-block",
              *           // custom input messages can be fired on this entity from other entities, allowing for on-screen input buttons to run through the same controller channel as other inputs.
-             *           
+             *
              *           "mouse:left-button"
              *           // The controller can also handle mouse events on the entity if the entity's render component triggers mouse events on the entity (for example, the `RenderSprite` component).
              *       }
-             * 
+             *
              * @property controlMap
              * @type Object
              * @default {}
@@ -128,7 +127,7 @@
             
             /**
              * The stateMaps property can hold multiple control maps. Use this if certain controls should only be available for certain states. The controller finds the first valid state and falls back to the base `controlMap` as default if no matches are found.
-             * 
+             *
              * @property stateMaps
              * @type Object
              * @default {}
@@ -140,7 +139,7 @@
         publicProperties: {
             /**
              * Whether input controls should be deactivated.
-             * 
+             *
              * @property paused
              * @type Boolean
              * @default false
@@ -298,20 +297,18 @@
                         controller = map[key];
                         if (typeof controller === 'string') {
                             this.addController(key, id, controller, states);
+                        } else if (Array.isArray(controller)) {
+                            for (i = 0; i < controller.length; i++) {
+                                this.addController(key, id, controller[i], states);
+                            }
                         } else {
-                            if (Array.isArray(controller)) {
-                                for (i = 0; i < controller.length; i++) {
-                                    this.addController(key, id, controller[i], states);
-                                }
-                            } else {
-                                for (j in controller) {
-                                    if (controller.hasOwnProperty(j)) {
-                                        if (typeof controller[j] === 'string') {
-                                            this.addController(key, id, controller[j], states, j);
-                                        } else {
-                                            for (i = 0; i < controller[j].length; i++) {
-                                                this.addController(key, id, controller[j][i], states, j);
-                                            }
+                            for (j in controller) {
+                                if (controller.hasOwnProperty(j)) {
+                                    if (typeof controller[j] === 'string') {
+                                        this.addController(key, id, controller[j], states, j);
+                                    } else {
+                                        for (i = 0; i < controller[j].length; i++) {
+                                            this.addController(key, id, controller[j][i], states, j);
                                         }
                                     }
                                 }

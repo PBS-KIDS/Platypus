@@ -1,6 +1,6 @@
 /**
  * Activates audio on mobile devices. This component should be included on the same entity as the asset loader.
- * 
+ *
  * Example "progress-bar" entity that could use this component:
 
     {
@@ -19,13 +19,13 @@
         }]
     }
 
- * 
+ *
  * @namespace platypus.components
  * @class AudioMobile
  * @uses platypus.Component
  * @deprecated since 0.7.0
  */
-/*global console, platypus */
+/*global platypus */
 (function () {
     'use strict';
 
@@ -36,9 +36,9 @@
         properties: {
             /**
              * Specifies the image or sprite sheet information needed to create the play button for mobile devices.
-             * 
+             *
              * Set `button.image` to set an image or `button.spriteSheet` to set the sprite sheet.
-             * 
+             *
              * May also set a position for the button:
              *
              *     {
@@ -54,21 +54,21 @@
             button: {}
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             platypus.debug.warn('"' + this.owner.type + '" is using the AudioMobile component which has been deprecated.');
         },
 
         events: {
             /**
              * On hearing this event, this component will load the next scene or provide a button for mobile devices to allow audio playback.
-             * 
+             *
              * @method 'complete'
              */
             "complete": function () {
 
                 /**
                  * Triggers this event once the audio is ready to play.
-                 * 
+                 *
                  * @event 'audio-ready'
                  */
                 if (platypus.supports.mobile) {

@@ -17,7 +17,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 
 ### Local Broadcasts:
 - **[alarm message from definition]** - The definition.alarm value from the JSON definition is used as the message id. It's sent when the alarm goes off.
-- **[update message from definition]** - The definition.update value from the JSON definition is used as the message id. It's sent every 'handle-logic' tick. 
+- **[update message from definition]** - The definition.update value from the JSON definition is used as the message id. It's sent every 'handle-logic' tick.
   - @param message.time (number) - The current time value for the timer.
 
 ## JSON Definition
@@ -50,7 +50,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
         constructor: function (definition) {
             this.time = this.owner.time || definition.time ||  0;
             this.prevTime = this.time;
-            this.alarmTime = this.owner.alarmTime || definition.alarmTime || undefined;
+            this.alarmTime = this.owner.alarmTime || definition.alarmTime || 0;
             this.isInterval = this.owner.isInterval || definition.isInterval || false;
             this.alarmMessage =  this.owner.alarmMessage || definition.alarmMessage || '';
             this.updateMessage = this.owner.updateMessage || definition.updateMessage || '';
@@ -78,27 +78,21 @@ A timer that can used to trigger events. The timer can increment and decrement. 
                         this.triggerEvent('stop-timer');
                     }
                     
-                    if (typeof this.alarmTime !== 'undefined') {
+                    if (this.alarmTime !== 0) {
                         if (this.isInterval) {
                             if (this.isIncrementing) {
                                 if (Math.floor(this.time / this.alarmTime) > Math.floor(this.prevTime / this.alarmTime)) {
                                     this.owner.trigger(this.alarmMessage);
                                 }
-                            } else {
-                                if (Math.floor(this.time / this.alarmTime) < Math.floor(this.prevTime / this.alarmTime)) {
-                                    this.owner.trigger(this.alarmMessage);
-                                }
+                            } else if (Math.floor(this.time / this.alarmTime) < Math.floor(this.prevTime / this.alarmTime)) {
+                                this.owner.trigger(this.alarmMessage);
                             }
-                        } else {
-                            if (this.isIncrementing) {
-                                if (this.time > this.alarmTime && this.prevTime < this.alarmTime) {
-                                    this.owner.trigger(this.alarmMessage);
-                                }
-                            } else {
-                                if (this.time < this.alarmTime && this.prevTime > this.alarmTime) {
-                                    this.owner.trigger(this.alarmMessage);
-                                }
+                        } else if (this.isIncrementing) {
+                            if (this.time > this.alarmTime && this.prevTime < this.alarmTime) {
+                                this.owner.trigger(this.alarmMessage);
                             }
+                        } else if (this.time < this.alarmTime && this.prevTime > this.alarmTime) {
+                            this.owner.trigger(this.alarmMessage);
                         }
                     }
                 }

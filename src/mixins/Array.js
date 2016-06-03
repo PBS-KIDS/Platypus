@@ -1,12 +1,14 @@
 /**
  * @namespace window
  */
-/*global springroll */
+/*global platypus, springroll */
 (function (Array, Object) {
-	/**
-	 * Add methods to Array
-	 * @class Array
-	 */
+    'use strict';
+    
+    /**
+     * Add methods to Array
+     * @class Array
+     */
     var cache = null,
         debug = !!springroll.Debug,
         prototype = Array.prototype,
@@ -15,16 +17,16 @@
             writable: true
         };
 
-	/**
-	 * Merges a given array into the current array without duplicating items.
-     * 
-	 * @method union
+    /**
+     * Merges a given array into the current array without duplicating items.
+     *
+     * @method union
      * @return {Array}
      * @chainable
-	 */
-	if (!prototype.union) {
-		Object.defineProperty(prototype, 'union', {
-			value: function (array) {
+     */
+    if (!prototype.union) {
+        Object.defineProperty(prototype, 'union', {
+            value: function (array) {
                 var i = 0,
                     bL = array.length;
                     
@@ -36,18 +38,18 @@
                 
                 return this;
             }
-		});
-	}
+        });
+    }
     
     /**
      * Slices, but uses a recycled array. Note that this slice does not accept parameters and makes a shallow copy of the original array.
-     * 
+     *
      * @method greenSlice
      * @return Array
      */
-	if (!prototype.greenSlice) {
-		Object.defineProperty(prototype, 'greenSlice', {
-			value: function () {
+    if (!prototype.greenSlice) {
+        Object.defineProperty(prototype, 'greenSlice', {
+            value: function () {
                 var arr = Array.setUp(),
                     i = 0,
                     length = this.length;
@@ -58,24 +60,24 @@
                 
                 return arr;
             }
-		});
-	}
+        });
+    }
     
     /**
      * Splices, but only removes a single item and returns the item itself, not an array.
-     * 
+     *
      * @method greenSplice
      * @return Array
      */
-	if (!prototype.greenSplice) {
-		Object.defineProperty(prototype, 'greenSplice', {
-			value: function (index) {
+    if (!prototype.greenSplice) {
+        Object.defineProperty(prototype, 'greenSplice', {
+            value: function (index) {
                 var i = 0,
                     item = this[index],
                     length = this.length;
                     
                 if ((index < 0) || (index >= length)) {
-                    return;
+                    return null;
                 }
                 
                 for (i = index + 1; i < length; i++) {
@@ -88,20 +90,20 @@
                 
                 return item;
             }
-		});
-	}
+        });
+    }
     
-	if (!prototype.recycle) {
+    if (!prototype.recycle) {
         /**
          * Save instance for reuse.
-         * 
+         *
          * @method Array.recycle
          * @param instance {Array} The instance to recycle.
          * @since 0.7.1
          */
         /**
          * Save instance for reuse.
-         * 
+         *
          * @method recycle
          * @param [depth] {Number} The dimensions of the array.
          * @since 0.7.1
@@ -122,7 +124,7 @@
         
         /**
          * Create a new instance or reuse an old instance if available.
-         * 
+         *
          * @method Array.setUp
          * @param [item] {Object|String|Number|Boolean} One or more arguments to prepopulate items in the array.
          * @return Array
@@ -165,5 +167,5 @@
                 return arr;
             };
         }
-	}
+    }
 }(Array, Object));

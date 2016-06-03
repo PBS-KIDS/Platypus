@@ -61,8 +61,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
  * @class NodeResident
  * @uses platypus.Component
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global platypus */
 (function () {
     'use strict';
     

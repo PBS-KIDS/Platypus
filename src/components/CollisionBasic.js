@@ -7,8 +7,7 @@
  * @class CollisionBasic
  * @uses platypus.Component
  */
-/*global include, platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
     'use strict';
     
@@ -169,17 +168,19 @@
                         };
                     
                     return function (vector, collisionData) {
-                        var msg = message,
+                        var colX = collisionData.xData[0],
+                            colY = collisionData.yData[0],
+                            msg = message,
                             v = null;
 
-                        if (collisionData.xCount) {
+                        if (colX) {
                             v = Vector.setUp(0, 0, 0);
-                            handleStuck(v, collisionData.getXEntry(0), this);
+                            handleStuck(v, colX, this);
                         }
 
-                        if (collisionData.yCount) {
+                        if (colY) {
                             v = v || Vector.setUp(0, 0, 0);
-                            handleStuck(v, collisionData.getYEntry(0), this);
+                            handleStuck(v, colY, this);
                         }
 
                         msg.position = vector;

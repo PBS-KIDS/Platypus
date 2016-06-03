@@ -1,16 +1,16 @@
 /**
  * This component listens for messages and, according to its preset settings, will remove and add components to the entity. This is useful if certain events should modify the behavior of the entity in some way: for example, acquiring a pogo-stick might add a jumping component so the hero can jump.
- * 
+ *
  * @namespace platypus.components
  * @class ComponentSwitcher
- * @uses platypus.Component 
+ * @uses platypus.Component
  */
-/*global platypus */
-/*jslint plusplus:true */
+/* global platypus */
 (function () {
     'use strict';
 
-    var addSwitch = function (event) {
+    var
+        addSwitch = function (event) {
             this.switches.push(event);
         };
     
@@ -20,7 +20,7 @@
         properties: {
             /**
              * This is the list of messages to listen for (as the keys) with the settings as two arrays of components to add and components to remove.
-             * 
+             *
                 {
                     "found-pogostick":{
                       "add":[
@@ -43,7 +43,7 @@
                     }
                   }
                 }
-             * 
+             *
              * @property componentMap
              * @type Object
              * @default null
@@ -51,7 +51,7 @@
             componentMap: null
         },
         
-        constructor: function (definition) {
+        constructor: function () {
             var event = '';
             
             this.switches = Array.setUp(); // The list of switches to make.
@@ -61,7 +61,7 @@
                     if (this.componentMap.hasOwnProperty(event)) {
                         /**
                          * Message(s) listed by `componentMap` will add or remove components.
-                         * 
+                         *
                          * @method '*'
                          */
                         this.addEventListener(event, addSwitch.bind(this, event));
@@ -73,7 +73,7 @@
         events: {
             /**
              * This component handles component-switching on this call so that it doesn't interfere with the "handle-logic" loop.
-             * 
+             *
              * @method 'prepare-logic'
              */
             "prepare-logic": function () {
@@ -128,7 +128,7 @@
                 if (owner.parent) {
                     /**
                     * This message is triggered on the parent when the entity's components change.
-                    * 
+                    *
                     * @event 'child-entity-updated'
                     * @param entity {platypus.Entity} This is the entity itself.
                     */
@@ -136,7 +136,7 @@
                 }
                 /**
                 * This message is triggered on the entity itself when its components change.
-                * 
+                *
                 * @event 'add-remove-component-complete'
                 */
                 owner.triggerEvent('add-remove-component-complete');

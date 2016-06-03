@@ -5,8 +5,7 @@
  * @class HandlerCollision
  * @uses platypus.Component
  */
-/*global include, platypus */
-/*jslint plusplus:true */
+/* global include, platypus */
 (function () {
     'use strict';
     
@@ -29,7 +28,6 @@
         Data = include('platypus.Data'),
         DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector'),
-        entityCollisionDataContainer = new CollisionDataContainer(),
         triggerMessage = {
             entity: null,
             type: null,
@@ -432,26 +430,30 @@
                         entities    = this.groupsLive,
                         x           = entities.length,
                         entity      = null,
+                        list        = null,
                         messageData = null,
-                        entityCDC   = entityCollisionDataContainer;
+                        entityCDC   = null;
                     
                     while (x--) {
                         entity = entities[x];
                         if (entity.collisionGroup.getSize() > 1) {
-                            entityCDC.reset();
-                            this.checkSolidEntityCollision(entity, entity.collisionGroup, entityCDC);
+                            entityCDC = this.checkSolidEntityCollision(entity, entity.collisionGroup);
                             
-                            i = entityCDC.xCount;
+                            list = entityCDC.xData;
+                            i = list.length;
                             while (i--) {
-                                messageData = entityCDC.getXEntry(i);
+                                messageData = list[i];
                                 triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
                             }
                             
-                            i = entityCDC.yCount;
+                            list = entityCDC.yData;
+                            i = list.length;
                             while (i--) {
-                                messageData = entityCDC.getYEntry(i);
+                                messageData = list[i];
                                 triggerCollisionMessages(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
                             }
+                            
+                            entityCDC.recycle();
                         }
                     }
                 };
@@ -489,32 +491,37 @@
                         entities    = this.solidEntitiesLive,
                         x           = entities.length,
                         entity      = null,
+                        list        = null,
                         messageData = null,
-                        entityCDC   = entityCollisionDataContainer,
+                        entityCDC   = null,
                         trigger = triggerCollisionMessages;
                     
                     while (x--) {
                         entity = entities[x];
-                        entityCDC.reset();
-                        this.checkSolidEntityCollision(entity, entity, entityCDC);
+                        entityCDC = this.checkSolidEntityCollision(entity, entity);
                         
-                        i = entityCDC.xCount;
+                        list = entityCDC.xData;
+                        i = list.length;
                         while (i--) {
-                            messageData = entityCDC.getXEntry(i);
+                            messageData = list[i];
                             trigger(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, messageData.direction, 0, 'solid', messageData.vector);
                         }
                         
-                        i = entityCDC.yCount;
+                        list = entityCDC.yData;
+                        i = list.length;
                         while (i--) {
-                            messageData = entityCDC.getYEntry(i);
+                            messageData = list[i];
                             trigger(messageData.thisShape.owner, messageData.thatShape.owner, messageData.thisShape.collisionType, messageData.thatShape.collisionType, 0, messageData.direction, 'solid', messageData.vector);
                         }
+                        
+                        entityCDC.recycle();
                     }
                 };
             }()),
             
-            checkSolidEntityCollision: function (ent, entityOrGroup, collisionDataCollection) {
-                var step              = 0,
+            checkSolidEntityCollision: function (ent, entityOrGroup) {
+                var collisionDataCollection = CollisionDataContainer.setUp(),
+                    step              = 0,
                     finalMovementInfo = null,
                     aabb              = null,
                     pX                = ent.previousX,
@@ -577,6 +584,8 @@
                 }
                 
                 finalMovementInfo.recycle();
+                
+                return collisionDataCollection;
             },
             
             processCollisionStep: (function () {
@@ -689,81 +698,76 @@
                 };
             }()),
             
-            resolveCollisionPosition: (function () {
-                var collisionData = new CollisionData();
+            resolveCollisionPosition: function (ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY) {
+                var j = 0,
+                    cd = null;
                 
-                return function (ent, entityOrGroup, finalMovementInfo, potentialCollidingShapes, collisionDataCollection, collisionTypes, entityDeltaX, entityDeltaY) {
-                    var j = 0,
-                        cd = collisionData;
-                    
-                    if (entityDeltaX !== 0) {
-                        j = collisionTypes.length;
-                        while (j--) {
-                            //Move each collision type in X to find the min X movement
-                            cd.clear();
-                            this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'x', potentialCollidingShapes[j], cd);
-                            
-                            if (cd.occurred) {
-                                collisionDataCollection.tryToAddX(cd);
-                            }
-                        }
-                    }
-                    
-                    if (collisionDataCollection.xCount > 0) {
-                        cd.copy(collisionDataCollection.getXEntry(0));
-                        finalMovementInfo.x = ent.previousX + cd.deltaMovement * cd.direction;
-                    } else {
-                        finalMovementInfo.x = ent.x;
-                    }
-                    
-                    // This moves the previous position of everything so that the check in Y can begin.
-                    entityOrGroup.movePreviousX(finalMovementInfo.x);
-                    
-                    if (entityDeltaY !== 0) {
-                        j = collisionTypes.length;
-                        while (j--) {
-                            //Move each collision type in Y to find the min Y movement
-                            cd.clear();
-                            this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'y', potentialCollidingShapes[j], cd);
-                            
-                            if (cd.occurred) {
-                                collisionDataCollection.tryToAddY(cd);
-                            }
-                        }
-                    }
-                    
-                    if (collisionDataCollection.yCount > 0) {
-                        cd.copy(collisionDataCollection.getYEntry(0));
-                        finalMovementInfo.y = ent.previousY + cd.deltaMovement * cd.direction;
-                    } else {
-                        finalMovementInfo.y = ent.y;
-                    }
-                    
-                    return finalMovementInfo;
-                };
-            }()),
-            
-            findMinAxisMovement: (function () {
-                var shapeCollisionData = new CollisionData();
-                
-                return function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes, bestCollisionData) {
-                    //Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
-                    var shapes     = entityOrGroup.getShapes(collisionType),
-                        prevShapes = entityOrGroup.getPrevShapes(collisionType),
-                        cd         = shapeCollisionData,
-                        i          = shapes.length;
-                    
-                    while (i--) {
-                        cd.clear();
-                        this.findMinShapeMovementCollision(prevShapes[i], shapes[i], axis, potentialCollidingShapes, cd);
+                if (entityDeltaX !== 0) {
+                    j = collisionTypes.length;
+                    while (j--) {
+                        //Move each collision type in X to find the min X movement
+                        cd = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'x', potentialCollidingShapes[j]);
                         
-                        if (cd.occurred && (!bestCollisionData.occurred //if a collision occurred and we haven't already had a collision.
-                            || (cd.deltaMovement < bestCollisionData.deltaMovement))) { //if a collision occurred and the diff is smaller than our best diff.
-                            bestCollisionData.copy(cd);
+                        if (!cd.occurred || !collisionDataCollection.tryToAddX(cd)) {
+                            cd.recycle();
                         }
                     }
-                };
-            }()),
+                }
+                
+                cd = collisionDataCollection.xData[0];
+                if (cd) {
+                    finalMovementInfo.x = ent.previousX + cd.deltaMovement * cd.direction;
+                } else {
+                    finalMovementInfo.x = ent.x;
+                }
+                
+                // This moves the previous position of everything so that the check in Y can begin.
+                entityOrGroup.movePreviousX(finalMovementInfo.x);
+                
+                if (entityDeltaY !== 0) {
+                    j = collisionTypes.length;
+                    while (j--) {
+                        //Move each collision type in Y to find the min Y movement
+                        cd = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'y', potentialCollidingShapes[j]);
+                        
+                        if (!cd.occurred || !collisionDataCollection.tryToAddY(cd)){
+                            cd.recycle();
+                        }
+                    }
+                }
+                
+                cd = collisionDataCollection.yData[0];
+                if (cd) {
+                    finalMovementInfo.y = ent.previousY + cd.deltaMovement * cd.direction;
+                } else {
+                    finalMovementInfo.y = ent.y;
+                }
+                
+                return finalMovementInfo;
+            },
+            
+            findMinAxisMovement: function (ent, entityOrGroup, collisionType, axis, potentialCollidingShapes) {
+                //Loop through my shapes of this type vs the colliding shapes and do precise collision returning the shortest movement in axis direction
+                var bestCD     = CollisionData.setUp(),
+                    shapes     = entityOrGroup.getShapes(collisionType),
+                    prevShapes = entityOrGroup.getPrevShapes(collisionType),
+                    cd         = null,
+                    i          = shapes.length;
+                
+                while (i--) {
+                    cd = this.findMinShapeMovementCollision(prevShapes[i], shapes[i], axis, potentialCollidingShapes);
+                    
+                    if (cd.occurred && (!bestCD.occurred //if a collision occurred and we haven't already had a collision.
+                        || (cd.deltaMovement < bestCD.deltaMovement))) { //if a collision occurred and the diff is smaller than our best diff.
+                        bestCD.recycle();
+                        bestCD = cd;
+                    } else {
+                        cd.recycle();
+                    }
+                }
+                
+                return bestCD;
+            },
             
             /**
              * Find the earliest point at which this shape collides with one of the potential colliding shapes along this axis.
@@ -777,18 +781,7 @@
              *
              */
             findMinShapeMovementCollision: (function () {
-
-                var storeCollisionData = function (collisionData, direction, position, initial, thisShape, thatShape, vector) {
-                        collisionData.occurred = true;
-                        collisionData.direction = direction;
-                        collisionData.position = position;
-                        collisionData.deltaMovement = Math.abs(position - initial);
-                        collisionData.aABB = thatShape.aABB;
-                        collisionData.thisShape = thisShape;
-                        collisionData.thatShape = thatShape;
-                        collisionData.vector.setVector(vector);
-                    },
-                    returnInfo = {
+                var returnInfo = {
                         position: 0,
                         contactVector: Vector.setUp()
                     },
@@ -927,7 +920,7 @@
                         }
                     };
                 
-                return function (prevShape, currentShape, axis, potentialCollidingShapes, collisionData) {
+                return function (prevShape, currentShape, axis, potentialCollidingShapes) {
                     var i = 0,
                         initialPoint    = prevShape[axis],
                         goalPoint       = currentShape[axis],
@@ -935,6 +928,7 @@
                         direction       = ((initialPoint < goalPoint) ? 1 : -1),
                         position        = goalPoint,
                         pcShape         = null,
+                        cd              = CollisionData.setUp(),
                         collisionInfo   = null,
                         finalPosition   = goalPoint,
                         findACP         = null;
@@ -961,18 +955,20 @@
                                             position = initialPoint;
                                         }
                                         finalPosition = position;
-                                        storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, pcShape, collisionInfo.contactVector);
+                                        cd.set(true, direction, finalPosition, Math.abs(finalPosition - initialPoint), pcShape.aABB, currentShape, pcShape, collisionInfo.contactVector, 0);
                                     }
                                 } else if (position > finalPosition) {
                                     if (position > initialPoint) { // Reality check: I think this is necessary due to floating point inaccuracies. - DDD
                                         position = initialPoint;
                                     }
                                     finalPosition = position;
-                                    storeCollisionData(collisionData, direction, finalPosition, initialPoint, currentShape, pcShape, collisionInfo.contactVector);
+                                    cd.set(true, direction, finalPosition, Math.abs(finalPosition - initialPoint), pcShape.aABB, currentShape, pcShape, collisionInfo.contactVector, 0);
                                 }
                             }
                         }
                     }
+                    
+                    return cd;
                 };
             }()),
             

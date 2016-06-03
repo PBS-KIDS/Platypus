@@ -1,6 +1,6 @@
 /**
  * This class defines a multi-dimensional vector object and a variety of methods for manipulating the vector.
- * 
+ *
  * @namespace platypus
  * @class Vector
  * @constructor
@@ -9,7 +9,6 @@
  * @param [z] {number} The z coordinate.
  */
 /*global platypus */
-/*jslint plusplus:true */
 platypus.Vector = (function () {
     'use strict';
     
@@ -23,7 +22,7 @@ platypus.Vector = (function () {
     
     /**
      * The x component of the vector.
-     * 
+     *
      * @property x
      * @type number
      * @default 0
@@ -39,7 +38,7 @@ platypus.Vector = (function () {
     
     /**
      * The y component of the vector.
-     * 
+     *
      * @property y
      * @type number
      * @default 0
@@ -55,7 +54,7 @@ platypus.Vector = (function () {
     
     /**
      * The z component of the vector.
-     * 
+     *
      * @property z
      * @type number
      * @default 0
@@ -71,7 +70,7 @@ platypus.Vector = (function () {
     
     /**
      * Returns a string describing the vector in the format of "[x, y, z]".
-     * 
+     *
      * @method toString
      * @return {String}
      */
@@ -81,7 +80,7 @@ platypus.Vector = (function () {
     
     /**
      * Sets the coordinates of the vector.
-     * 
+     *
      * @method set
      * @param x {number|Array|Vector} The x coordinate or an array or Vector describing the whole vector.
      * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of elements to copy from the array/Vector.
@@ -100,7 +99,7 @@ platypus.Vector = (function () {
 
     /**
      * Sets the coordinates of the vector.
-     * 
+     *
      * @method setXYZ
      * @param x {number} The x coordinate.
      * @param [y] {number} The y coordinate.
@@ -120,7 +119,7 @@ platypus.Vector = (function () {
 
     /**
      * Sets the coordinates of the vector.
-     * 
+     *
      * @method setVector
      * @param vector {Vector} The Vector to copy.
      * @param [dimensions] {number} The number of elements to copy from the Vector.
@@ -133,7 +132,7 @@ platypus.Vector = (function () {
 
     /**
      * Sets the coordinates of the vector.
-     * 
+     *
      * @method setArray
      * @param arr {Array} The array to copy.
      * @param [dimensions] {number} The number of elements to copy from the Array.
@@ -153,7 +152,7 @@ platypus.Vector = (function () {
 
     /**
      * Determines whether two vectors are equal.
-     * 
+     *
      * @method equals
      * @param x {number|Array|Vector} The x coordinate or an array or Vector to check against.
      * @param [y] {number} The y coordinate, or if x is an array/Vector this is the number of dimensions to check from the array/Vector.
@@ -190,7 +189,7 @@ platypus.Vector = (function () {
     
     /**
      * Sets the vector to values of the parameter vector.
-     * 
+     *
      * @param otherVector {platypus.Vector} The other vector.
      * @chainable
      * @deprecated since 0.7.4 - Use `setVector` instead.
@@ -199,7 +198,7 @@ platypus.Vector = (function () {
     
     /**
      * Returns the magnitude of the vector.
-     * 
+     *
      * @method magnitude
      * @param [dimensions] {number} The dimensions to include. Defaults to all dimensions.
      * @return {number} The magnitude of the vector.
@@ -219,7 +218,7 @@ platypus.Vector = (function () {
     
     /**
      * Returns the direction of the vector from the z-axis
-     * 
+     *
      * @return {number} The direction of the vector in radians.
      */
     proto.getAngle = function () {
@@ -237,7 +236,7 @@ platypus.Vector = (function () {
     
     /**
      * Returns a normalized copy of the vector.
-     * 
+     *
      * @method getUnit
      * @return {platypus.Vector} A normalized vector in the same direction as this vector.
      */
@@ -247,7 +246,7 @@ platypus.Vector = (function () {
     
     /**
      * Returns a copy of the Vector inverted.
-     * 
+     *
      * @method getInverse
      * @return {platypus.Vector}
      */
@@ -257,7 +256,7 @@ platypus.Vector = (function () {
     
     /**
      * Normalizes the vector.
-     * 
+     *
      * @method normalize
      * @chainable
      */
@@ -274,7 +273,7 @@ platypus.Vector = (function () {
     
     /**
      * Crosses this vector with the parameter vector.
-     * 
+     *
      * @method cross
      * @param vector {platypus.Vector} The vector to cross this vector with.
      * @chainable
@@ -299,7 +298,7 @@ platypus.Vector = (function () {
     
     /**
      * Crosses this vector with the parameter vector and returns the cross product.
-     * 
+     *
      * @method getCrossProduct
      * @param vector {platypus.Vector} The vector to cross this vector with.
      * @return {platypus.Vector} The cross product.
@@ -310,7 +309,7 @@ platypus.Vector = (function () {
     
     /**
      * Rotates the vector by the given amount.
-     * 
+     *
      * @method rotate
      * @param angle {number} The amount to rotate the vector in radians.
      * @param [axis="z"] {String|Vector} A vector describing the axis around which the rotation should occur or 'x', 'y', or 'z'.
@@ -359,7 +358,7 @@ platypus.Vector = (function () {
     
     /**
      * Scales the vector by the given factor or performs a transform if a matrix is provided.
-     * 
+     *
      * @method multiply
      * @param multiplier {number|Array} The factor to scale by or a 2D array describing a multiplication matrix.
      * @param limit {number} For scaling, determines which coordinates are affected.
@@ -393,7 +392,7 @@ platypus.Vector = (function () {
     
     /**
      * Adds the given components to this vector.
-     * 
+     *
      * @method add
      * @param x {number|Array|Vector} The x component to add, or an array or vector describing the whole addition.
      * @param [y] {number} The y component to add or the limit if the first parameter is a vector or array.
@@ -426,7 +425,7 @@ platypus.Vector = (function () {
     
     /**
      * Adds the given vector to this vector.
-     * 
+     *
      * @method addVector
      * @param otherVector {platypus.Vector} The vector to add.
      * @chainable
@@ -437,7 +436,7 @@ platypus.Vector = (function () {
     
     /**
      * Subtracts the given vector from this vector.
-     * 
+     *
      * @method subtractVector
      * @param otherVector {platypus.Vector} The vector to subtract.
      * @chainable
@@ -448,7 +447,7 @@ platypus.Vector = (function () {
     
     /**
      * Scales the vector by the given factor.
-     * 
+     *
      * @method multiply
      * @param factor {number} The factor to scale by.
      * @param limit {number} Determines which coordinates are affected. Defaults to all coordinates.
@@ -460,7 +459,7 @@ platypus.Vector = (function () {
     
     /**
      * Finds the dot product of the two vectors.
-     * 
+     *
      * @method dot
      * @param otherVector {platypus.Vector} The other vector.
      * @param limit {number} The number of vector indexes to include in the dot product.
@@ -483,7 +482,7 @@ platypus.Vector = (function () {
     
     /**
      * Finds the shortest angle between the two vectors.
-     * 
+     *
      * @method angleTo
      * @param otherVector {platypus.Vector} The other vector.
      * @return {number} The angle between this vector and the received vector.
@@ -497,7 +496,7 @@ platypus.Vector = (function () {
             ang = Math.acos(v1.dot(v2));
         } else {
             platypus.debug.warn('Vector: Attempted to find the angle of a zero-length vector.');
-            ang = undefined;
+            ang = NaN;
         }
             
         v1.recycle();
@@ -508,7 +507,7 @@ platypus.Vector = (function () {
     
     /**
      * Finds the shortest signed angle between the two vectors.
-     * 
+     *
      * @method signedAngleTo
      * @param otherVector {platypus.Vector} The other vector.
      * @param normal {platypus.Vector} A normal vector determining the resultant sign of the angle between two vectors.
@@ -535,11 +534,10 @@ platypus.Vector = (function () {
     
     /**
      * Find the scalar value of projecting this vector onto the parameter vector or onto a vector at the specified angle away.
-     * 
+     *
      * @method scalerProjection
      * @param vectorOrAngle {Vector|number} The other vector or the angle between the vectors.
-     * @return {number} The magnitude of the projection. 
-
+     * @return {number} The magnitude of the projection.
      */
     proto.scalarProjection = function (vectorOrAngle) {
         var v = null,
@@ -551,13 +549,13 @@ platypus.Vector = (function () {
             v = Vector.setUp(vectorOrAngle).normalize();
             d = this.dot(v);
             v.recycle();
-            return d;            
+            return d;
         }
     };
     
     /**
      * Returns a copy of this vector.
-     * 
+     *
      * @method copy
      * @return {platypus.Vector} A copy of this vector.
      */
@@ -567,7 +565,7 @@ platypus.Vector = (function () {
     
     /**
      * Adds properties to an object that describe the coordinates of a vector.
-     * 
+     *
      * @method Vector.assign
      * @param object {Object} Object on which the coordinates and vector will be added.
      * @param propertyName {String} A string describing the property name where the vector is accessable.
@@ -614,7 +612,7 @@ platypus.Vector = (function () {
                         }
                     }
                     
-                    return;
+                    return null;
                 }
                 return obj[prop];
             } else {
@@ -625,21 +623,21 @@ platypus.Vector = (function () {
 
     /**
      * Returns a Vector from cache or creates a new one if none are available.
-     * 
+     *
      * @method Vector.setUp
      * @return {platypus.Vector} The instantiated Vector.
      * @since 0.7.1
      */
     /**
      * Returns a Vector back to the cache. Prefer the Vector's recycle method since it recycles property objects as well.
-     * 
+     *
      * @method Vector.recycle
      * @param {platypus.Vector} The Vector to be recycled.
      * @since 0.7.1
      */
     /**
      * Relinquishes properties of the vector and recycles it.
-     * 
+     *
      * @method recycle
      * @since 0.7.1
      */

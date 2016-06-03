@@ -36,8 +36,7 @@
  * @class TiledLoader
  * @uses platypus.Component
  */
-/*global atob, console, include, pako, platypus */
-/*jslint bitwise: true, plusplus: true */
+/*global atob, include, pako, platypus */
 (function () {
     'use strict';
 

@@ -8,8 +8,7 @@
  * @extends platypus.DataMap
  * @since 0.8.0
  */
-/*global extend, include, platypus */
-/*jslint plusplus:true */
+/* global extend, include, platypus */
 platypus.StateMap = (function () {
     'use strict';
     
