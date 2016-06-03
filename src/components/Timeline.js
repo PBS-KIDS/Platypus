@@ -9,8 +9,24 @@
     'use strict';
     
     var timelineTrigger = function (timelineId) {
-        this.startTimeline(timelineId);
-    };
+            this.startTimeline(timelineId);
+        },
+        updateLogic = function(tick) {
+            var delta = tick.delta,
+                x = 0,
+                instance = null;
+            
+            for (x = this.timelineInstances.length - 1; x >= 0; x--) {
+                if (this.timelineInstances[x].active) {
+                    if (this.timelineInstances[x].timeline.length === 0) {
+                        this.timelineInstances.splice(x, 1)[0];
+                    } else {
+                        this.progressTimeline(this.timelineInstances[x], delta);    
+                    }
+                }
+            }
+            
+        };
     
     return platypus.createComponentClass({
         
@@ -56,22 +72,10 @@
         },
 
         events: {// These are messages that this component listens for
-            "handle-logic": function(tick) {
-                var delta = tick.delta,
-                    x = 0,
-                    instance = null;
-                
-                for (x = this.timelineInstances.length - 1; x <= 0; x++) {
-                    if (this.timelineInstances[x].active) {
-                        if (this.timelineInstances[x].timeline.length === 0) {
-                            this.timelineInstances.splice(x, 1)[0];
-                        } else {
-                            this.progressTimeline(this.timelineInstances[x], delta);    
-                        }
-                    }
-                }
-                
-            }
+            
+            //Using both logic-tick and handle-logic allows this to work at the Scene level or entity level.
+            "logic-tick": updateLogic,
+            "handle-logic": updateLogic
         },
         
         methods: {// These are internal methods that are invoked by this component.
@@ -192,22 +196,6 @@
                    entity.whatIsMyFavoriteColor().
             *********************************************************************/
             
-        },
-        
-        getAssetList: function (component, props, defaultProps) {
-            /*********************************************************************
-             TODO: This method can be provided to the list of assets this
-                   component requires. This method is invoked when the list of
-                   game scenes is created to determine assets for each scene.
-                   
-                   e.g.
-                   function (component, props, defaultProps) {
-                       return ['yellow-sprite'];
-                   }
-                   
-                   If the component doesn't require any assets, this method does
-                   not need to be provided.
-            *********************************************************************/
         }
     });
 }());
