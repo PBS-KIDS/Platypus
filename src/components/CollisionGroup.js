@@ -383,28 +383,35 @@
                 var childEntity = null,
                     entity      = null,
                     i           = 0,
+                    list        = null,
+                    owner       = this.owner,
+                    solids      = this.solidEntities,
                     v           = null;
                 
-                this.owner.saveDX -= vector.x - this.owner.previousX;
-                this.owner.saveDY -= vector.y - this.owner.previousY;
+                owner.saveDX -= vector.x - owner.previousX;
+                owner.saveDY -= vector.y - owner.previousY;
 
-                for (i = 0; i < collisionData.xCount; i++) {
-                    if (collisionData.getXEntry(i).thisShape.owner === this.owner) {
-                        this.owner.saveDX = 0;
+                list = collisionData.xData;
+                i = list.length;
+                while (i--) {
+                    if (list[i].thisShape.owner === owner) {
+                        owner.saveDX = 0;
                         break;
                     }
                 }
                 
-                for (i = 0; i < collisionData.yCount; i++) {
-                    if (collisionData.getYEntry(i).thisShape.owner === this.owner) {
-                        this.owner.saveDY = 0;
+                list = collisionData.yData;
+                i = list.length;
+                while (i--) {
+                    if (list[i].thisShape.owner === owner) {
+                        owner.saveDY = 0;
                         break;
                     }
                 }
                 
-                for (i = 0; i < this.solidEntities.length; i++) {
-                    childEntity = entity = this.solidEntities[i];
-                    if ((childEntity !== this.owner) && childEntity.collisionGroup) {
+                for (i = 0; i < solids.length; i++) {
+                    childEntity = entity = solids[i];
+                    if ((childEntity !== owner) && childEntity.collisionGroup) {
                         childEntity = childEntity.collisionGroup;
                     }
                     v = Vector.setUp(vector.x - entity.saveOX, vector.y - entity.saveOY, childEntity.z);
@@ -412,9 +419,9 @@
                     v.recycle();
                     entity.x += entity.saveDX;
                     entity.y += entity.saveDY;
-                    if (entity !== this.owner) {
-                        entity.x += this.owner.saveDX;
-                        entity.y += this.owner.saveDY;
+                    if (entity !== owner) {
+                        entity.x += owner.saveDX;
+                        entity.y += owner.saveDY;
                     }
                 }
             },
