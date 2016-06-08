@@ -730,7 +730,7 @@
                         //Move each collision type in Y to find the min Y movement
                         cd = this.findMinAxisMovement(ent, entityOrGroup, collisionTypes[j], 'y', potentialCollidingShapes[j]);
                         
-                        if (!cd.occurred || !collisionDataCollection.tryToAddY(cd)){
+                        if (!cd.occurred || !collisionDataCollection.tryToAddY(cd)) {
                             cd.recycle();
                         }
                     }

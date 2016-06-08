@@ -52,6 +52,8 @@ This component allows certain messages to trigger new messages at a later time. 
       
       }
     }
+    
+    NOTE: Deprecated as of 0.8.7 in favor of the new Timeline Component
 */
 /* global platypus */
 (function () {
