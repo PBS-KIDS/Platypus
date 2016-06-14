@@ -624,13 +624,17 @@
                 }
             },
             formatImages = function (name) {
-                var match = name.match(imageParts);
+                var match = false;
+                
+                if (typeof name === 'string') {
+                    match = name.match(imageParts);
 
-                if (match) {
-                    return match[1];
-                } else {
-                    return name;
+                    if (match) {
+                        return match[1];
+                    }
                 }
+
+                return name;
             },
             recycle = function () {
                 var animations = this.animations,
