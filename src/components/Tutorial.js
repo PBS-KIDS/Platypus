@@ -1,8 +1,9 @@
 /**
- * This component is an example template from which a developer can create their own components. Summarize the purpose of this component here.
+ * Tutorial provides a framework for playing tutorials. It allows the user to define things such as under what conditions tutorials will play, how often they play, and which tutorials have priority.
  * 
- * @class ComponentExample
+ * @class Tutorial
  * @uses platypus.Component
+ * @since 0.8.7
  */
 /*global platypus */
 (function () {
@@ -100,8 +101,9 @@
         
         properties: {
             
-            /*
-             * "tutorialDefs": [       //An array of tutorial data definition what, when, and how tutorials play
+            /* An array of tutorial definition objects. These objects define what events will be called by the tutorial, the priority of the tutorial, how often and how many times it will fire, the required conditions for it to fire, and more.
+             *
+             * "tutorialDefs": [       
              *      {
              *          "events": ["example-vo-event"],         //An Array of Strings. Defines the events to fire when all the conditions for this tutorial are met. If there are multiple events, one is chosen at random. All events in the array will play before any repeat.
              *          "priority": 5,                          //The priorioty of the tutorial. Higher numbered tutorials interrupt lower numbered. Default: 0.
@@ -115,6 +117,9 @@
              *      }
              * ]
              * 
+             * @property tutorialDefs
+             * @type Array [Object]
+             * @default []
              */
             "tutorialDefs": []
         },
@@ -163,16 +168,57 @@
         },
 
         events: {// These are messages that this component listens for
+            /**
+             * Checks added entity to determine if it is one of the conditions for one of the tutorials. If so, we track it.
+             *
+             * @method 'child-entity-added'
+             * @param entity {Object} The added entity.
+             */
             "child-entity-added": entityAdded,
+            /**
+             * Checks added entity to determine if it is one of the conditions for one of the tutorials. If so, we track it.
+             *
+             * @method 'peer-entity-added'
+             * @param entity {Object} The added entity.
+             */
             "peer-entity-added": entityAdded,
 
+            /**
+             * Removes entities from the watch list when they are destroyed.
+             *
+             * @method 'child-entity-removed'
+             * @param entity {Object} The removed entity.
+             */
             "child-entity-removed": entityRemoved,   
+            /**
+             * Removes entities from the watch list when they are destroyed.
+             *
+             * @method 'peer-entity-removed'
+             * @param entity {Object} The removed entity.
+             */
             "peer-entity-removed": entityRemoved,
             
             //Using both logic-tick and handle-logic allows this to work at the Scene level or entity level.
+             /**
+             * Checks tutorials to determine if they should play.
+             *
+             * @method 'logic-tick'
+             * @param tick.delta {Number} The length of the tick.
+             */
             "logic-tick": updateLogic,
+            /**
+             * Checks tutorials to determine if they should play.
+             *
+             * @method 'handle-logic'
+             * @param tick.delta {Number} The length of the tick.
+             */
             "handle-logic": updateLogic,
 
+            /**
+             * Fired when audioVO finishes. Clears the playing tutorial returning it to the internal list of tutorials if it will be played again.
+             *
+             * @method 'sequence-complete'
+             */
             "sequence-complete": function() {
                 if (this.playing.timesToReplay >= 0) {
                     this.tutorials.push(this.playing);
