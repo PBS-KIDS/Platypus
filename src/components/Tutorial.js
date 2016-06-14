@@ -12,7 +12,7 @@
                 
             for (entityType in this.watchedEntities) {
                 if (entity.type === entityType) {
-                    this.watchedEntities.entityType.push(entity);
+                    this.watchedEntities[entityType].push(entity);
                 }
             }
         },
@@ -20,9 +20,9 @@
             var x = 0,
                 entityType = entity.type;
 
-            for (x = this.watchedEntities.entityType.length - 1; x >= 0; x--) {
-                if (this.watchedEntities.entityType[x] === entity) {
-                    this.watchedEntities.entityType.splice(x, 1);
+            for (x = this.watchedEntities[entityType].length - 1; x >= 0; x--) {
+                if (this.watchedEntities[entityType][x] === entity) {
+                    this.watchedEntities[entityType].splice(x, 1);
                     break;
                 }
             }
@@ -46,7 +46,7 @@
                     keepChecking = true;
                 } else if (this.playing && (this.playing.priority < tut.priority)) {
                     keepChecking = true;
-                } else if (this.queue) {
+                } else if (tut.queue) {
                     keepChecking = true;
                 }
 
@@ -135,7 +135,7 @@
             this.tutorials = [];
 
                 
-            for (x = 0; x < this.tutorialDefs; x++) {
+            for (x = 0; x < this.tutorialDefs.length; x++) {
                 tutDef = this.tutorialDefs[x];
                 tutorial = {};
                 if (!tutDef.events) {
@@ -146,15 +146,15 @@
                 tutorial.originalEvents = tutDef.events.greenSlice();
                 tutorial.priority = tutDef.priority || 0;
                 tutorial.queue = tutDef.queue || false;
-                tutorial.timesToReplay = tutDef.timesToReplay || Infinity;
+                tutorial.timesToReplay = (typeof tutDef.timesToReplay === 'number') ? tutDef.timesToReplay : Infinity;
                 tutorial.replayDelay = tutDef.replayDelay || null;
                 tutorial.replayDelayTimer = tutorial.replayDelay;
                 tutorial.level = tutDef.level;
                 tutorial.requirements = {};
                 for (entityType in tutDef.requirements) {
-                    tutorial.requirements[entityId] = tutDef.requirements[entityId].greenSlice();
-                    if (!this.watchedEntities.entityType) {
-                        this.watchedEntities.entityType = [];
+                    tutorial.requirements[entityType] = tutDef.requirements[entityType].greenSlice();
+                    if (!this.watchedEntities[entityType]) {
+                        this.watchedEntities[entityType] = [];
                     }
                 }
                 this.tutorials.push(tutorial);
@@ -216,15 +216,16 @@
             },
             checkRequirements: function (requirements) {
                 var x = 0,
+                    y = 0,
                     entityType = null,
                     states = null,
                     anEntity = null, 
                     metRequirement = true;
 
                 for (entityType in requirements) { //Going through the types of entities
-                    states = requirements.entityType;
-                    for (y = this.watchedEntities.entityType.length - 1; y >= 0; y--) {  //Going through the instances of those entities
-                        anEntity = this.watchedEntities.entityType[y];
+                    states = requirements[entityType];
+                    for (y = this.watchedEntities[entityType].length - 1; y >= 0; y--) {  //Going through the instances of those entities
+                        anEntity = this.watchedEntities[entityType][y];
                         
                         metRequirement = true;
                         for (x = 0; x < states.length; x++) {   //Going through the required states of an entity instance

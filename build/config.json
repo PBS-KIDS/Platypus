@@ -91,6 +91,7 @@
 		"../src/components/SceneChanger.js",
 		"../src/components/TiledLoader.js",
 		"../src/components/Timeline.js",
+		"../src/components/Tutorial.js",
 		"../src/components/Tween.js",
 		"../src/components/VoiceOver.js",
 		"../src/components/XHR.js"
