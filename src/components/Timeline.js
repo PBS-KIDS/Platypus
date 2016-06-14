@@ -1,36 +1,48 @@
 /**
  * Timeline enables the scheduling of events based on a linear timeline
- * 
+ *
  * @class Timeline
  * @uses platypus.Component
+ * @since 0.8.7
  */
-/*global platypus */
+/*global include, platypus */
 (function () {
     'use strict';
     
-    var timelineTrigger = function (timelineId) {
-            this.startTimeline(timelineId);
+    var Data = include('platypus.Data'),
+        pause = function () {
+            this.active--;
         },
-        updateLogic = function(tick) {
+        play = function () {
+            this.active++;
+        },
+        timelineTrigger = function (timelineId) {
+            this.timelineInstances.push(this.createTimeStampedTimeline(this.timelines[timelineId]));
+        },
+        updateLogic = function (tick) {
             var delta = tick.delta,
-                x = 0,
-                instance = null;
+                instance = null,
+                instances = this.timelineInstances,
+                i = instances.length;
             
-            for (x = this.timelineInstances.length - 1; x >= 0; x--) {
-                if (this.timelineInstances[x].active) {
-                    if (this.timelineInstances[x].timeline.length === 0) {
-                        this.timelineInstances.splice(x, 1)[0];
+            while (i--) {
+                instance = instances[i];
+                if (instance.active) {
+                    if (instance.timeline.length === 0) {
+                        instances.greenSplice(i);
+                        instance.timeline.recycle(2);
+                        instance.recycle();
                     } else {
-                        this.progressTimeline(this.timelineInstances[x], delta);    
+                        this.progressTimeline(instance, delta);
                     }
                 }
             }
-            
         };
     
     return platypus.createComponentClass({
         
         id: 'Timeline',
+        
         properties: {
             /**
              * Defines the set of timelines. Triggering the key for one of the events will run the timeline. A timeline can contain three different types integers >= 0, strings, and objects. Integers are interpreted as waits and define
@@ -59,82 +71,75 @@
             "timelines": {}
         },
         
-        publicProperties: {
-        },
-        
-        constructor: function (definition) {
+        constructor: function () {
             var x = 0;
             
-            this.timelineInstances = [];
+            this.timelineInstances = Array.setUp();
             for (x in this.timelines) {
-                this.addEventListener(x, timelineTrigger.bind(this, x));
+                if (this.timelines.hasOwnProperty(x)) {
+                    this.addEventListener(x, timelineTrigger.bind(this, x));
+                }
             }
         },
 
-        events: {// These are messages that this component listens for
-            
+        events: {
             //Using both logic-tick and handle-logic allows this to work at the Scene level or entity level.
+            /**
+             * Checks game clock against timelines and triggers events as needed.
+             *
+             * @method 'logic-tick'
+             * @param tick.delta {Number} The length of the tick.
+             */
             "logic-tick": updateLogic,
+
+            /**
+             * Checks game clock against timelines and triggers events as needed.
+             *
+             * @method 'handle-logic'
+             * @param tick.delta {Number} The length of the tick.
+             */
             "handle-logic": updateLogic
         },
         
-        methods: {// These are internal methods that are invoked by this component.
-            createTimeStampedTimeline: function(timeline) {
-                  var timeStampedTimeline = [],
-                      x = 0,
-                      timeOffset = 0,
-                      entry = null;
-                  
-                  for (x = 0; x < timeline.length; x++) {
-                      entry = timeline[x];
-                      if (typeof entry === 'number') {
-                            timeOffset += entry;
-                      } else {
-                            timeStampedTimeline.push({
-                                "time": timeOffset,
-                                "value": entry
-                            });
-                      }
-                  }
-                  timeStampedTimeline.reverse();
-                  return timeStampedTimeline;
+        methods: {
+            createTimeStampedTimeline: function (timeline) {
+                var timeStampedTimeline = Array.setUp(),
+                    x = 0,
+                    timeOffset = 0,
+                    entry = null;
+                
+                for (x = 0; x < timeline.length; x++) {
+                    entry = timeline[x];
+                    if (typeof entry === 'number') {
+                        timeOffset += entry;
+                    } else {
+                        timeStampedTimeline.push(Data.setUp(
+                            "time", timeOffset,
+                            "value", entry
+                        ));
+                    }
+                }
+                timeStampedTimeline.reverse();
+                return Data.setUp(
+                    "timeline", timeStampedTimeline,
+                    "time", 0,
+                    "active", 1,
+                    "pause", pause,
+                    "play", play
+                );
             },
-            startTimeline: function(timelineId) {
-                var timeline = this.timelines[timelineId],
-                    instance = {
-                        "timeline": this.createTimeStampedTimeline(timeline),
-                        "time": 0,
-                        "active": 1,
-                        "pause": null,
-                        "play": null
-                    },
-                    pause = function () {
-                        instance.active--;
-                    },
-                    play = function () {
-                        instance.active++;
-                    };
-                    
-                    instance.pause = pause;
-                    instance.play = play;
-                    
-                this.timelineInstances.push(instance);
-            },
-            progressTimeline: function(instance, delta) {
-                var x = 0,
-                    y = 0,
-                    z = null,
-                    timeline = instance.timeline,
+            progressTimeline: function (instance, delta) {
+                var timeline = instance.timeline,
+                    i = timeline.length,
                     entry = null,
                     value = null,
-                    triggerOn = this.owner,
-                    newMessage = null;
+                    triggerOn = this.owner;
                 
                 instance.time += delta;
                 
                 //Go through the timeline playing events if the time has progressed far enough to trigger them.
-                for (x = timeline.length - 1; x >= 0; x--) {
-                    entry = timeline[x];
+                while (i--) {
+                    entry = timeline[i];
                     if (entry.time <= instance.time) {
                         value = entry.value;
                         if (typeof value === 'string') {
@@ -148,7 +153,7 @@
                                 }
                                 
                                 if (!triggerOn) {
-                                    console.warn('No entity of that id');
+                                    platypus.debug.warn('No entity of that id');
                                     triggerOn = this.owner;
                                 }
                             }
@@ -160,6 +165,7 @@
                             }
                         }
                         
+                        entry.recycle();
                         timeline.pop(); //Remove the entry.
                         if (!instance.active) {
                             return; //We bail until the callback.
@@ -174,28 +180,18 @@
                 }
             },
             destroy: function () {
+                var instance = null,
+                    instances = this.timelineInstances,
+                    i = instances.length;
+                
+                while (i--) {
+                    instance = instances[i];
+                    instance.timeline.recycle(2);
+                    instance.recycle();
+                }
+                instances.recycle();
                 this.timelineInstances = null;
             }
-        },
-        
-        publicMethods: {// These are methods that are available on the entity.
-            /*********************************************************************
-             TODO: Additional methods that should be invoked at the entity level,
-                   not just the local component level. Only one method of a given
-                   name can be used on the entity, so be aware other components
-                   may attempt to add an identically named method to the entity.
-                   No public method names should match the method names listed
-                   above, since they can also be called at the component level.
-                   
-                   e.g.
-                   whatIsMyFavoriteColor: function () {
-                       return '#ffff00';
-                   }
-                   
-                   This method can then be invoked on the entity as
-                   entity.whatIsMyFavoriteColor().
-            *********************************************************************/
-            
         }
     });
 }());

@@ -1,6 +1,6 @@
 /**
  * This component is an example template from which a developer can create their own components. Summarize the purpose of this component here.
- * 
+ *
  * @class ComponentExample
  * @uses platypus.Component
  */
@@ -38,7 +38,7 @@
          default value, but this value will automatically be overwritten by
          properties passed into the component or properties on the owner of
          the same name.
-         ********************************************************************/ 
+         ********************************************************************/
         properties: {
             "propertyName1": "property-value"
         },
@@ -50,12 +50,12 @@
          setting their default value, but this value will automatically be
          overwritten by properties passed into the component or properties
          on the owner of the same name.
-         ********************************************************************/ 
+         ********************************************************************/
         publicProperties: {
             "propertyName2": "property-value"
         },
         
-        constructor: function (definition) {
+        constructor: function (/*definition*/) {
             /*********************************************************************
              TODO: Place code here for anything that should happen on component
                    instantiation. Use the "load" event shown below for anything
