@@ -33,16 +33,48 @@ platypus.Scene = (function () {
     'use strict';
     
     var Application = include('springroll.Application'),
+        Data = include('platypus.Data'),
         Entity = include('platypus.Entity'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
         fn = /([\w-]+)\.(\w+)$/,
+        filterAssets = (function () {
+            var isDuplicate = function (id, preload) {
+                var j = preload.length;
+
+                while (j--) {
+                    if (preload[j].id === id) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            return function (assets, preload) {
+                var asset = null,
+                    cache = Application.instance.assetManager.cache._cache,
+                    filteredAssets = Array.setUp(),
+                    i = assets.length;
+
+                while (i--) {
+                    asset = formatAsset(assets[i]);
+                    if (cache[asset.id] || isDuplicate(asset.id, preload)) {
+                        asset.recycle();
+                    } else {
+                        filteredAssets.push(asset);
+                    }
+                }
+
+                return filteredAssets;
+            };
+        }()),
         formatAsset = function (asset) {
             var match = asset.match(fn),
-                a = {
-                    id: asset,
-                    src: asset
-                };
+                a = Data.setUp(
+                    'id', asset,
+                    'src', asset
+                );
             
             //TODO: Make this behavior less opaque.
             if (match) {
@@ -131,24 +163,8 @@ platypus.Scene = (function () {
             PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
         },
         loading = function (definition, assets) {
-            var lateAssets = this.getLateAssetList(definition),
-                i = lateAssets.length,
-                j = 0,
-                preload = this.preload;
+            var lateAssets = this.getLateAssetList(definition);
             
-            // We need to make sure that the late list only includes new items, not anything already loaded.
-            if (preload.length) {
-                while (i--) {
-                    j = preload.length;
-                    while (j--) {
-                        if (preload[j].id === lateAssets[i].id) {
-                            lateAssets.greenSplice(i);
-                            break;
-                        }
-                    }
-                }
-            }
-
             if (lateAssets.length) {
                 assets.union(lateAssets);
                 this.once('exit', unloadAssets.bind(this, lateAssets));
@@ -157,10 +173,12 @@ platypus.Scene = (function () {
             }
         },
         Scene  = function (panel, definition) {
-            var assets = this.getAssetList(definition);
+            var assets = null;
             
             State.call(this, panel, definition.options);
             
+            assets = this.getAssetList(definition);
+
             this.id = definition.id;
             this.preload.union(assets);
             this.layerDefinitions = definition.layers;
@@ -317,10 +335,7 @@ platypus.Scene = (function () {
     proto.getAssetList = function (def) {
         var i = 0,
             arr = null,
-            asset = null,
-            assets = Array.setUp(),
-            cache = Application.instance.assetManager.cache._cache,
-            formattedAssets = Array.setUp();
+            assets = Array.setUp();
         
         if (def.assets) {
             assets.union(def.assets);
@@ -332,14 +347,10 @@ platypus.Scene = (function () {
             arr.recycle();
         }
         
-        for (i = 0; i < assets.length; i++) {
-            asset = formatAsset(assets[i]);
-            if (!cache[asset.id]) {
-                formattedAssets.push(asset);
-            }
-        }
+        arr = filterAssets(assets, this.preload);
+        assets.recycle();
         
-        return formattedAssets;
+        return arr;
     };
     
     /**
@@ -359,12 +370,11 @@ platypus.Scene = (function () {
             arr.recycle();
         }
         
-        for (i = 0; i < assets.length; i++) {
-            assets[i] = formatAsset(assets[i]);
-        }
+        arr = filterAssets(assets, this.preload);
+        assets.recycle();
         
-        return assets;
+        return arr;
     };
-    
+
     return Scene;
 }());
