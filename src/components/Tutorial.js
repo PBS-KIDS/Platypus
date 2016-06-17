@@ -1,6 +1,6 @@
 /**
  * Tutorial provides a framework for playing tutorials. It allows the user to define things such as under what conditions tutorials will play, how often they play, and which tutorials have priority.
- * 
+ *
  * @class Tutorial
  * @uses platypus.Component
  * @since 0.8.7
@@ -41,7 +41,7 @@
                 keepChecking = false;
                 tut = this.tutorials[x];
 
-                if (!this.playing && this.theQueue.length == 0) {
+                if (!this.playing && this.theQueue.length === 0) {
                     keepChecking = true;
                 } else if ((!this.playing && this.theQueue.length > 0) && (tut.priority > this.theQueue[0].priority)) {
                     keepChecking = true;
@@ -103,20 +103,20 @@
             
             /* An array of tutorial definition objects. These objects define what events will be called by the tutorial, the priority of the tutorial, how often and how many times it will fire, the required conditions for it to fire, and more.
              *
-             * "tutorialDefs": [       
+             * "tutorialDefs": [
              *      {
              *          "events": ["example-vo-event"],         //An Array of Strings. Defines the events to fire when all the conditions for this tutorial are met. If there are multiple events, one is chosen at random. All events in the array will play before any repeat.
              *          "priority": 5,                          //The priorioty of the tutorial. Higher numbered tutorials interrupt lower numbered. Default: 0.
              *          "queue": true,                          //Will the tutorial queue up if played while another tutorial is playing? Default: false.
              *          "timesToReplay": 3,                     //The number of times a tutorial will replay. Set to 0 to make a tutorial play only once. Default: Infinity.
              *          "replayDelay": 10000,                   //While the conditions are met, the tutorial will replay at this interval in milliseconds. If set to null, it will not repeat. Default: null.
-             *          "level": "example-level",               //Tutorial will only play when this level is the currently loaded level. 
+             *          "level": "example-level",               //Tutorial will only play when this level is the currently loaded level.
              *          "requirements": {                       //The requirements is a collection of entities types that are watched by the tutorial to determine if the conditions to play this tutorial are true.
              *              "example-entity-type": ["example-entity-state"]     //The requirements is a set of key-value pairs. The keys are entity types that the tutorial will watch. The values are arrays of states of that entity type which must be true for the tutorial to play.
              *          }
              *      }
              * ]
-             * 
+             *
              * @property tutorialDefs
              * @type Array [Object]
              * @default []
@@ -144,7 +144,7 @@
                 tutDef = this.tutorialDefs[x];
                 tutorial = {};
                 if (!tutDef.events) {
-                    console.warn("Tutorial definition lacks events.");
+                    platypus.debug.warn("Tutorial definition lacks events.");
                     continue;
                 }
                 tutorial.events = tutDef.events.greenSlice();
@@ -157,9 +157,11 @@
                 tutorial.level = tutDef.level;
                 tutorial.requirements = {};
                 for (entityType in tutDef.requirements) {
-                    tutorial.requirements[entityType] = tutDef.requirements[entityType].greenSlice();
-                    if (!this.watchedEntities[entityType]) {
-                        this.watchedEntities[entityType] = [];
+                    if (tutDef.requirements.hasOwnProperty(entityType)) {
+                        tutorial.requirements[entityType] = tutDef.requirements[entityType].greenSlice();
+                        if (!this.watchedEntities[entityType]) {
+                            this.watchedEntities[entityType] = [];
+                        }
                     }
                 }
                 this.tutorials.push(tutorial);
@@ -168,6 +170,7 @@
         },
 
         events: {// These are messages that this component listens for
+            
             /**
              * Checks added entity to determine if it is one of the conditions for one of the tutorials. If so, we track it.
              *
@@ -175,6 +178,7 @@
              * @param entity {Object} The added entity.
              */
             "child-entity-added": entityAdded,
+
             /**
              * Checks added entity to determine if it is one of the conditions for one of the tutorials. If so, we track it.
              *
@@ -189,7 +193,8 @@
              * @method 'child-entity-removed'
              * @param entity {Object} The removed entity.
              */
-            "child-entity-removed": entityRemoved,   
+            "child-entity-removed": entityRemoved,
+
             /**
              * Removes entities from the watch list when they are destroyed.
              *
@@ -206,6 +211,7 @@
              * @param tick.delta {Number} The length of the tick.
              */
             "logic-tick": updateLogic,
+
             /**
              * Checks tutorials to determine if they should play.
              *
@@ -219,7 +225,7 @@
              *
              * @method 'sequence-complete'
              */
-            "sequence-complete": function() {
+            "sequence-complete": function () {
                 if (this.playing.timesToReplay >= 0) {
                     this.tutorials.push(this.playing);
                 }
@@ -229,8 +235,7 @@
         
         methods: {// These are internal methods that are invoked by this component.
             play: function (tutorial) {
-                var toCall = null,
-                    x = 0;
+                var toCall = null;
 
                 this.playing = tutorial;
                 if (this.playing.events.length === 0) {
@@ -265,27 +270,28 @@
                     y = 0,
                     entityType = null,
                     states = null,
-                    anEntity = null, 
+                    anEntity = null,
                     metRequirement = true;
 
                 for (entityType in requirements) { //Going through the types of entities
-                    states = requirements[entityType];
-                    for (y = this.watchedEntities[entityType].length - 1; y >= 0; y--) {  //Going through the instances of those entities
-                        anEntity = this.watchedEntities[entityType][y];
-                        
-                        metRequirement = true;
-                        for (x = 0; x < states.length; x++) {   //Going through the required states of an entity instance
-                            if (!anEntity.state.get(states[x])) {
-                                metRequirement = false;
+                    if (requirements.hasOwnProperty(entityType)) {
+                        states = requirements[entityType];
+                        for (y = this.watchedEntities[entityType].length - 1; y >= 0; y--) {  //Going through the instances of those entities
+                            anEntity = this.watchedEntities[entityType][y];
+                            metRequirement = true;
+                            for (x = 0; x < states.length; x++) {   //Going through the required states of an entity instance
+                                if (!anEntity.state.get(states[x])) {
+                                    metRequirement = false;
+                                    break;
+                                }
+                            }
+                            if (metRequirement) {
                                 break;
                             }
                         }
-                        if (metRequirement) {
-                            break;
+                        if (!metRequirement) {
+                            return false;
                         }
-                    }
-                    if (!metRequirement) {
-                        return false;
                     }
                 }
                 return true;
@@ -296,42 +302,6 @@
                 this.playing = null;
                 this.tutorials = null;
             }
-        },
-        
-        publicMethods: {// These are methods that are available on the entity.
-            /*********************************************************************
-             TODO: Additional methods that should be invoked at the entity level,
-                   not just the local component level. Only one method of a given
-                   name can be used on the entity, so be aware other components
-                   may attempt to add an identically named method to the entity.
-                   No public method names should match the method names listed
-                   above, since they can also be called at the component level.
-                   
-                   e.g.
-                   whatIsMyFavoriteColor: function () {
-                       return '#ffff00';
-                   }
-                   
-                   This method can then be invoked on the entity as
-                   entity.whatIsMyFavoriteColor().
-            *********************************************************************/
-            
-        }/*,
-        
-        getAssetList: function (component, props, defaultProps) {
-            **********************************************************************
-             TODO: This method can be provided to list assets that this
-                   component requires. This method is invoked when the list of
-                   game scenes is created to determine assets for each scene.
-                   
-                   e.g.
-                   function (component, props, defaultProps) {
-                       return ['yellow-sprite'];
-                   }
-                   
-                   If the component doesn't require any assets, this method
-                   should not be provided.
-            **********************************************************************
-        }*/
+        }
     });
 }());
