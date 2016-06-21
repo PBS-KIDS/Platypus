@@ -290,11 +290,12 @@
              * @param data.container {PIXI.Container} Container to contain this tile-rendering.
              */
             "handle-render-load": function (resp) {
-                var z = this.owner.z,
-                    renderer = this.renderer,
-                    parentContainer = null,
+                var extrusionMargin = 2,
                     mapContainer = this.mapContainer,
-                    sprite = null;
+                    parentContainer = null,
+                    renderer = this.renderer,
+                    sprite = null,
+                    z = this.owner.z;
 
                 if (resp && resp.container) {
                     parentContainer = this.parentContainer = resp.container;
@@ -304,7 +305,7 @@
                         this.reorderedStage = true;
                     }
 
-                    this.updateRegion();
+                    this.updateRegion(0);
 
                     if (!this.tileCache) {
                         this.render = doNothing;
@@ -316,14 +317,13 @@
                         mapContainer.z = z;
                         parentContainer.addChild(mapContainer);
                     } else {
-                        this.render = this.renderCache;
-
                         this.mapContainerWrapper = new Container();
                         this.mapContainerWrapper.addChild(mapContainer);
 
                         if ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight)) { // We never need to recache.
                             this.cacheAll   = true;
 
+                            this.render = this.renderCache;
                             this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
 
                             this.tilesSprite = sprite = new Sprite(this.cacheTexture);
@@ -337,6 +337,12 @@
                         } else if (this.cacheAll || ((this.layerWidth <= this.cacheWidth * 2) && (this.layerHeight <= this.cacheHeight)) || ((this.layerWidth <= this.cacheWidth) && (this.layerHeight <= this.cacheHeight * 2))) { // We cache everything across several textures creating a cache grid.
                             this.cacheAll = true;
 
+                            // Make sure there's room for the one-pixel extrusion around edges of caches
+                            this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth + extrusionMargin), this.maximumBuffer);
+                            this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight + extrusionMargin), this.maximumBuffer);
+                            this.updateRegion(extrusionMargin);
+
+                            this.render = this.renderCacheWithExtrusion;
                             this.cacheGrid = this.createGrid(parentContainer, renderer);
 
                             this.updateCache = true;
@@ -665,6 +671,9 @@
                     ctw = this.cacheTilesWidth,
                     h = 0,
                     w = 0,
+                    outerMargin = 2,
+                    extrusion = 1,
+                    rt = null,
                     sx = this.scaleX,
                     sy = this.scaleY,
                     th = this.tileHeight,
@@ -683,10 +692,12 @@
                     cg.push(col);
                     for (y = 0; y < tsh; y += cth) {
                         // This prevents us from using too large of a cache for the right and bottom edges of the map.
-                        w = Math.min(getPowerOfTwo((tsw - x) * tw), cw);
-                        h = Math.min(getPowerOfTwo((tsh - y) * th), ch);
+                        w = Math.min(getPowerOfTwo((tsw - x) * tw + outerMargin), cw);
+                        h = Math.min(getPowerOfTwo((tsh - y) * th + outerMargin), ch);
 
-                        ct = new Sprite(new RenderTexture(renderer, w, h));
+                        rt = new RenderTexture(renderer, w, h);
+                        rt.frame = new PIXI.Rectangle(extrusion, extrusion, ((w / tw) >> 0) * tw + extrusion, ((h / th) >> 0) * th + extrusion);
+                        ct = new Sprite(rt);
                         ct.z = z;
                         ct.scaleX = sx;
                         ct.scaleY = sy;
@@ -700,7 +711,7 @@
                 return cg;
             },
             
-            updateRegion: function () {
+            updateRegion: function (margin) {
                 var clipW = Math.floor(this.cacheWidth  / this.tileWidth),
                     clipH = Math.floor(this.cacheHeight / this.tileHeight);
 
@@ -711,7 +722,7 @@
                 this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
 
                 if (this.tileCache) {
-                    this.mapContainer.mask = new Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
+                    this.mapContainer.mask = new Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth + margin, this.cacheClipHeight + margin).endFill();
                 }
             },
 
@@ -839,17 +850,40 @@
                 ents.recycle();
             },
             
-            renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds) {
+            renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds, extrusion) {
                 if (oldCache && !oldBounds.empty) {
                     oldCache.x = oldBounds.left * this.tileWidth;
                     oldCache.y = oldBounds.top * this.tileHeight;
                     src.addChild(oldCache); // To copy last rendering over.
                 }
 
+                dest.clear();
                 src.x = -bounds.left * this.tileWidth;
                 src.y = -bounds.top * this.tileHeight;
+                dest.render(wrapper);
+                dest.requiresUpdate = true;
+            },
+
+            renderCacheWithExtrusion: function (bounds, dest, src, wrapper) {
+                var extrusion = 1;
 
                 dest.clear();
+
+                // There is probably a better way to do this. Currently for the extrusion, everything is rendered once offset in the n, s, e, w directions and then once in the middle to create the effect.
+                src.x = -bounds.left * this.tileWidth;
+                src.y = -bounds.top * this.tileHeight + extrusion;
+                dest.render(wrapper);
+                src.x = -bounds.left * this.tileWidth + extrusion;
+                src.y = -bounds.top * this.tileHeight;
+                dest.render(wrapper);
+                src.x = -bounds.left * this.tileWidth + extrusion * 2;
+                src.y = -bounds.top * this.tileHeight + extrusion;
+                dest.render(wrapper);
+                src.x = -bounds.left * this.tileWidth + extrusion;
+                src.y = -bounds.top * this.tileHeight + extrusion * 2;
+                dest.render(wrapper);
+                src.x = -bounds.left * this.tileWidth + extrusion;
+                src.y = -bounds.top * this.tileHeight + extrusion;
                 dest.render(wrapper);
                 dest.requiresUpdate = true;
             },
