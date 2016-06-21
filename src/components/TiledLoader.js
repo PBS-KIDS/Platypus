@@ -549,9 +549,11 @@
                 tileDefinition.properties.top = tileDefinition.properties.y || mapOffsetY;
                 tileDefinition.properties.z = tileDefinition.properties.z || this.layerZ;
 
-                tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
-                for (x = -1; x < tileTypes; x++) {
-                    importAnimation['tile' + x] = x;
+                if (tilesets.length) {
+                    tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
+                    for (x = -1; x < tileTypes; x++) {
+                        importAnimation['tile' + x] = x;
+                    }
                 }
                 for (x = 0; x < width; x++) {
                     importCollision[x] = [];
