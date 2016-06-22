@@ -20,6 +20,7 @@
         Container         = include('PIXI.Container'),
         Graphics          = include('PIXI.Graphics'),
         ParticleContainer = include('PIXI.ParticleContainer'),
+        Rectangle         = include('PIXI.Rectangle'),
         RenderTexture     = include('PIXI.RenderTexture'),
         Sprite            = include('PIXI.Sprite'),
         doNothing = function () {
@@ -696,7 +697,7 @@
                         h = Math.min(getPowerOfTwo((tsh - y) * th + outerMargin), ch);
 
                         rt = new RenderTexture(renderer, w, h);
-                        rt.frame = new PIXI.Rectangle(extrusion, extrusion, ((w / tw) >> 0) * tw + extrusion, ((h / th) >> 0) * th + extrusion);
+                        rt.frame = new Rectangle(extrusion, extrusion, ((w / tw) >> 0) * tw + extrusion, ((h / th) >> 0) * th + extrusion);
                         ct = new Sprite(rt);
                         ct.z = z;
                         ct.scaleX = sx;
@@ -850,7 +851,7 @@
                 ents.recycle();
             },
             
-            renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds, extrusion) {
+            renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds) {
                 if (oldCache && !oldBounds.empty) {
                     oldCache.x = oldBounds.left * this.tileWidth;
                     oldCache.y = oldBounds.top * this.tileHeight;
@@ -865,11 +866,17 @@
             },
 
             renderCacheWithExtrusion: function (bounds, dest, src, wrapper) {
-                var extrusion = 1;
+                var extrusion = 1,
+                    border = new Graphics();
+
+                // This mask makes only the extruded border drawn for the next 4 draws so that inner holes aren't extruded in addition to the outer rim.
+                border.lineStyle(1, 0x000000);
+                border.drawRect(0.5, 0.5, this.cacheClipWidth + 1, this.cacheClipHeight + 1);
 
                 dest.clear();
 
                 // There is probably a better way to do this. Currently for the extrusion, everything is rendered once offset in the n, s, e, w directions and then once in the middle to create the effect.
+                wrapper.mask = border;
                 src.x = -bounds.left * this.tileWidth;
                 src.y = -bounds.top * this.tileHeight + extrusion;
                 dest.render(wrapper);
@@ -882,9 +889,11 @@
                 src.x = -bounds.left * this.tileWidth + extrusion;
                 src.y = -bounds.top * this.tileHeight + extrusion * 2;
                 dest.render(wrapper);
+                wrapper.mask = null;
                 src.x = -bounds.left * this.tileWidth + extrusion;
                 src.y = -bounds.top * this.tileHeight + extrusion;
                 dest.render(wrapper);
+//                wrapper.mask = null;
                 dest.requiresUpdate = true;
             },
             
