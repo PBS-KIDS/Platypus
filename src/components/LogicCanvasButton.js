@@ -47,6 +47,7 @@
              * @property hoverAudio
              * @type String or an Array of Strings and Message Objects
              * @default ""
+             * @since 0.8.8
              */
             "onHover": "",
 
@@ -66,9 +67,7 @@
              * @type Boolean
              * @default false
              */
-            "disabled": false,
-
-            
+            "disabled": false
         },
 
         publicProperties: {
@@ -78,6 +77,7 @@
              * @property bottom
              * @type Number
              * @default null
+             * @since 0.8.8
              */
             "bottom": null,
 
@@ -87,6 +87,7 @@
              * @property bottom
              * @type Number
              * @default null
+             * @since 0.8.8
              */
             "left": null,
 
@@ -96,6 +97,7 @@
              * @property bottom
              * @type Number
              * @default null
+             * @since 0.8.8
              */
             "right": null,
 
@@ -105,6 +107,7 @@
              * @property bottom
              * @type Number
              * @default null
+             * @since 0.8.8
              */
             "top": null
         },
@@ -130,20 +133,25 @@
              * @method 'camera-update'
              * @param camera {platypus.Data} Camera update information
              * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
+             * @since 0.8.8
              */
             "camera-update": function (camera) {
-                var vp = camera.viewport;
+                var bottom = this.bottom,
+                    left = this.left,
+                    right = this.right,
+                    top = this.top,
+                    vp = camera.viewport;
 
-                if (typeof this.left === 'number') {
-                    this.owner.x = vp.left + this.left;
-                } else if (typeof this.right === 'number') {
-                    this.owner.x = vp.right - this.right;
+                if (typeof left === 'number') {
+                    this.owner.x = vp.left + left;
+                } else if (typeof right === 'number') {
+                    this.owner.x = vp.right - right;
                 }
 
-                if (typeof this.top === 'number') {
-                    this.owner.y = vp.top + this.top;
-                } else if (typeof this.bottom === 'number') {
-                    this.owner.y = vp.bottom - this.bottom;
+                if (typeof top === 'number') {
+                    this.owner.y = vp.top + top;
+                } else if (typeof bottom === 'number') {
+                    this.owner.y = vp.bottom - bottom;
                 }
             },
 
