@@ -42,6 +42,15 @@
             "onCancel": "",
 
             /**
+             * The event to trigger when the user mouses over the button
+             *
+             * @property hoverAudio
+             * @type String or an Array of Strings and Message Objects
+             * @default ""
+             */
+            "onHover": "",
+
+            /**
              * Whether this button's actions should be limited to the initial press/release.
              *
              * @property useOnce
@@ -57,7 +66,9 @@
              * @type Boolean
              * @default false
              */
-            "disabled": false
+            "disabled": false,
+
+            
         },
 
         publicProperties: {
@@ -194,6 +205,9 @@
              * @method 'mouseover'
              */
             "mouseover": function () {
+                if (this.onHover) {
+                    this.owner.trigger(this.onHover);
+                }
                 if (this.state.get('down')) {
                     this.cancelled = false;
                 }
