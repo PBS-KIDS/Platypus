@@ -60,6 +60,44 @@
             "disabled": false
         },
 
+        publicProperties: {
+            /**
+             * This sets the distance in world units from the bottom of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.bottom`.
+             *
+             * @property bottom
+             * @type Number
+             * @default null
+             */
+            "bottom": null,
+
+            /**
+             * This sets the distance in world units from the left of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.left`.
+             *
+             * @property bottom
+             * @type Number
+             * @default null
+             */
+            "left": null,
+
+            /**
+             * This sets the distance in world units from the right of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.right`.
+             *
+             * @property bottom
+             * @type Number
+             * @default null
+             */
+            "right": null,
+
+            /**
+             * This sets the distance in world units from the top of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.top`.
+             *
+             * @property bottom
+             * @type Number
+             * @default null
+             */
+            "top": null
+        },
+
         constructor: function () {
             var state = this.owner.state;
             
@@ -75,6 +113,29 @@
         },
 
         events: {
+            /**
+             * This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.
+             *
+             * @method 'camera-update'
+             * @param camera {platypus.Data} Camera update information
+             * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
+             */
+            "camera-update": function (camera) {
+                var vp = camera.viewport;
+
+                if (typeof this.left === 'number') {
+                    this.owner.x = vp.left + this.left;
+                } else if (typeof this.right === 'number') {
+                    this.owner.x = vp.right - this.right;
+                }
+
+                if (typeof this.top === 'number') {
+                    this.owner.y = vp.top + this.top;
+                } else if (typeof this.bottom === 'number') {
+                    this.owner.y = vp.bottom - this.bottom;
+                }
+            },
+
             /**
              * Handles `disabled` state changes.
              *
