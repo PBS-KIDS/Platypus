@@ -348,6 +348,7 @@
 
                             this.updateCache = true;
                         } else {
+                            this.render = this.renderCache;
                             this.cacheAll = false;
 
                             this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
