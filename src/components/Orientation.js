@@ -628,7 +628,7 @@
                         Array.setUp(0, 0, z)
                     );
 
-                    multiply(matrix, this.matrixTween, this.matrixTween);
+                    multiply(this.matrixTween, matrix, this.matrixTween);
                     
                     if (tween.anchor) {
                         initialOffset = Vector.setUp(tween.offset).multiply(1 - t);
