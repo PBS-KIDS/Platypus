@@ -944,7 +944,8 @@
                     };
                 
                 return function () {
-                    var worldVP = this.worldCamera.viewport,
+                    var threshold = this.threshold,
+                        worldVP = this.worldCamera.viewport,
                         world = this.worldDimensions,
                         w = world.width,
                         h = world.height;
@@ -964,6 +965,12 @@
                     } else {
                         this.moveY = containY;
                     }
+
+                    // Make sure camera is correctly contained:
+                    this.threshold = -1; // forces update
+                    this.moveX(worldVP.x);
+                    this.moveY(worldVP.y);
+                    this.threshold = threshold;
                 };
             }()),
             
