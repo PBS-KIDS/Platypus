@@ -175,15 +175,18 @@
             "worldHeight": 0
         },
         constructor: function (definition) {
+            var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
+                worldCamera = Data.setUp(
+                    "viewport", worldVP,
+                    "orientation", definition.orientation || 0
+                );
+
             //The dimensions of the camera in the window
             this.viewport = AABB.setUp(0, 0, 0, 0);
             
             //The dimensions of the camera in the game world
-            this.worldCamera = Data.setUp(
-                "viewport", AABB.setUp(this.x, this.y, this.width, this.height),
-                "orientation", definition.orientation || 0
-            );
-            
+            this.worldCamera = worldCamera;
+
             //Message object defined here so it's reusable
             this.worldDimensions = AABB.setUp();
             this.message = Data.setUp(
@@ -213,12 +216,12 @@
             //FOLLOW MODE VARIABLES
             
             //--Bounding
-            this.boundingBox = AABB.setUp(this.worldCamera.viewport.x, this.worldCamera.viewport.y, this.worldCamera.viewport.width / 2, this.worldCamera.viewport.height / 2);
+            this.boundingBox = AABB.setUp(worldVP.x, worldVP.y, worldVP.width / 2, worldVP.height / 2);
             
             //Forward Follow
-            this.lastX = this.worldCamera.viewport.x;
-            this.lastY = this.worldCamera.viewport.y;
-            this.lastOrientation = this.worldCamera.orientation;
+            this.lastX = worldVP.x;
+            this.lastY = worldVP.y;
+            this.lastOrientation = worldCamera.orientation;
             this.forwardX = 0;
             this.forwardY = 0;
             this.forwardAngle = 0;
@@ -361,6 +364,8 @@
             },
             
             "mousedown": function (event) {
+                var worldVP = this.worldCamera.viewport;
+
                 if (this.state === 'mouse-pan') {
                     if (!this.mouseVector) {
                         this.mouseVector = Vector.setUp();
@@ -369,8 +374,8 @@
                     this.mouse = this.mouseVector;
                     this.mouse.x = event.event.x;
                     this.mouse.y = event.event.y;
-                    this.mouseWorldOrigin.x = this.worldCamera.viewport.x;
-                    this.mouseWorldOrigin.y = this.worldCamera.viewport.y;
+                    this.mouseWorldOrigin.x = worldVP.x;
+                    this.mouseWorldOrigin.y = worldVP.y;
                 }
             },
             
@@ -396,7 +401,8 @@
             "tick": function (resp) {
                 var msg       = this.message,
                     viewport  = msg.viewport,
-                    transform = null;
+                    transform = null,
+                    worldCamera = this.worldCamera;
                 
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
                     this.viewportUpdate = true;
@@ -420,7 +426,7 @@
                     this.stationary = false;
                     msg.stationary = false;
                     
-                    viewport.set(this.worldCamera.viewport);
+                    viewport.set(worldCamera.viewport);
 
                     if (this.shakeIncrementor < this.shakeTime) {
                         this.viewportUpdate = true;
@@ -439,7 +445,7 @@
                     // Set up the rest of the camera message:
                     msg.scaleX         = this.windowPerWorldUnitWidth;
                     msg.scaleY         = this.windowPerWorldUnitHeight;
-                    msg.orientation    = this.worldCamera.orientation;
+                    msg.orientation    = worldCamera.orientation;
                     
                     // Transform the world to appear within camera
                     //this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
@@ -510,24 +516,28 @@
              * @param [location.time] {Number} The time to transition to the new location.
              * @param [location.ease] {Function} The ease function to use. Defaults to a linear transition.
              */
-            "relocate": function (location) {
-                var v = null,
-                    move = function () {
+            "relocate": (function () {
+                var move = function (v) {
                         if (this.move(v.x, v.y)) {
                             this.viewportUpdate = true;
                         }
-                    }.bind(this),
+                    },
                     stop = function () {
-                        v.recycle();
+                        this.recycle();
                     };
 
-                if (location.time && window.createjs && createjs.Tween) {
-                    v = Vector.setUp(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
-                    createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move).call(stop);
-                } else if (this.move(location.x, location.y)) {
-                    this.viewportUpdate = true;
-                }
-            },
+                return function (location) {
+                    var v = null,
+                        worldVP = this.worldCamera.viewport;
+
+                    if (location.time && window.createjs && createjs.Tween) {
+                        v = Vector.setUp(worldVP.x, worldVP.y);
+                        createjs.Tween.get(v).to({x: location.x, y: location.y}, location.time, location.ease).on('change', move.bind(this, v)).call(stop.bind(v));
+                    } else if (this.move(location.x, location.y)) {
+                        this.viewportUpdate = true;
+                    }
+                };
+            }()),
             
             /**
             * On receiving this message, the camera begins following the requested object.
@@ -695,10 +705,11 @@
             moveY: doNothing,
             
             reorient: function (newOrientation) {
-                var errMargin = 0.0001;
+                var errMargin = 0.0001,
+                    worldCamera = this.worldCamera;
                 
-                if (Math.abs(this.worldCamera.orientation - newOrientation) > errMargin) {
-                    this.worldCamera.orientation = newOrientation;
+                if (Math.abs(worldCamera.orientation - newOrientation) > errMargin) {
+                    worldCamera.orientation = newOrientation;
                     return true;
                 }
                 return false;
@@ -720,11 +731,13 @@
                     };
                 
                 return function (entity, time) {
-                    var x = getTransitionalPoint(this.worldCamera.viewport.x, entity.x, getRatio(this.transitionX, time)),
-                        y = getTransitionalPoint(this.worldCamera.viewport.y, entity.y, getRatio(this.transitionY, time));
+                    var worldCamera = this.worldCamera,
+                        worldVP = worldCamera.viewport,
+                        x = getTransitionalPoint(worldVP.x, entity.x, getRatio(this.transitionX, time)),
+                        y = getTransitionalPoint(worldVP.y, entity.y, getRatio(this.transitionY, time));
 
                     if (this.rotate) { // Only run the orientation calculations if we need them.
-                        return this.move(x, y, getTransitionalPoint(this.worldCamera.orientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
+                        return this.move(x, y, getTransitionalPoint(worldCamera.orientation, -(entity.orientation || 0), getRatio(this.transitionAngle, time)));
                     } else {
                         return this.move(x, y, 0);
                     }
@@ -738,6 +751,8 @@
                     moved  = false,
                     ms = 15,
                     standardizeTimeDistance = ms / time, //This allows the camera to pan appropriately on slower devices or longer ticks
+                    worldCamera = this.worldCamera,
+                    worldVP = worldCamera.viewport,
                     x = entity.x + this.offsetX,
                     y = entity.y + this.offsetY,
                     a = (entity.orientation || 0) + this.offsetAngle;
@@ -751,17 +766,17 @@
                     this.averageOffsetX += avgFractionFlip * (x - this.lastX) * standardizeTimeDistance;
                     this.averageOffsetY += avgFractionFlip * (y - this.lastY) * standardizeTimeDistance;
 
-                    if (Math.abs(this.averageOffsetX) > (this.worldCamera.viewport.width / (this.forwardX * 2))) {
+                    if (Math.abs(this.averageOffsetX) > (worldVP.width / (this.forwardX * 2))) {
                         this.averageOffsetX = 0;
                     }
-                    if (Math.abs(this.averageOffsetY) > (this.worldCamera.viewport.height / (this.forwardY * 2))) {
+                    if (Math.abs(this.averageOffsetY) > (worldVP.height / (this.forwardY * 2))) {
                         this.averageOffsetY = 0;
                     }
                     
                     if (this.rotate) {
                         this.averageOffsetAngle *= avgFraction;
                         this.averageOffsetAngle += avgFractionFlip * (a - this.lastOrientation) * standardizeTimeDistance;
-                        if (Math.abs(this.averageOffsetAngle) > (this.worldCamera.orientation / (this.forwardAngle * 2))) {
+                        if (Math.abs(this.averageOffsetAngle) > (worldCamera.orientation / (this.forwardAngle * 2))) {
                             this.averageOffsetAngle = 0;
                         }
                     }
@@ -792,9 +807,10 @@
                     ratioX  = (this.transitionX ? Math.min(time / this.transitionX, 1) : 1),
                     iratioX = 1 - ratioX,
                     ratioY  = (this.transitionY ? Math.min(time / this.transitionY, 1) : 1),
-                    iratioY = 1 - ratioY;
+                    iratioY = 1 - ratioY,
+                    worldVP = this.worldCamera.viewport;
                 
-                this.boundingBox.move(this.worldCamera.viewport.x, this.worldCamera.viewport.y);
+                this.boundingBox.move(worldVP.x, worldVP.y);
                 
                 if (entity.x > this.boundingBox.right) {
                     x = entity.x - this.boundingBox.halfWidth;
@@ -809,11 +825,11 @@
                 }
                 
                 if (x !== 0) {
-                    x = this.moveX(ratioX * x + iratioX * this.worldCamera.viewport.x);
+                    x = this.moveX(ratioX * x + iratioX * worldVP.x);
                 }
                 
                 if (y !== 0) {
-                    y = this.moveY(ratioY * y + iratioY * this.worldCamera.viewport.y);
+                    y = this.moveY(ratioY * y + iratioY * worldVP.y);
                 }
                 
                 return x || y;
@@ -821,7 +837,8 @@
             
             resize: function () {
                 var worldAspectRatio = this.width / this.height,
-                    windowAspectRatio = this.owner.width / this.owner.height;
+                    windowAspectRatio = this.owner.width / this.owner.height,
+                    worldVP = this.worldCamera.viewport;
                 
                 //The dimensions of the camera in the window
                 this.viewport.setAll(this.owner.width / 2, this.owner.height / 2, this.owner.width, this.owner.height);
@@ -829,21 +846,21 @@
                 if (!this.stretch) {
                     if (windowAspectRatio > worldAspectRatio) {
                         if (this.overflow) {
-                            this.worldCamera.viewport.resize(this.height * windowAspectRatio, this.height);
+                            worldVP.resize(this.height * windowAspectRatio, this.height);
                         } else {
                             this.viewport.resize(this.viewport.height * worldAspectRatio, this.viewport.height);
                         }
                     } else if (this.overflow) {
-                        this.worldCamera.viewport.resize(this.width, this.width / windowAspectRatio);
+                        worldVP.resize(this.width, this.width / windowAspectRatio);
                     } else {
                         this.viewport.resize(this.viewport.width, this.viewport.width / worldAspectRatio);
                     }
                 }
                 
-                this.worldPerWindowUnitWidth  = this.worldCamera.viewport.width  / this.viewport.width;
-                this.worldPerWindowUnitHeight = this.worldCamera.viewport.height / this.viewport.height;
-                this.windowPerWorldUnitWidth  = this.viewport.width  / this.worldCamera.viewport.width;
-                this.windowPerWorldUnitHeight = this.viewport.height / this.worldCamera.viewport.height;
+                this.worldPerWindowUnitWidth  = worldVP.width  / this.viewport.width;
+                this.worldPerWindowUnitHeight = worldVP.height / this.viewport.height;
+                this.windowPerWorldUnitWidth  = this.viewport.width  / worldVP.width;
+                this.windowPerWorldUnitHeight = this.viewport.height / worldVP.height;
                 
                 //this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
                 this.matrix.tx = this.viewport.x - this.viewport.halfWidth;
