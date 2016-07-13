@@ -9,13 +9,12 @@
 (function () {
     'use strict';
     
-    var Circle = include('PIXI.Circle'),
+    var AABB = include('platypus.AABB'),
         Container = include('PIXI.Container'),
         Data = include('platypus.Data'),
         Graphics = include('PIXI.Graphics'),
         Matrix = include('PIXI.Matrix'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
-        Rectangle = include('PIXI.Rectangle'),
         StateMap = include('platypus.StateMap'),
         tempMatrix = new Matrix(),
         changeState = function (state) {
@@ -156,12 +155,10 @@
             mask: null,
 
             /**
-             * Optional. Defines what types of input the entity will take. Defaults to no input. A hitArea can be defined that determines where on the image should be clickable. A string can also be used to create more complex shapes via the PIXI graphics API like: "hitArea": "r(10,20,40,40).dc(30,10,12)". Defaults to this component's image if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.
-             *
+             * Optional. Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:
              *
              *  "acceptInput": {
              *      "hover": false,
-             *      "click": false,
              *      "hitArea": {
              *          "x": 10,
              *          "y": 10,
@@ -443,7 +440,8 @@
                 };
             
             return function () {
-                var ss   = PIXIAnimation.formatSpriteSheet(this.spriteSheet),
+                var interactive = null,
+                    ss = PIXIAnimation.formatSpriteSheet(this.spriteSheet),
                     map  = null;
                 
                 if (ss === PIXIAnimation.EmptySpriteSheet) {
@@ -455,14 +453,12 @@
                 this.parentContainer      = null;
                 this.stateBased = map && this.stateBased;
                 this.eventBased = map && this.eventBased;
-                this.hover      = false;
-                this.click      = false;
                 
                 this.wasVisible = this.visible;
                 this.lastX = this.owner.x;
                 this.lastY = this.owner.y;
                 
-                this.camera = new platypus.AABB();
+                this.camera = AABB.setUp();
 
                 if (this.eventBased || this.stateBased) {
                     setupEventsAndStates(this, map);
@@ -518,12 +514,13 @@
                 
                 //handle hitArea
                 if (this.acceptInput) {
-                    this.hover = this.acceptInput.hover || false;
-                    this.click = this.acceptInput.click || false;
-                    
-                    if (this.acceptInput.hitArea) {
-                        this.container.hitArea = this.setHitArea(this.acceptInput.hitArea);
-                    }
+                    interactive = Data.setUp(
+                        'container', this.container,
+                        'hitArea', this.acceptInput.hitArea,
+                        'hover', this.acceptInput.hover
+                    );
+                    this.owner.addComponent(new platypus.components.Interactive(this.owner, interactive));
+                    interactive.recycle();
                 }
                 
                 this.isOnCamera = true;
@@ -572,8 +569,7 @@
              * Listens for this event to determine whether this sprite is visible.
              *
              * @method 'camera-update'
-             * @param handlerData {Object} Data from the render handler
-             * @param handlerData.container {PIXI.Container} The parent container.
+             * @param camera.viewport {platypus.AABB} Camera position and size.
              */
             "camera-update": function (camera) {
                 this.camera.set(camera.viewport);
@@ -682,7 +678,7 @@
                 if (pinInfo.pinId === this.pinTo) {
                     this.parentContainer = pinInfo.container;
                     this.parentContainer.addChild(this.container);
-                    this.addInputs();
+                    this.owner.triggerEvent('input-on');
                     this.pinnedTo = pinInfo;
                     this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first "render" event.
                 }
@@ -701,38 +697,6 @@
                     this.parentContainer.removeChild(this.container);
                     this.parentContainer = null;
                     this.pinnedTo = null;
-                }
-            },
-            
-            /**
-             * This event dispatches a PIXI.Event on this component's PIXI.Sprite. Useful for rerouting mouse/keyboard events.
-             *
-             * @method 'dispatch-event'
-             * @param event {Object | PIXI.Event} The event to dispatch.
-             */
-            "dispatch-event": function (event) {
-                this.sprite.dispatchEvent(this.sprite, event.event, event.data);
-            },
-            
-            /**
-             * Adds input event listeners to the sprite, enabling input.
-             *
-             * @method 'input-on'
-             */
-            "input-on": function () {
-                if (!this.removeInputListeners) {
-                    this.addInputs();
-                }
-            },
-            
-            /**
-             * Removes the input event listeners on the sprite, disabling input.
-             *
-             * @method 'input-off'
-             */
-            "input-off": function () {
-                if (this.removeInputListeners) {
-                    this.removeInputListeners();
                 }
             },
             
@@ -801,7 +765,7 @@
                         this.setMask(this.mask);
                     }
 
-                    this.addInputs();
+                    this.owner.triggerEvent('input-on');
                     return stage;
                 } else {
                     return null;
@@ -970,120 +934,6 @@
                 };
             }()),
             
-            triggerInput: function (event, eventName) {
-                var msg = null;
-                
-                //TML - This is in case we do a scene change using an event and the container is destroyed.
-                if (!this.container) {
-                    return;
-                }
-                
-                msg = Data.setUp(
-                    "event", event.data.originalEvent,
-                    "pixiEvent", event,
-                    "x", event.data.global.x / this.parentContainer.transformMatrix.a + this.camera.left,
-                    "y", event.data.global.y / this.parentContainer.transformMatrix.d + this.camera.top,
-                    "entity", this.owner
-                );
-
-                this.owner.trigger(eventName, msg);
-                msg.recycle();
-            },
-            
-            addInputs: function () {
-                var pressed   = false,
-                    sprite    = this.container,
-                    mousedown = null,
-                    mouseover = null,
-                    mouseout  = null,
-                    pressmove = null,
-                    pressup   = null,
-                    click     = null;
-                
-                // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-                if (this.click) {
-                    sprite.interactive = true;
-                    
-                    mousedown = function (event) {
-                        if (!pressed) {
-                            this.triggerInput(event, 'mousedown');
-                            event.target.mouseTarget = true;
-                            pressed = true;
-                        }
-                    }.bind(this);
-                    
-                    pressmove = function (event) {
-                        if (pressed) {
-                            this.triggerInput(event, 'pressmove');
-                            event.target.mouseTarget = true;
-                        } else {
-                            this.triggerInput(event, 'mousemove');
-                        }
-                    }.bind(this);
-                    
-                    pressup   = function (event) {
-                        if (pressed) {
-                            this.triggerInput(event, 'pressup');
-                            event.target.mouseTarget = false;
-                            pressed = false;
-                            
-                            if (event.target.removeDisplayObject) {
-                                event.target.removeDisplayObject();
-                            }
-                        }
-                    }.bind(this);
-                    
-                    click     = function (event) {
-                        this.triggerInput(event, 'click');
-                    }.bind(this);
-                    
-                    sprite.addListener('mousedown',       mousedown);
-                    sprite.addListener('touchstart',      mousedown);
-                    sprite.addListener('mouseup',         pressup);
-                    sprite.addListener('touchend',        pressup);
-                    sprite.addListener('mouseupoutside',  pressup);
-                    sprite.addListener('touchendoutside', pressup);
-                    sprite.addListener('mousemove',       pressmove);
-                    sprite.addListener('touchmove',       pressmove);
-                    sprite.addListener('click',           click);
-                    sprite.addListener('tap',             click);
-                }
-                if (this.hover) {
-                    sprite.interactive = true;
-
-                    mouseover = function (event) {
-                        this.triggerInput(event, 'mouseover');
-                    }.bind(this);
-                    mouseout  = function (event) {
-                        this.triggerInput(event, 'mouseout');
-                    }.bind(this);
-
-                    sprite.addListener('mouseover', mouseover);
-                    sprite.addListener('mouseout',  mouseout);
-                }
-
-                this.removeInputListeners = function () {
-                    if (this.click) {
-                        sprite.removeListener('mousedown',       mousedown);
-                        sprite.removeListener('touchstart',      mousedown);
-                        sprite.removeListener('mouseup',         pressup);
-                        sprite.removeListener('touchend',        pressup);
-                        sprite.removeListener('mouseupoutside',  pressup);
-                        sprite.removeListener('touchendoutside', pressup);
-                        sprite.removeListener('mousemove',       pressmove);
-                        sprite.removeListener('touchmove',       pressmove);
-                        sprite.removeListener('click',           click);
-                        sprite.removeListener('tap',             click);
-                    }
-                    if (this.hover) {
-                        sprite.removeListener('mouseover', mouseover);
-                        sprite.removeListener('mouseout',  mouseout);
-                    }
-                    sprite.interactive = false;
-                    this.removeInputListeners = null;
-                };
-            },
-            
             addPins: function (pins, frames) {
                 var i = 0,
                     j = 0,
@@ -1222,48 +1072,12 @@
                 }
             },
             
-            setHitArea: (function () {
-                var savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
-                
-                return function (shape) {
-                    var ha  = null,
-                        sav = '';
-                    
-                    sav = JSON.stringify(shape);
-                    
-                    ha = savedHitAreas[sav];
-
-                    if (!ha) {
-                        if (shape.radius) {
-                            ha = new Circle(shape.x || 0, shape.y || 0, shape.radius);
-                        } else {
-                            ha = new Rectangle(shape.x || 0, shape.y || 0, shape.width || this.owner.width || 0, shape.height || this.owner.height || 0);
-                        }
-                        
-                        savedHitAreas[sav] = ha;
-                    }
-                    
-                    return ha;
-                };
-            }()),
-            
             destroy: function () {
-                if (this.removeInputListeners) {
-                    this.removeInputListeners();
-                }
-                if (this.parentContainer) {
-                    if (this.container.mouseTarget) {
-                        this.container.visible = false;
-                        this.container.removeDisplayObject = function () {
-                            this.parentContainer.removeChild(this.container);
-                            this.parentContainer = null;
-                            this.container = null;
-                        }.bind(this);
-                    } else {
-                        this.parentContainer.removeChild(this.container);
-                        this.parentContainer = null;
-                        this.container = null;
-                    }
+                this.camera.recycle();
+                if (this.parentContainer && !this.container.mouseTarget) {
+                    this.parentContainer.removeChild(this.container);
+                    this.parentContainer = null;
+                    this.container = null;
                 }
                 this.removePins();
                 this.followThroughs = null;

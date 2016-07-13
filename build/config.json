@@ -46,6 +46,7 @@
 		"../src/components/HandlerController.js",
 		"../src/components/HandlerLogic.js",
 		"../src/components/HandlerRender.js",
+		"../src/components/Interactive.js",
 		"../src/components/LevelBuilder.js",
 		"../src/components/LogicAngularMovement.js",
 		"../src/components/LogicAttachment.js",
