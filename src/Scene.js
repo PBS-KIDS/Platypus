@@ -37,7 +37,7 @@ platypus.Scene = (function () {
         Entity = include('platypus.Entity'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
-        fn = /([\w-]+)\.(\w+)$/,
+        fn = /^(?:\w+:\/{2}\w+(?:\.\w+)*\/?)?(?:[\/.]*?(?:[^?]+)?\/)?(?:([^\/?]+)\.(\w+))(?:\?\S*)?$/,
         filterAssets = (function () {
             var isDuplicate = function (id, preload) {
                 var j = preload.length;
@@ -80,7 +80,7 @@ platypus.Scene = (function () {
             if (match) {
                 a.id = match[1];
             } else {
-                a.src = 'assets/images/' + asset + '.png'; // Deprecate in 0.9.x - asset source file reference can be handled in project compilation.
+                platypus.debug.warn('Scene: A listed asset should provide the entire file path since version 0.9.0.');
             }
             
             return a;

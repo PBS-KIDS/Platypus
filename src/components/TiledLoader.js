@@ -231,7 +231,7 @@
                                 }
                             }
                         } else if (level.layers[i].type === 'imagelayer') {
-                            assets.union([level.layers[i].name]);
+                            assets.union([level.layers[i].image]);
                         } else if (level.layers[i].properties && level.layers[i].properties.entity) {
                             data = Data.setUp('type', level.layers[i].properties.entity);
                             arr = Entity.getAssetList(data);
@@ -242,7 +242,7 @@
                     }
                     if (!ss) { //We need to load the tileset images since there is not a separate spriteSheet describing them
                         for (i = 0; i < level.tilesets.length; i++) {
-                            tilesets.push(level.tilesets[i].name);
+                            tilesets.push(level.tilesets[i].image);
                         }
                         assets.union(tilesets);
                         tilesets.recycle();
