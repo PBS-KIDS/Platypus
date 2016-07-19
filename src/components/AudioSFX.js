@@ -159,10 +159,10 @@
              *
              * @property stateBased
              * @type Boolean
-             * @default true
-             * @since 0.7.5 - Will default to `false` in version 0.9.0
+             * @default false
+             * @since 0.7.5 - Defaults to `true` prior to version 0.9.0
              */
-            stateBased: true
+            stateBased: false
         },
             
         constructor: function (definition) {

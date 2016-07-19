@@ -47,7 +47,7 @@
              * @property hoverAudio
              * @type String or an Array of Strings and Message Objects
              * @default ""
-             * @since 0.8.8
+             * @since 0.9.0
              */
             "onHover": "",
 
@@ -77,7 +77,7 @@
              * @property bottom
              * @type Number
              * @default null
-             * @since 0.8.8
+             * @since 0.9.0
              */
             "bottom": null,
 
@@ -87,7 +87,7 @@
              * @property bottom
              * @type Number
              * @default null
-             * @since 0.8.8
+             * @since 0.9.0
              */
             "left": null,
 
@@ -97,7 +97,7 @@
              * @property bottom
              * @type Number
              * @default null
-             * @since 0.8.8
+             * @since 0.9.0
              */
             "right": null,
 
@@ -107,7 +107,7 @@
              * @property bottom
              * @type Number
              * @default null
-             * @since 0.8.8
+             * @since 0.9.0
              */
             "top": null
         },
@@ -133,7 +133,7 @@
              * @method 'camera-update'
              * @param camera {platypus.Data} Camera update information
              * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
-             * @since 0.8.8
+             * @since 0.9.0
              */
             "camera-update": function (camera) {
                 var bottom = this.bottom,
