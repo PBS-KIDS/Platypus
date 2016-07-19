@@ -30,15 +30,27 @@
             "animationMap": null
         },
 
-        constructor: function () {
-            var animation = '',
-                map = this.animationMap;
+        constructor: (function () {
+            var trigger = function (animation) {
+                /**
+                 * On receiving an animation-mapped event, this component triggers this event to play an animation.
+                 *
+                 * @event 'play-animation'
+                 * @param animation {String} Describes the animation to play.
+                 */
+                this.owner.triggerEvent('play-animation', animation);
+            };
 
-            for (animation in map) {
-                if (map.hasOwnProperty(animation)) {
-                    this.addEventListener(animation, this.owner.triggerEvent.bind(this.owner, 'play-animation', map[animation]));
+            return function () {
+                var animation = '',
+                    map = this.animationMap;
+
+                for (animation in map) {
+                    if (map.hasOwnProperty(animation)) {
+                        this.addEventListener(animation, trigger.bind(this, map[animation]));
+                    }
                 }
-            }
-        }
+            };
+        } ())
     });
 }());

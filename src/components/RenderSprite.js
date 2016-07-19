@@ -385,6 +385,15 @@
                         }
                         return map;
                     }
+                },
+                animationEnded = function (animation) {
+                    /**
+                     * This event fires each time an animation completes.
+                     *
+                     * @event 'animation-ended'
+                     * @param animation {String} The id of the animation that ended.
+                     */
+                    this.owner.triggerEvent('animation-ended', animation);
                 };
             
             return function () {
@@ -439,14 +448,7 @@
                  * PIXIAnimation created here:
                  */
                 this.sprite = new PIXIAnimation(ss, animation);
-
-                /**
-                 * This event fires each time an animation completes.
-                 *
-                 * @event 'animation-ended'
-                 * @param animation {String} The id of the animation that ended.
-                 */
-                this.sprite.on('complete', this.owner.triggerEvent.bind(this.owner, 'animation-ended'));
+                this.sprite.on('complete', animationEnded.bind(this));
 
                 this.affine = new Matrix();
                 

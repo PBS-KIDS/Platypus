@@ -115,6 +115,12 @@
                         this.lastState = this.waitingState;
                         
                         this.animationFinished = false;
+                        /**
+                         * On entering a new animation-mapped state, this component triggers this event to play an animation.
+                         *
+                         * @event 'play-animation'
+                         * @param animation {String} Describes the animation to play.
+                         */
                         this.owner.triggerEvent('play-animation', this.currentAnimation);
                     } else {
                         this.animationFinished = true;
