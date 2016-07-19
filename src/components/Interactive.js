@@ -3,7 +3,7 @@
  *
  * @class Interactive
  * @uses platypus.Component
- * @since 0.8.8
+ * @since 0.9.0
  */
 /*global include, platypus */
 (function () {
@@ -60,6 +60,14 @@
         },
         
         publicProperties: {
+            /**
+             * Determines whether hovering over the sprite should alter the cursor.
+             *
+             * @property buttonMode
+             * @type Boolean
+             * @default false
+             */
+            buttonMode: false
         },
         
         constructor: function () {
@@ -79,6 +87,17 @@
              */
             "camera-update": function (camera) {
                 this.camera.set(camera.viewport);
+            },
+
+            /**
+             * Listens to this event to update whether the interactive element should be in button mode.
+             *
+             * @method 'handle-render'
+             */
+            "handle-render": function () {
+                if (this.buttonMode !== this.container.buttonMode) {
+                    this.container.buttonMode = this.buttonMode;
+                }
             },
 
             /**

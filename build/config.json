@@ -42,6 +42,7 @@
 		"../src/components/Counter.js",
 		"../src/components/EntityContainer.js",
 		"../src/components/EntityController.js",
+		"../src/components/EventRender.js",
 		"../src/components/HandlerCollision.js",
 		"../src/components/HandlerController.js",
 		"../src/components/HandlerLogic.js",
@@ -87,15 +88,16 @@
 		"../src/components/RenderDebug.js",
 		"../src/components/RenderDestroyMe.js",
 		"../src/components/RenderProgress.js",
-		"../src/components/RenderSprite.js",
 		"../src/components/RenderTiles.js",
 		"../src/components/SceneChanger.js",
+		"../src/components/StateRender.js",
 		"../src/components/TiledLoader.js",
 		"../src/components/Timeline.js",
 		"../src/components/Tutorial.js",
 		"../src/components/Tween.js",
-		"../src/components/VoiceOver.js",
-		"../src/components/XHR.js"
+		"../src/components/XHR.js",
+		"../src/components/RenderSprite.js",
+		"../src/components/VoiceOver.js"
 	],
 
 	"docs_out_path":"./output/docs/"

@@ -213,14 +213,6 @@
             this.animationSpeed = speed;
         
             /**
-            * Function to call when a PIXIAnimation finishes playing
-            *
-            * @method
-            * @memberof PIXIAnimation#
-            */
-            this.onComplete = null;
-        
-            /**
             * Elapsed time since animation has been started, used internally to display current texture
             *
             * @member {number}
@@ -383,6 +375,17 @@
         this.play();
     };
     
+    /**
+    * Returns whether a particular animation is available.
+    *
+    * @method has
+    * @param animation {string} The animation to check.
+    * @since 0.9.0
+    */
+    prototype.has = function (animation) {
+        return !!this._animations[animation];
+    };
+    
     /*
     * Updates the object transform for rendering
     * @private
@@ -407,9 +410,7 @@
         } else if (floor >= this._animation.frames.length) {
             name = this._animation.id;
             this.gotoAndPlay(this._animation.next);
-            if (this.onComplete) {
-                this.onComplete(name);
-            }
+            this.emit('complete', name);
         }
     };
     

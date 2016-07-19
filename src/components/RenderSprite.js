@@ -12,43 +12,13 @@
     var AABB = include('platypus.AABB'),
         Container = include('PIXI.Container'),
         Data = include('platypus.Data'),
+        EventRender = include('platypus.components.EventRender'),
         Graphics = include('PIXI.Graphics'),
+        Interactive = include('platypus.components.Interactive'),
         Matrix = include('PIXI.Matrix'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
-        StateMap = include('platypus.StateMap'),
+        StateRender = include('platypus.components.StateRender'),
         tempMatrix = new Matrix(),
-        changeState = function (state) {
-            //9-23-13 TML - Commenting this line out to allow animation events to take precedence over the currently playing animation even if it's the same animation. This is useful for animations that should restart on key events.
-            //                We may eventually want to add more complexity that would allow some animations to be overridden by messages and some not.
-            //if (this.currentAnimation !== state) {
-            if (this.animationFinished || (this.lastState >= -1)) {
-                this.currentAnimation = state;
-                this.lastState = -1;
-                this.animationFinished = false;
-                this.sprite.gotoAndPlay(state);
-            } else {
-                this.waitingAnimation = state;
-                this.waitingState = -1;
-            }
-            //}
-        },
-        defaultTest = function (animation) {
-            return animation;
-        },
-        stateTest = function (animation, states, ownerState) {
-            if (ownerState.includes(states)) {
-                return animation;
-            }
-            return false;
-        },
-        createTest = function (testStates, animation) {
-            if (testStates === 'default') {
-                return defaultTest.bind(null, animation);
-            } else {
-                //TODO: Better clean-up: Create a lot of these without removing them later... DDD 2/5/2016
-                return stateTest.bind(null, animation, StateMap.setUp(testStates));
-            }
-        },
         processGraphics = (function () {
             var process = function (gfx, value) {
                 var i = 0,
@@ -120,13 +90,14 @@
             /**
              * Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
              *
-             *  "animationMap":{
-             *      "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
-             *      "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
-             *      "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
-             *      "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
-             *  }
+             *     "animationMap":{
+             *         "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
+             *         "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+             *         "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+             *         "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+             *     }
              *
+             * This data is used to create EventRender or StateRender components on the entity if the `eventBased` or `stateBased` properties are set to `true`.
              *
              * @property animationMap
              * @type Object
@@ -170,7 +141,7 @@
              * @property interactive
              * @type Boolean|Object
              * @default false
-             * @since 0.8.8
+             * @since 0.9.0
              */
             interactive: false,
 
@@ -180,7 +151,7 @@
              * @property acceptInput
              * @type Object
              * @default null
-             * @deprecated since 0.8.8
+             * @deprecated since 0.9.0
              */
             acceptInput: null,
 
@@ -204,6 +175,7 @@
              * @property pinLocations
              * @type Object
              * @default null
+             * @deprecated since 0.9.0, Use RenderSpine for better functionality.
              */
             pinLocations: null,
 
@@ -213,6 +185,7 @@
              * @property pinTo
              * @type String
              * @default null
+             * @deprecated since 0.9.0, Use RenderSpine for better functionality.
              */
             pinTo: null,
 
@@ -262,7 +235,7 @@
             visible: true,
 
             /**
-             * Optional. Specifies whether this component should listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is false.
+             * Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.
              *
              * @property eventBased
              * @type Boolean
@@ -271,7 +244,7 @@
             eventBased: false,
 
             /**
-             * Optional. Specifies whether this component should listen to changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on this.owner.state. Default is true.
+             * Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.
              *
              * @property stateBased
              * @type Boolean
@@ -289,7 +262,7 @@
             cache: false,
 
             /**
-             * Optional. When using stateBased animations, forces animations to complete before starting a new animation. Defaults to false.
+             * Optional. When using state-based animations, forces animations to complete before starting a new animation. Defaults to false.
              *
              * @property forcePlayThrough
              * @type Boolean
@@ -308,15 +281,6 @@
         },
 
         publicProperties: {
-            /**
-             * Determines whether hovering over the sprite should alter the cursor.
-             *
-             * @property buttonMode
-             * @type Boolean
-             * @default false
-             */
-            buttonMode: false,
-
             /**
              * Prevents sprite from becoming invisible out of frame and losing mouse input connection.
              *
@@ -401,7 +365,8 @@
         },
         
         constructor: (function () {
-            var createAnimationMap = function (animationMap, ss) {
+            var
+                createAnimationMap = function (animationMap, ss) {
                     var map  = null,
                         anim = '';
 
@@ -420,48 +385,21 @@
                         }
                         return map;
                     }
-                },
-                setupEventsAndStates = function (component, map) {
-                    var anim      = '',
-                        animation = '';
-
-                    component.followThroughs = {};
-                    component.checkStates = Array.setUp();
-
-                    for (anim in map) {
-                        if (map.hasOwnProperty(anim)) {
-                            animation = map[anim];
-
-                            //TODO: Should probably find a cleaner way to accomplish this. Maybe in the animationMap definition? - DDD
-                            if (animation[animation.length - 1] === '!') {
-                                animation = animation.substring(0, animation.length - 1);
-                                component.followThroughs[animation] = true;
-                            } else {
-                                component.followThroughs[animation] = false;
-                            }
-
-                            if (component.eventBased) {
-                                component.addEventListener(anim, changeState.bind(component, animation));
-                            }
-                            if (component.stateBased) {
-                                component.checkStates.push(createTest(anim, animation));
-                            }
-                        }
-                    }
                 };
             
             return function () {
-                var interactive = null,
+                var animation = '',
+                    definition = null,
                     ss = PIXIAnimation.formatSpriteSheet(this.spriteSheet),
                     map  = null;
 
                 if (this.acceptInput) {
-                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite "acceptInput" property has been deprecated since 0.8.8 in favor of the "interactive" property which adds an "Interactive" component to the entity to handle input.');
+                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite "acceptInput" property has been deprecated since 0.9.0 in favor of the "interactive" property which adds an "Interactive" component to the entity to handle input.');
                     this.interactive = this.interactive || this.acceptInput;
                 }
                 
                 if (ss === PIXIAnimation.EmptySpriteSheet) {
-                    platypus.debug.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');
+                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite sprite sheet not defined.');
                 }
                 
                 map = createAnimationMap(this.animationMap, ss);
@@ -476,39 +414,46 @@
                 
                 this.camera = AABB.setUp();
 
-                if (this.eventBased || this.stateBased) {
-                    setupEventsAndStates(this, map);
-                    this.currentAnimation = map.default || '';
+                if (map) {
+                    animation = map.default || '';
+
+                    if (this.eventBased) {
+                        definition = Data.setUp(
+                            'animationMap', map
+                        );
+                        this.owner.addComponent(new EventRender(this.owner, definition));
+                        definition.recycle();
+                    }
+
+                    if (this.stateBased) {
+                        definition = Data.setUp(
+                            'animationMap', map,
+                            'forcePlayThrough', this.forcePlayThrough
+                        );
+                        this.owner.addComponent(new StateRender(this.owner, definition));
+                        definition.recycle();
+                    }
                 }
                 
                 /*
                  * PIXIAnimation created here:
                  */
-                this.sprite = new PIXIAnimation(ss, this.currentAnimation || 0);
-                this.sprite.onComplete = function (animation) {
-                    /**
-                     * This event fires each time an animation completes.
-                     *
-                     * @event 'animation-ended'
-                     * @param animation {String} The id of the animation that ended.
-                     */
-                    this.owner.triggerEvent('animation-ended', animation);
-                    if (this.waitingAnimation) {
-                        this.currentAnimation = this.waitingAnimation;
-                        this.waitingAnimation = false;
-                        this.lastState = this.waitingState;
-                        
-                        this.animationFinished = false;
-                        this.sprite.gotoAndPlay(this.currentAnimation);
-                    } else {
-                        this.animationFinished = true;
-                    }
-                }.bind(this);
+                this.sprite = new PIXIAnimation(ss, animation);
+
+                /**
+                 * This event fires each time an animation completes.
+                 *
+                 * @event 'animation-ended'
+                 * @param animation {String} The id of the animation that ended.
+                 */
+                this.sprite.on('complete', this.owner.triggerEvent.bind(this.owner, 'animation-ended'));
 
                 this.affine = new Matrix();
                 
                 // add pins to sprite and setup this.container if needed.
                 if (this.pinLocations) {
+                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite pinning has been deprecated in favor of the "RenderSpine" component which provides better functionality.');
+
                     this.container = new Container();
                     this.container.transformMatrix = new Matrix();
                     this.container.addChild(this.sprite);
@@ -530,25 +475,17 @@
                 
                 //handle hitArea
                 if (this.interactive) {
-                    interactive = Data.setUp(
+                    definition = Data.setUp(
                         'container', this.container,
                         'hitArea', this.interactive.hitArea,
                         'hover', this.interactive.hover
                     );
-                    this.owner.addComponent(new platypus.components.Interactive(this.owner, interactive));
-                    interactive.recycle();
+                    this.owner.addComponent(new Interactive(this.owner, definition));
+                    definition.recycle();
                 }
                 
                 this.isOnCamera = true;
-                this.state = this.owner.state;
-                this.stateChange = true; //Check state against entity's prior state to update animation if necessary on instantiation.
-                this.lastState = -1;
     
-                this.waitingAnimation = false;
-                this.waitingState = 0;
-                this.playWaiting = false;
-                this.animationFinished = false;
-                
                 if (this.cache) {
                     this.updateSprite(false);
                     this.owner.cacheRender = this.container;
@@ -638,15 +575,6 @@
             },
             
             /**
-             * This event is fired when the entity state changes. This is used to update the currently playing animation when it is state based.
-             *
-             * @method 'state-changed'
-             */
-            "state-changed": function () {
-                this.stateChange = true;
-            },
-            
-            /**
              * This event makes the sprite invisible. When multiple sprites are pinned together, the entire group is invisible.
              *
              * @method 'hide-sprite'
@@ -669,6 +597,7 @@
              *
              * @method 'pin-me'
              * @param pinId {String} The id of the pin location we're trying to attach to.
+             * @deprecated since 0.9.0
              */
             "pin-me": function (pinId) {
                 if (this.pins && this.pins[pinId]) {
@@ -689,6 +618,7 @@
              * @param pinInfo {Object} Information about the pin.
              * @param pinInfo.pinId {String} The pin id.
              * @param pinInfo.container {PIXI.Container} The container to add this sprite to.
+             * @deprecated since 0.9.0
              */
             "attach-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
@@ -707,6 +637,7 @@
              * @param pinInfo {Object} Information about the pin.
              * @param pinInfo.pinId {String} The pin id.
              * @param pinInfo.container {PIXI.Container} The container to add this sprite to.
+             * @deprecated since 0.9.0
              */
             "remove-pin": function (pinInfo) {
                 if (pinInfo.pinId === this.pinTo) {
@@ -729,8 +660,42 @@
             /**
              * Stops the sprite's animation.
              *
+             * @method 'stop-animation'
+             * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
+             * @since 0.9.0
+             */
+            "stop-animation": function (animation) {
+                var sprite = this.sprite;
+
+                if (animation && sprite.has(animation)) {
+                    sprite.gotoAndStop(animation);
+                } else {
+                    sprite.stop();
+                }
+            },
+            
+            /**
+             * Starts the sprite's animation.
+             *
+             * @method 'play-animation'
+             * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
+             * @since 0.9.0
+             */
+            "play-animation": function (animation) {
+                var sprite = this.sprite;
+
+                if (animation && sprite.has(animation)) {
+                    sprite.gotoAndPlay(animation);
+                } else {
+                    sprite.play();
+                }
+            },
+            
+            /**
+             * Stops the sprite's animation.
+             *
              * @method 'stop-sprite'
-             * @since 0.7.1
+             * @deprecated since 0.9.0
              */
             "stop-sprite": function () {
                 this.sprite.stop();
@@ -740,7 +705,7 @@
              * Starts the sprite's animation.
              *
              * @method 'play-sprite'
-             * @since 0.7.1
+             * @deprecated since 0.9.0
              */
             "play-sprite": function () {
                 this.sprite.play();
@@ -781,6 +746,11 @@
                         this.setMask(this.mask);
                     }
 
+                    /**
+                     * This event is triggered once the RenderSprite is ready to handle interactivity.
+                     *
+                     * @event 'input-on'
+                     */
                     this.owner.triggerEvent('input-on');
                     return stage;
                 } else {
@@ -794,21 +764,15 @@
                 };
                 
                 return function (playing) {
-                    var i = 0,
-                        x = 0,
+                    var x = 0,
                         y = 0,
                         o = null,
                         rotation = 0,
-                        testCase = false,
                         mirrored = 1,
                         flipped  = 1,
                         angle    = null,
                         m        = this.affine.copy(this.container.transformMatrix),
                         temp     = Matrix.TEMP_MATRIX;
-                    
-                    if (this.buttonMode !== this.container.buttonMode) {
-                        this.container.buttonMode = this.buttonMode;
-                    }
                     
                     if (this.pinnedTo) {
                         if (this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]) {
@@ -871,38 +835,14 @@
                         }
                     }
                     
-                    if (this.stateBased && this.stateChange) {
-                        if (this.state.has('visible')) {
-                            this.visible = this.state.get('visible');
-                        }
-                        if (this.checkStates) {
-                            for (i = 0; i < this.checkStates.length; i++) {
-                                testCase = this.checkStates[i](this.state);
-                                if (testCase) {
-                                    if (this.currentAnimation !== testCase) {
-                                        if (!this.followThroughs[this.currentAnimation] && (!this.forcePlaythrough || (this.animationFinished || (this.lastState >= +i)))) {
-                                            this.currentAnimation = testCase;
-                                            this.lastState = +i;
-                                            this.animationFinished = false;
-                                            if (playing) {
-                                                this.sprite.gotoAndPlay(testCase);
-                                            } else {
-                                                this.sprite.gotoAndStop(testCase);
-                                            }
-                                        } else {
-                                            this.waitingAnimation = testCase;
-                                            this.waitingState = +i;
-                                        }
-                                    } else if (this.waitingAnimation && !this.followThroughs[this.currentAnimation]) {// keep animating this animation since this animation has already overlapped the waiting animation.
-                                        this.waitingAnimation = false;
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        this.stateChange = false;
-                    }
-                    
+                    /**
+                     * This event is triggered each tick to check for animation updates.
+                     *
+                     * @event 'update-animation'
+                     * @param playing {Boolean} Whether the animation is in a playing or paused state.
+                     */
+                    this.owner.triggerEvent('update-animation', playing);
+
                     // Handle rotation
                     if (rotation) {
                         m.rotate((rotation / 180) * Math.PI);
@@ -1096,15 +1036,10 @@
                     this.container = null;
                 }
                 this.removePins();
-                this.followThroughs = null;
-                if (this.checkStates) {
-                    this.checkStates.recycle();
-                }
                 if (!this.cache) {
                     this.sprite.destroy();
                 }
                 this.sprite = null;
-                this.state = null;
             }
         },
         
