@@ -155,9 +155,9 @@
             mask: null,
 
             /**
-             * Optional. Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:
+             * Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:
              *
-             *  "acceptInput": {
+             *  "interactive": {
              *      "hover": false,
              *      "hitArea": {
              *          "x": 10,
@@ -167,9 +167,20 @@
              *      }
              *  }
              *
+             * @property interactive
+             * @type Boolean|Object
+             * @default false
+             * @since 0.8.8
+             */
+            interactive: false,
+
+            /**
+             * This property's functionality is now provided by the `interactive` property.
+             *
              * @property acceptInput
              * @type Object
              * @default null
+             * @deprecated since 0.8.8
              */
             acceptInput: null,
 
@@ -443,6 +454,11 @@
                 var interactive = null,
                     ss = PIXIAnimation.formatSpriteSheet(this.spriteSheet),
                     map  = null;
+
+                if (this.acceptInput) {
+                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite "acceptInput" property has been deprecated since 0.8.8 in favor of the "interactive" property which adds an "Interactive" component to the entity to handle input.');
+                    this.interactive = this.interactive || this.acceptInput;
+                }
                 
                 if (ss === PIXIAnimation.EmptySpriteSheet) {
                     platypus.debug.warn(this.owner.type + ' - RenderSprite: Sprite Sheet not defined.');
@@ -513,11 +529,11 @@
                 /* These next few need this.container set up */
                 
                 //handle hitArea
-                if (this.acceptInput) {
+                if (this.interactive) {
                     interactive = Data.setUp(
                         'container', this.container,
-                        'hitArea', this.acceptInput.hitArea,
-                        'hover', this.acceptInput.hover
+                        'hitArea', this.interactive.hitArea,
+                        'hover', this.interactive.hover
                     );
                     this.owner.addComponent(new platypus.components.Interactive(this.owner, interactive));
                     interactive.recycle();

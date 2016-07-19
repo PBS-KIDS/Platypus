@@ -3,6 +3,7 @@
  *
  * @class Interactive
  * @uses platypus.Component
+ * @since 0.8.8
  */
 /*global include, platypus */
 (function () {
@@ -62,6 +63,7 @@
         },
         
         constructor: function () {
+            this.pressed = false;
             this.camera = AABB.setUp();
             if (this.hitArea) {
                 this.container.hitArea = this.setHitArea(this.hitArea);
@@ -113,121 +115,116 @@
         },
         
         methods: {
-            triggerInput: function (event, eventName) {
-                var camera = this.camera,
-                    container = this.container,
-                    msg = null,
-                    matrix = null;
-                
-                //TML - This is in case we do a scene change using an event and the container is destroyed.
-                if (!container) {
-                    return;
-                }
-
-                matrix = container.parent.transformMatrix;
-                msg = Data.setUp(
-                    "event", event.data.originalEvent,
-                    "pixiEvent", event,
-                    "x", event.data.global.x / matrix.a + camera.left,
-                    "y", event.data.global.y / matrix.d + camera.top,
-                    "entity", this.owner
-                );
-
-                this.owner.trigger(eventName, msg);
-                msg.recycle();
-            },
-            
-            addInputs: function () {
-                var pressed   = false,
-                    sprite    = this.container,
-                    mousedown = null,
-                    mouseover = null,
-                    mouseout  = null,
-                    pressmove = null,
-                    pressup   = null,
-                    click     = null;
-                
-                // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-                sprite.interactive = true;
-                
-                mousedown = function (event) {
-                    if (!pressed) {
-                        this.triggerInput(event, 'mousedown');
-                        event.target.mouseTarget = true;
-                        pressed = true;
-                    }
-                }.bind(this);
-                
-                pressmove = function (event) {
-                    if (pressed) {
-                        this.triggerInput(event, 'pressmove');
-                        event.target.mouseTarget = true;
-                    } else {
-                        this.triggerInput(event, 'mousemove');
-                    }
-                }.bind(this);
-                
-                pressup   = function (event) {
-                    if (pressed) {
-                        this.triggerInput(event, 'pressup');
-                        event.target.mouseTarget = false;
-                        pressed = false;
+            addInputs: (function () {
+                var
+                    trigger = function (eventName, event) {
+                        var camera = this.camera,
+                            container = this.container,
+                            msg = null,
+                            matrix = null;
                         
-                        if (event.target.removeDisplayObject) {
-                            event.target.removeDisplayObject();
+                        //TML - This is in case we do a scene change using an event and the container is destroyed.
+                        if (!container) {
+                            return;
                         }
-                    }
-                }.bind(this);
-                
-                click     = function (event) {
-                    this.triggerInput(event, 'click');
-                }.bind(this);
-                
-                sprite.addListener('mousedown',       mousedown);
-                sprite.addListener('touchstart',      mousedown);
-                sprite.addListener('mouseup',         pressup);
-                sprite.addListener('touchend',        pressup);
-                sprite.addListener('mouseupoutside',  pressup);
-                sprite.addListener('touchendoutside', pressup);
-                sprite.addListener('mousemove',       pressmove);
-                sprite.addListener('touchmove',       pressmove);
-                sprite.addListener('click',           click);
-                sprite.addListener('tap',             click);
 
-                if (this.hover) {
+                        matrix = container.parent.transformMatrix;
+                        msg = Data.setUp(
+                            "event", event.data.originalEvent,
+                            "pixiEvent", event,
+                            "x", event.data.global.x / matrix.a + camera.left,
+                            "y", event.data.global.y / matrix.d + camera.top,
+                            "entity", this.owner
+                        );
+
+                        this.owner.trigger(eventName, msg);
+                        msg.recycle();
+                    },
+                    triggerMousedown = function (eventName, event) {
+                        if (!this.pressed) {
+                            trigger.call(this, eventName, event);
+                            event.target.mouseTarget = true;
+                            this.pressed = true;
+                        }
+                    },
+                    triggerPressmove = function (eventName, altEventName, event) {
+                        if (this.pressed) {
+                            trigger.call(this, eventName, event);
+                            event.target.mouseTarget = true;
+                        } else {
+                            trigger.call(this, altEventName, event);
+                        }
+                    },
+                    triggerPressup = function (eventName, event) {
+                        if (this.pressed) {
+                            trigger.call(this, eventName, event);
+                            event.target.mouseTarget = false;
+                            this.pressed = false;
+                            
+                            if (event.target.removeDisplayObject) {
+                                event.target.removeDisplayObject();
+                            }
+                        }
+                    },
+                    removeInputListeners = function (sprite, mousedown, pressup, pressmove, click, mouseover, mouseout) {
+                        sprite.removeListener('mousedown',       mousedown);
+                        sprite.removeListener('touchstart',      mousedown);
+                        sprite.removeListener('mouseup',         pressup);
+                        sprite.removeListener('touchend',        pressup);
+                        sprite.removeListener('mouseupoutside',  pressup);
+                        sprite.removeListener('touchendoutside', pressup);
+                        sprite.removeListener('mousemove',       pressmove);
+                        sprite.removeListener('touchmove',       pressmove);
+                        sprite.removeListener('click',           click);
+                        sprite.removeListener('tap',             click);
+
+                        if (this.hover) {
+                            sprite.removeListener('mouseover', mouseover);
+                            sprite.removeListener('mouseout',  mouseout);
+                        }
+                        sprite.interactive = false;
+                        this.removeInputListeners = null;
+                    };
+
+                return function () {
+                    var sprite    = this.container,
+                        mousedown = null,
+                        mouseover = null,
+                        mouseout  = null,
+                        pressmove = null,
+                        pressup   = null,
+                        click     = null;
+                    
+                    // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                     sprite.interactive = true;
-
-                    mouseover = function (event) {
-                        this.triggerInput(event, 'mouseover');
-                    }.bind(this);
-                    mouseout  = function (event) {
-                        this.triggerInput(event, 'mouseout');
-                    }.bind(this);
-
-                    sprite.addListener('mouseover', mouseover);
-                    sprite.addListener('mouseout',  mouseout);
-                }
-
-                this.removeInputListeners = function () {
-                    sprite.removeListener('mousedown',       mousedown);
-                    sprite.removeListener('touchstart',      mousedown);
-                    sprite.removeListener('mouseup',         pressup);
-                    sprite.removeListener('touchend',        pressup);
-                    sprite.removeListener('mouseupoutside',  pressup);
-                    sprite.removeListener('touchendoutside', pressup);
-                    sprite.removeListener('mousemove',       pressmove);
-                    sprite.removeListener('touchmove',       pressmove);
-                    sprite.removeListener('click',           click);
-                    sprite.removeListener('tap',             click);
+                    
+                    mousedown = triggerMousedown.bind(this, 'mousedown');
+                    pressmove = triggerPressmove.bind(this, 'pressmove', 'mousemove');
+                    pressup   = triggerPressup.bind(this, 'pressup');
+                    click     = trigger.bind(this, 'click');
+                    
+                    sprite.addListener('mousedown',       mousedown);
+                    sprite.addListener('touchstart',      mousedown);
+                    sprite.addListener('mouseup',         pressup);
+                    sprite.addListener('touchend',        pressup);
+                    sprite.addListener('mouseupoutside',  pressup);
+                    sprite.addListener('touchendoutside', pressup);
+                    sprite.addListener('mousemove',       pressmove);
+                    sprite.addListener('touchmove',       pressmove);
+                    sprite.addListener('click',           click);
+                    sprite.addListener('tap',             click);
 
                     if (this.hover) {
-                        sprite.removeListener('mouseover', mouseover);
-                        sprite.removeListener('mouseout',  mouseout);
+                        mouseover = trigger.bind(this, 'mouseover');
+                        mouseout  = trigger.bind(this, 'mouseout');
+
+                        sprite.addListener('mouseover', mouseover);
+                        sprite.addListener('mouseout',  mouseout);
                     }
-                    sprite.interactive = false;
-                    this.removeInputListeners = null;
+
+                    this.removeInputListeners = removeInputListeners.bind(this, sprite, mousedown, pressup, pressmove, click, mouseover, mouseout);
                 };
-            },
+            }()),
 
             setHitArea: (function () {
                 var savedHitAreas = {}; //So generated hitAreas are reused across identical entities.
