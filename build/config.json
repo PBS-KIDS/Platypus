@@ -96,6 +96,7 @@
 		"../src/components/Tutorial.js",
 		"../src/components/Tween.js",
 		"../src/components/XHR.js",
+		"../src/components/RenderSpine.js",
 		"../src/components/RenderSprite.js",
 		"../src/components/VoiceOver.js"
 	],

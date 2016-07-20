@@ -412,17 +412,8 @@
                 }
                 
                 map = createAnimationMap(this.animationMap, ss);
-                
-                this.parentContainer      = null;
                 this.stateBased = map && this.stateBased;
                 this.eventBased = map && this.eventBased;
-                
-                this.wasVisible = this.visible;
-                this.lastX = this.owner.x;
-                this.lastY = this.owner.y;
-                
-                this.camera = AABB.setUp();
-
                 if (map) {
                     animation = map.default || '';
 
@@ -444,13 +435,19 @@
                     }
                 }
                 
+                this.parentContainer = null;
+                this.wasVisible = this.visible;
+                this.lastX = this.owner.x;
+                this.lastY = this.owner.y;
+                this.camera = AABB.setUp();
+                this.affine = new Matrix();
+                this.isOnCamera = true;
+
                 /*
                  * PIXIAnimation created here:
                  */
                 this.sprite = new PIXIAnimation(ss, animation);
                 this.sprite.on('complete', animationEnded.bind(this));
-
-                this.affine = new Matrix();
                 
                 // add pins to sprite and setup this.container if needed.
                 if (this.pinLocations) {
@@ -485,8 +482,6 @@
                     this.owner.addComponent(new Interactive(this.owner, definition));
                     definition.recycle();
                 }
-                
-                this.isOnCamera = true;
     
                 if (this.cache) {
                     this.updateSprite(false);
