@@ -142,8 +142,10 @@
                             msg = null,
                             matrix = null;
                         
-                        //TML - This is in case we do a scene change using an event and the container is destroyed.
-                        if (!container) {
+                        if (
+                            !container || //TML - This is in case we do a scene change using an event and the container is destroyed.
+                            !event.data.originalEvent // This is a workaround for a bug in Pixi 3 where phantom hover events are triggered. - DDD 7/20/16
+                            ) {
                             return;
                         }
 
