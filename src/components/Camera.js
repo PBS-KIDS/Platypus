@@ -1,8 +1,6 @@
 /**
  * This component controls the game camera deciding where and how it should move. The camera also broadcasts messages when the window resizes or its orientation changes.
  *
- * If either worldWidth and worldHeight is set to 0 it is assumed the world is infinite in that dimension.
- *
  * @namespace platypus.components
  * @class Camera
  * @uses platypus.Component
@@ -152,27 +150,7 @@
              * @type number
              * @default: 600
              **/
-            "transitionAngle": 600,
-
-            /**
-             * Number specifying width of the world in units. This property is available on the Entity.
-             *
-             * @property worldWidth
-             * @type number
-             * @default 0
-             * @deprecated since 0.7.5
-             **/
-            "worldWidth": 0,
-            
-            /**
-             * Number specifying height of the world in units. This property is available on the Entity.
-             *
-             * @property worldHeight
-             * @type number
-             * @default 0
-             * @deprecated since 0.7.5
-             **/
-            "worldHeight": 0
+            "transitionAngle": 600
         },
         constructor: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
@@ -198,8 +176,6 @@
                 "world", this.worldDimensions
             );
             this.cameraLoadedMessage = Data.setUp(
-                "worldWidth", 0, //deprecate in 0.8.0
-                "worldHeight", 0, //deprecate in 0.8.0
                 "viewport", this.message.viewport,
                 "world", this.worldDimensions
             );
@@ -311,8 +287,6 @@
                      *
                      * @event 'camera-loaded'
                      * @param message
-                     * @param message.worldWidth {number} The width of the loaded world.
-                     * @param message.worldHeight {number} The height of the loaded world.
                      * @param message.world {platypus.AABB} The dimensions of the world map.
                      **/
                     entity.triggerEvent('camera-loaded', this.cameraLoadedMessage);
@@ -350,14 +324,10 @@
                 this.worldDimensions.set(values.world);
                 
                 this.worldIsLoaded = true;
-                this.worldWidth    = values.width;
-                this.worldHeight   = values.height;
                 if (values.camera) {
                     this.follow(values.camera);
                 }
                 if (this.owner.triggerEventOnChildren) {
-                    this.cameraLoadedMessage.worldWidth = this.worldWidth;
-                    this.cameraLoadedMessage.worldHeight = this.worldHeight;
                     this.owner.triggerEventOnChildren('camera-loaded', this.cameraLoadedMessage);
                 }
                 this.updateMovementMethods();

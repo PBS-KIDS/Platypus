@@ -290,32 +290,6 @@ platypus.AABB = (function () {
     proto.moveYBy = function (deltaY) {
         return this.moveY(this.y + deltaY);
     };
-    
-    /**
-     * Creates a new AABB with the same properties as this AABB.
-     *
-     * @method getCopy
-     * @return {platypus.AABB} Returns the new AABB object.
-     * @deprecated since 0.7.3 - Create a new AABB and use the `set()` method instead.
-     */
-    proto.getCopy = function () {
-        return AABB.setUp(this.x, this.y, this.width, this.height);
-    };
-
-    /**
-     * Expresses whether this AABB matches parameters describing an AABB.
-     *
-     * @method matches
-     * @param x {number} X coordinate of a bounding box
-     * @param y {number} Y coordinate of a bounding box
-     * @param width {number} Width of a bounding box
-     * @param height {number} Height of a bounding box
-     * @return {boolean} Returns `true` if the parameters match.
-     * @deprecated since 0.7.5 in favor of AABB to AABB checks using `equals()`
-     */
-    proto.matches = function (x, y, width, height) {
-        return (this.x === x) && (this.y === y) && (this.width === width) && (this.height === height);
-    };
 
     /**
      * Expresses whether this AABB matches the provided AABB.

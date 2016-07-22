@@ -132,18 +132,6 @@
              */
             "check-collision-group": function (resp) {
                 this.checkCamera(resp.camera, resp.entities);
-
-                /**
-                 * This message is triggered on collision entities to make sure their axis-aligned bounding box is prepared for collision testing.
-                 *
-                 * @event 'prepare-for-collision'
-                 * @param tick {Object} Object containing information about the current logic step.
-                 * @deprecated since 0.7.1
-                 */
-                if (this.owner.triggerEventOnChildren) {
-                    this.owner.triggerEventOnChildren('prepare-for-collision', resp);
-                }
-
                 this.checkGroupCollisions();
                 this.checkSolidCollisions();
                 this.resolveNonCollisions();

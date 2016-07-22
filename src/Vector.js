@@ -188,15 +188,6 @@ platypus.Vector = (function () {
     };
     
     /**
-     * Sets the vector to values of the parameter vector.
-     *
-     * @param otherVector {platypus.Vector} The other vector.
-     * @chainable
-     * @deprecated since 0.7.4 - Use `setVector` instead.
-     */
-    proto.copyValues = proto.setVector;
-    
-    /**
      * Returns the magnitude of the vector.
      *
      * @method magnitude

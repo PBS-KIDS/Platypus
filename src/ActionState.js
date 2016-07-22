@@ -147,17 +147,6 @@ platypus.ActionState = (function () {
     proto.resolve = function () {
         this.trigger(this.event, this.stateSummary);
     };
-
-    /**
-     * Determines whether the ActionState is valid for the Entity's current state.
-     *
-     * @method isStateValid
-     * @return {Boolean} Whether the current Entity state is valid for this ActionState.
-     * @deprecated since 0.7.5 - use `includes` method provided by `platypus.State` to perform this test.
-     */
-    proto.isStateValid = function (ownerState) {
-        return ownerState.includes(this.states);
-    };
     
     /**
      * Returns an ActionState from cache or creates a new one if none are available.

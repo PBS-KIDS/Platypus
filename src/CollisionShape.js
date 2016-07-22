@@ -187,16 +187,6 @@ platypus.CollisionShape = (function () {
     };
     
     /**
-     * Destroys the shape so that it can be memory collected safely.
-     *
-     * @method destroy
-     * @deprecated since 0.7.4 - Use `recycle()` instead.
-     */
-    proto.destroy = function () {
-        this.recycle();
-    };
-    
-    /**
      * Transform the shape using a matrix transformation.
      *
      * @method multiply
