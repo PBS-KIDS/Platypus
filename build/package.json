@@ -1,7 +1,8 @@
 {
     "name": "platypus",
-    "version": "0.8.7",
+    "version": "0.9.0",
     "description": "Platypus Docs",
+    "license": "MIT",
     "url": "https://github.com/PBS-KIDS/Platypus",
     "logo": "assets/platypus-title.png",
     "repository": {
