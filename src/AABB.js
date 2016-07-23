@@ -15,8 +15,12 @@ platypus.AABB = (function () {
     'use strict';
     
     var AABB = function (x, y, width, height) {
-            this.empty = true;
-            this.setAll(x, y, width, height);
+            if (x instanceof AABB) {
+                this.set(x);
+            } else {
+                this.empty = true;
+                this.setAll(x, y, width, height);
+            }
         },
         proto = AABB.prototype;
     
