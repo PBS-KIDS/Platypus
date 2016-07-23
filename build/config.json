@@ -1,6 +1,6 @@
 {
 	"platypus_source": [
-        "../src/pako.js",
+		"node_modules/pako/dist/pako_inflate.js",
 		"../src/platypus.js",
 		"../src/mixins/Recycler.js",
         "../src/mixins/Array.js",
