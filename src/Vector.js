@@ -13,8 +13,12 @@ platypus.Vector = (function () {
     'use strict';
     
     var Vector = function (x, y, z) {
-            if (!this.matrix) { // Recycled vectors will already have a matrix array
-                this.matrix = Array.setUp();
+            if (this.matrix) { // Recycled vectors will already have a matrix array. Resetting x, y, z to 0's to properly handle a set-up array of less than 3 dimensions.
+                this.matrix[0] = 0;
+                this.matrix[1] = 0;
+                this.matrix[2] = 0;
+            } else {
+                this.matrix = Array.setUp(0, 0, 0);
             }
             this.set(x, y, z);
         },
