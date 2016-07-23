@@ -3,15 +3,15 @@
     'use strict';
 
     var AABB = include('platypus.AABB'),
-        Atlas = include('PIXI.spine.SpineRuntime.Atlas'),
-        AtlasAttachmentParser = include('PIXI.spine.SpineRuntime.AtlasAttachmentParser'),
+        Atlas = include('PIXI.spine.SpineRuntime.Atlas', false),
+        AtlasAttachmentParser = include('PIXI.spine.SpineRuntime.AtlasAttachmentParser', false),
         BaseTexture = include('PIXI.BaseTexture'),
         Data = include('platypus.Data'),
         EventRender = include('platypus.components.EventRender'),
         Graphics = include('PIXI.Graphics'),
         Matrix = include('PIXI.Matrix'),
-        SkeletonJsonParser = include('PIXI.spine.SpineRuntime.SkeletonJsonParser'),
-        Spine = include('PIXI.spine.Spine'),
+        SkeletonJsonParser = include('PIXI.spine.SpineRuntime.SkeletonJsonParser', false),
+        Spine = include('PIXI.spine.Spine', false),
         StateRender = include('platypus.components.StateRender'),
         tempMatrix = new Matrix(),
         processGraphics = (function () {
@@ -45,6 +45,13 @@
                 arr.recycle();
             };
         }());
+    
+    // If PIXI.spine is unavailable, this component doesn't work.
+    if (!Spine) {
+        return function () {
+            platypus.debug.error('RenderSpine requires `PIXI.spine` to function.');
+        };
+    }
 
     return platypus.createComponentClass({
 
