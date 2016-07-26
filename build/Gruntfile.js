@@ -37,7 +37,6 @@ module.exports = function (grunt) {
             options: {
                 separator: '',
                 process: function (src, filepath) {
-grunt.log.writeln(filepath);
                     // Remove a few things from each file, they will be added back at the end.
 
                     // Strip the license header.
