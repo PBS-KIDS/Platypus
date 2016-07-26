@@ -1,3 +1,10 @@
+/**
+ * This component is attached to entities that will appear in the game world. It renders a spine-based puppet. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
+ *
+ * @namespace platypus.components
+ * @class RenderSpine
+ * @uses platypus.Component
+ */
 /* global include, platypus */
 (function () {
     'use strict';
@@ -125,7 +132,7 @@
              * @type Number|Object
              * @default 0
              */
-            "mixTimes": 0,
+            mixTimes: 0,
 
             /**
              * Optional. The offset of the z-index of the spine from the entity's z-index. Will default to 0.
@@ -398,6 +405,13 @@
                 }
             },
 
+            /**
+             * The render update message updates the spine.
+             *
+             * @method 'handle-render'
+             * @param renderData {Object} Data from the render handler
+             * @param renderData.container {PIXI.Container} The parent container.
+             */
             "handle-render": function (renderData) {
                 if (!this.spine) {
                     return;
@@ -412,6 +426,12 @@
                 this.updateSprite(true);
             },
 
+            /**
+             * This sets the mix times.
+             *
+             * @method 'set-mix-times'
+             * @param mixTimes {Object} This matches the syntax required for this component's `mixTimes` property
+             */
             "set-mix-times": function (mixTimes) {
                 this.setMixTimes(mixTimes);
             },
@@ -478,10 +498,6 @@
                 }
 
                 this.paused = false;
-            },
-
-            "load": function () {
-
             }
         },
 
@@ -660,10 +676,6 @@
                 this.spine = null;
                 this.mixTimes = null;
             }
-        },
-
-        publicMethods: {
-
         },
         
         getAssetList: (function () {

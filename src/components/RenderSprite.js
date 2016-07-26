@@ -545,7 +545,7 @@
             },
             
             /**
-             * The render update message. This updates the sprite. If a sprite doesn't have a container, it's removed.
+             * The render update message updates the sprite. If a sprite doesn't have a container, it's removed.
              *
              * @method 'handle-render'
              * @param renderData {Object} Data from the render handler
