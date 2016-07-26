@@ -8,7 +8,7 @@
  * @uses Map
  * @since 0.8.0
  */
-/* global include, platypus */
+/* global include, platypus, recycle, springroll */
 platypus.DataMap = (function () {
     'use strict';
     
@@ -172,7 +172,7 @@ platypus.DataMap = (function () {
      *
      * @method recycle
      */
-    platypus.setUpRecycle(DataMap, 'DataMap', function () {
+    recycle.add(DataMap, !!springroll.Debug, 'DataMap', function () {
         this.clear();
         DataMap.recycle(this);
     });

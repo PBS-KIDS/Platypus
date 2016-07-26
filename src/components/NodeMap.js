@@ -5,7 +5,7 @@
  * @class NodeMap
  * @uses platypus.Component
  */
-/* global include, platypus */
+/* global include, platypus, recycle, springroll */
 (function () {
     'use strict';
     
@@ -89,7 +89,7 @@
         this.recycle();
     };
     
-    platypus.setUpRecycle(Node, 'Node');
+    recycle.add(Node, !!springroll.Debug, 'Node');
     
     return platypus.createComponentClass({
         id: 'NodeMap',

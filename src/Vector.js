@@ -8,7 +8,7 @@
  * @param [y] {number} The y coordinate.
  * @param [z] {number} The z coordinate.
  */
-/*global platypus */
+/*global platypus, recycle, springroll */
 platypus.Vector = (function () {
     'use strict';
     
@@ -636,7 +636,7 @@ platypus.Vector = (function () {
      * @method recycle
      * @since 0.7.1
      */
-    platypus.setUpRecycle(Vector, 'Vector', function () {
+    recycle.add(Vector, !!springroll.Debug, 'Vector', function () {
         this.matrix.length = 0;
         Vector.recycle(this);
     });

@@ -10,7 +10,7 @@
  * @return {ActionState} Returns the new ActionState object.
  * @since 0.6.8
  */
-/*global include, platypus */
+/*global include, platypus, recycle, springroll */
 platypus.ActionState = (function () {
     'use strict';
     
@@ -168,7 +168,7 @@ platypus.ActionState = (function () {
      * @method recycle
      * @since 0.7.1
      */
-    platypus.setUpRecycle(ActionState, 'ActionState', function () {
+    recycle.add(ActionState, !!springroll.Debug, 'ActionState', function () {
         this.states.recycle();
         this.stateSummary.recycle();
         this.inputs.recycle();

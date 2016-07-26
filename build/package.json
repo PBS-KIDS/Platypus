@@ -6,16 +6,17 @@
     "url": "https://github.com/PBS-KIDS/Platypus",
     "logo": "assets/platypus-title.png",
     "repository": {
-		"type": "git",
-		"url": "https://github.com/PBS-KIDS/Platypus"
-	},
+        "type": "git",
+        "url": "https://github.com/PBS-KIDS/Platypus"
+    },
     "dependencies": {
-        "pako": "^0.2.8"
+        "pako": "^0.2.8",
+        "recycle": "https://github.com/gopherwood/recycle.git#v1.0.0"
     },
     "devDependencies": {
         "grunt": "^0.4.5",
         "grunt-contrib-compress": "^0.13.0",
-        "grunt-contrib-concat": "^0.5.1",
+        "grunt-contrib-concat": "^1.0.1",
         "grunt-contrib-copy": "^0.8.0",
         "grunt-contrib-uglify": "^0.9.1",
         "grunt-contrib-yuidoc": "^0.8.0",

@@ -1,8 +1,8 @@
 {
 	"platypus_source": [
-		"node_modules/pako/dist/pako_inflate.js",
+		"./node_modules/pako/dist/pako_inflate.js",
+		"./node_modules/recycle/recycle.js",
 		"../src/platypus.js",
-		"../src/mixins/Recycler.js",
         "../src/mixins/Array.js",
 		"../src/mixins/PIXI.Graphics.js",
 		"../src/mixins/PIXI.Container.js",

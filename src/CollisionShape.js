@@ -18,7 +18,7 @@
  * @param [definition.regY] {number} The registration y of the collision shape with the owner entity's location if offsetX is not provided.
  * @param collisionType {String} A string describing the collision type of this shape.
  */
-/*global include, platypus */
+/*global include, platypus, recycle, springroll */
 platypus.CollisionShape = (function () {
     'use strict';
     
@@ -229,7 +229,7 @@ platypus.CollisionShape = (function () {
      * @method recycle
      * @since 0.7.4
      */
-    platypus.setUpRecycle(CollisionShape, 'CollisionShape');
+    recycle.add(CollisionShape, !!springroll.Debug, 'CollisionShape');
     
     return CollisionShape;
 }());

@@ -1,7 +1,7 @@
 /**
  * @namespace window
  */
-/*global platypus, springroll */
+/*global recycle, springroll */
 (function (Array, Object) {
     'use strict';
     
@@ -9,13 +9,7 @@
      * Add methods to Array
      * @class Array
      */
-    var cache = null,
-        debug = !!springroll.Debug,
-        prototype = Array.prototype,
-        recycleProp = {
-            value: false,
-            writable: true
-        };
+    var prototype = Array.prototype;
 
     /**
      * Merges a given array into the current array without duplicating items.
@@ -93,79 +87,28 @@
         });
     }
     
-    if (!prototype.recycle) {
-        /**
-         * Save instance for reuse.
-         *
-         * @method Array.recycle
-         * @param instance {Array} The instance to recycle.
-         * @since 0.7.1
-         */
-        /**
-         * Save instance for reuse.
-         *
-         * @method recycle
-         * @param [depth] {Number} The dimensions of the array.
-         * @since 0.7.1
-         */
-        cache = platypus.setUpRecycle(Array, 'Array', function (depth) {
-            var i = 0;
-            
-            if (depth > 1) {
-                i = this.length;
-                depth -= 1;
-                while (i--) {
-                    this[i].recycle(depth);
-                }
-            }
-            this.length = 0;
-            Array.recycle(this);
-        });
-        
-        /**
-         * Create a new instance or reuse an old instance if available.
-         *
-         * @method Array.setUp
-         * @param [item] {Object|String|Number|Boolean} One or more arguments to prepopulate items in the array.
-         * @return Array
-         * @since 0.7.1
-         */
-        if (debug) {
-            Array.setUp = function () {
-                var i = 0,
-                    arr = null;
-                
-                if (cache.length) {
-                    arr = cache.pop();
-                    arr.recycled = false;
-                } else {
-                    arr = [];
-                    Object.defineProperty(arr, 'recycled', recycleProp);
-                }
-                
-                for (i = 0; i < arguments.length; i++) {
-                    arr.push(arguments[i]);
-                }
+    /**
+     * Save instance for reuse.
+     *
+     * @method Array.recycle
+     * @param instance {Array} The instance to recycle.
+     * @since 0.7.1
+     */
+    /**
+     * Save instance for reuse.
+     *
+     * @method recycle
+     * @param [depth] {Number} The dimensions of the array.
+     * @since 0.7.1
+     */
+    /**
+     * Create a new instance or reuse an old instance if available.
+     *
+     * @method Array.setUp
+     * @param [item] {Object|String|Number|Boolean} One or more arguments to prepopulate items in the array.
+     * @return Array
+     * @since 0.7.1
+     */
+    recycle.add(Array, !!springroll.Debug, 'Array');
 
-                return arr;
-            };
-        } else {
-            Array.setUp = function () {
-                var i = 0,
-                    arr = null;
-                
-                if (cache.length) {
-                    arr = cache.pop();
-                } else {
-                    arr = [];
-                }
-                
-                for (i = 0; i < arguments.length; i++) {
-                    arr.push(arguments[i]);
-                }
-
-                return arr;
-            };
-        }
-    }
 }(Array, Object));

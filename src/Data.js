@@ -7,7 +7,7 @@
  * @return {Data} Returns the new Data object.
  * @since 0.7.1
  */
-/*global platypus */
+/*global platypus, recycle, springroll */
 platypus.Data = (function () {
     'use strict';
     
@@ -56,7 +56,7 @@ platypus.Data = (function () {
      * @method recycle
      * @since 0.7.1
      */
-    platypus.setUpRecycle(Data, 'Data', function () {
+    recycle.add(Data, !!springroll.Debug, 'Data', function () {
         var key = '';
         
         for (key in this) {

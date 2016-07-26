@@ -6,7 +6,7 @@
  * @constructor
  * @return {platypus.CollisionDataContainer} Returns the new aabb object.
  */
-/* global platypus */
+/* global platypus, recycle, springroll */
 platypus.CollisionDataContainer = (function () {
     'use strict';
     
@@ -136,7 +136,7 @@ platypus.CollisionDataContainer = (function () {
      * @method recycle
      * @since 0.8.7
      */
-    platypus.setUpRecycle(CollisionDataContainer, 'CollisionDataContainer');
+    recycle.add(CollisionDataContainer, !!springroll.Debug, 'CollisionDataContainer');
 
     return CollisionDataContainer;
 }());

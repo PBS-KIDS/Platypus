@@ -9,7 +9,7 @@
  * @class RenderTiles
  * @uses platypus.Component
  */
-/* global include, platypus */
+/* global include, platypus, recycle, springroll */
 (function () {
     'use strict';
 
@@ -104,7 +104,7 @@
         this.recycle();
     };
     
-    platypus.setUpRecycle(Template, 'Template');
+    recycle.add(Template, !!springroll.Debug, 'Template');
 
     return platypus.createComponentClass({
 

@@ -8,7 +8,7 @@
  * @extends platypus.DataMap
  * @since 0.8.0
  */
-/* global extend, include, platypus */
+/* global extend, include, platypus, recycle, springroll */
 platypus.StateMap = (function () {
     'use strict';
     
@@ -158,7 +158,7 @@ platypus.StateMap = (function () {
      *
      * @method recycle
      */
-    platypus.setUpRecycle(StateMap, 'StateMap', function () {
+    recycle.add(StateMap, !!springroll.Debug, 'StateMap', function () {
         this.clear();
         StateMap.recycle(this);
     });
