@@ -59,6 +59,14 @@
              **/
             "height": 0,
             
+            /**
+             * Specifies whether the camera should be draggable via the mouse by setting to 'pan'.
+             *
+             * @property mode
+             * @type String
+             * @default 'static'
+             * @since 0.9.0
+             **/
             "mode": "static",
             
             /**
@@ -248,6 +256,7 @@
             this.container = new PIXI.Container();
             this.matrix = this.container.transformMatrix = new PIXI.Matrix();
             this.parentContainer.addChild(this.container);
+            this.movedCamera = false;
         },
         events: {
             /**
@@ -333,6 +342,13 @@
                 this.updateMovementMethods();
             },
             
+            /**
+             * If mouse dragging should cause the camera to move, this listens for the beginning of the drag motion.
+             *
+             * @method 'mousedown'
+             * @param event {Object} The mouse event.
+             * @since 0.9.0
+             **/
             "mousedown": function (event) {
                 var worldVP = this.worldCamera.viewport;
 
@@ -346,19 +362,42 @@
                     this.mouse.y = event.event.y;
                     this.mouseWorldOrigin.x = worldVP.x;
                     this.mouseWorldOrigin.y = worldVP.y;
+                    event.pixiEvent.stopPropagation();
                 }
             },
             
+            /**
+             * If mouse dragging should cause the camera to move, this listens the drag motion.
+             *
+             * @method 'pressmove'
+             * @param event {Object} The mouse event.
+             * @since 0.9.0
+             **/
             "pressmove": function (event) {
                 if (this.mouse) {
                     if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transformMatrix.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transformMatrix.d)) {
                         this.viewportUpdate = true;
+                        this.movedCamera = true;
+                        event.pixiEvent.stopPropagation();
                     }
                 }
             },
 
-            "pressup": function () {
-                this.mouse = null;
+            /**
+             * If mouse dragging should cause the camera to move, this listens for the end of the drag motion.
+             *
+             * @method 'pressup'
+             * @param event {Object} The mouse event.
+             * @since 0.9.0
+             **/
+            "pressup": function (event) {
+                if (this.mouse) {
+                    this.mouse = null;
+                    if (this.movedCamera) {
+                        this.movedCamera = false;
+                        event.pixiEvent.stopPropagation();
+                    }
+                }
             },
             
             /**

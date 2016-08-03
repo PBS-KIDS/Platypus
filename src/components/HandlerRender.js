@@ -10,6 +10,8 @@
     'use strict';
     
     var Container = include('PIXI.Container'),
+        Data = include('platypus.Data'),
+        Interactive = include('platypus.components.Interactive'),
         Vector = include('platypus.Vector');
 
     return platypus.createComponentClass({
@@ -18,48 +20,61 @@
 
         properties: {
             /**
-             * Indicates the types of input the Container will listen for. Defaults to none.
+             * Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:
              *
-             *      "acceptInput": {
-             *          "click": false, // Whether to listen for mouse/touch events
-             *          "camera": false, // Whether camera movement while the mouse (or touch) is triggered should result in a mousemove event
-             *          "hover": false // Whether to capture mouse movement even when there is no mouse-down.
+             *  "interactive": {
+             *      "hover": false,
+             *      "hitArea": {
+             *          "x": 10,
+             *          "y": 10,
+             *          "width": 40,
+             *          "height": 40
              *      }
+             *  }
+             *
+             * @property interactive
+             * @type Boolean|Object
+             * @default false
+             * @since 0.9.1
+             */
+            interactive: false,
+
+            /**
+             * This property's functionality is now provided by the `interactive` property.
              *
              * @property acceptInput
              * @type Object
              * @default null
+             * @deprecated since 0.9.1
              */
             acceptInput: null
-
-        },
-
-        publicProperties: {
-
         },
 
         constructor: function () {
-            this.container = new Container();
+            var definition = null;
 
-            this.camera = {
-                x: 0,
-                y: 0
-            };
+            this.container = new Container();
 
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
             if (this.acceptInput) {
-                this.click = this.acceptInput.click;
-                this.cameraMovementMovesMouse = this.acceptInput.camera;
-                this.hover = this.acceptInput.hover;
-                if (this.click || this.hover) {
-                    this.addInputs();
-                }
+                platypus.debug.warn('Entity "' + this.owner.type + '": HandlerRender "acceptInput" property has been deprecated since 0.9.1 in favor of the "interactive" property which adds an "Interactive" component to the entity to handle input.');
+                this.interactive = this.interactive || this.acceptInput;
             }
 
-            this.renderMessage = {
-                delta: 0,
-                container: this.container
-            };
+            if (this.interactive) {
+                definition = Data.setUp(
+                    'container', this.container,
+                    'hitArea', this.interactive.hitArea,
+                    'hover', this.interactive.hover
+                );
+                this.owner.addComponent(new Interactive(this.owner, definition));
+                definition.recycle();
+            }
+
+            this.renderMessage = Data.setUp(
+                'delta', 0,
+                'container', this.container
+            );
         },
 
         events: {
@@ -79,6 +94,13 @@
                 this.owner.triggerEvent('render-world', {
                     world: this.container
                 });
+
+                /**
+                 * This event is triggered once HandlerRender is ready to handle interactivity.
+                 *
+                 * @event 'input-on'
+                 */
+                this.owner.triggerEvent('input-on');
             },
 
             /**
@@ -199,231 +221,12 @@
 
                     }
                 };
-            }()),
-
-            /**
-             * Triggered every time the camera position or scale updates. This event triggers the 'mousemove' event if camera movement is set to trigger it. It also updates the internal record of the camera position.
-             *
-             * @method 'camera-update'
-             * @param cameraData {Object} A camera data object
-             * @param cameraData.viewport {Object | AABB} An AABB describing the location and size of the camera.
-             */
-            "camera-update": function (cameraData) {
-                this.camera.x = cameraData.viewport.left;
-                this.camera.y = cameraData.viewport.top;
-
-                if (this.moveMouse) {
-                    this.moveMouse();
-                }
-            }
-
+            }())
         },
         methods: {
-            addInputs: (function () {
-                var createHandler = function (self, eventName) {
-                    return function (event) {
-                        var stageX = event.data.global.x,
-                            stageY = event.data.global.y,
-                            nativeEvent = event.data.originalEvent,
-                            x = 0,
-                            y = 0;
-
-                        //TML - This is in case we do a scene change using an event and the container is destroyed.
-                        if (!self.container) {
-                            return;
-                        }
-
-                        x = stageX / self.container.transformMatrix.a + self.camera.x;
-                        y = stageY / self.container.transformMatrix.d + self.camera.y;
-
-                        event.target.mouseTarget = true;
-
-                        self.owner.trigger(eventName, {
-                            event: nativeEvent,
-                            pixiEvent: event,
-                            x: x,
-                            y: y,
-                            entity: self.owner
-                        });
-
-                        if (self.cameraMovementMovesMouse) {
-                            if (eventName === 'pressup') {
-                                event.target.mouseTarget = false;
-                                self.moveMouse = null;
-                                if (event.target.removeDisplayObject) {
-                                    event.target.removeDisplayObject();
-                                }
-                            } else {
-                                // This function is used to trigger a move event when the camera moves and the mouse is still triggered.
-                                self.moveMouse = function () {
-                                    self.owner.triggerEvent('pressmove', {
-                                        event: nativeEvent,
-                                        x: stageX / self.container.transformMatrix.a + self.camera.x,
-                                        y: stageY / self.container.transformMatrix.d + self.camera.y,
-                                        entity: self.owner
-                                    });
-                                };
-                            }
-                        }
-                    };
-                };
-
-                return function () {
-                    var sprite    = this.container,
-                        mousedown = null,
-                        mouseover = null,
-                        mouseout  = null,
-                        pressmove = null,
-                        pressup   = null,
-                        click     = null,
-                        tPM = null,
-                        tPU = null,
-                        tMD = null,
-                        pressed   = false;
-
-                    // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-                    if (this.click) {
-                        sprite.interactive = true;
-                        
-                        /**
-                         * Dispatched when the 'mousedown' event occurs on the container.
-                         *
-                         * @event 'mousedown'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        tMD = createHandler(this, 'mousedown');
-                        mousedown = function (event) {
-                            tMD(event);
-                            pressed = true;
-                        }.bind(this);
-                        
-                        /**
-                         * Dispatched when the 'pressmove' event occurs on the container.
-                         *
-                         * @event 'pressmove'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        tPM = createHandler(this, 'pressmove');
-                        pressmove = function (event) {
-                            if (pressed) {
-                                tPM(event);
-                            }
-                        }.bind(this);
-                        
-                        /**
-                         * Dispatched when the 'pressup' event occurs on the container.
-                         *
-                         * @event 'pressup'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        tPU = createHandler(this, 'pressup');
-                        pressup   = function (event) {
-                            tPU(event);
-                            pressed = false;
-                        }.bind(this);
-                        
-                        /**
-                         * Dispatched when the 'click' event occurs on the container.
-                         *
-                         * @event 'click'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        click     = createHandler(this, 'click');
-
-                        sprite.addListener('mousedown',       mousedown);
-                        sprite.addListener('touchstart',      mousedown);
-                        sprite.addListener('mouseup',         pressup);
-                        sprite.addListener('touchend',        pressup);
-                        sprite.addListener('mouseupoutside',  pressup);
-                        sprite.addListener('touchendoutside', pressup);
-                        sprite.addListener('mousemove',       pressmove);
-                        sprite.addListener('touchmove',       pressmove);
-                        sprite.addListener('click',           click);
-                        sprite.addListener('tap',             click);
-                    }
-                    if (this.hover) {
-                        sprite.interactive = true;
-                        
-                        /**
-                         * Dispatched when the 'mouseover' event occurs on the container.
-                         *
-                         * @event 'mouseover'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        mouseover = createHandler(this, 'mouseover');
-                        /**
-                         * Dispatched when the 'mouseout' event occurs on the container.
-                         *
-                         * @event 'mouseout'
-                         * @param eventData {Object}
-                         * @param eventData.event {Object | DOM Event} The native DOM event from the canvas.
-                         * @param eventData.pixiEvent {Object | easeljs.MouseEvent} The MouseEvent sent by PIXI.
-                         * @param eventData.x {Number} The x location of the mouse.
-                         * @param eventData.y {Number} The y location of the mouse.
-                         * @param eventData.entity {Object} The entity that contains this component.
-                         */
-                        mouseout  = createHandler(this, 'mouseout');
-
-                        sprite.addListener('mouseover', mouseover);
-                        sprite.addListener('mouseout',  mouseout);
-                    }
-
-                    this.removeInputListeners = function () {
-                        if (this.click) {
-                            sprite.removeListener('mousedown',       mousedown);
-                            sprite.removeListener('touchstart',      mousedown);
-                            sprite.removeListener('mouseup',         pressup);
-                            sprite.removeListener('touchend',        pressup);
-                            sprite.removeListener('mouseupoutside',  pressup);
-                            sprite.removeListener('touchendoutside', pressup);
-                            sprite.removeListener('mousemove',       pressmove);
-                            sprite.removeListener('touchmove',       pressmove);
-                            sprite.removeListener('click',           click);
-                            sprite.removeListener('tap',             click);
-                        }
-                        if (this.hover) {
-                            sprite.removeListener('mouseover', mouseover);
-                            sprite.removeListener('mouseout',  mouseout);
-                        }
-                        this.removeInputListeners = null;
-                    };
-                };
-            }()),
-
             destroy: function () {
-                if (this.container.mouseTarget) {
-                    this.container.visible = false;
-                    this.container.removeDisplayObject = function () {
-                        this.container = null;
-                    }.bind(this);
-                } else {
-                    this.container = null;
-                }
+                this.container = null;
+                this.renderMessage.recycle();
             }
         },
 
