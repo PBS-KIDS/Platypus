@@ -1,93 +1,361 @@
 /**
-# COMPONENT **LogicButton**
-This component handles the pressed/released state of a button according to input. It can be set as a toggle button or a simple press-and-release button.
-
-## Dependencies:
-- [[HandlerLogic]] (on entity's parent) - This component listens for a logic tick message to maintain and update its state.
-
-## Messages
-
-### Listens for:
-- **handle-logic** - On a `tick` logic message, the component updates its current state and broadcasts its logical state to the entity.
-- **pressed** - on receiving this message, the state of the button is set to "pressed".
-- **released** - on receiving this message, the state of the button is set to "released".
-- **mousedown** - on receiving this message, the state of the button is set to "pressed". Note that this component will not listen for "mousedown" if the component is in toggle mode.
-- **mouseup** - on receiving this message, the state of the button is set to "released" unless in toggle mode, in which case it toggles between "pressed" and "released".
-
-### Local Broadcasts:
-- **state-changed** - this component will trigger this message with both "pressed" and "released" properties denoting its state. Both of these work in tandem and never equal each other.
-  - @param message.pressed (boolean) - whether the button is in a pressed state.
-  - @param message.released (boolean) - whether the button is in a released state.
-
-## JSON Definition:
-    {
-      "type": "LogicButton",
-      
-      "toggle": true,
-      // Optional. Determines whether this button should behave as a toggle. Defaults to "false".
-      
-      "state": "pressed"
-      // Optional. Specifies starting state of button; typically only useful for toggle buttons. Defaults to "released".
-    }
-*/
-/*global platypus */
+ * Provides button functionality for a RenderSprite component.
+ *
+ * Formerly known as "LogicCanvasButton" which has been deprecated since 0.9.1
+ *
+ * @namespace platypus.components
+ * @class LogicButton
+ * @uses platypus.Component
+ */
+/*global include, platypus */
 (function () {
     'use strict';
+    
+    var Data = include('platypus.Data'),
+        component = platypus.components.LogicCanvasButton = platypus.createComponentClass({
 
-    return platypus.createComponentClass({
-        id: 'LogicButton',
-        constructor: function (definition) {
-            this.state = this.owner.state;
-            this.toggle = !!definition.toggle;
+            id: 'LogicButton',
 
-            if (definition.state === 'pressed') {
-                this.state.set('released', false);
-                this.state.set('pressed', true);
-            } else {
-                this.state.set('released', true);
-                this.state.set('pressed', false);
-            }
-        },
-        events: {
-            "mousedown": function (event) {
-                if (!platypus.supports.mobile || (event.event.type === 'touchstart')) {
-                    if (!this.toggle) {
-                        this.updateState('pressed');
-                    }
-                }
+            properties: {
+                /**
+                 * The event to trigger when pressed.
+                 *
+                 * @property onPress
+                 * @type String
+                 * @default ""
+                 */
+                "onPress": "",
+
+                /**
+                 * The event to trigger when released.
+                 *
+                 * @property onRelease
+                 * @type String
+                 * @default ""
+                 */
+                "onRelease": "",
+
+                /**
+                 * The event to trigger when cancelled.
+                 *
+                 * @property onCancel
+                 * @type String
+                 * @default ""
+                 */
+                "onCancel": "",
+
+                /**
+                 * The event to trigger when the user mouses over the button
+                 *
+                 * @property hoverAudio
+                 * @type String or an Array of Strings and Message Objects
+                 * @default ""
+                 * @since 0.9.0
+                 */
+                "onHover": "",
+
+                /**
+                 * Whether this button's actions should be limited to the initial press/release.
+                 *
+                 * @property useOnce
+                 * @type Boolean
+                 * @default false
+                 */
+                "useOnce": false,
+
+                /**
+                 * Whether this button should start disabled.
+                 *
+                 * @property disabled
+                 * @type Boolean
+                 * @default false
+                 */
+                "disabled": false,
+
+                /**
+                 * Determines whether this button should behave as a toggle.
+                 *
+                 * @property toggle
+                 * @type Boolean
+                 * @default false
+                 * @since 0.9.1
+                 */
+                "toggle": false,
+
+                /**
+                 * Specifies whether the button starts off 'pressed'; typically only useful for toggle buttons.
+                 *
+                 * @property pressed
+                 * @type Boolean
+                 * @default false
+                 * @since 0.9.1
+                 */
+                "pressed": false
             },
-            "pressup": function (event) {
-                if (!platypus.supports.mobile || (event.event.type === 'touchend') || (event.event.type === 'touchcancel')) {
-                    if (this.toggle) {
-                        if (this.state.get('pressed')) {
-                            this.updateState('released');
-                        } else {
-                            this.updateState('pressed');
-                        }
-                    } else {
-                        this.updateState('released');
-                    }
-                }
+
+            publicProperties: {
+                /**
+                 * This sets the distance in world units from the bottom of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.bottom`.
+                 *
+                 * @property bottom
+                 * @type Number
+                 * @default null
+                 * @since 0.9.0
+                 */
+                "bottom": null,
+
+                /**
+                 * This sets the distance in world units from the left of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.left`.
+                 *
+                 * @property bottom
+                 * @type Number
+                 * @default null
+                 * @since 0.9.0
+                 */
+                "left": null,
+
+                /**
+                 * This sets the distance in world units from the right of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.right`.
+                 *
+                 * @property bottom
+                 * @type Number
+                 * @default null
+                 * @since 0.9.0
+                 */
+                "right": null,
+
+                /**
+                 * This sets the distance in world units from the top of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.top`.
+                 *
+                 * @property bottom
+                 * @type Number
+                 * @default null
+                 * @since 0.9.0
+                 */
+                "top": null
             },
-            "handle-logic": function () {
-                //TODO: This is only here so that the "state-changed" message is triggered by the Entity for other components needing it.
-            }
-        },
-        
-        methods: {
-            updateState: function (state) {
-                var thisState = this.state;
+
+            constructor: function () {
+                var state = this.owner.state;
                 
-                if (thisState.get('released') && (state === 'pressed')) {
-                    thisState.set('pressed', true);
-                    thisState.set('released', false);
-                } else if (thisState.get('pressed') && (state === 'released')) {
-                    thisState.set('pressed', false);
-                    thisState.set('released', true);
-                }
+                this.state = state;
+                state.set('disabled', this.disabled);
+                state.set('down', this.pressed); // deprecate post 0.9 in favor of "pressed".
+                state.set('released', !this.pressed);
+                state.set('pressed', this.pressed);
+                state.set('highlighted', false);
+                this.owner.buttonMode = !this.disabled;
+                this.cancelled = false;
+            },
 
-                this.owner.triggerEvent(state, thisState);
+            events: {
+                /**
+                 * This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.
+                 *
+                 * @method 'camera-update'
+                 * @param camera {platypus.Data} Camera update information
+                 * @param camera.viewport {platypus.AABB} The bounding box describing the camera viewport location in the world.
+                 * @since 0.9.0
+                 */
+                "camera-update": function (camera) {
+                    var bottom = this.bottom,
+                        left = this.left,
+                        right = this.right,
+                        top = this.top,
+                        vp = camera.viewport;
+
+                    if (typeof left === 'number') {
+                        this.owner.x = vp.left + left;
+                    } else if (typeof right === 'number') {
+                        this.owner.x = vp.right - right;
+                    }
+
+                    if (typeof top === 'number') {
+                        this.owner.y = vp.top + top;
+                    } else if (typeof bottom === 'number') {
+                        this.owner.y = vp.bottom - bottom;
+                    }
+                },
+
+                /**
+                 * Triggers events per the component's definition when a press is made.
+                 *
+                 * @method 'mousedown'
+                 */
+                "mousedown": function (eventData) {
+                    if (!this.toggle && !this.state.get('disabled')) {
+                        if (this.onPress) {
+                            this.owner.trigger(this.onPress);
+                        }
+                        this.updateState('pressed');
+                        eventData.pixiEvent.stopPropagation();
+
+                        // Doing this prevents the another call from occurring.
+                        if (this.useOnce) {
+                            this.removeEventListener('mousedown');
+                        }
+                    }
+                },
+
+                /**
+                 * Triggers events per the component's definition when a press is released.
+                 *
+                 * @method 'pressup'
+                 */
+                "pressup": function (eventData) {
+                    if (!this.state.get('disabled')) {
+                        if (this.cancelled) {
+                            if (this.onCancel) {
+                                this.owner.trigger(this.onCancel);
+                            }
+                            this.updateState('cancelled');
+                        } else if (this.toggle) {
+                            if (this.state.get('pressed')) {
+                                this.updateState('released');
+                            } else {
+                                this.updateState('pressed');
+                            }
+                        } else {
+                            if (this.onRelease) {
+                                this.owner.trigger(this.onRelease);
+                            }
+                            this.updateState('released');
+                        }
+                        eventData.pixiEvent.stopPropagation();
+
+                        // Doing this prevents the another call from occurring.
+                        if (this.useOnce) {
+                            this.removeEventListener('pressup');
+                        }
+                    }
+
+                    this.cancelled = false;
+                },
+
+                /**
+                 * If a press moves over the button, it's not cancelled.
+                 *
+                 * @method 'mouseover'
+                 */
+                "mouseover": function () {
+                    if (this.onHover) {
+                        this.owner.trigger(this.onHover);
+                    }
+                    if (this.state.get('pressed')) {
+                        this.cancelled = false;
+                    }
+                },
+
+                /**
+                 * If a press moves off of the button, it's cancelled.
+                 *
+                 * @method 'mouseout'
+                 */
+                "mouseout": function () {
+                    if (this.state.get('pressed')) {
+                        this.cancelled = true;
+                    }
+                },
+                
+                /**
+                 * Disables the entity.
+                 *
+                 * @method 'disable'
+                 */
+                "disable": function () {
+                    this.state.set('disabled', true);
+                    this.owner.buttonMode = false;
+                },
+                
+                /**
+                 * Enables the entity.
+                 *
+                 * @method 'enable'
+                 */
+                "enable": function () {
+                    this.state.set('disabled', false);
+                    this.owner.buttonMode = true;
+                },
+
+                /**
+                 * Toggles whether the entity is disabled.
+                 *
+                 * @method 'toggle-disabled'
+                 */
+                "toggle-disabled": function () {
+                    var value = this.state.get('disabled');
+                    
+                    this.owner.buttonMode = value;
+                    this.state.set('disabled', !value);
+                },
+                
+                /**
+                 * Sets the entity's highlighted state to `true`.
+                 *
+                 * @method 'highlight'
+                 * @since 0.8.6
+                 */
+                "highlight": function () {
+                    this.state.set('highlighted', true);
+                },
+                
+                /**
+                 * Sets the entity's highlighted state to `false`.
+                 *
+                 * @method 'unhighlight'
+                 * @since 0.8.6
+                 */
+                "unhighlight": function () {
+                    this.state.set('highlighted', false);
+                },
+                
+                /**
+                 * Toggles the entity's highlighted state.
+                 *
+                 * @method 'toggle-highlight'
+                 * @since 0.8.6
+                 */
+                "toggle-highlight": function () {
+                    this.state.set('highlighted', !this.state.get('highlighted'));
+                }
+            },
+            
+            methods: {
+                updateState: function (state) {
+                    var message = null,
+                        thisState = this.state,
+                        pressed = thisState.get('pressed'),
+                        released = thisState.get('released'),
+                        toggled = false;
+                    
+                    if (released && (state === 'pressed')) {
+                        thisState.set('pressed', true);
+                        thisState.set('down', false);
+                        thisState.set('released', false);
+                        toggled = true;
+                    } else if (pressed && ((state === 'released') || (state === 'cancelled'))) {
+                        thisState.set('pressed', false);
+                        thisState.set('down', false);
+                        thisState.set('released', true);
+                        toggled = true;
+                    }
+
+                    if (toggled) {
+                        message = Data.setUp(
+                            'released', pressed,
+                            'pressed', released,
+                            'triggered', released
+                        );
+                        this.owner.triggerEvent(state, message);
+                        message.recycle();
+                    }
+                },
+
+                destroy: function () {
+                    this.state = null;
+                }
             }
-        }
-    });
+        });
+
+    return component;
 }());

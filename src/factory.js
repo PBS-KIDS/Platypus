@@ -160,5 +160,7 @@
         component.getLateAssetList = componentDefinition.getLateAssetList || Component.getLateAssetList;
 
         platypus.components[componentDefinition.id] = component;
+
+        return component;
     };
 }());
