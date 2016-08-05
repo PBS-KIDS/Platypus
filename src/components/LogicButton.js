@@ -160,20 +160,21 @@
                 "camera-update": function (camera) {
                     var bottom = this.bottom,
                         left = this.left,
+                        owner = this.owner,
                         right = this.right,
                         top = this.top,
                         vp = camera.viewport;
 
                     if (typeof left === 'number') {
-                        this.owner.x = vp.left + left;
+                        owner.x = vp.left + left;
                     } else if (typeof right === 'number') {
-                        this.owner.x = vp.right - right;
+                        owner.x = vp.right - right;
                     }
 
                     if (typeof top === 'number') {
-                        this.owner.y = vp.top + top;
+                        owner.y = vp.top + top;
                     } else if (typeof bottom === 'number') {
-                        this.owner.y = vp.bottom - bottom;
+                        owner.y = vp.bottom - bottom;
                     }
                 },
 
@@ -187,10 +188,21 @@
                         if (this.onPress) {
                             this.owner.trigger(this.onPress);
                         }
-                        this.updateState('pressed');
+
+                        /**
+                         * This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.
+                         *
+                         * @event 'pressed'
+                         * @param buttonState {platypus.Data} The state of the button
+                         * @param buttonState.pressed {Boolean} This is `true` for the 'pressed' event.
+                         * @param buttonState.released {Boolean} This is `false` for the 'pressed' event.
+                         * @param buttonState.triggered {Boolean} This is `true` for the 'pressed' event.
+                         * @since 0.9.1
+                         */
+                        this.updateStateAndTrigger('pressed');
                         eventData.pixiEvent.stopPropagation();
 
-                        // Doing this prevents the another call from occurring.
+                        // Doing this prevents the call from reccurring.
                         if (this.useOnce) {
                             this.removeEventListener('mousedown');
                         }
@@ -203,27 +215,51 @@
                  * @method 'pressup'
                  */
                 "pressup": function (eventData) {
-                    if (!this.state.get('disabled')) {
+                    var state = this.state;
+
+                    if (!state.get('disabled')) {
                         if (this.cancelled) {
                             if (this.onCancel) {
                                 this.owner.trigger(this.onCancel);
                             }
-                            this.updateState('cancelled');
+
+                            /**
+                             * This event is triggered when the button is pressed and the mouse/touch is dragged off-target before release.
+                             *
+                             * @event 'cancelled'
+                             * @param buttonState {platypus.Data} The state of the button
+                             * @param buttonState.pressed {Boolean} This is `false` for the 'cancelled' event.
+                             * @param buttonState.released {Boolean} This is `true` for the 'cancelled' event.
+                             * @param buttonState.triggered {Boolean} This is `false` for the 'cancelled' event.
+                             * @since 0.9.1
+                             */
+                            this.updateStateAndTrigger('cancelled');
                         } else if (this.toggle) {
-                            if (this.state.get('pressed')) {
-                                this.updateState('released');
+                            if (state.get('pressed')) {
+                                this.updateStateAndTrigger('released');
                             } else {
-                                this.updateState('pressed');
+                                this.updateStateAndTrigger('pressed');
                             }
                         } else {
                             if (this.onRelease) {
                                 this.owner.trigger(this.onRelease);
                             }
-                            this.updateState('released');
+
+                            /**
+                             * This event is triggered when the button is released, or on the down-to-up change for toggle buttons.
+                             *
+                             * @event 'released'
+                             * @param buttonState {platypus.Data} The state of the button
+                             * @param buttonState.pressed {Boolean} This is `false` for the 'released' event.
+                             * @param buttonState.released {Boolean} This is `true` for the 'released' event.
+                             * @param buttonState.triggered {Boolean} This is `false` for the 'released' event.
+                             * @since 0.9.1
+                             */
+                            this.updateStateAndTrigger('released');
                         }
                         eventData.pixiEvent.stopPropagation();
 
-                        // Doing this prevents the another call from occurring.
+                        // Doing this prevents the call from reccurring.
                         if (this.useOnce) {
                             this.removeEventListener('pressup');
                         }
@@ -316,27 +352,29 @@
                  * @since 0.8.6
                  */
                 "toggle-highlight": function () {
-                    this.state.set('highlighted', !this.state.get('highlighted'));
+                    var state = this.state;
+
+                    state.set('highlighted', !state.get('highlighted'));
                 }
             },
             
             methods: {
-                updateState: function (state) {
+                updateStateAndTrigger: function (event) {
                     var message = null,
-                        thisState = this.state,
-                        pressed = thisState.get('pressed'),
-                        released = thisState.get('released'),
+                        state = this.state,
+                        pressed = state.get('pressed'),
+                        released = state.get('released'),
                         toggled = false;
                     
-                    if (released && (state === 'pressed')) {
-                        thisState.set('pressed', true);
-                        thisState.set('down', false);
-                        thisState.set('released', false);
+                    if (released && (event === 'pressed')) {
+                        state.set('pressed', true);
+                        state.set('down', false);
+                        state.set('released', false);
                         toggled = true;
-                    } else if (pressed && ((state === 'released') || (state === 'cancelled'))) {
-                        thisState.set('pressed', false);
-                        thisState.set('down', false);
-                        thisState.set('released', true);
+                    } else if (pressed && ((event === 'released') || (event === 'cancelled'))) {
+                        state.set('pressed', false);
+                        state.set('down', false);
+                        state.set('released', true);
                         toggled = true;
                     }
 
@@ -346,12 +384,13 @@
                             'pressed', released,
                             'triggered', released
                         );
-                        this.owner.triggerEvent(state, message);
+                        this.owner.triggerEvent(event, message);
                         message.recycle();
                     }
                 },
 
                 destroy: function () {
+                    this.owner.buttonMode = false;
                     this.state = null;
                 }
             }
