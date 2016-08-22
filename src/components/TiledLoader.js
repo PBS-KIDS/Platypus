@@ -40,8 +40,7 @@
 (function () {
     'use strict';
 
-    var Application = include('springroll.Application'), // Import SpringRoll classes
-        AABB        = include('platypus.AABB'),
+    var AABB        = include('platypus.AABB'),
         Data        = include('platypus.Data'),
         Entity      = include('platypus.Entity'),
         maskId = 0x0fffffff,
@@ -424,7 +423,7 @@
         },
 
         constructor: function () {
-            this.assetCache = Application.instance.assetManager.cache;
+            this.assetCache = platypus.game.app.assetManager.cache;
             this.layerZ = 0;
             this.followEntity = false;
         },

@@ -9,8 +9,7 @@
 (function () {
     'use strict';
     
-    var Application = include('springroll.Application'), // Import SpringRoll classes
-        BaseTexture = include('PIXI.BaseTexture'),
+    var BaseTexture = include('PIXI.BaseTexture'),
         Data = include('platypus.Data'),
         Point = include('PIXI.Point'),
         Rectangle = include('PIXI.Rectangle'),
@@ -27,7 +26,7 @@
             var i = 0,
                 bts = Array.setUp(),
                 asset = null,
-                assetCache = Application.instance.assetManager.cache,
+                assetCache = platypus.game.app.assetManager.cache,
                 btCache = baseTextureCache,
                 path = null;
             

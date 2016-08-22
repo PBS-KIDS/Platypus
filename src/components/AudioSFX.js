@@ -10,8 +10,7 @@
 (function () {
     'use strict';
     
-    var Application = include('springroll.Application'), // Import SpringRoll classes
-        Data = include('platypus.Data'),
+    var Data = include('platypus.Data'),
         StateMap = include('platypus.StateMap'),
         defaultSettings = {
             interrupt: createjs.Sound.INTERRUPT_ANY, //INTERRUPT_ANY, INTERRUPT_EARLY, INTERRUPT_LATE, or INTERRUPT_NONE
@@ -175,7 +174,7 @@
             this.state = this.owner.state;
             this.stateChange = false;
             
-            this.player = Application.instance.sound;
+            this.player = platypus.game.app.sound;
     
             if (definition.audioMap) {
                 if (this.stateBased) {

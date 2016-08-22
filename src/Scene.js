@@ -32,8 +32,7 @@
 platypus.Scene = (function () {
     'use strict';
     
-    var Application = include('springroll.Application'),
-        Data = include('platypus.Data'),
+    var Data = include('platypus.Data'),
         Entity = include('platypus.Entity'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
         State  = include('springroll.State'),
@@ -53,7 +52,7 @@ platypus.Scene = (function () {
 
             return function (assets, preload) {
                 var asset = null,
-                    cache = Application.instance.assetManager.cache._cache,
+                    cache = platypus.game.app.assetManager.cache._cache,
                     filteredAssets = Array.setUp(),
                     i = assets.length;
 

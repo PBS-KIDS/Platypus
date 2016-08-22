@@ -9,8 +9,7 @@
 (function () {
     'use strict';
     
-    var Application = include("springroll.Application"),
-        AABB = include('platypus.AABB'),
+    var AABB = include('platypus.AABB'),
         Data = include('platypus.Data'),
         Vector = include('platypus.Vector'),
         anchorBound = function (anchorAABB, entityOffsetX, entityOffsetY, entity) {
@@ -246,7 +245,7 @@
             if (this.owner.container) {
                 this.parentContainer = this.owner.container;
             } else if (this.owner.stage) {
-                this.canvas = this.canvas || Application.instance.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
+                this.canvas = this.canvas || platypus.game.app.display.canvas; //TODO: Probably need to find a better way to handle resizing - DDD 10/4/2015
                 this.parentContainer = this.owner.stage;
                 this.owner.width  = this.canvas.width;
                 this.owner.height = this.canvas.height;

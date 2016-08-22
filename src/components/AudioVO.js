@@ -10,8 +10,7 @@
 (function () {
     'use strict';
     
-    var Application = include('springroll.Application'), // Import SpringRoll classes
-        Data = include('platypus.Data'),
+    var Data = include('platypus.Data'),
         sortByTime = function (a, b) {
             return a.time - b.time;
         },
@@ -145,7 +144,7 @@
             this.eventList = Array.setUp();
     
             this.playingAudio = false;
-            this.player = Application.instance.voPlayer;
+            this.player = platypus.game.app.voPlayer;
     
             if (definition.audioMap) {
                 for (key in definition.audioMap) {
