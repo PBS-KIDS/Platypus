@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../assets/css/yui-cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
+    <script src="../assets/js/yui-source.js"></script>
+	<title>platypus v0.9.1 API Documentation : platypus.Entity</title>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Documentation for: 0.9.1</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
+                                <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
+                                <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
+                                <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
+                                <li><a href="../classes/platypus.Component.html">platypus.Component</a></li>
+                                <li><a href="../classes/platypus.components.AIChaser.html">platypus.components.AIChaser</a></li>
+                                <li><a href="../classes/platypus.components.AIPacer.html">platypus.components.AIPacer</a></li>
+                                <li><a href="../classes/platypus.components.AudioSFX.html">platypus.components.AudioSFX</a></li>
+                                <li><a href="../classes/platypus.components.AudioVO.html">platypus.components.AudioVO</a></li>
+                                <li><a href="../classes/platypus.components.Camera.html">platypus.components.Camera</a></li>
+                                <li><a href="../classes/platypus.components.CameraFollowMe.html">platypus.components.CameraFollowMe</a></li>
+                                <li><a href="../classes/platypus.components.CollisionBasic.html">platypus.components.CollisionBasic</a></li>
+                                <li><a href="../classes/platypus.components.CollisionFilter.html">platypus.components.CollisionFilter</a></li>
+                                <li><a href="../classes/platypus.components.CollisionGroup.html">platypus.components.CollisionGroup</a></li>
+                                <li><a href="../classes/platypus.components.CollisionTiles.html">platypus.components.CollisionTiles</a></li>
+                                <li><a href="../classes/platypus.components.ComponentSwitcher.html">platypus.components.ComponentSwitcher</a></li>
+                                <li><a href="../classes/platypus.components.Counter.html">platypus.components.Counter</a></li>
+                                <li><a href="../classes/platypus.components.EntityContainer.html">platypus.components.EntityContainer</a></li>
+                                <li><a href="../classes/platypus.components.EntityController.html">platypus.components.EntityController</a></li>
+                                <li><a href="../classes/platypus.components.EventRender.html">platypus.components.EventRender</a></li>
+                                <li><a href="../classes/platypus.components.HandlerCollision.html">platypus.components.HandlerCollision</a></li>
+                                <li><a href="../classes/platypus.components.HandlerController.html">platypus.components.HandlerController</a></li>
+                                <li><a href="../classes/platypus.components.HandlerLogic.html">platypus.components.HandlerLogic</a></li>
+                                <li><a href="../classes/platypus.components.HandlerRender.html">platypus.components.HandlerRender</a></li>
+                                <li><a href="../classes/platypus.components.Interactive.html">platypus.components.Interactive</a></li>
+                                <li><a href="../classes/platypus.components.LevelBuilder.html">platypus.components.LevelBuilder</a></li>
+                                <li><a href="../classes/platypus.components.LogicAngularMovement.html">platypus.components.LogicAngularMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicAttachment.html">platypus.components.LogicAttachment</a></li>
+                                <li><a href="../classes/platypus.components.LogicButton.html">platypus.components.LogicButton</a></li>
+                                <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
+                                <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
+                                <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
+                                <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
+                                <li><a href="../classes/platypus.components.NodeMap.html">platypus.components.NodeMap</a></li>
+                                <li><a href="../classes/platypus.components.NodeResident.html">platypus.components.NodeResident</a></li>
+                                <li><a href="../classes/platypus.components.Orientation.html">platypus.components.Orientation</a></li>
+                                <li><a href="../classes/platypus.components.RandomEvents.html">platypus.components.RandomEvents</a></li>
+                                <li><a href="../classes/platypus.components.RelayFamily.html">platypus.components.RelayFamily</a></li>
+                                <li><a href="../classes/platypus.components.RelayGame.html">platypus.components.RelayGame</a></li>
+                                <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
+                                <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
+                                <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
+                                <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
+                                <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
+                                <li><a href="../classes/platypus.components.RenderSpine.html">platypus.components.RenderSpine</a></li>
+                                <li><a href="../classes/platypus.components.RenderSprite.html">platypus.components.RenderSprite</a></li>
+                                <li><a href="../classes/platypus.components.RenderTiles.html">platypus.components.RenderTiles</a></li>
+                                <li><a href="../classes/platypus.components.SceneChanger.html">platypus.components.SceneChanger</a></li>
+                                <li><a href="../classes/platypus.components.StateRender.html">platypus.components.StateRender</a></li>
+                                <li><a href="../classes/platypus.components.TiledLoader.html">platypus.components.TiledLoader</a></li>
+                                <li><a href="../classes/platypus.components.Timeline.html">platypus.components.Timeline</a></li>
+                                <li><a href="../classes/platypus.components.Tutorial.html">platypus.components.Tutorial</a></li>
+                                <li><a href="../classes/platypus.components.VoiceOver.html">platypus.components.VoiceOver</a></li>
+                                <li><a href="../classes/platypus.components.XHR.html">platypus.components.XHR</a></li>
+                                <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
+                                <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
+                                <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
+                                <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
+                                <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
+                                <li><a href="../classes/platypus.Scene.html">platypus.Scene</a></li>
+                                <li><a href="../classes/platypus.StateMap.html">platypus.StateMap</a></li>
+                                <li><a href="../classes/platypus.Vector.html">platypus.Vector</a></li>
+                                <li><a href="../classes/window.Array.html">window.Array</a></li>
+                                <li><a href="../classes/window.Map.html">window.Map</a></li>
+                                <li><a href="../classes/window.String.html">window.String</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                                <li><a href="../modules/platypus.html">platypus</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+            <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1>platypus.Entity Class</h1>
+                        <div class="box meta">
+                        
+                                <div class="extends">
+                                    Extends Messenger
+                                </div>
+                        
+                                <div class="foundat">
+                                    Defined in: <a href="../files/Entity.js.html#l1"><code>platypus.Entity:1</code></a>
+                                </div>
+                        
+                                    Module: <a href="../modules/platypus.html">platypus</a>
+                        
+                        </div>
+                        
+                        
+                        <div class="box intro">
+                            <p>The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.</p>
+                        <h2>JSON Definition Example</h2>
+                        <pre class="code prettyprint"><code>{
+                            "id": "entity-id",
+                            // "entity-id" becomes <code>entity.type</code> once the entity is created.
+                         
+                            "components": [
+                            // This array lists one or more component definition objects
+                         
+                                {"type": "example-component"}
+                               // The component objects must include a "type" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
+                            ],
+                         
+                            "properties": [
+                            // This array lists properties that will be attached directly to this entity.
+                         
+                                "x": 240
+                                // For example, <code>x</code> becomes <code>entity.x</code> on the new entity.
+                            ],
+                         
+                            "filters": {
+                            // Filters are only used by top level entities loaded by the scene and are not used by the entity directly. They determine whether an entity should be loaded on a particular browser according to browser settings.
+                         
+                                "includes": ["touch"],
+                                // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.
+                        
+                                "excludes": ["mobile"]
+                                // Optional. This filter specifies that this entity should not be loaded on mobile browsers/devices that. More than one setting can be added to the array.
+                            }
+                        }</code></pre>
+                        
+                        </div>
+                        
+                            <div class="constructor">
+                                <h2>Constructor</h2>
+                                <div id="method_platypus.Entity" class="method item">
+                                    <h3 class="name"><code>platypus.Entity</code></h3>
+                                
+                                        <div class="args">
+                                            <span class="paren">(</span><ul class="args-list inline commas">
+                                                <li class="arg">
+                                                        <code class="optional">[definition]</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code class="optional">[instanceDefinition]</code>
+                                                </li>
+                                            </ul><span class="paren">)</span>
+                                        </div>
+                                
+                                        <span class="returns-inline">
+                                            <span class="type">Entity</span>
+                                        </span>
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                    <div class="meta">
+                                                <p>
+                                                Defined in
+                                        <a href="../files/Entity.js.html#l1"><code>platypus.Entity:1</code></a>
+                                        </p>
+                                
+                                
+                                
+                                    </div>
+                                
+                                    <div class="description">
+                                        
+                                    </div>
+                                
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                                
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name optional">[definition]</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>Base definition for the entity.</p>
+                                
+                                                    </div>
+                                
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[id]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                                                <div class="param-description">
+                                                                    <p>This declares the type of entity and will be stored on the Entity as <code>entity.type</code> after instantiation.</p>
+                                
+                                                                </div>
+                                
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[components]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                                                <div class="param-description">
+                                                                    <p>This lists the components that should be attached to this entity.</p>
+                                
+                                                                </div>
+                                
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[properties]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                                                <div class="param-description">
+                                                                    <p>This is a list of key/value pairs that are added directly to the Entity as <code>entity.key = value</code>.</p>
+                                
+                                                                </div>
+                                
+                                                            </li>
+                                                        </ul>
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name optional">[instanceDefinition]</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>Specific instance definition including properties that override the base definition properties.</p>
+                                
+                                                    </div>
+                                
+                                                </li>
+                                            </ul>
+                                        </div>
+                                
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                                
+                                            <div class="returns-description">
+                                                        <span class="type">Entity</span>:
+                                                    <p>Returns the new entity made up of the provided components.</p>
+                                
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
+                        
+                        <div id="classdocs" class="tabview">
+                            <ul class="api-class-tabs">
+                                <li class="api-class-tab index"><a href="#index">Index</a></li>
+                        
+                                    <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+                                    <li class="api-class-tab events"><a href="#events">Events</a></li>
+                            </ul>
+                        
+                            <div>
+                                <div id="index" class="api-class-tabpanel index">
+                                    <h2 class="off-left">Item Index</h2>
+                        
+                                        <div class="index-section methods">
+                                            <h3>Methods</h3>
+                        
+                                            <ul class="index-list methods extends">
+                                                    <li class="index-item method">
+                                                        <a href="#method_addComponent">addComponent</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_destroy">destroy</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_getAssetList">getAssetList</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_getLateAssetList">getLateAssetList</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_removeComponent">removeComponent</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_setProperty">setProperty</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_toString">toString</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
+                        
+                        
+                        
+                                        <div class="index-section events">
+                                            <h3>Events</h3>
+                        
+                                            <ul class="index-list events extends">
+                                                    <li class="index-item event">
+                                                        <a href="#event_component-added">component-added</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_component-removed">component-removed</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_load">load</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
+                                </div>
+                        
+                                    <div id="methods" class="api-class-tabpanel">
+                                        <h2 class="off-left">Methods</h2>
+                        
+                                            <div id="method_addComponent" class="method item">
+                                                <h3 class="name"><code>addComponent</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>component</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="../classes/platypus.Component.html" class="crosslink">platypus.Component</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l139"><code>addComponent:139</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Attaches the provided component to the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">component</code>
+                                                                    <span class="type"><a href="../classes/platypus.Component.html" class="crosslink">platypus.Component</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Must be an object that functions as a Component.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="../classes/platypus.Component.html" class="crosslink">platypus.Component</a></span>:
+                                                                <p>Returns the same object that was submitted.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_destroy" class="method item">
+                                                <h3 class="name"><code>destroy</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l217"><code>destroy:217</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This method removes all components from the entity.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_getAssetList" class="method item">
+                                                <h3 class="name"><code>getAssetList</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>definition</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>properties</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l243"><code>getAssetList:243</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">definition</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The definition for the Entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">properties</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Properties for this instance of the Entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
+                                                                <p>A list of the necessary assets to load.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_getLateAssetList" class="method item">
+                                                <h3 class="name"><code>getLateAssetList</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>definition</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>data</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l281"><code>getLateAssetList:281</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">definition</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The definition for the Entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Scene data that affects asset list.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
+                                                                <p>A list of the necessary assets to load.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_removeComponent" class="method item">
+                                                <h3 class="name"><code>removeComponent</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>component</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type">Component</span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l160"><code>removeComponent:160</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Removes the mentioned component from the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">component</code>
+                                                                    <span class="type">Component</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Must be a [[Component]] attached to the entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type">Component</span>:
+                                                                <p>Returns the same object that was submitted if removal was successful; otherwise returns false (the component was not found attached to the entity).</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_setProperty" class="method item">
+                                                <h3 class="name"><code>setProperty</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>properties</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l201"><code>setProperty:201</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This method sets one or more properties on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">properties</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>A list of key/value pairs to set as properties on the entity.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_toString" class="method item">
+                                                <h3 class="name"><code>toString</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l129"><code>toString:129</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns a string describing the entity.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
+                                                                <p>Returns the entity type as a string of the form "[entity entity-type]".</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                    </div>
+                        
+                        
+                        
+                                    <div id="events" class="api-class-tabpanel">
+                                        <h2 class="off-left">Events</h2>
+                        
+                                            <div id="event_component-added" class="events item">
+                                                <h3 class="name"><code>component-added</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l149"><code>component-added:149</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The entity triggers <code>component-added</code> on itself once a component has been attached, notifying other components of their peer component.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">component</code>
+                                                                    <span class="type"><a href="../classes/platypus.Component.html" class="crosslink">platypus.Component</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The added component.</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">type</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The type of component.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_component-removed" class="events item">
+                                                <h3 class="name"><code>component-removed</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l170"><code>component-removed:170</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The entity triggers <code>component-removed</code> on itself once a component has been removed, notifying other components of their peer component's removal.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">component</code>
+                                                                    <span class="type">Component</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The removed component.</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">type</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The type of component.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_load" class="events item">
+                                                <h3 class="name"><code>load</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l115"><code>load:115</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The entity triggers <code>load</code> on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

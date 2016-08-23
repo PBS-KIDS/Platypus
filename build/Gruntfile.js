@@ -105,11 +105,6 @@ module.exports = function (grunt) {
         },
 
         copy: {
-            docsZip: {
-                files: [
-                    {expand: true, cwd:'output/', src:'<%= docsZip %>', dest:'../docs/'}
-                ]
-            },
             docsSite: {
                 files: [
                     {expand:true, cwd:'<%= docsFolder %>', src:'**', dest:getConfigValue('docs_out_path')}
@@ -211,7 +206,7 @@ module.exports = function (grunt) {
      * Build the docs using YUIdocs.
      */
     grunt.registerTask('docs', [
-        "setDocsBase", "yuidoc", "resetBase", "compress", "copy:docsZip"
+        "setDocsBase", "yuidoc", "resetBase", "compress", "copy:docsSite"
     ]);
 
     /**

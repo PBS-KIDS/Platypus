@@ -97,5 +97,5 @@
 		"../src/components/XHR.js"
 	],
 
-	"docs_out_path":"./output/docs/"
+	"docs_out_path":"../docs/"
 }
