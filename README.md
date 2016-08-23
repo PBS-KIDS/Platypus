@@ -24,6 +24,6 @@ Platypus in action:
 Wild Kratts [Monkey Mayhem](http://pbskids.org/wildkratts/games/monkey-mayhem/)
 
 ***
-[Code](https://github.com/PBS-KIDS/Platypus/) - [Wiki](https://github.com/PBS-KIDS/Platypus/wiki/) - [Docs](http://platypus.gopherwoodstudios.com/)
+[Code](https://github.com/PBS-KIDS/Platypus/) - [Wiki](https://github.com/PBS-KIDS/Platypus/wiki/) - [Docs](http://gopherwood.github.io/Platypus/)
 
-Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see licenses.txt), all assets in the example games are (c) Gopherwood Studios and/or (c) PBS KIDS.
+Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see licenses.txt), all assets in the example games are © Gopherwood Studios and/or © PBS KIDS.
