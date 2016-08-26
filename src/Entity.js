@@ -130,10 +130,10 @@ platypus.Entity = (function () {
     * Returns a string describing the entity.
     *
     * @method toString
-    * @return {String} Returns the entity type as a string of the form "[entity entity-type]".
+    * @return {String} Returns the entity type as a string of the form "[Entity entity-type]".
     **/
     proto.toString = function () {
-        return "[entity " + this.type + "]";
+        return "[Entity " + this.type + "]";
     };
     
     /**

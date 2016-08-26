@@ -281,10 +281,10 @@
             },
             
             /**
-             * If children entities are listening for a `camera-update` message, they are added to an internal list.
+             * The viewport is flagged to update when children are added.
              *
              * @method 'child-entity-added'
-             * @param entity {platypus.Entity} Expects an entity as the message object to determine whether to trigger `camera-update` on it.
+             * @param entity {platypus.Entity} Expects an entity as the message object.
               **/
             "child-entity-added": function (entity) {
                 this.viewportUpdate = true;
@@ -510,7 +510,8 @@
             * @param dimensions.height {number} Height of the camera viewport
             **/
             "resize-camera": function (dimensions) {
-                this.worldCamera.viewport.resize(dimensions.width, dimensions.height);
+                this.width = dimensions.width;
+                this.height = dimensions.height;
                 this.resize();
             },
             
