@@ -80,9 +80,9 @@
         },
         playSound = function (soundDefinition, value) {
             var soundList = null,
-                eventList = this.eventList,
+                eventList = Array.setUp(),
                 player = this.player;
-            
+
             if (typeof soundDefinition === 'string') {
                 soundList = Array.setUp(soundDefinition);
             } else if (Array.isArray(soundDefinition)) {
@@ -102,8 +102,12 @@
                 addEvents(value.events, eventList);
             }
 
-            this.playingAudio = true;
             player.play(soundList, onComplete.bind(this, true, soundList), onComplete.bind(this, false, soundList));
+
+            // Removing `this.eventList` after play call since playing a VO clip could be stopping a currently playing clip with events in progress.
+            this.eventList.recycle();
+            this.eventList = eventList;
+            this.playingAudio = true;
         };
     
     return platypus.createComponentClass({

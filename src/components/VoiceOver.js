@@ -72,7 +72,11 @@
 
             if (Array.isArray(sound)) {
                 for (i = 0; i < sound.length; i++) {
-                    definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
+                    if (typeof sound[i] === 'number') {
+                        definitions.push(sound[i]);
+                    } else {
+                        definitions.push(createAudioDefinition(sound[i], events, message, frameLength));
+                    }
                 }
                 return definitions;
             } else {
