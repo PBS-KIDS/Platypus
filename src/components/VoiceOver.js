@@ -162,6 +162,7 @@
                     offsetZ: definition.offsetZ,
                     pins: definition.pins,
                     pinTo: definition.pinTo,
+                    restart: definition.restart,
                     rotate: definition.rotate,
                     scaleX: definition.scaleX,
                     scaleY: definition.scaleY,

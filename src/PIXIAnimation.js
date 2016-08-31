@@ -103,6 +103,11 @@
                     );
                 }
             }
+
+            if (!anims.default) {
+                // Set up a default animation that plays through all frames
+                anims.default = getDefaultAnimation(textures.length, textures);
+            }
             
             return anims;
         },
@@ -164,11 +169,6 @@
             // Set up animations
             anims = standardizeAnimations(spriteSheet.animations, textures);
 
-            // Set up a default animation that plays through all frames
-            if (!anims.default) {
-                anims.default = getDefaultAnimation(textures.length, textures);
-            }
-            
             bases.recycle();
             
             return Data.setUp(
@@ -210,6 +210,16 @@
             * @default 1
             */
             this.animationSpeed = speed;
+
+            /**
+             * The currently playing animation name.
+             *
+             * @property currentAnimation
+             * @default ""
+             * @type String
+             * @since 0.9.2
+             */
+            this.currentAnimation = null;
         
             /**
             * Elapsed time since animation has been started, used internally to display current texture
@@ -361,16 +371,21 @@
     *
     * @method gotoAndPlay
     * @param animation {string} The animation to begin playing.
+    * @param [restart = true] {Boolean} Whether to restart the animation if it's currently playing.
     */
-    prototype.gotoAndPlay = function (animation) {
-        this._currentTime = 0;
-        this._animation = this._animations[animation];
-        if (!this._animation) {
-            this._animation = this._animations.default;
+    prototype.gotoAndPlay = function (animation, restart) {
+        if ((this.currentAnimation !== animation) || (restart !== false)) {
+            this._currentTime = 0;
+            this._animation = this._animations[animation];
+            this.currentAnimation = animation;
+            if (!this._animation) {
+                this._animation = this._animations.default;
+                this.currentAnimation = 'default';
+            }
+            this._texture = this._animation.frames[0].texture;
+            this.anchor = this._animation.frames[0].anchor;
         }
-        this._texture = this._animation.frames[0].texture;
-        this.anchor = this._animation.frames[0].anchor;
-        
+            
         this.play();
     };
     

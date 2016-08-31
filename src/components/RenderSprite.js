@@ -199,6 +199,16 @@
             offsetZ: 0,
 
             /**
+             * Whether to restart a playing animation on event.
+             *
+             * @property restart
+             * @type Boolean
+             * @default true
+             * @since 0.9.2
+             */
+            restart: true,
+
+            /**
              * Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.
              *
              * @property rotate
@@ -419,7 +429,8 @@
 
                     if (this.eventBased) {
                         definition = Data.setUp(
-                            'animationMap', map
+                            'animationMap', map,
+                            'restart', this.restart
                         );
                         this.owner.addComponent(new EventRender(this.owner, definition));
                         definition.recycle();
@@ -678,11 +689,11 @@
              * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
              * @since 0.9.0
              */
-            "play-animation": function (animation) {
+            "play-animation": function (animation, restart) {
                 var sprite = this.sprite;
 
                 if (animation && sprite.has(animation)) {
-                    sprite.gotoAndPlay(animation);
+                    sprite.gotoAndPlay(animation, restart);
                 } else {
                     sprite.play();
                 }

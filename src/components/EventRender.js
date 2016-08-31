@@ -27,18 +27,29 @@
              * @type Object
              * @default null
              */
-            "animationMap": null
+            animationMap: null,
+
+            /**
+             * Whether to restart a playing animation on event.
+             *
+             * @property restart
+             * @type Boolean
+             * @default true
+             * @since 0.9.2
+             */
+            restart: true
         },
 
         constructor: (function () {
-            var trigger = function (animation) {
+            var trigger = function (animation, restart) {
                 /**
                  * On receiving an animation-mapped event, this component triggers this event to play an animation.
                  *
                  * @event 'play-animation'
                  * @param animation {String} Describes the animation to play.
+                 * @param restart {Boolean} Whether to restart a playing animation.
                  */
-                this.owner.triggerEvent('play-animation', animation);
+                this.owner.triggerEvent('play-animation', animation, restart);
             };
 
             return function () {
@@ -47,7 +58,7 @@
 
                 for (animation in map) {
                     if (map.hasOwnProperty(animation)) {
-                        this.addEventListener(animation, trigger.bind(this, map[animation]));
+                        this.addEventListener(animation, trigger.bind(this, map[animation], this.restart));
                     }
                 }
             };
