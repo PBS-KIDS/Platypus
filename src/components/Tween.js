@@ -50,6 +50,7 @@ Tween takes a list of tween definitions and plays them as needed.
                     tweens = definition,
                     tweenDef = null,
                     arr = null,
+                    arr2 = null,
                     tween = createjs.Tween.get(this.owner);
 
                 if (Array.isArray(values)) {
@@ -67,7 +68,17 @@ Tween takes a list of tween definitions and plays them as needed.
                             tween.call(createTrigger(this.owner, tweenDef[1]));
                         } else {
                             arr = tweenDef.greenSlice();
-                            arr.greenSplice(0);
+                            if (arr.greenSplice(0) === 'to' && arr[2] && createjs.Ease[arr[2]]) {
+                                if (arr.length > 3) {
+                                    arr2 = arr.greenSlice();
+                                    arr2.greenSplice(0);
+                                    arr2.greenSplice(0);
+                                    arr[2] = createjs.Ease[arr2.greenSplice(0)].apply(null, arr2);
+                                    arr2.recycle();
+                                } else {
+                                    arr[2] = createjs.Ease[arr[2]];
+                                }
+                            }
                             tween[tweenDef[0]].apply(tween, arr);
                             arr.recycle();
                         }
