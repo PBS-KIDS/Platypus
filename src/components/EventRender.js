@@ -30,6 +30,16 @@
             animationMap: null,
 
             /**
+             * Sets a component that this component should be connected to.
+             *
+             * @property component
+             * @type Component
+             * @default null
+             * @since 0.9.2
+             */
+            component: null,
+
+            /**
              * Whether to restart a playing animation on event.
              *
              * @property restart
@@ -41,16 +51,20 @@
         },
 
         constructor: (function () {
-            var trigger = function (animation, restart) {
-                /**
-                 * On receiving an animation-mapped event, this component triggers this event to play an animation.
-                 *
-                 * @event 'play-animation'
-                 * @param animation {String} Describes the animation to play.
-                 * @param restart {Boolean} Whether to restart a playing animation.
-                 */
-                this.owner.triggerEvent('play-animation', animation, restart);
-            };
+            var
+                trigger = function (animation, restart) {
+                    /**
+                     * On receiving an animation-mapped event, this component triggers this event to play an animation.
+                     *
+                     * @event 'play-animation'
+                     * @param animation {String} Describes the animation to play.
+                     * @param restart {Boolean} Whether to restart a playing animation.
+                     */
+                    this.owner.triggerEvent('play-animation', animation, restart);
+                },
+                method = function (animation, restart) {
+                    this.playAnimation(animation, restart);
+                };
 
             return function () {
                 var animation = '',
@@ -58,7 +72,11 @@
 
                 for (animation in map) {
                     if (map.hasOwnProperty(animation)) {
-                        this.addEventListener(animation, trigger.bind(this, map[animation], this.restart));
+                        if (this.component) {
+                            this.addEventListener(animation, method.bind(this.component, map[animation], this.restart));
+                        } else {
+                            this.addEventListener(animation, trigger.bind(this, map[animation], this.restart));
+                        }
                     }
                 }
             };

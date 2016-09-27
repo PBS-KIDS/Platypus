@@ -49,6 +49,16 @@
             "animationMap": null,
 
             /**
+             * Sets a component that this component should be connected to.
+             *
+             * @property component
+             * @type Component
+             * @default null
+             * @since 0.9.2
+             */
+            component: null,
+
+            /**
              * Optional. Forces animations to complete before starting a new animation. Defaults to `false`.
              *
              * @property forcePlayThrough

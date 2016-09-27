@@ -107,7 +107,7 @@
                 /**
                  * This sets the distance in world units from the left of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.left`.
                  *
-                 * @property bottom
+                 * @property left
                  * @type Number
                  * @default null
                  * @since 0.9.0
@@ -117,7 +117,7 @@
                 /**
                  * This sets the distance in world units from the right of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.right`.
                  *
-                 * @property bottom
+                 * @property right
                  * @type Number
                  * @default null
                  * @since 0.9.0
@@ -127,7 +127,7 @@
                 /**
                  * This sets the distance in world units from the top of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.top`.
                  *
-                 * @property bottom
+                 * @property top
                  * @type Number
                  * @default null
                  * @since 0.9.0

@@ -320,7 +320,7 @@
             scaleY: 1,
 
             /**
-             * Optional. The X swek factor of the sprite. Defaults to 0.
+             * Optional. The X skew factor of the sprite. Defaults to 0.
              *
              * @property skewX
              * @type Number
@@ -430,7 +430,8 @@
                     if (this.eventBased) {
                         definition = Data.setUp(
                             'animationMap', map,
-                            'restart', this.restart
+                            'restart', this.restart,
+                            'component', this
                         );
                         this.owner.addComponent(new EventRender(this.owner, definition));
                         definition.recycle();
@@ -690,13 +691,7 @@
              * @since 0.9.0
              */
             "play-animation": function (animation, restart) {
-                var sprite = this.sprite;
-
-                if (animation && sprite.has(animation)) {
-                    sprite.gotoAndPlay(animation, restart);
-                } else {
-                    sprite.play();
-                }
+                this.playAnimation(animation, restart);
             },
             
             /**
@@ -982,6 +977,16 @@
                      * @param pin {Object} The created pin.
                      */
                     this.owner.triggerEvent('attach-pin', pin);
+                }
+            },
+
+            playAnimation: function (animation, restart) {
+                var sprite = this.sprite;
+
+                if (animation && sprite.has(animation)) {
+                    sprite.gotoAndPlay(animation, restart);
+                } else {
+                    sprite.play();
                 }
             },
 

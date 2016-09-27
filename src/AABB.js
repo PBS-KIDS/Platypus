@@ -60,6 +60,13 @@ platypus.AABB = (function () {
         return this;
     };
     
+    /**
+     * Sets the AABB values to those of the provided AABB.
+     *
+     * @method set
+     * @param aabb {platypus.AABB} The AABB to copy values.
+     * @chainable
+     */
     proto.set = function (aabb) {
         /**
          * Whether the AABB encloses a valid space.
@@ -166,7 +173,7 @@ platypus.AABB = (function () {
     /**
      * Resizes the AABB.
      *
-     * @method reset
+     * @method resize
      * @param width {number} The new width of the AABB
      * @param height {number} The new height of the AABB
      * @chainable
