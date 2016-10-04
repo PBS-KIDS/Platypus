@@ -262,6 +262,8 @@
                         // Doing this prevents the call from reccurring.
                         if (this.useOnce) {
                             this.removeEventListener('pressup');
+                            this.state.set('disabled', true);
+                            this.owner.buttonMode = false;
                         }
                     }
 
