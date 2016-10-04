@@ -42,7 +42,8 @@ platypus.Messenger = (function () {
     proto.trigger = function (events, message, debug) {
         var args = null,
             i = 0,
-            count = 0;
+            count = 0,
+            msg = message;
         
         if (typeof events === 'string') {
             return this.triggerEvent.apply(this, arguments);
@@ -55,7 +56,10 @@ platypus.Messenger = (function () {
             args.recycle();
             return count;
         } else if (events.event) {
-            return this.triggerEvent(events.event, events.message || message, events.debug || debug);
+            if (typeof events.message !== 'undefined') {
+                msg = events.message;
+            }
+            return this.triggerEvent(events.event, msg, events.debug || debug);
         } else {
             platypus.debug.warn('Event incorrectly formatted: must be string, array, or object containing an "event" property.', events);
             return 0;
