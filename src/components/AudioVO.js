@@ -142,7 +142,7 @@
             audioMap: null
         },
             
-        constructor: function (definition) {
+        constructor: function () {
             var key = '';
             
             this.eventList = Array.setUp();
@@ -150,9 +150,9 @@
             this.playingAudio = false;
             this.player = platypus.game.app.voPlayer;
     
-            if (definition.audioMap) {
-                for (key in definition.audioMap) {
-                    if (definition.audioMap.hasOwnProperty(key)) {
+            if (this.audioMap) {
+                for (key in this.audioMap) {
+                    if (this.audioMap.hasOwnProperty(key)) {
 
                         /**
                          * Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips.
@@ -160,7 +160,7 @@
                          * @method '*'
                          * @param [message.events] {Array} Used to specify the list of events to trigger while playing this audio sequence.
                          */
-                        this.addEventListener(key, playSound.bind(this, definition.audioMap[key]));
+                        this.addEventListener(key, playSound.bind(this, this.audioMap[key]));
                     }
                 }
             }
