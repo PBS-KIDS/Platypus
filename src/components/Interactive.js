@@ -56,7 +56,17 @@
              * @type Boolean
              * @default false
              */
-            "hover": false
+            "hover": false,
+
+            /**
+             * Used when returning world coordinates. Typically coordinates are relative to the parent, but when this component is added to the layer level, coordinates must be relative to self.
+             *
+             * @property relativeToSelf
+             * @type String
+             * @default false
+             * @since 0.9.3
+             */
+            "relativeToSelf": false
         },
         
         publicProperties: {
@@ -149,7 +159,7 @@
                             return;
                         }
 
-                        matrix = container.parent.transformMatrix;
+                        matrix = this.relativeToSelf ? container.transformMatrix : container.parent.transformMatrix;
                         msg = Data.setUp(
                             "event", event.data.originalEvent,
                             "pixiEvent", event,

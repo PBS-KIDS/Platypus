@@ -65,7 +65,8 @@
                 definition = Data.setUp(
                     'container', this.container,
                     'hitArea', this.interactive.hitArea,
-                    'hover', this.interactive.hover
+                    'hover', this.interactive.hover,
+                    'relativeToSelf', true
                 );
                 this.owner.addComponent(new Interactive(this.owner, definition));
                 definition.recycle();
