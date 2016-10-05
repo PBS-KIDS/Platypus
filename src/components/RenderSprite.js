@@ -1035,6 +1035,7 @@
                 gfx.isMask = true;
 
                 this.mask = this.container.mask = gfx;
+                this.mask.z = 0; //TML 12-4-16 - Masks don't need a Z, but this makes it play nice with the Z-ordering in HandlerRender.
 
                 if (this.parentContainer) {
                     this.parentContainer.addChild(this.mask);
