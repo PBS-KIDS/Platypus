@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.2 API Documentation : components\AudioVO.js</title>
+	<title>platypus v0.9.3 API Documentation : components\AudioVO.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.2</em>
+            <em>API Documentation for: 0.9.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -293,7 +293,7 @@
                                     audioMap: null
                                 },
                                     
-                                constructor: function (definition) {
+                                constructor: function () {
                                     var key = &#x27;&#x27;;
                                     
                                     this.eventList = Array.setUp();
@@ -301,9 +301,9 @@
                                     this.playingAudio = false;
                                     this.player = platypus.game.app.voPlayer;
                             
-                                    if (definition.audioMap) {
-                                        for (key in definition.audioMap) {
-                                            if (definition.audioMap.hasOwnProperty(key)) {
+                                    if (this.audioMap) {
+                                        for (key in this.audioMap) {
+                                            if (this.audioMap.hasOwnProperty(key)) {
                         
                                                 /**
                                                  * Listens for messages specified by the &#x60;audioMap&#x60; and on receiving them, begins playing corresponding audio clips.
@@ -311,7 +311,7 @@
                                                  * @method &#x27;*&#x27;
                                                  * @param [message.events] {Array} Used to specify the list of events to trigger while playing this audio sequence.
                                                  */
-                                                this.addEventListener(key, playSound.bind(this, definition.audioMap[key]));
+                                                this.addEventListener(key, playSound.bind(this, this.audioMap[key]));
                                             }
                                         }
                                     }

@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.9.2",
+        "version": "0.9.3",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -5787,7 +5787,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 81,
+            "line": 82,
             "description": "Once the entity is loaded, this component triggers \"render-world\" to notify other components about the entities' display container.",
             "itemtype": "method",
             "name": "'load'",
@@ -5796,7 +5796,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 87,
+            "line": 88,
             "description": "Once the entity is loaded, this component triggers \"render-world\" to notify other components about the entities' display container.",
             "itemtype": "event",
             "name": "'render-world'",
@@ -5819,7 +5819,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 98,
+            "line": 99,
             "description": "This event is triggered once HandlerRender is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -5828,7 +5828,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 106,
+            "line": 107,
             "description": "Called when a new entity has been added to the parent and should be considered for addition to the handler. Entities are sent a reference the Container that we're rendering to, so they can add their display objects to it and the delta from the lastest tick.",
             "itemtype": "method",
             "name": "'child-entity-added'",
@@ -5844,7 +5844,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 113,
+            "line": 114,
             "description": "Triggered on an entity added to the parent.",
             "itemtype": "event",
             "name": "'handle-render-load'",
@@ -5872,7 +5872,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 124,
+            "line": 125,
             "description": "Pauses the children of this render Container. If a pause time is not provided. It remains paused until 'unpause-render' is called.",
             "itemtype": "method",
             "name": "'pause-render'",
@@ -5896,7 +5896,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 138,
+            "line": 139,
             "description": "Notifies children entities that rendering updates have been paused.",
             "itemtype": "event",
             "name": "'render-paused'",
@@ -5906,7 +5906,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 148,
+            "line": 149,
             "description": "Unpauses the children of this render Container.",
             "itemtype": "method",
             "name": "'unpause-render'",
@@ -5915,7 +5915,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 156,
+            "line": 157,
             "description": "Notifies children entities that rendering updates have been unpaused.",
             "itemtype": "event",
             "name": "'render-unpaused'",
@@ -5925,7 +5925,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 166,
+            "line": 167,
             "description": "Sends a 'handle-render' message to all the children in the Container. The children in the Container are also paused/unpaused if needed and sorted according to their z value.",
             "itemtype": "method",
             "name": "'tick'",
@@ -5941,7 +5941,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 192,
+            "line": 193,
             "description": "Triggered every tick on the children entities.",
             "itemtype": "event",
             "name": "'handle-render'",
@@ -6002,7 +6002,19 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 63,
+            "line": 61,
+            "description": "Used when returning world coordinates. Typically coordinates are relative to the parent, but when this component is added to the layer level, coordinates must be relative to self.",
+            "itemtype": "property",
+            "name": "relativeToSelf",
+            "type": "String",
+            "default": "false",
+            "since": "0.9.3",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 73,
             "description": "Determines whether hovering over the sprite should alter the cursor.",
             "itemtype": "property",
             "name": "buttonMode",
@@ -6013,7 +6025,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 82,
+            "line": 92,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -6029,7 +6041,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 92,
+            "line": 102,
             "description": "Listens to this event to update whether the interactive element should be in button mode.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -6038,7 +6050,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 103,
+            "line": 113,
             "description": "This event dispatches a PIXI.Event on this component's PIXI.Sprite. Useful for rerouting mouse/keyboard events.",
             "itemtype": "method",
             "name": "'dispatch-event'",
@@ -6054,7 +6066,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 113,
+            "line": 123,
             "description": "Adds input event listeners to the sprite, enabling input.",
             "itemtype": "method",
             "name": "'input-on'",
@@ -6063,7 +6075,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 124,
+            "line": 134,
             "description": "Removes the input event listeners on the sprite, disabling input.",
             "itemtype": "method",
             "name": "'input-off'",
@@ -6655,7 +6667,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 271,
+            "line": 273,
             "description": "If a press moves over the button, it's not cancelled.",
             "itemtype": "method",
             "name": "'mouseover'",
@@ -6664,7 +6676,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 285,
+            "line": 287,
             "description": "If a press moves off of the button, it's cancelled.",
             "itemtype": "method",
             "name": "'mouseout'",
@@ -6673,7 +6685,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 296,
+            "line": 298,
             "description": "Disables the entity.",
             "itemtype": "method",
             "name": "'disable'",
@@ -6682,7 +6694,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 306,
+            "line": 308,
             "description": "Enables the entity.",
             "itemtype": "method",
             "name": "'enable'",
@@ -6691,7 +6703,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 316,
+            "line": 318,
             "description": "Toggles whether the entity is disabled.",
             "itemtype": "method",
             "name": "'toggle-disabled'",
@@ -6700,7 +6712,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 328,
+            "line": 330,
             "description": "Sets the entity's highlighted state to `true`.",
             "itemtype": "method",
             "name": "'highlight'",
@@ -6710,7 +6722,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 338,
+            "line": 340,
             "description": "Sets the entity's highlighted state to `false`.",
             "itemtype": "method",
             "name": "'unhighlight'",
@@ -6720,7 +6732,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 348,
+            "line": 350,
             "description": "Toggles the entity's highlighted state.",
             "itemtype": "method",
             "name": "'toggle-highlight'",
@@ -12812,7 +12824,7 @@
         },
         {
             "file": "Messenger.js",
-            "line": 65,
+            "line": 69,
             "description": "This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.",
             "itemtype": "method",
             "name": "triggerEvent",
@@ -12846,7 +12858,7 @@
         },
         {
             "file": "Messenger.js",
-            "line": 155,
+            "line": 159,
             "description": "This method returns all the messages that this entity is concerned about.",
             "itemtype": "method",
             "name": "getMessageIds",
@@ -12859,7 +12871,7 @@
         },
         {
             "file": "Messenger.js",
-            "line": 165,
+            "line": 169,
             "description": "This method relinguishes Messenger properties",
             "itemtype": "method",
             "name": "destroy",
