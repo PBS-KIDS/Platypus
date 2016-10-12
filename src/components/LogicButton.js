@@ -203,7 +203,7 @@
                         eventData.pixiEvent.stopPropagation();
 
                         // Doing this prevents the call from reccurring.
-                        if (this.useOnce) {
+                        if (this.useOnce && this.removeEventListener) {
                             this.removeEventListener('mousedown');
                         }
                     }
@@ -260,7 +260,7 @@
                         eventData.pixiEvent.stopPropagation();
 
                         // Doing this prevents the call from reccurring.
-                        if (this.useOnce) {
+                        if (this.useOnce && this.removeEventListener) { //Second check is to ensure method exists which won't be the case if a result of the press is the button being destroyed.
                             this.removeEventListener('pressup');
                             this.state.set('disabled', true);
                             this.owner.buttonMode = false;
