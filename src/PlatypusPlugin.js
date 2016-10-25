@@ -22,6 +22,7 @@
     
     var Application = include('springroll.Application'),
         ApplicationPlugin = include('springroll.ApplicationPlugin'),
+        PIXI = include('window.PIXI', false),
         updateFunction = null,
         plugin = new ApplicationPlugin(),
         resizeFunction = null,
@@ -83,7 +84,7 @@
                 var cJS     = window.createjs,
                     options = app.options,
                     author  = (options.author ? 'by ' + options.author : ''),
-                    pixi    = window.PIXI,
+                    pixi    = PIXI,
                     title   = app.name || document.title || '',
                     engine  = 'Platypus ' + platypus.version,
                     version = options.version || '(?)',
@@ -160,8 +161,12 @@
             }
         };
     
-    if (window.PIXI) {
-        window.PIXI.utils._saidHello = true; // Over-riding the pixi.js hello since we're creating our own.
+    if (PIXI) { // Over-riding the pixi.js hello since we're creating our own.
+        if (PIXI.utils.skipHello) { // version 4+
+            PIXI.utils.skipHello();
+        } else { // version 3-
+            PIXI.utils._saidHello = true;
+        }
     }
 
     plugin.setup = function () {
