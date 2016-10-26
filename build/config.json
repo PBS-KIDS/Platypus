@@ -5,7 +5,6 @@
 		"../src/platypus.js",
         "../src/mixins/Array.js",
 		"../src/mixins/PIXI.Graphics.js",
-		"../src/mixins/PIXI.Container.js",
         "../src/mixins/String.js",
         "../src/polyfills/Map.js",
 		"../src/Data.js",
