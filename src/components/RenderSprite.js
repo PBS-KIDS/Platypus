@@ -605,19 +605,7 @@
         
         methods: {
             checkCameraBounds: function () {
-      //          var bounds = null,
-        //            sprite   = this.sprite;
-                
-//                matrix = sprite.transformMatrix.copy(tempMatrix);
-
-//                sprite._currentBounds = null;
-                /*bounds = sprite.getBounds(true);//matrix);
-                
-                if (bounds && ((bounds.x + bounds.width < this.camera.left) || (bounds.x > this.camera.right) || (bounds.y + bounds.height < this.camera.top) || (bounds.y > this.camera.bottom))) {
-                    this.isOnCamera = false;
-                } else {*/
-                this.isOnCamera = true;
-                //}
+                this.isOnCamera = this.owner.parent.isOnCanvas(this.sprite.getBounds(true));
             },
             
             addStage: function (stage) {

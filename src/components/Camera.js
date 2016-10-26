@@ -989,6 +989,14 @@
                 this.forwardFollower.recycle();
                 this.lastFollow.recycle();
             }
+        },
+
+        publicMethods: {
+            isOnCanvas: function (bounds) {
+                var canvas = this.canvas;
+
+                return !bounds || !((bounds.x + bounds.width < 0) || (bounds.x > canvas.width) || (bounds.y + bounds.height < 0) || (bounds.y > canvas.height));
+            }
         }
     });
 }());
