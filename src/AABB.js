@@ -160,6 +160,16 @@ platypus.AABB = (function () {
     };
     
     /**
+     * Returns a string listing AABB dimensions.
+     *
+     * @method toString
+     * @return String
+     */
+    proto.toString = function () {
+        return '[AABB: ' + this.width + 'x' + this.height + ' (' + this.x + ', ' + this.y + ')]';
+    };
+
+    /**
      * Resets all the values in the AABB so that the AABB can be reused.
      *
      * @method reset
