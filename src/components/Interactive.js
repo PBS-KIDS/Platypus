@@ -159,7 +159,7 @@
                             return;
                         }
 
-                        matrix = this.relativeToSelf ? container.transformMatrix : container.parent.transformMatrix;
+                        matrix = this.relativeToSelf ? container.transform.worldTransform : container.parent.transform.worldTransform;
                         msg = Data.setUp(
                             "event", event.data.originalEvent,
                             "pixiEvent", event,

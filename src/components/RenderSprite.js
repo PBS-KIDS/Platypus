@@ -10,7 +10,6 @@
     'use strict';
     
     var AABB = include('platypus.AABB'),
-        Container = include('PIXI.Container'),
         Data = include('platypus.Data'),
         EventRender = include('platypus.components.EventRender'),
         Graphics = include('PIXI.Graphics'),
@@ -18,7 +17,6 @@
         Matrix = include('PIXI.Matrix'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
         StateRender = include('platypus.components.StateRender'),
-        tempMatrix = new Matrix(),
         processGraphics = (function () {
             var process = function (gfx, value) {
                 var i = 0,
@@ -154,40 +152,6 @@
              * @deprecated since 0.9.0
              */
             acceptInput: null,
-
-            /**
-             * Optional. Defines locations where other sprites on this entity can pin themselves to this sprite. This is useful for puppet-like dynamics. Each pin location has an id, which is used in the 'pinTo' property of another sprite to define where it connects. A pin location is defined as a set of (x,y,z) coordinates or, for moving pins, as a collection of (x,y,z) coordinates cooresponding to frames in the spritesheet. These coordinates are relative to the top-left corner of the sprite.
-             *
-             *  "pinLocations": [{
-             *      "pinId": "head",
-             *      "x": 15,
-             *      "y": -30,
-             *      "z": 1,
-             *
-             *      -AND/OR one of the following two-
-             *
-             *      "frames": {"0": {"x": 12, "y": -32}, "3": {"x": 12}}  //The keys specify the the frame to match the pin to. If a frame doesn't have coordinates or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is invisible.
-             *
-             *      "frames": [{"x": 12, "y": -32}, null, {"x": 12}]  //In this format, we assume the indexes of the array match those of the frames. If a given index is null or a parameter is undefined, the x/y/z values above are used. If they're not specified, the pinned sprite is invisible.
-             *
-             *  }],
-             *
-             * @property pinLocations
-             * @type Object
-             * @default null
-             * @deprecated since 0.9.0, Use RenderSpine for better functionality.
-             */
-            pinLocations: null,
-
-            /**
-             * Optional. Pin id of another sprite on this entity to pin this sprite to.
-             *
-             * @property pinTo
-             * @type String
-             * @default null
-             * @deprecated since 0.9.0, Use RenderSpine for better functionality.
-             */
-            pinTo: null,
 
             /**
              * Optional. The offset of the z-index of the sprite from the entity's z-index. Will default to 0.
@@ -460,34 +424,13 @@
                  */
                 this.sprite = new PIXIAnimation(ss, animation);
                 this.sprite.on('complete', animationEnded.bind(this));
-                
-                // add pins to sprite and setup this.container if needed.
-                if (this.pinLocations) {
-                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite pinning has been deprecated in favor of the "RenderSpine" component which provides better functionality.');
-
-                    this.container = new Container();
-                    this.container.transformMatrix = new Matrix();
-                    this.container.addChild(this.sprite);
-                    this.sprite.z = 0;
-
-                    this.addPins(this.pinLocations, ss.frames);
-                    this.sprite.transformMatrix = new Matrix();
-                } else {
-                    this.container = this.sprite;
-                    this.sprite.transformMatrix = new Matrix();
-                }
     
-                // pin to another RenderSprite
-                if (this.pinTo) {
-                    this.owner.triggerEvent('pin-me', this.pinTo);
-                }
-                
-                /* These next few need this.container set up */
+                /* These next few need this.sprite set up */
                 
                 //handle hitArea
                 if (this.interactive) {
                     definition = Data.setUp(
-                        'container', this.container,
+                        'container', this.sprite,
                         'hitArea', this.interactive.hitArea,
                         'hover', this.interactive.hover
                     );
@@ -497,7 +440,7 @@
     
                 if (this.cache) {
                     this.updateSprite(false);
-                    this.owner.cacheRender = this.container;
+                    this.owner.cacheRender = this.sprite;
                 }
                 
                 ss.recycleSpriteSheet();
@@ -512,7 +455,7 @@
              */
             "cache": function () {
                 this.updateSprite(false);
-                this.owner.cacheRender = this.container;
+                this.owner.cacheRender = this.sprite;
                 this.cache = true;
                 if (this.owner.parent && this.owner.parent.triggerEventOnChildren) {
                     /**
@@ -564,7 +507,7 @@
              * @param renderData.container {PIXI.Container} The parent container.
              */
             "handle-render": function (renderData) {
-                if (!this.container) { // If this component's removal is pending
+                if (!this.sprite) { // If this component's removal is pending
                     return;
                 }
 
@@ -599,61 +542,6 @@
              */
             "show-sprite": function () {
                 this.visible = true;
-            },
-            
-            /**
-             * If this component has a matching pin location, it will trigger "attach-pin" on the entity with the matching pin location.
-             *
-             * @method 'pin-me'
-             * @param pinId {String} The id of the pin location we're trying to attach to.
-             * @deprecated since 0.9.0
-             */
-            "pin-me": function (pinId) {
-                if (this.pins && this.pins[pinId]) {
-                    /**
-                     * Called by "pin-me", this event is responding to the inquiring component with the information about the pin it should attach to.
-                     *
-                     * @event 'attach-pin'
-                     * @param pinInfo {Object} Information about the pin.
-                     */
-                    this.owner.triggerEvent("attach-pin", this.pins[pinId]);
-                }
-            },
-            
-            /**
-             * On receiving this message, the component checks whether it wants to be pinned, and if so, adds itself to the provided container.
-             *
-             * @method 'attach-pin'
-             * @param pinInfo {Object} Information about the pin.
-             * @param pinInfo.pinId {String} The pin id.
-             * @param pinInfo.container {PIXI.Container} The container to add this sprite to.
-             * @deprecated since 0.9.0
-             */
-            "attach-pin": function (pinInfo) {
-                if (pinInfo.pinId === this.pinTo) {
-                    this.parentContainer = pinInfo.container;
-                    this.parentContainer.addChild(this.container);
-                    this.owner.triggerEvent('input-on');
-                    this.pinnedTo = pinInfo;
-                    this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first "render" event.
-                }
-            },
-            
-            /**
-             * On receiving this message, the component checks whether it is pinned to the specified pin. If so, it removes itself from the container.
-             *
-             * @method 'remove-pin'
-             * @param pinInfo {Object} Information about the pin.
-             * @param pinInfo.pinId {String} The pin id.
-             * @param pinInfo.container {PIXI.Container} The container to add this sprite to.
-             * @deprecated since 0.9.0
-             */
-            "remove-pin": function (pinInfo) {
-                if (pinInfo.pinId === this.pinTo) {
-                    this.parentContainer.removeChild(this.container);
-                    this.parentContainer = null;
-                    this.pinnedTo = null;
-                }
             },
             
             /**
@@ -717,32 +605,25 @@
         
         methods: {
             checkCameraBounds: function () {
-                var bounds = null,
-                    sprite   = this.sprite,
-                    matrix   = null,
-                    pinning  = null;
+      //          var bounds = null,
+        //            sprite   = this.sprite;
                 
-                matrix = sprite.transformMatrix.copy(tempMatrix);
-                pinning = this.pinnedTo;
-                while (pinning) {
-                    matrix.prepend(pinning.container.transformMatrix);
-                    pinning = pinning.pinnedTo;
-                }
+//                matrix = sprite.transformMatrix.copy(tempMatrix);
 
-                sprite._currentBounds = null;
-                bounds = sprite.getBounds(matrix);
+//                sprite._currentBounds = null;
+                /*bounds = sprite.getBounds(true);//matrix);
                 
                 if (bounds && ((bounds.x + bounds.width < this.camera.left) || (bounds.x > this.camera.right) || (bounds.y + bounds.height < this.camera.top) || (bounds.y > this.camera.bottom))) {
                     this.isOnCamera = false;
-                } else {
-                    this.isOnCamera = true;
-                }
+                } else {*/
+                this.isOnCamera = true;
+                //}
             },
             
             addStage: function (stage) {
                 if (stage && !this.pinTo) {
                     this.parentContainer = stage;
-                    this.parentContainer.addChild(this.container);
+                    this.parentContainer.addChild(this.sprite);
 
                     //Handle mask
                     if (this.mask) {
@@ -769,61 +650,31 @@
                 return function (playing) {
                     var x = 0,
                         y = 0,
-                        o = null,
+                        o = this.owner.orientationMatrix,
                         rotation = 0,
                         mirrored = 1,
                         flipped  = 1,
-                        angle    = null,
-                        m        = this.affine.copy(this.container.transformMatrix),
-                        temp     = Matrix.TEMP_MATRIX;
+                        angle    = null;
                     
-                    if (this.pinnedTo) {
-                        if (this.pinnedTo.frames && this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame]) {
-                            x = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].x;
-                            y = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].y;
-                            if (this.container.z !== this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z) {
-                                if (this.parentContainer) {
-                                    this.parentContainer.reorder = true;
-                                }
-                                this.container.z = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].z;
-                            }
-                            rotation = this.pinnedTo.frames[this.pinnedTo.sprite.currentFrame].angle || 0;
-                            this.visible = true;
-                        } else if (this.pinnedTo.defaultPin) {
-                            x = this.pinnedTo.defaultPin.x;
-                            y = this.pinnedTo.defaultPin.y;
-                            if (this.container.z !== this.pinnedTo.defaultPin.z) {
-                                if (this.parentContainer) {
-                                    this.parentContainer.reorder = true;
-                                }
-                                this.container.z = this.pinnedTo.defaultPin.z;
-                            }
-                            rotation = this.pinnedTo.defaultPin.angle || 0;
-                            this.visible = true;
-                        } else {
-                            this.visible = false;
+                    x = this.owner.x;
+                    y = this.owner.y;
+                    if (this.rotate) {
+                        rotation = this.rotation;
+                    }
+                    if (this.sprite.z !== (this.owner.z + this.offsetZ)) {
+                        if (this.parentContainer) {
+                            this.parentContainer.reorder = true;
                         }
-                    } else {
-                        x = this.owner.x;
-                        y = this.owner.y;
-                        if (this.rotate) {
-                            rotation = this.rotation;
-                        }
-                        if (this.container.z !== (this.owner.z + this.offsetZ)) {
-                            if (this.parentContainer) {
-                                this.parentContainer.reorder = true;
-                            }
-                            this.container.z = (this.owner.z + this.offsetZ);
-                        }
-    
-                        if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
-                            this.container.alpha = this.owner.opacity;
-                        }
+                        this.sprite.z = (this.owner.z + this.offsetZ);
+                    }
+
+                    if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
+                        this.sprite.alpha = this.owner.opacity;
                     }
                     
-                    if (this.container.reorder) {
-                        this.container.reorder = false;
-                        this.container.children.sort(sort);
+                    if (this.sprite.reorder) {
+                        this.sprite.reorder = false;
+                        this.sprite.children.sort(sort);
                     }
                     
                     if (this.mirror || this.flip) {
@@ -846,38 +697,10 @@
                      */
                     this.owner.triggerEvent('update-animation', playing);
 
-                    // Handle rotation
-                    if (rotation) {
-                        m.rotate((rotation / 180) * Math.PI);
-                    }
-
-                    if (this.pinnedTo) {
-                        temp.tx = x;
-                        temp.ty = y;
-                        temp.a = mirrored;
-                        temp.b = 0;
-                        temp.c = 0;
-                        temp.d = flipped;
-                        m.prepend(temp);
+                    if (o) { // This is a 3x3 2D matrix describing an affine transformation.
+                        this.sprite.setTransform(o[0][2], o[1][2], o[0][0], o[1][1], (rotation ? (rotation / 180) * Math.PI : 0), o[1][0], o[0][1]);
                     } else {
-                        if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
-                            o = this.owner.orientationMatrix;
-                            temp.tx = o[0][2];
-                            temp.ty = o[1][2];
-                            temp.a = o[0][0];
-                            temp.b = o[1][0];
-                            temp.c = o[0][1];
-                            temp.d = o[1][1];
-                            m.prepend(temp);
-                        }
-                        
-                        temp.tx = x;
-                        temp.ty = y;
-                        temp.a = this.scaleX * mirrored;
-                        temp.b = this.owner.skewX;
-                        temp.c = this.owner.skewY;
-                        temp.d = this.scaleY * flipped;
-                        m.prepend(temp);
+                        this.sprite.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
                     }
                     
                     // Set isCameraOn of sprite if within camera bounds
@@ -889,97 +712,10 @@
                     this.lastX = this.owner.x;
                     this.lastY = this.owner.y;
                     this.wasVisible = this.visible;
-                    this.container.visible = (this.visible && this.isOnCamera) || this.dragMode;
+                    this.sprite.visible = (this.visible && this.isOnCamera) || this.dragMode;
                 };
             }()),
             
-            addPins: function (pins, frames) {
-                var i = 0,
-                    j = 0,
-                    pin   = null,
-                    regX  = frames.regX || 0,
-                    regY  = frames.regY || 0,
-                    isArray = Array.isArray(frames),
-                    zFix = 0.00000001;
-                
-                this.pinsToRemove = this.pinsToRemove || Array.setUp();
-                
-                this.pins = {};
-                
-                for (i = 0; i < pins.length; i++) {
-                    this.pinsToRemove.push(pins[i].pinId);
-
-                    if (isArray) {
-                        regX = frames[0][5] || 0;
-                        regY = frames[0][6] || 0;
-                    }
-                    
-                    this.pins[pins[i].pinId] = pin = {
-                        pinId: pins[i].pinId,
-                        sprite: this.sprite,
-                        container: this.container
-                    };
-
-                    if ((typeof pins[i].x === 'number') && (typeof pins[i].y === 'number')) {
-                        pin.defaultPin = {
-                            x: (pins[i].x - regX),
-                            y: (pins[i].y - regY),
-                            z: pins[i].z || zFix, //force z to prevent flickering z-order issues.
-                            angle: (pins[i].angle || 0)
-                        };
-                    }
-                    
-                    if (pins[i].frames) {
-                        pin.frames = Array.setUp();
-                        for (j = 0; j < pins[i].frames.length; j++) {
-                            if (pins[i].frames[j]) {
-                                if (isArray) {
-                                    regX = frames[j][5] || 0;
-                                    regY = frames[j][6] || 0;
-                                }
-                                if ((typeof pins[i].frames[j].x === 'number') && (typeof pins[i].frames[j].y === 'number')) {
-                                    pin.frames.push({
-                                        x: (pins[i].frames[j].x - regX),
-                                        y: (pins[i].frames[j].y - regY),
-                                        z: pins[i].frames[j].z || (pin.defaultPin ? pin.defaultPin.z : zFix),
-                                        angle: pins[i].frames[j].angle || (pin.defaultPin ? pin.defaultPin.angle : 0)
-                                    });
-                                } else if (pin.defaultPin) {
-                                    if (typeof pins[i].frames[j].x === 'number') {
-                                        pin.frames.push({
-                                            x: (pins[i].frames[j].x - regX),
-                                            y: pin.defaultPin.y,
-                                            z: pins[i].frames[j].z || pin.defaultPin.z,
-                                            angle: pins[i].frames[j].angle || pin.defaultPin.angle
-                                        });
-                                    } else if (typeof pins[i].frames[j].y === 'number') {
-                                        pin.frames.push({
-                                            x: pin.defaultPin.x,
-                                            y: (pins[i].frames[j].y - regY),
-                                            z: pins[i].frames[j].z || pin.defaultPin.z,
-                                            angle: pins[i].frames[j].angle || pin.defaultPin.angle
-                                        });
-                                    } else {
-                                        pin.frames.push(null);
-                                    }
-                                } else {
-                                    pin.frames.push(null);
-                                }
-                            } else {
-                                pin.frames.push(null);
-                            }
-                        }
-                    }
-                    /**
-                     * This event is triggered for each pin created. It is intended for other RenderSprite components looking to pin to this pin.
-                     *
-                     * @event 'attach-pin'
-                     * @param pin {Object} The created pin.
-                     */
-                    this.owner.triggerEvent('attach-pin', pin);
-                }
-            },
-
             playAnimation: function (animation, restart) {
                 var sprite = this.sprite;
 
@@ -990,21 +726,6 @@
                 }
             },
 
-            removePins: function () {
-                var i = 0;
-                
-                if (this.pins && this.pinsToRemove) {
-                    for (i = 0; i < this.pinsToRemove.length; i++) {
-                        this.owner.triggerEvent('remove-pin', this.pins[this.pinsToRemove[i]].pinId);
-                        if (this.pins[this.pinsToRemove[i]].frames) {
-                            this.pins[this.pinsToRemove[i]].frames.recycle();
-                        }
-                        delete this.pins[this.pinsToRemove[i]];
-                    }
-                    this.pinsToRemove.recycle();
-                }
-            },
-            
             setMask: function (shape) {
                 var gfx = null;
                 
@@ -1013,7 +734,7 @@
                 }
                 
                 if (!shape) {
-                    this.mask = this.container.mask = null;
+                    this.mask = this.sprite.mask = null;
                     return;
                 }
                 
@@ -1034,7 +755,7 @@
                 
                 gfx.isMask = true;
 
-                this.mask = this.container.mask = gfx;
+                this.mask = this.sprite.mask = gfx;
                 this.mask.z = 0; //TML 12-4-16 - Masks don't need a Z, but this makes it play nice with the Z-ordering in HandlerRender.
 
                 if (this.parentContainer) {
@@ -1044,13 +765,10 @@
             
             destroy: function () {
                 this.camera.recycle();
-                if (this.parentContainer && !this.container.mouseTarget) {
-                    this.parentContainer.removeChild(this.container);
+                if (this.parentContainer && !this.sprite.mouseTarget) {
+                    this.parentContainer.removeChild(this.sprite);
                     this.parentContainer = null;
-                    this.container = null;
-                }
-                this.removePins();
-                if (!this.cache) {
+                } else if (!this.cache) {
                     this.sprite.destroy();
                 }
                 this.sprite = null;

@@ -471,18 +471,6 @@
         }
     };
     
-    PIXIAnimation.destroyBaseTextures = function () {
-        var btCache = baseTextureCache,
-            key = '';
-        
-        for (key in btCache) {
-            if (btCache.hasOwnProperty(key)) {
-                btCache[key].destroy();
-                delete btCache[key];
-            }
-        }
-    };
-    
     PIXIAnimation.EmptySpriteSheet = {
         framerate: 60,
         frames: [],

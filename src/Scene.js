@@ -319,8 +319,6 @@ platypus.Scene = (function () {
         this.layers.recycle();
         this.layers = null;
         
-        PIXIAnimation.destroyBaseTextures();
-        
         platypus.game.currentScene = null;
     };
     

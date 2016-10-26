@@ -2,8 +2,8 @@
 (function () {
     'use strict';
     
-    var prototype = PIXI.Container.prototype;
-    
+    /* var prototype = PIXI.Container.prototype;
+
     prototype.updateTransform = function () {
         var i = 0,
             j = 0;
@@ -30,5 +30,5 @@
         }
     };
     
-    prototype.containerUpdateTransform = prototype.updateTransform;
+    prototype.containerUpdateTransform = prototype.updateTransform;*/
 }());

@@ -253,7 +253,6 @@
                 platypus.debug.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
             this.container = new PIXI.Container();
-            this.matrix = this.container.transformMatrix = new PIXI.Matrix();
             this.parentContainer.addChild(this.container);
             this.movedCamera = false;
         },
@@ -276,7 +275,6 @@
              */
             "render-world": function (data) {
                 this.world = data.world;
-                this.world.transformMatrix = this.world.transformMatrix || new PIXI.Matrix();
                 this.container.addChild(this.world);
             },
             
@@ -374,7 +372,7 @@
              **/
             "pressmove": function (event) {
                 if (this.mouse) {
-                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transformMatrix.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transformMatrix.d)) {
+                    if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transform.worldTransform.d)) {
                         this.viewportUpdate = true;
                         this.movedCamera = true;
                         event.pixiEvent.stopPropagation();
@@ -409,7 +407,6 @@
             "tick": function (resp) {
                 var msg       = this.message,
                     viewport  = msg.viewport,
-                    transform = null,
                     worldCamera = this.worldCamera;
                 
                 if ((this.state === 'following') && this.followingFunction(this.following, resp.delta)) {
@@ -456,17 +453,7 @@
                     msg.orientation    = worldCamera.orientation;
                     
                     // Transform the world to appear within camera
-                    //this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
-                    transform = this.world.transformMatrix;
-                    transform.a = msg.scaleX;
-                    transform.b = 0;
-                    transform.c = 0;
-                    transform.d = msg.scaleY;
-                    if (msg.orientation) {
-                        transform.rotate(msg.orientation);
-                    }
-                    transform.tx = (viewport.halfWidth - viewport.x) * msg.scaleX;
-                    transform.ty = (viewport.halfHeight - viewport.y) * msg.scaleY;
+                    this.world.setTransform((viewport.halfWidth - viewport.x) * msg.scaleX, (viewport.halfHeight - viewport.y) * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
                     
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
@@ -871,9 +858,7 @@
                 this.windowPerWorldUnitWidth  = this.viewport.width  / worldVP.width;
                 this.windowPerWorldUnitHeight = this.viewport.height / worldVP.height;
                 
-                //this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
-                this.matrix.tx = this.viewport.x - this.viewport.halfWidth;
-                this.matrix.ty = this.viewport.y - this.viewport.halfHeight;
+                this.container.setTransform(this.viewport.x - this.viewport.halfWidth, this.viewport.y - this.viewport.halfHeight);
                 
                 this.viewportUpdate = true;
                 
