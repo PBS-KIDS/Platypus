@@ -181,7 +181,6 @@
                     triggerPressmove = function (eventName, altEventName, event) {
                         if (this.pressed) {
                             trigger.call(this, eventName, event);
-                            event.target.mouseTarget = true;
                         } else {
                             trigger.call(this, altEventName, event);
                         }
