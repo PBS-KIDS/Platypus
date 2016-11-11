@@ -605,7 +605,7 @@
         
         methods: {
             checkCameraBounds: function () {
-                this.isOnCamera = this.owner.parent.isOnCanvas(this.sprite.getBounds(true));
+                this.isOnCamera = this.owner.parent.isOnCanvas(this.sprite.getBounds(false));
             },
             
             addStage: function (stage) {

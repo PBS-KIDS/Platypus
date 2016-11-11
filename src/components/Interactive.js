@@ -174,13 +174,14 @@
                     triggerMousedown = function (eventName, event) {
                         if (!this.pressed) {
                             trigger.call(this, eventName, event);
-                            event.target.mouseTarget = true;
+                            event.currentTarget.mouseTarget = true;
                             this.pressed = true;
                         }
                     },
                     triggerPressmove = function (eventName, altEventName, event) {
                         if (this.pressed) {
                             trigger.call(this, eventName, event);
+                            event.currentTarget.mouseTarget = true;
                         } else {
                             trigger.call(this, altEventName, event);
                         }
@@ -188,11 +189,11 @@
                     triggerPressup = function (eventName, event) {
                         if (this.pressed) {
                             trigger.call(this, eventName, event);
-                            event.target.mouseTarget = false;
+                            event.currentTarget.mouseTarget = false;
                             this.pressed = false;
                             
-                            if (event.target.removeDisplayObject) {
-                                event.target.removeDisplayObject();
+                            if (event.currentTarget.removeDisplayObject) {
+                                event.currentTarget.removeDisplayObject();
                             }
                         }
                     },
