@@ -96,6 +96,9 @@
                     
                     if (pixi) {
                         using.push('Pixi.js ' + pixi.VERSION);
+                        if (pixi.animate) {
+                            using.push('PixiAnimate ' + pixi.animate.VERSION);
+                        }
                     }
                     if (cJS) {
                         if (cJS.EaselJS) {
