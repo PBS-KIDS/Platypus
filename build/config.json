@@ -82,6 +82,7 @@
 		"../src/components/RelayLinker.js",
 		"../src/components/RelayParent.js",
 		"../src/components/RelaySelf.js",
+		"../src/components/RenderAnimation.js",
 		"../src/components/RenderDebug.js",
 		"../src/components/RenderDestroyMe.js",
 		"../src/components/RenderProgress.js",
