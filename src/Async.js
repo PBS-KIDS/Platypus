@@ -1,11 +1,11 @@
-/*global platypus, recycle, springroll */
+/*global platypus, recycle, springroll, setTimeout */
 platypus.Async = (function () {
     'use strict';
     
     var callback = function () {
             this.increment -= 1;
             if (!this.increment) {
-                this.finalCallback();
+                setTimeout(this.finalCallback, 0); //ensure async to keep code flow consistent.
                 this.recycle();
             }
         },
@@ -13,11 +13,16 @@ platypus.Async = (function () {
             var cb = callback.bind(this),
                 i = arr.length;
 
-            this.increment = arr.length;
-            this.finalCallback = finalCallback;
+            if (!i) {
+                finalCallback();
+                this.recycle();
+            } else {
+                this.increment = i;
+                this.finalCallback = finalCallback;
 
-            while (i--) {
-                arr[i](cb);
+                while (i--) {
+                    arr[i](cb);
+                }
             }
         };
     
