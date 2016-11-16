@@ -134,7 +134,7 @@ platypus.Scene = (function () {
                     }
                 }
                 if (supportedLayer) {
-                    this.layers.push(new platypus.Entity(layerDefinition, {
+                    this.layers.push(new Entity(layerDefinition, {
                         properties: properties
                     }));
                 }

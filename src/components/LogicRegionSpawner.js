@@ -116,7 +116,7 @@ This component spawns new entities within a given area at set intervals.
                         this.spawnPosition.y = this.owner.y - (this.owner.regY || 0) + (Math.random() * this.owner.height);
                     }
 
-                    this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new platypus.Entity(this.entityClass, this.spawnProperties)));
+                    this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new Entity(this.entityClass, this.spawnProperties)));
                 }
             }
         },

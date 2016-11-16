@@ -127,7 +127,7 @@ This component creates an entity and propels it away. This is useful for casting
                     }
                     
                     if (this.parent) {
-                        this.owner.triggerEvent('entity-created', this.parent.addEntity(new platypus.Entity(this.entityClass, this.propertiesContainer)));
+                        this.owner.triggerEvent('entity-created', this.parent.addEntity(new Entity(this.entityClass, this.propertiesContainer)));
                     }
                 }
                 
