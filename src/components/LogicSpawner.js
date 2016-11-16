@@ -48,7 +48,7 @@ This component creates an entity and propels it away. This is useful for casting
 
             this.state = this.owner.state;
             this.stateName = definition.state || 'spawning';
-            this.entityClass = platypus.game.settings.entities[className];
+            this.originalZ = (platypus.game.settings.entities[className] && platypus.game.settings.entities[className].properties && platypus.game.settings.entities[className].properties.z) || 0;
             this.speed = definition.speed || this.owner.speed || 0;
 
             this.state.set(this.stateName, false);
@@ -73,6 +73,7 @@ This component creates an entity and propels it away. This is useful for casting
             
             
             this.propertiesContainer = {
+                type: className,
                 properties: this.spawneeProperties
             };
             
@@ -85,14 +86,12 @@ This component creates an entity and propels it away. This is useful for casting
         events: {// These are messages that this component listens for
             "handle-logic": function () {
                 var offset = 0,
-                    classZ = 0,
                     state  = this.state;
                 
                 if (this.firing) {
                     this.spawneeProperties.x = this.owner.x;
                     this.spawneeProperties.y = this.owner.y;
-                    classZ = (this.entityClass.properties && this.entityClass.properties.z) ? this.entityClass.properties.z : 0;
-                    this.spawneeProperties.z = this.owner.z + classZ;
+                    this.spawneeProperties.z = this.owner.z + this.originalZ;
                     
                     offset = this.offsetX;
                     if (state.get('left')) {
@@ -127,7 +126,7 @@ This component creates an entity and propels it away. This is useful for casting
                     }
                     
                     if (this.parent) {
-                        this.owner.triggerEvent('entity-created', this.parent.addEntity(new Entity(this.entityClass, this.propertiesContainer)));
+                        this.parent.addEntity(this.propertiesContainer);
                     }
                 }
                 

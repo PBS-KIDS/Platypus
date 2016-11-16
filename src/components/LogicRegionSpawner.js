@@ -56,6 +56,7 @@ This component spawns new entities within a given area at set intervals.
                 y: 0
             };
             this.spawnProperties = {
+                type: definition.spawn,
                 properties: this.spawnPosition
             };
             
@@ -83,8 +84,6 @@ This component spawns new entities within a given area at set intervals.
                     }
                 }
             }
-            
-            this.entityClass = platypus.game.settings.entities[definition.spawn];
             
             this.interval = this.owner.interval || definition.interval || 1000;
             this.time = 0;
@@ -116,7 +115,7 @@ This component spawns new entities within a given area at set intervals.
                         this.spawnPosition.y = this.owner.y - (this.owner.regY || 0) + (Math.random() * this.owner.height);
                     }
 
-                    this.owner.triggerEvent('entity-created', this.owner.parent.addEntity(new Entity(this.entityClass, this.spawnProperties)));
+                    this.owner.parent.addEntity(this.spawnProperties);
                 }
             }
         },
