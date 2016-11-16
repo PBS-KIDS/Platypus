@@ -14,7 +14,6 @@
         EventRender = include('platypus.components.EventRender'),
         Graphics = include('PIXI.Graphics'),
         Interactive = include('platypus.components.Interactive'),
-        Matrix = include('PIXI.Matrix'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
         StateRender = include('platypus.components.StateRender'),
         processGraphics = (function () {
@@ -416,7 +415,6 @@
                 this.lastX = this.owner.x;
                 this.lastY = this.owner.y;
                 this.camera = AABB.setUp();
-                this.affine = new Matrix();
                 this.isOnCamera = true;
 
                 /*
