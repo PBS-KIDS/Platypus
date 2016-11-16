@@ -18,7 +18,7 @@ this.platypus = this.platypus || {};
         isSilk    = (uagent.search('silk')    > -1),
         isIOS     = isIPod || isIPhone  || isIPad,
         isMobile  = isIOS  || isAndroid || isSilk;
-    
+
     /**
      * This is an object of boolean key/value pairs describing the current browser's properties.
      * @property supports
