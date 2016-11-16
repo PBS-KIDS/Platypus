@@ -7,16 +7,22 @@
  * @class VoiceOver
  * @uses platypus.Component
  */
-/* global platypus */
+/* global include, platypus */
 (function () {
     'use strict';
 
-    var getEventName = function (msg, VO) {
+    var AudioVO = include('platypus.components.AudioVO'),
+        RenderAnimation = include('platypus.components.RenderAnimation'),
+        RenderSprite = include('platypus.components.RenderSprite'),
+        getEventName = function (msg, VO) {
             if (VO === ' ') {
                 return msg + 'default';
             } else {
                 return msg + VO;
             }
+        },
+        componentInit = function (Component, definition, callback) {
+            this.owner.addComponent(new Component(this.owner, definition, callback));
         },
         createAudioDefinition = function (sound, events, message, frameLength) {
             var i          = 0,
@@ -121,9 +127,9 @@
              *
              * @property messagePrefix
              * @type String
-             * @default "VoiceOver"
+             * @default ""
              */
-            messagePrefix: "VoiceOver",
+            messagePrefix: "",
 
             /**
              * This maps events to audio clips and voice over strings.
@@ -144,8 +150,9 @@
             voiceOverMap: {}
         },
 
-        constructor: function (definition) {
+        constructor: function (definition, callback) {
             var i = '',
+                componentInits = Array.setUp(),
                 audioDefinition     = {
                     audioMap: {},
                     aliases: definition.aliases
@@ -153,6 +160,7 @@
                 animationDefinition = {
                     acceptInput: definition.acceptInput,
                     aliases: definition.aliases,
+                    animation: definition.animation,
                     animationMap: {},
                     eventBased: true, // VO triggers events for changing lip-sync frames.
                     flip: definition.flip,
@@ -162,6 +170,8 @@
                     offsetZ: definition.offsetZ,
                     pins: definition.pins,
                     pinTo: definition.pinTo,
+                    regX: definition.regX,
+                    regY: definition.regY,
                     restart: definition.restart,
                     rotate: definition.rotate,
                     scaleX: definition.scaleX,
@@ -170,7 +180,11 @@
                     stateBased: definition.stateBased || false
                 };
             
-            this.message = this.messagePrefix + '-';
+            if (this.messagePrefix) {
+                this.message = this.messagePrefix + '-';
+            } else {
+                this.message = '';
+            }
             
             for (i in this.animationMap) {
                 if (this.animationMap.hasOwnProperty(i)) {
@@ -178,14 +192,20 @@
                 }
             }
             animationDefinition.animationMap.default = this.animationMap.default;
-            this.owner.addComponent(new platypus.components.RenderSprite(this.owner, animationDefinition));
+            componentInits.push(componentInit.bind(this, (definition.animation ? RenderAnimation : RenderSprite), animationDefinition));
 
             for (i in this.voiceOverMap) {
                 if (this.voiceOverMap.hasOwnProperty(i)) {
                     audioDefinition.audioMap[i] = createVO(this.voiceOverMap[i], this.animationMap, this.message, this.frameLength);
                 }
             }
-            this.owner.addComponent(new platypus.components.AudioVO(this.owner, audioDefinition));
+            componentInits.push(componentInit.bind(this, AudioVO, audioDefinition));
+
+            platypus.Async.setUp(componentInits, callback);
+
+            componentInits.recycle();
+
+            return true;
         },
 
         events: {
@@ -200,12 +220,14 @@
         },
         
         getAssetList: function (component, props, defaultProps) {
-            var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+            var ss = component.spriteSheet || props.spriteSheet || (defaultProps && defaultProps.spriteSheet);
             
             if (typeof ss === 'string') {
                 return platypus.game.settings.spriteSheets[ss].images.greenSlice();
-            } else {
+            } else if (ss) {
                 return ss.images.greenSlice();
+            } else {
+                return Array.setUp();
             }
         }
     });
