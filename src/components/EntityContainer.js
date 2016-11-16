@@ -71,48 +71,51 @@
             childEvents: []
         },
         
-        constructor: function (definition) {
-            var i = 0,
-                events = this.childEvents;
-    
-             //saving list of entities for load message
-            this.entityDefinitions = null;
-            if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
-                this.entityDefinitions = definition.entities.concat(this.owner.entities);
-            } else {
-                this.entityDefinitions = definition.entities || this.owner.entities || null;
-            }
+        constructor: (function () {
+            var
+                entityInit = function (entityDefinition, callback) {
+                    this.addEntity(entityDefinition, callback);
+                };
 
-            this.owner.entities = this.entities = Array.setUp();
-            
-            this.childEvents = Array.setUp();
-            for (i = 0; i < events.length; i++) {
-                this.addNewPublicEvent(events[i]);
-            }
-            this.addNewPrivateEvent('peer-entity-added');
-            this.addNewPrivateEvent('peer-entity-removed');
-        },
-        
-        events: {
-            /**
-             * This component waits until all other entity components are loaded before it begins adding children entities. This allows other entity components to listen to entity-added messages and handle them if necessary.
-             *
-             * @method 'load'
-             */
-            "load": function () {
-                // putting this here so all other components will have been loaded and can listen for "entity-added" calls.
+            return function (definition, callback) {
                 var i = 0,
-                    entities   = this.entityDefinitions;
-                
-                if (entities) {
-                    for (i = 0; i < entities.length; i++) {
-                        this.addEntity(entities[i]);
-                    }
+                    entities = null,
+                    events = this.childEvents,
+                    entityInits = null;
+        
+                //saving list of entities for load message
+                if (definition.entities && this.owner.entities) { //combine component list and entity list into one if they both exist.
+                    entities = definition.entities.concat(this.owner.entities);
+                } else {
+                    entities = definition.entities || this.owner.entities || null;
                 }
 
-                delete this.entityDefinitions;
-            },
-            
+                this.owner.entities = this.entities = Array.setUp();
+                
+                this.childEvents = Array.setUp();
+                for (i = 0; i < events.length; i++) {
+                    this.addNewPublicEvent(events[i]);
+                }
+                this.addNewPrivateEvent('peer-entity-added');
+                this.addNewPrivateEvent('peer-entity-removed');
+
+                if (entities) {
+                    entityInits = Array.setUp();
+                    for (i = 0; i < entities.length; i++) {
+                        entityInits.push(entityInit.bind(this, entities[i]));
+                    }
+                    platypus.Async.setUp(entityInits, function () {
+                        callback();
+                    });
+                    entityInits.recycle();
+                    return true; // notifies owner that this component is asynchronous.
+                } else {
+                    return false;
+                }
+            };
+        } ()),
+        
+        events: {
             /**
              * This message will added the given entity to this component's list of entities.
              *
@@ -305,19 +308,22 @@
              * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
              * @return {platypus.Entity} The entity that was just added.
              */
-            addEntity: function (newEntity) {
+            addEntity: function (newEntity, callback) {
                 var entity = null,
                     x = 0;
                 
                 if (newEntity instanceof Entity) {
                     entity = newEntity;
+                    if (callback) {
+                        callback();
+                    }
                 } else {
                     if (typeof newEntity === 'string') {
-                        entity = new Entity(platypus.game.settings.entities[newEntity]);
+                        entity = new Entity(platypus.game.settings.entities[newEntity], null, callback);
                     } else if (newEntity.id) {
-                        entity = new Entity(newEntity);
+                        entity = new Entity(newEntity, null, callback);
                     } else {
-                        entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity);
+                        entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, callback);
                     }
                     this.owner.triggerEvent('entity-created', entity);
                 }

@@ -7,6 +7,7 @@
 		"../src/mixins/PIXI.Graphics.js",
         "../src/mixins/String.js",
         "../src/polyfills/Map.js",
+		"../src/Async.js",
 		"../src/Data.js",
 		"../src/DataMap.js",
 		"../src/PIXIAnimation.js",

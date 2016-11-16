@@ -88,15 +88,23 @@ platypus.Scene = (function () {
             this.app.unload(lateAssets);
             lateAssets.recycle();
         },
+        layerInit = function (layerDefinition, properties, callback) {
+            this.layers.push(new Entity(layerDefinition, {
+                properties: properties
+            }, callback));
+        },
         loadScene = function () {
             var i = 0,
                 key = '',
+                layerInits = Array.setUp(),
                 layers = this.layerDefinitions,
                 supportedLayer = true,
                 layerDefinition = false,
                 properties = null,
                 messages = null;
 
+            this.stillLoading = true;
+            this.stillEntering = true;
             this.storeMessages = true;
             this.storedMessages = Array.setUp();
             this.layers = Array.setUp();
@@ -134,11 +142,30 @@ platypus.Scene = (function () {
                     }
                 }
                 if (supportedLayer) {
-                    this.layers.push(new Entity(layerDefinition, {
-                        properties: properties
-                    }));
+                    layerInits.push(layerInit.bind(this, layerDefinition, properties));
                 }
             }
+
+            platypus.Async.setUp(layerInits, function () {
+                platypus.debug.olive('Scene loaded: ' + this.id);
+                
+                /**
+                 * This event is triggered on the layers once the Scene is finished loading.
+                 *
+                 * @event 'scene-loaded'
+                 * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                 */
+                this.triggerOnChildren('scene-loaded', this.data);
+                
+                // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
+                PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
+
+                this.stillLoading = false;
+                if (!this.stillEntering) {
+                    this.sceneLive();
+                }
+            }.bind(this));
+
             // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
             messages = this.storedMessages;
             this.storeMessages = false;
@@ -148,18 +175,7 @@ platypus.Scene = (function () {
             messages.recycle();
             this.storedMessages = null;
 
-            platypus.debug.olive('Scene loaded: ' + this.id);
-            
-            /**
-             * This event is triggered on the layers once the Scene is finished loading.
-             *
-             * @event 'scene-loaded'
-             * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
-             */
-            this.triggerOnChildren('scene-loaded', this.data);
-            
-            // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
-            PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
+            layerInits.recycle();
         },
         loading = function (definition, assets) {
             var lateAssets = this.getLateAssetList(definition);
@@ -186,6 +202,8 @@ platypus.Scene = (function () {
             this.stage = panel;
             this.layers = null;
             this.assets = definition.assets || null;
+            this.stillLoading = false;
+            this.stillEntering = false;
             
             // If the scene has dynamically added assets such as level data
             this.on('loading', loading.bind(this, definition));
@@ -203,6 +221,13 @@ platypus.Scene = (function () {
      * @method enterDone
      */
     proto.enterDone = function () {
+        this.stillEntering = false;
+        if (!this.stillLoading) {
+            this.sceneLive();
+        }
+    };
+
+    proto.sceneLive = function () {
         platypus.game.currentScene = this;
         platypus.debug.olive('Scene live: ' + this.id);
         

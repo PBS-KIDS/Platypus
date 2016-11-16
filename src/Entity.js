@@ -49,10 +49,14 @@ platypus.Entity = (function () {
     
     var Data = include('platypus.Data'),
         StateMap = include('platypus.StateMap'),
+        componentInit = function (Component, componentDefinition, callback) {
+            this.addComponent(new Component(this, componentDefinition, callback));
+        },
         entityIds = {},
-        entity = function (definition, instanceDefinition) {
+        entity = function (definition, instanceDefinition, callback) {
             var i                    = 0,
                 componentDefinition  = null,
+                componentInits       = Array.setUp(),
                 def                  = Data.setUp(definition),
                 componentDefinitions = def.components,
                 defaultProperties    = Data.setUp(def.properties),
@@ -95,30 +99,36 @@ platypus.Entity = (function () {
                     componentDefinition = componentDefinitions[i];
                     if (componentDefinition) {
                         if (platypus.components[componentDefinition.type]) {
-                            this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
+                            componentInits.push(componentInit.bind(this, platypus.components[componentDefinition.type], componentDefinition));
                         } else {
                             platypus.debug.warn('Entity "' + this.type + '": Component "' + componentDefinition.type + '" is not defined.', componentDefinition);
                         }
                     }
                 }
             }
+            platypus.Async.setUp(componentInits, function () {
+                // Trigger saved events that were being fired during component addition.
+                delete this.trigger;
+                delete this.triggerEvent;
+                for (i = 0; i < savedEvents.length; i++) {
+                    this.trigger(savedEvents[i], savedMessages[i]);
+                }
+                savedEvents.recycle();
+                savedMessages.recycle();
+
+                /**
+                 * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
+                 *
+                 * @event load
+                 */
+                this.triggerEvent('load');
+
+                if (callback) {
+                    callback();
+                }
+            }.bind(this));
             
-            // Trigger saved events that were being fired during component addition.
-            delete this.trigger;
-            delete this.triggerEvent;
-            for (i = 0; i < savedEvents.length; i++) {
-                this.trigger(savedEvents[i], savedMessages[i]);
-            }
-            savedEvents.recycle();
-            savedMessages.recycle();
-
-            /**
-             * The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
-             *
-             * @event load
-             */
-            this.triggerEvent('load');
-
+            componentInits.recycle();
             def.recycle();
             defaultProperties.recycle();
             instance.recycle();

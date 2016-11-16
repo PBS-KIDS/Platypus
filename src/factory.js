@@ -38,7 +38,7 @@
     platypus.components = {};
     
     platypus.createComponentClass = function (componentDefinition, Prototype) {
-        var component = function (owner, definition) {
+        var component = function (owner, definition, callback) {
                 var prop  = '',
                     func  = '',
                     name  = '',
@@ -114,8 +114,8 @@
                     }
                 }
 
-                if (this.constructor) {
-                    this.constructor(definition);
+                if ((!this.constructor || !this.constructor(definition, callback)) && callback) { // whether the callback will be used; if not, we run immediately.
+                    callback();
                 }
             },
             func  = null,
