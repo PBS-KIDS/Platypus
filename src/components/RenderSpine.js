@@ -524,21 +524,8 @@
                 }
             },
             
-            checkCameraBounds: function () { //TODO: Camera check is busted for spine
-/*                var bounds = null,
-                    spine = this.spine,
-                    matrix = null;
-                
-                matrix = spine.transformMatrix.copy(tempMatrix);
-
-                spine._currentBounds = null;
-                bounds = spine.getBounds(matrix);
-                
-                if (bounds && ((bounds.x + bounds.width < this.camera.left) || (bounds.x > this.camera.right) || (bounds.y + bounds.height < this.camera.top) || (bounds.y > this.camera.bottom))) {
-                    this.isOnCamera = false;
-                } else {*/
-                    this.isOnCamera = true;
-                //}
+            checkCameraBounds: function () {
+                this.isOnCamera = this.owner.parent.isOnCanvas(this.instance.getBounds(false));
             },
 
             setMixTimes: function (mixTimes) {
