@@ -165,11 +165,7 @@
         };
     
     if (PIXI) { // Over-riding the pixi.js hello since we're creating our own.
-        if (PIXI.utils.skipHello) { // version 4+
-            PIXI.utils.skipHello();
-        } else { // version 3-
-            PIXI.utils._saidHello = true;
-        }
+        PIXI.utils.skipHello();
     }
 
     plugin.setup = function () {
