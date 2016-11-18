@@ -55,7 +55,7 @@
             "propertyName2": "property-value"
         },
         
-        constructor: function (/*definition, callback*/) {
+        initialize: function (/*definition, callback*/) {
             /*********************************************************************
              TODO: Place code here for anything that should happen on component
                    instantiation. If the component requires assets or other call-
@@ -66,12 +66,12 @@
                    below for anything that should happen once all of the entity's
                    other components are finished loading.
                    
-             NOTE: Any events triggered in the constructor are delayed until the
+             NOTE: Any events triggered in the initialize are delayed until the
                    entity has finished adding components (but immediately before
                    "load" is triggered). As such, be aware that event listeners
-                   will get the message after the constructor is finished, and
+                   will get the message after the initialize is finished, and
                    any event content or owner properties that changes between
-                   the trigger call and the end of components' constructor calls
+                   the trigger call and the end of components' initialize calls
                    will be reflected in the the event handler.
             *********************************************************************/
         },

@@ -16,7 +16,7 @@
     return platypus.createComponentClass({
         id: 'CollisionGroup',
         
-        constructor: function () {
+        initialize: function () {
             this.solidEntities = Array.setUp();
             
             // These are used as return values for methods, but are instantiated here for recycling later.

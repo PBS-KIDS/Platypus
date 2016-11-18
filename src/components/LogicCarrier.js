@@ -35,7 +35,7 @@ Requires: ["CollisionGroup"]
 
     return platypus.createComponentClass({
         id: 'LogicCarrier',
-        constructor: function () {},
+        initialize: function () {},
         events: {
             "load": function () {
                 if (!this.owner.triggerEvent('add-collision-entity', this.owner)) {

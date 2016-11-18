@@ -56,7 +56,7 @@
 
         },
 
-        constructor: function () {
+        initialize: function () {
             this.angle     = this.startAngle;
             this.v         = Array.setUp(0, 0);
             this.moving    = false;

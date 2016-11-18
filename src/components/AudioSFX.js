@@ -164,7 +164,7 @@
             stateBased: false
         },
             
-        constructor: function (definition) {
+        initialize: function (definition) {
             var key      = '',
                 playClip = null,
                 sound    = null;

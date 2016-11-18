@@ -337,7 +337,7 @@
             z: 0
         },
         
-        constructor: (function () {
+        initialize: (function () {
             var
                 createAnimationMap = function (animationMap, ss) {
                     var map  = null,

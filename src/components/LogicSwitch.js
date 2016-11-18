@@ -32,7 +32,7 @@ This component serves as a switch in the game world, typically tied to collision
         
         id: 'LogicSwitch',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.state = this.owner.state;
             this.pressed = false;
             this.wasPressed = this.pressed;

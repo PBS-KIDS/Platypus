@@ -234,7 +234,7 @@
             left: 0
         },
 
-        constructor: function () {
+        initialize: function () {
             var imgMap = this.imageMap;
 
             this.doMap            = null; //list of display objects that should overlay tile map.

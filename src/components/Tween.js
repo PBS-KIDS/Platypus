@@ -94,7 +94,7 @@ Tween takes a list of tween definitions and plays them as needed.
     return platypus.createComponentClass({
         id: 'Tween',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var event = '';
             
             if (definition.events) {

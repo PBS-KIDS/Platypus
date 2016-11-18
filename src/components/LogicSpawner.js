@@ -41,7 +41,7 @@ This component creates an entity and propels it away. This is useful for casting
         
         id: 'LogicSpawner',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var className = this.owner.spawneeClass || definition.spawneeClass,
                 prop = '',
                 x = 0;

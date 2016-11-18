@@ -207,7 +207,7 @@
         publicProperties: {
         },
         
-        constructor: function () {
+        initialize: function () {
             this.levelMessage = {level: null, persistentData: null};
         },
 

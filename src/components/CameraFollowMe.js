@@ -69,7 +69,7 @@
             pause: false
         },
         
-        constructor: function () {
+        initialize: function () {
             this.pauseGame = (this.pause && this.camera.time) ? {
                 time: this.camera.time
             } : null;

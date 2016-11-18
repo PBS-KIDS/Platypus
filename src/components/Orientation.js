@@ -149,7 +149,7 @@
              */
             "orientationMatrix": null
         },
-        constructor: (function () {
+        initialize: (function () {
             var setupOrientation = function (self, orientation) {
                 var vector = Vector.setUp(1, 0, 0),
                     owner  = self.owner,

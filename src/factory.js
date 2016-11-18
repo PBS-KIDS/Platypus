@@ -17,6 +17,7 @@
     var Component = include('platypus.Component'),
         key = '',
         priority = 0,
+        doNothing = function () {},
         setupProperty = function (property, component, owner) {
             Object.defineProperty(component, property, {
                 get: function () {
@@ -114,7 +115,7 @@
                     }
                 }
 
-                if ((!this.constructor || !this.constructor(definition, callback)) && callback) { // whether the callback will be used; if not, we run immediately.
+                if (!this.initialize(definition, callback) && callback) { // whether the callback will be used; if not, we run immediately.
                     callback();
                 }
             },
@@ -135,7 +136,12 @@
         }
         
         // Have to copy rather than replace so definition is not corrupted
-        proto.constructor = componentDefinition.constructor;
+        proto.initialize = componentDefinition.initialize || (componentDefinition.hasOwnProperty('constructor') ? componentDefinition.constructor /* deprecated function name */: doNothing);
+
+        // Throw deprecation warning if needed (deprecated as of v0.10.1)
+        if (componentDefinition.hasOwnProperty('constructor')) {
+            platypus.debug.warn(componentDefinition.id + ': "constructor" has been deprecated in favor of "initialize" for a component\'s initializing function definition.');
+        }
 
         if (componentDefinition.methods) {
             for (func in componentDefinition.methods) {

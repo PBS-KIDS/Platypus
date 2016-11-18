@@ -51,7 +51,7 @@
             state: ""
         },
         
-        constructor: function () {
+        initialize: function () {
             var event      = "",
                 collisions = this.collisions,
                 state      = this.state;

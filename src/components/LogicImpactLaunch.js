@@ -48,7 +48,7 @@ This component will cause the entity to move in a certain direction on colliding
             flipY: false
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.stunState = definition.state || "stunned";
             
             this.flipX = this.flipX ? -1 : 1;

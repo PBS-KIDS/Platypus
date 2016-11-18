@@ -50,7 +50,7 @@
             acceptInput: null
         },
 
-        constructor: function () {
+        initialize: function () {
             var definition = null;
 
             this.container = new Container();

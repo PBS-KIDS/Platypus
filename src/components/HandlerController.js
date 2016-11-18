@@ -115,7 +115,7 @@
         
         id: 'HandlerController',
         
-        constructor: function () {
+        initialize: function () {
             this.callbackKeyUp   = null;
             this.callbackKeyDown = null;
             

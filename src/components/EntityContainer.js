@@ -71,7 +71,7 @@
             childEvents: []
         },
         
-        constructor: (function () {
+        initialize: (function () {
             var
                 entityInit = function (entityDefinition, callback) {
                     this.addEntity(entityDefinition, callback);

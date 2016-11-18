@@ -68,7 +68,7 @@
             forcePlayThrough: false
         },
 
-        constructor: function () {
+        initialize: function () {
             var anim      = '',
                 animation = '',
                 map = this.animationMap;

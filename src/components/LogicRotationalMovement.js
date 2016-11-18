@@ -48,7 +48,7 @@ This component changes the (x, y) position of an object according to its current
     
     return platypus.createComponentClass({
         id: 'LogicRotationalMovement',
-        constructor: function (definition) {
+        initialize: function (definition) {
             var state = this.owner.state;
             
             this.speed = definition.speed || 0.3;

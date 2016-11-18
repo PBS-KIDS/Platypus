@@ -191,7 +191,7 @@
             friction: -1
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             if (!this.acceleration) {
                 this.activeAcceleration = false;
             }

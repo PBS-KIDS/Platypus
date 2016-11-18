@@ -57,7 +57,7 @@ NOTE: HandlerRender and the RenderSprite used by this entity need to have their 
             stickyClick: false
         },
         
-        constructor: function () {
+        initialize: function () {
             this.nextX = this.owner.x;
             this.nextY = this.owner.y;
             this.lastZ = this.owner.z;

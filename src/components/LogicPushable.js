@@ -40,7 +40,7 @@ A component that enables an entity to be pushed.
     
     return platypus.createComponentClass({
         id: 'LogicPushable',
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.yPush = definition.push || definition.yPush || 0;
             this.xPush = definition.push || definition.xPush || 0.1;
             if (definition.roll) {

@@ -42,7 +42,7 @@
             z: 0
         },
         
-        constructor: function () {
+        initialize: function () {
             var b   = new PIXI.Graphics(),
                 f   = new PIXI.Graphics(),
                 con = new PIXI.Container();

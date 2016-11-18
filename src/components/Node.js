@@ -36,7 +36,7 @@ This component causes an entity to be a position on a [[NodeMap]]. This componen
             z: 0
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.nodeId = definition.nodeId || this.owner.nodeId || this.owner.id || String(Math.random());
             
             if ((typeof this.nodeId !== 'string') && (this.nodeId.length)) {

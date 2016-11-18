@@ -50,7 +50,7 @@
             gridBits: 8
         },
         
-        constructor: function () {
+        initialize: function () {
             this.againstGrid = Data.setUp();
             
             this.solidEntitiesLive = Array.setUp();

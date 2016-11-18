@@ -204,7 +204,7 @@ This component is a general purpose state-machine for an entity, taking in vario
             outputs: null
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var i = 0,
                 inputDefinition = this.inputs,
                 key = '',

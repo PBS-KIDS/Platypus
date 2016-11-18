@@ -88,7 +88,7 @@
              */
             timeMultiplier: 1
         },
-        constructor: function () {
+        initialize: function () {
             this.entities = Array.setUp();
             this.activeEntities = Array.setUp();
             this.removals = Array.setUp();

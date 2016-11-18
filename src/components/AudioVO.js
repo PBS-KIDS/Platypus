@@ -142,7 +142,7 @@
             audioMap: null
         },
             
-        constructor: function () {
+        initialize: function () {
             var key = '';
             
             this.eventList = Array.setUp();

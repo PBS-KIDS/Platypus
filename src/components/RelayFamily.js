@@ -28,7 +28,7 @@
             events: null
         },
 
-        constructor: function () {
+        initialize: function () {
             var event = '';
             
             if (this.events) {

@@ -47,7 +47,7 @@ A timer that can used to trigger events. The timer can increment and decrement. 
 
     return platypus.createComponentClass({
         id: 'LogicTimer',
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.time = this.owner.time || definition.time ||  0;
             this.prevTime = this.time;
             this.alarmTime = this.owner.alarmTime || definition.alarmTime || 0;

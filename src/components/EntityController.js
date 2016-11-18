@@ -147,7 +147,7 @@
             paused: false
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var key = '',
                 filter = null;
             

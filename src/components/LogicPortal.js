@@ -38,7 +38,7 @@ A component which changes the scene when activated. When the portal receives an 
 
     return platypus.createComponentClass({
         id: 'LogicPortal',
-        constructor: function (definition) {
+        initialize: function (definition) {
             var i = 0,
                 entrants = definition.entrants || definition.entrant || 'no one',
                 state = this.owner.state;

@@ -47,7 +47,7 @@
             events: null
         },
 
-        constructor: function () {
+        initialize: function () {
             var i = 0,
                 event = '';
 

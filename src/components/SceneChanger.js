@@ -34,7 +34,7 @@
             persistentData: null
         },
         
-        constructor: function () {
+        initialize: function () {
             this.persistentData = Data.setUp(this.persistentData);
         },
 

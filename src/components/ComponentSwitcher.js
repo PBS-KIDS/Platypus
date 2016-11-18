@@ -51,7 +51,7 @@
             componentMap: null
         },
         
-        constructor: function () {
+        initialize: function () {
             var event = '';
             
             this.switches = Array.setUp(); // The list of switches to make.

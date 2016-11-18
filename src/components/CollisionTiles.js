@@ -301,7 +301,7 @@
              */
             tileHeight: 10
         },
-        constructor: function () {
+        initialize: function () {
             this.tileOffsetLeft  = this.tileWidth / 2 + this.left;
             this.tileOffsetTop = this.tileHeight / 2 + this.top;
             

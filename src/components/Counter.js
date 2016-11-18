@@ -26,7 +26,7 @@
             total: 0
         },
 
-        constructor: function () {
+        initialize: function () {
             this.count = 0;
             this.lastTotal = 0;
             this.lastCount = 0;

@@ -42,7 +42,7 @@
             windTime: 500
         },
         
-        constructor: function () {
+        initialize: function () {
             var thisState = this.owner.state;
             
             this.windProgress = 0;

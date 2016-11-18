@@ -32,7 +32,7 @@
             direction: null
         },
         
-        constructor: function () {
+        initialize: function () {
             this.lastDirection    = '';
             this.currentDirection = this.direction || ((this.movement === 'horizontal') ? 'left' : 'up');
         },

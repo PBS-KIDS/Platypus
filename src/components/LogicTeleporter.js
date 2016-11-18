@@ -39,7 +39,7 @@ This component listens for redirected collision messages and fires a message on 
     return platypus.createComponentClass({
         id: 'LogicTeleporter',
 
-        constructor: function (definition) {
+        initialize: function (definition) {
             
             this.destination = null;
             this.linkId = this.owner.teleportId || definition.teleportId;

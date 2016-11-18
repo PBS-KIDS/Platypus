@@ -422,7 +422,7 @@
             manuallyLoad: false
         },
 
-        constructor: function () {
+        initialize: function () {
             this.assetCache = platypus.game.app.assetManager.cache;
             this.layerZ = 0;
             this.followEntity = false;

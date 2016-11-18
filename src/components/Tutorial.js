@@ -128,7 +128,7 @@
             
         },
         
-        constructor: function () {
+        initialize: function () {
             var x = 0,
                 entityType = null,
                 tutDef = null,

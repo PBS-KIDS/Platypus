@@ -32,7 +32,7 @@
             animationIds: null
         },
 
-        constructor: function (definition) {
+        initialize: function (definition) {
             if (this.animationId) {
                 this.animationIds = Array.setUp(definition.animationId);
             } else if (this.animationIds) {

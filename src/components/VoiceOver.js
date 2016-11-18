@@ -153,7 +153,7 @@
             voiceOverMap: {}
         },
 
-        constructor: function (definition, callback) {
+        initialize: function (definition, callback) {
             var i = '',
                 componentInits = Array.setUp(),
                 audioDefinition     = {

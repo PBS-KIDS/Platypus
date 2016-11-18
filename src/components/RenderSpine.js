@@ -272,7 +272,7 @@
             z: 0
         },
 
-        constructor: (function () {
+        initialize: (function () {
             var
                 createAnimationMap = function (animationMap, animations) {
                     var map  = null,

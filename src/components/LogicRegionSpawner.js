@@ -41,7 +41,7 @@ This component spawns new entities within a given area at set intervals.
         
         id: 'LogicRegionSpawner',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var x       = 0,
                 y       = 0,
                 columns = 1,

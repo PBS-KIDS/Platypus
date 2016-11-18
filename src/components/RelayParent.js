@@ -36,7 +36,7 @@
             events: null
         },
 
-        constructor: function () {
+        initialize: function () {
             var event = '',
                 events = this.events;
             

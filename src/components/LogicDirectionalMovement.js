@@ -60,7 +60,7 @@
             speed: 0.3
         },
         
-        constructor: function () {
+        initialize: function () {
             var state = this.state = this.owner.state;
             
             if (typeof this.speed === 'number') {

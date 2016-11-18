@@ -50,7 +50,7 @@
             restart: true
         },
 
-        constructor: (function () {
+        initialize: (function () {
             var
                 trigger = function (animation, restart) {
                     /**

@@ -408,7 +408,7 @@
             jumpThrough: false
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var arr = null,
                 x            = 0,
                 key          = '',

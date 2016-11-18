@@ -40,7 +40,7 @@ This component allows this entity to be carried by other entities with which it 
 
     return platypus.createComponentClass({
         id: 'LogicPortable',
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.portableDirections = definition.portableDirections || defaultOrientation;
     
             this.carrier      = this.lastCarrier = null;

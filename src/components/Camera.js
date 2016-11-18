@@ -159,7 +159,7 @@
              **/
             "transitionAngle": 600
         },
-        constructor: function (definition) {
+        initialize: function (definition) {
             var worldVP = AABB.setUp(this.x, this.y, this.width, this.height),
                 worldCamera = Data.setUp(
                     "viewport", worldVP,

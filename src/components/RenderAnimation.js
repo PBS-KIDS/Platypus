@@ -230,7 +230,7 @@
              */
             z: 0
         },
-        constructor: (function () {
+        initialize: (function () {
             var createAnimationMap = function (animationMap, labels, totalFrames, endings) {
                     var lastAnim = totalFrames,
                         map  = null,

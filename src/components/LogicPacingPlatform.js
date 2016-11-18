@@ -36,7 +36,7 @@ This component changes the (x, y) position of an object according to its speed a
         
         id: 'LogicPacingPlatform',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.ang      = this.owner.angle      || definition.angle     || 0; //PI/2 makes it go down first
             this.dist     = this.owner.distance || definition.distance || 128; //Distance in pixels
             this.dX       = this.dist * Math.cos(this.ang);

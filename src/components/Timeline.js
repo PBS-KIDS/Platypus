@@ -71,7 +71,7 @@
             "timelines": {}
         },
         
-        constructor: function () {
+        initialize: function () {
             var x = 0;
             
             this.timelineInstances = Array.setUp();

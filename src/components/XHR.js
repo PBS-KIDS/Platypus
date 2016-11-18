@@ -52,7 +52,7 @@
             withCredentials: false
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             this.setProperties(definition);
         },
 

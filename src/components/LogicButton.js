@@ -135,7 +135,7 @@
                 "top": null
             },
 
-            constructor: function () {
+            initialize: function () {
                 var state = this.owner.state;
                 
                 this.state = state;

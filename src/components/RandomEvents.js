@@ -29,7 +29,7 @@
     return platypus.createComponentClass({
         id: 'RandomEvents',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var event = '';
             
             if (definition.events) {

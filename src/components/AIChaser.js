@@ -46,7 +46,7 @@
             speed: 0.3
         },
         
-        constructor: function () {
+        initialize: function () {
             this.target = this.owner.target || null;
             this.offset = Vector.setUp(0, 0);
             this.state = this.owner.state;

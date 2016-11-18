@@ -43,7 +43,7 @@ Requires: ["../Vector.js"]
     return platypus.createComponentClass({
         id: 'LogicRebounder',
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             platypus.Vector.assign(this.owner, 'velocity', 'dx', 'dy', 'dz');
 
             this.owner.mass = this.owner.mass || definition.mass || 1;

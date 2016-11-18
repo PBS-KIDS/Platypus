@@ -40,7 +40,7 @@
         
         id: 'RenderDebug',
         
-        constructor: function () {
+        initialize: function () {
             this.parentContainer = null;
             this.shapes = Array.setUp();
             this.isOutdated = true;

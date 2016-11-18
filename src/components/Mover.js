@@ -164,7 +164,7 @@
             reorientVelocities: true
         },
         
-        constructor: function () {
+        initialize: function () {
             var maxMagnitude = Infinity,
                 max = this.maxMagnitude,
                 thisState = this.owner.state;

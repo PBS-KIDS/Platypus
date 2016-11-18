@@ -64,7 +64,7 @@
 
         },
 
-        constructor: function () {
+        initialize: function () {
             this.state = this.owner.state;
 
             if (!this.owner.linkId) {

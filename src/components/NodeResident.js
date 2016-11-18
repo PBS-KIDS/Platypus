@@ -160,7 +160,7 @@ This component connects an entity to its parent's [[NodeMap]]. It manages naviga
             speed: 0
         },
         
-        constructor: function (definition) {
+        initialize: function (definition) {
             var offset = definition.offset || this.owner.nodeOffset || {};
             
             this.nodeId = this.owner.nodeId = definition.nodeId || this.owner.nodeId;

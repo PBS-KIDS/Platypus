@@ -80,7 +80,7 @@
             buttonMode: false
         },
         
-        constructor: function () {
+        initialize: function () {
             this.pressed = false;
             this.camera = AABB.setUp();
             if (this.hitArea) {
