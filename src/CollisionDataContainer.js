@@ -22,16 +22,6 @@ platypus.CollisionDataContainer = (function () {
         },
         proto = CollisionDataContainer.prototype;
     
-    // deprecated since 0.8.7
-    proto.getXEntry = function (index) {
-        return this.xData[index];
-    };
-    
-    // deprecated since 0.8.7
-    proto.getYEntry = function (index) {
-        return this.yData[index];
-    };
-    
     /**
      * Adds a CollisionData object to the container's X-axis if the movement distance is less than or equal to collision data collected so far.
      *

@@ -685,8 +685,6 @@
                     message = Data.setUp(
                         "level", null,
                         "world", AABB.setUp(),
-                        "width", 0, // deprecate in 0.8.0
-                        "height", 0, // deprecate in 0.8.0
                         "tile", AABB.setUp(),
                         "camera", null
                     );
