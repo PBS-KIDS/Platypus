@@ -55,12 +55,16 @@
             "propertyName2": "property-value"
         },
         
-        constructor: function (/*definition*/) {
+        constructor: function (/*definition, callback*/) {
             /*********************************************************************
              TODO: Place code here for anything that should happen on component
-                   instantiation. Use the "load" event shown below for anything
-                   that should happen once all of the entity's components are
-                   finished loading.
+                   instantiation. If the component requires assets or other call-
+                   backs to finish before it's loaded completely, run `callback()`
+                   in the completing code and make sure this function returns
+                   `true` which notifies the calling code that this function is
+                   using the callback for completion. Use the "load" event shown
+                   below for anything that should happen once all of the entity's
+                   other components are finished loading.
                    
              NOTE: Any events triggered in the constructor are delayed until the
                    entity has finished adding components (but immediately before

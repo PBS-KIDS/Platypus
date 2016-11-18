@@ -35,11 +35,13 @@
  * @class Entity
  * @constructor
  * @extends Messenger
- * @param {Object} [definition] Base definition for the entity.
- * @param {Object} [definition.id] This declares the type of entity and will be stored on the Entity as `entity.type` after instantiation.
- * @param {Object} [definition.components] This lists the components that should be attached to this entity.
- * @param {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
- * @param {Object} [instanceDefinition] Specific instance definition including properties that override the base definition properties.
+ * @param [definition] {Object} Base definition for the entity.
+ * @param [definition.id] {Object} This declares the type of entity and will be stored on the Entity as `entity.type` after instantiation.
+ * @param [definition.components] {Object} This lists the components that should be attached to this entity.
+ * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
+ * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
+ * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
+ * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
  * @return {Entity} Returns the new entity made up of the provided components.
 **/
 

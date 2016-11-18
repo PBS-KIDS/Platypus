@@ -121,9 +121,10 @@
              *
              * @method 'add-entity'
              * @param entity {platypus.Entity} This is the entity to be added as a child.
+             * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
              */
-            "add-entity": function (entity) {
-                this.addEntity(entity);
+            "add-entity": function (entity, callback) {
+                this.addEntity(entity, callback);
             },
             
             /**
@@ -306,6 +307,7 @@
              * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a "type" property is provided or a String is provided, this component looks up the entity definition to create the entity.
              * @param [newEntity.type] {String} If an object with a "type" property is provided, this component looks up the entity definition to create the entity.
              * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
+             * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
              * @return {platypus.Entity} The entity that was just added.
              */
             addEntity: function (newEntity, callback) {
