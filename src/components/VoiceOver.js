@@ -165,6 +165,7 @@
                     eventBased: true, // VO triggers events for changing lip-sync frames.
                     flip: definition.flip,
                     hidden: definition.hidden,
+                    interactive: definition.interactive,
                     mask: definition.mask,
                     mirror: definition.mirror,
                     offsetZ: definition.offsetZ,
