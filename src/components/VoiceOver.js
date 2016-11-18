@@ -1,11 +1,14 @@
 /**
- * This component uses its definition to load AudioVO and RenderSprite components who work in an interconnected way to render animations corresponding to one or more audio tracks.
+ * This component uses its definition to load an AudioVO component and either a RenderSprite or RenderAnimation component. These work in an interconnected way to render animations corresponding to one or more audio tracks.
  *
- * In addition to its own properties, this component also accepts all properties accepted by either [RenderSprite](platypus.components.RenderSprite.html) or [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
+ * In addition to its own properties, this component also accepts all properties accepted by either [RenderSprite](platypus.components.RenderSprite.html), [RenderSprite](platypus.components.RenderAnimation.html), and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
  *
  * @namespace platypus.components
  * @class VoiceOver
  * @uses platypus.Component
+ * @uses platypus.AudioVO
+ * @uses platypus.RenderAnimation
+ * @uses platypus.RenderSprite
  */
 /* global include, platypus */
 (function () {
