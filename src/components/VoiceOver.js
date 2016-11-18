@@ -169,8 +169,6 @@
                     mask: definition.mask,
                     mirror: definition.mirror,
                     offsetZ: definition.offsetZ,
-                    pins: definition.pins,
-                    pinTo: definition.pinTo,
                     regX: definition.regX,
                     regY: definition.regY,
                     restart: definition.restart,

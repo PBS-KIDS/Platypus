@@ -301,7 +301,7 @@
             skewY: 0,
 
             /**
-             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount except when pinned or if they ignore the rotation value by setting 'rotate' to false.
+             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
              *
              * @property rotation
              * @type Number
@@ -509,23 +509,17 @@
                     return;
                 }
 
-                if (!this.parentContainer) {
-                    if (!this.pinTo) { //In case this component was added after handler-render is initiated
-                        if (!this.addStage(renderData.container)) {
-                            platypus.debug.warn('No PIXI Stage, removing render component from "' + this.owner.type + '".');
-                            this.owner.removeComponent(this);
-                            return;
-                        }
-                    } else {
-                        return;
-                    }
+                if (!this.parentContainer && !this.addStage(renderData.container)) {
+                    platypus.debug.warn('No PIXI Stage, removing render component from "' + this.owner.type + '".');
+                    this.owner.removeComponent(this);
+                    return;
                 }
                 
                 this.updateSprite(true);
             },
             
             /**
-             * This event makes the sprite invisible. When multiple sprites are pinned together, the entire group is invisible.
+             * This event makes the sprite invisible.
              *
              * @method 'hide-sprite'
              */
@@ -534,7 +528,7 @@
             },
 
             /**
-             * This event makes the sprite visible. When multiple sprites are pinned together, the entire group is made visible.
+             * This event makes the sprite visible.
              *
              * @method 'show-sprite'
              */
@@ -607,7 +601,7 @@
             },
             
             addStage: function (stage) {
-                if (stage && !this.pinTo) {
+                if (stage) {
                     this.parentContainer = stage;
                     this.parentContainer.addChild(this.sprite);
 

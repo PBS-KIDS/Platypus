@@ -236,7 +236,7 @@
             skewY: 0,
 
             /**
-             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount except when pinned or if they ignore the rotation value by setting 'rotate' to false.
+             * Optional. The rotation of the spine in degrees. All spines on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
              *
              * @property rotation
              * @type Number
