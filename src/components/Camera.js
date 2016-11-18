@@ -992,6 +992,18 @@
         },
 
         publicMethods: {
+            /**
+             * Returns whether a particular display object intersects the camera's viewport on the canvas.
+             *
+             * @method isOnCanvas
+             * @param bounds {PIXI.Rectangle|Object} The bounds of the display object.
+             * @param bounds.height {Number} The height of the display object.
+             * @param bounds.width {Number} The width of the display object.
+             * @param bounds.x {Number} The left edge of the display object.
+             * @param bounds.y {Number} The top edge of the display object.
+             * @return {Boolean} Whether the display object intersects the camera's bounds.
+             * @since 1.0.0
+             */
             isOnCanvas: function (bounds) {
                 var canvas = this.canvas;
 
