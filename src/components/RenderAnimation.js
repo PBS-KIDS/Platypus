@@ -1,4 +1,14 @@
-/* global console, include, PIXI, platypus */
+/**
+ * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
+ *
+ * Note: This component requires assets published using [PixiAnimate](https://github.com/jiborobot/pixi-animate).
+ *
+ * @namespace platypus.components
+ * @class RenderAnimation
+ * @uses platypus.Component
+ * @since 1.0.0
+ */
+/* global include, PIXI, platypus */
 (function () {
     "use strict";
 
@@ -8,7 +18,6 @@
         EventRender = include('platypus.components.EventRender'),
         Graphics = include('PIXI.Graphics'),
         Interactive = include('platypus.components.Interactive'),
-        MovieClip = include('PIXI.animate.MovieClip', false),
         StateRender = include('platypus.components.StateRender'),
         animationEnded = function (animation) {
             /**
@@ -51,27 +60,16 @@
             };
         }());
     
-    if (MovieClip) { // Temporary fix for setMask
-        MovieClip.prototype.setMask = MovieClip.prototype.ma = function (mask) {
-            // According to PIXI, only Graphics and Sprites can
-            // be used as mask, let's ignore everything else, like other
-            // movieclips and displayobjects/containers
-            if (mask) {
-                if (!(mask instanceof PIXI.Graphics) && !(mask instanceof PIXI.Sprite)) {
-                    if (typeof console !== "undefined" && console.warn) {
-                        console.warn("Warning: Masks can only be PIXI.Graphics or PIXI.Sprite objects.");
-                    }
-                    return this;
-                }
-            }
-            this.mask = mask;
-            return this;
-        };
-    }
-
     return platypus.createComponentClass({
         id: "RenderAnimation",
         properties: {
+            /**
+             * This sets the PixiAnimate animation to play. This is typically of the form "library.asset" as defined by the PixiAnimate publish settings.
+             *
+             * @property animation
+             * @type String
+             * @default ""
+             */
             animation: '',
 
             /**
@@ -159,13 +157,36 @@
              */
             stateBased: true,
 
+            /**
+             * Determines the x origin of the animation.
+             *
+             * @property regX
+             * @type Number
+             * @default 0
+             */
             regX: 0,
+            
+            /**
+             * Determines the y origin of the animation.
+             *
+             * @property regY
+             * @type Number
+             * @default 0
+             */
             regY: 0,
+
+            /**
+             * The offset of the z-index of the sprite from the entity's z-index.
+             *
+             * @property offsetZ
+             * @type Number
+             * @default 0
+             */
             offsetZ: 0
         },
         publicProperties: {
             /**
-             * Optional. The X scaling factor for the image. Defaults to 1.
+             * The X scaling factor for the image.
              *
              * @property scaleX
              * @type Number
@@ -174,7 +195,7 @@
             scaleX: 1,
 
             /**
-             * Optional. The Y scaling factor for the image. Defaults to 1.
+             * The Y scaling factor for the image.
              *
              * @property scaleY
              * @type Number
@@ -183,7 +204,7 @@
             scaleY: 1,
 
             /**
-             * Optional. The x position of the entity. Defaults to 0.
+             * The x position of the entity.
              *
              * @property x
              * @type Number
@@ -192,7 +213,7 @@
             x: 0,
             
             /**
-             * Optional. The y position of the entity. Defaults to 0.
+             * The y position of the entity.
              *
              * @property y
              * @type Number
@@ -201,7 +222,7 @@
             y: 0,
             
             /**
-             * Optional. The z position of the entity. Defaults to 0.
+             * The z position of the entity.
              *
              * @property z
              * @type Number
@@ -330,15 +351,29 @@
                 }
             },
             
-            "handle-render-load": function (resp) {
-                if (!this.parentContainer && resp && resp.container) {
-                    this.addStage(resp.container);
+            /**
+             * A setup message used to add the animation to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.
+             *
+             * @method 'handle-render-load'
+             * @param handlerData {Object} Data from the render handler
+             * @param handlerData.container {PIXI.Container} The parent container.
+             */
+            "handle-render-load": function (handlerData) {
+                if (!this.parentContainer && handlerData && handlerData.container) {
+                    this.addStage(handlerData.container);
                 }
             },
-
-            "handle-render": function (resp) {
+            
+            /**
+             * The render update message updates the animation.
+             *
+             * @method 'handle-render'
+             * @param renderData {Object} Data from the render handler
+             * @param renderData.container {PIXI.Container} The parent container.
+             */
+            "handle-render": function (renderData) {
                 if (!this.ready && !this.parentContainer) {
-                    this.addStage(resp.container);
+                    this.addStage(renderData.container);
                 }
                 if (this.ready) {
                     this.update();
@@ -374,7 +409,7 @@
             },
             
             /**
-             * Stops the sprite's animation.
+             * Stops the animation.
              *
              * @method 'stop-animation'
              * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
@@ -390,7 +425,7 @@
             },
             
             /**
-             * Starts the sprite's animation.
+             * Starts the animation.
              *
              * @method 'play-animation'
              * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
