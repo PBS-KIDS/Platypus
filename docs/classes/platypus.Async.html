@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.0 API Documentation : window.String</title>
+	<title>platypus v0.10.0 API Documentation : platypus.Async</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -144,24 +144,107 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>window.String Class</h1>
+                        <h1>platypus.Async Class</h1>
                         <div class="box meta">
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/mixins_String.js.html#l6"><code>window.String:6</code></a>
+                                    Defined in: <a href="../files/Async.js.html#l1"><code>platypus.Async:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
                         
+                                <p>Available since 0.10.0</p>
                         </div>
                         
                         
                         <div class="box intro">
-                            <p>Add methods to String</p>
+                            <p>This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed.</p>
                         
                         </div>
                         
+                            <div class="constructor">
+                                <h2>Constructor</h2>
+                                <div id="method_platypus.Async" class="method item">
+                                    <h3 class="name"><code>platypus.Async</code></h3>
+                                
+                                        <div class="args">
+                                            <span class="paren">(</span><ul class="args-list inline commas">
+                                                <li class="arg">
+                                                        <code>functions</code>
+                                                </li>
+                                                <li class="arg">
+                                                        <code>callback</code>
+                                                </li>
+                                            </ul><span class="paren">)</span>
+                                        </div>
+                                
+                                        <span class="returns-inline">
+                                            <span class="type"><a href="../classes/platypus.Async.html" class="crosslink">platypus.Async</a></span>
+                                        </span>
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                    <div class="meta">
+                                                <p>
+                                                Defined in
+                                        <a href="../files/Async.js.html#l1"><code>platypus.Async:1</code></a>
+                                        </p>
+                                
+                                
+                                
+                                            <p>Available since 0.10.0</p>
+                                    </div>
+                                
+                                    <div class="description">
+                                        
+                                    </div>
+                                
+                                        <div class="params">
+                                            <h4>Parameters:</h4>
+                                
+                                            <ul class="params-list">
+                                                <li class="param">
+                                                        <code class="param-name">functions</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>An array of functions where each function accepts a <code>callback</code> parameter and runs <code>callback()</code> on completion to notify the completion of the call.</p>
+                                
+                                                    </div>
+                                
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name">callback</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>The function to run once the list of functions has finished.</p>
+                                
+                                                    </div>
+                                
+                                                </li>
+                                            </ul>
+                                        </div>
+                                
+                                        <div class="returns">
+                                            <h4>Returns:</h4>
+                                
+                                            <div class="returns-description">
+                                                        <span class="type"><a href="../classes/platypus.Async.html" class="crosslink">platypus.Async</a></span>:
+                                                    <p>Returns the new Async object.</p>
+                                
+                                            </div>
+                                        </div>
+                                
+                                </div>
+                            </div>
                         
                         <div id="classdocs" class="tabview">
                             <ul class="api-class-tabs">
@@ -179,7 +262,15 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_greenSplit">greenSplit</a>
+                                                        <a href="#method_Async.recycle">Async.recycle</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_Async.setUp">Async.setUp</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_recycle">recycle</a>
                         
                                                     </li>
                                             </ul>
@@ -192,13 +283,66 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_greenSplit" class="method item">
-                                                <h3 class="name"><code>greenSplit</code></h3>
+                                            <div id="method_Async.recycle" class="method item">
+                                                <h3 class="name"><code>Async.recycle</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>async</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Async.js.html#l46"><code>Async.recycle:46</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns an Async back to the cache.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">async</code>
+                                                                    <span class="type"><a href="../classes/platypus.Async.html" class="crosslink">platypus.Async</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The Async to be recycled.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_Async.setUp" class="method item">
+                                                <h3 class="name"><code>Async.setUp</code></h3>
                                             
                                                     <span class="paren">()</span>
                                             
                                                     <span class="returns-inline">
-                                                        <span class="type"></span>
+                                                        <span class="type"><a href="../classes/platypus.Async.html" class="crosslink">platypus.Async</a></span>
                                                     </span>
                                             
                                             
@@ -210,7 +354,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/mixins_String.js.html#l13"><code>greenSplit:13</code></a>
+                                                    <a href="../files/Async.js.html#l40"><code>Async.setUp:40</code></a>
                                                     </p>
                                             
                                             
@@ -218,7 +362,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Splits, but uses a recycled array.</p>
+                                                    <p>Returns an Async from cache or creates a new one if none are available.</p>
                                             
                                                 </div>
                                             
@@ -227,10 +371,41 @@
                                                         <h4>Returns:</h4>
                                             
                                                         <div class="returns-description">
-                                                                <p>Array</p>
+                                                                    <span class="type"><a href="../classes/platypus.Async.html" class="crosslink">platypus.Async</a></span>:
+                                                                <p>The instantiated Async.</p>
                                             
                                                         </div>
                                                     </div>
+                                            
+                                            </div>
+                                            <div id="method_recycle" class="method item">
+                                                <h3 class="name"><code>recycle</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Async.js.html#l52"><code>recycle:52</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Relinquishes properties of the Async and recycles it.</p>
+                                            
+                                                </div>
+                                            
+                                            
                                             
                                             </div>
                                     </div>

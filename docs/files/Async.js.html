@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.0 API Documentation : window.String</title>
+	<title>platypus v0.10.0 API Documentation : Async.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -144,100 +144,77 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>window.String Class</h1>
-                        <div class="box meta">
+                        <script>
+                        	var name = Async.js      
+                        </script>
+                        <h1 class="file-heading">File:Async.js</h1>
                         
+                        <div class="file">
+                            <pre class="code prettyprint linenums">
+                        /**
+                         * This class defines an asynchronous set up wherein multiple calls can be made and a final function will be run once the calls are completed.
+                         *
+                         * @namespace platypus
+                         * @class Async
+                         * @constructor
+                         * @param functions {Array} An array of functions where each function accepts a &#x60;callback&#x60; parameter and runs &#x60;callback()&#x60; on completion to notify the completion of the call.
+                         * @param callback {Function} The function to run once the list of functions has finished.
+                         * @return {platypus.Async} Returns the new Async object.
+                         * @since 0.10.0
+                         */
+                        /*global platypus, recycle, springroll, setTimeout */
+                        platypus.Async = (function () {
+                            &#x27;use strict&#x27;;
+                            
+                            var callback = function () {
+                                    this.increment -= 1;
+                                    if (!this.increment) {
+                                        setTimeout(this.finalCallback, 0); //ensure async to keep code flow consistent.
+                                        this.recycle();
+                                    }
+                                },
+                                Async = function (arr, finalCallback) {
+                                    var cb = callback.bind(this),
+                                        i = arr.length;
                         
-                                <div class="foundat">
-                                    Defined in: <a href="../files/mixins_String.js.html#l6"><code>window.String:6</code></a>
-                                </div>
+                                    if (!i) {
+                                        finalCallback();
+                                        this.recycle();
+                                    } else {
+                                        this.increment = i;
+                                        this.finalCallback = finalCallback;
                         
-                                    Module: <a href="../modules/platypus.html">platypus</a>
+                                        while (i--) {
+                                            arr[i](cb);
+                                        }
+                                    }
+                                };
+                            
+                            /**
+                             * Returns an Async from cache or creates a new one if none are available.
+                             *
+                             * @method Async.setUp
+                             * @return {platypus.Async} The instantiated Async.
+                             */
+                            /**
+                             * Returns an Async back to the cache.
+                             *
+                             * @method Async.recycle
+                             * @param async {platypus.Async} The Async to be recycled.
+                             */
+                            /**
+                             * Relinquishes properties of the Async and recycles it.
+                             *
+                             * @method recycle
+                             */
+                            recycle.add(Async, !!springroll.Debug, &#x27;Async&#x27;, function () {
+                                this.increment = 0;
+                                this.finalCallback = null;
+                            });
                         
-                        </div>
-                        
-                        
-                        <div class="box intro">
-                            <p>Add methods to String</p>
-                        
-                        </div>
-                        
-                        
-                        <div id="classdocs" class="tabview">
-                            <ul class="api-class-tabs">
-                                <li class="api-class-tab index"><a href="#index">Index</a></li>
-                        
-                                    <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
-                            </ul>
-                        
-                            <div>
-                                <div id="index" class="api-class-tabpanel index">
-                                    <h2 class="off-left">Item Index</h2>
-                        
-                                        <div class="index-section methods">
-                                            <h3>Methods</h3>
-                        
-                                            <ul class="index-list methods">
-                                                    <li class="index-item method">
-                                                        <a href="#method_greenSplit">greenSplit</a>
-                        
-                                                    </li>
-                                            </ul>
-                                        </div>
-                        
-                        
-                        
-                                </div>
-                        
-                                    <div id="methods" class="api-class-tabpanel">
-                                        <h2 class="off-left">Methods</h2>
-                        
-                                            <div id="method_greenSplit" class="method item">
-                                                <h3 class="name"><code>greenSplit</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                                    <span class="returns-inline">
-                                                        <span class="type"></span>
-                                                    </span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/mixins_String.js.html#l13"><code>greenSplit:13</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Splits, but uses a recycled array.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                                    <div class="returns">
-                                                        <h4>Returns:</h4>
-                                            
-                                                        <div class="returns-description">
-                                                                <p>Array</p>
-                                            
-                                                        </div>
-                                                    </div>
-                                            
-                                            </div>
-                                    </div>
-                        
-                        
-                        
-                            </div>
+                            return Async;
+                        }());
+                            </pre>
                         </div>
                     </div>
                 </div>

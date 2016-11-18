@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : mixins\PIXI.Graphics.js</title>
+	<title>platypus v0.10.0 API Documentation : mixins\PIXI.Graphics.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -152,46 +154,44 @@
                         /**
                          * This adds support for a tiny API to PIXI.Graphics similar to the CreateJS Graphics API. This is used for backwards support for RenderSprite masks.
                          */
-                        /* global include, platypus */
+                        /* global include */
                         (function () {
                             &#x27;use strict&#x27;;
                             
                             var Graphics = include(&#x27;PIXI.Graphics&#x27;),
-                                debug = function (param) {
-                                    platypus.debug.olive(&#x27;&quot;&#x27; + param + &#x27;&quot; is not an available PIXI.Graphics method.&#x27;);
-                                    return this;
-                                },
                                 gfx = Graphics.prototype;
                             
-                            gfx.a  = gfx.arc;
-                            gfx.at = gfx.arcTo;
-                            gfx.bt = gfx.bezierCurveTo;
-                            gfx.c  = gfx.clear;
-                            gfx.dc = gfx.drawCircle;
-                            gfx.de = gfx.drawEllipse;
-                            gfx.dr = gfx.drawRect;
-                            gfx.ef = gfx.endFill;
-                            gfx.f  = gfx.beginFill;
-                            gfx.lt = gfx.lineTo;
-                            gfx.mt = gfx.moveTo;
-                            gfx.qt = gfx.quadraticCurveTo;
-                            gfx.r  = gfx.drawRect;
-                            gfx.rr = gfx.drawRoundedRect;
+                            gfx.a  = gfx.a  || gfx.arc;
+                            gfx.at = gfx.at || gfx.arcTo;
+                            gfx.bt = gfx.bt || gfx.bezierCurveTo;
+                            gfx.c  = gfx.c  || gfx.clear;
+                            gfx.dc = gfx.dc || gfx.drawCircle;
+                            gfx.de = gfx.de || gfx.drawEllipse;
+                            gfx.dr = gfx.dr || gfx.drawRect;
+                            gfx.ef = gfx.ef || gfx.endFill;
+                            gfx.f  = gfx.f  || gfx.beginFill;
+                            gfx.lt = gfx.lt || gfx.lineTo;
+                            gfx.mt = gfx.mt || gfx.moveTo;
+                            gfx.qt = gfx.qt || gfx.quadraticCurveTo;
+                            gfx.r  = gfx.r  || gfx.drawRect;
+                            gfx.rr = gfx.rr || gfx.drawRoundedRect;
                             
-                            gfx.cp = debug.bind(&quot;cp&quot;);
-                            gfx.lf = debug.bind(&quot;lf&quot;);
-                            gfx.rf = debug.bind(&quot;rf&quot;);
-                            gfx.bf = debug.bind(&quot;bf&quot;);
-                            gfx.ss = debug.bind(&quot;ss&quot;);
-                            gfx.sd = debug.bind(&quot;sd&quot;);
-                            gfx.s  = debug.bind(&quot;s&quot;);
-                            gfx.ls = debug.bind(&quot;ls&quot;);
-                            gfx.rs = debug.bind(&quot;rs&quot;);
-                            gfx.bs = debug.bind(&quot;bs&quot;);
-                            gfx.es = debug.bind(&quot;es&quot;);
-                            gfx.rc = debug.bind(&quot;rc&quot;);
-                            gfx.dp = debug.bind(&quot;dp&quot;);
-                            gfx.p  = debug.bind(&quot;p&quot;);
+                            /* Other CreateJS shortcuts that are unsupported by PIXI
+                            gfx.cp
+                            gfx.lf
+                            gfx.rf
+                            gfx.bf
+                            gfx.ss
+                            gfx.sd
+                            gfx.s
+                            gfx.ls
+                            gfx.rs
+                            gfx.bs
+                            gfx.es
+                            gfx.rc
+                            gfx.dp
+                            gfx.p
+                            */
                             
                         } ());
                             </pre>

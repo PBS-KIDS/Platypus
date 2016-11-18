@@ -7,7 +7,7 @@
  * @param functions {Array} An array of functions where each function accepts a `callback` parameter and runs `callback()` on completion to notify the completion of the call.
  * @param callback {Function} The function to run once the list of functions has finished.
  * @return {platypus.Async} Returns the new Async object.
- * @since 1.0.0
+ * @since 0.10.0
  */
 /*global platypus, recycle, springroll, setTimeout */
 platypus.Async = (function () {

@@ -6,7 +6,7 @@
  * @namespace platypus.components
  * @class RenderAnimation
  * @uses platypus.Component
- * @since 1.0.0
+ * @since 0.10.0
  */
 /* global include, PIXI, platypus */
 (function () {

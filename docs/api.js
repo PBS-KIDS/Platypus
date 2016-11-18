@@ -3,6 +3,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "classes": [
         "platypus.AABB",
         "platypus.ActionState",
+        "platypus.Async",
         "platypus.CollisionData",
         "platypus.CollisionDataContainer",
         "platypus.CollisionShape",
@@ -55,6 +56,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "platypus.components.RelayLinker",
         "platypus.components.RelayParent",
         "platypus.components.RelaySelf",
+        "platypus.components.RenderAnimation",
         "platypus.components.RenderDebug",
         "platypus.components.RenderDestroyMe",
         "platypus.components.RenderProgress",

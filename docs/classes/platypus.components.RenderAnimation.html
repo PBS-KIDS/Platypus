@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.0 API Documentation : platypus.components.AIPacer</title>
+	<title>platypus v0.10.0 API Documentation : platypus.components.RenderAnimation</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -144,7 +144,7 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>platypus.components.AIPacer Class</h1>
+                        <h1>platypus.components.RenderAnimation Class</h1>
                         <div class="box meta">
                                 <div class="uses">
                                     Uses
@@ -155,16 +155,18 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/components_AIPacer.js.html#l1"><code>platypus.components.AIPacer:1</code></a>
+                                    Defined in: <a href="../files/components_RenderAnimation.js.html#l1"><code>platypus.components.RenderAnimation:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
                         
+                                <p>Available since 0.10.0</p>
                         </div>
                         
                         
                         <div class="box intro">
-                            <p>This component acts as a simple AI that will reverse the movement direction of an object when it collides with something.</p>
+                            <p>This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.</p>
+                        <p>Note: This component requires assets published using <a href="https://github.com/jiborobot/pixi-animate">PixiAnimate</a>.</p>
                         
                         </div>
                         
@@ -187,11 +189,35 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;handle-ai&#x27;">&#x27;handle-ai&#x27;</a>
+                                                        <a href="#method_&#x27;camera-update&#x27;">&#x27;camera-update&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;turn-around&#x27;">&#x27;turn-around&#x27;</a>
+                                                        <a href="#method_&#x27;handle-render&#x27;">&#x27;handle-render&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;handle-render-load&#x27;">&#x27;handle-render-load&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;hide-animation&#x27;">&#x27;hide-animation&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;play-animation&#x27;">&#x27;play-animation&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;set-mask&#x27;">&#x27;set-mask&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;show-animation&#x27;">&#x27;show-animation&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop-animation&#x27;">&#x27;stop-animation&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -238,11 +264,63 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
-                                                        <a href="#property_direction">direction</a>
+                                                        <a href="#property_animation">animation</a>
                         
                                                     </li>
                                                     <li class="index-item property">
-                                                        <a href="#property_movement">movement</a>
+                                                        <a href="#property_animationMap">animationMap</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_eventBased">eventBased</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_interactive">interactive</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_mask">mask</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_offsetZ">offsetZ</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_regX">regX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_regY">regY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_scaleX">scaleX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_scaleY">scaleY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_stateBased">stateBased</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_visible">visible</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_x">x</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_y">y</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_z">z</a>
                         
                                                     </li>
                                             </ul>
@@ -254,23 +332,11 @@
                         
                                             <ul class="index-list events">
                                                     <li class="index-item event">
-                                                        <a href="#event_&#x27;go-down&#x27;">&#x27;go-down&#x27;</a>
+                                                        <a href="#event_&#x27;animation-ended&#x27;">&#x27;animation-ended&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item event">
-                                                        <a href="#event_&#x27;go-left&#x27;">&#x27;go-left&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;go-right&#x27;">&#x27;go-right&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;go-up&#x27;">&#x27;go-up&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;stop&#x27;">&#x27;stop&#x27;</a>
+                                                        <a href="#event_&#x27;input-on&#x27;">&#x27;input-on&#x27;</a>
                         
                                                     </li>
                                             </ul>
@@ -280,43 +346,13 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;handle-ai&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;handle-ai&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l41"><code>&#x27;handle-ai&#x27;:41</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This AI listens for a step message triggered by its entity parent in order to perform its logic on each tick.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;turn-around&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;turn-around&#x27;</code></h3>
+                                            <div id="method_&#x27;camera-update&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;camera-update&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>collisionInfo</code>
+                                                                    <code>camera.viewport</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -331,7 +367,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l81"><code>&#x27;turn-around&#x27;:81</code></a>
+                                                    <a href="../files/components_RenderAnimation.js.html#l339"><code>&#x27;camera-update&#x27;:339</code></a>
                                                     </p>
                                             
                                             
@@ -339,7 +375,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>On receiving this message, the component will check the collision side and re-orient itself accordingly.</p>
+                                                    <p>Listens for this event to determine whether this sprite is visible.</p>
                                             
                                                 </div>
                                             
@@ -348,12 +384,363 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">collisionInfo</code>
-                                                                    <span class="type"><a href="../classes/platypus.CollisionData.html" class="crosslink">platypus.CollisionData</a></span>
+                                                                    <code class="param-name">camera.viewport</code>
+                                                                    <span class="type"><a href="../classes/platypus.AABB.html" class="crosslink">platypus.AABB</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>Uses direction of collision to determine whether to turn around.</p>
+                                                                    <p>Camera position and size.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-render&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-render&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>renderData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l367"><code>&#x27;handle-render&#x27;:367</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The render update message updates the animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">renderData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Data from the render handler</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">container</code>
+                                                                                <span class="type">PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The parent container.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-render-load&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-render-load&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>handlerData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l354"><code>&#x27;handle-render-load&#x27;:354</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>A setup message used to add the animation to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">handlerData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Data from the render handler</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">container</code>
+                                                                                <span class="type">PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The parent container.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;hide-animation&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;hide-animation&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l383"><code>&#x27;hide-animation&#x27;:383</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event makes the animation invisible.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;play-animation&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;play-animation&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[animation]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l427"><code>&#x27;play-animation&#x27;:427</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Starts the animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[animation]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The animation to play. If not specified, this method simply unpauses the current animation.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;set-mask&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;set-mask&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>mask</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l401"><code>&#x27;set-mask&#x27;:401</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Defines the mask on the animation. If no mask is specified, the mask is set to null.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">mask</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The mask. This can specified the same way as the 'mask' parameter on the component.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;show-animation&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;show-animation&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l392"><code>&#x27;show-animation&#x27;:392</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event makes the animation visible.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop-animation&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop-animation&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code class="optional">[animation]</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l411"><code>&#x27;stop-animation&#x27;:411</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Stops the animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[animation]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The animation to show and pause. If not specified, this method simply pauses the current animation.</p>
                                             
                                                                 </div>
                                             
@@ -888,8 +1275,8 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_direction" class="property item">
-                                                <h3 class="name"><code>direction</code></h3>
+                                            <div id="property_animation" class="property item">
+                                                <h3 class="name"><code>animation</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
                                             
                                             
@@ -899,24 +1286,24 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l25"><code>direction:25</code></a>
+                                                    <a href="../files/components_RenderAnimation.js.html#l66"><code>animation:66</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This sets the initial direction of movement. Defaults to "up", or "left" if movement is horizontal.</p>
+                                                    <p>This sets the PixiAnimate animation to play. This is typically of the form "library.asset" as defined by the PixiAnimate publish settings.</p>
                                             
                                                 </div>
                                             
-                                                    <p><strong>Default:</strong> &quot;up&quot;</p>
+                                                    <p><strong>Default:</strong> &quot;&quot;</p>
                                             
                                             
                                             </div>
-                                            <div id="property_movement" class="property item">
-                                                <h3 class="name"><code>movement</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            <div id="property_animationMap" class="property item">
+                                                <h3 class="name"><code>animationMap</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                                             
                                             
                                             
@@ -925,18 +1312,382 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l16"><code>movement:16</code></a>
+                                                    <a href="../files/components_RenderAnimation.js.html#l75"><code>animationMap:75</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>This determines the direction of movement. Can be "horizontal", "vertical", or "both".</p>
+                                                    <p>Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.</p>
+                                            <pre class="code prettyprint"><code>"animationMap":{
+                                                "standing": "default-animation"  // On receiving a "standing" event, or when this.owner.state.standing === true, the "default" animation will begin playing.
+                                                "ground,moving": "walking",  // Comma separated values have a special meaning when evaluating "state-changed" messages. The above example will cause the "walking" animation to play ONLY if the entity's state includes both "moving" and "ground" equal to true.
+                                                "ground,striking": "swing!", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
+                                                "default": "default-animation" // Optional. "default" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
+                                            }
+                                            </code></pre>
+                                            <p>This data is used to create EventRender or StateRender components on the entity if the <code>eventBased</code> or <code>stateBased</code> properties are set to <code>true</code>.</p>
                                             
                                                 </div>
                                             
-                                                    <p><strong>Default:</strong> &quot;both&quot;</p>
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_eventBased" class="property item">
+                                                <h3 class="name"><code>eventBased</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l142"><code>eventBased:142</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is <code>false</code>.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_interactive" class="property item">
+                                                <h3 class="name"><code>interactive</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l113"><code>interactive:113</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.9.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:</p>
+                                            <p>"interactive": {
+                                            "hover": false,
+                                            "hitArea": {
+                                            "x": 10,
+                                            "y": 10,
+                                            "width": 40,
+                                            "height": 40
+                                            }
+                                            }</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_mask" class="property item">
+                                                <h3 class="name"><code>mask</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l93"><code>mask:93</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.</p>
+                                            <p>"mask": {
+                                            "x": 10,
+                                            "y": 10,
+                                            "width": 40,
+                                            "height": 40
+                                            },</p>
+                                            <p>-OR-</p>
+                                            <p>"mask": "r(10,20,40,40).dc(30,10,12)"</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_offsetZ" class="property item">
+                                                <h3 class="name"><code>offsetZ</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l178"><code>offsetZ:178</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The offset of the z-index of the sprite from the entity's z-index.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_regX" class="property item">
+                                                <h3 class="name"><code>regX</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l160"><code>regX:160</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Determines the x origin of the animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_regY" class="property item">
+                                                <h3 class="name"><code>regY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l169"><code>regY:169</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Determines the y origin of the animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_scaleX" class="property item">
+                                                <h3 class="name"><code>scaleX</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l188"><code>scaleX:188</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The X scaling factor for the image.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_scaleY" class="property item">
+                                                <h3 class="name"><code>scaleY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l197"><code>scaleY:197</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The Y scaling factor for the image.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_stateBased" class="property item">
+                                                <h3 class="name"><code>stateBased</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l151"><code>stateBased:151</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on <code>this.owner.state</code>. Default is <code>true</code>.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> true</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_visible" class="property item">
+                                                <h3 class="name"><code>visible</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l133"><code>visible:133</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_x" class="property item">
+                                                <h3 class="name"><code>x</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l206"><code>x:206</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The x position of the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_y" class="property item">
+                                                <h3 class="name"><code>y</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l215"><code>y:215</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The y position of the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_z" class="property item">
+                                                <h3 class="name"><code>z</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderAnimation.js.html#l224"><code>z:224</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The z position of the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
                                             
                                             
                                             </div>
@@ -946,8 +1697,8 @@
                                     <div id="events" class="api-class-tabpanel">
                                         <h2 class="off-left">Events</h2>
                         
-                                            <div id="event_&#x27;go-down&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;go-down&#x27;</code></h3>
+                                            <div id="event_&#x27;animation-ended&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;animation-ended&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
                                             
@@ -957,22 +1708,39 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l67"><code>&#x27;go-down&#x27;:67</code></a>
+                                                    <a href="../files/components_RenderAnimation.js.html#l23"><code>&#x27;animation-ended&#x27;:23</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Triggers this event when the entity is moving up and collides with something.</p>
+                                                    <p>This event fires each time an animation completes.</p>
                                             
                                                 </div>
                                             
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">animation</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The id of the animation that ended.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                             
                                             
                                             </div>
-                                            <div id="event_&#x27;go-left&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;go-left&#x27;</code></h3>
+                                            <div id="event_&#x27;input-on&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;input-on&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
                                             
@@ -982,89 +1750,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l57"><code>&#x27;go-left&#x27;:57</code></a>
+                                                    <a href="../files/components_RenderAnimation.js.html#l305"><code>&#x27;input-on&#x27;:305</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Triggers this event when the entity is moving right and collides with something.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;go-right&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;go-right&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l62"><code>&#x27;go-right&#x27;:62</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Triggers this event when the entity is moving left and collides with something.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;go-up&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;go-up&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l72"><code>&#x27;go-up&#x27;:72</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Triggers this event when the entity is moving down and collides with something.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;stop&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;stop&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_AIPacer.js.html#l50"><code>&#x27;stop&#x27;:50</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Triggers this event prior to changing direction.</p>
+                                                    <p>This event is triggered once the RenderSprite is ready to handle interactivity.</p>
                                             
                                                 </div>
                                             

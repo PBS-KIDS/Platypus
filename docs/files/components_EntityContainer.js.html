@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : components\EntityContainer.js</title>
+	<title>platypus v0.10.0 API Documentation : components\EntityContainer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -222,56 +224,60 @@
                                     childEvents: []
                                 },
                                 
-                                constructor: function (definition) {
-                                    var i = 0,
-                                        events = this.childEvents;
-                            
-                                     //saving list of entities for load message
-                                    this.entityDefinitions = null;
-                                    if (definition.entities &amp;&amp; this.owner.entities) { //combine component list and entity list into one if they both exist.
-                                        this.entityDefinitions = definition.entities.concat(this.owner.entities);
-                                    } else {
-                                        this.entityDefinitions = definition.entities || this.owner.entities || null;
-                                    }
+                                constructor: (function () {
+                                    var
+                                        entityInit = function (entityDefinition, callback) {
+                                            this.addEntity(entityDefinition, callback);
+                                        };
                         
-                                    this.owner.entities = this.entities = Array.setUp();
-                                    
-                                    this.childEvents = Array.setUp();
-                                    for (i = 0; i &lt; events.length; i++) {
-                                        this.addNewPublicEvent(events[i]);
-                                    }
-                                    this.addNewPrivateEvent(&#x27;peer-entity-added&#x27;);
-                                    this.addNewPrivateEvent(&#x27;peer-entity-removed&#x27;);
-                                },
-                                
-                                events: {
-                                    /**
-                                     * This component waits until all other entity components are loaded before it begins adding children entities. This allows other entity components to listen to entity-added messages and handle them if necessary.
-                                     *
-                                     * @method &#x27;load&#x27;
-                                     */
-                                    &quot;load&quot;: function () {
-                                        // putting this here so all other components will have been loaded and can listen for &quot;entity-added&quot; calls.
+                                    return function (definition, callback) {
                                         var i = 0,
-                                            entities   = this.entityDefinitions;
-                                        
-                                        if (entities) {
-                                            for (i = 0; i &lt; entities.length; i++) {
-                                                this.addEntity(entities[i]);
-                                            }
+                                            entities = null,
+                                            events = this.childEvents,
+                                            entityInits = null;
+                                
+                                        //saving list of entities for load message
+                                        if (definition.entities &amp;&amp; this.owner.entities) { //combine component list and entity list into one if they both exist.
+                                            entities = definition.entities.concat(this.owner.entities);
+                                        } else {
+                                            entities = definition.entities || this.owner.entities || null;
                                         }
                         
-                                        delete this.entityDefinitions;
-                                    },
-                                    
+                                        this.owner.entities = this.entities = Array.setUp();
+                                        
+                                        this.childEvents = Array.setUp();
+                                        for (i = 0; i &lt; events.length; i++) {
+                                            this.addNewPublicEvent(events[i]);
+                                        }
+                                        this.addNewPrivateEvent(&#x27;peer-entity-added&#x27;);
+                                        this.addNewPrivateEvent(&#x27;peer-entity-removed&#x27;);
+                        
+                                        if (entities) {
+                                            entityInits = Array.setUp();
+                                            for (i = 0; i &lt; entities.length; i++) {
+                                                entityInits.push(entityInit.bind(this, entities[i]));
+                                            }
+                                            platypus.Async.setUp(entityInits, function () {
+                                                callback();
+                                            });
+                                            entityInits.recycle();
+                                            return true; // notifies owner that this component is asynchronous.
+                                        } else {
+                                            return false;
+                                        }
+                                    };
+                                } ()),
+                                
+                                events: {
                                     /**
                                      * This message will added the given entity to this component&#x27;s list of entities.
                                      *
                                      * @method &#x27;add-entity&#x27;
                                      * @param entity {platypus.Entity} This is the entity to be added as a child.
+                                     * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
                                      */
-                                    &quot;add-entity&quot;: function (entity) {
-                                        this.addEntity(entity);
+                                    &quot;add-entity&quot;: function (entity, callback) {
+                                        this.addEntity(entity, callback);
                                     },
                                     
                                     /**
@@ -454,21 +460,25 @@
                                      * @param newEntity {platypus.Entity|Object|String} Specifies the entity to add. If an object with a &quot;type&quot; property is provided or a String is provided, this component looks up the entity definition to create the entity.
                                      * @param [newEntity.type] {String} If an object with a &quot;type&quot; property is provided, this component looks up the entity definition to create the entity.
                                      * @param [newEntity.properties] {Object} A list of key/value pairs that sets the initial properties on the new entity.
+                                     * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
                                      * @return {platypus.Entity} The entity that was just added.
                                      */
-                                    addEntity: function (newEntity) {
+                                    addEntity: function (newEntity, callback) {
                                         var entity = null,
                                             x = 0;
                                         
                                         if (newEntity instanceof Entity) {
                                             entity = newEntity;
+                                            if (callback) {
+                                                callback();
+                                            }
                                         } else {
                                             if (typeof newEntity === &#x27;string&#x27;) {
-                                                entity = new Entity(platypus.game.settings.entities[newEntity]);
+                                                entity = new Entity(platypus.game.settings.entities[newEntity], null, callback);
                                             } else if (newEntity.id) {
-                                                entity = new Entity(newEntity);
+                                                entity = new Entity(newEntity, null, callback);
                                             } else {
-                                                entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity);
+                                                entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, callback);
                                             }
                                             this.owner.triggerEvent(&#x27;entity-created&#x27;, entity);
                                         }

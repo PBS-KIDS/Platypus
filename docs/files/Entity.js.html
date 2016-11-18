@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : Entity.js</title>
+	<title>platypus v0.10.0 API Documentation : Entity.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -186,11 +188,13 @@
                          * @class Entity
                          * @constructor
                          * @extends Messenger
-                         * @param {Object} [definition] Base definition for the entity.
-                         * @param {Object} [definition.id] This declares the type of entity and will be stored on the Entity as &#x60;entity.type&#x60; after instantiation.
-                         * @param {Object} [definition.components] This lists the components that should be attached to this entity.
-                         * @param {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as &#x60;entity.key = value&#x60;.
-                         * @param {Object} [instanceDefinition] Specific instance definition including properties that override the base definition properties.
+                         * @param [definition] {Object} Base definition for the entity.
+                         * @param [definition.id] {Object} This declares the type of entity and will be stored on the Entity as &#x60;entity.type&#x60; after instantiation.
+                         * @param [definition.components] {Object} This lists the components that should be attached to this entity.
+                         * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as &#x60;entity.key = value&#x60;.
+                         * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
+                         * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as &#x60;entity.key = value&#x60;.
+                         * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
                          * @return {Entity} Returns the new entity made up of the provided components.
                         **/
                         
@@ -200,10 +204,14 @@
                             
                             var Data = include(&#x27;platypus.Data&#x27;),
                                 StateMap = include(&#x27;platypus.StateMap&#x27;),
+                                componentInit = function (Component, componentDefinition, callback) {
+                                    this.addComponent(new Component(this, componentDefinition, callback));
+                                },
                                 entityIds = {},
-                                entity = function (definition, instanceDefinition) {
+                                entity = function (definition, instanceDefinition, callback) {
                                     var i                    = 0,
                                         componentDefinition  = null,
+                                        componentInits       = Array.setUp(),
                                         def                  = Data.setUp(definition),
                                         componentDefinitions = def.components,
                                         defaultProperties    = Data.setUp(def.properties),
@@ -246,30 +254,36 @@
                                             componentDefinition = componentDefinitions[i];
                                             if (componentDefinition) {
                                                 if (platypus.components[componentDefinition.type]) {
-                                                    this.addComponent(new platypus.components[componentDefinition.type](this, componentDefinition));
+                                                    componentInits.push(componentInit.bind(this, platypus.components[componentDefinition.type], componentDefinition));
                                                 } else {
                                                     platypus.debug.warn(&#x27;Entity &quot;&#x27; + this.type + &#x27;&quot;: Component &quot;&#x27; + componentDefinition.type + &#x27;&quot; is not defined.&#x27;, componentDefinition);
                                                 }
                                             }
                                         }
                                     }
+                                    platypus.Async.setUp(componentInits, function () {
+                                        // Trigger saved events that were being fired during component addition.
+                                        delete this.trigger;
+                                        delete this.triggerEvent;
+                                        for (i = 0; i &lt; savedEvents.length; i++) {
+                                            this.trigger(savedEvents[i], savedMessages[i]);
+                                        }
+                                        savedEvents.recycle();
+                                        savedMessages.recycle();
+                        
+                                        /**
+                                         * The entity triggers &#x60;load&#x60; on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
+                                         *
+                                         * @event load
+                                         */
+                                        this.triggerEvent(&#x27;load&#x27;);
+                        
+                                        if (callback) {
+                                            callback();
+                                        }
+                                    }.bind(this));
                                     
-                                    // Trigger saved events that were being fired during component addition.
-                                    delete this.trigger;
-                                    delete this.triggerEvent;
-                                    for (i = 0; i &lt; savedEvents.length; i++) {
-                                        this.trigger(savedEvents[i], savedMessages[i]);
-                                    }
-                                    savedEvents.recycle();
-                                    savedMessages.recycle();
-                        
-                                    /**
-                                     * The entity triggers &#x60;load&#x60; on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.
-                                     *
-                                     * @event load
-                                     */
-                                    this.triggerEvent(&#x27;load&#x27;);
-                        
+                                    componentInits.recycle();
                                     def.recycle();
                                     defaultProperties.recycle();
                                     instance.recycle();

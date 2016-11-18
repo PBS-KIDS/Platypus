@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : platypus.Entity</title>
+	<title>platypus v0.10.0 API Documentation : platypus.Entity</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -205,6 +207,9 @@
                                                 <li class="arg">
                                                         <code class="optional">[instanceDefinition]</code>
                                                 </li>
+                                                <li class="arg">
+                                                        <code class="optional">[callback]</code>
+                                                </li>
                                             </ul><span class="paren">)</span>
                                         </div>
                                 
@@ -271,7 +276,7 @@
                                 
                                                             </li>
                                                             <li class="param">
-                                                                    <code class="param-name optional">[properties]</code>
+                                                                    <code class="param-name optional">[properties]  [definition.properties]</code>
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                                                                     <span class="flag optional" title="This parameter is optional.">optional</span>
                                 
@@ -291,6 +296,31 @@
                                 
                                                     <div class="param-description">
                                                         <p>Specific instance definition including properties that override the base definition properties.</p>
+                                
+                                                    </div>
+                                
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name optional">[properties]</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                                    <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                                                <div class="param-description">
+                                                                    <p>This is a list of key/value pairs that are added directly to the Entity as <code>entity.key = value</code>.</p>
+                                
+                                                                </div>
+                                
+                                                            </li>
+                                                        </ul>
+                                                </li>
+                                                <li class="param">
+                                                        <code class="param-name optional">[callback]</code>
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                                        <span class="flag optional" title="This parameter is optional.">optional</span>
+                                
+                                
+                                                    <div class="param-description">
+                                                        <p>A function to run once all of the components on the Entity have been loaded.</p>
                                 
                                                     </div>
                                 
@@ -407,7 +437,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l139"><code>addComponent:139</code></a>
+                                                    <a href="../files/Entity.js.html#l151"><code>addComponent:151</code></a>
                                                     </p>
                                             
                                             
@@ -463,7 +493,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l217"><code>destroy:217</code></a>
+                                                    <a href="../files/Entity.js.html#l229"><code>destroy:229</code></a>
                                                     </p>
                                             
                                             
@@ -505,7 +535,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l243"><code>getAssetList:243</code></a>
+                                                    <a href="../files/Entity.js.html#l255"><code>getAssetList:255</code></a>
                                                     </p>
                                             
                                             
@@ -584,7 +614,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l281"><code>getLateAssetList:281</code></a>
+                                                    <a href="../files/Entity.js.html#l293"><code>getLateAssetList:293</code></a>
                                                     </p>
                                             
                                             
@@ -660,7 +690,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l160"><code>removeComponent:160</code></a>
+                                                    <a href="../files/Entity.js.html#l172"><code>removeComponent:172</code></a>
                                                     </p>
                                             
                                             
@@ -722,7 +752,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l201"><code>setProperty:201</code></a>
+                                                    <a href="../files/Entity.js.html#l213"><code>setProperty:213</code></a>
                                                     </p>
                                             
                                             
@@ -772,7 +802,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l129"><code>toString:129</code></a>
+                                                    <a href="../files/Entity.js.html#l141"><code>toString:141</code></a>
                                                     </p>
                                             
                                             
@@ -814,7 +844,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l149"><code>component-added:149</code></a>
+                                                    <a href="../files/Entity.js.html#l161"><code>component-added:161</code></a>
                                                     </p>
                                             
                                             
@@ -868,7 +898,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l170"><code>component-removed:170</code></a>
+                                                    <a href="../files/Entity.js.html#l182"><code>component-removed:182</code></a>
                                                     </p>
                                             
                                             
@@ -922,7 +952,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l115"><code>load:115</code></a>
+                                                    <a href="../files/Entity.js.html#l121"><code>load:121</code></a>
                                                     </p>
                                             
                                             

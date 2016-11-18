@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : components\VoiceOver.js</title>
+	<title>platypus v0.10.0 API Documentation : components\VoiceOver.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -150,24 +152,33 @@
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                         * This component uses its definition to load AudioVO and RenderSprite components who work in an interconnected way to render animations corresponding to one or more audio tracks.
+                         * This component uses its definition to load an AudioVO component and either a RenderSprite or RenderAnimation component. These work in an interconnected way to render animations corresponding to one or more audio tracks.
                          *
-                         * In addition to its own properties, this component also accepts all properties accepted by either [RenderSprite](platypus.components.RenderSprite.html) or [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
+                         * In addition to its own properties, this component also accepts all properties accepted by either [RenderSprite](platypus.components.RenderSprite.html), [RenderSprite](platypus.components.RenderAnimation.html), and [AudioVO](platypus.components.AudioVO.html) and passes them along when it creates those components.
                          *
                          * @namespace platypus.components
                          * @class VoiceOver
                          * @uses platypus.Component
+                         * @uses platypus.AudioVO
+                         * @uses platypus.RenderAnimation
+                         * @uses platypus.RenderSprite
                          */
-                        /* global platypus */
+                        /* global include, platypus */
                         (function () {
                             &#x27;use strict&#x27;;
                         
-                            var getEventName = function (msg, VO) {
+                            var AudioVO = include(&#x27;platypus.components.AudioVO&#x27;),
+                                RenderAnimation = include(&#x27;platypus.components.RenderAnimation&#x27;),
+                                RenderSprite = include(&#x27;platypus.components.RenderSprite&#x27;),
+                                getEventName = function (msg, VO) {
                                     if (VO === &#x27; &#x27;) {
                                         return msg + &#x27;default&#x27;;
                                     } else {
                                         return msg + VO;
                                     }
+                                },
+                                componentInit = function (Component, definition, callback) {
+                                    this.owner.addComponent(new Component(this.owner, definition, callback));
                                 },
                                 createAudioDefinition = function (sound, events, message, frameLength) {
                                     var i          = 0,
@@ -272,9 +283,9 @@
                                      *
                                      * @property messagePrefix
                                      * @type String
-                                     * @default &quot;VoiceOver&quot;
+                                     * @default &quot;&quot;
                                      */
-                                    messagePrefix: &quot;VoiceOver&quot;,
+                                    messagePrefix: &quot;&quot;,
                         
                                     /**
                                      * This maps events to audio clips and voice over strings.
@@ -295,8 +306,9 @@
                                     voiceOverMap: {}
                                 },
                         
-                                constructor: function (definition) {
+                                constructor: function (definition, callback) {
                                     var i = &#x27;&#x27;,
+                                        componentInits = Array.setUp(),
                                         audioDefinition     = {
                                             audioMap: {},
                                             aliases: definition.aliases
@@ -304,15 +316,17 @@
                                         animationDefinition = {
                                             acceptInput: definition.acceptInput,
                                             aliases: definition.aliases,
+                                            animation: definition.animation,
                                             animationMap: {},
                                             eventBased: true, // VO triggers events for changing lip-sync frames.
                                             flip: definition.flip,
                                             hidden: definition.hidden,
+                                            interactive: definition.interactive,
                                             mask: definition.mask,
                                             mirror: definition.mirror,
                                             offsetZ: definition.offsetZ,
-                                            pins: definition.pins,
-                                            pinTo: definition.pinTo,
+                                            regX: definition.regX,
+                                            regY: definition.regY,
                                             restart: definition.restart,
                                             rotate: definition.rotate,
                                             scaleX: definition.scaleX,
@@ -321,7 +335,11 @@
                                             stateBased: definition.stateBased || false
                                         };
                                     
-                                    this.message = this.messagePrefix + &#x27;-&#x27;;
+                                    if (this.messagePrefix) {
+                                        this.message = this.messagePrefix + &#x27;-&#x27;;
+                                    } else {
+                                        this.message = &#x27;&#x27;;
+                                    }
                                     
                                     for (i in this.animationMap) {
                                         if (this.animationMap.hasOwnProperty(i)) {
@@ -329,14 +347,20 @@
                                         }
                                     }
                                     animationDefinition.animationMap.default = this.animationMap.default;
-                                    this.owner.addComponent(new platypus.components.RenderSprite(this.owner, animationDefinition));
+                                    componentInits.push(componentInit.bind(this, (definition.animation ? RenderAnimation : RenderSprite), animationDefinition));
                         
                                     for (i in this.voiceOverMap) {
                                         if (this.voiceOverMap.hasOwnProperty(i)) {
                                             audioDefinition.audioMap[i] = createVO(this.voiceOverMap[i], this.animationMap, this.message, this.frameLength);
                                         }
                                     }
-                                    this.owner.addComponent(new platypus.components.AudioVO(this.owner, audioDefinition));
+                                    componentInits.push(componentInit.bind(this, AudioVO, audioDefinition));
+                        
+                                    platypus.Async.setUp(componentInits, callback);
+                        
+                                    componentInits.recycle();
+                        
+                                    return true;
                                 },
                         
                                 events: {
@@ -351,12 +375,14 @@
                                 },
                                 
                                 getAssetList: function (component, props, defaultProps) {
-                                    var ss = component.spriteSheet || props.spriteSheet || defaultProps.spriteSheet;
+                                    var ss = component.spriteSheet || props.spriteSheet || (defaultProps &amp;&amp; defaultProps.spriteSheet);
                                     
                                     if (typeof ss === &#x27;string&#x27;) {
                                         return platypus.game.settings.spriteSheets[ss].images.greenSlice();
-                                    } else {
+                                    } else if (ss) {
                                         return ss.images.greenSlice();
+                                    } else {
+                                        return Array.setUp();
                                     }
                                 }
                             });

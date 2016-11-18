@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : platypus.components.VoiceOver</title>
+	<title>platypus v0.10.0 API Documentation : platypus.components.VoiceOver</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -148,6 +150,9 @@
                                     Uses
                                     <ul class="inline commas">
                                             <li><a href="platypus.Component.html">platypus.Component</a></li>
+                                            <li><a href="platypus.AudioVO.html">platypus.AudioVO</a></li>
+                                            <li><a href="platypus.RenderAnimation.html">platypus.RenderAnimation</a></li>
+                                            <li><a href="platypus.RenderSprite.html">platypus.RenderSprite</a></li>
                                     </ul>
                                 </div>
                         
@@ -162,8 +167,8 @@
                         
                         
                         <div class="box intro">
-                            <p>This component uses its definition to load AudioVO and RenderSprite components who work in an interconnected way to render animations corresponding to one or more audio tracks.</p>
-                        <p>In addition to its own properties, this component also accepts all properties accepted by either <a href="platypus.components.RenderSprite.html">RenderSprite</a> or <a href="platypus.components.AudioVO.html">AudioVO</a> and passes them along when it creates those components.</p>
+                            <p>This component uses its definition to load an AudioVO component and either a RenderSprite or RenderAnimation component. These work in an interconnected way to render animations corresponding to one or more audio tracks.</p>
+                        <p>In addition to its own properties, this component also accepts all properties accepted by either <a href="platypus.components.RenderSprite.html">RenderSprite</a>, <a href="platypus.components.RenderAnimation.html">RenderSprite</a>, and <a href="platypus.components.AudioVO.html">AudioVO</a> and passes them along when it creates those components.</p>
                         
                         </div>
                         
@@ -271,7 +276,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_VoiceOver.js.html#l192"><code>&#x27;load&#x27;:192</code></a>
+                                                    <a href="../files/components_VoiceOver.js.html#l214"><code>&#x27;load&#x27;:214</code></a>
                                                     </p>
                                             
                                             
@@ -822,7 +827,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_VoiceOver.js.html#l91"><code>animationMap:91</code></a>
+                                                    <a href="../files/components_VoiceOver.js.html#l100"><code>animationMap:100</code></a>
                                                     </p>
                                             
                                             
@@ -857,7 +862,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_VoiceOver.js.html#l110"><code>frameLength:110</code></a>
+                                                    <a href="../files/components_VoiceOver.js.html#l119"><code>frameLength:119</code></a>
                                                     </p>
                                             
                                             
@@ -883,7 +888,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_VoiceOver.js.html#l119"><code>messagePrefix:119</code></a>
+                                                    <a href="../files/components_VoiceOver.js.html#l128"><code>messagePrefix:128</code></a>
                                                     </p>
                                             
                                             
@@ -894,7 +899,7 @@
                                             
                                                 </div>
                                             
-                                                    <p><strong>Default:</strong> &quot;VoiceOver&quot;</p>
+                                                    <p><strong>Default:</strong> &quot;&quot;</p>
                                             
                                             
                                             </div>
@@ -909,7 +914,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_VoiceOver.js.html#l128"><code>voiceOverMap:128</code></a>
+                                                    <a href="../files/components_VoiceOver.js.html#l137"><code>voiceOverMap:137</code></a>
                                                     </p>
                                             
                                             

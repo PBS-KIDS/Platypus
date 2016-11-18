@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : platypus.components.Camera</title>
+	<title>platypus v0.10.0 API Documentation : platypus.components.Camera</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -256,6 +258,10 @@
                                                         <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_isOnCanvas">isOnCanvas</a>
+                        
+                                                    </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_removeEventListener">removeEventListener</a>
                         
@@ -375,7 +381,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l283"><code>&#x27;child-entity-added&#x27;:283</code></a>
+                                                    <a href="../files/components_Camera.js.html#l281"><code>&#x27;child-entity-added&#x27;:281</code></a>
                                                     </p>
                                             
                                             
@@ -428,7 +434,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l304"><code>&#x27;child-entity-updated&#x27;:304</code></a>
+                                                    <a href="../files/components_Camera.js.html#l302"><code>&#x27;child-entity-updated&#x27;:302</code></a>
                                                     </p>
                                             
                                             
@@ -482,7 +488,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l551"><code>&#x27;follow&#x27;:551</code></a>
+                                                    <a href="../files/components_Camera.js.html#l538"><code>&#x27;follow&#x27;:538</code></a>
                                                     </p>
                                             
                                             
@@ -650,7 +656,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l261"><code>&#x27;load&#x27;:261</code></a>
+                                                    <a href="../files/components_Camera.js.html#l260"><code>&#x27;load&#x27;:260</code></a>
                                                     </p>
                                             
                                             
@@ -686,7 +692,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l344"><code>&#x27;mousedown&#x27;:344</code></a>
+                                                    <a href="../files/components_Camera.js.html#l342"><code>&#x27;mousedown&#x27;:342</code></a>
                                                     </p>
                                             
                                             
@@ -740,7 +746,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l368"><code>&#x27;pressmove&#x27;:368</code></a>
+                                                    <a href="../files/components_Camera.js.html#l366"><code>&#x27;pressmove&#x27;:366</code></a>
                                                     </p>
                                             
                                             
@@ -794,7 +800,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l385"><code>&#x27;pressup&#x27;:385</code></a>
+                                                    <a href="../files/components_Camera.js.html#l383"><code>&#x27;pressup&#x27;:383</code></a>
                                                     </p>
                                             
                                             
@@ -848,7 +854,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l518"><code>&#x27;relocate&#x27;:518</code></a>
+                                                    <a href="../files/components_Camera.js.html#l505"><code>&#x27;relocate&#x27;:505</code></a>
                                                     </p>
                                             
                                             
@@ -945,7 +951,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l270"><code>&#x27;render-world&#x27;:270</code></a>
+                                                    <a href="../files/components_Camera.js.html#l269"><code>&#x27;render-world&#x27;:269</code></a>
                                                     </p>
                                             
                                             
@@ -1010,7 +1016,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l504"><code>&#x27;resize-camera&#x27;:504</code></a>
+                                                    <a href="../files/components_Camera.js.html#l491"><code>&#x27;resize-camera&#x27;:491</code></a>
                                                     </p>
                                             
                                             
@@ -1085,7 +1091,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l572"><code>&#x27;shake&#x27;:572</code></a>
+                                                    <a href="../files/components_Camera.js.html#l559"><code>&#x27;shake&#x27;:559</code></a>
                                                     </p>
                                             
                                             
@@ -1194,7 +1200,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l402"><code>&#x27;tick&#x27;:402</code></a>
+                                                    <a href="../files/components_Camera.js.html#l400"><code>&#x27;tick&#x27;:400</code></a>
                                                     </p>
                                             
                                             
@@ -1258,7 +1264,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l319"><code>&#x27;world-loaded&#x27;:319</code></a>
+                                                    <a href="../files/components_Camera.js.html#l317"><code>&#x27;world-loaded&#x27;:317</code></a>
                                                     </p>
                                             
                                             
@@ -1630,6 +1636,114 @@
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
                                                                 A list of the necessary assets to load.
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_isOnCanvas" class="method item">
+                                                <h3 class="name"><code>isOnCanvas</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>bounds</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_Camera.js.html#l995"><code>isOnCanvas:995</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.10.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns whether a particular display object intersects the camera's viewport on the canvas.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">bounds</code>
+                                                                    <span class="type">PIXI.Rectangle | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The bounds of the display object.</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">height</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The height of the display object.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">width</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The width of the display object.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">x</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The left edge of the display object.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">y</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The top edge of the display object.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>:
+                                                                <p>Whether the display object intersects the camera's bounds.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -2205,7 +2319,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l293"><code>&#x27;camera-loaded&#x27;:293</code></a>
+                                                    <a href="../files/components_Camera.js.html#l291"><code>&#x27;camera-loaded&#x27;:291</code></a>
                                                     </p>
                                             
                                             
@@ -2258,7 +2372,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Camera.js.html#l471"><code>&#x27;camera-update&#x27;:471</code></a>
+                                                    <a href="../files/components_Camera.js.html#l458"><code>&#x27;camera-update&#x27;:458</code></a>
                                                     </p>
                                             
                                             

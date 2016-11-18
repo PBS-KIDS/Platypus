@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : platypus.AABB</title>
+	<title>platypus v0.10.0 API Documentation : platypus.AABB</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -370,6 +372,10 @@
                                                         <a href="#method_setBounds">setBounds</a>
                         
                                                     </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_toString">toString</a>
+                        
+                                                    </li>
                                             </ul>
                                         </div>
                         
@@ -451,7 +457,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l399"><code>AABB.recycle:399</code></a>
+                                                    <a href="../files/AABB.js.html#l409"><code>AABB.recycle:409</code></a>
                                                     </p>
                                             
                                             
@@ -502,7 +508,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l392"><code>AABB.setUp:392</code></a>
+                                                    <a href="../files/AABB.js.html#l402"><code>AABB.setUp:402</code></a>
                                                     </p>
                                             
                                             
@@ -551,7 +557,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l351"><code>collides:351</code></a>
+                                                    <a href="../files/AABB.js.html#l361"><code>collides:361</code></a>
                                                     </p>
                                             
                                             
@@ -617,7 +623,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l317"><code>contains:317</code></a>
+                                                    <a href="../files/AABB.js.html#l327"><code>contains:327</code></a>
                                                     </p>
                                             
                                             
@@ -682,11 +688,12 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l328"><code>containsVector:328</code></a>
+                                                    <a href="../files/AABB.js.html#l349"><code>containsVector:349</code></a>
                                                     </p>
                                             
                                             
                                             
+                                                        <p>Available since 0.7.5</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -747,12 +754,11 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l339"><code>containsVector:339</code></a>
+                                                    <a href="../files/AABB.js.html#l338"><code>containsVector:338</code></a>
                                                     </p>
                                             
                                             
                                             
-                                                        <p>Available since 0.7.5</p>
                                                 </div>
                                             
                                                 <div class="description">
@@ -813,7 +819,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l305"><code>equals:305</code></a>
+                                                    <a href="../files/AABB.js.html#l315"><code>equals:315</code></a>
                                                     </p>
                                             
                                             
@@ -879,7 +885,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l374"><code>getIntersectionArea:374</code></a>
+                                                    <a href="../files/AABB.js.html#l384"><code>getIntersectionArea:384</code></a>
                                                     </p>
                                             
                                             
@@ -942,7 +948,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l206"><code>include:206</code></a>
+                                                    <a href="../files/AABB.js.html#l216"><code>include:216</code></a>
                                                     </p>
                                             
                                             
@@ -998,7 +1004,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l363"><code>intersects:363</code></a>
+                                                    <a href="../files/AABB.js.html#l373"><code>intersects:373</code></a>
                                                     </p>
                                             
                                             
@@ -1064,7 +1070,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l241"><code>move:241</code></a>
+                                                    <a href="../files/AABB.js.html#l251"><code>move:251</code></a>
                                                     </p>
                                             
                                             
@@ -1129,7 +1135,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l255"><code>moveX:255</code></a>
+                                                    <a href="../files/AABB.js.html#l265"><code>moveX:265</code></a>
                                                     </p>
                                             
                                             
@@ -1183,7 +1189,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l283"><code>moveXBy:283</code></a>
+                                                    <a href="../files/AABB.js.html#l293"><code>moveXBy:293</code></a>
                                                     </p>
                                             
                                             
@@ -1237,7 +1243,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l269"><code>moveY:269</code></a>
+                                                    <a href="../files/AABB.js.html#l279"><code>moveY:279</code></a>
                                                     </p>
                                             
                                             
@@ -1291,7 +1297,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l294"><code>moveYBy:294</code></a>
+                                                    <a href="../files/AABB.js.html#l304"><code>moveYBy:304</code></a>
                                                     </p>
                                             
                                             
@@ -1338,7 +1344,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l406"><code>recycle:406</code></a>
+                                                    <a href="../files/AABB.js.html#l416"><code>recycle:416</code></a>
                                                     </p>
                                             
                                             
@@ -1370,7 +1376,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l162"><code>reset:162</code></a>
+                                                    <a href="../files/AABB.js.html#l172"><code>reset:172</code></a>
                                                     </p>
                                             
                                             
@@ -1410,7 +1416,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/AABB.js.html#l173"><code>resize:173</code></a>
+                                                    <a href="../files/AABB.js.html#l183"><code>resize:183</code></a>
                                                     </p>
                                             
                                             
@@ -1697,6 +1703,47 @@
                                                         </ul>
                                                     </div>
                                             
+                                            
+                                            </div>
+                                            <div id="method_toString" class="method item">
+                                                <h3 class="name"><code>toString</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/AABB.js.html#l162"><code>toString:162</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns a string listing AABB dimensions.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                <p>String</p>
+                                            
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                     </div>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.9.3 API Documentation : components\Camera.js</title>
+	<title>platypus v0.10.0 API Documentation : components\Camera.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.9.3</em>
+            <em>API Documentation for: 0.10.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -39,6 +39,7 @@
                             <ul id="api-classes" class="apis classes">
                                 <li><a href="../classes/platypus.AABB.html">platypus.AABB</a></li>
                                 <li><a href="../classes/platypus.ActionState.html">platypus.ActionState</a></li>
+                                <li><a href="../classes/platypus.Async.html">platypus.Async</a></li>
                                 <li><a href="../classes/platypus.CollisionData.html">platypus.CollisionData</a></li>
                                 <li><a href="../classes/platypus.CollisionDataContainer.html">platypus.CollisionDataContainer</a></li>
                                 <li><a href="../classes/platypus.CollisionShape.html">platypus.CollisionShape</a></li>
@@ -81,6 +82,7 @@
                                 <li><a href="../classes/platypus.components.RelayLinker.html">platypus.components.RelayLinker</a></li>
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
+                                <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -404,7 +406,6 @@
                                         platypus.debug.warn(&#x27;Camera: There appears to be no Container on this entity for the camera to display.&#x27;);
                                     }
                                     this.container = new PIXI.Container();
-                                    this.matrix = this.container.transformMatrix = new PIXI.Matrix();
                                     this.parentContainer.addChild(this.container);
                                     this.movedCamera = false;
                                 },
@@ -427,7 +428,6 @@
                                      */
                                     &quot;render-world&quot;: function (data) {
                                         this.world = data.world;
-                                        this.world.transformMatrix = this.world.transformMatrix || new PIXI.Matrix();
                                         this.container.addChild(this.world);
                                     },
                                     
@@ -525,7 +525,7 @@
                                      **/
                                     &quot;pressmove&quot;: function (event) {
                                         if (this.mouse) {
-                                            if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transformMatrix.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transformMatrix.d)) {
+                                            if (this.move(this.mouseWorldOrigin.x + (this.mouse.x - event.event.x) / this.world.transform.worldTransform.a, this.mouseWorldOrigin.y + (this.mouse.y - event.event.y) / this.world.transform.worldTransform.d)) {
                                                 this.viewportUpdate = true;
                                                 this.movedCamera = true;
                                                 event.pixiEvent.stopPropagation();
@@ -560,7 +560,6 @@
                                     &quot;tick&quot;: function (resp) {
                                         var msg       = this.message,
                                             viewport  = msg.viewport,
-                                            transform = null,
                                             worldCamera = this.worldCamera;
                                         
                                         if ((this.state === &#x27;following&#x27;) &amp;&amp; this.followingFunction(this.following, resp.delta)) {
@@ -607,17 +606,7 @@
                                             msg.orientation    = worldCamera.orientation;
                                             
                                             // Transform the world to appear within camera
-                                            //this.world.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, (msg.orientation || 0) * 180 / Math.PI, 0, 0, viewport.x, viewport.y);
-                                            transform = this.world.transformMatrix;
-                                            transform.a = msg.scaleX;
-                                            transform.b = 0;
-                                            transform.c = 0;
-                                            transform.d = msg.scaleY;
-                                            if (msg.orientation) {
-                                                transform.rotate(msg.orientation);
-                                            }
-                                            transform.tx = (viewport.halfWidth - viewport.x) * msg.scaleX;
-                                            transform.ty = (viewport.halfHeight - viewport.y) * msg.scaleY;
+                                            this.world.setTransform((viewport.halfWidth - viewport.x) * msg.scaleX, (viewport.halfHeight - viewport.y) * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
                                             
                                             /**
                                              * This component fires &quot;camera-update&quot; when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
@@ -1022,9 +1011,7 @@
                                         this.windowPerWorldUnitWidth  = this.viewport.width  / worldVP.width;
                                         this.windowPerWorldUnitHeight = this.viewport.height / worldVP.height;
                                         
-                                        //this.container.cache(0, 0, this.viewport.width, this.viewport.height, 1);
-                                        this.matrix.tx = this.viewport.x - this.viewport.halfWidth;
-                                        this.matrix.ty = this.viewport.y - this.viewport.halfHeight;
+                                        this.container.setTransform(this.viewport.x - this.viewport.halfWidth, this.viewport.y - this.viewport.halfHeight);
                                         
                                         this.viewportUpdate = true;
                                         
@@ -1154,6 +1141,26 @@
                             
                                         this.forwardFollower.recycle();
                                         this.lastFollow.recycle();
+                                    }
+                                },
+                        
+                                publicMethods: {
+                                    /**
+                                     * Returns whether a particular display object intersects the camera&#x27;s viewport on the canvas.
+                                     *
+                                     * @method isOnCanvas
+                                     * @param bounds {PIXI.Rectangle|Object} The bounds of the display object.
+                                     * @param bounds.height {Number} The height of the display object.
+                                     * @param bounds.width {Number} The width of the display object.
+                                     * @param bounds.x {Number} The left edge of the display object.
+                                     * @param bounds.y {Number} The top edge of the display object.
+                                     * @return {Boolean} Whether the display object intersects the camera&#x27;s bounds.
+                                     * @since 0.10.0
+                                     */
+                                    isOnCanvas: function (bounds) {
+                                        var canvas = this.canvas;
+                        
+                                        return !bounds || !((bounds.x + bounds.width &lt; 0) || (bounds.x &gt; canvas.width) || (bounds.y + bounds.height &lt; 0) || (bounds.y &gt; canvas.height));
                                     }
                                 }
                             });
