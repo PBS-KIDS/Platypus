@@ -509,6 +509,10 @@
                 instance.y = this.y - this.regY * this.scaleY;
                 instance.z = this.z + this.offsetZ;
 
+                if (this.owner.opacity || (this.owner.opacity === 0)) {
+                    this.instance.alpha = this.owner.opacity;
+                }
+
                 // Set isCameraOn of instance if within camera bounds
                 if (this.instance && ((!this.wasVisible && this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
                     //TODO: This check is running twice when an object is moving and the camera is moving.
@@ -519,6 +523,17 @@
                 this.lastY = this.owner.y;
                 this.wasVisible = this.visible;
                 this.instance.visible = (this.visible && this.isOnCamera) || this.dragMode;
+            },
+            
+            destroy: function () {
+                this.camera.recycle();
+                if (this.parentContainer && !this.instance.mouseTarget) {
+                    this.parentContainer.removeChild(this.instance);
+                    this.parentContainer = null;
+                } else if (!this.cache) {
+                    this.instance.destroy();
+                }
+                this.instance = null;
             }
         }
     });
