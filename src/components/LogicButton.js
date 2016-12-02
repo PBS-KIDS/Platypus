@@ -257,7 +257,9 @@
                              */
                             this.updateStateAndTrigger('released');
                         }
-                        eventData.pixiEvent.stopPropagation();
+                        if (eventData && eventData.pixiEvent && eventData.pixiEvent.stopPropagation) { // ensure a properly formed event has been sent
+                            eventData.pixiEvent.stopPropagation();
+                        }
 
                         // Doing this prevents the call from reccurring.
                         if (this.useOnce && this.removeEventListener) { //Second check is to ensure method exists which won't be the case if a result of the press is the button being destroyed.
