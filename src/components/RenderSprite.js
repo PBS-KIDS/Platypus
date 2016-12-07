@@ -516,6 +516,7 @@
                 }
                 
                 this.updateSprite(true);
+                this.sprite.update(renderData.delta);
             },
             
             /**

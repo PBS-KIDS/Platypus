@@ -17,6 +17,7 @@
         Texture = include('PIXI.Texture'),
         animationCache = {},
         baseTextureCache = {},
+        doNothing = function () {},
         emptyFrame = {
             texture: Texture.EMPTY,
             anchor: new Point(0, 0)
@@ -241,6 +242,12 @@
             
             this._updating = false;
 
+            /*
+            * Updates the object transform for rendering
+            * @private
+            */
+            this.update = doNothing;
+
             // Set up initial playthrough.
             if (cache.textures.length < 2) {
                 this.gotoAndStop(animation);
@@ -309,14 +316,6 @@
     */
     prototype.stop = function () {
         this.paused = true;
-        /*
-        if (!this.playing) {
-            return;
-        }
-    
-        this.playing = false;
-        this._syncUpdate();
-        */
     };
     
     /**
@@ -325,29 +324,48 @@
     */
     prototype.play = function () {
         this.paused = false;
-        /*
-        if (this.playing) {
-            return;
-        }
-    
-        this.playing = true;
-        this._syncUpdate();
-        */
     };
     
-    prototype._syncUpdate = function () {
-        var update = this.playing && this._visible;
-        
-        if (update !== this._updating) {
-            this._updating = update;
+    prototype._syncUpdate = (function () {
+        var
+            update = function (deltaTime) {
+                var data = null,
+                    name = "",
+                    floor = 0;
+                
+                this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
+                
+                floor = Math.floor(this._currentTime);
             
-            if (update) {
-                PIXI.ticker.shared.add(this.update, this);
-            } else {
-                PIXI.ticker.shared.remove(this.update, this);
+                if (floor < 0) {
+                    floor = 0;
+                }
+                
+                if (floor < this._animation.frames.length) {
+                    data = this._animation.frames[floor % this._animation.frames.length];
+                    this._texture = data.texture;
+                    this.anchor = data.anchor;
+                } else if (floor >= this._animation.frames.length) {
+                    name = this._animation.id;
+                    this.gotoAndPlay(this._animation.next);
+                    this.emit('complete', name);
+                }
+            };
+        
+        return function () {
+            var updating = this.playing && this._visible;
+            
+            if (updating !== this._updating) {
+                this._updating = updating;
+                
+                if (updating) {
+                    this.update = update;
+                } else {
+                    this.update = doNothing;
+                }
             }
-        }
-    };
+        };
+    }());
     
     /**
     * Stops the PIXIAnimation and goes to a specific frame
@@ -398,34 +416,6 @@
     */
     prototype.has = function (animation) {
         return !!this._animations[animation];
-    };
-    
-    /*
-    * Updates the object transform for rendering
-    * @private
-    */
-    prototype.update = function (deltaTime) {
-        var data = null,
-            name = "",
-            floor = 0;
-        
-        this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
-        
-        floor = Math.floor(this._currentTime);
-    
-        if (floor < 0) {
-            floor = 0;
-        }
-        
-        if (floor < this._animation.frames.length) {
-            data = this._animation.frames[floor % this._animation.frames.length];
-            this._texture = data.texture;
-            this.anchor = data.anchor;
-        } else if (floor >= this._animation.frames.length) {
-            name = this._animation.id;
-            this.gotoAndPlay(this._animation.next);
-            this.emit('complete', name);
-        }
     };
     
     /**

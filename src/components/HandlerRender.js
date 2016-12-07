@@ -176,9 +176,7 @@
                 };
 
                 return function (tick) {
-                    var x = 0,
-                        child   = null,
-                        message = this.renderMessage;
+                    var message = this.renderMessage;
 
                     message.delta = tick.delta;
 
@@ -201,25 +199,9 @@
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
 
-                    if (this.container) {
-                        x = this.container.children.length;
-                        while (x--) {
-                            child = this.container.children[x];
-
-                            if (child.visible) {
-                                if (child.paused && !this.paused) {
-                                    child.paused = false;
-                                } else if (this.paused) {
-                                    child.paused = true;
-                                }
-                            }
-                        }
-
-                        if (this.container.reorder) {
-                            this.container.reorder = false;
-                            this.container.children.sort(sort);
-                        }
-
+                    if (this.container && this.container.reorder) {
+                        this.container.reorder = false;
+                        this.container.children.sort(sort);
                     }
                 };
             }())
