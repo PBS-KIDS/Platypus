@@ -20,13 +20,15 @@
         Interactive = include('platypus.components.Interactive'),
         StateRender = include('platypus.components.StateRender'),
         animationEnded = function (animation) {
+            this.playAnimation(animation);
+
             /**
              * This event fires each time an animation completes.
              *
              * @event 'animation-ended'
              * @param animation {String} The id of the animation that ended.
              */
-            this.owner.triggerEvent('animation-ended', animation);
+            this.owner.triggerEvent('animation-ended', animation, this.instance);
         },
         processGraphics = (function () {
             var process = function (gfx, value) {
@@ -89,6 +91,16 @@
              * @default null
              */
             animationMap: null,
+
+            /**
+             * The framerate at which the animation should play.
+             *
+             * @property framerate
+             * @type Number
+             * @default 24
+             * @since 0.10.2
+             */
+            framerate: 24,
 
             /**
              * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.
@@ -232,10 +244,11 @@
         },
         initialize: (function () {
             var createAnimationMap = function (animationMap, labels, totalFrames, endings) {
-                    var lastAnim = totalFrames,
+                    var lastAnim = totalFrames - 1,
                         map  = null,
                         i = labels.length;
-
+                    
+                    endings[0] = lastAnim;
                     while (i--) {
                         endings[labels[i].label] = lastAnim;
                         lastAnim = labels[i].label;
@@ -261,6 +274,7 @@
                         map = createAnimationMap(this.animationMap, instance.labels, instance.totalFrames, this.endings);
 
                     this.instance = instance;
+                    instance.framerate = this.framerate;
 
                     this.stateBased = map && this.stateBased;
                     this.eventBased = map && this.eventBased;
@@ -420,7 +434,7 @@
                 if (animation && instance.has(animation)) {
                     instance.gotoAndStop(animation);
                 } else {
-                    instance.stop();
+                    Animator.stop(instance);
                 }
             },
             
@@ -450,6 +464,7 @@
                             this.setMask(this.mask);
                         }
                     }
+                    this.playAnimation(0);
                     return stage;
                 } else {
                     return null;
@@ -459,7 +474,7 @@
             playAnimation: function (animation) {
                 var instance = this.instance;
 
-                Animator.fromTo(instance, animation, this.endings[animation], true, animationEnded.bind(this, animation));
+                Animator.fromTo(instance, animation, this.endings[animation] || 0, false, animationEnded.bind(this, animation));
             },
 
             setMask: function (shape) {
@@ -507,7 +522,12 @@
                 scale.y = this.scaleY;
                 instance.x = this.x - this.regX * this.scaleX;
                 instance.y = this.y - this.regY * this.scaleY;
-                instance.z = this.z + this.offsetZ;
+                if (instance.z !== (this.z + this.offsetZ)) {
+                    if (this.parentContainer) {
+                        this.parentContainer.reorder = true;
+                    }
+                    instance.z = (this.z + this.offsetZ);
+                }
 
                 if (this.owner.opacity || (this.owner.opacity === 0)) {
                     this.instance.alpha = this.owner.opacity;
