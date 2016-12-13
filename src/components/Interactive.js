@@ -12,7 +12,8 @@
     var AABB = include('platypus.AABB'),
         Circle = include('PIXI.Circle'),
         Data = include('platypus.Data'),
-        Rectangle = include('PIXI.Rectangle');
+        Rectangle = include('PIXI.Rectangle'),
+        touchInstances = [];
     
     return platypus.createComponentClass({
         id: 'Interactive',
@@ -173,21 +174,32 @@
                     },
                     triggerMousedown = function (eventName, event) {
                         if (!this.pressed) {
+                            if ( typeof event.data.identifier !== "undefined") {
+                                touchInstances[event.data.identifier] = this;
+                            }
+
                             trigger.call(this, eventName, event);
                             event.currentTarget.mouseTarget = true;
                             this.pressed = true;
                         }
                     },
                     triggerPressmove = function (eventName, altEventName, event) {
-                        if (this.pressed) {
+                        var index = touchInstances.indexOf(this);
+
+                        if (this.pressed && (typeof event.data.identifier === "undefined" || index === event.data.identifier)) { //pressmove
                             trigger.call(this, eventName, event);
                             event.currentTarget.mouseTarget = true;
-                        } else {
+                        } else { //mousemove
                             trigger.call(this, altEventName, event);
                         }
                     },
                     triggerPressup = function (eventName, event) {
-                        if (this.pressed) {
+                        var index = touchInstances.indexOf(this);
+
+                        if (this.pressed && (typeof event.data.identifier === "undefined" || index === event.data.identifier)) {
+                            if (index === event.data.identifier) {
+                                touchInstances.greenSlice(index);
+                            }
                             trigger.call(this, eventName, event);
                             event.currentTarget.mouseTarget = false;
                             this.pressed = false;
