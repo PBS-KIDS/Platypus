@@ -333,7 +333,7 @@
                     name = "",
                     floor = 0;
                 
-                this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
+                this._currentTime += this.animationSpeed * this._animation.speed * deltaTime * (60 / 1000);
                 
                 floor = Math.floor(this._currentTime);
             
