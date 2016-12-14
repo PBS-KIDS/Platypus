@@ -146,6 +146,8 @@
                 state.set('highlighted', false);
                 this.owner.buttonMode = !this.disabled;
                 this.cancelled = false;
+
+                this.readyToToggle = false;
             },
 
             events: {
@@ -184,27 +186,31 @@
                  * @method 'mousedown'
                  */
                 "mousedown": function (eventData) {
-                    if (!this.toggle && !this.state.get('disabled')) {
-                        if (this.onPress) {
-                            this.owner.trigger(this.onPress);
-                        }
+                    if (!this.state.get('disabled')) {
+                        if (this.toggle) {
+                            this.readyToToggle = this.readyToToggle || (eventData.event.type === 'mousedown'); // This is to prevent double-toggling caused by touch events triggering just before mouse events. - DDD 12/14/2016
+                        } else {
+                            if (this.onPress) {
+                                this.owner.trigger(this.onPress);
+                            }
 
-                        /**
-                         * This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.
-                         *
-                         * @event 'pressed'
-                         * @param buttonState {platypus.Data} The state of the button
-                         * @param buttonState.pressed {Boolean} This is `true` for the 'pressed' event.
-                         * @param buttonState.released {Boolean} This is `false` for the 'pressed' event.
-                         * @param buttonState.triggered {Boolean} This is `true` for the 'pressed' event.
-                         * @since 0.9.1
-                         */
-                        this.updateStateAndTrigger('pressed');
-                        eventData.pixiEvent.stopPropagation();
+                            /**
+                             * This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.
+                             *
+                             * @event 'pressed'
+                             * @param buttonState {platypus.Data} The state of the button
+                             * @param buttonState.pressed {Boolean} This is `true` for the 'pressed' event.
+                             * @param buttonState.released {Boolean} This is `false` for the 'pressed' event.
+                             * @param buttonState.triggered {Boolean} This is `true` for the 'pressed' event.
+                             * @since 0.9.1
+                             */
+                            this.updateStateAndTrigger('pressed');
+                            eventData.pixiEvent.stopPropagation();
 
-                        // Doing this prevents the call from reccurring.
-                        if (this.useOnce && this.removeEventListener) {
-                            this.removeEventListener('mousedown');
+                            // Doing this prevents the call from reccurring.
+                            if (this.useOnce && this.removeEventListener) {
+                                this.removeEventListener('mousedown');
+                            }
                         }
                     }
                 },
@@ -235,10 +241,12 @@
                              */
                             this.updateStateAndTrigger('cancelled');
                         } else if (this.toggle) {
-                            if (state.get('pressed')) {
-                                this.updateStateAndTrigger('released');
-                            } else {
-                                this.updateStateAndTrigger('pressed');
+                            if (this.readyToToggle) {
+                                if (state.get('pressed')) {
+                                    this.updateStateAndTrigger('released');
+                                } else {
+                                    this.updateStateAndTrigger('pressed');
+                                }
                             }
                         } else {
                             if (this.onRelease) {
@@ -270,6 +278,7 @@
                     }
 
                     this.cancelled = false;
+                    this.readyToToggle = false;
                 },
 
                 /**
