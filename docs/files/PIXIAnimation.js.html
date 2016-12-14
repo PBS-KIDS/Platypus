@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.1 API Documentation : PIXIAnimation.js</title>
+	<title>platypus v0.10.2 API Documentation : PIXIAnimation.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.1</em>
+            <em>API Documentation for: 0.10.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -170,6 +170,7 @@
                                 Texture = include(&#x27;PIXI.Texture&#x27;),
                                 animationCache = {},
                                 baseTextureCache = {},
+                                doNothing = function () {},
                                 emptyFrame = {
                                     texture: Texture.EMPTY,
                                     anchor: new Point(0, 0)
@@ -394,6 +395,12 @@
                                     
                                     this._updating = false;
                         
+                                    /*
+                                    * Updates the object transform for rendering
+                                    * @private
+                                    */
+                                    this.update = doNothing;
+                        
                                     // Set up initial playthrough.
                                     if (cache.textures.length &lt; 2) {
                                         this.gotoAndStop(animation);
@@ -462,14 +469,6 @@
                             */
                             prototype.stop = function () {
                                 this.paused = true;
-                                /*
-                                if (!this.playing) {
-                                    return;
-                                }
-                            
-                                this.playing = false;
-                                this._syncUpdate();
-                                */
                             };
                             
                             /**
@@ -478,29 +477,48 @@
                             */
                             prototype.play = function () {
                                 this.paused = false;
-                                /*
-                                if (this.playing) {
-                                    return;
-                                }
-                            
-                                this.playing = true;
-                                this._syncUpdate();
-                                */
                             };
                             
-                            prototype._syncUpdate = function () {
-                                var update = this.playing &amp;&amp; this._visible;
-                                
-                                if (update !== this._updating) {
-                                    this._updating = update;
+                            prototype._syncUpdate = (function () {
+                                var
+                                    update = function (deltaTime) {
+                                        var data = null,
+                                            name = &quot;&quot;,
+                                            floor = 0;
+                                        
+                                        this._currentTime += this.animationSpeed * this._animation.speed * deltaTime * (60 / 1000);
+                                        
+                                        floor = Math.floor(this._currentTime);
                                     
-                                    if (update) {
-                                        PIXI.ticker.shared.add(this.update, this);
-                                    } else {
-                                        PIXI.ticker.shared.remove(this.update, this);
+                                        if (floor &lt; 0) {
+                                            floor = 0;
+                                        }
+                                        
+                                        if (floor &lt; this._animation.frames.length) {
+                                            data = this._animation.frames[floor % this._animation.frames.length];
+                                            this._texture = data.texture;
+                                            this.anchor = data.anchor;
+                                        } else if (floor &gt;= this._animation.frames.length) {
+                                            name = this._animation.id;
+                                            this.gotoAndPlay(this._animation.next);
+                                            this.emit(&#x27;complete&#x27;, name);
+                                        }
+                                    };
+                                
+                                return function () {
+                                    var updating = this.playing &amp;&amp; this._visible;
+                                    
+                                    if (updating !== this._updating) {
+                                        this._updating = updating;
+                                        
+                                        if (updating) {
+                                            this.update = update;
+                                        } else {
+                                            this.update = doNothing;
+                                        }
                                     }
-                                }
-                            };
+                                };
+                            }());
                             
                             /**
                             * Stops the PIXIAnimation and goes to a specific frame
@@ -551,34 +569,6 @@
                             */
                             prototype.has = function (animation) {
                                 return !!this._animations[animation];
-                            };
-                            
-                            /*
-                            * Updates the object transform for rendering
-                            * @private
-                            */
-                            prototype.update = function (deltaTime) {
-                                var data = null,
-                                    name = &quot;&quot;,
-                                    floor = 0;
-                                
-                                this._currentTime += this.animationSpeed * this._animation.speed * deltaTime;
-                                
-                                floor = Math.floor(this._currentTime);
-                            
-                                if (floor &lt; 0) {
-                                    floor = 0;
-                                }
-                                
-                                if (floor &lt; this._animation.frames.length) {
-                                    data = this._animation.frames[floor % this._animation.frames.length];
-                                    this._texture = data.texture;
-                                    this.anchor = data.anchor;
-                                } else if (floor &gt;= this._animation.frames.length) {
-                                    name = this._animation.id;
-                                    this.gotoAndPlay(this._animation.next);
-                                    this.emit(&#x27;complete&#x27;, name);
-                                }
                             };
                             
                             /**

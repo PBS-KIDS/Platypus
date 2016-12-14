@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.10.1",
+        "version": "0.10.2",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -6072,7 +6072,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 193,
+            "line": 191,
             "description": "Triggered every tick on the children entities.",
             "itemtype": "event",
             "name": "'handle-render'",
@@ -6100,7 +6100,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 21,
+            "line": 22,
             "description": "Sets the container that represents the interactive area.",
             "itemtype": "property",
             "name": "container",
@@ -6111,7 +6111,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 30,
+            "line": 31,
             "description": "Sets the hit area for interactive responses by describing the dimensions of a clickable rectangle:\n\n    \"hitArea\": {\n        \"x\": 10,\n        \"y\": 10,\n        \"width\": 40,\n        \"height\": 40\n    }\n\nA string can also be used to create more complex shapes via the PIXI graphics API like:\n\n    \"hitArea\": \"r(10,20,40,40).dc(30,10,12)\"\n\nDefaults to the container if not specified or, if simply set to `true`, a rectangle using the entity's dimensions.",
             "itemtype": "property",
             "name": "hitArea",
@@ -6122,7 +6122,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 52,
+            "line": 53,
             "description": "Sets whether the entity should respond to mouse hovering.",
             "itemtype": "property",
             "name": "hover",
@@ -6133,7 +6133,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 61,
+            "line": 62,
             "description": "Used when returning world coordinates. Typically coordinates are relative to the parent, but when this component is added to the layer level, coordinates must be relative to self.",
             "itemtype": "property",
             "name": "relativeToSelf",
@@ -6145,7 +6145,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 73,
+            "line": 74,
             "description": "Determines whether hovering over the sprite should alter the cursor.",
             "itemtype": "property",
             "name": "buttonMode",
@@ -6156,7 +6156,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 92,
+            "line": 93,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -6172,7 +6172,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 102,
+            "line": 103,
             "description": "Listens to this event to update whether the interactive element should be in button mode.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -6181,7 +6181,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 113,
+            "line": 114,
             "description": "This event dispatches a PIXI.Event on this component's PIXI.Sprite. Useful for rerouting mouse/keyboard events.",
             "itemtype": "method",
             "name": "'dispatch-event'",
@@ -6197,7 +6197,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 123,
+            "line": 124,
             "description": "Adds input event listeners to the sprite, enabling input.",
             "itemtype": "method",
             "name": "'input-on'",
@@ -6206,7 +6206,7 @@
         },
         {
             "file": "components\\Interactive.js",
-            "line": 134,
+            "line": 135,
             "description": "Removes the input event listeners on the sprite, disabling input.",
             "itemtype": "method",
             "name": "'input-off'",
@@ -6798,7 +6798,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 273,
+            "line": 275,
             "description": "If a press moves over the button, it's not cancelled.",
             "itemtype": "method",
             "name": "'mouseover'",
@@ -6807,7 +6807,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 287,
+            "line": 289,
             "description": "If a press moves off of the button, it's cancelled.",
             "itemtype": "method",
             "name": "'mouseout'",
@@ -6816,7 +6816,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 298,
+            "line": 300,
             "description": "Disables the entity.",
             "itemtype": "method",
             "name": "'disable'",
@@ -6825,7 +6825,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 308,
+            "line": 310,
             "description": "Enables the entity.",
             "itemtype": "method",
             "name": "'enable'",
@@ -6834,7 +6834,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 318,
+            "line": 320,
             "description": "Toggles whether the entity is disabled.",
             "itemtype": "method",
             "name": "'toggle-disabled'",
@@ -6843,7 +6843,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 330,
+            "line": 332,
             "description": "Sets the entity's highlighted state to `true`.",
             "itemtype": "method",
             "name": "'highlight'",
@@ -6853,7 +6853,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 340,
+            "line": 342,
             "description": "Sets the entity's highlighted state to `false`.",
             "itemtype": "method",
             "name": "'unhighlight'",
@@ -6863,7 +6863,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 350,
+            "line": 352,
             "description": "Toggles the entity's highlighted state.",
             "itemtype": "method",
             "name": "'toggle-highlight'",
@@ -8743,7 +8743,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 23,
+            "line": 25,
             "description": "This event fires each time an animation completes.",
             "itemtype": "event",
             "name": "'animation-ended'",
@@ -8759,7 +8759,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 66,
+            "line": 68,
             "description": "This sets the PixiAnimate animation to play. This is typically of the form \"library.asset\" as defined by the PixiAnimate publish settings.",
             "itemtype": "property",
             "name": "animation",
@@ -8770,7 +8770,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 75,
+            "line": 77,
             "description": "Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.\n\n    \"animationMap\":{\n        \"standing\": \"default-animation\"  // On receiving a \"standing\" event, or when this.owner.state.standing === true, the \"default\" animation will begin playing.\n        \"ground,moving\": \"walking\",  // Comma separated values have a special meaning when evaluating \"state-changed\" messages. The above example will cause the \"walking\" animation to play ONLY if the entity's state includes both \"moving\" and \"ground\" equal to true.\n        \"ground,striking\": \"swing!\", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.\n        \"default\": \"default-animation\" // Optional. \"default\" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.\n    }\n\nThis data is used to create EventRender or StateRender components on the entity if the `eventBased` or `stateBased` properties are set to `true`.",
             "itemtype": "property",
             "name": "animationMap",
@@ -8781,7 +8781,19 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 93,
+            "line": 95,
+            "description": "The framerate at which the animation should play.",
+            "itemtype": "property",
+            "name": "framerate",
+            "type": "Number",
+            "default": "24",
+            "since": "0.10.2",
+            "class": "platypus.components.RenderAnimation",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderAnimation.js",
+            "line": 105,
             "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
             "itemtype": "property",
             "name": "mask",
@@ -8792,7 +8804,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 113,
+            "line": 125,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -8804,7 +8816,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 133,
+            "line": 145,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -8815,7 +8827,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 142,
+            "line": 154,
             "description": "Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.",
             "itemtype": "property",
             "name": "eventBased",
@@ -8826,7 +8838,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 151,
+            "line": 163,
             "description": "Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.",
             "itemtype": "property",
             "name": "stateBased",
@@ -8837,7 +8849,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 160,
+            "line": 172,
             "description": "Determines the x origin of the animation.",
             "itemtype": "property",
             "name": "regX",
@@ -8848,7 +8860,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 169,
+            "line": 181,
             "description": "Determines the y origin of the animation.",
             "itemtype": "property",
             "name": "regY",
@@ -8859,7 +8871,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 178,
+            "line": 190,
             "description": "The offset of the z-index of the sprite from the entity's z-index.",
             "itemtype": "property",
             "name": "offsetZ",
@@ -8870,7 +8882,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 188,
+            "line": 200,
             "description": "The X scaling factor for the image.",
             "itemtype": "property",
             "name": "scaleX",
@@ -8881,7 +8893,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 197,
+            "line": 209,
             "description": "The Y scaling factor for the image.",
             "itemtype": "property",
             "name": "scaleY",
@@ -8892,7 +8904,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 206,
+            "line": 218,
             "description": "The x position of the entity.",
             "itemtype": "property",
             "name": "x",
@@ -8903,7 +8915,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 215,
+            "line": 227,
             "description": "The y position of the entity.",
             "itemtype": "property",
             "name": "y",
@@ -8914,7 +8926,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 224,
+            "line": 236,
             "description": "The z position of the entity.",
             "itemtype": "property",
             "name": "z",
@@ -8925,7 +8937,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 305,
+            "line": 319,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -8934,7 +8946,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 339,
+            "line": 353,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -8950,7 +8962,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 354,
+            "line": 368,
             "description": "A setup message used to add the animation to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -8973,7 +8985,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 367,
+            "line": 381,
             "description": "The render update message updates the animation.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -8996,7 +9008,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 383,
+            "line": 397,
             "description": "This event makes the animation invisible.",
             "itemtype": "method",
             "name": "'hide-animation'",
@@ -9005,7 +9017,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 392,
+            "line": 406,
             "description": "This event makes the animation visible.",
             "itemtype": "method",
             "name": "'show-animation'",
@@ -9014,7 +9026,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 401,
+            "line": 415,
             "description": "Defines the mask on the animation. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -9030,7 +9042,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 411,
+            "line": 425,
             "description": "Stops the animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -9047,7 +9059,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 427,
+            "line": 441,
             "description": "Starts the animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -9938,7 +9950,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 521,
+            "line": 522,
             "description": "This event makes the sprite invisible.",
             "itemtype": "method",
             "name": "'hide-sprite'",
@@ -9947,7 +9959,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 530,
+            "line": 531,
             "description": "This event makes the sprite visible.",
             "itemtype": "method",
             "name": "'show-sprite'",
@@ -9956,7 +9968,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 539,
+            "line": 540,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -9972,7 +9984,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 549,
+            "line": 550,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -9990,7 +10002,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 566,
+            "line": 567,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -10008,7 +10020,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 577,
+            "line": 578,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-sprite'",
@@ -10019,7 +10031,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 587,
+            "line": 588,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-sprite'",
@@ -10030,7 +10042,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 613,
+            "line": 614,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -10039,7 +10051,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 672,
+            "line": 673,
             "description": "This event is triggered each tick to check for animation updates.",
             "itemtype": "event",
             "name": "'update-animation'",
@@ -13240,7 +13252,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 199,
+            "line": 200,
             "access": "private",
             "tagname": "",
             "class": "platypus.PIXIAnimation",
@@ -13248,7 +13260,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 206,
+            "line": 207,
             "description": "The speed that the PIXIAnimation will play at. Higher is faster, lower is slower",
             "itemtype": "method",
             "name": "",
@@ -13259,7 +13271,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 214,
+            "line": 215,
             "description": "The currently playing animation name.",
             "itemtype": "property",
             "name": "currentAnimation",
@@ -13271,7 +13283,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 224,
+            "line": 225,
             "description": "Elapsed time since animation has been started, used internally to display current texture",
             "itemtype": "method",
             "name": "",
@@ -13283,7 +13295,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 232,
+            "line": 233,
             "description": "Indicates if the PIXIAnimation is currently playing",
             "itemtype": "method",
             "name": "",
@@ -13294,7 +13306,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 257,
+            "line": 264,
             "description": "The visibility of the sprite.",
             "itemtype": "property",
             "name": "visible",
@@ -13304,7 +13316,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 273,
+            "line": 280,
             "description": "The PIXIAnimations current frame index",
             "itemtype": "method",
             "name": "",
@@ -13316,7 +13328,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 287,
+            "line": 294,
             "description": "The PIXIAnimations paused state. If paused, the animation doesn't update.",
             "itemtype": "property",
             "name": "paused",
@@ -13325,21 +13337,21 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 306,
+            "line": 313,
             "description": "Stops the PIXIAnimation",
             "class": "platypus.PIXIAnimation",
             "namespace": "platypus"
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 322,
+            "line": 321,
             "description": "Plays the PIXIAnimation",
             "class": "platypus.PIXIAnimation",
             "namespace": "platypus"
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 352,
+            "line": 370,
             "description": "Stops the PIXIAnimation and goes to a specific frame",
             "params": [
                 {
@@ -13353,7 +13365,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 369,
+            "line": 387,
             "description": "Goes to a specific frame and begins playing the PIXIAnimation",
             "itemtype": "method",
             "name": "gotoAndPlay",
@@ -13376,7 +13388,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 392,
+            "line": 410,
             "description": "Returns whether a particular animation is available.",
             "itemtype": "method",
             "name": "has",
@@ -13393,7 +13405,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 431,
+            "line": 421,
             "description": "Stops the PIXIAnimation and destroys it",
             "itemtype": "method",
             "name": "destroy",
@@ -13402,7 +13414,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 455,
+            "line": 445,
             "description": "This method makes sure that all the base textures are in the gpu to prevent framerate lurches later due to loading base textures as their textures appear.",
             "itemtype": "method",
             "name": "PIXIAnimation.preloadBaseTextures",
@@ -13418,7 +13430,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 484,
+            "line": 474,
             "description": "This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.",
             "itemtype": "method",
             "name": "formatSpriteSheet",
@@ -14394,27 +14406,27 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:206"
+            "line": " PIXIAnimation.js:207"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:224"
+            "line": " PIXIAnimation.js:225"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:232"
+            "line": " PIXIAnimation.js:233"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " PIXIAnimation.js:257"
+            "line": " PIXIAnimation.js:264"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:273"
+            "line": " PIXIAnimation.js:280"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " PIXIAnimation.js:273"
+            "line": " PIXIAnimation.js:280"
         },
         {
             "message": "Missing item type\n### Local Broadcasts:\n- **child-entity-added** - This message is triggered when a new entity has been added to the list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just added.\n- **child-entity-removed** - This message is triggered when an entity has been removed from the list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just removed.\n\n### Child Broadcasts:\n- **peer-entity-added** - This message is triggered when a new entity has been added to the parent's list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just added.\n- **peer-entity-removed** - This message is triggered when an entity has been removed from the parent's list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just removed.\n- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.\n  - @param message (object) - sends the message object received by the original message.\n\n## Entity Methods:\n- **addEntity** -  This method will add the provided entity to this component's list of entities.\n  - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.\n  - @return entity ([[Entity]] object) - Returns the entity that was just added.\n- **removeEntity** - This method will remove the provided entity from the list of child entities.\n  - @param message ([[Entity]] object) - Required. The entity to remove.\n  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.\n- **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.\n  - @param type (string) - Required. The entity type to find.\n  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.\n- **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).\n  - @param id (string) - Required. The entity id to find.\n  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.\n- **triggerOnChildren** - This method is used by both internal components and external entities to trigger messages on the child entities.\n  - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an \"event\" property (and optionally a \"message\" property, overriding the value below), or an array of the same.\n  - @param value (variant) - This is a message object or other value to pass along to component functions.\n  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A \"value\" object parameter (above) will also set this flag if value.debug is set to true.\n  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.\n- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on the child entities.\n  - @param event (string) - This is the message to process.\n  - @param value (variant) - This is a message object or other value to pass along to component functions.\n  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A \"value\" object parameter (above) will also set this flag if value.debug is set to true.\n  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.",
@@ -14526,19 +14538,19 @@
         },
         {
             "message": "Missing item type",
-            "line": " PIXIAnimation.js:199"
+            "line": " PIXIAnimation.js:200"
         },
         {
             "message": "Missing item type\nStops the PIXIAnimation",
-            "line": " PIXIAnimation.js:306"
+            "line": " PIXIAnimation.js:313"
         },
         {
             "message": "Missing item type\nPlays the PIXIAnimation",
-            "line": " PIXIAnimation.js:322"
+            "line": " PIXIAnimation.js:321"
         },
         {
             "message": "Missing item type\nStops the PIXIAnimation and goes to a specific frame",
-            "line": " PIXIAnimation.js:352"
+            "line": " PIXIAnimation.js:370"
         },
         {
             "message": "Missing item type\nReturns the direction of the vector from the z-axis",

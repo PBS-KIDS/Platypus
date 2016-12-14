@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.1 API Documentation : components\RenderAnimation.js</title>
+	<title>platypus v0.10.2 API Documentation : components\RenderAnimation.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.1</em>
+            <em>API Documentation for: 0.10.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -173,13 +173,15 @@
                                 Interactive = include(&#x27;platypus.components.Interactive&#x27;),
                                 StateRender = include(&#x27;platypus.components.StateRender&#x27;),
                                 animationEnded = function (animation) {
+                                    this.playAnimation(animation);
+                        
                                     /**
                                      * This event fires each time an animation completes.
                                      *
                                      * @event &#x27;animation-ended&#x27;
                                      * @param animation {String} The id of the animation that ended.
                                      */
-                                    this.owner.triggerEvent(&#x27;animation-ended&#x27;, animation);
+                                    this.owner.triggerEvent(&#x27;animation-ended&#x27;, animation, this.instance);
                                 },
                                 processGraphics = (function () {
                                     var process = function (gfx, value) {
@@ -242,6 +244,16 @@
                                      * @default null
                                      */
                                     animationMap: null,
+                        
+                                    /**
+                                     * The framerate at which the animation should play.
+                                     *
+                                     * @property framerate
+                                     * @type Number
+                                     * @default 24
+                                     * @since 0.10.2
+                                     */
+                                    framerate: 24,
                         
                                     /**
                                      * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
@@ -385,10 +397,11 @@
                                 },
                                 initialize: (function () {
                                     var createAnimationMap = function (animationMap, labels, totalFrames, endings) {
-                                            var lastAnim = totalFrames,
+                                            var lastAnim = totalFrames - 1,
                                                 map  = null,
                                                 i = labels.length;
-                        
+                                            
+                                            endings[0] = lastAnim;
                                             while (i--) {
                                                 endings[labels[i].label] = lastAnim;
                                                 lastAnim = labels[i].label;
@@ -414,6 +427,7 @@
                                                 map = createAnimationMap(this.animationMap, instance.labels, instance.totalFrames, this.endings);
                         
                                             this.instance = instance;
+                                            instance.framerate = this.framerate;
                         
                                             this.stateBased = map &amp;&amp; this.stateBased;
                                             this.eventBased = map &amp;&amp; this.eventBased;
@@ -573,7 +587,7 @@
                                         if (animation &amp;&amp; instance.has(animation)) {
                                             instance.gotoAndStop(animation);
                                         } else {
-                                            instance.stop();
+                                            Animator.stop(instance);
                                         }
                                     },
                                     
@@ -603,6 +617,7 @@
                                                     this.setMask(this.mask);
                                                 }
                                             }
+                                            this.playAnimation(0);
                                             return stage;
                                         } else {
                                             return null;
@@ -612,7 +627,7 @@
                                     playAnimation: function (animation) {
                                         var instance = this.instance;
                         
-                                        Animator.fromTo(instance, animation, this.endings[animation], true, animationEnded.bind(this, animation));
+                                        Animator.fromTo(instance, animation, this.endings[animation] || 0, false, animationEnded.bind(this, animation));
                                     },
                         
                                     setMask: function (shape) {
@@ -660,7 +675,12 @@
                                         scale.y = this.scaleY;
                                         instance.x = this.x - this.regX * this.scaleX;
                                         instance.y = this.y - this.regY * this.scaleY;
-                                        instance.z = this.z + this.offsetZ;
+                                        if (instance.z !== (this.z + this.offsetZ)) {
+                                            if (this.parentContainer) {
+                                                this.parentContainer.reorder = true;
+                                            }
+                                            instance.z = (this.z + this.offsetZ);
+                                        }
                         
                                         if (this.owner.opacity || (this.owner.opacity === 0)) {
                                             this.instance.alpha = this.owner.opacity;

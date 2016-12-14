@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.1 API Documentation : components\HandlerRender.js</title>
+	<title>platypus v0.10.2 API Documentation : components\HandlerRender.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.1</em>
+            <em>API Documentation for: 0.10.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -329,9 +329,7 @@
                                         };
                         
                                         return function (tick) {
-                                            var x = 0,
-                                                child   = null,
-                                                message = this.renderMessage;
+                                            var message = this.renderMessage;
                         
                                             message.delta = tick.delta;
                         
@@ -354,25 +352,9 @@
                                                 this.owner.triggerEventOnChildren(&#x27;handle-render&#x27;, message);
                                             }
                         
-                                            if (this.container) {
-                                                x = this.container.children.length;
-                                                while (x--) {
-                                                    child = this.container.children[x];
-                        
-                                                    if (child.visible) {
-                                                        if (child.paused &amp;&amp; !this.paused) {
-                                                            child.paused = false;
-                                                        } else if (this.paused) {
-                                                            child.paused = true;
-                                                        }
-                                                    }
-                                                }
-                        
-                                                if (this.container.reorder) {
-                                                    this.container.reorder = false;
-                                                    this.container.children.sort(sort);
-                                                }
-                        
+                                            if (this.container &amp;&amp; this.container.reorder) {
+                                                this.container.reorder = false;
+                                                this.container.children.sort(sort);
                                             }
                                         };
                                     }())
