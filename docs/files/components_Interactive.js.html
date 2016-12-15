@@ -166,7 +166,7 @@
                                 Circle = include(&#x27;PIXI.Circle&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 Rectangle = include(&#x27;PIXI.Rectangle&#x27;),
-                                touchInstances = [];
+                                touchInstances = {};
                             
                             return platypus.createComponentClass({
                                 id: &#x27;Interactive&#x27;,
@@ -328,7 +328,7 @@
                                             triggerMousedown = function (eventName, event) {
                                                 if (!this.pressed) {
                                                     if ( typeof event.data.identifier !== &quot;undefined&quot;) {
-                                                        touchInstances[event.data.identifier] = this;
+                                                        touchInstances[event.data.identifier.toString()] = this;
                                                     }
                         
                                                     trigger.call(this, eventName, event);
@@ -337,9 +337,7 @@
                                                 }
                                             },
                                             triggerPressmove = function (eventName, altEventName, event) {
-                                                var index = touchInstances.indexOf(this);
-                        
-                                                if (this.pressed &amp;&amp; (typeof event.data.identifier === &quot;undefined&quot; || index === event.data.identifier)) { //pressmove
+                                                if (this.pressed &amp;&amp; (typeof event.data.identifier === &quot;undefined&quot; || touchInstances[event.data.identifier.toString()] === this)) { //pressmove
                                                     trigger.call(this, eventName, event);
                                                     event.currentTarget.mouseTarget = true;
                                                 } else { //mousemove
@@ -347,11 +345,9 @@
                                                 }
                                             },
                                             triggerPressup = function (eventName, event) {
-                                                var index = touchInstances.indexOf(this);
-                        
-                                                if (this.pressed &amp;&amp; (typeof event.data.identifier === &quot;undefined&quot; || index === event.data.identifier)) {
-                                                    if (index === event.data.identifier) {
-                                                        touchInstances.greenSlice(index);
+                                                if (this.pressed &amp;&amp; (typeof event.data.identifier === &quot;undefined&quot; || touchInstances[event.data.identifier.toString()] === this)) {
+                                                    if (typeof event.data.identifier !== &quot;undefined&quot; &amp;&amp; touchInstances[event.data.identifier.toString()] === this) {
+                                                        touchInstances[event.data.identifier.toString()] = null;
                                                     }
                                                     trigger.call(this, eventName, event);
                                                     event.currentTarget.mouseTarget = false;
