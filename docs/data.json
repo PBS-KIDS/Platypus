@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.10.2",
+        "version": "0.10.4",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"

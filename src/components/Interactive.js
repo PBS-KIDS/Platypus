@@ -13,7 +13,7 @@
         Circle = include('PIXI.Circle'),
         Data = include('platypus.Data'),
         Rectangle = include('PIXI.Rectangle'),
-        touchInstances = [];
+        touchInstances = {};
     
     return platypus.createComponentClass({
         id: 'Interactive',
@@ -175,7 +175,7 @@
                     triggerMousedown = function (eventName, event) {
                         if (!this.pressed) {
                             if ( typeof event.data.identifier !== "undefined") {
-                                touchInstances[event.data.identifier] = this;
+                                touchInstances[event.data.identifier.toString()] = this;
                             }
 
                             trigger.call(this, eventName, event);
@@ -184,9 +184,7 @@
                         }
                     },
                     triggerPressmove = function (eventName, altEventName, event) {
-                        var index = touchInstances.indexOf(this);
-
-                        if (this.pressed && (typeof event.data.identifier === "undefined" || index === event.data.identifier)) { //pressmove
+                        if (this.pressed && (typeof event.data.identifier === "undefined" || touchInstances[event.data.identifier.toString()] === this)) { //pressmove
                             trigger.call(this, eventName, event);
                             event.currentTarget.mouseTarget = true;
                         } else { //mousemove
@@ -194,11 +192,9 @@
                         }
                     },
                     triggerPressup = function (eventName, event) {
-                        var index = touchInstances.indexOf(this);
-
-                        if (this.pressed && (typeof event.data.identifier === "undefined" || index === event.data.identifier)) {
-                            if (index === event.data.identifier) {
-                                touchInstances.greenSlice(index);
+                        if (this.pressed && (typeof event.data.identifier === "undefined" || touchInstances[event.data.identifier.toString()] === this)) {
+                            if (typeof event.data.identifier !== "undefined" && touchInstances[event.data.identifier.toString()] === this) {
+                                touchInstances[event.data.identifier.toString()] = null;
                             }
                             trigger.call(this, eventName, event);
                             event.currentTarget.mouseTarget = false;
