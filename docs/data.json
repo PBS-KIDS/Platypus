@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.10.4",
+        "version": "0.10.5",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -3279,7 +3279,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 260,
+            "line": 261,
             "description": "Sets up the camera window size on load.",
             "itemtype": "method",
             "name": "'load'",
@@ -3288,7 +3288,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 269,
+            "line": 270,
             "description": "On receiving this message, the camera begins viewing the world.",
             "itemtype": "method",
             "name": "'render-world'",
@@ -3311,7 +3311,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 281,
+            "line": 282,
             "description": "The viewport is flagged to update when children are added.",
             "itemtype": "method",
             "name": "'child-entity-added'",
@@ -3327,7 +3327,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 291,
+            "line": 292,
             "description": "On receiving a \"world-loaded\" message, the camera broadcasts the world size to all children in the world.",
             "itemtype": "event",
             "name": "'camera-loaded'",
@@ -3349,7 +3349,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 302,
+            "line": 303,
             "description": "Triggers \"camera-update\" on newly changed entities.",
             "itemtype": "method",
             "name": "'child-entity-updated'",
@@ -3366,7 +3366,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 317,
+            "line": 318,
             "description": "On receiving this message, the camera updates its world location and size as necessary. An example of this message is triggered by the [TiledLoader](platypus.components.TiledLoader.html) component.",
             "itemtype": "method",
             "name": "'world-loaded'",
@@ -3402,7 +3402,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 342,
+            "line": 343,
             "description": "If mouse dragging should cause the camera to move, this listens for the beginning of the drag motion.",
             "itemtype": "method",
             "name": "'mousedown'",
@@ -3419,7 +3419,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 366,
+            "line": 367,
             "description": "If mouse dragging should cause the camera to move, this listens the drag motion.",
             "itemtype": "method",
             "name": "'pressmove'",
@@ -3436,7 +3436,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 383,
+            "line": 384,
             "description": "If mouse dragging should cause the camera to move, this listens for the end of the drag motion.",
             "itemtype": "method",
             "name": "'pressup'",
@@ -3453,7 +3453,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 400,
+            "line": 401,
             "description": "On a \"tick\" step event, the camera updates its location according to its current state.",
             "itemtype": "method",
             "name": "'tick'",
@@ -3476,7 +3476,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 458,
+            "line": 460,
             "description": "This component fires \"camera-update\" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.",
             "itemtype": "event",
             "name": "'camera-update'",
@@ -3524,7 +3524,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 491,
+            "line": 493,
             "description": "The camera listens for this event to change its world viewport size.",
             "itemtype": "method",
             "name": "'resize-camera'",
@@ -3552,7 +3552,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 505,
+            "line": 507,
             "description": "The camera listens for this event to change its position in the world.",
             "itemtype": "method",
             "name": "'relocate'",
@@ -3592,7 +3592,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 538,
+            "line": 540,
             "description": "On receiving this message, the camera begins following the requested object.",
             "itemtype": "method",
             "name": "'follow'",
@@ -3675,7 +3675,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 559,
+            "line": 561,
             "description": "On receiving this message, the camera will shake around its target location.",
             "itemtype": "method",
             "name": "'shake'",
@@ -3723,7 +3723,7 @@
         },
         {
             "file": "components\\Camera.js",
-            "line": 995,
+            "line": 997,
             "description": "Returns whether a particular display object intersects the camera's viewport on the canvas.",
             "itemtype": "method",
             "name": "isOnCanvas",
@@ -6654,7 +6654,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 152,
+            "line": 154,
             "description": "This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -6678,7 +6678,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 181,
+            "line": 183,
             "description": "Triggers events per the component's definition when a press is made.",
             "itemtype": "method",
             "name": "'mousedown'",
@@ -6687,7 +6687,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 192,
+            "line": 197,
             "description": "This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.",
             "itemtype": "event",
             "name": "'pressed'",
@@ -6721,7 +6721,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 212,
+            "line": 218,
             "description": "Triggers events per the component's definition when a press is released.",
             "itemtype": "method",
             "name": "'pressup'",
@@ -6730,7 +6730,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 226,
+            "line": 232,
             "description": "This event is triggered when the button is pressed and the mouse/touch is dragged off-target before release.",
             "itemtype": "event",
             "name": "'cancelled'",
@@ -6764,7 +6764,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 248,
+            "line": 256,
             "description": "This event is triggered when the button is released, or on the down-to-up change for toggle buttons.",
             "itemtype": "event",
             "name": "'released'",
@@ -6798,7 +6798,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 275,
+            "line": 284,
             "description": "If a press moves over the button, it's not cancelled.",
             "itemtype": "method",
             "name": "'mouseover'",
@@ -6807,7 +6807,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 289,
+            "line": 298,
             "description": "If a press moves off of the button, it's cancelled.",
             "itemtype": "method",
             "name": "'mouseout'",
@@ -6816,7 +6816,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 300,
+            "line": 309,
             "description": "Disables the entity.",
             "itemtype": "method",
             "name": "'disable'",
@@ -6825,7 +6825,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 310,
+            "line": 319,
             "description": "Enables the entity.",
             "itemtype": "method",
             "name": "'enable'",
@@ -6834,7 +6834,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 320,
+            "line": 329,
             "description": "Toggles whether the entity is disabled.",
             "itemtype": "method",
             "name": "'toggle-disabled'",
@@ -6843,7 +6843,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 332,
+            "line": 341,
             "description": "Sets the entity's highlighted state to `true`.",
             "itemtype": "method",
             "name": "'highlight'",
@@ -6853,7 +6853,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 342,
+            "line": 351,
             "description": "Sets the entity's highlighted state to `false`.",
             "itemtype": "method",
             "name": "'unhighlight'",
@@ -6863,7 +6863,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 352,
+            "line": 361,
             "description": "Toggles the entity's highlighted state.",
             "itemtype": "method",
             "name": "'toggle-highlight'",
