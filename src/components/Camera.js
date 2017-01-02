@@ -253,6 +253,7 @@
                 platypus.debug.warn('Camera: There appears to be no Container on this entity for the camera to display.');
             }
             this.container = new PIXI.Container();
+            this.container.visible = false;
             this.parentContainer.addChild(this.container);
             this.movedCamera = false;
         },
@@ -454,7 +455,8 @@
                     
                     // Transform the world to appear within camera
                     this.world.setTransform((viewport.halfWidth - viewport.x) * msg.scaleX, (viewport.halfHeight - viewport.y) * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
-                    
+                    this.container.visible = true;
+
                     /**
                      * This component fires "camera-update" when the position of the camera in the world has changed. This event is triggered on both the entity (typically a layer) as well as children of the entity.
                      *
