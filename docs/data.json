@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.10.5",
+        "version": "0.10.6",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -6210,6 +6210,527 @@
             "description": "Removes the input event listeners on the sprite, disabling input.",
             "itemtype": "method",
             "name": "'input-off'",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 188,
+            "description": "This event is triggered on pointer down.",
+            "itemtype": "event",
+            "name": "'pointerdown'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 202,
+            "description": "This event is triggered on mouse down.",
+            "itemtype": "event",
+            "name": "'mousedown'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "deprecated": true,
+            "deprecationMessage": "since v0.10.6 - superceded by the \"pointerdown\" event.",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 223,
+            "description": "This event is triggered on pointer move.",
+            "itemtype": "event",
+            "name": "'pointermove'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 236,
+            "description": "This event is triggered on press move (drag).",
+            "itemtype": "event",
+            "name": "'pressmove'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 249,
+            "description": "This event is triggered on mouse move.",
+            "itemtype": "event",
+            "name": "'mousemove'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "deprecated": true,
+            "deprecationMessage": "since v0.10.6 - superceded by the \"pointermove\" event.",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 265,
+            "description": "This event is triggered on pointer tap.",
+            "itemtype": "event",
+            "name": "'pointertap'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 278,
+            "description": "This event is triggered on click.",
+            "itemtype": "event",
+            "name": "'click'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "deprecated": true,
+            "deprecationMessage": "since v0.10.6 - superceded by the \"pointertap\" event.",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 293,
+            "description": "This event is triggered on pointer out.",
+            "itemtype": "event",
+            "name": "'pointerout'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 306,
+            "description": "This event is triggered on mouse out.",
+            "itemtype": "event",
+            "name": "'mouseout'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "deprecated": true,
+            "deprecationMessage": "since v0.10.6 - superceded by the \"pointerout\" event.",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 320,
+            "description": "This event is triggered on pointer over.",
+            "itemtype": "event",
+            "name": "'pointerover'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 333,
+            "description": "This event is triggered on mouse over.",
+            "itemtype": "event",
+            "name": "'mouseover'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "deprecated": true,
+            "deprecationMessage": "since v0.10.6 - superceded by the \"pointerover\" event.",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 352,
+            "description": "This event is triggered on press up.",
+            "itemtype": "event",
+            "name": "'pressup'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 365,
+            "description": "This event is triggered on pointer up.",
+            "itemtype": "event",
+            "name": "'pointerup'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
+            "class": "platypus.components.Interactive",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Interactive.js",
+            "line": 393,
+            "description": "This event is triggered on pointer up outside.",
+            "itemtype": "event",
+            "name": "'pointerupoutside'",
+            "params": [
+                {
+                    "name": "event",
+                    "description": "The original DOM pointer event.",
+                    "type": "DOMEvent"
+                },
+                {
+                    "name": "pixiEvent",
+                    "description": "The Pixi pointer event.",
+                    "type": "PIXI.interaction.InteractionEvent"
+                },
+                {
+                    "name": "x",
+                    "description": "The x coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y coordinate in world units.",
+                    "type": "Number"
+                },
+                {
+                    "name": "entity",
+                    "description": "The entity receiving this event.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "since": "v0.10.6",
             "class": "platypus.components.Interactive",
             "namespace": "platypus.components"
         },

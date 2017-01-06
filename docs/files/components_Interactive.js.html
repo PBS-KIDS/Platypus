@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.5 API Documentation : components\Interactive.js</title>
+	<title>platypus v0.10.6 API Documentation : components\Interactive.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.5</em>
+            <em>API Documentation for: 0.10.6</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -166,7 +166,7 @@
                                 Circle = include(&#x27;PIXI.Circle&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 Rectangle = include(&#x27;PIXI.Rectangle&#x27;),
-                                touchInstances = {};
+                                pointerInstances = {};
                             
                             return platypus.createComponentClass({
                                 id: &#x27;Interactive&#x27;,
@@ -300,6 +300,16 @@
                                 methods: {
                                     addInputs: (function () {
                                         var
+                                            getId = function (event) {
+                                                var data = event.data,
+                                                    originalEvent = data.originalEvent;
+                        
+                                                if (typeof originalEvent.pointerId !== &#x27;undefined&#x27;) {
+                                                    return &#x27;point&#x27; + originalEvent.pointerId; // Handles pointer events
+                                                } else {
+                                                    return originalEvent.type.substr(0, 5) + (data.identifier || 0); // Handles mouse / touch events
+                                                }
+                                            },
                                             trigger = function (eventName, event) {
                                                 var camera = this.camera,
                                                     container = this.container,
@@ -325,54 +335,251 @@
                                                 this.owner.trigger(eventName, msg);
                                                 msg.recycle();
                                             },
-                                            triggerMousedown = function (eventName, event) {
-                                                if (!this.pressed) {
-                                                    if ( typeof event.data.identifier !== &quot;undefined&quot;) {
-                                                        touchInstances[event.data.identifier.toString()] = this;
-                                                    }
+                                            triggerPointerDown = function (event) {
+                                                pointerInstances[getId(event)] = this;
                         
-                                                    trigger.call(this, eventName, event);
-                                                    event.currentTarget.mouseTarget = true;
-                                                    this.pressed = true;
+                                                /**
+                                                 * This event is triggered on pointer down.
+                                                 *
+                                                 * @event &#x27;pointerdown&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @since v0.10.6
+                                                 */
+                                                trigger.call(this, &#x27;pointerdown&#x27;, event);
+                        
+                                                if (!this.pressed) {
+                                                    /**
+                                                     * This event is triggered on mouse down.
+                                                     *
+                                                     * @event &#x27;mousedown&#x27;
+                                                     * @param event {DOMEvent} The original DOM pointer event.
+                                                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                     * @param x {Number} The x coordinate in world units.
+                                                     * @param y {Number} The y coordinate in world units.
+                                                     * @param entity {platypus.Entity} The entity receiving this event.
+                                                     * @deprecated since v0.10.6 - superceded by the &quot;pointerdown&quot; event.
+                                                     */
+                                                    trigger.call(this, &#x27;mousedown&#x27;, event);
                                                 }
+                        
+                                                event.currentTarget.mouseTarget = true;
+                                                this.pressed = true;
                                             },
-                                            triggerPressmove = function (eventName, altEventName, event) {
-                                                if (this.pressed &amp;&amp; (typeof event.data.identifier === &quot;undefined&quot; || touchInstances[event.data.identifier.toString()] === this)) { //pressmove
-                                                    trigger.call(this, eventName, event);
-                                                    event.currentTarget.mouseTarget = true;
-                                                } else { //mousemove
-                                                    trigger.call(this, altEventName, event);
-                                                }
-                                            },
-                                            triggerPressup = function (eventName, event) {
-                                                if (this.pressed &amp;&amp; (typeof event.data.identifier === &quot;undefined&quot; || touchInstances[event.data.identifier.toString()] === this)) {
-                                                    if (typeof event.data.identifier !== &quot;undefined&quot; &amp;&amp; touchInstances[event.data.identifier.toString()] === this) {
-                                                        touchInstances[event.data.identifier.toString()] = null;
+                                            triggerPointerMove = function (event) {
+                                                var id = getId(event);
+                        
+                                                if (pointerInstances[id] === this) {
+                                                    /**
+                                                     * This event is triggered on pointer move.
+                                                     *
+                                                     * @event &#x27;pointermove&#x27;
+                                                     * @param event {DOMEvent} The original DOM pointer event.
+                                                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                     * @param x {Number} The x coordinate in world units.
+                                                     * @param y {Number} The y coordinate in world units.
+                                                     * @param entity {platypus.Entity} The entity receiving this event.
+                                                     * @since v0.10.6
+                                                     */
+                                                    trigger.call(this, &#x27;pointermove&#x27;, event);
+                                                    if (this.pressed) {
+                                                        /**
+                                                         * This event is triggered on press move (drag).
+                                                         *
+                                                         * @event &#x27;pressmove&#x27;
+                                                         * @param event {DOMEvent} The original DOM pointer event.
+                                                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                         * @param x {Number} The x coordinate in world units.
+                                                         * @param y {Number} The y coordinate in world units.
+                                                         * @param entity {platypus.Entity} The entity receiving this event.
+                                                         */
+                                                        trigger.call(this, &#x27;pressmove&#x27;, event);
+                                                        event.currentTarget.mouseTarget = true;
+                                                    } else {
+                                                        /**
+                                                         * This event is triggered on mouse move.
+                                                         *
+                                                         * @event &#x27;mousemove&#x27;
+                                                         * @param event {DOMEvent} The original DOM pointer event.
+                                                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                         * @param x {Number} The x coordinate in world units.
+                                                         * @param y {Number} The y coordinate in world units.
+                                                         * @param entity {platypus.Entity} The entity receiving this event.
+                                                         * @deprecated since v0.10.6 - superceded by the &quot;pointermove&quot; event.
+                                                         */
+                                                        trigger.call(this, &#x27;mousemove&#x27;, event); // deprecated in v0.10.6
                                                     }
-                                                    trigger.call(this, eventName, event);
+                                                }
+                                            },
+                                            triggerPointerTap = function (event) {
+                                                /**
+                                                 * This event is triggered on pointer tap.
+                                                 *
+                                                 * @event &#x27;pointertap&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @since v0.10.6
+                                                 */
+                                                trigger.call(this, &#x27;pointertap&#x27;, event);
+                        
+                                                /**
+                                                 * This event is triggered on click.
+                                                 *
+                                                 * @event &#x27;click&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @deprecated since v0.10.6 - superceded by the &quot;pointertap&quot; event.
+                                                 */
+                                                trigger.call(this, &#x27;click&#x27;, event); // deprecated in v0.10.6
+                                            },
+                                            triggerPointerOut = function (event) {
+                        
+                                                /**
+                                                 * This event is triggered on pointer out.
+                                                 *
+                                                 * @event &#x27;pointerout&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @since v0.10.6
+                                                 */
+                                                trigger.call(this, &#x27;pointerout&#x27;, event);
+                        
+                                                /**
+                                                 * This event is triggered on mouse out.
+                                                 *
+                                                 * @event &#x27;mouseout&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @deprecated since v0.10.6 - superceded by the &quot;pointerout&quot; event.
+                                                 */
+                                                trigger.call(this, &#x27;mouseout&#x27;, event); // deprecated in v0.10.6
+                                            },
+                                            triggerPointerOver = function (event) {
+                                                /**
+                                                 * This event is triggered on pointer over.
+                                                 *
+                                                 * @event &#x27;pointerover&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @since v0.10.6
+                                                 */
+                                                trigger.call(this, &#x27;pointerover&#x27;, event);
+                        
+                                                /**
+                                                 * This event is triggered on mouse over.
+                                                 *
+                                                 * @event &#x27;mouseover&#x27;
+                                                 * @param event {DOMEvent} The original DOM pointer event.
+                                                 * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                 * @param x {Number} The x coordinate in world units.
+                                                 * @param y {Number} The y coordinate in world units.
+                                                 * @param entity {platypus.Entity} The entity receiving this event.
+                                                 * @deprecated since v0.10.6 - superceded by the &quot;pointerover&quot; event.
+                                                 */
+                                                trigger.call(this, &#x27;mouseover&#x27;, event); // deprecated in v0.10.6
+                                            },
+                                            triggerPointerUp = function (event) {
+                                                var id = getId(event);
+                        
+                                                if (pointerInstances[id] === this) {
+                                                    pointerInstances[id] = null;
+                                                    if (this.pressed) {
+                                                        /**
+                                                         * This event is triggered on press up.
+                                                         *
+                                                         * @event &#x27;pressup&#x27;
+                                                         * @param event {DOMEvent} The original DOM pointer event.
+                                                         * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                         * @param x {Number} The x coordinate in world units.
+                                                         * @param y {Number} The y coordinate in world units.
+                                                         * @param entity {platypus.Entity} The entity receiving this event.
+                                                         */
+                                                        trigger.call(this, &#x27;pressup&#x27;, event);
+                                                        this.pressed = false;
+                                                    }
+                                                    /**
+                                                     * This event is triggered on pointer up.
+                                                     *
+                                                     * @event &#x27;pointerup&#x27;
+                                                     * @param event {DOMEvent} The original DOM pointer event.
+                                                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                     * @param x {Number} The x coordinate in world units.
+                                                     * @param y {Number} The y coordinate in world units.
+                                                     * @param entity {platypus.Entity} The entity receiving this event.
+                                                     * @since v0.10.6
+                                                     */
+                                                    trigger.call(this, &#x27;pointerup&#x27;, event);
                                                     event.currentTarget.mouseTarget = false;
-                                                    this.pressed = false;
                                                     
                                                     if (event.currentTarget.removeDisplayObject) {
                                                         event.currentTarget.removeDisplayObject();
                                                     }
                                                 }
                                             },
-                                            removeInputListeners = function (sprite, mousedown, pressup, pressmove, click, mouseover, mouseout) {
-                                                sprite.removeListener(&#x27;mousedown&#x27;,       mousedown);
-                                                sprite.removeListener(&#x27;touchstart&#x27;,      mousedown);
-                                                sprite.removeListener(&#x27;mouseup&#x27;,         pressup);
-                                                sprite.removeListener(&#x27;touchend&#x27;,        pressup);
-                                                sprite.removeListener(&#x27;mouseupoutside&#x27;,  pressup);
-                                                sprite.removeListener(&#x27;touchendoutside&#x27;, pressup);
-                                                sprite.removeListener(&#x27;mousemove&#x27;,       pressmove);
-                                                sprite.removeListener(&#x27;touchmove&#x27;,       pressmove);
-                                                sprite.removeListener(&#x27;click&#x27;,           click);
-                                                sprite.removeListener(&#x27;tap&#x27;,             click);
+                                            triggerPointerUpOutside = function (event) {
+                                                var id = getId(event);
+                        
+                                                if (pointerInstances[id] === this) {
+                                                    pointerInstances[id] = null;
+                                                    if (this.pressed) {
+                                                        trigger.call(this, &#x27;pressup&#x27;, event);
+                                                        this.pressed = false;
+                                                    }
+                                                    /**
+                                                     * This event is triggered on pointer up outside.
+                                                     *
+                                                     * @event &#x27;pointerupoutside&#x27;
+                                                     * @param event {DOMEvent} The original DOM pointer event.
+                                                     * @param pixiEvent {PIXI.interaction.InteractionEvent} The Pixi pointer event.
+                                                     * @param x {Number} The x coordinate in world units.
+                                                     * @param y {Number} The y coordinate in world units.
+                                                     * @param entity {platypus.Entity} The entity receiving this event.
+                                                     * @since v0.10.6
+                                                     */
+                                                    trigger.call(this, &#x27;pointerupoutside&#x27;, event);
+                                                    event.currentTarget.mouseTarget = false;
+                                                    
+                                                    if (event.currentTarget.removeDisplayObject) {
+                                                        event.currentTarget.removeDisplayObject();
+                                                    }
+                                                }
+                                            },
+                                            removeInputListeners = function (sprite, pointerdown, pointerup, pointerupoutside, pointermove, pointertap, pointerover, pointerout) {
+                                                var key = &#x27;&#x27;;
+                        
+                                                for (key in pointerInstances) {
+                                                    if (pointerInstances.hasOwnProperty(key) &amp;&amp; (pointerInstances[key] === this)) {
+                                                        pointerInstances[key] = null;
+                                                    }
+                                                }
+                        
+                                                sprite.removeListener(&#x27;pointerdown&#x27;, pointerdown);
+                                                sprite.removeListener(&#x27;pointerup&#x27;, pointerup);
+                                                sprite.removeListener(&#x27;pointerupoutside&#x27;, pointerupoutside);
+                                                sprite.removeListener(&#x27;pointermove&#x27;, pointermove);
+                                                sprite.removeListener(&#x27;pointertap&#x27;, pointertap);
                         
                                                 if (this.hover) {
-                                                    sprite.removeListener(&#x27;mouseover&#x27;, mouseover);
-                                                    sprite.removeListener(&#x27;mouseout&#x27;,  mouseout);
+                                                    sprite.removeListener(&#x27;pointerover&#x27;, pointerover);
+                                                    sprite.removeListener(&#x27;pointerout&#x27;,  pointerout);
                                                 }
                                                 sprite.interactive = false;
                                                 this.removeInputListeners = null;
@@ -380,41 +587,38 @@
                         
                                         return function () {
                                             var sprite    = this.container,
-                                                mousedown = null,
-                                                mouseover = null,
-                                                mouseout  = null,
-                                                pressmove = null,
-                                                pressup   = null,
-                                                click     = null;
+                                                pointerdown = null,
+                                                pointerover = null,
+                                                pointerout  = null,
+                                                pointermove = null,
+                                                pointerup = null,
+                                                pointerupoutside = null,
+                                                pointertap = null;
                                             
                                             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
                                             sprite.interactive = true;
                                             
-                                            mousedown = triggerMousedown.bind(this, &#x27;mousedown&#x27;);
-                                            pressmove = triggerPressmove.bind(this, &#x27;pressmove&#x27;, &#x27;mousemove&#x27;);
-                                            pressup   = triggerPressup.bind(this, &#x27;pressup&#x27;);
-                                            click     = trigger.bind(this, &#x27;click&#x27;);
+                                            pointerdown = triggerPointerDown.bind(this);
+                                            pointermove = triggerPointerMove.bind(this);
+                                            pointerup = triggerPointerUp.bind(this);
+                                            pointerupoutside = triggerPointerUpOutside.bind(this);
+                                            pointertap = triggerPointerTap.bind(this);
                                             
-                                            sprite.addListener(&#x27;mousedown&#x27;,       mousedown);
-                                            sprite.addListener(&#x27;touchstart&#x27;,      mousedown);
-                                            sprite.addListener(&#x27;mouseup&#x27;,         pressup);
-                                            sprite.addListener(&#x27;touchend&#x27;,        pressup);
-                                            sprite.addListener(&#x27;mouseupoutside&#x27;,  pressup);
-                                            sprite.addListener(&#x27;touchendoutside&#x27;, pressup);
-                                            sprite.addListener(&#x27;mousemove&#x27;,       pressmove);
-                                            sprite.addListener(&#x27;touchmove&#x27;,       pressmove);
-                                            sprite.addListener(&#x27;click&#x27;,           click);
-                                            sprite.addListener(&#x27;tap&#x27;,             click);
+                                            sprite.addListener(&#x27;pointerdown&#x27;, pointerdown);
+                                            sprite.addListener(&#x27;pointerup&#x27;, pointerup);
+                                            sprite.addListener(&#x27;pointerupoutside&#x27;, pointerupoutside);
+                                            sprite.addListener(&#x27;pointermove&#x27;, pointermove);
+                                            sprite.addListener(&#x27;pointertap&#x27;, pointertap);
                         
                                             if (this.hover) {
-                                                mouseover = trigger.bind(this, &#x27;mouseover&#x27;);
-                                                mouseout  = trigger.bind(this, &#x27;mouseout&#x27;);
+                                                pointerover = triggerPointerOver.bind(this);
+                                                pointerout  = triggerPointerOut.bind(this);
                         
-                                                sprite.addListener(&#x27;mouseover&#x27;, mouseover);
-                                                sprite.addListener(&#x27;mouseout&#x27;,  mouseout);
+                                                sprite.addListener(&#x27;pointerover&#x27;, pointerover);
+                                                sprite.addListener(&#x27;pointerout&#x27;, pointerout);
                                             }
                         
-                                            this.removeInputListeners = removeInputListeners.bind(this, sprite, mousedown, pressup, pressmove, click, mouseover, mouseout);
+                                            this.removeInputListeners = removeInputListeners.bind(this, sprite, pointerdown, pointerup, pointerupoutside, pointermove, pointertap, pointerover, pointerout);
                                         };
                                     }()),
                         
