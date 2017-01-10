@@ -15,6 +15,7 @@
     'use strict';
     
     var Component = include('platypus.Component'),
+        debug = include('springroll.Debug', false),
         key = '',
         priority = 0,
         doNothing = function () {},
@@ -138,6 +139,130 @@
         // Have to copy rather than replace so definition is not corrupted
         proto.initialize = componentDefinition.initialize || (componentDefinition.hasOwnProperty('constructor') ? componentDefinition.constructor /* deprecated function name */: doNothing);
 
+        // This can be overridden by a "toJSON" method in the component definition. This is by design.
+        proto.toJSON = (function () {
+            var validating = false,
+                valid = function (value, depthArray) {
+                    var depth = null,
+                        root = false,
+                        key = '',
+                        invalid = false,
+                        i = 0,
+                        type = typeof value;
+                    
+                    if (!validating) { // prevents endless validation during recursion.
+                        validating = true;
+                        root = true;
+                    }
+
+                    if (type === 'function') {
+                        invalid = true;
+                    } else if ((type === 'object') && (value !== null)) {
+                        if (value.toJSON) { // We know it's valid but we run this for the depth check to make sure that there is no recursion.
+                            depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                            depth.push(value);
+                            if (!valid(value.toJSON(), depth)) {
+                                invalid = true;
+                            }
+                        } else if (Array.isArray(value)) {
+                            i = value.length;
+                            while (i--) {
+                                if (depthArray && depthArray.indexOf(value[i]) >= 0) {
+                                    invalid = true;
+                                    break;
+                                }
+                                depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                depth.push(value[i]);
+                                if (!valid(value[i], depth)) {
+                                    invalid = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (key in value) {
+                                if (value.hasOwnProperty(key)) {
+                                    if (depthArray && depthArray.indexOf(value[key]) >= 0) {
+                                        invalid = true;
+                                        break;
+                                    }
+                                    depth = depthArray ? depthArray.greenSlice() : Array.setUp();
+                                    depth.push(value[key]);
+                                    if (!valid(value[key], depth)) {
+                                        invalid = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (depthArray) {
+                        depthArray.recycle();
+                    }
+
+                    if (root) {
+                        validating = false;
+                    }
+
+                    return !invalid;
+                };
+
+            // We only perform validation in debug mode since it may impact performance.
+            if (include('springroll.Debug', false)) {
+                return function (propertiesDefinition) {
+                    var properties = componentDefinition.properties,
+                        publicProperties = componentDefinition.publicProperties,
+                        component = {
+                            type: this.type
+                        },
+                        key = '';
+                    
+                    for (key in properties) {
+                        if (properties.hasOwnProperty(key) && (properties[key] !== this[key])) {
+                            if (!validating && !valid(this[key])) {
+                                platypus.debug.warn('Component "' + this.type + '" includes a non-JSON property value for "' + key + '" (type "' + (typeof this[key]) + '"). You may want to create a custom `toJSON` method for this component.', this[key]);
+                            }
+                            component[key] = this[key];
+                        }
+                    }
+
+                    for (key in publicProperties) {
+                        if (publicProperties.hasOwnProperty(key) && (publicProperties[key] !== this.owner[key])) {
+                            if (!validating && !valid(this.owner[key])) {
+                                platypus.debug.warn('Component "' + this.type + '" includes a non-JSON public property value for "' + key + '" (type "' + (typeof this.owner[key]) + '"). You may want to create a custom `toJSON` method for this component.', this.owner[key]);
+                            }
+                            propertiesDefinition[key] = this.owner[key];
+                        }
+                    }
+
+                    return component;
+                };
+            } else {
+                return function (propertiesDefinition) {
+                    var properties = componentDefinition.properties,
+                        publicProperties = componentDefinition.publicProperties,
+                        component = {
+                            type: this.type
+                        },
+                        key = '';
+                    
+                    for (key in properties) {
+                        if (properties.hasOwnProperty(key) && (properties[key] !== this[key])) {
+                            component[key] = this[key];
+                        }
+                    }
+
+                    for (key in publicProperties) {
+                        if (publicProperties.hasOwnProperty(key) && (publicProperties[key] !== this.owner[key])) {
+                            propertiesDefinition[key] = this.owner[key];
+                        }
+                    }
+
+                    return component;
+                };
+            }
+        }());
+
         // Throw deprecation warning if needed (deprecated as of v0.10.1)
         if (componentDefinition.hasOwnProperty('constructor')) {
             platypus.debug.warn(componentDefinition.id + ': "constructor" has been deprecated in favor of "initialize" for a component\'s initializing function definition.');
@@ -164,7 +289,7 @@
 
         component.getAssetList     = componentDefinition.getAssetList     || Component.getAssetList;
         component.getLateAssetList = componentDefinition.getLateAssetList || Component.getLateAssetList;
-
+        
         platypus.components[componentDefinition.id] = component;
 
         return component;

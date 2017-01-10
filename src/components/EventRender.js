@@ -80,6 +80,12 @@
                     }
                 }
             };
-        } ())
+        } ()),
+
+        methods: {
+            toJSON: function () { // This component is added by another component, so it shouldn't be returned for reconstruction.
+                return null;
+            }
+        }
     });
 }());

@@ -43,6 +43,14 @@ platypus.Component = (function () {
     };
 
     /**
+     * Returns a JSON object describing the component.
+     *
+     * @method toJSON
+     * @return {Object} Returns a JSON definition that can be used to recreate the component.
+     **/
+    proto.toJSON = null; // defined in factory.js
+
+    /**
      * This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.
      *
      * @method destroy
