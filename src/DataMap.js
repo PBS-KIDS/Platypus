@@ -41,6 +41,16 @@ platypus.DataMap = (function () {
             }
             keys.length = 0;
         },
+        mapToJSON = function (keys) {
+            var i = keys.length,
+                json = {};
+            
+            while (i--) {
+                json[keys[i]] = this.get(keys[i]);
+            }
+
+            return json;
+        },
         mapMethods = {
             get: {
                 value: null
@@ -58,6 +68,9 @@ platypus.DataMap = (function () {
                 value: null
             },
             clear: {
+                value: null
+            },
+            toJSON: {
                 value: null
             }
         },
@@ -124,6 +137,15 @@ platypus.DataMap = (function () {
                  * @method clear
                  */
                 mm.clear.value = mapClear.bind(map, keys);
+                            
+                /**
+                 * Returns a JSON object describing the component.
+                 *
+                 * @method toJSON
+                 * @return {Object} Returns a JSON definition that can be used to recreate the component.
+                 * @since v0.10.7
+                 **/
+                mm.toJSON.value = mapToJSON.bind(map, keys);
                 
                 Object.defineProperties(this, mm);
             }
@@ -154,7 +176,7 @@ platypus.DataMap = (function () {
                 }
             }
         };
-    
+
     /**
      * Returns DataMap from cache or creates a new one if none are available.
      *

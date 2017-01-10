@@ -47,6 +47,7 @@ platypus.Component = (function () {
      *
      * @method toJSON
      * @return {Object} Returns a JSON definition that can be used to recreate the component.
+     * @since v0.10.7
      **/
     proto.toJSON = null; // defined in factory.js
 

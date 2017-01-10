@@ -153,13 +153,17 @@ platypus.Entity = (function () {
     *
     * @method toJSON
     * @return {Object} Returns a JSON definition that can be used to recreate the entity.
+    * @since v0.10.7
     **/
     proto.toJSON = function () {
         var components = this.components,
             definition = {
                 type: this.type,
                 components: [],
-                properties: {}
+                properties: {
+                    id: this.id,
+                    state: this.state.toJSON()
+                }
             },
             i = 0,
             json = null,

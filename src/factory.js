@@ -227,7 +227,7 @@
                     }
 
                     for (key in publicProperties) {
-                        if (publicProperties.hasOwnProperty(key) && (publicProperties[key] !== this.owner[key])) {
+                        if (publicProperties.hasOwnProperty(key) && (publicProperties[key] !== this.owner[key]) && (typeof propertiesDefinition[key] === 'undefined')) {
                             if (!validating && !valid(this.owner[key])) {
                                 platypus.debug.warn('Component "' + this.type + '" includes a non-JSON public property value for "' + key + '" (type "' + (typeof this.owner[key]) + '"). You may want to create a custom `toJSON` method for this component.', this.owner[key]);
                             }
