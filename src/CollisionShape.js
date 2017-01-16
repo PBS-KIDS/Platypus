@@ -210,6 +210,41 @@ platypus.CollisionShape = (function () {
     };
     
     /**
+    * Returns a JSON object describing the collision shape.
+    *
+    * @method toJSON
+    * @return {Object} Returns a JSON definition that can be used to recreate the collision shape.
+    * @since v0.10.7
+    **/
+    proto.toJSON = function () {
+        var json = {},
+            width = this.size.width,
+            height = this.size.height;
+
+        if (width / 2 !== this.regX) {
+            json.regX = this.regX;
+        }
+        if (height / 2 !== this.regY) {
+            json.regY = this.regY;
+        }
+        if (this.offset.x !== ((width / 2) - this.regX)) {
+            json.offsetX = this.offset.x;
+        }
+        if (this.offset.y !== ((height / 2) - this.regY)) {
+            json.offsetY = this.offset.y;
+        }
+        if (this.type === 'circle') {
+            json.radius = this.radius;
+        } else {
+            json.width = width;
+            json.height = height;
+        }
+        json.type = this.type;
+
+        return json;
+    };
+
+    /**
      * Returns an CollisionShape from cache or creates a new one if none are available.
      *
      * @method CollisionShape.setUp
