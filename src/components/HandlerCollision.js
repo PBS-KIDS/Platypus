@@ -1046,6 +1046,56 @@
                 }
             },
             
+            checkPointForCollisions: function (x, y, collisions, callback) {
+                var gb = this.gridBits,
+                    againstGrid = this.againstGrid[(((y >> gb) << 16) ^ (x >> gb)) >>> 0],
+                    otherEntity = null,
+                    message = triggerMessage,
+                    j   = 0,
+                    k   = 0,
+                    m   = 0,
+                    otherEntities  = null,
+                    otherCollisionType = null,
+                    otherShapes = null;
+
+                message.x = 0;
+                message.y = 0;
+
+                if (!againstGrid) {
+                    return;
+                }
+                
+                j = collisions.length;
+                while (j--) {
+                    otherCollisionType = collisions[j];
+                    otherEntities = againstGrid.get(otherCollisionType);
+                    if (otherEntities) {
+                        k = otherEntities.length;
+                        while (k--) {
+                            otherEntity = otherEntities[k];
+                            if (otherEntity.getAABB(otherCollisionType).containsPoint(x, y)) {
+                                otherShapes = otherEntity.getShapes(otherCollisionType);
+                                m = otherShapes.length;
+                                while (m--) {
+                                    if (otherShapes[m].containsPoint(x, y)) {
+                                        //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
+                                        message.entity  = otherEntity;
+                                        message.type    = otherCollisionType;
+                                        message.myType  = '';
+                                        message.shape   = otherShapes[m];
+                                        message.hitType = 'soft';
+                                        
+                                        callback(message);
+                                        
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            
             destroy: function () {
                 var ag = this.againstGrid,
                     data = null,
@@ -1109,6 +1159,25 @@
                 var collisions = Array.setUp();
                 
                 this.checkEntityForSoftCollisions(entity, function (collision) {
+                    collisions.push(Data.setUp(collision));
+                });
+                
+                return collisions;
+            },
+            
+            /**
+             * This method returns a list of collision objects describing collisions between a point and a list of other entities.
+             *
+             * @method getPointCollisions
+             * @param x {number} The x-axis value.
+             * @param y {number} The y-axis value.
+             * @param collisionTypes {Array of strings} The collision types to check against.
+             * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+             */
+            getPointCollisions: function (x, y, collisionTypes) {
+                var collisions = Array.setUp();
+                
+                this.checkPointForCollisions(x, y, collisionTypes, function (collision) {
                     collisions.push(Data.setUp(collision));
                 });
                 

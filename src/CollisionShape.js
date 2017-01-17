@@ -208,6 +208,24 @@ platypus.CollisionShape = (function () {
         
         this.aABB.setAll(this.x, this.y, this.width, this.height);
     };
+
+    /**
+     * Expresses whether this shape contains the given point.
+     *
+     * @method containsPoint
+     * @param x {number} The x-axis value.
+     * @param y {number} The y-axis value.
+     * @return {boolean} Returns `true` if this shape contains the point.
+     * @since 0.10.7
+     */
+    proto.containsPoint = function (x, y) {
+        var pow = Math.pow;
+
+        return this.aABB.containsPoint(x, y) && (
+            (this.type === 'rectangle') ||
+            ((this.type === 'circle') && ((pow((this.x - x), 2) + pow((this.y - y), 2)) <= pow(this.radius, 2)))
+        );
+    };
     
     /**
     * Returns a JSON object describing the collision shape.

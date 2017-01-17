@@ -349,9 +349,10 @@ platypus.AABB = (function () {
     /**
      * Expresses whether this AABB contains the given point.
      *
-     * @method containsVector
-     * @param vector {platypus.Vector} The vector to check.
-     * @return {boolean} Returns `true` if this AABB contains the vector.
+     * @method containsPoint
+     * @param x {number} The x-axis value.
+     * @param y {number} The y-axis value.
+     * @return {boolean} Returns `true` if this AABB contains the point.
      * @since 0.7.5
      */
     proto.containsPoint = function (x, y) {
