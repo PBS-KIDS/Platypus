@@ -403,7 +403,8 @@
                     if (this.stateBased) {
                         definition = Data.setUp(
                             'animationMap', map,
-                            'forcePlayThrough', this.forcePlayThrough
+                            'forcePlayThrough', this.forcePlayThrough,
+                            'component', this
                         );
                         this.owner.addComponent(new StateRender(this.owner, definition));
                         definition.recycle();
@@ -555,13 +556,7 @@
              * @since 0.9.0
              */
             "stop-animation": function (animation) {
-                var sprite = this.sprite;
-
-                if (animation && sprite.has(animation)) {
-                    sprite.gotoAndStop(animation);
-                } else {
-                    sprite.stop();
-                }
+                this.stopAnimation(animation);
             },
             
             /**
@@ -704,6 +699,16 @@
                     sprite.gotoAndPlay(animation, restart);
                 } else {
                     sprite.play();
+                }
+            },
+
+            stopAnimation: function (animation) {
+                var sprite = this.sprite;
+
+                if (animation && sprite.has(animation)) {
+                    sprite.gotoAndStop(animation);
+                } else {
+                    sprite.stop();
                 }
             },
 

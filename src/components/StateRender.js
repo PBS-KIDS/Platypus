@@ -10,15 +10,6 @@
     'use strict';
     
     var StateMap = include('platypus.StateMap'),
-        defaultTest = function (animation) {
-            return animation;
-        },
-        stateTest = function (animation, states, ownerState) {
-            if (ownerState.includes(states)) {
-                return animation;
-            }
-            return false;
-        },
         createTest = function (testStates, animation) {
             if (testStates === 'default') {
                 return defaultTest.bind(null, animation);
@@ -26,6 +17,40 @@
                 //TODO: Better clean-up: Create a lot of these without removing them later... DDD 2/5/2016
                 return stateTest.bind(null, animation, StateMap.setUp(testStates));
             }
+        },
+        defaultTest = function (animation) {
+            return animation;
+        },
+        methodPlay = function (animation, restart) {
+            this.component.playAnimation(animation, restart);
+        },
+        methodStop = function (animation) {
+            this.component.stopAnimation(animation);
+        },
+        stateTest = function (animation, states, ownerState) {
+            if (ownerState.includes(states)) {
+                return animation;
+            }
+            return false;
+        },
+        triggerPlay = function (animation, restart) {
+            /**
+             * On entering a new animation-mapped state, this component triggers this event to play an animation.
+             *
+             * @event 'play-animation'
+             * @param animation {String} Describes the animation to play.
+             * @param restart {Boolean} Whether to restart a playing animation.
+             */
+            this.owner.triggerEvent('play-animation', animation, restart);
+        },
+        triggerStop = function (animation) {
+            /**
+             * On attaining an animation-mapped state, this component triggers this event to stop a previous animation.
+             *
+             * @event 'stop-animation'
+             * @param animation {String} Describes the animation to stop.
+             */
+            this.owner.triggerEvent('stop-animation', animation);
         };
 
     return platypus.createComponentClass({
@@ -99,6 +124,14 @@
             this.waitingState = 0;
             this.playWaiting = false;
             this.animationFinished = false;
+
+            if (this.component) {
+                this.playAnimation = methodPlay;
+                this.stopAnimation = methodStop;
+            } else {
+                this.playAnimation = triggerPlay;
+                this.stopAnimation = triggerStop;
+            }
         },
 
         events: {
@@ -125,13 +158,7 @@
                         this.lastState = this.waitingState;
                         
                         this.animationFinished = false;
-                        /**
-                         * On entering a new animation-mapped state, this component triggers this event to play an animation.
-                         *
-                         * @event 'play-animation'
-                         * @param animation {String} Describes the animation to play.
-                         */
-                        this.owner.triggerEvent('play-animation', this.currentAnimation);
+                        this.playAnimation(this.currentAnimation);
                     } else {
                         this.animationFinished = true;
                     }
@@ -162,9 +189,9 @@
                                         this.lastState = +i;
                                         this.animationFinished = false;
                                         if (playing) {
-                                            this.owner.triggerEvent('play-animation', this.currentAnimation);
+                                            this.playAnimation(this.currentAnimation);
                                         } else {
-                                            this.owner.triggerEvent('stop-animation', this.currentAnimation);
+                                            this.stopAnimation(this.currentAnimation);
                                         }
                                     } else {
                                         this.waitingAnimation = testCase;

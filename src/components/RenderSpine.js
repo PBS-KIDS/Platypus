@@ -328,7 +328,8 @@
 
                     if (this.eventBased) {
                         definition = Data.setUp(
-                            'animationMap', map
+                            'animationMap', map,
+                            'component', this
                         );
                         this.owner.addComponent(new EventRender(this.owner, definition));
                         definition.recycle();
@@ -337,7 +338,8 @@
                     if (this.stateBased) {
                         definition = Data.setUp(
                             'animationMap', map,
-                            'forcePlayThrough', this.forcePlayThrough
+                            'forcePlayThrough', this.forcePlayThrough,
+                            'component', this
                         );
                         this.owner.addComponent(new StateRender(this.owner, definition));
                         definition.recycle();
