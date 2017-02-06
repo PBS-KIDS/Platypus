@@ -1010,6 +1010,34 @@
                 var canvas = this.canvas;
 
                 return !bounds || !((bounds.x + bounds.width < 0) || (bounds.x > canvas.width) || (bounds.y + bounds.height < 0) || (bounds.y > canvas.height));
+            },
+
+            windowToWorld: function (windowVector, withOffset, vector) {
+                var worldVector = vector || Vector.setUp();
+                
+                worldVector.x = windowVector.x * this.worldPerWindowUnitWidth;
+                worldVector.y = windowVector.y * this.worldPerWindowUnitHeight;
+                
+                if (withOffset !== false) {
+                    worldVector.x -= this.viewport.x * this.worldPerWindowUnitWidth;
+                    worldVector.y -= this.viewport.y * this.worldPerWindowUnitHeight;
+                }
+
+                return worldVector;
+            },
+            
+            worldToWindow: function (worldVector, withOffset, vector) {
+                var windowVector = vector || Vector.setUp();
+
+                windowVector.x = worldVector.x * this.windowPerWorldUnitWidth;
+                windowVector.y = worldVector.y * this.windowPerWorldUnitHeight;
+                
+                if (withOffset !== false) {
+                    windowVector.x += this.viewport.x;
+                    windowVector.y += this.viewport.y;
+                }
+
+                return windowVector;
             }
         }
     });
