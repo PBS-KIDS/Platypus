@@ -35,6 +35,15 @@
             attachment: '',
 
             /**
+             * Whether the attachment starts out attached.
+             *
+             * @property startAttached
+             * @type Boolean
+             * @default false
+             */
+            startAttached: false,
+
+            /**
              * The offset of the attached entity in x from the attachee.
              *
              * @property offsetX
@@ -72,7 +81,7 @@
                 linkId += 1;
             }
 
-            this.state.set(this.attachState, false);
+            this.state.set(this.attachState, this.startAttached);
             this.attachmentPosition = {
                 x: 0,
                 y: 0,
@@ -87,7 +96,7 @@
             };
 
             this.attachment = null;
-            this.isAttached = false;
+            this.isAttached = this.startAttached;
         },
 
         events: {// These are messages that this component listens for
@@ -162,6 +171,24 @@
              */
             "detach": function () {
                 this.isAttached = false;
+            },
+            /**
+             * Changes the x, y, and z offset of the attachment.
+             *
+             * @method 'change-attachment-offset'
+             * @param offset {Object} An object containing the offset values.
+             * @param input.x {Number} The new X offset.
+             * @param input.y {Number} The new Y offset.
+             * @param input.y {Number} The new Z offset.
+             */
+            "change-attachment-offset": function (offset) {
+                if (typeof offset.x !== 'undefined') {
+                    this.offsetX = offset.x;
+                } else if (typeof offset.y !== 'undefined') {
+                    this.offsetY = offset.y;
+                } else if (typeof offset.z !== 'undefined') {
+                    this.offsetZ = offset.z;
+                }
             }
         },
 
