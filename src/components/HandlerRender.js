@@ -11,8 +11,7 @@
     
     var Container = include('PIXI.Container'),
         Data = include('platypus.Data'),
-        Interactive = include('platypus.components.Interactive'),
-        Vector = include('platypus.Vector');
+        Interactive = include('platypus.components.Interactive');
 
     return platypus.createComponentClass({
 
@@ -50,10 +49,14 @@
             acceptInput: null
         },
 
+        publicProperties: {
+            worldContainer: null
+        },
+
         initialize: function () {
             var definition = null;
 
-            this.container = new Container();
+            this.worldContainer = this.worldContainer || new Container();
 
             // The following appends necessary information to displayed objects to allow them to receive touches and clicks
             if (this.acceptInput) {
@@ -63,7 +66,7 @@
 
             if (this.interactive) {
                 definition = Data.setUp(
-                    'container', this.container,
+                    'container', this.worldContainer,
                     'hitArea', this.interactive.hitArea,
                     'hover', this.interactive.hover,
                     'relativeToSelf', true
@@ -74,7 +77,7 @@
 
             this.renderMessage = Data.setUp(
                 'delta', 0,
-                'container', this.container
+                'container', this.worldContainer
             );
         },
 
@@ -93,7 +96,7 @@
                  * @param data.world {PIXI.Container} Contains entities to be rendered.
                  */
                 this.owner.triggerEvent('render-world', {
-                    world: this.container
+                    world: this.worldContainer
                 });
 
                 /**
@@ -176,7 +179,8 @@
                 };
 
                 return function (tick) {
-                    var message = this.renderMessage;
+                    var message = this.renderMessage,
+                        worldContainer = this.worldContainer;
 
                     message.delta = tick.delta;
 
@@ -199,16 +203,16 @@
                         this.owner.triggerEventOnChildren('handle-render', message);
                     }
 
-                    if (this.container && this.container.reorder) {
-                        this.container.reorder = false;
-                        this.container.children.sort(sort);
+                    if (worldContainer && worldContainer.reorder) {
+                        worldContainer.reorder = false;
+                        worldContainer.children.sort(sort);
                     }
                 };
             }())
         },
         methods: {
             destroy: function () {
-                this.container = null;
+                this.worldContainer = null;
                 this.renderMessage.recycle();
             }
         }
