@@ -102,8 +102,7 @@ platypus.Entity = (function () {
                 savedEvents.push(event);
                 savedMessages.push(message);
 
-                // This notifies the sender whether this message has a recipient
-                return (this.getMessageIds().indexOf(event) >= 0) ? 1 : 0;
+                return -1; // Message has not been delivered yet.
             };
             
             if (componentDefinitions) {
