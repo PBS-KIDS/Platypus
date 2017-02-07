@@ -101,6 +101,9 @@ platypus.Entity = (function () {
             this.trigger = this.triggerEvent = function (event, message) {
                 savedEvents.push(event);
                 savedMessages.push(message);
+
+                // This notifies the sender whether this message has a recipient
+                return (this.getMessageIds().indexOf(event) >= 0) ? 1 : 0;
             };
             
             if (componentDefinitions) {
