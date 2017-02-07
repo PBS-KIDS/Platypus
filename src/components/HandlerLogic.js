@@ -261,6 +261,8 @@
                     }
                     
                     if (!this.paused) {
+                        this.inLogicLoop = true;
+                        
                         /**
                          * This event is triggered on the top-level layer to signify a "handle-logic" event is about to be triggered on children. This is unique from the layer's "tick" event in that it occurs the same number of times as the "handle-logic" event and will not occur if HandlerLogic is paused.
                          *
@@ -276,7 +278,6 @@
                             this.owner.triggerEventOnChildren('handle-ai', msg);
                         }
 
-                        this.inLogicLoop = true;
                         i = actives.length;
                         while (i--) {
                             entity = actives[i];
