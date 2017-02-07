@@ -76,7 +76,7 @@ platypus.Entity = (function () {
             this.id = instance.id || instanceProperties.id;
             if (this.id) { // check to make sure auto-ids don't overlap.
                 if (this.id.search(this.type + '-') === 0) {
-                    i = this.id.substring(this.id.search('-') + 1);
+                    i = parseInt(this.id.substring(this.id.search('-') + 1), 10);
                     if (!isNaN(i) && (!entityIds[this.type] || (entityIds[this.type] <= i))) {
                         entityIds[this.type] = i + 1;
                     }
