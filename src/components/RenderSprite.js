@@ -265,6 +265,16 @@
             dragMode: false,
 
             /**
+             * Prevents sprite from becoming invisible out of frame and losing mouse input connection.
+             *
+             * @property dragMode
+             * @type Boolean
+             * @default false
+             * @since 0.8.3
+             */
+            tint: 0xFFFFFF,
+
+            /**
              * Optional. The X scaling factor for the image. Defaults to 1.
              *
              * @property scaleX
@@ -646,6 +656,10 @@
 
                     if (!this.ignoreOpacity && (this.owner.opacity || (this.owner.opacity === 0))) {
                         this.sprite.alpha = this.owner.opacity;
+                    }
+
+                    if (this.owner.tint !== this.sprite.tint) {
+                        this.sprite.tint = this.owner.tint;
                     }
                     
                     if (this.sprite.reorder) {
