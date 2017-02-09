@@ -327,6 +327,17 @@
             rotation: 0
         },
 
+        publicProperties: {
+            /**
+             * Optional. The tint applied to the sprite. Defaults to 0xFFFFFF which applies no tint.
+             *
+             * @property tint
+             * @type Number
+             * @default 0xFFFFFF
+             */
+            tint: 0xFFFFFF
+        },
+
         initialize: (function () {
             var
                 createAnimationMap = function (animationMap, ss) {
@@ -462,6 +473,10 @@
                      * @param playing {Boolean} Whether the animation is in a playing or paused state.
                      */
                     this.owner.triggerEvent('update-animation', true);
+
+                    if (this.owner.tint !== this.sprite.tint) {
+                        this.sprite.tint = this.owner.tint;
+                    }
 
                     this.sprite.update(renderData.delta);
                 }
