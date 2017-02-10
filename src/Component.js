@@ -115,6 +115,7 @@ platypus.Component = (function () {
      * @method addEventListener
      * @param event {String} The event that this component should listen for.
      * @param callback {Function} The handler for the event.
+     * @return handler {Function} A reference to the bound handler.
      * @private
      */
     proto.addEventListener = function (event, callback, priority) {
@@ -123,6 +124,8 @@ platypus.Component = (function () {
         this.listener.events.push(event);
         this.listener.messages.push(handler);
         this.owner.on(event, handler, priority);
+
+        return handler;
     };
     
     /**
