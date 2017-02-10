@@ -4,12 +4,14 @@
  * @namespace platypus.components
  * @class RenderSprite
  * @uses platypus.Component
+ * @since 0.10.7
  */
 /* global include, platypus */
 (function () {
     'use strict';
     
     var AABB = include('platypus.AABB'),
+        ColorMatrixFilter = include('PIXI.filters.ColorMatrixFilter'),
         Container = include('PIXI.Container'),
         Data = include('platypus.Data'),
         Graphics = include('PIXI.Graphics'),
@@ -158,6 +160,15 @@
             dragMode: false,
 
             /**
+             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
+             *
+             * @property rotation
+             * @type Number
+             * @default 1
+             */
+            rotation: 0,
+
+            /**
              * Optional. The X scaling factor for the image. Defaults to 1.
              *
              * @property scaleX
@@ -194,13 +205,13 @@
             skewY: 0,
 
             /**
-             * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.
+             * Optional. The tint applied to the sprite. Defaults to no tint.
              *
-             * @property rotation
+             * @property tint
              * @type Number
-             * @default 1
+             * @default null
              */
-            rotation: 0,
+            tint: null,
 
             /**
              * Optional. The x position of the entity. Defaults to 0.
@@ -240,6 +251,26 @@
             this.lastY = this.owner.y;
             this.camera = AABB.setUp();
             this.isOnCamera = true;
+
+            this._tint = null;
+            Object.defineProperty(this.owner, 'tint', {
+                get: function () {
+                    return this._tint;
+                }.bind(this),
+                set: function (value) {
+                    var filters = this.container.filters,
+                        matrix = null;
+
+                    if (!filters) {
+                        filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
+                    }
+                    matrix = filters[0].matrix;
+                    matrix[0] = (value & 0xff0000) / 0xff0000; // Red
+                    matrix[6] = (value & 0xff00) / 0xff00; // Green
+                    matrix[12] = (value & 0xff) / 0xff; // Blue
+                    this._tint = value;
+                }.bind(this)
+            });
 
             if (this.interactive) {
                 definition = Data.setUp(
