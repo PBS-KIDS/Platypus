@@ -515,6 +515,7 @@
                 }
             }
             
+            this.active = true;
             this.stuck = false;
         },
         
@@ -536,7 +537,7 @@
                  * @event 'add-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if ((typeof type !== 'string') || (type === colType)) {
+                if (!this.active && ((typeof type !== 'string') || (type === colType))) {
                     if (colTypes.indexOf(colType) === -1) {
                         colTypes.push(colType);
                     }
@@ -564,7 +565,7 @@
                  * @event 'remove-collision-entity'
                  * @param entity {platypus.Entity} The entity this component is attached to.
                  */
-                if ((typeof type !== 'string') || (type === colType)) {
+                if (this.active && ((typeof type !== 'string') || (type === colType))) {
                     parent.triggerEvent('remove-collision-entity', owner);
                     index = colTypes.indexOf(colType);
                     if (index >= 0) {

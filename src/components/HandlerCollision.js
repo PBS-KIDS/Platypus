@@ -22,12 +22,19 @@
      * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
      * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
      */
-    var AABB = include('platypus.AABB'),
+    var BIT_16 = 0xffff,
+        AABB = include('platypus.AABB'),
         CollisionData = include('platypus.CollisionData'),
         CollisionDataContainer = include('platypus.CollisionDataContainer'),
         Data = include('platypus.Data'),
         DataMap = include('platypus.DataMap'),
         Vector = include('platypus.Vector'),
+        combine = function (x, y) {
+            return (x << 16) | (y & BIT_16);
+        },
+        getBucketId = function (x, y, bits) {
+            return combine(x >> bits, y >> bits);
+        },
         triggerMessage = {
             entity: null,
             type: null,
@@ -165,7 +172,7 @@
 
                 for (x = aabb.left; x <= aabb.right; x++) {
                     for (y = aabb.top; y <= aabb.bottom; y++) {
-                        list = thisAgainstGrid[((y << 16) ^ x) >>> 0];
+                        list = thisAgainstGrid[combine(x, y)];
                         if (list) {
                             i = types.length;
                             while (i--) {
@@ -263,7 +270,7 @@
 
                     for (x = aabb.left; x <= aabb.right; x++) {
                         for (y = aabb.top; y <= aabb.bottom; y++) {
-                            id = ((y << 16) ^ x) >>> 0;
+                            id = combine(x, y);
                             list = thisAgainstGrid[id];
                             if (!list) {
                                 list = thisAgainstGrid[id] = DataMap.setUp();
@@ -1048,7 +1055,7 @@
             
             checkPointForCollisions: function (x, y, collisions, callback) {
                 var gb = this.gridBits,
-                    againstGrid = this.againstGrid[(((y >> gb) << 16) ^ (x >> gb)) >>> 0],
+                    againstGrid = this.againstGrid[getBucketId(x, y, gb)],
                     otherEntity = null,
                     message = triggerMessage,
                     j   = 0,
