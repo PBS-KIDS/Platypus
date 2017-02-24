@@ -372,6 +372,19 @@ platypus.AABB = (function () {
     };
 
     /**
+     * Expresses whether this AABB collides with the given point. This is an exclusive version of containsPoint.
+     *
+     * @method collidesPoint
+     * @param x {number} The x-axis value.
+     * @param y {number} The y-axis value.
+     * @return {boolean} Returns `true` if this AABB collides with the point.
+     * @since 0.10.7
+     */
+    proto.collidesPoint = function (x, y) {
+        return (y > this.top) && (y < this.bottom) && (x > this.left) && (x < this.right);
+    };
+    
+    /**
      * Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping only, not touching edges.
      *
      * @method intersects
