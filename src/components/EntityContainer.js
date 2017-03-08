@@ -317,10 +317,6 @@
                             entities = this.entities,
                             i = entities.length;
 
-                        if (callback) {
-                            callback();
-                        }
-
                         entity.parent = owner;
                         entity.triggerEvent('adopted', entity);
                         
@@ -334,6 +330,10 @@
                         this.addChildEventListeners(entity);
                         entities.push(entity);
                         owner.triggerEvent('child-entity-added', entity);
+
+                        if (callback) {
+                            callback();
+                        }
                     };
 
                 return function (newEntity, callback) {
