@@ -41,7 +41,7 @@
  * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
  * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
  * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as `entity.key = value`.
- * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
+ * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
  * @return {Entity} Returns the new entity made up of the provided components.
 **/
 
@@ -135,7 +135,7 @@ platypus.Entity = (function () {
                 this.triggerEvent('load');
 
                 if (callback) {
-                    callback();
+                    callback(this);
                 }
             }.bind(this));
             

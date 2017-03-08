@@ -310,41 +310,53 @@
              * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
              * @return {platypus.Entity} The entity that was just added.
              */
-            addEntity: function (newEntity, callback) {
-                var entity = null,
-                    x = 0;
-                
-                if (newEntity instanceof Entity) {
-                    entity = newEntity;
-                    if (callback) {
-                        callback();
-                    }
-                } else {
-                    if (typeof newEntity === 'string') {
-                        entity = new Entity(platypus.game.settings.entities[newEntity], null, callback);
-                    } else if (newEntity.id) {
-                        entity = new Entity(newEntity, null, callback);
-                    } else {
-                        entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, callback);
-                    }
-                    this.owner.triggerEvent('entity-created', entity);
-                }
-                
-                entity.parent = this.owner;
-                entity.triggerEvent('adopted', entity);
-                
-                for (x = 0; x < this.entities.length; x++) {
-                    if (!entity.triggerEvent('peer-entity-added', this.entities[x])) {
-                        break;
-                    }
-                }
-                this.triggerEventOnChildren('peer-entity-added', entity);
+            addEntity: (function () {
+                var
+                    whenReady = function (callback, entity) {
+                        var owner = this.owner,
+                            entities = this.entities,
+                            i = entities.length;
 
-                this.addChildEventListeners(entity);
-                this.entities.push(entity);
-                this.owner.triggerEvent('child-entity-added', entity);
-                return entity;
-            },
+                        if (callback) {
+                            callback();
+                        }
+
+                        entity.parent = owner;
+                        entity.triggerEvent('adopted', entity);
+                        
+                        while (i--) {
+                            if (!entity.triggerEvent('peer-entity-added', entities[i])) {
+                                break;
+                            }
+                        }
+                        this.triggerEventOnChildren('peer-entity-added', entity);
+
+                        this.addChildEventListeners(entity);
+                        entities.push(entity);
+                        owner.triggerEvent('child-entity-added', entity);
+                    };
+
+                return function (newEntity, callback) {
+                    var entity = null;
+                    
+                    if (newEntity instanceof Entity) {
+                        entity = newEntity;
+                        if (callback) {
+                            callback();
+                        }
+                    } else {
+                        if (typeof newEntity === 'string') {
+                            entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback));
+                        } else if (newEntity.id) {
+                            entity = new Entity(newEntity, null, whenReady.bind(this, callback));
+                        } else {
+                            entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback));
+                        }
+                        this.owner.triggerEvent('entity-created', entity);
+                    }
+                    return entity;
+                };
+            }()),
             
             removeEntity: function (entity) {
                 var i = this.entities.indexOf(entity);
