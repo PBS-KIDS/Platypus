@@ -332,7 +332,7 @@
                         owner.triggerEvent('child-entity-added', entity);
 
                         if (callback) {
-                            callback();
+                            callback(entity);
                         }
                     };
 
@@ -342,7 +342,7 @@
                     if (newEntity instanceof Entity) {
                         entity = newEntity;
                         if (callback) {
-                            callback();
+                            callback(entity);
                         }
                     } else {
                         if (typeof newEntity === 'string') {
