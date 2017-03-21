@@ -295,7 +295,7 @@
             addCollisionEntity: function (entity) {
                 if (entity.getTileShapes) { // Has a CollisionTiles component
                     this.terrain = entity;
-                } else if (entity.collisionTypes) {
+                } else if (entity.collisionTypes && !entity.againstGrid) {
                     entity.againstGrid = Array.setUp();
                     entity.againstAABB = AABB.setUp();
                     this.updateAgainst(entity);
