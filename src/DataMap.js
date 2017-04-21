@@ -143,7 +143,7 @@ platypus.DataMap = (function () {
                  *
                  * @method toJSON
                  * @return {Object} Returns a JSON definition that can be used to recreate the component.
-                 * @since v0.10.7
+                 * @since 0.11.0
                  **/
                 mm.toJSON.value = mapToJSON.bind(map, keys);
                 

@@ -378,7 +378,7 @@ platypus.AABB = (function () {
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this AABB collides with the point.
-     * @since 0.10.7
+     * @since 0.11.0
      */
     proto.collidesPoint = function (x, y) {
         return (y > this.top) && (y < this.bottom) && (x > this.left) && (x < this.right);

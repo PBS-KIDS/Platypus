@@ -1,8 +1,6 @@
 /**
  * Provides button functionality for a RenderSprite component.
  *
- * Formerly known as "LogicCanvasButton" which has been deprecated since 0.9.1
- *
  * @namespace platypus.components
  * @class LogicButton
  * @uses platypus.Component
@@ -140,7 +138,6 @@
                 
                 this.state = state;
                 state.set('disabled', this.disabled);
-                state.set('down', this.pressed); // deprecate post 0.9 in favor of "pressed".
                 state.set('released', !this.pressed);
                 state.set('pressed', this.pressed);
                 state.set('highlighted', false);
@@ -381,12 +378,10 @@
                     
                     if (released && (event === 'pressed')) {
                         state.set('pressed', true);
-                        state.set('down', false);
                         state.set('released', false);
                         toggled = true;
                     } else if (pressed && ((event === 'released') || (event === 'cancelled'))) {
                         state.set('pressed', false);
-                        state.set('down', false);
                         state.set('released', true);
                         toggled = true;
                     }

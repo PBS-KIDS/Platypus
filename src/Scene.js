@@ -79,7 +79,7 @@ platypus.Scene = (function () {
             if (match) {
                 a.id = match[1];
             } else {
-                platypus.debug.warn('Scene: A listed asset should provide the entire file path since version 0.9.0.');
+                platypus.debug.warn('Scene: A listed asset should provide the entire file path.');
             }
             
             return a;

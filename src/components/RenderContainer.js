@@ -4,7 +4,7 @@
  * @namespace platypus.components
  * @class RenderSprite
  * @uses platypus.Component
- * @since 0.10.7
+ * @since 0.11.0
  */
 /* global include, platypus */
 (function () {
