@@ -19,7 +19,7 @@
         CanvasRenderer    = include('PIXI.CanvasRenderer'),
         Container         = include('PIXI.Container'),
         Graphics          = include('PIXI.Graphics'),
-        ParticleContainer = include('PIXI.ParticleContainer'),
+        ParticleContainer = include('PIXI.particles.ParticleContainer'),
         Rectangle         = include('PIXI.Rectangle'),
         RenderTexture     = include('PIXI.RenderTexture'),
         Sprite            = include('PIXI.Sprite'),
