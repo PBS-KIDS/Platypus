@@ -50,6 +50,15 @@
         },
 
         publicProperties: {
+
+            /**
+             * This is the container holding all children's disply objects for this layer. It's an available proeprty on the layer entity.
+             *
+             * @property worldContainer
+             * @type PIXI.Container
+             * @default null
+             * @since 0.10.7
+             */
             worldContainer: null
         },
 
