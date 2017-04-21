@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : platypus.StateMap</title>
+	<title>platypus v0.11.0 API Documentation : platypus.StateMap</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -276,6 +277,10 @@
                                                         <a href="#method_StateMap.setUp">StateMap.setUp</a>
                         
                                                     </li>
+                                                    <li class="index-item method inherited">
+                                                        <a href="#method_toJSON">toJSON</a>
+                        
+                                                    </li>
                                                     <li class="index-item method">
                                                         <a href="#method_update">update</a>
                         
@@ -319,7 +324,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_clear">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l121"><code>clear:121</code></a>
+                                                    <a href="../files/DataMap.js.html#l134"><code>clear:134</code></a>
                                                     </p>
                                             
                                             
@@ -355,7 +360,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_DataMap.recycle">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l164"><code>DataMap.recycle:164</code></a>
+                                                    <a href="../files/DataMap.js.html#l186"><code>DataMap.recycle:186</code></a>
                                                     </p>
                                             
                                             
@@ -405,7 +410,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_DataMap.setUp">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l158"><code>DataMap.setUp:158</code></a>
+                                                    <a href="../files/DataMap.js.html#l180"><code>DataMap.setUp:180</code></a>
                                                     </p>
                                             
                                             
@@ -453,7 +458,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_delete">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l112"><code>delete:112</code></a>
+                                                    <a href="../files/DataMap.js.html#l125"><code>delete:125</code></a>
                                                     </p>
                                             
                                             
@@ -518,7 +523,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_get">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l84"><code>get:84</code></a>
+                                                    <a href="../files/DataMap.js.html#l97"><code>get:97</code></a>
                                                     </p>
                                             
                                             
@@ -583,7 +588,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_has">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l93"><code>has:93</code></a>
+                                                    <a href="../files/DataMap.js.html#l106"><code>has:106</code></a>
                                                     </p>
                                             
                                             
@@ -814,7 +819,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#method_set">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l102"><code>set:102</code></a>
+                                                    <a href="../files/DataMap.js.html#l115"><code>set:115</code></a>
                                                     </p>
                                             
                                             
@@ -961,6 +966,49 @@
                                                     </div>
                                             
                                             </div>
+                                            <div id="method_toJSON" class="method item inherited">
+                                                <h3 class="name"><code>toJSON</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>Inherited from
+                                                            <a href="../classes/platypus.DataMap.html#method_toJSON">platypus.DataMap</a>:
+                                                    <a href="../files/DataMap.js.html#l141"><code>toJSON:141</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns a JSON object describing the component.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                                                <p>Returns a JSON definition that can be used to recreate the component.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
                                             <div id="method_update" class="method item">
                                                 <h3 class="name"><code>update</code></h3>
                                             
@@ -1101,7 +1149,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.DataMap.html#property_keys">platypus.DataMap</a>:
-                                                    <a href="../files/DataMap.js.html#l75"><code>keys:75</code></a>
+                                                    <a href="../files/DataMap.js.html#l88"><code>keys:88</code></a>
                                                     </p>
                                             
                                             

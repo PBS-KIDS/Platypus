@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.0 API Documentation : components\RenderAnimation.js</title>
+	<title>platypus v0.11.0 API Documentation : components\RenderContainer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -146,44 +146,30 @@
                 <div id="docs-main">
                     <div class="content">
                         <script>
-                        	var name = components\RenderAnimation.js      
+                        	var name = components\RenderContainer.js      
                         </script>
-                        <h1 class="file-heading">File:components\RenderAnimation.js</h1>
+                        <h1 class="file-heading">File:components\RenderContainer.js</h1>
                         
                         <div class="file">
                             <pre class="code prettyprint linenums">
                         /**
-                         * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
-                         *
-                         * Note: This component requires assets published using [PixiAnimate](https://github.com/jiborobot/pixi-animate).
+                         * This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity&#x27;s location and other dynamic properties.
                          *
                          * @namespace platypus.components
-                         * @class RenderAnimation
+                         * @class RenderContainer
                          * @uses platypus.Component
-                         * @since 0.10.0
+                         * @since 0.11.0
                          */
-                        /* global include, PIXI, platypus */
+                        /* global include, platypus */
                         (function () {
-                            &quot;use strict&quot;;
-                        
+                            &#x27;use strict&#x27;;
+                            
                             var AABB = include(&#x27;platypus.AABB&#x27;),
-                                Animator = include(&#x27;PIXI.animate.Animator&#x27;, false),
+                                ColorMatrixFilter = include(&#x27;PIXI.filters.ColorMatrixFilter&#x27;),
+                                Container = include(&#x27;PIXI.Container&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
-                                EventRender = include(&#x27;platypus.components.EventRender&#x27;),
                                 Graphics = include(&#x27;PIXI.Graphics&#x27;),
                                 Interactive = include(&#x27;platypus.components.Interactive&#x27;),
-                                StateRender = include(&#x27;platypus.components.StateRender&#x27;),
-                                animationEnded = function (animation) {
-                                    this.playAnimation(animation);
-                        
-                                    /**
-                                     * This event fires each time an animation completes.
-                                     *
-                                     * @event &#x27;animation-ended&#x27;
-                                     * @param animation {String} The id of the animation that ended.
-                                     */
-                                    this.owner.triggerEvent(&#x27;animation-ended&#x27;, animation, this.instance);
-                                },
                                 processGraphics = (function () {
                                     var process = function (gfx, value) {
                                         var i = 0,
@@ -217,45 +203,10 @@
                                 }());
                             
                             return platypus.createComponentClass({
-                                id: &quot;RenderAnimation&quot;,
+                                
+                                id: &#x27;RenderContainer&#x27;,
+                                
                                 properties: {
-                                    /**
-                                     * This sets the PixiAnimate animation to play. This is typically of the form &quot;library.asset&quot; as defined by the PixiAnimate publish settings.
-                                     *
-                                     * @property animation
-                                     * @type String
-                                     * @default &quot;&quot;
-                                     */
-                                    animation: &#x27;&#x27;,
-                        
-                                    /**
-                                     * Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.
-                                     *
-                                     *     &quot;animationMap&quot;:{
-                                     *         &quot;standing&quot;: &quot;default-animation&quot;  // On receiving a &quot;standing&quot; event, or when this.owner.state.standing === true, the &quot;default&quot; animation will begin playing.
-                                     *         &quot;ground,moving&quot;: &quot;walking&quot;,  // Comma separated values have a special meaning when evaluating &quot;state-changed&quot; messages. The above example will cause the &quot;walking&quot; animation to play ONLY if the entity&#x27;s state includes both &quot;moving&quot; and &quot;ground&quot; equal to true.
-                                     *         &quot;ground,striking&quot;: &quot;swing!&quot;, // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.
-                                     *         &quot;default&quot;: &quot;default-animation&quot; // Optional. &quot;default&quot; is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.
-                                     *     }
-                                     *
-                                     * This data is used to create EventRender or StateRender components on the entity if the &#x60;eventBased&#x60; or &#x60;stateBased&#x60; properties are set to &#x60;true&#x60;.
-                                     *
-                                     * @property animationMap
-                                     * @type Object
-                                     * @default null
-                                     */
-                                    animationMap: null,
-                        
-                                    /**
-                                     * The framerate at which the animation should play.
-                                     *
-                                     * @property framerate
-                                     * @type Number
-                                     * @default 24
-                                     * @since 0.10.2
-                                     */
-                                    framerate: 24,
-                        
                                     /**
                                      * Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: &quot;mask&quot;: &quot;r(10,20,40,40).dc(30,10,12)&quot;. Defaults to no mask or, if simply set to true, a rectangle using the entity&#x27;s dimensions.
                                      *
@@ -297,6 +248,33 @@
                                     interactive: false,
                         
                                     /**
+                                     * Optional. Whether this object can be rotated. It&#x27;s rotational angle is set by setting the this.owner.rotation value on the entity.
+                                     *
+                                     * @property rotate
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    rotate: false,
+                        
+                                    /**
+                                     * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.
+                                     *
+                                     * @property mirror
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    mirror: false,
+                        
+                                    /**
+                                     * Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be &gt; 180.
+                                     *
+                                     * @property flip
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    flip: false,
+                        
+                                    /**
                                      * Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.
                                      *
                                      * @property visible
@@ -306,53 +284,46 @@
                                     visible: true,
                         
                                     /**
-                                     * Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is &#x60;false&#x60;.
+                                     * Optional. Whether this sprite should be cached into an entity with a &#x60;RenderTiles&#x60; component (like &quot;render-layer&quot;). The &#x60;RenderTiles&#x60; component must have its &quot;entityCache&quot; property set to &#x60;true&#x60;. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.
                                      *
-                                     * @property eventBased
+                                     * @property cache
                                      * @type Boolean
                                      * @default false
                                      */
-                                    eventBased: false,
+                                    cache: false,
                         
                                     /**
-                                     * Optional. Specifies whether this component should create a StateRender component to handle changes in the entity&#x27;s state that match the animationMap to animate. Set this to true if the component should animate based on &#x60;this.owner.state&#x60;. Default is &#x60;true&#x60;.
+                                     * Optional. Ignores the opacity of the owner.
                                      *
-                                     * @property stateBased
+                                     * @property ignoreOpacity
                                      * @type Boolean
-                                     * @default true
+                                     * @default false
                                      */
-                                    stateBased: true,
-                        
-                                    /**
-                                     * Determines the x origin of the animation.
-                                     *
-                                     * @property regX
-                                     * @type Number
-                                     * @default 0
-                                     */
-                                    regX: 0,
-                                    
-                                    /**
-                                     * Determines the y origin of the animation.
-                                     *
-                                     * @property regY
-                                     * @type Number
-                                     * @default 0
-                                     */
-                                    regY: 0,
-                        
-                                    /**
-                                     * The offset of the z-index of the sprite from the entity&#x27;s z-index.
-                                     *
-                                     * @property offsetZ
-                                     * @type Number
-                                     * @default 0
-                                     */
-                                    offsetZ: 0
+                                    ignoreOpacity: false
                                 },
+                        
                                 publicProperties: {
                                     /**
-                                     * The X scaling factor for the image.
+                                     * Prevents sprite from becoming invisible out of frame and losing mouse input connection.
+                                     *
+                                     * @property dragMode
+                                     * @type Boolean
+                                     * @default false
+                                     * @since 0.8.3
+                                     */
+                                    dragMode: false,
+                        
+                                    /**
+                                     * Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting &#x27;rotate&#x27; to false.
+                                     *
+                                     * @property rotation
+                                     * @type Number
+                                     * @default 1
+                                     */
+                                    rotation: 0,
+                        
+                                    /**
+                                     * Optional. The X scaling factor for the image. Defaults to 1.
                                      *
                                      * @property scaleX
                                      * @type Number
@@ -361,7 +332,7 @@
                                     scaleX: 1,
                         
                                     /**
-                                     * The Y scaling factor for the image.
+                                     * Optional. The Y scaling factor for the image. Defaults to 1.
                                      *
                                      * @property scaleY
                                      * @type Number
@@ -370,7 +341,34 @@
                                     scaleY: 1,
                         
                                     /**
-                                     * The x position of the entity.
+                                     * Optional. The X skew factor of the sprite. Defaults to 0.
+                                     *
+                                     * @property skewX
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    skewX: 0,
+                        
+                                    /**
+                                     * Optional. The Y skew factor for the image. Defaults to 0.
+                                     *
+                                     * @property skewY
+                                     * @type Number
+                                     * @default 0
+                                     */
+                                    skewY: 0,
+                        
+                                    /**
+                                     * Optional. The tint applied to the sprite. Defaults to no tint.
+                                     *
+                                     * @property tint
+                                     * @type Number
+                                     * @default null
+                                     */
+                                    tint: null,
+                        
+                                    /**
+                                     * Optional. The x position of the entity. Defaults to 0.
                                      *
                                      * @property x
                                      * @type Number
@@ -379,7 +377,7 @@
                                     x: 0,
                                     
                                     /**
-                                     * The y position of the entity.
+                                     * Optional. The y position of the entity. Defaults to 0.
                                      *
                                      * @property y
                                      * @type Number
@@ -388,7 +386,7 @@
                                     y: 0,
                                     
                                     /**
-                                     * The z position of the entity.
+                                     * Optional. The z position of the entity. Defaults to 0.
                                      *
                                      * @property z
                                      * @type Number
@@ -396,115 +394,77 @@
                                      */
                                     z: 0
                                 },
-                                initialize: (function () {
-                                    var createAnimationMap = function (animationMap, labels, totalFrames, endings) {
-                                            var lastAnim = totalFrames - 1,
-                                                map  = null,
-                                                i = labels.length;
-                                            
-                                            endings[0] = lastAnim;
-                                            while (i--) {
-                                                endings[labels[i].label] = lastAnim;
-                                                lastAnim = labels[i].label;
+                                
+                                initialize: function () {
+                                    var container = this.container = this.owner.container = new Container(),
+                                        definition = null;
+                        
+                                    this.parentContainer = null;
+                                    this.wasVisible = this.visible;
+                                    this.lastX = this.owner.x;
+                                    this.lastY = this.owner.y;
+                                    this.camera = AABB.setUp();
+                                    this.isOnCamera = true;
+                        
+                                    this._tint = null;
+                                    Object.defineProperty(this.owner, &#x27;tint&#x27;, {
+                                        get: function () {
+                                            return this._tint;
+                                        }.bind(this),
+                                        set: function (value) {
+                                            var filters = this.container.filters,
+                                                matrix = null;
+                        
+                                            if (!filters) {
+                                                filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
                                             }
+                                            matrix = filters[0].matrix;
+                                            matrix[0] = (value &amp; 0xff0000) / 0xff0000; // Red
+                                            matrix[6] = (value &amp; 0xff00) / 0xff00; // Green
+                                            matrix[12] = (value &amp; 0xff) / 0xff; // Blue
+                                            this._tint = value;
+                                        }.bind(this)
+                                    });
                         
-                                            if (animationMap) {
-                                                return animationMap;
-                                            } else if (Array.isArray(labels) &amp;&amp; (labels.length === 1)) {
-                                                // This is a single animation, so no mapping is necessary
-                                                return null;
-                                            } else {
-                                                // Create 1-to-1 animation map since none was defined
-                                                map = {};
-                                                i = labels.length;
-                                                while (i--) {
-                                                    map[labels[i].label] = labels[i].label;
-                                                }
-                                                return map;
-                                            }
-                                        },
-                                        onceLoaded = function (callback, instance) {
-                                            var definition = null,
-                                                map = createAnimationMap(this.animationMap, instance.labels, instance.totalFrames, this.endings);
+                                    if (this.interactive) {
+                                        definition = Data.setUp(
+                                            &#x27;container&#x27;, container,
+                                            &#x27;hitArea&#x27;, this.interactive.hitArea,
+                                            &#x27;hover&#x27;, this.interactive.hover
+                                        );
+                                        this.owner.addComponent(new Interactive(this.owner, definition));
+                                        definition.recycle();
+                                    }
                         
-                                            this.instance = instance;
-                                            instance.framerate = this.framerate;
-                        
-                                            this.stateBased = map &amp;&amp; this.stateBased;
-                                            this.eventBased = map &amp;&amp; this.eventBased;
-                                            if (map) {
-                                                if (this.eventBased) {
-                                                    definition = Data.setUp(
-                                                        &#x27;animationMap&#x27;, map,
-                                                        &#x27;restart&#x27;, this.restart,
-                                                        &#x27;component&#x27;, this
-                                                    );
-                                                    this.owner.addComponent(new EventRender(this.owner, definition));
-                                                    definition.recycle();
-                                                }
-                        
-                                                if (this.stateBased) {
-                                                    definition = Data.setUp(
-                                                        &#x27;animationMap&#x27;, map,
-                                                        &#x27;forcePlayThrough&#x27;, this.forcePlayThrough,
-                                                        &#x27;component&#x27;, this
-                                                    );
-                                                    this.owner.addComponent(new StateRender(this.owner, definition));
-                                                    definition.recycle();
-                                                }
-                                            }
-                        
-                                            if (this.parentContainer) {
-                                                this.parentContainer.addChild(this.instance);
-                                                this.ready = true;
-                                                //Handle mask
-                                                if (this.mask) {
-                                                    this.setMask(this.mask);
-                                                }
-                                                this.update();
-                                            }
-                        
-                                            if (this.interactive) {
-                                                definition = Data.setUp(
-                                                    &#x27;container&#x27;, instance,
-                                                    &#x27;hitArea&#x27;, this.interactive.hitArea,
-                                                    &#x27;hover&#x27;, this.interactive.hover
-                                                );
-                                                this.owner.addComponent(new Interactive(this.owner, definition, function () {
-                                                    /**
-                                                     * This event is triggered once the RenderSprite is ready to handle interactivity.
-                                                     *
-                                                     * @event &#x27;input-on&#x27;
-                                                     */
-                                                    this.owner.triggerEvent(&#x27;input-on&#x27;);
-                        
-                                                    callback();
-                                                }.bind(this)));
-                                                definition.recycle();
-                                            } else {
-                                                callback();
-                                            }
-                                        };
-                                    
-                                    return function (definition, callback) {
-                                        this.endings = Data.setUp();
-                                        this.instance = null;
-                                        this.ready = false;
-                                        if (this.animation) {
-                                            PIXI.animate.load(include(this.animation), onceLoaded.bind(this, callback));
-                                        }
-                        
-                                        this.parentContainer = null;
-                                        this.wasVisible = this.visible;
-                                        this.lastX = this.owner.x;
-                                        this.lastY = this.owner.y;
-                                        this.camera = AABB.setUp();
-                                        this.isOnCamera = true;
-                        
-                                        return true; // notifies owner that this component is asynchronous.
-                                    };
-                                }()),
+                                    if (this.cache) {
+                                        this.updateSprite(false);
+                                        this.owner.cacheRender = this.container;
+                                    }
+                                },
+                                
                                 events: {
+                                    /**
+                                     * On receiving a &quot;cache&quot; event, this component triggers &quot;cache-sprite&quot; to cache its rendering into the background. This is an optimization for static images to reduce render calls.
+                                     *
+                                     * @method &#x27;cache&#x27;
+                                     */
+                                    &quot;cache&quot;: function () {
+                                        this.updateSprite(false);
+                                        this.owner.cacheRender = this.container;
+                                        this.cache = true;
+                                        if (this.owner.parent &amp;&amp; this.owner.parent.triggerEventOnChildren) {
+                                            /**
+                                             * On receiving a &quot;cache&quot; event, this component triggers &quot;cache-sprite&quot; to cache its rendering into the background. This is an optimization for static images to reduce render calls.
+                                             *
+                                             * @event &#x27;cache-sprite&#x27;
+                                             * @param entity {platypus.Entity} This component&#x27;s owner.
+                                             */
+                                            this.owner.parent.triggerEventOnChildren(&#x27;cache-sprite&#x27;, this.owner);
+                                        } else {
+                                            platypus.debug.warn(&#x27;Unable to cache sprite for &#x27; + this.owner.type);
+                                        }
+                                    },
+                        
                                     /**
                                      * Listens for this event to determine whether this sprite is visible.
                                      *
@@ -515,13 +475,13 @@
                                         this.camera.set(camera.viewport);
                                         
                                         // Set visiblity of sprite if within camera bounds
-                                        if (this.instance) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
+                                        if (this.container) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
                                             this.checkCameraBounds();
                                         }
                                     },
                                     
                                     /**
-                                     * A setup message used to add the animation to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn&#x27;t already have one.
+                                     * A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn&#x27;t already have one.
                                      *
                                      * @method &#x27;handle-render-load&#x27;
                                      * @param handlerData {Object} Data from the render handler
@@ -530,108 +490,147 @@
                                     &quot;handle-render-load&quot;: function (handlerData) {
                                         if (!this.parentContainer &amp;&amp; handlerData &amp;&amp; handlerData.container) {
                                             this.addStage(handlerData.container);
+                                            this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first &quot;render&quot; event.
                                         }
                                     },
                                     
                                     /**
-                                     * The render update message updates the animation.
+                                     * The render update message updates the sprite. If a sprite doesn&#x27;t have a container, it&#x27;s removed.
                                      *
                                      * @method &#x27;handle-render&#x27;
                                      * @param renderData {Object} Data from the render handler
                                      * @param renderData.container {PIXI.Container} The parent container.
                                      */
-                                    &quot;handle-render&quot;: function (renderData) {
-                                        if (!this.ready &amp;&amp; !this.parentContainer) {
-                                            this.addStage(renderData.container);
+                                    &quot;handle-render&quot;: function () {
+                                        if (!this.container) { // If this component&#x27;s removal is pending
+                                            return;
                                         }
-                                        if (this.ready) {
-                                            this.update();
-                                        }
+                        
+                                        this.updateSprite(true);
                                     },
                                     
                                     /**
-                                     * This event makes the animation invisible.
+                                     * This event makes the sprite invisible.
                                      *
-                                     * @method &#x27;hide-animation&#x27;
+                                     * @method &#x27;hide-sprite&#x27;
                                      */
-                                    &quot;hide-animation&quot;: function () {
+                                    &quot;hide-sprite&quot;: function () {
                                         this.visible = false;
                                     },
                         
                                     /**
-                                     * This event makes the animation visible.
+                                     * This event makes the sprite visible.
                                      *
-                                     * @method &#x27;show-animation&#x27;
+                                     * @method &#x27;show-sprite&#x27;
                                      */
-                                    &quot;show-animation&quot;: function () {
+                                    &quot;show-sprite&quot;: function () {
                                         this.visible = true;
                                     },
                                     
                                     /**
-                                     * Defines the mask on the animation. If no mask is specified, the mask is set to null.
+                                     * Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.
                                      *
                                      * @method &#x27;set-mask&#x27;
                                      * @param mask {Object} The mask. This can specified the same way as the &#x27;mask&#x27; parameter on the component.
                                      */
                                     &quot;set-mask&quot;: function (mask) {
                                         this.setMask(mask);
-                                    },
-                                    
-                                    /**
-                                     * Stops the animation.
-                                     *
-                                     * @method &#x27;stop-animation&#x27;
-                                     * @param [animation] {String} The animation to show and pause. If not specified, this method simply pauses the current animation.
-                                     */
-                                    &quot;stop-animation&quot;: function (animation) {
-                                        var instance = this.instance;
-                        
-                                        if (animation &amp;&amp; instance.has(animation)) {
-                                            instance.gotoAndStop(animation);
-                                        } else {
-                                            Animator.stop(instance);
-                                        }
-                                    },
-                                    
-                                    /**
-                                     * Starts the animation.
-                                     *
-                                     * @method &#x27;play-animation&#x27;
-                                     * @param [animation] {String} The animation to play. If not specified, this method simply unpauses the current animation.
-                                     */
-                                    &quot;play-animation&quot;: function (animation, restart) {
-                                        this.playAnimation(animation, restart);
                                     }
                                 },
+                                
                                 methods: {
                                     checkCameraBounds: function () {
-                                        this.isOnCamera = this.owner.parent.isOnCanvas(this.instance.getBounds(false));
+                                        this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
                                     },
                                     
                                     addStage: function (stage) {
                                         if (stage) {
                                             this.parentContainer = stage;
-                                            if (this.instance) {
-                                                this.parentContainer.addChild(this.instance);
-                                                this.ready = true;
-                                                //Handle mask
-                                                if (this.mask) {
-                                                    this.setMask(this.mask);
-                                                }
+                                            this.parentContainer.addChild(this.container);
+                        
+                                            //Handle mask
+                                            if (this.mask) {
+                                                this.setMask(this.mask);
                                             }
-                                            this.playAnimation(0);
+                        
+                                            /**
+                                             * This event is triggered once the RenderSprite is ready to handle interactivity.
+                                             *
+                                             * @event &#x27;input-on&#x27;
+                                             */
+                                            this.owner.triggerEvent(&#x27;input-on&#x27;);
                                             return stage;
                                         } else {
                                             return null;
                                         }
                                     },
                                     
-                                    playAnimation: function (animation) {
-                                        var instance = this.instance;
+                                    updateSprite: (function () {
+                                        var sort = function (a, b) {
+                                            return a.z - b.z;
+                                        };
+                                        
+                                        return function () {
+                                            var x = 0,
+                                                y = 0,
+                                                o = this.owner.orientationMatrix,
+                                                rotation = 0,
+                                                mirrored = 1,
+                                                flipped  = 1,
+                                                angle    = null;
+                                            
+                                            x = this.owner.x;
+                                            y = this.owner.y;
+                                            if (this.rotate) {
+                                                rotation = this.rotation;
+                                            }
+                                            if (this.container.z !== this.owner.z) {
+                                                if (this.parentContainer) {
+                                                    this.parentContainer.reorder = true;
+                                                }
+                                                this.container.z = this.owner.z;
+                                            }
                         
-                                        Animator.fromTo(instance, animation, this.endings[animation] || 0, false, animationEnded.bind(this, animation));
-                                    },
-                        
+                                            if (!this.ignoreOpacity &amp;&amp; (this.owner.opacity || (this.owner.opacity === 0))) {
+                                                this.container.alpha = this.owner.opacity;
+                                            }
+                                            
+                                            if (this.container.reorder) {
+                                                this.container.reorder = false;
+                                                this.container.children.sort(sort);
+                                            }
+                                            
+                                            if (this.mirror || this.flip) {
+                                                angle = this.rotation % 360;
+                                                
+                                                if (this.mirror &amp;&amp; (angle &gt; 90) &amp;&amp; (angle &lt; 270)) {
+                                                    mirrored = -1;
+                                                }
+                                                
+                                                if (this.flip &amp;&amp; (angle &lt; 180)) {
+                                                    flipped = -1;
+                                                }
+                                            }
+                                            
+                                            if (o) { // This is a 3x3 2D matrix describing an affine transformation.
+                                                this.container.setTransform(o[0][2], o[1][2], o[0][0], o[1][1], (rotation ? (rotation / 180) * Math.PI : 0), o[1][0], o[0][1]);
+                                            } else {
+                                                this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
+                                            }
+                                            
+                                            // Set isCameraOn of sprite if within camera bounds
+                                            if (this.container &amp;&amp; ((!this.wasVisible &amp;&amp; this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
+                                                //TODO: This check is running twice when an object is moving and the camera is moving.
+                                                //Find a way to remove the duplication!
+                                                this.checkCameraBounds();
+                                            }
+                                            this.lastX = this.owner.x;
+                                            this.lastY = this.owner.y;
+                                            this.wasVisible = this.visible;
+                                            this.container.visible = (this.visible &amp;&amp; this.isOnCamera) || this.dragMode;
+                                        };
+                                    }()),
+                                    
                                     setMask: function (shape) {
                                         var gfx = null;
                                         
@@ -640,7 +639,7 @@
                                         }
                                         
                                         if (!shape) {
-                                            this.mask = this.instance.mask = null;
+                                            this.mask = this.container.mask = null;
                                             return;
                                         }
                                         
@@ -661,54 +660,23 @@
                                         
                                         gfx.isMask = true;
                         
-                                        this.mask = this.instance.mask = gfx;
-                                        this.mask.z = 0; //Masks don&#x27;t need a Z, but this makes it play nice with the Z-ordering in HandlerRender.
+                                        this.mask = this.container.mask = gfx;
+                                        this.mask.z = 0; //TML 12-4-16 - Masks don&#x27;t need a Z, but this makes it play nice with the Z-ordering in HandlerRender.
                         
                                         if (this.parentContainer) {
                                             this.parentContainer.addChild(this.mask);
                                         }
                                     },
-                        
-                                    update: function () {
-                                        var instance = this.instance,
-                                            scale = instance.scale;
-                        
-                                        scale.x = this.scaleX;
-                                        scale.y = this.scaleY;
-                                        instance.x = this.x - this.regX * this.scaleX;
-                                        instance.y = this.y - this.regY * this.scaleY;
-                                        if (instance.z !== (this.z + this.offsetZ)) {
-                                            if (this.parentContainer) {
-                                                this.parentContainer.reorder = true;
-                                            }
-                                            instance.z = (this.z + this.offsetZ);
-                                        }
-                        
-                                        if (this.owner.opacity || (this.owner.opacity === 0)) {
-                                            this.instance.alpha = this.owner.opacity;
-                                        }
-                        
-                                        // Set isCameraOn of instance if within camera bounds
-                                        if (this.instance &amp;&amp; ((!this.wasVisible &amp;&amp; this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
-                                            //TODO: This check is running twice when an object is moving and the camera is moving.
-                                            //Find a way to remove the duplication!
-                                            this.checkCameraBounds();
-                                        }
-                                        this.lastX = this.owner.x;
-                                        this.lastY = this.owner.y;
-                                        this.wasVisible = this.visible;
-                                        this.instance.visible = (this.visible &amp;&amp; this.isOnCamera) || this.dragMode;
-                                    },
                                     
                                     destroy: function () {
                                         this.camera.recycle();
-                                        if (this.parentContainer &amp;&amp; !this.instance.mouseTarget) {
-                                            this.parentContainer.removeChild(this.instance);
+                                        if (this.parentContainer &amp;&amp; !this.container.mouseTarget) {
+                                            this.parentContainer.removeChild(this.container);
                                             this.parentContainer = null;
                                         } else if (!this.cache) {
-                                            this.instance.destroy();
+                                            this.container.destroy();
                                         }
-                                        this.instance = null;
+                                        this.container = null;
                                     }
                                 }
                             });

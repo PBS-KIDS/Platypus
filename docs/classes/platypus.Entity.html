@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : platypus.Entity</title>
+	<title>platypus v0.11.0 API Documentation : platypus.Entity</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -174,21 +175,11 @@
                                // The component objects must include a "type" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
                             ],
                          
-                            "properties": [
-                            // This array lists properties that will be attached directly to this entity.
+                            "properties": {
+                            // This object lists properties that will be attached directly to this entity.
                          
                                 "x": 240
                                 // For example, <code>x</code> becomes <code>entity.x</code> on the new entity.
-                            ],
-                         
-                            "filters": {
-                            // Filters are only used by top level entities loaded by the scene and are not used by the entity directly. They determine whether an entity should be loaded on a particular browser according to browser settings.
-                         
-                                "includes": ["touch"],
-                                // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.
-                        
-                                "excludes": ["mobile"]
-                                // Optional. This filter specifies that this entity should not be loaded on mobile browsers/devices that. More than one setting can be added to the array.
                             }
                         }</code></pre>
                         
@@ -320,7 +311,7 @@
                                 
                                 
                                                     <div class="param-description">
-                                                        <p>A function to run once all of the components on the Entity have been loaded.</p>
+                                                        <p>A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.</p>
                                 
                                                     </div>
                                 
@@ -382,6 +373,10 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_toJSON">toJSON</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_toString">toString</a>
                         
                                                     </li>
@@ -437,7 +432,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l151"><code>addComponent:151</code></a>
+                                                    <a href="../files/Entity.js.html#l187"><code>addComponent:187</code></a>
                                                     </p>
                                             
                                             
@@ -493,7 +488,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l229"><code>destroy:229</code></a>
+                                                    <a href="../files/Entity.js.html#l265"><code>destroy:265</code></a>
                                                     </p>
                                             
                                             
@@ -535,7 +530,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l255"><code>getAssetList:255</code></a>
+                                                    <a href="../files/Entity.js.html#l291"><code>getAssetList:291</code></a>
                                                     </p>
                                             
                                             
@@ -614,7 +609,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l293"><code>getLateAssetList:293</code></a>
+                                                    <a href="../files/Entity.js.html#l329"><code>getLateAssetList:329</code></a>
                                                     </p>
                                             
                                             
@@ -690,7 +685,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l172"><code>removeComponent:172</code></a>
+                                                    <a href="../files/Entity.js.html#l208"><code>removeComponent:208</code></a>
                                                     </p>
                                             
                                             
@@ -752,7 +747,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l213"><code>setProperty:213</code></a>
+                                                    <a href="../files/Entity.js.html#l249"><code>setProperty:249</code></a>
                                                     </p>
                                             
                                             
@@ -784,6 +779,72 @@
                                             
                                             
                                             </div>
+                                            <div id="method_toJSON" class="method item">
+                                                <h3 class="name"><code>toJSON</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>includeComponents</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/Entity.js.html#l150"><code>toJSON:150</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns a JSON object describing the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">includeComponents</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether the returned JSON should list components. Defaults to <code>false</code> to condense output since components are generally defined in <code>platypus.game.settings.entities</code>, but may be needed for custom-constructed entities not so defined.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                                                <p>Returns a JSON definition that can be used to recreate the entity.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
                                             <div id="method_toString" class="method item">
                                                 <h3 class="name"><code>toString</code></h3>
                                             
@@ -802,7 +863,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l141"><code>toString:141</code></a>
+                                                    <a href="../files/Entity.js.html#l140"><code>toString:140</code></a>
                                                     </p>
                                             
                                             
@@ -844,7 +905,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l161"><code>component-added:161</code></a>
+                                                    <a href="../files/Entity.js.html#l197"><code>component-added:197</code></a>
                                                     </p>
                                             
                                             
@@ -898,7 +959,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l182"><code>component-removed:182</code></a>
+                                                    <a href="../files/Entity.js.html#l218"><code>component-removed:218</code></a>
                                                     </p>
                                             
                                             
@@ -952,7 +1013,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/Entity.js.html#l121"><code>load:121</code></a>
+                                                    <a href="../files/Entity.js.html#l120"><code>load:120</code></a>
                                                     </p>
                                             
                                             

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.0 API Documentation : platypus.components.Counter</title>
+	<title>platypus v0.11.0 API Documentation : platypus.components.RenderContainer</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -145,7 +145,7 @@
                 </div>            <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>platypus.components.Counter Class</h1>
+                        <h1>platypus.components.RenderContainer Class</h1>
                         <div class="box meta">
                                 <div class="uses">
                                     Uses
@@ -156,16 +156,17 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/components_Counter.js.html#l1"><code>platypus.components.Counter:1</code></a>
+                                    Defined in: <a href="../files/components_RenderContainer.js.html#l1"><code>platypus.components.RenderContainer:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
                         
+                                <p>Available since 0.11.0</p>
                         </div>
                         
                         
                         <div class="box intro">
-                            <p>A simple component that keeps count of something and sends messages each time the count changes. Can also have a total. When it does it will display 'count / total'.</p>
+                            <p>This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.</p>
                         
                         </div>
                         
@@ -188,19 +189,31 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;change-count&#x27;">&#x27;change-count&#x27;</a>
+                                                        <a href="#method_&#x27;cache&#x27;">&#x27;cache&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;change-total&#x27;">&#x27;change-total&#x27;</a>
+                                                        <a href="#method_&#x27;camera-update&#x27;">&#x27;camera-update&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;handle-logic&#x27;">&#x27;handle-logic&#x27;</a>
+                                                        <a href="#method_&#x27;handle-render&#x27;">&#x27;handle-render&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;increment-count&#x27;">&#x27;increment-count&#x27;</a>
+                                                        <a href="#method_&#x27;handle-render-load&#x27;">&#x27;handle-render-load&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;hide-sprite&#x27;">&#x27;hide-sprite&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;set-mask&#x27;">&#x27;set-mask&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;show-sprite&#x27;">&#x27;show-sprite&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method private inherited">
@@ -251,7 +264,75 @@
                         
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
-                                                        <a href="#property_total">total</a>
+                                                        <a href="#property_cache">cache</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_dragMode">dragMode</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_flip">flip</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_ignoreOpacity">ignoreOpacity</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_interactive">interactive</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_mask">mask</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_mirror">mirror</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_rotate">rotate</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_rotation">rotation</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_scaleX">scaleX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_scaleY">scaleY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_skewX">skewX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_skewY">skewY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_tint">tint</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_visible">visible</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_x">x</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_y">y</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_z">z</a>
                         
                                                     </li>
                                             </ul>
@@ -263,7 +344,11 @@
                         
                                             <ul class="index-list events">
                                                     <li class="index-item event">
-                                                        <a href="#event_&#x27;update-content&#x27;">&#x27;update-content&#x27;</a>
+                                                        <a href="#event_&#x27;cache-sprite&#x27;">&#x27;cache-sprite&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;input-on&#x27;">&#x27;input-on&#x27;</a>
                         
                                                     </li>
                                             </ul>
@@ -273,13 +358,43 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;change-count&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;change-count&#x27;</code></h3>
+                                            <div id="method_&#x27;cache&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;cache&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l292"><code>&#x27;cache&#x27;:292</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;camera-update&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;camera-update&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>data.count</code>
+                                                                    <code>camera.viewport</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -294,7 +409,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Counter.js.html#l85"><code>&#x27;change-count&#x27;:85</code></a>
+                                                    <a href="../files/components_RenderContainer.js.html#l314"><code>&#x27;camera-update&#x27;:314</code></a>
                                                     </p>
                                             
                                             
@@ -302,7 +417,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Changes the count to the given value.</p>
+                                                    <p>Listens for this event to determine whether this sprite is visible.</p>
                                             
                                                 </div>
                                             
@@ -311,12 +426,12 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">data.count</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                                                    <code class="param-name">camera.viewport</code>
+                                                                    <span class="type"><a href="../classes/platypus.AABB.html" class="crosslink">platypus.AABB</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The new count value.</p>
+                                                                    <p>Camera position and size.</p>
                                             
                                                                 </div>
                                             
@@ -326,13 +441,13 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;change-total&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;change-total&#x27;</code></h3>
+                                            <div id="method_&#x27;handle-render&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-render&#x27;</code></h3>
                                             
                                                     <div class="args">
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
-                                                                    <code>data.total</code>
+                                                                    <code>renderData</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -347,7 +462,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Counter.js.html#l75"><code>&#x27;change-total&#x27;:75</code></a>
+                                                    <a href="../files/components_RenderContainer.js.html#l343"><code>&#x27;handle-render&#x27;:343</code></a>
                                                     </p>
                                             
                                             
@@ -355,7 +470,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Changes the total to the given value.</p>
+                                                    <p>The render update message updates the sprite. If a sprite doesn't have a container, it's removed.</p>
                                             
                                                 </div>
                                             
@@ -364,12 +479,172 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">data.total</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                                                    <code class="param-name">renderData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>The new total value.</p>
+                                                                    <p>Data from the render handler</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">container</code>
+                                                                                <span class="type">PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The parent container.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-render-load&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-render-load&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>handlerData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l329"><code>&#x27;handle-render-load&#x27;:329</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">handlerData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Data from the render handler</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">container</code>
+                                                                                <span class="type">PIXI.Container</span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The parent container.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;hide-sprite&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;hide-sprite&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l358"><code>&#x27;hide-sprite&#x27;:358</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event makes the sprite invisible.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;set-mask&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;set-mask&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>mask</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l376"><code>&#x27;set-mask&#x27;:376</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">mask</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The mask. This can specified the same way as the 'mask' parameter on the component.</p>
                                             
                                                                 </div>
                                             
@@ -379,8 +654,8 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;handle-logic&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
+                                            <div id="method_&#x27;show-sprite&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;show-sprite&#x27;</code></h3>
                                             
                                                     <span class="paren">()</span>
                                             
@@ -394,7 +669,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Counter.js.html#l39"><code>&#x27;handle-logic&#x27;:39</code></a>
+                                                    <a href="../files/components_RenderContainer.js.html#l367"><code>&#x27;show-sprite&#x27;:367</code></a>
                                                     </p>
                                             
                                             
@@ -402,37 +677,7 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Each step, this component detects whether the count has changed and triggers an 'update-content' event if so.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;increment-count&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;increment-count&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_Counter.js.html#l95"><code>&#x27;increment-count&#x27;:95</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Increments the count by 1.</p>
+                                                    <p>This event makes the sprite visible.</p>
                                             
                                                 </div>
                                             
@@ -1016,8 +1261,235 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_total" class="property item">
-                                                <h3 class="name"><code>total</code></h3>
+                                            <div id="property_cache" class="property item">
+                                                <h3 class="name"><code>cache</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l132"><code>cache:132</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this sprite should be cached into an entity with a <code>RenderTiles</code> component (like "render-layer"). The <code>RenderTiles</code> component must have its "entityCache" property set to <code>true</code>. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_dragMode" class="property item">
+                                                <h3 class="name"><code>dragMode</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l152"><code>dragMode:152</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.8.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Prevents sprite from becoming invisible out of frame and losing mouse input connection.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_flip" class="property item">
+                                                <h3 class="name"><code>flip</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l114"><code>flip:114</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be &gt; 180.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_ignoreOpacity" class="property item">
+                                                <h3 class="name"><code>ignoreOpacity</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l141"><code>ignoreOpacity:141</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Ignores the opacity of the owner.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_interactive" class="property item">
+                                                <h3 class="name"><code>interactive</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l76"><code>interactive:76</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.9.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:</p>
+                                            <p>"interactive": {
+                                            "hover": false,
+                                            "hitArea": {
+                                            "x": 10,
+                                            "y": 10,
+                                            "width": 40,
+                                            "height": 40
+                                            }
+                                            }</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_mask" class="property item">
+                                                <h3 class="name"><code>mask</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l56"><code>mask:56</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: "mask": "r(10,20,40,40).dc(30,10,12)". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.</p>
+                                            <p>"mask": {
+                                            "x": 10,
+                                            "y": 10,
+                                            "width": 40,
+                                            "height": 40
+                                            },</p>
+                                            <p>-OR-</p>
+                                            <p>"mask": "r(10,20,40,40).dc(30,10,12)"</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_mirror" class="property item">
+                                                <h3 class="name"><code>mirror</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l105"><code>mirror:105</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_rotate" class="property item">
+                                                <h3 class="name"><code>rotate</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l96"><code>rotate:96</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_rotation" class="property item">
+                                                <h3 class="name"><code>rotation</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
@@ -1027,14 +1499,248 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Counter.js.html#l19"><code>total:19</code></a>
+                                                    <a href="../files/components_RenderContainer.js.html#l162"><code>rotation:162</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>A total the counter is incrementing toward.</p>
+                                                    <p>Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_scaleX" class="property item">
+                                                <h3 class="name"><code>scaleX</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l171"><code>scaleX:171</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The X scaling factor for the image. Defaults to 1.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_scaleY" class="property item">
+                                                <h3 class="name"><code>scaleY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l180"><code>scaleY:180</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The Y scaling factor for the image. Defaults to 1.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_skewX" class="property item">
+                                                <h3 class="name"><code>skewX</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l189"><code>skewX:189</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The X skew factor of the sprite. Defaults to 0.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_skewY" class="property item">
+                                                <h3 class="name"><code>skewY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l198"><code>skewY:198</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The Y skew factor for the image. Defaults to 0.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_tint" class="property item">
+                                                <h3 class="name"><code>tint</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l207"><code>tint:207</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The tint applied to the sprite. Defaults to no tint.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_visible" class="property item">
+                                                <h3 class="name"><code>visible</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l123"><code>visible:123</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_x" class="property item">
+                                                <h3 class="name"><code>x</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l216"><code>x:216</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The x position of the entity. Defaults to 0.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_y" class="property item">
+                                                <h3 class="name"><code>y</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l225"><code>y:225</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The y position of the entity. Defaults to 0.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_z" class="property item">
+                                                <h3 class="name"><code>z</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l234"><code>z:234</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. The z position of the entity. Defaults to 0.</p>
                                             
                                                 </div>
                                             
@@ -1048,8 +1754,8 @@
                                     <div id="events" class="api-class-tabpanel">
                                         <h2 class="off-left">Events</h2>
                         
-                                            <div id="event_&#x27;update-content&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;update-content&#x27;</code></h3>
+                                            <div id="event_&#x27;cache-sprite&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;cache-sprite&#x27;</code></h3>
                                                 <span class="type"></span>
                                             
                                             
@@ -1059,14 +1765,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_Counter.js.html#l65"><code>&#x27;update-content&#x27;:65</code></a>
+                                                    <a href="../files/components_RenderContainer.js.html#l302"><code>&#x27;cache-sprite&#x27;:302</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>A call used to notify other components that the count or total has changed.</p>
+                                                    <p>On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.</p>
                                             
                                                 </div>
                                             
@@ -1075,18 +1781,43 @@
                                             
                                                         <ul class="params-list">
                                                             <li class="param">
-                                                                    <code class="param-name">update.text</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                                                    <code class="param-name">entity</code>
+                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
                                             
                                             
                                                                 <div class="param-description">
-                                                                    <p>String describing the current count.</p>
+                                                                    <p>This component's owner.</p>
                                             
                                                                 </div>
                                             
                                                             </li>
                                                         </ul>
                                                     </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;input-on&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;input-on&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderContainer.js.html#l402"><code>&#x27;input-on&#x27;:402</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered once the RenderSprite is ready to handle interactivity.</p>
+                                            
+                                                </div>
+                                            
                                             
                                             
                                             </div>

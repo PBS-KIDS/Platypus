@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : Entity.js</title>
+	<title>platypus v0.11.0 API Documentation : Entity.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -166,21 +167,11 @@
                                     // The component objects must include a &quot;type&quot; property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.
                                  ],
                               
-                                 &quot;properties&quot;: [
-                                 // This array lists properties that will be attached directly to this entity.
+                                 &quot;properties&quot;: {
+                                 // This object lists properties that will be attached directly to this entity.
                               
                                      &quot;x&quot;: 240
                                      // For example, &#x60;x&#x60; becomes &#x60;entity.x&#x60; on the new entity.
-                                 ],
-                              
-                                 &quot;filters&quot;: {
-                                 // Filters are only used by top level entities loaded by the scene and are not used by the entity directly. They determine whether an entity should be loaded on a particular browser according to browser settings.
-                              
-                                     &quot;includes&quot;: [&quot;touch&quot;],
-                                     // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.
-                        
-                                     &quot;excludes&quot;: [&quot;mobile&quot;]
-                                     // Optional. This filter specifies that this entity should not be loaded on mobile browsers/devices that. More than one setting can be added to the array.
                                  }
                              }
                          *
@@ -194,7 +185,7 @@
                          * @param [definition.properties] {Object} [definition.properties] This is a list of key/value pairs that are added directly to the Entity as &#x60;entity.key = value&#x60;.
                          * @param [instanceDefinition] {Object} Specific instance definition including properties that override the base definition properties.
                          * @param [instanceDefinition.properties] {Object} This is a list of key/value pairs that are added directly to the Entity as &#x60;entity.key = value&#x60;.
-                         * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
+                         * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.
                          * @return {Entity} Returns the new entity made up of the provided components.
                         **/
                         
@@ -227,7 +218,14 @@
                                     this.type = def.id || &#x27;none&#x27;;
                         
                                     this.id = instance.id || instanceProperties.id;
-                                    if (!this.id) {
+                                    if (this.id) { // check to make sure auto-ids don&#x27;t overlap.
+                                        if (this.id.search(this.type + &#x27;-&#x27;) === 0) {
+                                            i = parseInt(this.id.substring(this.id.search(&#x27;-&#x27;) + 1), 10);
+                                            if (!isNaN(i) &amp;&amp; (!entityIds[this.type] || (entityIds[this.type] &lt;= i))) {
+                                                entityIds[this.type] = i + 1;
+                                            }
+                                        }
+                                    } else {
                                         if (!entityIds[this.type]) {
                                             entityIds[this.type] = 0;
                                         }
@@ -247,6 +245,8 @@
                                     this.trigger = this.triggerEvent = function (event, message) {
                                         savedEvents.push(event);
                                         savedMessages.push(message);
+                        
+                                        return -1; // Message has not been delivered yet.
                                     };
                                     
                                     if (componentDefinitions) {
@@ -279,7 +279,7 @@
                                         this.triggerEvent(&#x27;load&#x27;);
                         
                                         if (callback) {
-                                            callback();
+                                            callback(this);
                                         }
                                     }.bind(this));
                                     
@@ -299,6 +299,43 @@
                             **/
                             proto.toString = function () {
                                 return &quot;[Entity &quot; + this.type + &quot;]&quot;;
+                            };
+                            
+                            /**
+                            * Returns a JSON object describing the entity.
+                            *
+                            * @method toJSON
+                            * @param includeComponents {Boolean} Whether the returned JSON should list components. Defaults to &#x60;false&#x60; to condense output since components are generally defined in &#x60;platypus.game.settings.entities&#x60;, but may be needed for custom-constructed entities not so defined.
+                            * @return {Object} Returns a JSON definition that can be used to recreate the entity.
+                            * @since 0.11.0
+                            **/
+                            proto.toJSON = function (includeComponents) {
+                                var components = this.components,
+                                    definition = {
+                                        properties: {
+                                            id: this.id,
+                                            state: this.state.toJSON()
+                                        }
+                                    },
+                                    i = 0,
+                                    json = null,
+                                    properties = definition.properties;
+                                
+                                if (includeComponents) {
+                                    definition.id = this.type;
+                                    definition.components = [];
+                                } else {
+                                    definition.type = this.type;
+                                }
+                        
+                                for (i = 0; i &lt; components.length; i++) {
+                                    json = components[i].toJSON(properties);
+                                    if (includeComponents &amp;&amp; json) {
+                                        definition.components.push(json);
+                                    }
+                                }
+                        
+                                return definition;
                             };
                             
                             /**

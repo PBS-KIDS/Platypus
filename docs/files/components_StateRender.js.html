@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : components\StateRender.js</title>
+	<title>platypus v0.11.0 API Documentation : components\StateRender.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.0</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -163,15 +164,6 @@
                             &#x27;use strict&#x27;;
                             
                             var StateMap = include(&#x27;platypus.StateMap&#x27;),
-                                defaultTest = function (animation) {
-                                    return animation;
-                                },
-                                stateTest = function (animation, states, ownerState) {
-                                    if (ownerState.includes(states)) {
-                                        return animation;
-                                    }
-                                    return false;
-                                },
                                 createTest = function (testStates, animation) {
                                     if (testStates === &#x27;default&#x27;) {
                                         return defaultTest.bind(null, animation);
@@ -179,6 +171,40 @@
                                         //TODO: Better clean-up: Create a lot of these without removing them later... DDD 2/5/2016
                                         return stateTest.bind(null, animation, StateMap.setUp(testStates));
                                     }
+                                },
+                                defaultTest = function (animation) {
+                                    return animation;
+                                },
+                                methodPlay = function (animation, restart) {
+                                    this.component.playAnimation(animation, restart);
+                                },
+                                methodStop = function (animation) {
+                                    this.component.stopAnimation(animation);
+                                },
+                                stateTest = function (animation, states, ownerState) {
+                                    if (ownerState.includes(states)) {
+                                        return animation;
+                                    }
+                                    return false;
+                                },
+                                triggerPlay = function (animation, restart) {
+                                    /**
+                                     * On entering a new animation-mapped state, this component triggers this event to play an animation.
+                                     *
+                                     * @event &#x27;play-animation&#x27;
+                                     * @param animation {String} Describes the animation to play.
+                                     * @param restart {Boolean} Whether to restart a playing animation.
+                                     */
+                                    this.owner.triggerEvent(&#x27;play-animation&#x27;, animation, restart);
+                                },
+                                triggerStop = function (animation) {
+                                    /**
+                                     * On attaining an animation-mapped state, this component triggers this event to stop a previous animation.
+                                     *
+                                     * @event &#x27;stop-animation&#x27;
+                                     * @param animation {String} Describes the animation to stop.
+                                     */
+                                    this.owner.triggerEvent(&#x27;stop-animation&#x27;, animation);
                                 };
                         
                             return platypus.createComponentClass({
@@ -252,6 +278,14 @@
                                     this.waitingState = 0;
                                     this.playWaiting = false;
                                     this.animationFinished = false;
+                        
+                                    if (this.component) {
+                                        this.playAnimation = methodPlay;
+                                        this.stopAnimation = methodStop;
+                                    } else {
+                                        this.playAnimation = triggerPlay;
+                                        this.stopAnimation = triggerStop;
+                                    }
                                 },
                         
                                 events: {
@@ -278,13 +312,7 @@
                                                 this.lastState = this.waitingState;
                                                 
                                                 this.animationFinished = false;
-                                                /**
-                                                 * On entering a new animation-mapped state, this component triggers this event to play an animation.
-                                                 *
-                                                 * @event &#x27;play-animation&#x27;
-                                                 * @param animation {String} Describes the animation to play.
-                                                 */
-                                                this.owner.triggerEvent(&#x27;play-animation&#x27;, this.currentAnimation);
+                                                this.playAnimation(this.currentAnimation);
                                             } else {
                                                 this.animationFinished = true;
                                             }
@@ -315,9 +343,9 @@
                                                                 this.lastState = +i;
                                                                 this.animationFinished = false;
                                                                 if (playing) {
-                                                                    this.owner.triggerEvent(&#x27;play-animation&#x27;, this.currentAnimation);
+                                                                    this.playAnimation(this.currentAnimation);
                                                                 } else {
-                                                                    this.owner.triggerEvent(&#x27;stop-animation&#x27;, this.currentAnimation);
+                                                                    this.stopAnimation(this.currentAnimation);
                                                                 }
                                                             } else {
                                                                 this.waitingAnimation = testCase;
@@ -336,6 +364,10 @@
                                 },
                                 
                                 methods: {
+                                    toJSON: function () { // This component is added by another component, so it shouldn&#x27;t be returned for reconstruction.
+                                        return null;
+                                    },
+                        
                                     destroy: function () {
                                         this.checkStates.recycle();
                                         this.followThroughs = null;
