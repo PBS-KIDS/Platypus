@@ -1180,6 +1180,7 @@
              * @param y {number} The y-axis value.
              * @param collisionTypes {Array of strings} The collision types to check against.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+             * @since 0.10.7
              */
             getPointCollisions: function (x, y, collisionTypes) {
                 var collisions = Array.setUp();
