@@ -1,8 +1,8 @@
 /**
- * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
+ * This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.
  *
  * @namespace platypus.components
- * @class RenderSprite
+ * @class RenderContainer
  * @uses platypus.Component
  * @since 0.11.0
  */
