@@ -1012,6 +1012,15 @@
                 return !bounds || !((bounds.x + bounds.width < 0) || (bounds.x > canvas.width) || (bounds.y + bounds.height < 0) || (bounds.y > canvas.height));
             },
 
+            /**
+             * Returns a world coordinate corresponding to a provided window coordinate.
+             *
+             * @method windowToWorld
+             * @param windowVector {platypus.Vector} A vector describing a window position.
+             * @param withOffset {Boolean} Whether to provide a world position relative to the camera's location.
+             * @param vector {platypus.Vector} If provided, this is used as the return vector.
+             * @return {platypus.Vector} A vector describing a world position.
+             */
             windowToWorld: function (windowVector, withOffset, vector) {
                 var worldVector = vector || Vector.setUp();
                 
@@ -1026,6 +1035,15 @@
                 return worldVector;
             },
             
+            /**
+             * Returns a window coordinate corresponding to a provided world coordinate.
+             *
+             * @method worldToWindow
+             * @param worldVector {platypus.Vector} A vector describing a world position.
+             * @param withOffset {Boolean} Whether to provide a window position relative to the camera's location.
+             * @param vector {platypus.Vector} If provided, this is used as the return vector.
+             * @return {platypus.Vector} A vector describing a window position.
+             */
             worldToWindow: function (worldVector, withOffset, vector) {
                 var windowVector = vector || Vector.setUp();
 
