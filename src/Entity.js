@@ -151,6 +151,7 @@ platypus.Entity = (function () {
     * Returns a JSON object describing the entity.
     *
     * @method toJSON
+    * @param includeComponents {Boolean} Whether the returned JSON should list components. Defaults to `false` to condense output since components are generally defined in `platypus.game.settings.entities`, but may be needed for custom-constructed entities not so defined.
     * @return {Object} Returns a JSON definition that can be used to recreate the entity.
     * @since v0.10.7
     **/
