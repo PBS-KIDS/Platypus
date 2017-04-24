@@ -4,6 +4,8 @@ var path = require('path'),
 module.exports = function (grunt) {
     'use strict';
 
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -15,6 +17,23 @@ module.exports = function (grunt) {
         docsName: '<%= pkg.name %>_docs-<%= version %>',
         docsZip: "<%= docsName %>.zip",
 
+        // Setup tests
+        jasmine: {
+            src: [
+                "node_modules/springroll/components/preloadjs/lib/preloadjs.combined.js",
+                "node_modules/springroll/components/soundjs/lib/soundjs.combined.js",
+                "node_modules/pixi.js/dist/pixi.js",
+                "node_modules/springroll/dist/core.js",
+                "node_modules/springroll/dist/modules/states.js",
+                "output/platypus.combined.js"
+            ],
+            options: {
+                specs: "spec/**/*.js",
+                vendor: "vendor/**/*.js",
+                version: '2.0.0'
+            }
+        },
+        
         // Setup Uglify for JS minification.
         uglify: {
             options: {
