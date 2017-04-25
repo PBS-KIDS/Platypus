@@ -138,7 +138,7 @@ module.exports = function (grunt) {
             src: {
                 files: [{
                     expand: true,
-                    cwd: './output/',
+                    cwd: './build/output/',
                     src: '*.js',
                     dest: './lib/'
                 }]
@@ -197,21 +197,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadTasks('tasks/');
 
-    grunt.registerTask('setDocsBase', "Internal utility task to set a correct base for YUIDocs.", function () {
-        grunt.file.setBase('.');
-        grunt.config.set('docsFolder', "./build/output/<%= docsName %>/");
-    });
-
-    grunt.registerTask('resetBase', "Internal utility task to reset the base, after setDocsBase", function () {
-        grunt.file.setBase('./build');
-        grunt.config.set('docsFolder', "./output/<%= docsName %>/");
-    });
+    grunt.file.setBase('.');
+    grunt.config.set('docsFolder', "./build/output/<%= docsName %>/");
 
     /**
      * Build the docs using YUIdocs.
      */
     grunt.registerTask('docs', [
-        "setDocsBase", "yuidoc", "resetBase", "compress", "copy:docsSite"
+        "yuidoc", "compress", "copy:docsSite"
     ]);
 
     /**

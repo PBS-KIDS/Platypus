@@ -1,5 +1,8 @@
+/* global module */
 module.exports = {
-    path: function(str) {
-        return  str.substr(str.lastIndexOf("/")+1);
+    path: function (str) {
+        'use strict';
+
+        return  str.substr(str.lastIndexOf("/") + 1);
     }
-}
+};
