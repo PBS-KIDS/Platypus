@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.0 API Documentation : PIXIAnimation.js</title>
+	<title>platypus v0.11.1 API Documentation : PIXIAnimation.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.0</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -164,6 +164,7 @@
                             &#x27;use strict&#x27;;
                             
                             var BaseTexture = include(&#x27;PIXI.BaseTexture&#x27;),
+                                CanvasTinter = include(&#x27;PIXI.CanvasTinter&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 Point = include(&#x27;PIXI.Point&#x27;),
                                 Rectangle = include(&#x27;PIXI.Rectangle&#x27;),
@@ -483,8 +484,7 @@
                             prototype._syncUpdate = (function () {
                                 var
                                     update = function (deltaTime) {
-                                        var data = null,
-                                            name = &quot;&quot;,
+                                        var name = &quot;&quot;,
                                             floor = 0;
                                         
                                         this._currentTime += this.animationSpeed * this._animation.speed * deltaTime * (60 / 1000);
@@ -496,9 +496,7 @@
                                         }
                                         
                                         if (floor &lt; this._animation.frames.length) {
-                                            data = this._animation.frames[floor % this._animation.frames.length];
-                                            this._texture = data.texture;
-                                            this.anchor = data.anchor;
+                                            this.setFrame(floor % this._animation.frames.length);
                                         } else if (floor &gt;= this._animation.frames.length) {
                                             name = this._animation.id;
                                             this.gotoAndPlay(this._animation.next);
@@ -534,8 +532,7 @@
                                 if (!this._animation) {
                                     this._animation = this._animations.default;
                                 }
-                                this._texture = this._animation.frames[0].texture;
-                                this.anchor =  this._animation.frames[0].anchor;
+                                this.setFrame(0);
                             };
                             
                             /**
@@ -554,11 +551,28 @@
                                         this._animation = this._animations.default;
                                         this.currentAnimation = &#x27;default&#x27;;
                                     }
-                                    this._texture = this._animation.frames[0].texture;
-                                    this.anchor = this._animation.frames[0].anchor;
+                                    this.setFrame(0);
                                 }
                                     
                                 this.play();
+                            };
+                            
+                            /**
+                            * Sets the texture and anchor for a particular frame.
+                            *
+                            * @method setFrame
+                            * @param frameIndex {Number} Animation frame index to set.
+                            * @since 0.11.1
+                            */
+                            prototype.setFrame = function (frameIndex) {
+                                var frameData = this._animation.frames[frameIndex];
+                        
+                                this._texture = frameData.texture;
+                                this.anchor = frameData.anchor;
+                        
+                                if (this.tintedTexture) { // Sprite is using a cached tinted canvas, so we need to update this cache too.
+                                    this.tintedTexture = CanvasTinter.getTintedTexture(this, this.tint);
+                                }
                             };
                             
                             /**
