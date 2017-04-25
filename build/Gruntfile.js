@@ -160,12 +160,9 @@ module.exports = function (grunt) {
     });
 
     function getConfigValue (name) {
-        var config = grunt.config.get('buildConfig');
+        var config = grunt.file.readJSON('config.json');
 
-        if (config === null) {
-            config = grunt.file.readJSON('config.json');
-            grunt.config.set('buildConfig', config);
-        }
+        grunt.config.set('buildConfig', config);
 
         return config[name];
     }
