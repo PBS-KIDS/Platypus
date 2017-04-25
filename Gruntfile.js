@@ -106,8 +106,8 @@ module.exports = function (grunt) {
                     linkNatives: true,
                     attributesEmit: true,
                     selleck: true,
-                    helpers: ["../build/path.js"],
-                    themedir: "../build/platypusTheme/"
+                    helpers: ["./build/path.js"],
+                    themedir: "./build/platypusTheme/"
                 }
             }
         },
@@ -198,7 +198,7 @@ module.exports = function (grunt) {
     grunt.loadTasks('tasks/');
 
     grunt.registerTask('setDocsBase', "Internal utility task to set a correct base for YUIDocs.", function () {
-        grunt.file.setBase('./src');
+        grunt.file.setBase('.');
         grunt.config.set('docsFolder', "./build/output/<%= docsName %>/");
     });
 
