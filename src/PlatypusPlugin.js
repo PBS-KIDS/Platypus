@@ -11,7 +11,7 @@
  *          "sounds": {} // Platypus uses the SpringRoll audio system and syntax for audio assets.
  *      }
  *
- * The Platypus game instance is `app.platypus` on the SpringRoll Application and `platypus.game` within the platypus namespace.
+ * The Platypus game instance is `app.platypusGame` on the SpringRoll Application and `platypus.game` within the platypus namespace.
  *
  * @namespace platypus
  * @class PlatypusPlugin
@@ -220,7 +220,8 @@
                 setSpriteSheetIds(config.spriteSheets);
             }
             
-            game = this.platypus = new platypus.Game(config, this);
+            // as of v0.11.1 deprecating `.platypus` as a reference to the game since it's confusing. Using `.platypusGame` instead.
+            game = this.platypus = this.platypusGame = new platypus.Game(config, this);
             
             updateFunction = function (elapsed) {
                 time.delta = elapsed;
