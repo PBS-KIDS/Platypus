@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
 
 	grunt.registerTask('updatebower', function() {
-		var file = '../bower.json';
+		var file = '../../bower.json';
 		var version = grunt.config.get('version');
 
 		if (!grunt.file.exists(file)) {

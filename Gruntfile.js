@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                 "node_modules/springroll/dist/core.js",
                 "node_modules/springroll/dist/modules/pixi-display.js",
                 "node_modules/springroll/dist/modules/states.js",
-                "output/platypus.combined.js"
+                "lib/platypus.combined.js"
             ],
             options: {
                 specs: "spec/**/*.js",
@@ -48,7 +48,7 @@ module.exports = function (grunt) {
             },
             build: {
                 files: {
-                    'output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
+                    './build/output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
                 }
             }
         },
@@ -83,7 +83,7 @@ module.exports = function (grunt) {
             },
             build: {
                 files: {
-                    'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource([{
+                    './build/output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource([{
                         cwd: '',
                         config: 'config.json',
                         source: 'platypus_source'
@@ -140,21 +140,21 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: './output/',
                     src: '*.js',
-                    dest: '../lib/'
+                    dest: './lib/'
                 }]
             }
         },
 
         updateversion: {
             platypus: {
-                file: '../src/platypus.js',
+                file: './src/platypus.js',
                 version: '<%= version %>'
             }
         },
 
         clearversion: {
             platypus: {
-                file: '../src/platypus.js'
+                file: './src/platypus.js'
             }
         }
     });
@@ -198,12 +198,12 @@ module.exports = function (grunt) {
     grunt.loadTasks('tasks/');
 
     grunt.registerTask('setDocsBase', "Internal utility task to set a correct base for YUIDocs.", function () {
-        grunt.file.setBase('../src');
-        grunt.config.set('docsFolder', "../build/output/<%= docsName %>/");
+        grunt.file.setBase('./src');
+        grunt.config.set('docsFolder', "./build/output/<%= docsName %>/");
     });
 
     grunt.registerTask('resetBase', "Internal utility task to reset the base, after setDocsBase", function () {
-        grunt.file.setBase('../build');
+        grunt.file.setBase('./build');
         grunt.config.set('docsFolder', "./output/<%= docsName %>/");
     });
 
