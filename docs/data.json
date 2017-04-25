@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.0",
+        "version": "0.11.1",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -9760,7 +9760,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 56,
+            "line": 57,
             "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
             "itemtype": "property",
             "name": "mask",
@@ -9771,7 +9771,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 76,
+            "line": 77,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -9783,7 +9783,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 96,
+            "line": 97,
             "description": "Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.",
             "itemtype": "property",
             "name": "rotate",
@@ -9794,7 +9794,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 105,
+            "line": 106,
             "description": "Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.",
             "itemtype": "property",
             "name": "mirror",
@@ -9805,7 +9805,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 114,
+            "line": 115,
             "description": "Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.",
             "itemtype": "property",
             "name": "flip",
@@ -9816,7 +9816,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 123,
+            "line": 124,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -9827,7 +9827,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 132,
+            "line": 133,
             "description": "Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like \"render-layer\"). The `RenderTiles` component must have its \"entityCache\" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.",
             "itemtype": "property",
             "name": "cache",
@@ -9838,7 +9838,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 141,
+            "line": 142,
             "description": "Optional. Ignores the opacity of the owner.",
             "itemtype": "property",
             "name": "ignoreOpacity",
@@ -9849,7 +9849,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 152,
+            "line": 153,
             "description": "Prevents sprite from becoming invisible out of frame and losing mouse input connection.",
             "itemtype": "property",
             "name": "dragMode",
@@ -9861,7 +9861,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 162,
+            "line": 163,
             "description": "Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -9872,7 +9872,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 171,
+            "line": 172,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -9883,7 +9883,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 180,
+            "line": 181,
             "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
@@ -9894,7 +9894,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 189,
+            "line": 190,
             "description": "Optional. The X skew factor of the sprite. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
@@ -9905,7 +9905,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 198,
+            "line": 199,
             "description": "Optional. The Y skew factor for the image. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
@@ -9916,7 +9916,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 207,
+            "line": 208,
             "description": "Optional. The tint applied to the sprite. Defaults to no tint.",
             "itemtype": "property",
             "name": "tint",
@@ -9927,7 +9927,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 216,
+            "line": 217,
             "description": "Optional. The x position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "x",
@@ -9938,7 +9938,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 225,
+            "line": 226,
             "description": "Optional. The y position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "y",
@@ -9949,7 +9949,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 234,
+            "line": 235,
             "description": "Optional. The z position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "z",
@@ -9960,7 +9960,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 292,
+            "line": 312,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "method",
             "name": "'cache'",
@@ -9969,7 +9969,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 302,
+            "line": 322,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "event",
             "name": "'cache-sprite'",
@@ -9985,7 +9985,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 314,
+            "line": 334,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -10001,7 +10001,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 329,
+            "line": 349,
             "description": "A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -10024,7 +10024,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 343,
+            "line": 363,
             "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10047,7 +10047,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 358,
+            "line": 378,
             "description": "This event makes the sprite invisible.",
             "itemtype": "method",
             "name": "'hide-sprite'",
@@ -10056,7 +10056,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 367,
+            "line": 387,
             "description": "This event makes the sprite visible.",
             "itemtype": "method",
             "name": "'show-sprite'",
@@ -10065,7 +10065,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 376,
+            "line": 396,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -10081,7 +10081,7 @@
         },
         {
             "file": "components\\RenderContainer.js",
-            "line": 402,
+            "line": 422,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -14270,7 +14270,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 200,
+            "line": 201,
             "access": "private",
             "tagname": "",
             "class": "platypus.PIXIAnimation",
@@ -14278,7 +14278,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 207,
+            "line": 208,
             "description": "The speed that the PIXIAnimation will play at. Higher is faster, lower is slower",
             "itemtype": "method",
             "name": "",
@@ -14289,7 +14289,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 215,
+            "line": 216,
             "description": "The currently playing animation name.",
             "itemtype": "property",
             "name": "currentAnimation",
@@ -14301,7 +14301,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 225,
+            "line": 226,
             "description": "Elapsed time since animation has been started, used internally to display current texture",
             "itemtype": "method",
             "name": "",
@@ -14313,7 +14313,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 233,
+            "line": 234,
             "description": "Indicates if the PIXIAnimation is currently playing",
             "itemtype": "method",
             "name": "",
@@ -14324,7 +14324,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 264,
+            "line": 265,
             "description": "The visibility of the sprite.",
             "itemtype": "property",
             "name": "visible",
@@ -14334,7 +14334,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 280,
+            "line": 281,
             "description": "The PIXIAnimations current frame index",
             "itemtype": "method",
             "name": "",
@@ -14346,7 +14346,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 294,
+            "line": 295,
             "description": "The PIXIAnimations paused state. If paused, the animation doesn't update.",
             "itemtype": "property",
             "name": "paused",
@@ -14355,21 +14355,21 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 313,
+            "line": 314,
             "description": "Stops the PIXIAnimation",
             "class": "platypus.PIXIAnimation",
             "namespace": "platypus"
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 321,
+            "line": 322,
             "description": "Plays the PIXIAnimation",
             "class": "platypus.PIXIAnimation",
             "namespace": "platypus"
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 370,
+            "line": 368,
             "description": "Stops the PIXIAnimation and goes to a specific frame",
             "params": [
                 {
@@ -14383,7 +14383,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 387,
+            "line": 384,
             "description": "Goes to a specific frame and begins playing the PIXIAnimation",
             "itemtype": "method",
             "name": "gotoAndPlay",
@@ -14406,7 +14406,24 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 410,
+            "line": 406,
+            "description": "Sets the texture and anchor for a particular frame.",
+            "itemtype": "method",
+            "name": "setFrame",
+            "params": [
+                {
+                    "name": "frameIndex",
+                    "description": "Animation frame index to set.",
+                    "type": "Number"
+                }
+            ],
+            "since": "0.11.1",
+            "class": "platypus.PIXIAnimation",
+            "namespace": "platypus"
+        },
+        {
+            "file": "PIXIAnimation.js",
+            "line": 424,
             "description": "Returns whether a particular animation is available.",
             "itemtype": "method",
             "name": "has",
@@ -14423,7 +14440,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 421,
+            "line": 435,
             "description": "Stops the PIXIAnimation and destroys it",
             "itemtype": "method",
             "name": "destroy",
@@ -14432,7 +14449,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 445,
+            "line": 459,
             "description": "This method makes sure that all the base textures are in the gpu to prevent framerate lurches later due to loading base textures as their textures appear.",
             "itemtype": "method",
             "name": "PIXIAnimation.preloadBaseTextures",
@@ -14448,7 +14465,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 474,
+            "line": 488,
             "description": "This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.",
             "itemtype": "method",
             "name": "formatSpriteSheet",
@@ -15424,27 +15441,27 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:207"
+            "line": " PIXIAnimation.js:208"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:225"
+            "line": " PIXIAnimation.js:226"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:233"
+            "line": " PIXIAnimation.js:234"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " PIXIAnimation.js:264"
+            "line": " PIXIAnimation.js:265"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:280"
+            "line": " PIXIAnimation.js:281"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " PIXIAnimation.js:280"
+            "line": " PIXIAnimation.js:281"
         },
         {
             "message": "Missing item type\n### Local Broadcasts:\n- **child-entity-added** - This message is triggered when a new entity has been added to the list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just added.\n- **child-entity-removed** - This message is triggered when an entity has been removed from the list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just removed.\n\n### Child Broadcasts:\n- **peer-entity-added** - This message is triggered when a new entity has been added to the parent's list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just added.\n- **peer-entity-removed** - This message is triggered when an entity has been removed from the parent's list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just removed.\n- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.\n  - @param message (object) - sends the message object received by the original message.\n\n## Entity Methods:\n- **addEntity** -  This method will add the provided entity to this component's list of entities.\n  - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.\n  - @return entity ([[Entity]] object) - Returns the entity that was just added.\n- **removeEntity** - This method will remove the provided entity from the list of child entities.\n  - @param message ([[Entity]] object) - Required. The entity to remove.\n  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.\n- **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.\n  - @param type (string) - Required. The entity type to find.\n  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.\n- **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).\n  - @param id (string) - Required. The entity id to find.\n  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.\n- **triggerOnChildren** - This method is used by both internal components and external entities to trigger messages on the child entities.\n  - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an \"event\" property (and optionally a \"message\" property, overriding the value below), or an array of the same.\n  - @param value (variant) - This is a message object or other value to pass along to component functions.\n  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A \"value\" object parameter (above) will also set this flag if value.debug is set to true.\n  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.\n- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on the child entities.\n  - @param event (string) - This is the message to process.\n  - @param value (variant) - This is a message object or other value to pass along to component functions.\n  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A \"value\" object parameter (above) will also set this flag if value.debug is set to true.\n  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.",
@@ -15556,19 +15573,19 @@
         },
         {
             "message": "Missing item type",
-            "line": " PIXIAnimation.js:200"
+            "line": " PIXIAnimation.js:201"
         },
         {
             "message": "Missing item type\nStops the PIXIAnimation",
-            "line": " PIXIAnimation.js:313"
+            "line": " PIXIAnimation.js:314"
         },
         {
             "message": "Missing item type\nPlays the PIXIAnimation",
-            "line": " PIXIAnimation.js:321"
+            "line": " PIXIAnimation.js:322"
         },
         {
             "message": "Missing item type\nStops the PIXIAnimation and goes to a specific frame",
-            "line": " PIXIAnimation.js:370"
+            "line": " PIXIAnimation.js:368"
         },
         {
             "message": "Missing item type\nReturns the direction of the vector from the z-axis",

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.0 API Documentation : components\RenderContainer.js</title>
+	<title>platypus v0.11.1 API Documentation : components\RenderContainer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.0</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -165,6 +165,7 @@
                             &#x27;use strict&#x27;;
                             
                             var AABB = include(&#x27;platypus.AABB&#x27;),
+                                CanvasRenderer = include(&#x27;PIXI.CanvasRenderer&#x27;),
                                 ColorMatrixFilter = include(&#x27;PIXI.filters.ColorMatrixFilter&#x27;),
                                 Container = include(&#x27;PIXI.Container&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
@@ -407,24 +408,43 @@
                                     this.isOnCamera = true;
                         
                                     this._tint = null;
-                                    Object.defineProperty(this.owner, &#x27;tint&#x27;, {
-                                        get: function () {
-                                            return this._tint;
-                                        }.bind(this),
-                                        set: function (value) {
-                                            var filters = this.container.filters,
-                                                matrix = null;
                         
-                                            if (!filters) {
-                                                filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
-                                            }
-                                            matrix = filters[0].matrix;
-                                            matrix[0] = (value &amp; 0xff0000) / 0xff0000; // Red
-                                            matrix[6] = (value &amp; 0xff00) / 0xff00; // Green
-                                            matrix[12] = (value &amp; 0xff) / 0xff; // Blue
-                                            this._tint = value;
-                                        }.bind(this)
-                                    });
+                                    // This should be simplified once PIXI supports a &#x60;tint&#x60; property on PIXI.Container: https://github.com/pixijs/pixi.js/issues/2328
+                                    if (platypus.game.app.display.renderer instanceof CanvasRenderer) {
+                                        Object.defineProperty(this.owner, &#x27;tint&#x27;, {
+                                            get: function () {
+                                                return this._tint;
+                                            }.bind(this),
+                                            set: function (value) {
+                                                var children = this.container.children,
+                                                    i = children.length;
+                        
+                                                while (i--) {
+                                                    children[i].tint = value;
+                                                }
+                                                this._tint = value;
+                                            }.bind(this)
+                                        });
+                                    } else {
+                                        Object.defineProperty(this.owner, &#x27;tint&#x27;, {
+                                            get: function () {
+                                                return this._tint;
+                                            }.bind(this),
+                                            set: function (value) {
+                                                var filters = this.container.filters,
+                                                    matrix = null;
+                        
+                                                if (!filters) {
+                                                    filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
+                                                }
+                                                matrix = filters[0].matrix;
+                                                matrix[0] = (value &amp; 0xff0000) / 0xff0000; // Red
+                                                matrix[6] = (value &amp; 0xff00) / 0xff00; // Green
+                                                matrix[12] = (value &amp; 0xff) / 0xff; // Blue
+                                                this._tint = value;
+                                            }.bind(this)
+                                        });
+                                    }
                         
                                     if (this.interactive) {
                                         definition = Data.setUp(
