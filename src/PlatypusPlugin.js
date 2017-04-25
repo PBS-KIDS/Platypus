@@ -203,7 +203,8 @@
             priority = 320,
             time = {
                 delta: 0
-            };
+            },
+            deprecationAnnounced = false;
         
         if (!config) {
             platypus.debug.warn('PlatypusPlugin: Platypus requires a game configuration.');
@@ -220,8 +221,18 @@
                 setSpriteSheetIds(config.spriteSheets);
             }
             
+            game = this.platypusGame = new platypus.Game(config, this);
+
             // as of v0.11.1 deprecating `.platypus` as a reference to the game since it's confusing. Using `.platypusGame` instead.
-            game = this.platypus = this.platypusGame = new platypus.Game(config, this);
+            Object.defineProperty(this, 'platypus', {
+                get: function () {
+                    if (!deprecationAnnounced) {
+                        platypus.debug.warn('Referencing `.platypus` to access the Platypus game instance on the SpringRoll Application has been deprecated in favor of `.platypusGame`.');
+                        deprecationAnnounced = true;
+                    }
+                    return this.platypusGame;
+                }
+            });
             
             updateFunction = function (elapsed) {
                 time.delta = elapsed;
