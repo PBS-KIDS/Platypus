@@ -32,6 +32,7 @@ The same as the NEXT process, but will not minify the source code. All code form
 * grunt combine - Build a NEXT version, but leave comments and formatting intact.
 * grunt docs - Build only the docs
 * grunt uglify - Build only the min files. (Will use NEXT as the version)
+* npm test - Run tests to verify game engine functionality.
 
 ### Credit
 
