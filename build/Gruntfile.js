@@ -1,5 +1,5 @@
-var path = require('path'),
-    _ = require('lodash');
+/* global module, require */
+var path = require('path');
 
 module.exports = function (grunt) {
     'use strict';
@@ -83,11 +83,11 @@ module.exports = function (grunt) {
             },
             build: {
                 files: {
-                    'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource(
-                            [
-                                {cwd: '', config:'config.json', source:'platypus_source'}
-                            ]
-                    )
+                    'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource([{
+                        cwd: '',
+                        config: 'config.json',
+                        source: 'platypus_source'
+                    }])
                 }
             }
         },
@@ -115,25 +115,33 @@ module.exports = function (grunt) {
         compress: {
             build: {
                 options: {
-                    mode:'zip',
-                    archive:'output/<%= docsZip %>'
+                    mode: 'zip',
+                    archive: 'output/<%= docsZip %>'
                 },
-                files: [
-                    {expand:true, src:'**', cwd:'<%= docsFolder %>'}
-                ]
+                files: [{
+                    expand: true,
+                    src: '**',
+                    cwd: '<%= docsFolder %>'
+                }]
             }
         },
 
         copy: {
             docsSite: {
-                files: [
-                    {expand:true, cwd:'<%= docsFolder %>', src:'**', dest:getConfigValue('docs_out_path')}
-                ]
+                files: [{
+                    expand: true,
+                    cwd: '<%= docsFolder %>',
+                    src: '**',
+                    dest: getConfigValue('docs_out_path')
+                }]
             },
             src: {
-                files: [
-                    {expand: true, cwd:'./output/', src: '*.js', dest: '../lib/'}
-                ]
+                files: [{
+                    expand: true,
+                    cwd: './output/',
+                    src: '*.js',
+                    dest: '../lib/'
+                }]
             }
         },
 
@@ -151,55 +159,40 @@ module.exports = function (grunt) {
         }
     });
 
-    function getBuildConfig() {
-        // Read the global settings file first.
-        var config = grunt.file.readJSON('config.json');
-
-        // If we have a config.local.json .. prefer its values.
-        if (grunt.file.exists('config.local.json')) {
-            var config2 = grunt.file.readJSON('config.local.json');
-            _.extend(config, config2);
-        }
-
-        return config;
-    }
-
-    function getConfigValue(name) {
+    function getConfigValue (name) {
         var config = grunt.config.get('buildConfig');
 
-        if (config == null) {
-            config = getBuildConfig();
+        if (config === null) {
+            config = grunt.file.readJSON('config.json');
             grunt.config.set('buildConfig', config);
         }
 
         return config[name];
     }
 
-    function getCombinedSource() {
-        var configs = [
-            {cwd: '', config:'config.json', source:'source'}
-        ];
-
-        return combineSource(configs);
-    }
-
     function combineSource (configs) {
+        var handle = function (item, index, array) {
+                array[index] = path.resolve(this.cwd, item);
+            },
+            i = 0,
+            json = null,
+            o = null,
+            sourcePaths = [],
+            sources = null;
+
         // Pull out all the source paths.
-        var sourcePaths = [];
-        for (var i=0;i<configs.length;i++) {
-            var o = configs[i];
-            var json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
-            var sources = json[o.source];
-            sources.forEach(function(item, index, array) {
-                array[index] = path.resolve(o.cwd, item);
-            });
+        for (i = 0; i < configs.length; i++) {
+            o = configs[i];
+            json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
+            sources = json[o.source];
+            sources.forEach(handle.bind(o));
             sourcePaths = sourcePaths.concat(sources);
         }
 
         return sourcePaths;
     }
 
-    function getBuildArgs() {
+    function getBuildArgs () {
         var banner = grunt.file.read("BANNER");
         grunt.config("concat.options.banner", banner);
     }
@@ -212,12 +205,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadTasks('tasks/');
 
-    grunt.registerTask('setDocsBase', "Internal utility task to set a correct base for YUIDocs.", function() {
+    grunt.registerTask('setDocsBase', "Internal utility task to set a correct base for YUIDocs.", function () {
         grunt.file.setBase('../src');
         grunt.config.set('docsFolder', "../build/output/<%= docsName %>/");
     });
 
-    grunt.registerTask('resetBase', "Internal utility task to reset the base, after setDocsBase", function() {
+    grunt.registerTask('resetBase', "Internal utility task to reset the base, after setDocsBase", function () {
         grunt.file.setBase('../build');
         grunt.config.set('docsFolder', "./output/<%= docsName %>/");
     });
@@ -240,7 +233,7 @@ module.exports = function (grunt) {
      * Task for exporting a next build.
      *
      */
-    grunt.registerTask('next', function() {
+    grunt.registerTask('next', function () {
         grunt.config("buildArgs", this.args || []);
         getBuildArgs();
         grunt.task.run(["updateversion", "combine", "uglify", "clearversion", "copy:src", "clearBuildArgs"]);
@@ -258,13 +251,13 @@ module.exports = function (grunt) {
      * Task for exporting a release build (version based on package.json)
      *
      */
-    grunt.registerTask('build', function() {
+    grunt.registerTask('build', function () {
         grunt.config("buildArgs", this.args || []);
         getBuildArgs();
         grunt.task.run(["setVersion", "updateversion", "combine", "uglify", "clearversion", "docs", "copy:src", "updatebower", "copy:docsSite", "clearBuildArgs"]);
     });
 
-    grunt.registerTask('clearBuildArgs', function() {
+    grunt.registerTask('clearBuildArgs', function () {
         grunt.config("buildArgs", []);
     });
 

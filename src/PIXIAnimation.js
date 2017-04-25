@@ -4,8 +4,7 @@
  * @class PIXIAnimation
  * @extends PIXI.Sprite
  */
-//TODO: Document!
-/*global include, PIXI, platypus */
+/*global include, platypus */
 (function () {
     'use strict';
     
