@@ -24,6 +24,7 @@ module.exports = function (grunt) {
                 "node_modules/springroll/components/soundjs/lib/soundjs.combined.js",
                 "node_modules/pixi.js/dist/pixi.js",
                 "node_modules/springroll/dist/core.js",
+                "node_modules/springroll/dist/modules/pixi-display.js",
                 "node_modules/springroll/dist/modules/states.js",
                 "output/platypus.combined.js"
             ],
