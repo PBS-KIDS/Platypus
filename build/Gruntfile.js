@@ -38,7 +38,7 @@ module.exports = function (grunt) {
         // Setup Uglify for JS minification.
         uglify: {
             options: {
-                banner: grunt.file.read('LICENSE'),
+                banner: "/*!\n * @license PLATYPUS v<%= version %>\n *\n * Distributed under the terms of the MIT license.\n * http://www.opensource.org/licenses/mit-license.html\n *\n * This notice shall be included in all copies or substantial portions of the Software.\n */\n\n",
                 preserveComments: "some",
                 compress: {
                     global_defs: {
@@ -189,11 +189,6 @@ module.exports = function (grunt) {
         return sourcePaths;
     }
 
-    function getBuildArgs () {
-        var banner = grunt.file.read("BANNER");
-        grunt.config("concat.options.banner", banner);
-    }
-
     // Load all the tasks we need
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -232,7 +227,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('next', function () {
         grunt.config("buildArgs", this.args || []);
-        getBuildArgs();
+        grunt.config("concat.options.banner", "/*!\n * PLATYPUS v<%= pkg.version %>-next\n *\n */");
         grunt.task.run(["updateversion", "combine", "uglify", "clearversion", "copy:src", "clearBuildArgs"]);
     });
 
@@ -250,7 +245,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('build', function () {
         grunt.config("buildArgs", this.args || []);
-        getBuildArgs();
+        grunt.config("concat.options.banner", "/*!\n * PLATYPUS v<%= pkg.version %>\n *\n */");
         grunt.task.run(["setVersion", "updateversion", "combine", "uglify", "clearversion", "docs", "copy:src", "updatebower", "copy:docsSite", "clearBuildArgs"]);
     });
 
