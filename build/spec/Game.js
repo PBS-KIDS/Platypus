@@ -33,7 +33,6 @@ describe("Game", function () {
     describe("with configuration and SpringRoll application", function () {
         it("will be the platypus game instance", function () {
             expect(platypus.game).not.toBeUndefined();
-            expect(platypus.game).toBe(app.platypus);
         });
           
         it("will be available from both `platypus.game` and SpringRoll's `app.platypusGame`", function () {
