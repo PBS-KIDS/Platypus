@@ -4,6 +4,17 @@ var path = require('path');
 module.exports = function (grunt) {
     'use strict';
 
+    var jasSrc = grunt.file.readJSON('config.json').platypus_source.slice();
+
+    jasSrc.unshift(
+        "node_modules/springroll/components/preloadjs/lib/preloadjs.combined.js",
+        "node_modules/springroll/components/soundjs/lib/soundjs.combined.js",
+        "node_modules/pixi.js/dist/pixi.js",
+        "node_modules/springroll/dist/core.js",
+        "node_modules/springroll/dist/modules/pixi-display.js",
+        "node_modules/springroll/dist/modules/states.js"
+    );
+
     grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     grunt.initConfig({
@@ -19,15 +30,7 @@ module.exports = function (grunt) {
 
         // Setup tests
         jasmine: {
-            src: [
-                "node_modules/springroll/components/preloadjs/lib/preloadjs.combined.js",
-                "node_modules/springroll/components/soundjs/lib/soundjs.combined.js",
-                "node_modules/pixi.js/dist/pixi.js",
-                "node_modules/springroll/dist/core.js",
-                "node_modules/springroll/dist/modules/pixi-display.js",
-                "node_modules/springroll/dist/modules/states.js",
-                "lib/platypus.combined.js"
-            ],
+            src: jasSrc,
             options: {
                 specs: "spec/**/*.js",
                 vendor: "vendor/**/*.js",
