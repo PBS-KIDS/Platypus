@@ -153,6 +153,19 @@ platypus.CollisionShape = (function () {
         this.y = y;
         this.aABB.moveY(y);
     };
+
+    /**
+     * Move the shape's x and y position.
+     *
+     * @method moveXY
+     * @param x {number} The x position to which the shape should be moved.
+     * @param y {number} The y position to which the shape should be moved.
+     */
+    proto.moveXY = function (x, y) {
+        this.x = x;
+        this.y = y;
+        this.aABB.move(x, y);
+    };
     
     /**
      * Returns the axis-aligned bounding box of the shape.

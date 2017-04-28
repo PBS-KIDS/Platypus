@@ -166,7 +166,7 @@
                     x = 0,
                     y = 0;
                 
-                if (sweep.equals(entity.againstAABB)) {
+                if (entity && sweep.equals(entity.againstAABB)) {
                     return this.getEntityAgainstGrid(entity, types);
                 }
 
@@ -1052,6 +1052,57 @@
                     againstGrid.recycle();
                 }
             },
+
+
+            checkShapeForCollisions: function (shape, softCollisionMap, callback) {
+                var againstGrid = null,
+                    otherEntity = null,
+                    message = triggerMessage,
+                    j   = 0,
+                    k   = 0,
+                    m   = 0,
+                    otherEntities  = null,
+                    otherCollisionType = null,
+                    otherShapes = null,
+                    collisionFound = false;
+
+                message.x = 0;
+                message.y = 0;
+
+                againstGrid = this.getAgainstGrid(null, shape.getAABB(), softCollisionMap);
+                j = softCollisionMap.length;
+                while (j--) {
+                    otherCollisionType = softCollisionMap[j];
+                    otherEntities = againstGrid[otherCollisionType];
+                    if (otherEntities) {
+                        k = otherEntities.length;
+                        while (k--) {
+                            otherEntity = otherEntities[k];
+                            if ((shape.getAABB().collides(otherEntity.getAABB(otherCollisionType)))) {
+                                collisionFound = false;
+                                otherShapes = otherEntity.getShapes(otherCollisionType);
+                                m = otherShapes.length;
+                                while (m--) {
+                                    if (shape.collides(otherShapes[m])) {
+                                        //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
+                                        message.entity  = otherEntity;
+                                        message.type    = otherCollisionType;
+                                        message.myType  = '';
+                                        message.shape   = otherShapes[m];
+                                        message.hitType = 'soft';
+                                        
+                                        callback(message);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        otherEntities.recycle();
+                    }
+                }
+                againstGrid.recycle();
+            },
+
             
             checkPointForCollisions: function (x, y, collisions, callback) {
                 var gb = this.gridBits,
@@ -1172,6 +1223,24 @@
                 return collisions;
             },
             
+            /**
+             * This method returns a list of collision objects describing collisions between a shape and a list of other entities.
+             *
+             * @method getShapeCollisions
+             * @param shape {CollisionShape} The shape to check for collisions.
+             * @param collisionTypes {Array of strings} The collision types to check against.
+             * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+             */
+            getShapeCollisions: function (shape, collisionTypes) {
+                var collisions = Array.setUp();
+                
+                this.checkShapeForCollisions(shape, collisionTypes, function (collision) {
+                    collisions.push(Data.setUp(collision));
+                });
+                
+                return collisions;
+            },
+
             /**
              * This method returns a list of collision objects describing collisions between a point and a list of other entities.
              *
