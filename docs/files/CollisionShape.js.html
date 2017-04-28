@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : CollisionShape.js</title>
+	<title>platypus v0.11.1 API Documentation : CollisionShape.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -361,7 +362,60 @@
                                 
                                 this.aABB.setAll(this.x, this.y, this.width, this.height);
                             };
+                        
+                            /**
+                             * Expresses whether this shape contains the given point.
+                             *
+                             * @method containsPoint
+                             * @param x {number} The x-axis value.
+                             * @param y {number} The y-axis value.
+                             * @return {boolean} Returns &#x60;true&#x60; if this shape contains the point.
+                             * @since 0.11.0
+                             */
+                            proto.containsPoint = function (x, y) {
+                                var pow = Math.pow;
+                        
+                                return this.aABB.containsPoint(x, y) &amp;&amp; (
+                                    (this.type === &#x27;rectangle&#x27;) ||
+                                    ((this.type === &#x27;circle&#x27;) &amp;&amp; ((pow((this.x - x), 2) + pow((this.y - y), 2)) &lt;= pow(this.radius, 2)))
+                                );
+                            };
                             
+                            /**
+                            * Returns a JSON object describing the collision shape.
+                            *
+                            * @method toJSON
+                            * @return {Object} Returns a JSON definition that can be used to recreate the collision shape.
+                            * @since 0.11.0
+                            **/
+                            proto.toJSON = function () {
+                                var json = {},
+                                    width = this.size.width,
+                                    height = this.size.height;
+                        
+                                if (width / 2 !== this.regX) {
+                                    json.regX = this.regX;
+                                }
+                                if (height / 2 !== this.regY) {
+                                    json.regY = this.regY;
+                                }
+                                if (this.offset.x !== ((width / 2) - this.regX)) {
+                                    json.offsetX = this.offset.x;
+                                }
+                                if (this.offset.y !== ((height / 2) - this.regY)) {
+                                    json.offsetY = this.offset.y;
+                                }
+                                if (this.type === &#x27;circle&#x27;) {
+                                    json.radius = this.radius;
+                                } else {
+                                    json.width = width;
+                                    json.height = height;
+                                }
+                                json.type = this.type;
+                        
+                                return json;
+                            };
+                        
                             /**
                              * Returns an CollisionShape from cache or creates a new one if none are available.
                              *

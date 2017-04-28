@@ -1,16 +1,17 @@
 /**
- * This component is attached to entities that will appear in the game world. It renders a static or animated image. It listens for messages triggered on the entity or changes in the logical state of the entity to play a corresponding animation.
+ * This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.
  *
  * @namespace platypus.components
- * @class RenderSprite
+ * @class RenderContainer
  * @uses platypus.Component
- * @since 0.10.7
+ * @since 0.11.0
  */
 /* global include, platypus */
 (function () {
     'use strict';
     
     var AABB = include('platypus.AABB'),
+        CanvasRenderer = include('PIXI.CanvasRenderer'),
         ColorMatrixFilter = include('PIXI.filters.ColorMatrixFilter'),
         Container = include('PIXI.Container'),
         Data = include('platypus.Data'),
@@ -253,24 +254,43 @@
             this.isOnCamera = true;
 
             this._tint = null;
-            Object.defineProperty(this.owner, 'tint', {
-                get: function () {
-                    return this._tint;
-                }.bind(this),
-                set: function (value) {
-                    var filters = this.container.filters,
-                        matrix = null;
 
-                    if (!filters) {
-                        filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
-                    }
-                    matrix = filters[0].matrix;
-                    matrix[0] = (value & 0xff0000) / 0xff0000; // Red
-                    matrix[6] = (value & 0xff00) / 0xff00; // Green
-                    matrix[12] = (value & 0xff) / 0xff; // Blue
-                    this._tint = value;
-                }.bind(this)
-            });
+            // This should be simplified once PIXI supports a `tint` property on PIXI.Container: https://github.com/pixijs/pixi.js/issues/2328
+            if (platypus.game.app.display.renderer instanceof CanvasRenderer) {
+                Object.defineProperty(this.owner, 'tint', {
+                    get: function () {
+                        return this._tint;
+                    }.bind(this),
+                    set: function (value) {
+                        var children = this.container.children,
+                            i = children.length;
+
+                        while (i--) {
+                            children[i].tint = value;
+                        }
+                        this._tint = value;
+                    }.bind(this)
+                });
+            } else {
+                Object.defineProperty(this.owner, 'tint', {
+                    get: function () {
+                        return this._tint;
+                    }.bind(this),
+                    set: function (value) {
+                        var filters = this.container.filters,
+                            matrix = null;
+
+                        if (!filters) {
+                            filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
+                        }
+                        matrix = filters[0].matrix;
+                        matrix[0] = (value & 0xff0000) / 0xff0000; // Red
+                        matrix[6] = (value & 0xff00) / 0xff00; // Green
+                        matrix[12] = (value & 0xff) / 0xff; // Blue
+                        this._tint = value;
+                    }.bind(this)
+                });
+            }
 
             if (this.interactive) {
                 definition = Data.setUp(

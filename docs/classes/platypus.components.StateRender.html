@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : platypus.components.StateRender</title>
+	<title>platypus v0.11.1 API Documentation : platypus.components.StateRender</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -228,6 +229,10 @@
                         
                                                     </li>
                                                     <li class="index-item method inherited">
+                                                        <a href="#method_toJSON">toJSON</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method inherited">
                                                         <a href="#method_toString">toString</a>
                         
                                                     </li>
@@ -266,6 +271,10 @@
                                                         <a href="#event_&#x27;play-animation&#x27;">&#x27;play-animation&#x27;</a>
                         
                                                     </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;stop-animation&#x27;">&#x27;stop-animation&#x27;</a>
+                        
+                                                    </li>
                                             </ul>
                                         </div>
                                 </div>
@@ -294,7 +303,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l114"><code>&#x27;animation-ended&#x27;:114</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l147"><code>&#x27;animation-ended&#x27;:147</code></a>
                                                     </p>
                                             
                                             
@@ -341,7 +350,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l105"><code>&#x27;state-changed&#x27;:105</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l138"><code>&#x27;state-changed&#x27;:138</code></a>
                                                     </p>
                                             
                                             
@@ -370,6 +379,9 @@
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                                    </span>
                                             
                                             
                                                     <span class="flag private">private</span>
@@ -381,7 +393,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l103"><code>addEventListener:103</code></a>
+                                                    <a href="../files/Component.js.html#l112"><code>addEventListener:112</code></a>
                                                     </p>
                                             
                                             
@@ -419,6 +431,14 @@
                                                         </ul>
                                                     </div>
                                             
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>:
+                                                                handler  A reference to the bound handler.
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                             <div id="method_addMethod" class="method item private inherited">
@@ -446,7 +466,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l119"><code>addMethod:119</code></a>
+                                                    <a href="../files/Component.js.html#l131"><code>addMethod:131</code></a>
                                                     </p>
                                             
                                             
@@ -502,7 +522,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l45"><code>destroy:45</code></a>
+                                                    <a href="../files/Component.js.html#l54"><code>destroy:54</code></a>
                                                     </p>
                                             
                                             
@@ -546,7 +566,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l176"><code>getAssetList:176</code></a>
+                                                    <a href="../files/Component.js.html#l188"><code>getAssetList:188</code></a>
                                                     </p>
                                             
                                             
@@ -628,7 +648,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l187"><code>getLateAssetList:187</code></a>
+                                                    <a href="../files/Component.js.html#l199"><code>getLateAssetList:199</code></a>
                                                     </p>
                                             
                                             
@@ -691,7 +711,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l138"><code>removeEventListener:138</code></a>
+                                                    <a href="../files/Component.js.html#l150"><code>removeEventListener:150</code></a>
                                                     </p>
                                             
                                             
@@ -753,7 +773,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l76"><code>removeEventListeners:76</code></a>
+                                                    <a href="../files/Component.js.html#l85"><code>removeEventListeners:85</code></a>
                                                     </p>
                                             
                                             
@@ -806,7 +826,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l160"><code>removeMethod:160</code></a>
+                                                    <a href="../files/Component.js.html#l172"><code>removeMethod:172</code></a>
                                                     </p>
                                             
                                             
@@ -834,6 +854,47 @@
                                                         </ul>
                                                     </div>
                                             
+                                            
+                                            </div>
+                                            <div id="method_toJSON" class="method item inherited">
+                                                <h3 class="name"><code>toJSON</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>Inherited from
+                                                            <a href="../classes/platypus.Component.html#method_toJSON">platypus.Component</a>:
+                                                    <a href="../files/Component.js.html#l45"><code>toJSON:45</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    Returns a JSON object describing the component.
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                                                Returns a JSON definition that can be used to recreate the component.
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                             <div id="method_toString" class="method item inherited">
@@ -897,7 +958,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l141"><code>update-animation:141</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l168"><code>update-animation:168</code></a>
                                                     </p>
                                             
                                             
@@ -945,7 +1006,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l35"><code>animationMap:35</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l60"><code>animationMap:60</code></a>
                                                     </p>
                                             
                                             
@@ -977,7 +1038,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l51"><code>component:51</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l76"><code>component:76</code></a>
                                                     </p>
                                             
                                             
@@ -1004,7 +1065,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l61"><code>forcePlayThrough:61</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l86"><code>forcePlayThrough:86</code></a>
                                                     </p>
                                             
                                             
@@ -1036,7 +1097,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_StateRender.js.html#l128"><code>&#x27;play-animation&#x27;:128</code></a>
+                                                    <a href="../files/components_StateRender.js.html#l37"><code>&#x27;play-animation&#x27;:37</code></a>
                                                     </p>
                                             
                                             
@@ -1058,6 +1119,59 @@
                                             
                                                                 <div class="param-description">
                                                                     <p>Describes the animation to play.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">restart</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Whether to restart a playing animation.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;stop-animation&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;stop-animation&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_StateRender.js.html#l47"><code>&#x27;stop-animation&#x27;:47</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On attaining an animation-mapped state, this component triggers this event to stop a previous animation.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">animation</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Describes the animation to stop.</p>
                                             
                                                                 </div>
                                             

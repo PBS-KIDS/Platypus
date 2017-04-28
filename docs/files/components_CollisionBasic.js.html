@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : components\CollisionBasic.js</title>
+	<title>platypus v0.11.1 API Documentation : components\CollisionBasic.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -668,6 +669,7 @@
                                         }
                                     }
                                     
+                                    this.active = true;
                                     this.stuck = false;
                                 },
                                 
@@ -689,7 +691,7 @@
                                          * @event &#x27;add-collision-entity&#x27;
                                          * @param entity {platypus.Entity} The entity this component is attached to.
                                          */
-                                        if ((typeof type !== &#x27;string&#x27;) || (type === colType)) {
+                                        if (!this.active &amp;&amp; ((typeof type !== &#x27;string&#x27;) || (type === colType))) {
                                             if (colTypes.indexOf(colType) === -1) {
                                                 colTypes.push(colType);
                                             }
@@ -717,7 +719,7 @@
                                          * @event &#x27;remove-collision-entity&#x27;
                                          * @param entity {platypus.Entity} The entity this component is attached to.
                                          */
-                                        if ((typeof type !== &#x27;string&#x27;) || (type === colType)) {
+                                        if (this.active &amp;&amp; ((typeof type !== &#x27;string&#x27;) || (type === colType))) {
                                             parent.triggerEvent(&#x27;remove-collision-entity&#x27;, owner);
                                             index = colTypes.indexOf(colType);
                                             if (index &gt;= 0) {

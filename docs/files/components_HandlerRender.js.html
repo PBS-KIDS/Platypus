@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : components\HandlerRender.js</title>
+	<title>platypus v0.11.1 API Documentation : components\HandlerRender.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -164,8 +165,7 @@
                             
                             var Container = include(&#x27;PIXI.Container&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
-                                Interactive = include(&#x27;platypus.components.Interactive&#x27;),
-                                Vector = include(&#x27;platypus.Vector&#x27;);
+                                Interactive = include(&#x27;platypus.components.Interactive&#x27;);
                         
                             return platypus.createComponentClass({
                         
@@ -190,33 +190,30 @@
                                      * @default false
                                      * @since 0.9.1
                                      */
-                                    interactive: false,
+                                    interactive: false
+                                },
+                        
+                                publicProperties: {
                         
                                     /**
-                                     * This property&#x27;s functionality is now provided by the &#x60;interactive&#x60; property.
+                                     * This is the container holding all children&#x27;s disply objects for this layer. It&#x27;s an available proeprty on the layer entity.
                                      *
-                                     * @property acceptInput
-                                     * @type Object
+                                     * @property worldContainer
+                                     * @type PIXI.Container
                                      * @default null
-                                     * @deprecated since 0.9.1
+                                     * @since 0.11.0
                                      */
-                                    acceptInput: null
+                                    worldContainer: null
                                 },
                         
                                 initialize: function () {
                                     var definition = null;
                         
-                                    this.container = new Container();
-                        
-                                    // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-                                    if (this.acceptInput) {
-                                        platypus.debug.warn(&#x27;Entity &quot;&#x27; + this.owner.type + &#x27;&quot;: HandlerRender &quot;acceptInput&quot; property has been deprecated since 0.9.1 in favor of the &quot;interactive&quot; property which adds an &quot;Interactive&quot; component to the entity to handle input.&#x27;);
-                                        this.interactive = this.interactive || this.acceptInput;
-                                    }
+                                    this.worldContainer = this.worldContainer || new Container();
                         
                                     if (this.interactive) {
                                         definition = Data.setUp(
-                                            &#x27;container&#x27;, this.container,
+                                            &#x27;container&#x27;, this.worldContainer,
                                             &#x27;hitArea&#x27;, this.interactive.hitArea,
                                             &#x27;hover&#x27;, this.interactive.hover,
                                             &#x27;relativeToSelf&#x27;, true
@@ -227,7 +224,7 @@
                         
                                     this.renderMessage = Data.setUp(
                                         &#x27;delta&#x27;, 0,
-                                        &#x27;container&#x27;, this.container
+                                        &#x27;container&#x27;, this.worldContainer
                                     );
                                 },
                         
@@ -246,7 +243,7 @@
                                          * @param data.world {PIXI.Container} Contains entities to be rendered.
                                          */
                                         this.owner.triggerEvent(&#x27;render-world&#x27;, {
-                                            world: this.container
+                                            world: this.worldContainer
                                         });
                         
                                         /**
@@ -329,7 +326,8 @@
                                         };
                         
                                         return function (tick) {
-                                            var message = this.renderMessage;
+                                            var message = this.renderMessage,
+                                                worldContainer = this.worldContainer;
                         
                                             message.delta = tick.delta;
                         
@@ -352,47 +350,17 @@
                                                 this.owner.triggerEventOnChildren(&#x27;handle-render&#x27;, message);
                                             }
                         
-                                            if (this.container &amp;&amp; this.container.reorder) {
-                                                this.container.reorder = false;
-                                                this.container.children.sort(sort);
+                                            if (worldContainer &amp;&amp; worldContainer.reorder) {
+                                                worldContainer.reorder = false;
+                                                worldContainer.children.sort(sort);
                                             }
                                         };
                                     }())
                                 },
                                 methods: {
                                     destroy: function () {
-                                        this.container = null;
+                                        this.worldContainer = null;
                                         this.renderMessage.recycle();
-                                    }
-                                },
-                        
-                                publicMethods: {
-                                    windowToWorld: function (windowVector, withOffset, vector) {
-                                        var worldVector = vector || Vector.setUp();
-                                        
-                                        worldVector.x = windowVector.x * this.worldPerWindowUnitWidth;
-                                        worldVector.y = windowVector.y * this.worldPerWindowUnitHeight;
-                                        
-                                        if (withOffset !== false) {
-                                            worldVector.x -= this.viewport.x * this.worldPerWindowUnitWidth;
-                                            worldVector.y -= this.viewport.y * this.worldPerWindowUnitHeight;
-                                        }
-                        
-                                        return worldVector;
-                                    },
-                                    
-                                    worldToWindow: function (worldVector, withOffset, vector) {
-                                        var windowVector = vector || Vector.setUp();
-                        
-                                        windowVector.x = worldVector.x * this.windowPerWorldUnitWidth;
-                                        windowVector.y = worldVector.y * this.windowPerWorldUnitHeight;
-                                        
-                                        if (withOffset !== false) {
-                                            windowVector.x += this.viewport.x;
-                                            windowVector.y += this.viewport.y;
-                                        }
-                        
-                                        return windowVector;
                                     }
                                 }
                             });

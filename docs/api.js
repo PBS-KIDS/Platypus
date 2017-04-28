@@ -57,6 +57,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "platypus.components.RelayParent",
         "platypus.components.RelaySelf",
         "platypus.components.RenderAnimation",
+        "platypus.components.RenderContainer",
         "platypus.components.RenderDebug",
         "platypus.components.RenderDestroyMe",
         "platypus.components.RenderProgress",

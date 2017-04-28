@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : components\HandlerCollision.js</title>
+	<title>platypus v0.11.1 API Documentation : components\HandlerCollision.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -175,12 +176,19 @@
                              * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
                              * @param collision.y {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: top, neither, or bottom respectively.
                              */
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
+                            var BIT_16 = 0xffff,
+                                AABB = include(&#x27;platypus.AABB&#x27;),
                                 CollisionData = include(&#x27;platypus.CollisionData&#x27;),
                                 CollisionDataContainer = include(&#x27;platypus.CollisionDataContainer&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 DataMap = include(&#x27;platypus.DataMap&#x27;),
                                 Vector = include(&#x27;platypus.Vector&#x27;),
+                                combine = function (x, y) {
+                                    return (x &lt;&lt; 16) | (y &amp; BIT_16);
+                                },
+                                getBucketId = function (x, y, bits) {
+                                    return combine(x &gt;&gt; bits, y &gt;&gt; bits);
+                                },
                                 triggerMessage = {
                                     entity: null,
                                     type: null,
@@ -318,7 +326,7 @@
                         
                                         for (x = aabb.left; x &lt;= aabb.right; x++) {
                                             for (y = aabb.top; y &lt;= aabb.bottom; y++) {
-                                                list = thisAgainstGrid[((y &lt;&lt; 16) ^ x) &gt;&gt;&gt; 0];
+                                                list = thisAgainstGrid[combine(x, y)];
                                                 if (list) {
                                                     i = types.length;
                                                     while (i--) {
@@ -416,7 +424,7 @@
                         
                                             for (x = aabb.left; x &lt;= aabb.right; x++) {
                                                 for (y = aabb.top; y &lt;= aabb.bottom; y++) {
-                                                    id = ((y &lt;&lt; 16) ^ x) &gt;&gt;&gt; 0;
+                                                    id = combine(x, y);
                                                     list = thisAgainstGrid[id];
                                                     if (!list) {
                                                         list = thisAgainstGrid[id] = DataMap.setUp();
@@ -441,7 +449,7 @@
                                     addCollisionEntity: function (entity) {
                                         if (entity.getTileShapes) { // Has a CollisionTiles component
                                             this.terrain = entity;
-                                        } else if (entity.collisionTypes) {
+                                        } else if (entity.collisionTypes &amp;&amp; !entity.againstGrid) {
                                             entity.againstGrid = Array.setUp();
                                             entity.againstAABB = AABB.setUp();
                                             this.updateAgainst(entity);
@@ -1199,6 +1207,56 @@
                                         }
                                     },
                                     
+                                    checkPointForCollisions: function (x, y, collisions, callback) {
+                                        var gb = this.gridBits,
+                                            againstGrid = this.againstGrid[getBucketId(x, y, gb)],
+                                            otherEntity = null,
+                                            message = triggerMessage,
+                                            j   = 0,
+                                            k   = 0,
+                                            m   = 0,
+                                            otherEntities  = null,
+                                            otherCollisionType = null,
+                                            otherShapes = null;
+                        
+                                        message.x = 0;
+                                        message.y = 0;
+                        
+                                        if (!againstGrid) {
+                                            return;
+                                        }
+                                        
+                                        j = collisions.length;
+                                        while (j--) {
+                                            otherCollisionType = collisions[j];
+                                            otherEntities = againstGrid.get(otherCollisionType);
+                                            if (otherEntities) {
+                                                k = otherEntities.length;
+                                                while (k--) {
+                                                    otherEntity = otherEntities[k];
+                                                    if (otherEntity.getAABB(otherCollisionType).containsPoint(x, y)) {
+                                                        otherShapes = otherEntity.getShapes(otherCollisionType);
+                                                        m = otherShapes.length;
+                                                        while (m--) {
+                                                            if (otherShapes[m].containsPoint(x, y)) {
+                                                                //TML - We&#x27;re only reporting the first shape we hit even though there may be multiple that we could be hitting.
+                                                                message.entity  = otherEntity;
+                                                                message.type    = otherCollisionType;
+                                                                message.myType  = &#x27;&#x27;;
+                                                                message.shape   = otherShapes[m];
+                                                                message.hitType = &#x27;soft&#x27;;
+                                                                
+                                                                callback(message);
+                                                                
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    
                                     destroy: function () {
                                         var ag = this.againstGrid,
                                             data = null,
@@ -1262,6 +1320,26 @@
                                         var collisions = Array.setUp();
                                         
                                         this.checkEntityForSoftCollisions(entity, function (collision) {
+                                            collisions.push(Data.setUp(collision));
+                                        });
+                                        
+                                        return collisions;
+                                    },
+                                    
+                                    /**
+                                     * This method returns a list of collision objects describing collisions between a point and a list of other entities.
+                                     *
+                                     * @method getPointCollisions
+                                     * @param x {number} The x-axis value.
+                                     * @param y {number} The y-axis value.
+                                     * @param collisionTypes {Array of strings} The collision types to check against.
+                                     * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+                                     * @since 0.11.0
+                                     */
+                                    getPointCollisions: function (x, y, collisionTypes) {
+                                        var collisions = Array.setUp();
+                                        
+                                        this.checkPointForCollisions(x, y, collisionTypes, function (collision) {
                                             collisions.push(Data.setUp(collision));
                                         });
                                         

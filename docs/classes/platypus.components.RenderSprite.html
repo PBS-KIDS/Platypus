@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : platypus.components.RenderSprite</title>
+	<title>platypus v0.11.1 API Documentation : platypus.components.RenderSprite</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -187,50 +188,16 @@
                         
                                             <ul class="index-list methods">
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;cache&#x27;">&#x27;cache&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;camera-update&#x27;">&#x27;camera-update&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
                                                         <a href="#method_&#x27;handle-render&#x27;">&#x27;handle-render&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;handle-render-load&#x27;">&#x27;handle-render-load&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;hide-sprite&#x27;">&#x27;hide-sprite&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
                                                         <a href="#method_&#x27;play-animation&#x27;">&#x27;play-animation&#x27;</a>
                         
                                                     </li>
-                                                    <li class="index-item method deprecated">
-                                                        <a href="#method_&#x27;play-sprite&#x27;">&#x27;play-sprite&#x27;</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;set-mask&#x27;">&#x27;set-mask&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item method">
-                                                        <a href="#method_&#x27;show-sprite&#x27;">&#x27;show-sprite&#x27;</a>
-                        
-                                                    </li>
                                                     <li class="index-item method">
                                                         <a href="#method_&#x27;stop-animation&#x27;">&#x27;stop-animation&#x27;</a>
                         
-                                                    </li>
-                                                    <li class="index-item method deprecated">
-                                                        <a href="#method_&#x27;stop-sprite&#x27;">&#x27;stop-sprite&#x27;</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
                                                     </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_addEventListener">addEventListener</a>
@@ -265,6 +232,10 @@
                         
                                                     </li>
                                                     <li class="index-item method inherited">
+                                                        <a href="#method_toJSON">toJSON</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method inherited">
                                                         <a href="#method_toString">toString</a>
                         
                                                     </li>
@@ -275,21 +246,12 @@
                                             <h3>Properties</h3>
                         
                                             <ul class="index-list properties">
-                                                    <li class="index-item property deprecated">
-                                                        <a href="#property_acceptInput">acceptInput</a>
-                        
-                                                            <span class="flag deprecated">deprecated</span>
-                                                    </li>
                                                     <li class="index-item property">
                                                         <a href="#property_animationMap">animationMap</a>
                         
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_cache">cache</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_dragMode">dragMode</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -321,6 +283,14 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_offsetX">offsetX</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_offsetY">offsetY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_offsetZ">offsetZ</a>
                         
                                                     </li>
@@ -337,11 +307,19 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_scale">scale</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_scaleX">scaleX</a>
                         
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_scaleY">scaleY</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_skew">skew</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -364,18 +342,6 @@
                                                         <a href="#property_visible">visible</a>
                         
                                                     </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_x">x</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_y">y</a>
-                        
-                                                    </li>
-                                                    <li class="index-item property">
-                                                        <a href="#property_z">z</a>
-                        
-                                                    </li>
                                             </ul>
                                         </div>
                         
@@ -389,14 +355,6 @@
                         
                                                     </li>
                                                     <li class="index-item event">
-                                                        <a href="#event_&#x27;cache-sprite&#x27;">&#x27;cache-sprite&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item event">
-                                                        <a href="#event_&#x27;input-on&#x27;">&#x27;input-on&#x27;</a>
-                        
-                                                    </li>
-                                                    <li class="index-item event">
                                                         <a href="#event_&#x27;update-animation&#x27;">&#x27;update-animation&#x27;</a>
                         
                                                     </li>
@@ -407,89 +365,6 @@
                                     <div id="methods" class="api-class-tabpanel">
                                         <h2 class="off-left">Methods</h2>
                         
-                                            <div id="method_&#x27;cache&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;cache&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l449"><code>&#x27;cache&#x27;:449</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;camera-update&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;camera-update&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>camera.viewport</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l471"><code>&#x27;camera-update&#x27;:471</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Listens for this event to determine whether this sprite is visible.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">camera.viewport</code>
-                                                                    <span class="type"><a href="../classes/platypus.AABB.html" class="crosslink">platypus.AABB</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>Camera position and size.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
                                             <div id="method_&#x27;handle-render&#x27;" class="method item">
                                                 <h3 class="name"><code>&#x27;handle-render&#x27;</code></h3>
                                             
@@ -511,7 +386,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l500"><code>&#x27;handle-render&#x27;:500</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l433"><code>&#x27;handle-render&#x27;:433</code></a>
                                                     </p>
                                             
                                             
@@ -555,101 +430,6 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;handle-render-load&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;handle-render-load&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>handlerData</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l486"><code>&#x27;handle-render-load&#x27;:486</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">handlerData</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>Data from the render handler</p>
-                                            
-                                                                </div>
-                                            
-                                                                    <ul class="params-list">
-                                                                        <li class="param">
-                                                                                <code class="param-name">container</code>
-                                                                                <span class="type">PIXI.Container</span>
-                                            
-                                                                            <div class="param-description">
-                                                                                <p>The parent container.</p>
-                                            
-                                                                            </div>
-                                            
-                                                                        </li>
-                                                                    </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;hide-sprite&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;hide-sprite&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l522"><code>&#x27;hide-sprite&#x27;:522</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event makes the sprite invisible.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
                                             <div id="method_&#x27;play-animation&#x27;" class="method item">
                                                 <h3 class="name"><code>&#x27;play-animation&#x27;</code></h3>
                                             
@@ -671,7 +451,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l567"><code>&#x27;play-animation&#x27;:567</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l465"><code>&#x27;play-animation&#x27;:465</code></a>
                                                     </p>
                                             
                                             
@@ -705,121 +485,6 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;play-sprite&#x27;" class="method item deprecated">
-                                                <h3 class="name"><code>&#x27;play-sprite&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                                    <span class="flag deprecated" title="since 0.9.0">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l588"><code>&#x27;play-sprite&#x27;:588</code></a>
-                                                    </p>
-                                            
-                                            
-                                                        <p>Deprecated: since 0.9.0</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Starts the sprite's animation.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;set-mask&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;set-mask&#x27;</code></h3>
-                                            
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>mask</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l540"><code>&#x27;set-mask&#x27;:540</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">mask</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>The mask. This can specified the same way as the 'mask' parameter on the component.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="method_&#x27;show-sprite&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;show-sprite&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l531"><code>&#x27;show-sprite&#x27;:531</code></a>
-                                                    </p>
-                                            
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event makes the sprite visible.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
                                             <div id="method_&#x27;stop-animation&#x27;" class="method item">
                                                 <h3 class="name"><code>&#x27;stop-animation&#x27;</code></h3>
                                             
@@ -841,7 +506,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l550"><code>&#x27;stop-animation&#x27;:550</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l454"><code>&#x27;stop-animation&#x27;:454</code></a>
                                                     </p>
                                             
                                             
@@ -875,38 +540,6 @@
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;stop-sprite&#x27;" class="method item deprecated">
-                                                <h3 class="name"><code>&#x27;stop-sprite&#x27;</code></h3>
-                                            
-                                                    <span class="paren">()</span>
-                                            
-                                            
-                                                    <span class="flag deprecated" title="since 0.9.0">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l578"><code>&#x27;stop-sprite&#x27;:578</code></a>
-                                                    </p>
-                                            
-                                            
-                                                        <p>Deprecated: since 0.9.0</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Stops the sprite's animation.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
                                             <div id="method_addEventListener" class="method item private inherited">
                                                 <h3 class="name"><code>addEventListener</code></h3>
                                             
@@ -921,6 +554,9 @@
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                                    </span>
                                             
                                             
                                                     <span class="flag private">private</span>
@@ -932,7 +568,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l103"><code>addEventListener:103</code></a>
+                                                    <a href="../files/Component.js.html#l112"><code>addEventListener:112</code></a>
                                                     </p>
                                             
                                             
@@ -970,6 +606,14 @@
                                                         </ul>
                                                     </div>
                                             
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>:
+                                                                handler  A reference to the bound handler.
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                             <div id="method_addMethod" class="method item private inherited">
@@ -997,7 +641,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l119"><code>addMethod:119</code></a>
+                                                    <a href="../files/Component.js.html#l131"><code>addMethod:131</code></a>
                                                     </p>
                                             
                                             
@@ -1053,7 +697,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l45"><code>destroy:45</code></a>
+                                                    <a href="../files/Component.js.html#l54"><code>destroy:54</code></a>
                                                     </p>
                                             
                                             
@@ -1097,7 +741,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l176"><code>getAssetList:176</code></a>
+                                                    <a href="../files/Component.js.html#l188"><code>getAssetList:188</code></a>
                                                     </p>
                                             
                                             
@@ -1179,7 +823,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l187"><code>getLateAssetList:187</code></a>
+                                                    <a href="../files/Component.js.html#l199"><code>getLateAssetList:199</code></a>
                                                     </p>
                                             
                                             
@@ -1242,7 +886,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l138"><code>removeEventListener:138</code></a>
+                                                    <a href="../files/Component.js.html#l150"><code>removeEventListener:150</code></a>
                                                     </p>
                                             
                                             
@@ -1304,7 +948,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l76"><code>removeEventListeners:76</code></a>
+                                                    <a href="../files/Component.js.html#l85"><code>removeEventListeners:85</code></a>
                                                     </p>
                                             
                                             
@@ -1357,7 +1001,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l160"><code>removeMethod:160</code></a>
+                                                    <a href="../files/Component.js.html#l172"><code>removeMethod:172</code></a>
                                                     </p>
                                             
                                             
@@ -1385,6 +1029,47 @@
                                                         </ul>
                                                     </div>
                                             
+                                            
+                                            </div>
+                                            <div id="method_toJSON" class="method item inherited">
+                                                <h3 class="name"><code>toJSON</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>Inherited from
+                                                            <a href="../classes/platypus.Component.html#method_toJSON">platypus.Component</a>:
+                                                    <a href="../files/Component.js.html#l45"><code>toJSON:45</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    Returns a JSON object describing the component.
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                                                Returns a JSON definition that can be used to recreate the component.
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                             <div id="method_toString" class="method item inherited">
@@ -1432,34 +1117,6 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_acceptInput" class="property item deprecated">
-                                                <h3 class="name"><code>acceptInput</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                                    <span class="flag deprecated" title="since 0.9.0">deprecated</span>
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l145"><code>acceptInput:145</code></a>
-                                                    </p>
-                                            
-                                                        <p>Deprecated: since 0.9.0</p>
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This property's functionality is now provided by the <code>interactive</code> property.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> null</p>
-                                            
-                                            
-                                            </div>
                                             <div id="property_animationMap" class="property item">
                                                 <h3 class="name"><code>animationMap</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -1471,7 +1128,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l87"><code>animationMap:87</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l78"><code>animationMap:78</code></a>
                                                     </p>
                                             
                                             
@@ -1505,7 +1162,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l228"><code>cache:228</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l229"><code>cache:229</code></a>
                                                     </p>
                                             
                                             
@@ -1513,33 +1170,6 @@
                                             
                                                 <div class="description">
                                                     <p>Optional. Whether this sprite should be cached into an entity with a <code>RenderTiles</code> component (like "render-layer"). The <code>RenderTiles</code> component must have its "entityCache" property set to <code>true</code>. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_dragMode" class="property item">
-                                                <h3 class="name"><code>dragMode</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l257"><code>dragMode:257</code></a>
-                                                    </p>
-                                            
-                                            
-                                                        <p>Available since 0.8.3</p>
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Prevents sprite from becoming invisible out of frame and losing mouse input connection.</p>
                                             
                                                 </div>
                                             
@@ -1558,7 +1188,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l210"><code>eventBased:210</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l211"><code>eventBased:211</code></a>
                                                     </p>
                                             
                                             
@@ -1584,7 +1214,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l192"><code>flip:192</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l193"><code>flip:193</code></a>
                                                     </p>
                                             
                                             
@@ -1610,7 +1240,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l237"><code>forcePlayThrough:237</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l238"><code>forcePlayThrough:238</code></a>
                                                     </p>
                                             
                                             
@@ -1636,7 +1266,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l246"><code>ignoreOpacity:246</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l247"><code>ignoreOpacity:247</code></a>
                                                     </p>
                                             
                                             
@@ -1662,7 +1292,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l125"><code>interactive:125</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l116"><code>interactive:116</code></a>
                                                     </p>
                                             
                                             
@@ -1698,7 +1328,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l105"><code>mask:105</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l96"><code>mask:96</code></a>
                                                     </p>
                                             
                                             
@@ -1732,7 +1362,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l183"><code>mirror:183</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l184"><code>mirror:184</code></a>
                                                     </p>
                                             
                                             
@@ -1747,6 +1377,60 @@
                                             
                                             
                                             </div>
+                                            <div id="property_offsetX" class="property item">
+                                                <h3 class="name"><code>offsetX</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderSprite.js.html#l136"><code>offsetX:136</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The offset of the x-axis position of the sprite from the entity's x-axis position.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_offsetY" class="property item">
+                                                <h3 class="name"><code>offsetY</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderSprite.js.html#l146"><code>offsetY:146</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The offset of the y-axis position of the sprite from the entity's y-axis position.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_offsetZ" class="property item">
                                                 <h3 class="name"><code>offsetZ</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
@@ -1758,14 +1442,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l155"><code>offsetZ:155</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l156"><code>offsetZ:156</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. The offset of the z-index of the sprite from the entity's z-index. Will default to 0.</p>
+                                                    <p>The z-index relative to other render components on the entity.</p>
                                             
                                                 </div>
                                             
@@ -1784,7 +1468,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l164"><code>restart:164</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l165"><code>restart:165</code></a>
                                                     </p>
                                             
                                             
@@ -1811,7 +1495,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l174"><code>rotate:174</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l175"><code>rotate:175</code></a>
                                                     </p>
                                             
                                             
@@ -1837,7 +1521,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l303"><code>rotation:303</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l310"><code>rotation:310</code></a>
                                                     </p>
                                             
                                             
@@ -1845,6 +1529,32 @@
                                             
                                                 <div class="description">
                                                     <p>Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_scale" class="property item">
+                                                <h3 class="name"><code>scale</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderSprite.js.html#l256"><code>scale:256</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The scaling factor for this component.</p>
                                             
                                                 </div>
                                             
@@ -1863,7 +1573,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l267"><code>scaleX:267</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l265"><code>scaleX:265</code></a>
                                                     </p>
                                             
                                             
@@ -1889,18 +1599,44 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l276"><code>scaleY:276</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l274"><code>scaleY:274</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. The Y scaling factor for the image. Defaults to 1.</p>
+                                                    <p>Optional. The Y scaling factor for the entity. Defaults to 1.</p>
                                             
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> 1</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_skew" class="property item">
+                                                <h3 class="name"><code>skew</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/components_RenderSprite.js.html#l283"><code>skew:283</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The skew factor for this component.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0</p>
                                             
                                             
                                             </div>
@@ -1915,14 +1651,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l285"><code>skewX:285</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l292"><code>skewX:292</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. The X skew factor of the sprite. Defaults to 0.</p>
+                                                    <p>Optional. The X skew factor of the entity. Defaults to 0.</p>
                                             
                                                 </div>
                                             
@@ -1941,14 +1677,14 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l294"><code>skewY:294</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l301"><code>skewY:301</code></a>
                                                     </p>
                                             
                                             
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Optional. The Y skew factor for the image. Defaults to 0.</p>
+                                                    <p>Optional. The Y skew factor for the entity. Defaults to 0.</p>
                                             
                                                 </div>
                                             
@@ -1967,7 +1703,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l56"><code>spriteSheet:56</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l47"><code>spriteSheet:47</code></a>
                                                     </p>
                                             
                                             
@@ -2011,7 +1747,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l219"><code>stateBased:219</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l220"><code>stateBased:220</code></a>
                                                     </p>
                                             
                                             
@@ -2037,7 +1773,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l201"><code>visible:201</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l202"><code>visible:202</code></a>
                                                     </p>
                                             
                                             
@@ -2049,84 +1785,6 @@
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> false</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_x" class="property item">
-                                                <h3 class="name"><code>x</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l312"><code>x:312</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Optional. The x position of the entity. Defaults to 0.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 0</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_y" class="property item">
-                                                <h3 class="name"><code>y</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l321"><code>y:321</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Optional. The y position of the entity. Defaults to 0.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 0</p>
-                                            
-                                            
-                                            </div>
-                                            <div id="property_z" class="property item">
-                                                <h3 class="name"><code>z</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l330"><code>z:330</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Optional. The z position of the entity. Defaults to 0.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 0</p>
                                             
                                             
                                             </div>
@@ -2147,7 +1805,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l363"><code>&#x27;animation-ended&#x27;:363</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l342"><code>&#x27;animation-ended&#x27;:342</code></a>
                                                     </p>
                                             
                                             
@@ -2178,73 +1836,6 @@
                                             
                                             
                                             </div>
-                                            <div id="event_&#x27;cache-sprite&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;cache-sprite&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l459"><code>&#x27;cache-sprite&#x27;:459</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>On receiving a "cache" event, this component triggers "cache-sprite" to cache its rendering into the background. This is an optimization for static images to reduce render calls.</p>
-                                            
-                                                </div>
-                                            
-                                                    <div class="params">
-                                                        <h4>Event Payload:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">entity</code>
-                                                                    <span class="type"><a href="../classes/platypus.Entity.html" class="crosslink">platypus.Entity</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>This component's owner.</p>
-                                            
-                                                                </div>
-                                            
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                            
-                                            
-                                            </div>
-                                            <div id="event_&#x27;input-on&#x27;" class="events item">
-                                                <h3 class="name"><code>&#x27;input-on&#x27;</code></h3>
-                                                <span class="type"></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l614"><code>&#x27;input-on&#x27;:614</code></a>
-                                                    </p>
-                                            
-                                            
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>This event is triggered once the RenderSprite is ready to handle interactivity.</p>
-                                            
-                                                </div>
-                                            
-                                            
-                                            
-                                            </div>
                                             <div id="event_&#x27;update-animation&#x27;" class="events item">
                                                 <h3 class="name"><code>&#x27;update-animation&#x27;</code></h3>
                                                 <span class="type"></span>
@@ -2256,7 +1847,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_RenderSprite.js.html#l673"><code>&#x27;update-animation&#x27;:673</code></a>
+                                                    <a href="../files/components_RenderSprite.js.html#l442"><code>&#x27;update-animation&#x27;:442</code></a>
                                                     </p>
                                             
                                             

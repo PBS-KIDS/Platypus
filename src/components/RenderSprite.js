@@ -134,22 +134,12 @@
             interactive: false,
 
             /**
-             * This property's functionality is now provided by the `interactive` property.
-             *
-             * @property acceptInput
-             * @type Object
-             * @default null
-             * @deprecated since 0.9.0
-             */
-            acceptInput: null,
-
-            /**
              * The offset of the x-axis position of the sprite from the entity's x-axis position.
              *
              * @property offsetX
              * @type Number
              * @default 0
-             * @since 0.10.7
+             * @since 0.11.0
              */
             offsetX: 0,
 
@@ -159,7 +149,7 @@
              * @property offsetY
              * @type Number
              * @default 0
-             * @since 0.10.7
+             * @since 0.11.0
              */
             offsetY: 0,
 
@@ -364,11 +354,6 @@
                     ss = PIXIAnimation.formatSpriteSheet(this.spriteSheet),
                     map  = null;
 
-                if (this.acceptInput) {
-                    platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite "acceptInput" property has been deprecated since 0.9.0 in favor of the "interactive" property which adds an "Interactive" component to the entity to handle input.');
-                    this.interactive = this.interactive || this.acceptInput;
-                }
-                
                 if (ss === PIXIAnimation.EmptySpriteSheet) {
                     platypus.debug.warn('Entity "' + this.owner.type + '": RenderSprite sprite sheet not defined.');
                 }
@@ -486,26 +471,6 @@
              */
             "play-animation": function (animation, restart) {
                 this.playAnimation(animation, restart);
-            },
-            
-            /**
-             * Stops the sprite's animation.
-             *
-             * @method 'stop-sprite'
-             * @deprecated since 0.9.0
-             */
-            "stop-sprite": function () {
-                this.sprite.stop();
-            },
-            
-            /**
-             * Starts the sprite's animation.
-             *
-             * @method 'play-sprite'
-             * @deprecated since 0.9.0
-             */
-            "play-sprite": function () {
-                this.sprite.play();
             }
         },
         

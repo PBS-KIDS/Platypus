@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : platypus.components.LogicButton</title>
+	<title>platypus v0.11.1 API Documentation : platypus.components.LogicButton</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -165,7 +166,6 @@
                         
                         <div class="box intro">
                             <p>Provides button functionality for a RenderSprite component.</p>
-                        <p>Formerly known as "LogicCanvasButton" which has been deprecated since 0.9.1</p>
                         
                         </div>
                         
@@ -261,6 +261,10 @@
                                                     </li>
                                                     <li class="index-item method private inherited">
                                                         <a href="#method_removeMethod">removeMethod</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method inherited">
+                                                        <a href="#method_toJSON">toJSON</a>
                         
                                                     </li>
                                                     <li class="index-item method inherited">
@@ -370,7 +374,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l154"><code>&#x27;camera-update&#x27;:154</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l152"><code>&#x27;camera-update&#x27;:152</code></a>
                                                     </p>
                                             
                                             
@@ -430,7 +434,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l309"><code>&#x27;disable&#x27;:309</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l307"><code>&#x27;disable&#x27;:307</code></a>
                                                     </p>
                                             
                                             
@@ -460,7 +464,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l319"><code>&#x27;enable&#x27;:319</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l317"><code>&#x27;enable&#x27;:317</code></a>
                                                     </p>
                                             
                                             
@@ -490,7 +494,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l341"><code>&#x27;highlight&#x27;:341</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l339"><code>&#x27;highlight&#x27;:339</code></a>
                                                     </p>
                                             
                                             
@@ -521,7 +525,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l183"><code>&#x27;mousedown&#x27;:183</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l181"><code>&#x27;mousedown&#x27;:181</code></a>
                                                     </p>
                                             
                                             
@@ -551,7 +555,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l298"><code>&#x27;mouseout&#x27;:298</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l296"><code>&#x27;mouseout&#x27;:296</code></a>
                                                     </p>
                                             
                                             
@@ -581,7 +585,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l284"><code>&#x27;mouseover&#x27;:284</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l282"><code>&#x27;mouseover&#x27;:282</code></a>
                                                     </p>
                                             
                                             
@@ -611,7 +615,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l218"><code>&#x27;pressup&#x27;:218</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l216"><code>&#x27;pressup&#x27;:216</code></a>
                                                     </p>
                                             
                                             
@@ -641,7 +645,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l329"><code>&#x27;toggle-disabled&#x27;:329</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l327"><code>&#x27;toggle-disabled&#x27;:327</code></a>
                                                     </p>
                                             
                                             
@@ -671,7 +675,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l361"><code>&#x27;toggle-highlight&#x27;:361</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l359"><code>&#x27;toggle-highlight&#x27;:359</code></a>
                                                     </p>
                                             
                                             
@@ -702,7 +706,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l351"><code>&#x27;unhighlight&#x27;:351</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l349"><code>&#x27;unhighlight&#x27;:349</code></a>
                                                     </p>
                                             
                                             
@@ -732,6 +736,9 @@
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                                    </span>
                                             
                                             
                                                     <span class="flag private">private</span>
@@ -743,7 +750,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l103"><code>addEventListener:103</code></a>
+                                                    <a href="../files/Component.js.html#l112"><code>addEventListener:112</code></a>
                                                     </p>
                                             
                                             
@@ -781,6 +788,14 @@
                                                         </ul>
                                                     </div>
                                             
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>:
+                                                                handler  A reference to the bound handler.
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                             <div id="method_addMethod" class="method item private inherited">
@@ -808,7 +823,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l119"><code>addMethod:119</code></a>
+                                                    <a href="../files/Component.js.html#l131"><code>addMethod:131</code></a>
                                                     </p>
                                             
                                             
@@ -864,7 +879,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l45"><code>destroy:45</code></a>
+                                                    <a href="../files/Component.js.html#l54"><code>destroy:54</code></a>
                                                     </p>
                                             
                                             
@@ -908,7 +923,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l176"><code>getAssetList:176</code></a>
+                                                    <a href="../files/Component.js.html#l188"><code>getAssetList:188</code></a>
                                                     </p>
                                             
                                             
@@ -990,7 +1005,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l187"><code>getLateAssetList:187</code></a>
+                                                    <a href="../files/Component.js.html#l199"><code>getLateAssetList:199</code></a>
                                                     </p>
                                             
                                             
@@ -1053,7 +1068,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l138"><code>removeEventListener:138</code></a>
+                                                    <a href="../files/Component.js.html#l150"><code>removeEventListener:150</code></a>
                                                     </p>
                                             
                                             
@@ -1115,7 +1130,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l76"><code>removeEventListeners:76</code></a>
+                                                    <a href="../files/Component.js.html#l85"><code>removeEventListeners:85</code></a>
                                                     </p>
                                             
                                             
@@ -1168,7 +1183,7 @@
                                                 <div class="meta">
                                                             <p>Inherited from
                                                             <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l160"><code>removeMethod:160</code></a>
+                                                    <a href="../files/Component.js.html#l172"><code>removeMethod:172</code></a>
                                                     </p>
                                             
                                             
@@ -1196,6 +1211,47 @@
                                                         </ul>
                                                     </div>
                                             
+                                            
+                                            </div>
+                                            <div id="method_toJSON" class="method item inherited">
+                                                <h3 class="name"><code>toJSON</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>Inherited from
+                                                            <a href="../classes/platypus.Component.html#method_toJSON">platypus.Component</a>:
+                                                    <a href="../files/Component.js.html#l45"><code>toJSON:45</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.11.0</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    Returns a JSON object describing the component.
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
+                                                                Returns a JSON definition that can be used to recreate the component.
+                                                        </div>
+                                                    </div>
                                             
                                             </div>
                                             <div id="method_toString" class="method item inherited">
@@ -1254,7 +1310,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l97"><code>bottom:97</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l96"><code>bottom:96</code></a>
                                                     </p>
                                             
                                             
@@ -1281,7 +1337,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l66"><code>disabled:66</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l65"><code>disabled:65</code></a>
                                                     </p>
                                             
                                             
@@ -1307,7 +1363,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l47"><code>hoverAudio:47</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l46"><code>hoverAudio:46</code></a>
                                                     </p>
                                             
                                             
@@ -1334,7 +1390,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l107"><code>left:107</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l106"><code>left:106</code></a>
                                                     </p>
                                             
                                             
@@ -1361,7 +1417,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l38"><code>onCancel:38</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l37"><code>onCancel:37</code></a>
                                                     </p>
                                             
                                             
@@ -1387,7 +1443,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l20"><code>onPress:20</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l19"><code>onPress:19</code></a>
                                                     </p>
                                             
                                             
@@ -1413,7 +1469,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l29"><code>onRelease:29</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l28"><code>onRelease:28</code></a>
                                                     </p>
                                             
                                             
@@ -1439,7 +1495,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l85"><code>pressed:85</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l84"><code>pressed:84</code></a>
                                                     </p>
                                             
                                             
@@ -1466,7 +1522,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l117"><code>right:117</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l116"><code>right:116</code></a>
                                                     </p>
                                             
                                             
@@ -1493,7 +1549,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l75"><code>toggle:75</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l74"><code>toggle:74</code></a>
                                                     </p>
                                             
                                             
@@ -1520,7 +1576,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l127"><code>top:127</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l126"><code>top:126</code></a>
                                                     </p>
                                             
                                             
@@ -1547,7 +1603,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l57"><code>useOnce:57</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l56"><code>useOnce:56</code></a>
                                                     </p>
                                             
                                             
@@ -1579,7 +1635,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l232"><code>&#x27;cancelled&#x27;:232</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l230"><code>&#x27;cancelled&#x27;:230</code></a>
                                                     </p>
                                             
                                             
@@ -1654,7 +1710,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l197"><code>&#x27;pressed&#x27;:197</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l195"><code>&#x27;pressed&#x27;:195</code></a>
                                                     </p>
                                             
                                             
@@ -1729,7 +1785,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicButton.js.html#l256"><code>&#x27;released&#x27;:256</code></a>
+                                                    <a href="../files/components_LogicButton.js.html#l254"><code>&#x27;released&#x27;:254</code></a>
                                                     </p>
                                             
                                             

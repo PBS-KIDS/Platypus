@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.10.6 API Documentation : components\EntityContainer.js</title>
+	<title>platypus v0.11.1 API Documentation : components\EntityContainer.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.10.6</em>
+            <em>API Documentation for: 0.11.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -83,6 +83,7 @@
                                 <li><a href="../classes/platypus.components.RelayParent.html">platypus.components.RelayParent</a></li>
                                 <li><a href="../classes/platypus.components.RelaySelf.html">platypus.components.RelaySelf</a></li>
                                 <li><a href="../classes/platypus.components.RenderAnimation.html">platypus.components.RenderAnimation</a></li>
+                                <li><a href="../classes/platypus.components.RenderContainer.html">platypus.components.RenderContainer</a></li>
                                 <li><a href="../classes/platypus.components.RenderDebug.html">platypus.components.RenderDebug</a></li>
                                 <li><a href="../classes/platypus.components.RenderDestroyMe.html">platypus.components.RenderDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.RenderProgress.html">platypus.components.RenderProgress</a></li>
@@ -463,41 +464,53 @@
                                      * @param [callback] {Function} A function to run once all of the components on the Entity have been loaded.
                                      * @return {platypus.Entity} The entity that was just added.
                                      */
-                                    addEntity: function (newEntity, callback) {
-                                        var entity = null,
-                                            x = 0;
-                                        
-                                        if (newEntity instanceof Entity) {
-                                            entity = newEntity;
-                                            if (callback) {
-                                                callback();
-                                            }
-                                        } else {
-                                            if (typeof newEntity === &#x27;string&#x27;) {
-                                                entity = new Entity(platypus.game.settings.entities[newEntity], null, callback);
-                                            } else if (newEntity.id) {
-                                                entity = new Entity(newEntity, null, callback);
-                                            } else {
-                                                entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, callback);
-                                            }
-                                            this.owner.triggerEvent(&#x27;entity-created&#x27;, entity);
-                                        }
-                                        
-                                        entity.parent = this.owner;
-                                        entity.triggerEvent(&#x27;adopted&#x27;, entity);
-                                        
-                                        for (x = 0; x &lt; this.entities.length; x++) {
-                                            if (!entity.triggerEvent(&#x27;peer-entity-added&#x27;, this.entities[x])) {
-                                                break;
-                                            }
-                                        }
-                                        this.triggerEventOnChildren(&#x27;peer-entity-added&#x27;, entity);
+                                    addEntity: (function () {
+                                        var
+                                            whenReady = function (callback, entity) {
+                                                var owner = this.owner,
+                                                    entities = this.entities,
+                                                    i = entities.length;
                         
-                                        this.addChildEventListeners(entity);
-                                        this.entities.push(entity);
-                                        this.owner.triggerEvent(&#x27;child-entity-added&#x27;, entity);
-                                        return entity;
-                                    },
+                                                entity.parent = owner;
+                                                entity.triggerEvent(&#x27;adopted&#x27;, entity);
+                                                
+                                                while (i--) {
+                                                    if (!entity.triggerEvent(&#x27;peer-entity-added&#x27;, entities[i])) {
+                                                        break;
+                                                    }
+                                                }
+                                                this.triggerEventOnChildren(&#x27;peer-entity-added&#x27;, entity);
+                        
+                                                this.addChildEventListeners(entity);
+                                                entities.push(entity);
+                                                owner.triggerEvent(&#x27;child-entity-added&#x27;, entity);
+                        
+                                                if (callback) {
+                                                    callback(entity);
+                                                }
+                                            };
+                        
+                                        return function (newEntity, callback) {
+                                            var entity = null;
+                                            
+                                            if (newEntity instanceof Entity) {
+                                                entity = newEntity;
+                                                if (callback) {
+                                                    callback(entity);
+                                                }
+                                            } else {
+                                                if (typeof newEntity === &#x27;string&#x27;) {
+                                                    entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback));
+                                                } else if (newEntity.id) {
+                                                    entity = new Entity(newEntity, null, whenReady.bind(this, callback));
+                                                } else {
+                                                    entity = new Entity(platypus.game.settings.entities[newEntity.type], newEntity, whenReady.bind(this, callback));
+                                                }
+                                                this.owner.triggerEvent(&#x27;entity-created&#x27;, entity);
+                                            }
+                                            return entity;
+                                        };
+                                    }()),
                                     
                                     removeEntity: function (entity) {
                                         var i = this.entities.indexOf(entity);

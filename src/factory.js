@@ -208,7 +208,7 @@
                 };
 
             // We only perform validation in debug mode since it may impact performance.
-            if (include('springroll.Debug', false)) {
+            if (debug) {
                 return function (propertiesDefinition) {
                     var properties = componentDefinition.properties,
                         publicProperties = componentDefinition.publicProperties,

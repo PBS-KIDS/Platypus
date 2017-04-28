@@ -295,7 +295,7 @@
             addCollisionEntity: function (entity) {
                 if (entity.getTileShapes) { // Has a CollisionTiles component
                     this.terrain = entity;
-                } else if (entity.collisionTypes) {
+                } else if (entity.collisionTypes && !entity.againstGrid) {
                     entity.againstGrid = Array.setUp();
                     entity.againstAABB = AABB.setUp();
                     this.updateAgainst(entity);
@@ -1249,6 +1249,7 @@
              * @param y {number} The y-axis value.
              * @param collisionTypes {Array of strings} The collision types to check against.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+             * @since 0.11.0
              */
             getPointCollisions: function (x, y, collisionTypes) {
                 var collisions = Array.setUp();

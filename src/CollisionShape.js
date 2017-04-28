@@ -229,7 +229,7 @@ platypus.CollisionShape = (function () {
      * @param x {number} The x-axis value.
      * @param y {number} The y-axis value.
      * @return {boolean} Returns `true` if this shape contains the point.
-     * @since 0.10.7
+     * @since 0.11.0
      */
     proto.containsPoint = function (x, y) {
         var pow = Math.pow;
@@ -245,7 +245,7 @@ platypus.CollisionShape = (function () {
     *
     * @method toJSON
     * @return {Object} Returns a JSON definition that can be used to recreate the collision shape.
-    * @since v0.10.7
+    * @since 0.11.0
     **/
     proto.toJSON = function () {
         var json = {},

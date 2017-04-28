@@ -22,7 +22,7 @@
  * @constructor
  * @extends springroll.State
  * @param Stage {PIXI.Container} Object where the scene displays layers.
- * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties, filters, and components as shown above under "JSON Definition Example".
+ * @param {Object} [definition] Base definition for the scene, including one or more layers with both properties and components as shown above under "JSON Definition Example".
  * @param {String} [definition.id] This declares the id of the scene.
  * @param {Array} [definition.layers] This lists the layers that comprise the scene.
  * @param {Array} [definition.assets] This lists the assets that this scene requires.
@@ -79,7 +79,7 @@ platypus.Scene = (function () {
             if (match) {
                 a.id = match[1];
             } else {
-                platypus.debug.warn('Scene: A listed asset should provide the entire file path since version 0.9.0.');
+                platypus.debug.warn('Scene: A listed asset should provide the entire file path.');
             }
             
             return a;

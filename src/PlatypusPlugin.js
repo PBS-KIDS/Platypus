@@ -11,7 +11,7 @@
  *          "sounds": {} // Platypus uses the SpringRoll audio system and syntax for audio assets.
  *      }
  *
- * The Platypus game instance is `app.platypus` on the SpringRoll Application and `platypus.game` within the platypus namespace.
+ * The Platypus game instance is `app.platypusGame` on the SpringRoll Application and `platypus.game` within the platypus namespace.
  *
  * @namespace platypus
  * @class PlatypusPlugin
@@ -203,7 +203,8 @@
             priority = 320,
             time = {
                 delta: 0
-            };
+            },
+            deprecationAnnounced = false;
         
         if (!config) {
             platypus.debug.warn('PlatypusPlugin: Platypus requires a game configuration.');
@@ -220,7 +221,18 @@
                 setSpriteSheetIds(config.spriteSheets);
             }
             
-            game = this.platypus = new platypus.Game(config, this);
+            game = this.platypusGame = new platypus.Game(config, this);
+
+            // as of v0.11.1 deprecating `.platypus` as a reference to the game since it's confusing. Using `.platypusGame` instead.
+            Object.defineProperty(this, 'platypus', {
+                get: function () {
+                    if (!deprecationAnnounced) {
+                        platypus.debug.warn('Referencing `.platypus` to access the Platypus game instance on the SpringRoll Application has been deprecated in favor of `.platypusGame`.');
+                        deprecationAnnounced = true;
+                    }
+                    return this.platypusGame;
+                }
+            });
             
             updateFunction = function (elapsed) {
                 time.delta = elapsed;

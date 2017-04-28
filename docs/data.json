@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.10.6",
+        "version": "0.11.1",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -551,6 +551,17 @@
                 "platypus.components": 1
             }
         },
+        "components\\RenderContainer.js": {
+            "name": "components\\RenderContainer.js",
+            "modules": {},
+            "classes": {
+                "platypus.components.RenderContainer": 1
+            },
+            "fors": {},
+            "namespaces": {
+                "platypus.components": 1
+            }
+        },
         "components\\RenderDebug.js": {
             "name": "components\\RenderDebug.js",
             "modules": {},
@@ -983,6 +994,7 @@
                 "platypus.components.RelayParent": 1,
                 "platypus.components.RelaySelf": 1,
                 "platypus.components.RenderAnimation": 1,
+                "platypus.components.RenderContainer": 1,
                 "platypus.components.RenderDebug": 1,
                 "platypus.components.RenderDestroyMe": 1,
                 "platypus.components.RenderProgress": 1,
@@ -1435,7 +1447,7 @@
             "namespace": "platypus.components",
             "file": "components\\LogicButton.js",
             "line": 1,
-            "description": "Provides button functionality for a RenderSprite component.\n\nFormerly known as \"LogicCanvasButton\" which has been deprecated since 0.9.1",
+            "description": "Provides button functionality for a RenderSprite component.",
             "uses": [
                 "platypus.Component"
             ]
@@ -1695,6 +1707,24 @@
                 "platypus.Component"
             ],
             "since": "0.10.0"
+        },
+        "platypus.components.RenderContainer": {
+            "name": "platypus.components.RenderContainer",
+            "shortname": "platypus.components.RenderContainer",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "platypus",
+            "namespace": "platypus.components",
+            "file": "components\\RenderContainer.js",
+            "line": 1,
+            "description": "This component is attached to entities that will appear in the game world. It creates a PIXI Container to contain all other display objects on the entity and keeps the container updates with the entity's location and other dynamic properties.",
+            "uses": [
+                "platypus.Component"
+            ],
+            "since": "0.11.0"
         },
         "platypus.components.RenderDebug": {
             "name": "platypus.components.RenderDebug",
@@ -2299,6 +2329,7 @@
                 "platypus.components.RelayParent",
                 "platypus.components.RelaySelf",
                 "platypus.components.RenderAnimation",
+                "platypus.components.RenderContainer",
                 "platypus.components.RenderDebug",
                 "platypus.components.RenderDestroyMe",
                 "platypus.components.RenderProgress",
@@ -2374,7 +2405,7 @@
             "namespace": "platypus",
             "file": "Entity.js",
             "line": 1,
-            "description": "The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.\n\n## JSON Definition Example\n    {\n        \"id\": \"entity-id\",\n        // \"entity-id\" becomes `entity.type` once the entity is created.\n     \n        \"components\": [\n        // This array lists one or more component definition objects\n     \n            {\"type\": \"example-component\"}\n           // The component objects must include a \"type\" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.\n        ],\n     \n        \"properties\": [\n        // This array lists properties that will be attached directly to this entity.\n     \n            \"x\": 240\n            // For example, `x` becomes `entity.x` on the new entity.\n        ],\n     \n        \"filters\": {\n        // Filters are only used by top level entities loaded by the scene and are not used by the entity directly. They determine whether an entity should be loaded on a particular browser according to browser settings.\n     \n            \"includes\": [\"touch\"],\n            // Optional. This filter specifies that this entity should be loaded on browsers/devices that support a touch interface. More than one setting can be added to the array.\n\n            \"excludes\": [\"mobile\"]\n            // Optional. This filter specifies that this entity should not be loaded on mobile browsers/devices that. More than one setting can be added to the array.\n        }\n    }",
+            "description": "The Entity object acts as a container for components, facilitates communication between components and other game objects, and includes properties set by components to maintain a current state. The entity object serves as the foundation for most of the game objects in the platypus engine.\n\n## JSON Definition Example\n    {\n        \"id\": \"entity-id\",\n        // \"entity-id\" becomes `entity.type` once the entity is created.\n     \n        \"components\": [\n        // This array lists one or more component definition objects\n     \n            {\"type\": \"example-component\"}\n           // The component objects must include a \"type\" property corresponding to a component to load, but may also include additional properties to customize the component in a particular way for this entity.\n        ],\n     \n        \"properties\": {\n        // This object lists properties that will be attached directly to this entity.\n     \n            \"x\": 240\n            // For example, `x` becomes `entity.x` on the new entity.\n        }\n    }",
             "is_constructor": 1,
             "extends": "Messenger",
             "params": [
@@ -2420,7 +2451,7 @@
                 },
                 {
                     "name": "callback",
-                    "description": "A function to run once all of the components on the Entity have been loaded.",
+                    "description": "A function to run once all of the components on the Entity have been loaded. The first parameter is the entity itself.",
                     "type": "Function",
                     "optional": true
                 }
@@ -2534,7 +2565,7 @@
                 },
                 {
                     "name": "definition",
-                    "description": "Base definition for the scene, including one or more layers with both properties, filters, and components as shown above under \"JSON Definition Example\".",
+                    "description": "Base definition for the scene, including one or more layers with both properties and components as shown above under \"JSON Definition Example\".",
                     "type": "Object",
                     "optional": true,
                     "props": [
@@ -3765,6 +3796,66 @@
             "namespace": "platypus.components"
         },
         {
+            "file": "components\\Camera.js",
+            "line": 1015,
+            "description": "Returns a world coordinate corresponding to a provided window coordinate.",
+            "itemtype": "method",
+            "name": "windowToWorld",
+            "params": [
+                {
+                    "name": "windowVector",
+                    "description": "A vector describing a window position.",
+                    "type": "platypus.Vector"
+                },
+                {
+                    "name": "withOffset",
+                    "description": "Whether to provide a world position relative to the camera's location.",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "vector",
+                    "description": "If provided, this is used as the return vector.",
+                    "type": "platypus.Vector"
+                }
+            ],
+            "return": {
+                "description": "A vector describing a world position.",
+                "type": "platypus.Vector"
+            },
+            "class": "platypus.components.Camera",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\Camera.js",
+            "line": 1038,
+            "description": "Returns a window coordinate corresponding to a provided world coordinate.",
+            "itemtype": "method",
+            "name": "worldToWindow",
+            "params": [
+                {
+                    "name": "worldVector",
+                    "description": "A vector describing a world position.",
+                    "type": "platypus.Vector"
+                },
+                {
+                    "name": "withOffset",
+                    "description": "Whether to provide a window position relative to the camera's location.",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "vector",
+                    "description": "If provided, this is used as the return vector.",
+                    "type": "platypus.Vector"
+                }
+            ],
+            "return": {
+                "description": "A vector describing a window position.",
+                "type": "platypus.Vector"
+            },
+            "class": "platypus.components.Camera",
+            "namespace": "platypus.components"
+        },
+        {
             "file": "components\\CameraFollowMe.js",
             "line": 18,
             "description": "Sets initial camera settings when the entity is being followed. This can be over-written by the \"follow-me\" call itself. If any of these attributes are not provided, the following are used by default:\n\n                 {\n                     \"time\": 500,\n                     // Optional. Time in milliseconds that the camera should focus before returning to the original focus.\n                     \n                     \"mode\": \"forward\",\n                     // Optional. Camera mode that the camera should use.\n                     \n                     \"top\": 100,\n                     // Optional number specifying top of viewport in world coordinates\n                     \n                     \"left\": 100,\n                     // Optional number specifying left of viewport in world coordinates\n                     \n                     \"width\": 100,\n                     // Optional number specifying width of viewport in world coordinates\n                     \n                     \"height\": 100,\n                     // Optional number specifying height of viewport in world coordinates\n                     \n                     \"offsetX\": 20,\n                     // Optional number setting how far to offset the camera from the entity horizontally.\n                     \n                     \"offsetY\": 40\n                     // Optional number setting how far to offset the camera from the entity vertically.\n                 }",
@@ -4156,7 +4247,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 522,
+            "line": 523,
             "description": "On receiving this message, the component triggers `add-collision-entity` on the parent.",
             "itemtype": "method",
             "name": "'collide-on'",
@@ -4172,7 +4263,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 533,
+            "line": 534,
             "description": "On receiving 'collide-on', this message is triggered on the parent to turn on collision.",
             "itemtype": "event",
             "name": "'add-collision-entity'",
@@ -4188,7 +4279,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 548,
+            "line": 549,
             "description": "On receiving this message, the component triggers `remove-collision-entity` on the parent.",
             "itemtype": "method",
             "name": "'collide-off'",
@@ -4204,7 +4295,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 561,
+            "line": 562,
             "description": "On receiving 'collide-off', this message is triggered on the parent to turn off collision.",
             "itemtype": "event",
             "name": "'remove-collision-entity'",
@@ -4220,7 +4311,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 581,
+            "line": 582,
             "description": "This message causes the entity's x,y coordinates to update.",
             "itemtype": "method",
             "name": "'relocate-entity'",
@@ -4245,7 +4336,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 643,
+            "line": 644,
             "description": "If the entity is stuck to another entity, this component tries to unstick the entity on each logic step.",
             "itemtype": "method",
             "name": "'handle-logic'",
@@ -4254,7 +4345,7 @@
         },
         {
             "file": "components\\CollisionBasic.js",
-            "line": 654,
+            "line": 655,
             "description": "Collision shapes are updated to reflect the new orientation when this message occurs.",
             "itemtype": "method",
             "name": "'orientation-updated'",
@@ -5244,13 +5335,13 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 47,
+            "line": 54,
             "class": "platypus.components.HandlerCollision",
             "namespace": "platypus.components"
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 73,
+            "line": 80,
             "description": "On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.",
             "itemtype": "method",
             "name": "'child-entity-added'",
@@ -5266,7 +5357,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 85,
+            "line": 92,
             "description": "On receiving this message, the component checks the entity to determine whether it listens for collision messages. If so, the entity is added to the collision group.",
             "itemtype": "method",
             "name": "'add-collision-entity'",
@@ -5282,7 +5373,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 95,
+            "line": 102,
             "description": "On receiving this message, the component looks for the entity in its collision group and removes it.",
             "itemtype": "method",
             "name": "'child-entity-removed'",
@@ -5298,7 +5389,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 105,
+            "line": 112,
             "description": "On receiving this message, the component looks for the entity in its collision group and removes it.",
             "itemtype": "method",
             "name": "'remove-collision-entity'",
@@ -5314,7 +5405,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 115,
+            "line": 122,
             "description": "On receiving this message, the component looks for the entity in its collision group and updates it.",
             "itemtype": "method",
             "name": "'child-entity-updated'",
@@ -5330,7 +5421,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 126,
+            "line": 133,
             "description": "This message causes the component to go through the entities and check for collisions.",
             "itemtype": "method",
             "name": "'check-collision-group'",
@@ -5354,7 +5445,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 376,
+            "line": 383,
             "description": "This message is triggered on an entity that has been repositioned due to a solid collision.",
             "itemtype": "event",
             "name": "'relocate-entity'",
@@ -5377,14 +5468,14 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 760,
+            "line": 767,
             "description": "Find the earliest point at which this shape collides with one of the potential colliding shapes along this axis.\nFor example, cycles through shapes a, b, and c to find the earliest position:\n\n   O---->   [b]  [a]     [c]\n\n   Returns collision location for:\n\n           O[b]",
             "class": "platypus.components.HandlerCollision",
             "namespace": "platypus.components"
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 1081,
+            "line": 1138,
             "description": "This method returns an object containing world entities.",
             "itemtype": "method",
             "name": "getWorldEntities",
@@ -5397,7 +5488,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 1091,
+            "line": 1148,
             "description": "This method returns an entity representing the collision map of the world.",
             "itemtype": "method",
             "name": "getWorldTerrain",
@@ -5410,7 +5501,7 @@
         },
         {
             "file": "components\\HandlerCollision.js",
-            "line": 1101,
+            "line": 1158,
             "description": "This method returns a list of collision objects describing soft collisions between an entity and a list of other entities.",
             "itemtype": "method",
             "name": "getEntityCollisions",
@@ -5425,6 +5516,37 @@
                 "description": "collisions  This is a list of collision objects describing the soft collisions.",
                 "type": "Array"
             },
+            "class": "platypus.components.HandlerCollision",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\HandlerCollision.js",
+            "line": 1175,
+            "description": "This method returns a list of collision objects describing collisions between a point and a list of other entities.",
+            "itemtype": "method",
+            "name": "getPointCollisions",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x-axis value.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y-axis value.",
+                    "type": "Number"
+                },
+                {
+                    "name": "collisionTypes",
+                    "description": "The collision types to check against.",
+                    "type": "Array of strings"
+                }
+            ],
+            "return": {
+                "description": "collisions  This is a list of collision objects describing the soft collisions.",
+                "type": "Array"
+            },
+            "since": "0.11.0",
             "class": "platypus.components.HandlerCollision",
             "namespace": "platypus.components"
         },
@@ -5683,7 +5805,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 264,
+            "line": 266,
             "description": "This event is triggered on the top-level layer to signify a \"handle-logic\" event is about to be triggered on children. This is unique from the layer's \"tick\" event in that it occurs the same number of times as the \"handle-logic\" event and will not occur if HandlerLogic is paused.",
             "itemtype": "event",
             "name": "'logic-tick'",
@@ -5710,7 +5832,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 284,
+            "line": 285,
             "description": "This event is triggered on children entities to run anything that should occur before \"handle-logic\". For example, removing or adding components should happen here and not in \"handle-logic\".",
             "itemtype": "event",
             "name": "'prepare-logic'",
@@ -5744,7 +5866,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 296,
+            "line": 297,
             "description": "This event is triggered on children entities to run their logic.",
             "itemtype": "event",
             "name": "'handle-logic'",
@@ -5777,7 +5899,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 307,
+            "line": 308,
             "description": "This event is triggered on children entities to move. This happens immediately after logic so entity logic can determine movement.",
             "itemtype": "event",
             "name": "'handle-movement'",
@@ -5811,7 +5933,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 334,
+            "line": 335,
             "description": "This event is triggered on the entity (layer) to test collisions once logic has been completed.",
             "itemtype": "event",
             "name": "'check-collision-group'",
@@ -5844,7 +5966,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 344,
+            "line": 345,
             "description": "This event is triggered on entities to run logic that may depend upon collision responses.",
             "itemtype": "event",
             "name": "'handle-post-collision-logic'",
@@ -5877,7 +5999,7 @@
         },
         {
             "file": "components\\HandlerLogic.js",
-            "line": 354,
+            "line": 355,
             "description": "Triggered on entities when the entity's state has been changed.",
             "itemtype": "event",
             "name": "'state-changed'",
@@ -5893,7 +6015,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 22,
+            "line": 21,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -5905,20 +6027,19 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 42,
-            "description": "This property's functionality is now provided by the `interactive` property.",
+            "line": 44,
+            "description": "This is the container holding all children's disply objects for this layer. It's an available proeprty on the layer entity.",
             "itemtype": "property",
-            "name": "acceptInput",
-            "type": "Object",
+            "name": "worldContainer",
+            "type": "PIXI.Container",
             "default": "null",
-            "deprecated": true,
-            "deprecationMessage": "since 0.9.1",
+            "since": "0.11.0",
             "class": "platypus.components.HandlerRender",
             "namespace": "platypus.components"
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 82,
+            "line": 78,
             "description": "Once the entity is loaded, this component triggers \"render-world\" to notify other components about the entities' display container.",
             "itemtype": "method",
             "name": "'load'",
@@ -5927,7 +6048,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 88,
+            "line": 84,
             "description": "Once the entity is loaded, this component triggers \"render-world\" to notify other components about the entities' display container.",
             "itemtype": "event",
             "name": "'render-world'",
@@ -5950,7 +6071,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 99,
+            "line": 95,
             "description": "This event is triggered once HandlerRender is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -5959,7 +6080,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 107,
+            "line": 103,
             "description": "Called when a new entity has been added to the parent and should be considered for addition to the handler. Entities are sent a reference the Container that we're rendering to, so they can add their display objects to it and the delta from the lastest tick.",
             "itemtype": "method",
             "name": "'child-entity-added'",
@@ -5975,7 +6096,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 114,
+            "line": 110,
             "description": "Triggered on an entity added to the parent.",
             "itemtype": "event",
             "name": "'handle-render-load'",
@@ -6003,7 +6124,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 125,
+            "line": 121,
             "description": "Pauses the children of this render Container. If a pause time is not provided. It remains paused until 'unpause-render' is called.",
             "itemtype": "method",
             "name": "'pause-render'",
@@ -6027,7 +6148,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 139,
+            "line": 135,
             "description": "Notifies children entities that rendering updates have been paused.",
             "itemtype": "event",
             "name": "'render-paused'",
@@ -6037,7 +6158,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 149,
+            "line": 145,
             "description": "Unpauses the children of this render Container.",
             "itemtype": "method",
             "name": "'unpause-render'",
@@ -6046,7 +6167,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 157,
+            "line": 153,
             "description": "Notifies children entities that rendering updates have been unpaused.",
             "itemtype": "event",
             "name": "'render-unpaused'",
@@ -6056,7 +6177,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 167,
+            "line": 163,
             "description": "Sends a 'handle-render' message to all the children in the Container. The children in the Container are also paused/unpaused if needed and sorted according to their z value.",
             "itemtype": "method",
             "name": "'tick'",
@@ -6072,7 +6193,7 @@
         },
         {
             "file": "components\\HandlerRender.js",
-            "line": 191,
+            "line": 188,
             "description": "Triggered every tick on the children entities.",
             "itemtype": "event",
             "name": "'handle-render'",
@@ -6963,6 +7084,17 @@
         {
             "file": "components\\LogicAttachment.js",
             "line": 37,
+            "description": "Whether the attachment starts out attached.",
+            "itemtype": "property",
+            "name": "startAttached",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.LogicAttachment",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\LogicAttachment.js",
+            "line": 46,
             "description": "The offset of the attached entity in x from the attachee.",
             "itemtype": "property",
             "name": "offsetX",
@@ -6973,7 +7105,7 @@
         },
         {
             "file": "components\\LogicAttachment.js",
-            "line": 45,
+            "line": 54,
             "description": "The offset of the attached entity in y from the attachee.",
             "itemtype": "property",
             "name": "offsetY",
@@ -6984,7 +7116,7 @@
         },
         {
             "file": "components\\LogicAttachment.js",
-            "line": 53,
+            "line": 62,
             "description": "The offset of the attached entity in z from the attachee.",
             "itemtype": "property",
             "name": "offsetZ",
@@ -6995,7 +7127,7 @@
         },
         {
             "file": "components\\LogicAttachment.js",
-            "line": 95,
+            "line": 104,
             "description": "On receiving this message, updates the attached entity's position.",
             "itemtype": "method",
             "name": "'handle-logic'",
@@ -7004,7 +7136,7 @@
         },
         {
             "file": "components\\LogicAttachment.js",
-            "line": 148,
+            "line": 157,
             "description": "Creates and attaches the entity. The input value makes it possible to attach the entity on user input.",
             "itemtype": "method",
             "name": "'attach'",
@@ -7027,7 +7159,7 @@
         },
         {
             "file": "components\\LogicAttachment.js",
-            "line": 158,
+            "line": 167,
             "description": "Detaches and removes the entity.",
             "itemtype": "method",
             "name": "'detach'",
@@ -7035,8 +7167,39 @@
             "namespace": "platypus.components"
         },
         {
+            "file": "components\\LogicAttachment.js",
+            "line": 175,
+            "description": "Changes the x, y, and z offset of the attachment.",
+            "itemtype": "method",
+            "name": "'change-attachment-offset'",
+            "params": [
+                {
+                    "name": "offset",
+                    "description": "An object containing the offset values.",
+                    "type": "Object"
+                },
+                {
+                    "name": "input.x",
+                    "description": "The new X offset.",
+                    "type": "Number"
+                },
+                {
+                    "name": "input.y",
+                    "description": "The new Y offset.",
+                    "type": "Number"
+                },
+                {
+                    "name": "input.y",
+                    "description": "The new Z offset.",
+                    "type": "Number"
+                }
+            ],
+            "class": "platypus.components.LogicAttachment",
+            "namespace": "platypus.components"
+        },
+        {
             "file": "components\\LogicButton.js",
-            "line": 20,
+            "line": 19,
             "description": "The event to trigger when pressed.",
             "itemtype": "property",
             "name": "onPress",
@@ -7047,7 +7210,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 29,
+            "line": 28,
             "description": "The event to trigger when released.",
             "itemtype": "property",
             "name": "onRelease",
@@ -7058,7 +7221,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 38,
+            "line": 37,
             "description": "The event to trigger when cancelled.",
             "itemtype": "property",
             "name": "onCancel",
@@ -7069,7 +7232,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 47,
+            "line": 46,
             "description": "The event to trigger when the user mouses over the button",
             "itemtype": "property",
             "name": "hoverAudio",
@@ -7081,7 +7244,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 57,
+            "line": 56,
             "description": "Whether this button's actions should be limited to the initial press/release.",
             "itemtype": "property",
             "name": "useOnce",
@@ -7092,7 +7255,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 66,
+            "line": 65,
             "description": "Whether this button should start disabled.",
             "itemtype": "property",
             "name": "disabled",
@@ -7103,7 +7266,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 75,
+            "line": 74,
             "description": "Determines whether this button should behave as a toggle.",
             "itemtype": "property",
             "name": "toggle",
@@ -7115,7 +7278,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 85,
+            "line": 84,
             "description": "Specifies whether the button starts off 'pressed'; typically only useful for toggle buttons.",
             "itemtype": "property",
             "name": "pressed",
@@ -7127,7 +7290,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 97,
+            "line": 96,
             "description": "This sets the distance in world units from the bottom of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.bottom`.",
             "itemtype": "property",
             "name": "bottom",
@@ -7139,7 +7302,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 107,
+            "line": 106,
             "description": "This sets the distance in world units from the left of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.left`.",
             "itemtype": "property",
             "name": "left",
@@ -7151,7 +7314,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 117,
+            "line": 116,
             "description": "This sets the distance in world units from the right of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.right`.",
             "itemtype": "property",
             "name": "right",
@@ -7163,7 +7326,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 127,
+            "line": 126,
             "description": "This sets the distance in world units from the top of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.top`.",
             "itemtype": "property",
             "name": "top",
@@ -7175,7 +7338,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 154,
+            "line": 152,
             "description": "This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -7199,7 +7362,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 183,
+            "line": 181,
             "description": "Triggers events per the component's definition when a press is made.",
             "itemtype": "method",
             "name": "'mousedown'",
@@ -7208,7 +7371,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 197,
+            "line": 195,
             "description": "This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.",
             "itemtype": "event",
             "name": "'pressed'",
@@ -7242,7 +7405,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 218,
+            "line": 216,
             "description": "Triggers events per the component's definition when a press is released.",
             "itemtype": "method",
             "name": "'pressup'",
@@ -7251,7 +7414,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 232,
+            "line": 230,
             "description": "This event is triggered when the button is pressed and the mouse/touch is dragged off-target before release.",
             "itemtype": "event",
             "name": "'cancelled'",
@@ -7285,7 +7448,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 256,
+            "line": 254,
             "description": "This event is triggered when the button is released, or on the down-to-up change for toggle buttons.",
             "itemtype": "event",
             "name": "'released'",
@@ -7319,7 +7482,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 284,
+            "line": 282,
             "description": "If a press moves over the button, it's not cancelled.",
             "itemtype": "method",
             "name": "'mouseover'",
@@ -7328,7 +7491,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 298,
+            "line": 296,
             "description": "If a press moves off of the button, it's cancelled.",
             "itemtype": "method",
             "name": "'mouseout'",
@@ -7337,7 +7500,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 309,
+            "line": 307,
             "description": "Disables the entity.",
             "itemtype": "method",
             "name": "'disable'",
@@ -7346,7 +7509,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 319,
+            "line": 317,
             "description": "Enables the entity.",
             "itemtype": "method",
             "name": "'enable'",
@@ -7355,7 +7518,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 329,
+            "line": 327,
             "description": "Toggles whether the entity is disabled.",
             "itemtype": "method",
             "name": "'toggle-disabled'",
@@ -7364,7 +7527,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 341,
+            "line": 339,
             "description": "Sets the entity's highlighted state to `true`.",
             "itemtype": "method",
             "name": "'highlight'",
@@ -7374,7 +7537,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 351,
+            "line": 349,
             "description": "Sets the entity's highlighted state to `false`.",
             "itemtype": "method",
             "name": "'unhighlight'",
@@ -7384,7 +7547,7 @@
         },
         {
             "file": "components\\LogicButton.js",
-            "line": 361,
+            "line": 359,
             "description": "Toggles the entity's highlighted state.",
             "itemtype": "method",
             "name": "'toggle-highlight'",
@@ -9458,7 +9621,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 319,
+            "line": 320,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -9467,7 +9630,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 353,
+            "line": 354,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -9483,7 +9646,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 368,
+            "line": 369,
             "description": "A setup message used to add the animation to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -9506,7 +9669,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 381,
+            "line": 382,
             "description": "The render update message updates the animation.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -9529,7 +9692,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 397,
+            "line": 398,
             "description": "This event makes the animation invisible.",
             "itemtype": "method",
             "name": "'hide-animation'",
@@ -9538,7 +9701,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 406,
+            "line": 407,
             "description": "This event makes the animation visible.",
             "itemtype": "method",
             "name": "'show-animation'",
@@ -9547,7 +9710,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 415,
+            "line": 416,
             "description": "Defines the mask on the animation. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -9563,7 +9726,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 425,
+            "line": 426,
             "description": "Stops the animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -9580,7 +9743,7 @@
         },
         {
             "file": "components\\RenderAnimation.js",
-            "line": 441,
+            "line": 442,
             "description": "Starts the animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -9593,6 +9756,336 @@
                 }
             ],
             "class": "platypus.components.RenderAnimation",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 57,
+            "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
+            "itemtype": "property",
+            "name": "mask",
+            "type": "Object",
+            "default": "null",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 77,
+            "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
+            "itemtype": "property",
+            "name": "interactive",
+            "type": "Boolean|Object",
+            "default": "false",
+            "since": "0.9.0",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 97,
+            "description": "Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.",
+            "itemtype": "property",
+            "name": "rotate",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 106,
+            "description": "Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.",
+            "itemtype": "property",
+            "name": "mirror",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 115,
+            "description": "Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.",
+            "itemtype": "property",
+            "name": "flip",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 124,
+            "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
+            "itemtype": "property",
+            "name": "visible",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 133,
+            "description": "Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like \"render-layer\"). The `RenderTiles` component must have its \"entityCache\" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.",
+            "itemtype": "property",
+            "name": "cache",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 142,
+            "description": "Optional. Ignores the opacity of the owner.",
+            "itemtype": "property",
+            "name": "ignoreOpacity",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 153,
+            "description": "Prevents sprite from becoming invisible out of frame and losing mouse input connection.",
+            "itemtype": "property",
+            "name": "dragMode",
+            "type": "Boolean",
+            "default": "false",
+            "since": "0.8.3",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 163,
+            "description": "Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
+            "itemtype": "property",
+            "name": "rotation",
+            "type": "Number",
+            "default": "1",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 172,
+            "description": "Optional. The X scaling factor for the image. Defaults to 1.",
+            "itemtype": "property",
+            "name": "scaleX",
+            "type": "Number",
+            "default": "1",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 181,
+            "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
+            "itemtype": "property",
+            "name": "scaleY",
+            "type": "Number",
+            "default": "1",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 190,
+            "description": "Optional. The X skew factor of the sprite. Defaults to 0.",
+            "itemtype": "property",
+            "name": "skewX",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 199,
+            "description": "Optional. The Y skew factor for the image. Defaults to 0.",
+            "itemtype": "property",
+            "name": "skewY",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 208,
+            "description": "Optional. The tint applied to the sprite. Defaults to no tint.",
+            "itemtype": "property",
+            "name": "tint",
+            "type": "Number",
+            "default": "null",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 217,
+            "description": "Optional. The x position of the entity. Defaults to 0.",
+            "itemtype": "property",
+            "name": "x",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 226,
+            "description": "Optional. The y position of the entity. Defaults to 0.",
+            "itemtype": "property",
+            "name": "y",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 235,
+            "description": "Optional. The z position of the entity. Defaults to 0.",
+            "itemtype": "property",
+            "name": "z",
+            "type": "Number",
+            "default": "0",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 312,
+            "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
+            "itemtype": "method",
+            "name": "'cache'",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 322,
+            "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
+            "itemtype": "event",
+            "name": "'cache-sprite'",
+            "params": [
+                {
+                    "name": "entity",
+                    "description": "This component's owner.",
+                    "type": "platypus.Entity"
+                }
+            ],
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 334,
+            "description": "Listens for this event to determine whether this sprite is visible.",
+            "itemtype": "method",
+            "name": "'camera-update'",
+            "params": [
+                {
+                    "name": "camera.viewport",
+                    "description": "Camera position and size.",
+                    "type": "platypus.AABB"
+                }
+            ],
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 349,
+            "description": "A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
+            "itemtype": "method",
+            "name": "'handle-render-load'",
+            "params": [
+                {
+                    "name": "handlerData",
+                    "description": "Data from the render handler",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "container",
+                            "description": "The parent container.",
+                            "type": "PIXI.Container"
+                        }
+                    ]
+                }
+            ],
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 363,
+            "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
+            "itemtype": "method",
+            "name": "'handle-render'",
+            "params": [
+                {
+                    "name": "renderData",
+                    "description": "Data from the render handler",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "container",
+                            "description": "The parent container.",
+                            "type": "PIXI.Container"
+                        }
+                    ]
+                }
+            ],
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 378,
+            "description": "This event makes the sprite invisible.",
+            "itemtype": "method",
+            "name": "'hide-sprite'",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 387,
+            "description": "This event makes the sprite visible.",
+            "itemtype": "method",
+            "name": "'show-sprite'",
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 396,
+            "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
+            "itemtype": "method",
+            "name": "'set-mask'",
+            "params": [
+                {
+                    "name": "mask",
+                    "description": "The mask. This can specified the same way as the 'mask' parameter on the component.",
+                    "type": "Object"
+                }
+            ],
+            "class": "platypus.components.RenderContainer",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderContainer.js",
+            "line": 422,
+            "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
+            "itemtype": "event",
+            "name": "'input-on'",
+            "class": "platypus.components.RenderContainer",
             "namespace": "platypus.components"
         },
         {
@@ -9915,7 +10408,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 379,
+            "line": 381,
             "description": "Listens for this event to determine whether this spine is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -9931,7 +10424,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 394,
+            "line": 396,
             "description": "A setup message used to add the spine to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -9954,7 +10447,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 408,
+            "line": 410,
             "description": "The render update message updates the spine.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -9977,7 +10470,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 429,
+            "line": 431,
             "description": "This sets the mix times.",
             "itemtype": "method",
             "name": "'set-mix-times'",
@@ -9993,7 +10486,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 439,
+            "line": 441,
             "description": "This event makes the spine invisible.",
             "itemtype": "method",
             "name": "'hide'",
@@ -10002,7 +10495,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 448,
+            "line": 450,
             "description": "This event makes the spine visible.",
             "itemtype": "method",
             "name": "'show'",
@@ -10011,7 +10504,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 457,
+            "line": 459,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -10027,7 +10520,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 467,
+            "line": 469,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -10045,7 +10538,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 485,
+            "line": 487,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -10063,7 +10556,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 515,
+            "line": 517,
             "description": "This event is triggered once the RenderSpine is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -10072,7 +10565,7 @@
         },
         {
             "file": "components\\RenderSpine.js",
-            "line": 606,
+            "line": 608,
             "description": "This event is triggered each tick to check for animation updates.",
             "itemtype": "event",
             "name": "'update-animation'",
@@ -10088,7 +10581,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 56,
+            "line": 47,
             "description": "spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.\n\n \"spriteSheet\": 'hero-image'\n\n -OR-\n\n \"spriteSheet\": {\n\n     \"images\": [\"example0\", \"example1\"], //Can also define 'image' and give the\n     \"frames\": {\n         \"width\":  100,\n         \"height\": 100,\n         \"regY\":   100,\n         \"regX\":   50\n     },\n     \"animations\":{\n         \"default-animation\":[2],\n         \"walking\": {\"frames\": [0, 1, 2], \"speed\": 4},\n         \"swing\": {\"frames\": [3, 4, 5], \"speed\": 4}\n     }\n }\n\n -OR- an Array of the above (since 0.8.4)",
             "itemtype": "property",
             "name": "spriteSheet",
@@ -10099,7 +10592,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 87,
+            "line": 78,
             "description": "Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.\n\n    \"animationMap\":{\n        \"standing\": \"default-animation\"  // On receiving a \"standing\" event, or when this.owner.state.standing === true, the \"default\" animation will begin playing.\n        \"ground,moving\": \"walking\",  // Comma separated values have a special meaning when evaluating \"state-changed\" messages. The above example will cause the \"walking\" animation to play ONLY if the entity's state includes both \"moving\" and \"ground\" equal to true.\n        \"ground,striking\": \"swing!\", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.\n        \"default\": \"default-animation\" // Optional. \"default\" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.\n    }\n\nThis data is used to create EventRender or StateRender components on the entity if the `eventBased` or `stateBased` properties are set to `true`.",
             "itemtype": "property",
             "name": "animationMap",
@@ -10110,7 +10603,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 105,
+            "line": 96,
             "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
             "itemtype": "property",
             "name": "mask",
@@ -10121,7 +10614,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 125,
+            "line": 116,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -10133,21 +10626,32 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 145,
-            "description": "This property's functionality is now provided by the `interactive` property.",
+            "line": 136,
+            "description": "The offset of the x-axis position of the sprite from the entity's x-axis position.",
             "itemtype": "property",
-            "name": "acceptInput",
-            "type": "Object",
-            "default": "null",
-            "deprecated": true,
-            "deprecationMessage": "since 0.9.0",
+            "name": "offsetX",
+            "type": "Number",
+            "default": "0",
+            "since": "0.11.0",
             "class": "platypus.components.RenderSprite",
             "namespace": "platypus.components"
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 155,
-            "description": "Optional. The offset of the z-index of the sprite from the entity's z-index. Will default to 0.",
+            "line": 146,
+            "description": "The offset of the y-axis position of the sprite from the entity's y-axis position.",
+            "itemtype": "property",
+            "name": "offsetY",
+            "type": "Number",
+            "default": "0",
+            "since": "0.11.0",
+            "class": "platypus.components.RenderSprite",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderSprite.js",
+            "line": 156,
+            "description": "The z-index relative to other render components on the entity.",
             "itemtype": "property",
             "name": "offsetZ",
             "type": "Number",
@@ -10157,7 +10661,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 164,
+            "line": 165,
             "description": "Whether to restart a playing animation on event.",
             "itemtype": "property",
             "name": "restart",
@@ -10169,7 +10673,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 174,
+            "line": 175,
             "description": "Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.",
             "itemtype": "property",
             "name": "rotate",
@@ -10180,7 +10684,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 183,
+            "line": 184,
             "description": "Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.",
             "itemtype": "property",
             "name": "mirror",
@@ -10191,7 +10695,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 192,
+            "line": 193,
             "description": "Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.",
             "itemtype": "property",
             "name": "flip",
@@ -10202,7 +10706,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 201,
+            "line": 202,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -10213,7 +10717,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 210,
+            "line": 211,
             "description": "Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.",
             "itemtype": "property",
             "name": "eventBased",
@@ -10224,7 +10728,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 219,
+            "line": 220,
             "description": "Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.",
             "itemtype": "property",
             "name": "stateBased",
@@ -10235,7 +10739,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 228,
+            "line": 229,
             "description": "Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like \"render-layer\"). The `RenderTiles` component must have its \"entityCache\" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.",
             "itemtype": "property",
             "name": "cache",
@@ -10246,7 +10750,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 237,
+            "line": 238,
             "description": "Optional. When using state-based animations, forces animations to complete before starting a new animation. Defaults to false.",
             "itemtype": "property",
             "name": "forcePlayThrough",
@@ -10257,7 +10761,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 246,
+            "line": 247,
             "description": "Optional. Ignores the opacity of the owner. Used when multiple RenderSprite components are on the same entity.",
             "itemtype": "property",
             "name": "ignoreOpacity",
@@ -10268,19 +10772,18 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 257,
-            "description": "Prevents sprite from becoming invisible out of frame and losing mouse input connection.",
+            "line": 256,
+            "description": "The scaling factor for this component.",
             "itemtype": "property",
-            "name": "dragMode",
-            "type": "Boolean",
-            "default": "false",
-            "since": "0.8.3",
+            "name": "scale",
+            "type": "Number|Array|Object",
+            "default": "1",
             "class": "platypus.components.RenderSprite",
             "namespace": "platypus.components"
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 267,
+            "line": 265,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -10291,8 +10794,8 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 276,
-            "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
+            "line": 274,
+            "description": "Optional. The Y scaling factor for the entity. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
             "type": "Number",
@@ -10302,8 +10805,19 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 285,
-            "description": "Optional. The X skew factor of the sprite. Defaults to 0.",
+            "line": 283,
+            "description": "The skew factor for this component.",
+            "itemtype": "property",
+            "name": "skew",
+            "type": "Number|Array|Object",
+            "default": "0",
+            "class": "platypus.components.RenderSprite",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\RenderSprite.js",
+            "line": 292,
+            "description": "Optional. The X skew factor of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
             "type": "Number",
@@ -10313,8 +10827,8 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 294,
-            "description": "Optional. The Y skew factor for the image. Defaults to 0.",
+            "line": 301,
+            "description": "Optional. The Y skew factor for the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
             "type": "Number",
@@ -10324,7 +10838,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 303,
+            "line": 310,
             "description": "Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -10335,40 +10849,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 312,
-            "description": "Optional. The x position of the entity. Defaults to 0.",
-            "itemtype": "property",
-            "name": "x",
-            "type": "Number",
-            "default": "0",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 321,
-            "description": "Optional. The y position of the entity. Defaults to 0.",
-            "itemtype": "property",
-            "name": "y",
-            "type": "Number",
-            "default": "0",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 330,
-            "description": "Optional. The z position of the entity. Defaults to 0.",
-            "itemtype": "property",
-            "name": "z",
-            "type": "Number",
-            "default": "0",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 363,
+            "line": 342,
             "description": "This event fires each time an animation completes.",
             "itemtype": "event",
             "name": "'animation-ended'",
@@ -10384,71 +10865,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 449,
-            "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
-            "itemtype": "method",
-            "name": "'cache'",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 459,
-            "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
-            "itemtype": "event",
-            "name": "'cache-sprite'",
-            "params": [
-                {
-                    "name": "entity",
-                    "description": "This component's owner.",
-                    "type": "platypus.Entity"
-                }
-            ],
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 471,
-            "description": "Listens for this event to determine whether this sprite is visible.",
-            "itemtype": "method",
-            "name": "'camera-update'",
-            "params": [
-                {
-                    "name": "camera.viewport",
-                    "description": "Camera position and size.",
-                    "type": "platypus.AABB"
-                }
-            ],
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 486,
-            "description": "A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
-            "itemtype": "method",
-            "name": "'handle-render-load'",
-            "params": [
-                {
-                    "name": "handlerData",
-                    "description": "Data from the render handler",
-                    "type": "Object",
-                    "props": [
-                        {
-                            "name": "container",
-                            "description": "The parent container.",
-                            "type": "PIXI.Container"
-                        }
-                    ]
-                }
-            ],
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 500,
+            "line": 433,
             "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10471,33 +10888,15 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 522,
-            "description": "This event makes the sprite invisible.",
-            "itemtype": "method",
-            "name": "'hide-sprite'",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 531,
-            "description": "This event makes the sprite visible.",
-            "itemtype": "method",
-            "name": "'show-sprite'",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 540,
-            "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
-            "itemtype": "method",
-            "name": "'set-mask'",
+            "line": 442,
+            "description": "This event is triggered each tick to check for animation updates.",
+            "itemtype": "event",
+            "name": "'update-animation'",
             "params": [
                 {
-                    "name": "mask",
-                    "description": "The mask. This can specified the same way as the 'mask' parameter on the component.",
-                    "type": "Object"
+                    "name": "playing",
+                    "description": "Whether the animation is in a playing or paused state.",
+                    "type": "Boolean"
                 }
             ],
             "class": "platypus.components.RenderSprite",
@@ -10505,7 +10904,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 550,
+            "line": 454,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -10523,7 +10922,7 @@
         },
         {
             "file": "components\\RenderSprite.js",
-            "line": 567,
+            "line": 465,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -10536,53 +10935,6 @@
                 }
             ],
             "since": "0.9.0",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 578,
-            "description": "Stops the sprite's animation.",
-            "itemtype": "method",
-            "name": "'stop-sprite'",
-            "deprecated": true,
-            "deprecationMessage": "since 0.9.0",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 588,
-            "description": "Starts the sprite's animation.",
-            "itemtype": "method",
-            "name": "'play-sprite'",
-            "deprecated": true,
-            "deprecationMessage": "since 0.9.0",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 614,
-            "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
-            "itemtype": "event",
-            "name": "'input-on'",
-            "class": "platypus.components.RenderSprite",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\RenderSprite.js",
-            "line": 673,
-            "description": "This event is triggered each tick to check for animation updates.",
-            "itemtype": "event",
-            "name": "'update-animation'",
-            "params": [
-                {
-                    "name": "playing",
-                    "description": "Whether the animation is in a playing or paused state.",
-                    "type": "Boolean"
-                }
-            ],
             "class": "platypus.components.RenderSprite",
             "namespace": "platypus.components"
         },
@@ -10965,7 +11317,44 @@
         },
         {
             "file": "components\\StateRender.js",
-            "line": 35,
+            "line": 37,
+            "description": "On entering a new animation-mapped state, this component triggers this event to play an animation.",
+            "itemtype": "event",
+            "name": "'play-animation'",
+            "params": [
+                {
+                    "name": "animation",
+                    "description": "Describes the animation to play.",
+                    "type": "String"
+                },
+                {
+                    "name": "restart",
+                    "description": "Whether to restart a playing animation.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "platypus.components.StateRender",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\StateRender.js",
+            "line": 47,
+            "description": "On attaining an animation-mapped state, this component triggers this event to stop a previous animation.",
+            "itemtype": "event",
+            "name": "'stop-animation'",
+            "params": [
+                {
+                    "name": "animation",
+                    "description": "Describes the animation to stop.",
+                    "type": "String"
+                }
+            ],
+            "class": "platypus.components.StateRender",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "components\\StateRender.js",
+            "line": 60,
             "description": "An object containg key-value pairs that define a mapping from entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.\n\n \"animationMap\":{\n     \"standing\": \"default-animation\"  // On receiving a \"standing\" event, or when this.owner.state.standing === true, the \"default\" animation will begin playing.\n     \"ground,moving\": \"walking\",  // Comma separated values have a special meaning when evaluating \"state-changed\" messages. The above example will cause the \"walking\" animation to play ONLY if the entity's state includes both \"moving\" and \"ground\" equal to true.\n     \"ground,striking\": \"swing!\", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.\n     \"default\": \"default-animation\" // Optional. \"default\" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.\n }",
             "itemtype": "property",
             "name": "animationMap",
@@ -10976,7 +11365,7 @@
         },
         {
             "file": "components\\StateRender.js",
-            "line": 51,
+            "line": 76,
             "description": "Sets a component that this component should be connected to.",
             "itemtype": "property",
             "name": "component",
@@ -10988,7 +11377,7 @@
         },
         {
             "file": "components\\StateRender.js",
-            "line": 61,
+            "line": 86,
             "description": "Optional. Forces animations to complete before starting a new animation. Defaults to `false`.",
             "itemtype": "property",
             "name": "forcePlayThrough",
@@ -10999,7 +11388,7 @@
         },
         {
             "file": "components\\StateRender.js",
-            "line": 105,
+            "line": 138,
             "description": "This listens for the entity state to change and will update the currently playing animation.",
             "itemtype": "method",
             "name": "'state-changed'",
@@ -11008,7 +11397,7 @@
         },
         {
             "file": "components\\StateRender.js",
-            "line": 114,
+            "line": 147,
             "description": "On receiving this event, the component checks for any waiting animations and begins playing them if so.",
             "itemtype": "method",
             "name": "'animation-ended'",
@@ -11024,23 +11413,7 @@
         },
         {
             "file": "components\\StateRender.js",
-            "line": 128,
-            "description": "On entering a new animation-mapped state, this component triggers this event to play an animation.",
-            "itemtype": "event",
-            "name": "'play-animation'",
-            "params": [
-                {
-                    "name": "animation",
-                    "description": "Describes the animation to play.",
-                    "type": "String"
-                }
-            ],
-            "class": "platypus.components.StateRender",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "components\\StateRender.js",
-            "line": 141,
+            "line": 168,
             "description": "This checks to determine whether another animation should begin playing.",
             "itemtype": "method",
             "name": "update-animation",
@@ -12292,16 +12665,21 @@
             "line": 349,
             "description": "Expresses whether this AABB contains the given point.",
             "itemtype": "method",
-            "name": "containsVector",
+            "name": "containsPoint",
             "params": [
                 {
-                    "name": "vector",
-                    "description": "The vector to check.",
-                    "type": "platypus.Vector"
+                    "name": "x",
+                    "description": "The x-axis value.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y-axis value.",
+                    "type": "Number"
                 }
             ],
             "return": {
-                "description": "Returns `true` if this AABB contains the vector.",
+                "description": "Returns `true` if this AABB contains the point.",
                 "type": "Boolean"
             },
             "since": "0.7.5",
@@ -12310,7 +12688,7 @@
         },
         {
             "file": "AABB.js",
-            "line": 361,
+            "line": 362,
             "description": "Expresses whether this AABB collides with the given AABB. This is similar to `intersects` but returns true for overlapping or touching edges.",
             "itemtype": "method",
             "name": "collides",
@@ -12331,7 +12709,33 @@
         },
         {
             "file": "AABB.js",
-            "line": 373,
+            "line": 374,
+            "description": "Expresses whether this AABB collides with the given point. This is an exclusive version of containsPoint.",
+            "itemtype": "method",
+            "name": "collidesPoint",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x-axis value.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y-axis value.",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns `true` if this AABB collides with the point.",
+                "type": "Boolean"
+            },
+            "since": "0.11.0",
+            "class": "platypus.AABB",
+            "namespace": "platypus"
+        },
+        {
+            "file": "AABB.js",
+            "line": 387,
             "description": "Expresses whether this AABB intersects the given AABB. This is similar to `collides` but returns true for overlapping only, not touching edges.",
             "itemtype": "method",
             "name": "intersects",
@@ -12351,7 +12755,7 @@
         },
         {
             "file": "AABB.js",
-            "line": 384,
+            "line": 398,
             "description": "Returns the area of the intersection. If the AABB's do not intersect, `0` is returned.",
             "itemtype": "method",
             "name": "getIntersectionArea",
@@ -12371,7 +12775,7 @@
         },
         {
             "file": "AABB.js",
-            "line": 402,
+            "line": 416,
             "description": "Returns an AABB from cache or creates a new one if none are available.",
             "itemtype": "method",
             "name": "AABB.setUp",
@@ -12385,7 +12789,7 @@
         },
         {
             "file": "AABB.js",
-            "line": 409,
+            "line": 423,
             "description": "Returns a AABB back to the cache.",
             "itemtype": "method",
             "name": "AABB.recycle",
@@ -12402,7 +12806,7 @@
         },
         {
             "file": "AABB.js",
-            "line": 416,
+            "line": 430,
             "description": "Relinquishes properties of the AABB and recycles it.",
             "itemtype": "method",
             "name": "recycle",
@@ -12984,6 +13388,46 @@
         {
             "file": "CollisionShape.js",
             "line": 212,
+            "description": "Expresses whether this shape contains the given point.",
+            "itemtype": "method",
+            "name": "containsPoint",
+            "params": [
+                {
+                    "name": "x",
+                    "description": "The x-axis value.",
+                    "type": "Number"
+                },
+                {
+                    "name": "y",
+                    "description": "The y-axis value.",
+                    "type": "Number"
+                }
+            ],
+            "return": {
+                "description": "Returns `true` if this shape contains the point.",
+                "type": "Boolean"
+            },
+            "since": "0.11.0",
+            "class": "platypus.CollisionShape",
+            "namespace": "platypus"
+        },
+        {
+            "file": "CollisionShape.js",
+            "line": 230,
+            "description": "Returns a JSON object describing the collision shape.",
+            "itemtype": "method",
+            "name": "toJSON",
+            "return": {
+                "description": "Returns a JSON definition that can be used to recreate the collision shape.",
+                "type": "Object"
+            },
+            "since": "0.11.0",
+            "class": "platypus.CollisionShape",
+            "namespace": "platypus"
+        },
+        {
+            "file": "CollisionShape.js",
+            "line": 265,
             "description": "Returns an CollisionShape from cache or creates a new one if none are available.",
             "itemtype": "method",
             "name": "CollisionShape.setUp",
@@ -12997,7 +13441,7 @@
         },
         {
             "file": "CollisionShape.js",
-            "line": 219,
+            "line": 272,
             "description": "Returns a CollisionShape back to the cache.",
             "itemtype": "method",
             "name": "CollisionShape.recycle",
@@ -13014,7 +13458,7 @@
         },
         {
             "file": "CollisionShape.js",
-            "line": 226,
+            "line": 279,
             "description": "Relinquishes properties of the CollisionShape and recycles it.",
             "itemtype": "method",
             "name": "recycle",
@@ -13038,6 +13482,20 @@
         {
             "file": "Component.js",
             "line": 45,
+            "description": "Returns a JSON object describing the component.",
+            "itemtype": "method",
+            "name": "toJSON",
+            "return": {
+                "description": "Returns a JSON definition that can be used to recreate the component.",
+                "type": "Object"
+            },
+            "since": "0.11.0",
+            "class": "platypus.Component",
+            "namespace": "platypus"
+        },
+        {
+            "file": "Component.js",
+            "line": 54,
             "description": "This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.",
             "itemtype": "method",
             "name": "destroy",
@@ -13048,7 +13506,7 @@
         },
         {
             "file": "Component.js",
-            "line": 76,
+            "line": 85,
             "description": "This method removes multiple event listeners from the entity.",
             "itemtype": "method",
             "name": "removeEventListeners",
@@ -13067,7 +13525,7 @@
         },
         {
             "file": "Component.js",
-            "line": 103,
+            "line": 112,
             "description": "This method adds an event listener to the entity.",
             "itemtype": "method",
             "name": "addEventListener",
@@ -13083,6 +13541,10 @@
                     "type": "Function"
                 }
             ],
+            "return": {
+                "description": "handler  A reference to the bound handler.",
+                "type": "Function"
+            },
             "access": "private",
             "tagname": "",
             "class": "platypus.Component",
@@ -13090,7 +13552,7 @@
         },
         {
             "file": "Component.js",
-            "line": 119,
+            "line": 131,
             "description": "This method adds a method to the entity.",
             "itemtype": "method",
             "name": "addMethod",
@@ -13113,7 +13575,7 @@
         },
         {
             "file": "Component.js",
-            "line": 138,
+            "line": 150,
             "description": "This method removes an event listener from the entity.",
             "itemtype": "method",
             "name": "removeEventListener",
@@ -13136,7 +13598,7 @@
         },
         {
             "file": "Component.js",
-            "line": 160,
+            "line": 172,
             "description": "This method removes a method from the entity.",
             "itemtype": "method",
             "name": "removeMethod",
@@ -13154,7 +13616,7 @@
         },
         {
             "file": "Component.js",
-            "line": 176,
+            "line": 188,
             "description": "This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.",
             "itemtype": "method",
             "name": "getAssetList",
@@ -13184,7 +13646,7 @@
         },
         {
             "file": "Component.js",
-            "line": 187,
+            "line": 199,
             "description": "This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.",
             "itemtype": "method",
             "name": "getLateAssetList",
@@ -13245,7 +13707,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 75,
+            "line": 88,
             "description": "Tracks keys on this object to make iteration faster.",
             "itemtype": "property",
             "name": "keys",
@@ -13256,7 +13718,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 84,
+            "line": 97,
             "description": "Returns the value of the provided key.",
             "itemtype": "method",
             "name": "get",
@@ -13276,7 +13738,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 93,
+            "line": 106,
             "description": "Determines whether the provided key is available on this DataMap.",
             "itemtype": "method",
             "name": "has",
@@ -13296,7 +13758,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 102,
+            "line": 115,
             "description": "Sets a value to a key in the DataMap.",
             "itemtype": "method",
             "name": "set",
@@ -13321,7 +13783,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 112,
+            "line": 125,
             "description": "Deletes a key (and value) from the DataMap.",
             "itemtype": "method",
             "name": "delete",
@@ -13341,7 +13803,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 121,
+            "line": 134,
             "description": "Clears out of keys (and values) from the DataMap.",
             "itemtype": "method",
             "name": "clear",
@@ -13350,7 +13812,21 @@
         },
         {
             "file": "DataMap.js",
-            "line": 158,
+            "line": 141,
+            "description": "Returns a JSON object describing the component.",
+            "itemtype": "method",
+            "name": "toJSON",
+            "return": {
+                "description": "Returns a JSON definition that can be used to recreate the component.",
+                "type": "Object"
+            },
+            "since": "0.11.0",
+            "class": "platypus.DataMap",
+            "namespace": "platypus"
+        },
+        {
+            "file": "DataMap.js",
+            "line": 180,
             "description": "Returns DataMap from cache or creates a new one if none are available.",
             "itemtype": "method",
             "name": "DataMap.setUp",
@@ -13363,7 +13839,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 164,
+            "line": 186,
             "description": "Returns DataMap back to the cache. Prefer the DataMap's recycle method since it recycles property objects as well.",
             "itemtype": "method",
             "name": "DataMap.recycle",
@@ -13379,7 +13855,7 @@
         },
         {
             "file": "DataMap.js",
-            "line": 170,
+            "line": 192,
             "description": "Relinquishes DataMap properties and recycles it.",
             "itemtype": "method",
             "name": "recycle",
@@ -13388,7 +13864,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 121,
+            "line": 120,
             "description": "The entity triggers `load` on itself once all the properties and components have been attached, notifying the components that all their peer components are ready for messages.",
             "itemtype": "event",
             "name": "load",
@@ -13397,7 +13873,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 141,
+            "line": 140,
             "description": "Returns a string describing the entity.",
             "itemtype": "method",
             "name": "toString",
@@ -13410,7 +13886,28 @@
         },
         {
             "file": "Entity.js",
-            "line": 151,
+            "line": 150,
+            "description": "Returns a JSON object describing the entity.",
+            "itemtype": "method",
+            "name": "toJSON",
+            "params": [
+                {
+                    "name": "includeComponents",
+                    "description": "Whether the returned JSON should list components. Defaults to `false` to condense output since components are generally defined in `platypus.game.settings.entities`, but may be needed for custom-constructed entities not so defined.",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "Returns a JSON definition that can be used to recreate the entity.",
+                "type": "Object"
+            },
+            "since": "0.11.0",
+            "class": "platypus.Entity",
+            "namespace": "platypus"
+        },
+        {
+            "file": "Entity.js",
+            "line": 187,
             "description": "Attaches the provided component to the entity.",
             "itemtype": "method",
             "name": "addComponent",
@@ -13430,7 +13927,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 161,
+            "line": 197,
             "description": "The entity triggers `component-added` on itself once a component has been attached, notifying other components of their peer component.",
             "itemtype": "event",
             "name": "component-added",
@@ -13453,7 +13950,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 172,
+            "line": 208,
             "description": "Removes the mentioned component from the entity.",
             "itemtype": "method",
             "name": "removeComponent",
@@ -13473,7 +13970,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 182,
+            "line": 218,
             "description": "The entity triggers `component-removed` on itself once a component has been removed, notifying other components of their peer component's removal.",
             "itemtype": "event",
             "name": "component-removed",
@@ -13496,7 +13993,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 213,
+            "line": 249,
             "description": "This method sets one or more properties on the entity.",
             "params": [
                 {
@@ -13512,7 +14009,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 229,
+            "line": 265,
             "description": "This method removes all components from the entity.",
             "itemtype": "method",
             "name": "destroy",
@@ -13521,7 +14018,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 255,
+            "line": 291,
             "description": "Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.",
             "itemtype": "method",
             "name": "getAssetList",
@@ -13546,7 +14043,7 @@
         },
         {
             "file": "Entity.js",
-            "line": 293,
+            "line": 329,
             "description": "Returns all of the assets required for this Entity. This method calls the corresponding method on all components to determine the list of assets.",
             "itemtype": "method",
             "name": "getLateAssetList",
@@ -13773,7 +14270,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 200,
+            "line": 201,
             "access": "private",
             "tagname": "",
             "class": "platypus.PIXIAnimation",
@@ -13781,7 +14278,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 207,
+            "line": 208,
             "description": "The speed that the PIXIAnimation will play at. Higher is faster, lower is slower",
             "itemtype": "method",
             "name": "",
@@ -13792,7 +14289,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 215,
+            "line": 216,
             "description": "The currently playing animation name.",
             "itemtype": "property",
             "name": "currentAnimation",
@@ -13804,7 +14301,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 225,
+            "line": 226,
             "description": "Elapsed time since animation has been started, used internally to display current texture",
             "itemtype": "method",
             "name": "",
@@ -13816,7 +14313,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 233,
+            "line": 234,
             "description": "Indicates if the PIXIAnimation is currently playing",
             "itemtype": "method",
             "name": "",
@@ -13827,7 +14324,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 264,
+            "line": 265,
             "description": "The visibility of the sprite.",
             "itemtype": "property",
             "name": "visible",
@@ -13837,7 +14334,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 280,
+            "line": 281,
             "description": "The PIXIAnimations current frame index",
             "itemtype": "method",
             "name": "",
@@ -13849,7 +14346,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 294,
+            "line": 295,
             "description": "The PIXIAnimations paused state. If paused, the animation doesn't update.",
             "itemtype": "property",
             "name": "paused",
@@ -13858,21 +14355,21 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 313,
+            "line": 314,
             "description": "Stops the PIXIAnimation",
             "class": "platypus.PIXIAnimation",
             "namespace": "platypus"
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 321,
+            "line": 322,
             "description": "Plays the PIXIAnimation",
             "class": "platypus.PIXIAnimation",
             "namespace": "platypus"
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 370,
+            "line": 368,
             "description": "Stops the PIXIAnimation and goes to a specific frame",
             "params": [
                 {
@@ -13886,7 +14383,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 387,
+            "line": 384,
             "description": "Goes to a specific frame and begins playing the PIXIAnimation",
             "itemtype": "method",
             "name": "gotoAndPlay",
@@ -13909,7 +14406,24 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 410,
+            "line": 406,
+            "description": "Sets the texture and anchor for a particular frame.",
+            "itemtype": "method",
+            "name": "setFrame",
+            "params": [
+                {
+                    "name": "frameIndex",
+                    "description": "Animation frame index to set.",
+                    "type": "Number"
+                }
+            ],
+            "since": "0.11.1",
+            "class": "platypus.PIXIAnimation",
+            "namespace": "platypus"
+        },
+        {
+            "file": "PIXIAnimation.js",
+            "line": 424,
             "description": "Returns whether a particular animation is available.",
             "itemtype": "method",
             "name": "has",
@@ -13926,7 +14440,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 421,
+            "line": 435,
             "description": "Stops the PIXIAnimation and destroys it",
             "itemtype": "method",
             "name": "destroy",
@@ -13935,7 +14449,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 445,
+            "line": 459,
             "description": "This method makes sure that all the base textures are in the gpu to prevent framerate lurches later due to loading base textures as their textures appear.",
             "itemtype": "method",
             "name": "PIXIAnimation.preloadBaseTextures",
@@ -13951,7 +14465,7 @@
         },
         {
             "file": "PIXIAnimation.js",
-            "line": 474,
+            "line": 488,
             "description": "This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.",
             "itemtype": "method",
             "name": "formatSpriteSheet",
@@ -14927,27 +15441,27 @@
     "warnings": [
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:207"
+            "line": " PIXIAnimation.js:208"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:225"
+            "line": " PIXIAnimation.js:226"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:233"
+            "line": " PIXIAnimation.js:234"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " PIXIAnimation.js:264"
+            "line": " PIXIAnimation.js:265"
         },
         {
             "message": "replacing incorrect tag: member with method",
-            "line": " PIXIAnimation.js:280"
+            "line": " PIXIAnimation.js:281"
         },
         {
             "message": "unknown tag: memberof",
-            "line": " PIXIAnimation.js:280"
+            "line": " PIXIAnimation.js:281"
         },
         {
             "message": "Missing item type\n### Local Broadcasts:\n- **child-entity-added** - This message is triggered when a new entity has been added to the list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just added.\n- **child-entity-removed** - This message is triggered when an entity has been removed from the list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just removed.\n\n### Child Broadcasts:\n- **peer-entity-added** - This message is triggered when a new entity has been added to the parent's list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just added.\n- **peer-entity-removed** - This message is triggered when an entity has been removed from the parent's list of children entities.\n  - @param message ([[Entity]] object) - The entity that was just removed.\n- **[Messages specified in definition]** - Listens for specified messages and on receiving them, re-triggers them on child entities.\n  - @param message (object) - sends the message object received by the original message.\n\n## Entity Methods:\n- **addEntity** -  This method will add the provided entity to this component's list of entities.\n  - @param entity ([[Entity]] object) - Required. This is the entity to be added as a child.\n  - @return entity ([[Entity]] object) - Returns the entity that was just added.\n- **removeEntity** - This method will remove the provided entity from the list of child entities.\n  - @param message ([[Entity]] object) - Required. The entity to remove.\n  - @return entity ([[Entity]] object | false) - Returns the entity that was just removed. If the entity was not foudn as a child, `false` is returned, indicated that the provided entity was not a child of this entity.\n- **getEntitiesByType** - This method will return all child entities (including grandchildren) that match the provided type.\n  - @param type (string) - Required. The entity type to find.\n  - @return entities (Array of [[Entity]] objects) - Returns the entities that match the specified entity type.\n- **getEntityById** - This method will return the first child entity it finds with a matching id (including grandchildren).\n  - @param id (string) - Required. The entity id to find.\n  - @return entity ([[Entity]] object) - Returns the entity that matches the specified entity id.\n- **triggerOnChildren** - This method is used by both internal components and external entities to trigger messages on the child entities.\n  - @param event (variant) - This is the message(s) to process. This can be a string, an object containing an \"event\" property (and optionally a \"message\" property, overriding the value below), or an array of the same.\n  - @param value (variant) - This is a message object or other value to pass along to component functions.\n  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A \"value\" object parameter (above) will also set this flag if value.debug is set to true.\n  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.\n- **triggerEvent** - This method is used by both internal components and external entities to trigger messages on the child entities.\n  - @param event (string) - This is the message to process.\n  - @param value (variant) - This is a message object or other value to pass along to component functions.\n  - @param debug (boolean) - This flags whether to output message contents and subscriber information to the console during game development. A \"value\" object parameter (above) will also set this flag if value.debug is set to true.\n  - @return integer - The number of handlers for the triggered message: this is useful for determining how many child entities care about a given message.",
@@ -14955,11 +15469,11 @@
         },
         {
             "message": "Missing item type",
-            "line": " components\\HandlerCollision.js:47"
+            "line": " components\\HandlerCollision.js:54"
         },
         {
             "message": "Missing item type\nFind the earliest point at which this shape collides with one of the potential colliding shapes along this axis.\nFor example, cycles through shapes a, b, and c to find the earliest position:\n\n   O---->   [b]  [a]     [c]\n\n   Returns collision location for:\n\n           O[b]",
-            "line": " components\\HandlerCollision.js:760"
+            "line": " components\\HandlerCollision.js:767"
         },
         {
             "message": "Missing item type\n# COMPONENT **LogicCarrier**\nThis component allows this entity carry other entities with which it collides. Entities that this component should carry need to have a [[Logic-Portable]] component attached to notify this entity that they are portable.\n\n## Dependencies:\n- [[Collision-Group]] - This component will attach a [[Collision-Group]] to this entity if it does not already have this component. `LogicCarrier` uses a collision group to resolve its portable peers' collisions with itself before other world collisions are handled.\n- [[Logic-Portable]] (on portable peer entity) - This component listens for 'carry-me' and 'release-me', commonly triggered by [[Logic-Portable]] on a colliding peer entity.\n\n## Messages\n\n### Listens for:\n- **load** - On receiving this message, the component ensures that it has a peer collision group component, and adds one if not.\n- **carry-me** - On receiving this message, the component triggers `add-collision-entity` on the entity to add the peer entity to its collision group.\n  - @param message.entity ([[Entity]]) - Required. The peer entity requesting to be carried.\n- **release-me** - On receiving this message, the component triggers `remove-collision-entity` on the entity to remove the peer entity from its collision group.\n  - @param message.entity ([[Entity]]) - Required. The peer entity requesting to be released.\n\n### Local Broadcasts\n- **add-collision-entity** - On receiving a `carry-me` message, this component triggers this message to add the portable peer to the collision group.\n  - @param message ([[Entity]]) - The entity being added to the collision group.\n- **remove-collision-entity** - On receiving a `release-me` message, this component triggers this message to remove the portable peer to the collision group.\n  - @param message ([[Entity]]) - The entity being removed from the collision group.\n\n## JSON Definition:\n    {\n      \"type\": \"LogicCarrier\"\n      // This component has no customizable properties.\n    }\n    \nRequires: [\"CollisionGroup\"]",
@@ -15059,19 +15573,19 @@
         },
         {
             "message": "Missing item type",
-            "line": " PIXIAnimation.js:200"
+            "line": " PIXIAnimation.js:201"
         },
         {
             "message": "Missing item type\nStops the PIXIAnimation",
-            "line": " PIXIAnimation.js:313"
+            "line": " PIXIAnimation.js:314"
         },
         {
             "message": "Missing item type\nPlays the PIXIAnimation",
-            "line": " PIXIAnimation.js:321"
+            "line": " PIXIAnimation.js:322"
         },
         {
             "message": "Missing item type\nStops the PIXIAnimation and goes to a specific frame",
-            "line": " PIXIAnimation.js:370"
+            "line": " PIXIAnimation.js:368"
         },
         {
             "message": "Missing item type\nReturns the direction of the vector from the z-axis",

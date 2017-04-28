@@ -4,12 +4,12 @@
  * @class PIXIAnimation
  * @extends PIXI.Sprite
  */
-//TODO: Document!
-/*global include, PIXI, platypus */
+/*global include, platypus */
 (function () {
     'use strict';
     
     var BaseTexture = include('PIXI.BaseTexture'),
+        CanvasTinter = include('PIXI.CanvasTinter'),
         Data = include('platypus.Data'),
         Point = include('PIXI.Point'),
         Rectangle = include('PIXI.Rectangle'),
@@ -329,8 +329,7 @@
     prototype._syncUpdate = (function () {
         var
             update = function (deltaTime) {
-                var data = null,
-                    name = "",
+                var name = "",
                     floor = 0;
                 
                 this._currentTime += this.animationSpeed * this._animation.speed * deltaTime * (60 / 1000);
@@ -342,9 +341,7 @@
                 }
                 
                 if (floor < this._animation.frames.length) {
-                    data = this._animation.frames[floor % this._animation.frames.length];
-                    this._texture = data.texture;
-                    this.anchor = data.anchor;
+                    this.setFrame(floor % this._animation.frames.length);
                 } else if (floor >= this._animation.frames.length) {
                     name = this._animation.id;
                     this.gotoAndPlay(this._animation.next);
@@ -380,8 +377,7 @@
         if (!this._animation) {
             this._animation = this._animations.default;
         }
-        this._texture = this._animation.frames[0].texture;
-        this.anchor =  this._animation.frames[0].anchor;
+        this.setFrame(0);
     };
     
     /**
@@ -400,11 +396,28 @@
                 this._animation = this._animations.default;
                 this.currentAnimation = 'default';
             }
-            this._texture = this._animation.frames[0].texture;
-            this.anchor = this._animation.frames[0].anchor;
+            this.setFrame(0);
         }
             
         this.play();
+    };
+    
+    /**
+    * Sets the texture and anchor for a particular frame.
+    *
+    * @method setFrame
+    * @param frameIndex {Number} Animation frame index to set.
+    * @since 0.11.1
+    */
+    prototype.setFrame = function (frameIndex) {
+        var frameData = this._animation.frames[frameIndex];
+
+        this._texture = frameData.texture;
+        this.anchor = frameData.anchor;
+
+        if (this.tintedTexture) { // Sprite is using a cached tinted canvas, so we need to update this cache too.
+            this.tintedTexture = CanvasTinter.getTintedTexture(this, this.tint);
+        }
     };
     
     /**

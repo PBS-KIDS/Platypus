@@ -1,8 +1,21 @@
-var path = require('path'),
-    _ = require('lodash');
+/* global module, require */
+var path = require('path');
 
 module.exports = function (grunt) {
     'use strict';
+
+    var jasSrc = grunt.file.readJSON('config.json').platypus_source.slice();
+
+    jasSrc.unshift(
+        "node_modules/springroll/components/preloadjs/lib/preloadjs.combined.js",
+        "node_modules/springroll/components/soundjs/lib/soundjs.combined.js",
+        "node_modules/pixi.js/dist/pixi.js",
+        "node_modules/springroll/dist/core.js",
+        "node_modules/springroll/dist/modules/pixi-display.js",
+        "node_modules/springroll/dist/modules/states.js"
+    );
+
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -15,10 +28,20 @@ module.exports = function (grunt) {
         docsName: '<%= pkg.name %>_docs-<%= version %>',
         docsZip: "<%= docsName %>.zip",
 
+        // Setup tests
+        jasmine: {
+            src: jasSrc,
+            options: {
+                specs: "spec/**/*.js",
+                vendor: "vendor/**/*.js",
+                version: '2.0.0'
+            }
+        },
+        
         // Setup Uglify for JS minification.
         uglify: {
             options: {
-                banner: grunt.file.read('LICENSE'),
+                banner: "/*!\n * @license PLATYPUS v<%= version %>\n *\n * Distributed under the terms of the MIT license.\n * http://www.opensource.org/licenses/mit-license.html\n *\n * This notice shall be included in all copies or substantial portions of the Software.\n */\n\n",
                 preserveComments: "some",
                 compress: {
                     global_defs: {
@@ -28,7 +51,7 @@ module.exports = function (grunt) {
             },
             build: {
                 files: {
-                    'output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
+                    './build/output/<%= pkg.name.toLowerCase() %>.min.js': getConfigValue('platypus_source')
                 }
             }
         },
@@ -63,11 +86,11 @@ module.exports = function (grunt) {
             },
             build: {
                 files: {
-                    'output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource(
-                            [
-                                {cwd: '', config:'config.json', source:'platypus_source'}
-                            ]
-                    )
+                    './build/output/<%= pkg.name.toLowerCase() %>.combined.js': combineSource([{
+                        cwd: '',
+                        config: 'config.json',
+                        source: 'platypus_source'
+                    }])
                 }
             }
         },
@@ -86,8 +109,8 @@ module.exports = function (grunt) {
                     linkNatives: true,
                     attributesEmit: true,
                     selleck: true,
-                    helpers: ["../build/path.js"],
-                    themedir: "../build/platypusTheme/"
+                    helpers: ["./build/path.js"],
+                    themedir: "./build/platypusTheme/"
                 }
             }
         },
@@ -95,93 +118,78 @@ module.exports = function (grunt) {
         compress: {
             build: {
                 options: {
-                    mode:'zip',
-                    archive:'output/<%= docsZip %>'
+                    mode: 'zip',
+                    archive: 'output/<%= docsZip %>'
                 },
-                files: [
-                    {expand:true, src:'**', cwd:'<%= docsFolder %>'}
-                ]
+                files: [{
+                    expand: true,
+                    src: '**',
+                    cwd: '<%= docsFolder %>'
+                }]
             }
         },
 
         copy: {
             docsSite: {
-                files: [
-                    {expand:true, cwd:'<%= docsFolder %>', src:'**', dest:getConfigValue('docs_out_path')}
-                ]
+                files: [{
+                    expand: true,
+                    cwd: '<%= docsFolder %>',
+                    src: '**',
+                    dest: getConfigValue('docs_out_path')
+                }]
             },
             src: {
-                files: [
-                    {expand: true, cwd:'./output/', src: '*.js', dest: '../lib/'}
-                ]
+                files: [{
+                    expand: true,
+                    cwd: './build/output/',
+                    src: '*.js',
+                    dest: './lib/'
+                }]
             }
         },
 
         updateversion: {
             platypus: {
-                file: '../src/platypus.js',
+                file: './src/platypus.js',
                 version: '<%= version %>'
             }
         },
 
         clearversion: {
             platypus: {
-                file: '../src/platypus.js'
+                file: './src/platypus.js'
             }
         }
     });
 
-    function getBuildConfig() {
-        // Read the global settings file first.
+    function getConfigValue (name) {
         var config = grunt.file.readJSON('config.json');
 
-        // If we have a config.local.json .. prefer its values.
-        if (grunt.file.exists('config.local.json')) {
-            var config2 = grunt.file.readJSON('config.local.json');
-            _.extend(config, config2);
-        }
-
-        return config;
-    }
-
-    function getConfigValue(name) {
-        var config = grunt.config.get('buildConfig');
-
-        if (config == null) {
-            config = getBuildConfig();
-            grunt.config.set('buildConfig', config);
-        }
+        grunt.config.set('buildConfig', config);
 
         return config[name];
     }
 
-    function getCombinedSource() {
-        var configs = [
-            {cwd: '', config:'config.json', source:'source'}
-        ];
-
-        return combineSource(configs);
-    }
-
     function combineSource (configs) {
+        var handle = function (item, index, array) {
+                array[index] = path.resolve(this.cwd, item);
+            },
+            i = 0,
+            json = null,
+            o = null,
+            sourcePaths = [],
+            sources = null;
+
         // Pull out all the source paths.
-        var sourcePaths = [];
-        for (var i=0;i<configs.length;i++) {
-            var o = configs[i];
-            var json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
-            var sources = json[o.source];
-            sources.forEach(function(item, index, array) {
-                array[index] = path.resolve(o.cwd, item);
-            });
+        for (i = 0; i < configs.length; i++) {
+            o = configs[i];
+            json = grunt.file.readJSON(path.resolve(o.cwd, o.config));
+            sources = json[o.source];
+            sources.forEach(handle.bind(o));
             sourcePaths = sourcePaths.concat(sources);
         }
 
         return sourcePaths;
-    }
-
-    function getBuildArgs() {
-        var banner = grunt.file.read("BANNER");
-        grunt.config("concat.options.banner", banner);
     }
 
     // Load all the tasks we need
@@ -192,21 +200,14 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadTasks('tasks/');
 
-    grunt.registerTask('setDocsBase', "Internal utility task to set a correct base for YUIDocs.", function() {
-        grunt.file.setBase('../src');
-        grunt.config.set('docsFolder', "../build/output/<%= docsName %>/");
-    });
-
-    grunt.registerTask('resetBase', "Internal utility task to reset the base, after setDocsBase", function() {
-        grunt.file.setBase('../build');
-        grunt.config.set('docsFolder', "./output/<%= docsName %>/");
-    });
+    grunt.file.setBase('.');
+    grunt.config.set('docsFolder', "./build/output/<%= docsName %>/");
 
     /**
      * Build the docs using YUIdocs.
      */
     grunt.registerTask('docs', [
-        "setDocsBase", "yuidoc", "resetBase", "compress", "copy:docsSite"
+        "yuidoc", "compress", "copy:docsSite"
     ]);
 
     /**
@@ -220,9 +221,9 @@ module.exports = function (grunt) {
      * Task for exporting a next build.
      *
      */
-    grunt.registerTask('next', function() {
+    grunt.registerTask('next', function () {
         grunt.config("buildArgs", this.args || []);
-        getBuildArgs();
+        grunt.config("concat.options.banner", "/*!\n * PLATYPUS v<%= pkg.version %>-next\n *\n */");
         grunt.task.run(["updateversion", "combine", "uglify", "clearversion", "copy:src", "clearBuildArgs"]);
     });
 
@@ -238,13 +239,13 @@ module.exports = function (grunt) {
      * Task for exporting a release build (version based on package.json)
      *
      */
-    grunt.registerTask('build', function() {
+    grunt.registerTask('build', function () {
         grunt.config("buildArgs", this.args || []);
-        getBuildArgs();
+        grunt.config("concat.options.banner", "/*!\n * PLATYPUS v<%= pkg.version %>\n *\n */");
         grunt.task.run(["setVersion", "updateversion", "combine", "uglify", "clearversion", "docs", "copy:src", "updatebower", "copy:docsSite", "clearBuildArgs"]);
     });
 
-    grunt.registerTask('clearBuildArgs', function() {
+    grunt.registerTask('clearBuildArgs', function () {
         grunt.config("buildArgs", []);
     });
 

@@ -36,20 +36,19 @@
              * @default false
              * @since 0.9.1
              */
-            interactive: false,
-
-            /**
-             * This property's functionality is now provided by the `interactive` property.
-             *
-             * @property acceptInput
-             * @type Object
-             * @default null
-             * @deprecated since 0.9.1
-             */
-            acceptInput: null
+            interactive: false
         },
 
         publicProperties: {
+
+            /**
+             * This is the container holding all children's disply objects for this layer. It's an available proeprty on the layer entity.
+             *
+             * @property worldContainer
+             * @type PIXI.Container
+             * @default null
+             * @since 0.11.0
+             */
             worldContainer: null
         },
 
@@ -57,12 +56,6 @@
             var definition = null;
 
             this.worldContainer = this.worldContainer || new Container();
-
-            // The following appends necessary information to displayed objects to allow them to receive touches and clicks
-            if (this.acceptInput) {
-                platypus.debug.warn('Entity "' + this.owner.type + '": HandlerRender "acceptInput" property has been deprecated since 0.9.1 in favor of the "interactive" property which adds an "Interactive" component to the entity to handle input.');
-                this.interactive = this.interactive || this.acceptInput;
-            }
 
             if (this.interactive) {
                 definition = Data.setUp(
