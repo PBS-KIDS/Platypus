@@ -39,8 +39,4 @@ describe("Game", function () {
             expect(platypus.game).toBe(app.platypusGame);
         });
     });
-
-    it("contains spec with an expectation", function () {
-        expect(true).toBe(true);
-    });
 });
