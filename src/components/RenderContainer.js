@@ -165,7 +165,7 @@
              *
              * @property rotation
              * @type Number
-             * @default 1
+             * @default 0
              */
             rotation: 0,
 
@@ -479,7 +479,7 @@
                     }
                     
                     if (o) { // This is a 3x3 2D matrix describing an affine transformation.
-                        this.container.setTransform(o[0][2], o[1][2], o[0][0], o[1][1], (rotation ? (rotation / 180) * Math.PI : 0), o[1][0], o[0][1]);
+                        this.container.setTransform(x + o[0][2], y + o[1][2], o[0][0], o[1][1], (rotation ? (rotation / 180) * Math.PI : 0), o[1][0], o[0][1]);
                     } else {
                         this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
                     }
