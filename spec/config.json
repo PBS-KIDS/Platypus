@@ -1,4 +1,11 @@
 {
+    "entities": {
+        "predefined-entity": {
+            "id": "predefined-entity",
+            "components": [],
+            "properties": {}
+        }
+    },
     "scenes": {
         "test-scene": {
             "layers": []
