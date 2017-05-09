@@ -341,9 +341,7 @@
                     
                     if (newEntity instanceof Entity) {
                         entity = newEntity;
-                        if (callback) {
-                            callback(entity);
-                        }
+                        whenReady.call(this, callback, entity);
                     } else {
                         if (typeof newEntity === 'string') {
                             entity = new Entity(platypus.game.settings.entities[newEntity], null, whenReady.bind(this, callback));
