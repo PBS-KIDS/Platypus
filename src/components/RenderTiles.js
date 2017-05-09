@@ -19,10 +19,18 @@
         CanvasRenderer    = include('PIXI.CanvasRenderer'),
         Container         = include('PIXI.Container'),
         Graphics          = include('PIXI.Graphics'),
-        ParticleContainer = include('PIXI.particles.ParticleContainer'),
+        ParticleContainer = Container, //Excluding ParticleContainer atm due to https://github.com/pixijs/pixi.js/issues/4008 -- include('PIXI.particles.ParticleContainer'),
         Rectangle         = include('PIXI.Rectangle'),
         RenderTexture     = include('PIXI.RenderTexture'),
         Sprite            = include('PIXI.Sprite'),
+        clearRenderTexture = function (renderer, renderTexture, clearColor) { // This is pulled from https://github.com/pixijs/pixi.js/pull/3647 and should be in a future build of PIXI
+            var baseTexture = renderTexture.baseTexture,
+                renderTarget = baseTexture._glRenderTargets[renderer.CONTEXT_UID];
+                
+            if (renderTarget) {
+                renderTarget.clear(clearColor);
+            }
+        },
         doNothing = function () {
             return null;
         },
@@ -281,6 +289,8 @@
                 this.buffer = 0; // prevents buffer logic from running if tiles aren't being cached.
                 this.cacheAll = false; // so tiles are updated as camera moves.
             }
+
+            this.ready = false;
         },
 
         events: {
@@ -299,6 +309,7 @@
                     z = this.owner.z;
 
                 if (resp && resp.container) {
+                    this.ready = true;
                     parentContainer = this.parentContainer = resp.container;
 
                     if (parentContainer && !this.reorderedStage) {
@@ -325,7 +336,7 @@
                             this.cacheAll   = true;
 
                             this.render = this.renderCache;
-                            this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
+                            this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
 
                             this.tilesSprite = sprite = new Sprite(this.cacheTexture);
                             sprite.scaleX = this.scaleX;
@@ -351,7 +362,7 @@
                             this.render = this.renderCache;
                             this.cacheAll = false;
 
-                            this.cacheTexture = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
+                            this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
 
                             this.tilesSprite = new Sprite(this.cacheTexture);
                             this.tilesSprite.scaleX = this.scaleX;
@@ -359,7 +370,7 @@
                             this.tilesSprite.z = z;
 
                             // Set up copy buffer and circular pointers
-                            this.cacheTexture.alternate = new RenderTexture(renderer, this.cacheWidth, this.cacheHeight);
+                            this.cacheTexture.alternate = RenderTexture.create(this.cacheWidth, this.cacheHeight);
                             this.tilesSpriteCache = new Sprite(this.cacheTexture.alternate);
 
                             this.cacheTexture.alternate.alternate = this.cacheTexture;
@@ -447,78 +458,8 @@
              * @param camera.viewport {platypus.AABB} The AABB describing the camera viewport in world units.
              */
             "camera-update": function (camera) {
-                var x = 0,
-                    y = 0,
-                    inFrame = false,
-                    sprite  = null,
-                    ctw     = 0,
-                    cth     = 0,
-                    ctw2    = 0,
-                    cth2    = 0,
-                    cache   = this.cache,
-                    cacheP  = this.cachePixels,
-                    vp      = camera.viewport,
-                    resized = (this.buffer && ((vp.width !== this.laxCam.width) || (vp.height !== this.laxCam.height))),
-                    tempC   = tempCache,
-                    laxCam  = this.convertCamera(vp);
-
-                if (!this.cacheAll && (cacheP.empty || !cacheP.contains(laxCam)) && (this.imageMap.length > 0)) {
-                    if (resized) {
-                        this.updateBufferRegion(laxCam);
-                    }
-                    ctw     = this.cacheTilesWidth - 1;
-                    cth     = this.cacheTilesHeight - 1;
-                    ctw2    = ctw / 2;
-                    cth2    = cth / 2;
-
-                    //only attempt to draw children that are relevant
-                    tempC.setAll(Math.round((laxCam.x - this.left) / this.tileWidth - ctw2) + ctw2, Math.round((laxCam.y - this.top) / this.tileHeight - cth2) + cth2, ctw, cth);
-                    if (tempC.left < 0) {
-                        tempC.moveX(tempC.halfWidth);
-                    } else if (tempC.right > this.tilesWidth - 1) {
-                        tempC.moveX(this.tilesWidth - 1 - tempC.halfWidth);
-                    }
-                    if (tempC.top < 0) {
-                        tempC.moveY(tempC.halfHeight);
-                    } else if (tempC.bottom > this.tilesHeight - 1) {
-                        tempC.moveY(this.tilesHeight - 1 - tempC.halfHeight);
-                    }
-                    
-                    if (!this.tileCache) {
-                        this.update(null, tempC);
-                    } else if (cache.empty || !tempC.contains(cache)) {
-                        this.tilesSpriteCache.texture = this.cacheTexture;
-                        this.cacheTexture = this.cacheTexture.alternate;
-                        this.tilesSprite.texture = this.cacheTexture;
-                        this.update(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
-                    }
-
-                    // Store pixel bounding box for checking later.
-                    cacheP.setAll((cache.x + 0.5) * this.tileWidth + this.left, (cache.y + 0.5) * this.tileHeight + this.top, (cache.width + 1) * this.tileWidth, (cache.height + 1) * this.tileHeight);
-                }
-
-                if (this.cacheGrid) {
-                    for (x = 0; x < this.cacheGrid.length; x++) {
-                        for (y = 0; y < this.cacheGrid[x].length; y++) {
-                            sprite = this.cacheGrid[x][y];
-                            cacheP.setAll((x + 0.5) * this.cacheClipWidth + this.left, (y + 0.5) * this.cacheClipHeight + this.top, this.cacheClipWidth, this.cacheClipHeight);
-
-                            inFrame = cacheP.intersects(laxCam);
-                            if (sprite.visible && !inFrame) {
-                                sprite.visible = false;
-                            } else if (!sprite.visible && inFrame) {
-                                sprite.visible = true;
-                            }
-                            
-                            if (sprite.visible && inFrame) {
-                                sprite.x = vp.left - laxCam.left + x * this.cacheClipWidth + this.left;
-                                sprite.y = vp.top  - laxCam.top  + y * this.cacheClipHeight + this.top;
-                            }
-                        }
-                    }
-                } else if (this.tileCache) {
-                    this.tilesSprite.x = vp.left - laxCam.left + cache.left * this.tileWidth + this.left;
-                    this.tilesSprite.y = vp.top  - laxCam.top  + cache.top  * this.tileHeight + this.top;
+                if (this.ready) {
+                    this.updateCamera(camera);
                 }
             },
 
@@ -652,6 +593,82 @@
                 return map;
             },
             
+            updateCamera: function (camera) {
+                var x = 0,
+                    y = 0,
+                    inFrame = false,
+                    sprite  = null,
+                    ctw     = 0,
+                    cth     = 0,
+                    ctw2    = 0,
+                    cth2    = 0,
+                    cache   = this.cache,
+                    cacheP  = this.cachePixels,
+                    vp      = camera.viewport,
+                    resized = (this.buffer && ((vp.width !== this.laxCam.width) || (vp.height !== this.laxCam.height))),
+                    tempC   = tempCache,
+                    laxCam  = this.convertCamera(vp);
+
+                if (!this.cacheAll && (cacheP.empty || !cacheP.contains(laxCam)) && (this.imageMap.length > 0)) {
+                    if (resized) {
+                        this.updateBufferRegion(laxCam);
+                    }
+                    ctw     = this.cacheTilesWidth - 1;
+                    cth     = this.cacheTilesHeight - 1;
+                    ctw2    = ctw / 2;
+                    cth2    = cth / 2;
+
+                    //only attempt to draw children that are relevant
+                    tempC.setAll(Math.round((laxCam.x - this.left) / this.tileWidth - ctw2) + ctw2, Math.round((laxCam.y - this.top) / this.tileHeight - cth2) + cth2, ctw, cth);
+                    if (tempC.left < 0) {
+                        tempC.moveX(tempC.halfWidth);
+                    } else if (tempC.right > this.tilesWidth - 1) {
+                        tempC.moveX(this.tilesWidth - 1 - tempC.halfWidth);
+                    }
+                    if (tempC.top < 0) {
+                        tempC.moveY(tempC.halfHeight);
+                    } else if (tempC.bottom > this.tilesHeight - 1) {
+                        tempC.moveY(this.tilesHeight - 1 - tempC.halfHeight);
+                    }
+                    
+                    if (!this.tileCache) {
+                        this.update(null, tempC);
+                    } else if (cache.empty || !tempC.contains(cache)) {
+                        this.tilesSpriteCache.texture = this.cacheTexture;
+                        this.cacheTexture = this.cacheTexture.alternate;
+                        this.tilesSprite.texture = this.cacheTexture;
+                        this.update(this.cacheTexture, tempC, this.tilesSpriteCache, cache);
+                    }
+
+                    // Store pixel bounding box for checking later.
+                    cacheP.setAll((cache.x + 0.5) * this.tileWidth + this.left, (cache.y + 0.5) * this.tileHeight + this.top, (cache.width + 1) * this.tileWidth, (cache.height + 1) * this.tileHeight);
+                }
+
+                if (this.cacheGrid) {
+                    for (x = 0; x < this.cacheGrid.length; x++) {
+                        for (y = 0; y < this.cacheGrid[x].length; y++) {
+                            sprite = this.cacheGrid[x][y];
+                            cacheP.setAll((x + 0.5) * this.cacheClipWidth + this.left, (y + 0.5) * this.cacheClipHeight + this.top, this.cacheClipWidth, this.cacheClipHeight);
+
+                            inFrame = cacheP.intersects(laxCam);
+                            if (sprite.visible && !inFrame) {
+                                sprite.visible = false;
+                            } else if (!sprite.visible && inFrame) {
+                                sprite.visible = true;
+                            }
+                            
+                            if (sprite.visible && inFrame) {
+                                sprite.x = vp.left - laxCam.left + x * this.cacheClipWidth + this.left;
+                                sprite.y = vp.top  - laxCam.top  + y * this.cacheClipHeight + this.top;
+                            }
+                        }
+                    }
+                } else if (this.tileCache) {
+                    this.tilesSprite.x = vp.left - laxCam.left + cache.left * this.tileWidth + this.left;
+                    this.tilesSprite.y = vp.top  - laxCam.top  + cache.top  * this.tileHeight + this.top;
+                }
+            },
+
             updateTile: function (index, map, x, y) {
                 var tile = null,
                     tiles = this.tiles;
@@ -697,7 +714,7 @@
                         w = Math.min(getPowerOfTwo((tsw - x) * tw + outerMargin), cw);
                         h = Math.min(getPowerOfTwo((tsh - y) * th + outerMargin), ch);
 
-                        rt = new RenderTexture(renderer, w, h);
+                        rt = RenderTexture.create(w, h);
                         rt.frame = new Rectangle(extrusion, extrusion, ((w / tw) >> 0) * tw + extrusion, ((h / th) >> 0) * th + extrusion);
                         ct = new Sprite(rt);
                         ct.z = z;
@@ -853,48 +870,50 @@
             },
             
             renderCache: function (bounds, dest, src, wrapper, oldCache, oldBounds) {
+                var renderer = this.renderer;
+
                 if (oldCache && !oldBounds.empty) {
                     oldCache.x = oldBounds.left * this.tileWidth;
                     oldCache.y = oldBounds.top * this.tileHeight;
                     src.addChild(oldCache); // To copy last rendering over.
                 }
 
-                dest.clear();
+                clearRenderTexture(renderer, dest);
                 src.x = -bounds.left * this.tileWidth;
                 src.y = -bounds.top * this.tileHeight;
-                dest.render(wrapper);
+                renderer.render(wrapper, dest);
                 dest.requiresUpdate = true;
             },
 
             renderCacheWithExtrusion: function (bounds, dest, src, wrapper) {
                 var extrusion = 1,
-                    border = new Graphics();
+                    border = new Graphics(),
+                    renderer = this.renderer;
 
                 // This mask makes only the extruded border drawn for the next 4 draws so that inner holes aren't extruded in addition to the outer rim.
                 border.lineStyle(1, 0x000000);
                 border.drawRect(0.5, 0.5, this.cacheClipWidth + 1, this.cacheClipHeight + 1);
 
-                dest.clear();
+                clearRenderTexture(renderer, dest);
 
                 // There is probably a better way to do this. Currently for the extrusion, everything is rendered once offset in the n, s, e, w directions and then once in the middle to create the effect.
                 wrapper.mask = border;
                 src.x = -bounds.left * this.tileWidth;
                 src.y = -bounds.top * this.tileHeight + extrusion;
-                dest.render(wrapper);
+                renderer.render(wrapper, dest);
                 src.x = -bounds.left * this.tileWidth + extrusion;
                 src.y = -bounds.top * this.tileHeight;
-                dest.render(wrapper);
+                renderer.render(wrapper, dest);
                 src.x = -bounds.left * this.tileWidth + extrusion * 2;
                 src.y = -bounds.top * this.tileHeight + extrusion;
-                dest.render(wrapper);
+                renderer.render(wrapper, dest);
                 src.x = -bounds.left * this.tileWidth + extrusion;
                 src.y = -bounds.top * this.tileHeight + extrusion * 2;
-                dest.render(wrapper);
+                renderer.render(wrapper, dest);
                 wrapper.mask = null;
                 src.x = -bounds.left * this.tileWidth + extrusion;
                 src.y = -bounds.top * this.tileHeight + extrusion;
-                dest.render(wrapper);
-//                wrapper.mask = null;
+                renderer.render(wrapper, dest);
                 dest.requiresUpdate = true;
             },
             
