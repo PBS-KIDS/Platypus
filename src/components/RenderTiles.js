@@ -13,7 +13,9 @@
 (function () {
     'use strict';
 
-    var AABB              = include('platypus.AABB'),
+    var EDGE_BLEED = 1,
+        EDGES_BLEED = EDGE_BLEED * 2,
+        AABB              = include('platypus.AABB'),
         PIXIAnimation     = include('platypus.PIXIAnimation'),
         Application       = include('springroll.Application'),
         CanvasRenderer    = include('PIXI.CanvasRenderer'),
@@ -282,8 +284,8 @@
             this.layerHeight = this.tilesHeight * this.tileHeight;
 
             // Set up buffer cache size
-            this.cacheWidth = Math.min(getPowerOfTwo(this.layerWidth), this.maximumBuffer);
-            this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight), this.maximumBuffer);
+            this.cacheWidth  = Math.min(getPowerOfTwo(this.layerWidth  + EDGES_BLEED), this.maximumBuffer);
+            this.cacheHeight = Math.min(getPowerOfTwo(this.layerHeight + EDGES_BLEED), this.maximumBuffer);
 
             if (!this.tileCache) {
                 this.buffer = 0; // prevents buffer logic from running if tiles aren't being cached.
@@ -304,7 +306,6 @@
                 var extrusionMargin = 2,
                     mapContainer = this.mapContainer,
                     parentContainer = null,
-                    renderer = this.renderer,
                     sprite = null,
                     z = this.owner.z;
 
@@ -355,7 +356,7 @@
                             this.updateRegion(extrusionMargin);
 
                             this.render = this.renderCacheWithExtrusion;
-                            this.cacheGrid = this.createGrid(parentContainer, renderer);
+                            this.cacheGrid = this.createGrid(parentContainer);
 
                             this.updateCache = true;
                         } else {
@@ -683,15 +684,15 @@
                 map[x][y] = tile;
             },
 
-            createGrid: function (parentContainer, renderer) {
+            createGrid: function (parentContainer) {
                 var ch = this.cacheHeight,
                     cw = this.cacheWidth,
                     cth = this.cacheTilesHeight,
                     ctw = this.cacheTilesWidth,
                     h = 0,
                     w = 0,
-                    outerMargin = 2,
-                    extrusion = 1,
+                    outerMargin = EDGES_BLEED,
+                    extrusion = EDGE_BLEED,
                     rt = null,
                     sx = this.scaleX,
                     sy = this.scaleY,
@@ -715,7 +716,7 @@
                         h = Math.min(getPowerOfTwo((tsh - y) * th + outerMargin), ch);
 
                         rt = RenderTexture.create(w, h);
-                        rt.frame = new Rectangle(extrusion, extrusion, ((w / tw) >> 0) * tw + extrusion, ((h / th) >> 0) * th + extrusion);
+                        rt.frame = new Rectangle(extrusion, extrusion, (((w - outerMargin) / tw) >> 0) * tw + extrusion, (((h - outerMargin) / th) >> 0) * th + extrusion);
                         ct = new Sprite(rt);
                         ct.z = z;
                         ct.scaleX = sx;
@@ -731,14 +732,22 @@
             },
             
             updateRegion: function (margin) {
-                var clipW = Math.floor(this.cacheWidth  / this.tileWidth),
-                    clipH = Math.floor(this.cacheHeight / this.tileHeight);
+                var tw = this.tileWidth,
+                    th = this.tileHeight,
+                    ctw = Math.min(this.tilesWidth,  ((this.cacheWidth - EDGES_BLEED)  / tw)  >> 0),
+                    cth = Math.min(this.tilesHeight, ((this.cacheHeight - EDGES_BLEED) / th) >> 0);
 
-                this.cacheTilesWidth  = Math.min(this.tilesWidth,  clipW);
-                this.cacheTilesHeight = Math.min(this.tilesHeight, clipH);
+                if (!ctw) {
+                    platypus.debug.warn('"' + this.owner.type + '" RenderTiles: The tiles are ' + tw + 'px wide which is larger than ' + (this.cacheWidth - EDGES_BLEED) + 'px (maximum cache size of ' + this.cacheWidth + 'px minus a 2px edge bleed). Increase the maximum cache size or reduce tile size.');
+                }
+                if (!cth) {
+                    platypus.debug.warn('"' + this.owner.type + '" RenderTiles: The tiles are ' + th + 'px high which is larger than ' + (this.cacheHeight - EDGES_BLEED) + 'px (maximum cache size of ' + this.cacheHeight + 'px minus a 2px edge bleed). Increase the maximum cache size or reduce tile size.');
+                }
 
-                this.cacheClipWidth   = this.cacheTilesWidth  * this.tileWidth;
-                this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
+                this.cacheTilesWidth  = ctw;
+                this.cacheTilesHeight = cth;
+                this.cacheClipWidth   = ctw * tw;
+                this.cacheClipHeight  = cth * th;
 
                 if (this.tileCache) {
                     this.mapContainer.mask = new Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth + margin, this.cacheClipHeight + margin).endFill();
@@ -746,11 +755,8 @@
             },
 
             updateBufferRegion: function (viewport) {
-                var clipW = Math.floor(this.cacheWidth  / this.tileWidth),
-                    clipH = Math.floor(this.cacheHeight / this.tileHeight);
-
-                this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  clipW);
-                this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), clipH);
+                this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  (this.cacheWidth  / this.tileWidth)  >> 0);
+                this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), (this.cacheHeight / this.tileHeight) >> 0);
 
                 this.cacheClipWidth   = this.cacheTilesWidth  * this.tileWidth;
                 this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
