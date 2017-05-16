@@ -208,10 +208,12 @@
             },
             
             "pressup": function (value) {
-                this.owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
+                var owner = this.owner;
+
+                owner.triggerEvent('mouse:' + mouseMap[value.event.button || 0] + ':up', value.event);
                 if (this.joystick) {
-                    this.owner.triggerEvent('joystick:up', value.event);
-                    this.handleJoy(value);
+                    owner.triggerEvent('joystick:up', value.event);
+                    owner.triggerEvent('stop');
                 }
             },
             
@@ -233,27 +235,30 @@
         methods: {
             handleJoy: function (event) {
                 // The following translate mouse and touch events into messages that this controller can handle in a systematic way
-                var segment     = Math.PI / (this.joystick.directions / 2),
-                    dist        = distance(this.owner, event),
+                var joystick = this.joystick,
+                    owner = this.owner,
+                    segment     = Math.PI / (joystick.directions / 2),
+                    dist        = distance(owner, event),
                     orientation = 0,
                     direction   = '',
                     accuracy    = '';
                 
-                if ((dist > this.joystick.outerRadius) || (dist < this.joystick.innerRadius)) {
+                if ((dist > joystick.outerRadius) || (dist < joystick.innerRadius)) {
                     return;
                 } else if (!this.paused) {
-                    orientation = angle(this.owner, event, dist);
-                    direction   = directions[this.joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
+                    orientation = angle(owner, event, dist);
+                    direction   = directions[joystick.directions][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
                     
-                    if (this.joystick.handleEdge) {
-                        segment  = Math.PI / this.joystick.directions;
-                        accuracy = directions[this.joystick.directions * 2][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
+                    if (joystick.handleEdge) {
+                        segment  = Math.PI / joystick.directions;
+                        accuracy = directions[joystick.directions * 2][Math.floor(((orientation + segment / 2) % (Math.PI * 2)) / segment)];
                         if (accuracy !== direction) {
-                            this.owner.triggerEvent(accuracy.replace(direction, '').replace('-', ''), event);  //There's probably a better way to perform this, but the current method is functional. - DDD
+                            owner.triggerEvent(accuracy.replace(direction, '').replace('-', ''), event);  //There's probably a better way to perform this, but the current method is functional. - DDD
                         }
                     }
-                    this.owner.triggerEvent(direction, event);
-                    this.owner.triggerEvent("joystick-orientation", orientation);
+                    owner.triggerEvent('stop');
+                    owner.triggerEvent(direction, event);
+                    owner.triggerEvent("joystick-orientation", orientation);
                 }
             },
             

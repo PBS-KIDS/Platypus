@@ -13,68 +13,56 @@
         isTrue = function () {
             return true;
         },
-        createController = function (self, definition) {
-            var getActiveAccelerationState = isTrue,
-                getActiveVelocityState = isTrue,
-                getInstantState = isTrue,
-                state = self.owner.state,
-                controlState = definition.controlState,
-                instantState = definition.instantState,
-                instantSuccess = definition.instantSuccess;
-
-            if (controlState) {
-                getActiveVelocityState = function () {
-                    return state.get(controlState);
-                };
-            }
-
-            if (self.instant || instantState) {
-                if (instantState) {
-                    getInstantState = function () {
-                        return state.get(instantState);
-                    };
+        getState = function (state, stateName) {
+            return state.get(stateName);
+        },
+        instantUpdate = function (getInstantState, getActiveVelocityState, instantSuccess) {
+            var state  = getInstantState(),
+                vState = getActiveVelocityState();
+            
+            if (this.activeVelocity) {
+                if (this.enact && !vState) { // Turn off ready if the state doesn't allow it.
+                    this.ready = false;
                 }
-                
-                self.instant = true;
 
-                self.update = function () {
-                    var state  = getInstantState(),
-                        vState = getActiveVelocityState();
-                    
-                    if (this.activeVelocity) {
-                        if (this.enact && !vState) { // Turn off ready if the state doesn't allow it.
-                            this.ready = false;
-                        }
-
-                        if (this.ready && this.enact && state) {
-                            this.ready = false; // to insure a single instance until things are reset
-                            this.velocity.setVector(this.instant);
-                            if (instantSuccess) {
-                                this.owner.triggerEvent(instantSuccess);
-                            }
-                        } else if (!this.ready && !(this.enact && state)) {
-                            this.ready = true;
-                            this.decay();
-                        } else if (vState) {
-                            return null;
-                        }
-                        return this.velocity;
-                    } else {
-                        return null;
+                if (this.ready && this.enact && state) {
+                    this.ready = false; // to insure a single instance until things are reset
+                    this.velocity.setVector(this.instant);
+                    if (instantSuccess) {
+                        this.owner.triggerEvent(instantSuccess);
                     }
-                };
+                } else if (!this.ready && !(this.enact && state)) {
+                    this.ready = true;
+                    this.decay();
+                } else if (vState) {
+                    return null;
+                }
+                return this.velocity;
             } else {
-                self.update = function (delta) {
-                    if (this.activeVelocity && getActiveVelocityState()) {
-                        if (this.activeAcceleration && getActiveAccelerationState()) {
-                            this.move(delta);
-                        }
+                return null;
+            }
+        },
+        gradualUpdate = function (getActiveVelocityState, delta) {
+            if (this.activeVelocity && getActiveVelocityState()) {
+                if (this.activeAcceleration) {
+                    this.move(delta);
+                }
 
-                        return this.velocity;
-                    } else {
-                        return null;
-                    }
-                };
+                return this.velocity;
+            } else {
+                return null;
+            }
+        },
+        createController = function (component, definition) {
+            var state = component.owner.state,
+                getActiveVelocityState = (definition.controlState ? getState.bind(null, state, definition.controlState) : isTrue),
+                getInstantState =        (definition.instantState ? getState.bind(null, state, definition.instantState) : isTrue);
+
+            if (component.instant || definition.instantState) {
+                component.instant = true;
+                component.update = instantUpdate.bind(component, getInstantState, getActiveVelocityState, definition.instantSuccess);
+            } else {
+                component.update = gradualUpdate.bind(component, getActiveVelocityState);
             }
         };
     

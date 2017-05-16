@@ -186,7 +186,7 @@
             "mousedown": function (eventData) {
                 if (!this.state.get('disabled')) {
                     if (this.toggle) {
-                        this.readyToToggle = this.readyToToggle || (eventData.event.type === 'mousedown') || (eventData.event.type === 'pointerdown'); // This is to prevent double-toggling caused by touch events triggering just before mouse events. - DDD 12/14/2016
+                        this.readyToToggle = true;
                     } else {
                         if (this.onPress) {
                             this.owner.trigger(this.onPress);

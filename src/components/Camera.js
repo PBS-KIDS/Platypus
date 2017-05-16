@@ -1028,8 +1028,8 @@
                 worldVector.y = windowVector.y * this.worldPerWindowUnitHeight;
                 
                 if (withOffset !== false) {
-                    worldVector.x -= this.viewport.x * this.worldPerWindowUnitWidth;
-                    worldVector.y -= this.viewport.y * this.worldPerWindowUnitHeight;
+                    worldVector.x += this.worldCamera.viewport.left;
+                    worldVector.y += this.worldCamera.viewport.top;
                 }
 
                 return worldVector;

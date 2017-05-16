@@ -126,7 +126,7 @@
              */
             "handle-logic": function () {
                 var state = this.state,
-                    up        = this.up        || this.upLeft || this.downLeft,
+                    up        = this.up        || this.upLeft || this.upRight,
                     upLeft    = this.upLeft    || (this.up   && this.left),
                     left      = this.left      || this.upLeft || this.downLeft,
                     downLeft  = this.downLeft  || (this.down && this.left),
