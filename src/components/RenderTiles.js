@@ -113,7 +113,7 @@
         this.instances.recycle();
         this.recycle();
     };
-    
+
     recycle.add(Template, !!springroll.Debug, 'Template');
 
     return platypus.createComponentClass({
@@ -323,8 +323,8 @@
                     if (!this.tileCache) {
                         this.render = doNothing;
 
-                        mapContainer.scaleX = this.scaleX;
-                        mapContainer.scaleY = this.scaleY;
+                        mapContainer.scale.x = this.scaleX;
+                        mapContainer.scale.y = this.scaleY;
                         mapContainer.x = this.left;
                         mapContainer.y = this.top;
                         mapContainer.z = z;
@@ -340,8 +340,8 @@
                             this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
 
                             this.tilesSprite = sprite = new Sprite(this.cacheTexture);
-                            sprite.scaleX = this.scaleX;
-                            sprite.scaleY = this.scaleY;
+                            sprite.scale.x = this.scaleX;
+                            sprite.scale.y = this.scaleY;
                             sprite.z = z;
 
                             this.cache.setBounds(0, 0, this.tilesWidth - 1, this.tilesHeight - 1);
@@ -366,8 +366,8 @@
                             this.cacheTexture = RenderTexture.create(this.cacheWidth, this.cacheHeight);
 
                             this.tilesSprite = new Sprite(this.cacheTexture);
-                            this.tilesSprite.scaleX = this.scaleX;
-                            this.tilesSprite.scaleY = this.scaleY;
+                            this.tilesSprite.scale.x = this.scaleX;
+                            this.tilesSprite.scale.y = this.scaleY;
                             this.tilesSprite.z = z;
 
                             // Set up copy buffer and circular pointers
@@ -719,8 +719,8 @@
                         rt.frame = new Rectangle(extrusion, extrusion, (((w - outerMargin) / tw) >> 0) * tw + extrusion, (((h - outerMargin) / th) >> 0) * th + extrusion);
                         ct = new Sprite(rt);
                         ct.z = z;
-                        ct.scaleX = sx;
-                        ct.scaleY = sy;
+                        ct.scale.x = sx;
+                        ct.scale.y = sy;
                         col.push(ct);
                         parentContainer.addChild(ct);
 
@@ -732,8 +732,8 @@
             },
             
             updateRegion: function (margin) {
-                var tw = this.tileWidth,
-                    th = this.tileHeight,
+                var tw = this.tileWidth * this.scaleX,
+                    th = this.tileHeight * this.scaleY,
                     ctw = Math.min(this.tilesWidth,  ((this.cacheWidth - EDGES_BLEED)  / tw)  >> 0),
                     cth = Math.min(this.tilesHeight, ((this.cacheHeight - EDGES_BLEED) / th) >> 0);
 
@@ -755,11 +755,14 @@
             },
 
             updateBufferRegion: function (viewport) {
-                this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / this.tileWidth),  (this.cacheWidth  / this.tileWidth)  >> 0);
-                this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / this.tileHeight), (this.cacheHeight / this.tileHeight) >> 0);
+                var tw = this.tileWidth * this.scaleX,
+                    th = this.tileHeight * this.scaleY;
 
-                this.cacheClipWidth   = this.cacheTilesWidth  * this.tileWidth;
-                this.cacheClipHeight  = this.cacheTilesHeight * this.tileHeight;
+                this.cacheTilesWidth  = Math.min(this.tilesWidth,  Math.ceil((viewport.width  + this.buffer * 2) / tw), (this.cacheWidth  / tw) >> 0);
+                this.cacheTilesHeight = Math.min(this.tilesHeight, Math.ceil((viewport.height + this.buffer * 2) / th), (this.cacheHeight / th) >> 0);
+
+                this.cacheClipWidth   = this.cacheTilesWidth  * tw;
+                this.cacheClipHeight  = this.cacheTilesHeight * th;
 
                 this.mapContainer.mask = new Graphics().beginFill(0x000000).drawRect(0, 0, this.cacheClipWidth, this.cacheClipHeight).endFill();
             },
@@ -939,6 +942,38 @@
                         this.update(grid[x][y].texture, cache);
                     }
                 }
+            },
+
+            toJSON: function () { // This component is added by another component, so it shouldn't be returned for reconstruction.
+                var imageMap = this.imageMap[0],
+                    imgMap = [],
+                    x = imageMap.length,
+                    y = 0;
+                
+                while (x--) {
+                    y = imageMap[x].length;
+                    imgMap[x] = [];
+                    while (y--) {
+                        imgMap[x][y] = imageMap[x][y].id;
+                    }
+                }
+
+                return {
+                    type: 'RenderTiles',
+                    buffer: this.buffer,
+                    cacheAll: this.cacheAll,
+                    entityCache: this.entityCache,
+                    imageMap: imgMap,
+                    maximumBuffer: this.maximumBuffer,
+                    scaleX: this.scaleX,
+                    scaleY: this.scaleY,
+                    spriteSheet: this.spriteSheet,
+                    tileCache: this.tileCache,
+                    tileHeight: this.tileHeight,
+                    tileWidth: this.tileWidth,
+                    top: this.top,
+                    left: this.left
+                };
             },
 
             destroy: function () {
