@@ -77,6 +77,14 @@ This component allows this entity to be carried by other entities with which it 
                 } else if (collisionInfo.x > 0) {
                     this.updateCarrier(collisionInfo.entity, 'right');
                 }
+            },
+            "force-release": function () {
+                if (this.carrier) {
+                    this.carrier.triggerEvent('release-me', this.message);
+                }
+                this.carrier = null;
+                this.lastCarrier = this.carrier;
+                this.carrierConnected = false;
             }
         },
         methods: {
