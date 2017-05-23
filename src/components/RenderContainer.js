@@ -17,6 +17,8 @@
         Data = include('platypus.Data'),
         Graphics = include('PIXI.Graphics'),
         Interactive = include('platypus.components.Interactive'),
+        Matrix = include('PIXI.Matrix'),
+        pixiMatrix = new Matrix(),
         processGraphics = (function () {
             var process = function (gfx, value) {
                 var i = 0,
@@ -441,6 +443,7 @@
                         y = 0,
                         o = this.owner.orientationMatrix,
                         rotation = 0,
+                        matrix = pixiMatrix,
                         mirrored = 1,
                         flipped  = 1,
                         angle    = null;
@@ -479,7 +482,13 @@
                     }
                     
                     if (o) { // This is a 3x3 2D matrix describing an affine transformation.
-                        this.container.setTransform(x + o[0][2], y + o[1][2], o[0][0], o[1][1], (rotation ? (rotation / 180) * Math.PI : 0), o[1][0], o[0][1]);
+                        matrix.a = o[0][0];
+                        matrix.b = o[1][0];
+                        matrix.tx = x + o[0][2];
+                        matrix.c = o[0][1];
+                        matrix.d = o[1][1];
+                        matrix.ty = y + o[1][2];
+                        this.container.transform.setFromMatrix(matrix);
                     } else {
                         this.container.setTransform(x, y, this.scaleX * mirrored, this.scaleY * flipped, (rotation ? (rotation / 180) * Math.PI : 0), this.skewX, this.skewY);
                     }
