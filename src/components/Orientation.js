@@ -498,7 +498,13 @@
              * @param transform {Array|String} A 3x3 @D Array or a string describing a transformation.
              */
             "replace-transform": function (transform) {
-                this.replace(transform);
+                if (Array.isArray(transform)) {
+                    this.replace(transform);
+                } else if (typeof transform === 'string') {
+                    if (matrices[transform]) {
+                        this.replace(matrices[transform]);
+                    }
+                }
             }
         },
         
