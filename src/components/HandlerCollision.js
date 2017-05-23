@@ -37,6 +37,7 @@
         },
         triggerMessage = {
             entity: null,
+            from: null,
             type: null,
             x: 0,
             y: 0,
@@ -398,6 +399,7 @@
                     var msg = triggerMessage;
                     
                     msg.entity    = otherEntity;
+                    msg.from      = entity;
                     msg.myType    = thisType;
                     msg.type      = thatType;
                     msg.x         = x;
@@ -408,6 +410,7 @@
                     
                     if (otherEntity) {
                         msg.entity    = entity;
+                        msg.from      = otherEntity;
                         msg.type      = thisType;
                         msg.myType    = thatType;
                         msg.x         = -x;
@@ -459,6 +462,7 @@
                     var msg = triggerMessage;
                     
                     msg.entity    = otherEntity;
+                    msg.from      = entity;
                     msg.myType    = thisType;
                     msg.type      = thatType;
                     msg.x         = x;
@@ -469,6 +473,7 @@
                     
                     if (otherEntity) {
                         msg.entity    = entity;
+                        msg.from      = otherEntity;
                         msg.type      = thisType;
                         msg.myType    = thatType;
                         msg.x         = -x;
@@ -1029,6 +1034,7 @@
                                             if (shapes[l].collides(otherShapes[m])) {
                                                 //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                                 message.entity  = otherEntity;
+                                                message.from    = ent;
                                                 message.type    = otherCollisionType;
                                                 message.myType  = collisionType;
                                                 message.shape   = otherShapes[m];
@@ -1086,6 +1092,7 @@
                                     if (shape.collides(otherShapes[m])) {
                                         //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                         message.entity  = otherEntity;
+                                        message.from    = null;
                                         message.type    = otherCollisionType;
                                         message.myType  = '';
                                         message.shape   = otherShapes[m];
@@ -1138,6 +1145,7 @@
                                     if (otherShapes[m].containsPoint(x, y)) {
                                         //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                         message.entity  = otherEntity;
+                                        message.from    = null;
                                         message.type    = otherCollisionType;
                                         message.myType  = '';
                                         message.shape   = otherShapes[m];
