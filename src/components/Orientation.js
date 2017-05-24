@@ -30,6 +30,9 @@
         normal = Vector.setUp(0, 0, 1),
         origin = Vector.setUp(1, 0, 0),
         matrices = {
+            'identity': [[  1,  0,  0],
+                         [  0,  1,  0],
+                         [  0,  0,  1]],
             'horizontal': [[ -1,  0,  0],
                            [  0,  1,  0],
                            [  0,  0, -1]],
