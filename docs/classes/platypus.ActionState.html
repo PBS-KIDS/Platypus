@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.1 API Documentation : platypus.ActionState</title>
+	<title>platypus v0.11.2 API Documentation : platypus.ActionState</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.1</em>
+            <em>API Documentation for: 0.11.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -68,8 +68,10 @@
                                 <li><a href="../classes/platypus.components.LogicAngularMovement.html">platypus.components.LogicAngularMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicAttachment.html">platypus.components.LogicAttachment</a></li>
                                 <li><a href="../classes/platypus.components.LogicButton.html">platypus.components.LogicButton</a></li>
+                                <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -100,7 +102,10 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EventRender.html">platypus.EventRender</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Interactive.html">platypus.Interactive</a></li>
+                                <li><a href="../classes/platypus.Map.html">platypus.Map</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
                                 <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
@@ -150,7 +155,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/ActionState.js.html#l1"><code>platypus.ActionState:1</code></a>
+                                    Defined in: <a href="../files/src_ActionState.js.html#l1"><code>platypus.ActionState:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -196,7 +201,7 @@
                                     <div class="meta">
                                                 <p>
                                                 Defined in
-                                        <a href="../files/ActionState.js.html#l1"><code>platypus.ActionState:1</code></a>
+                                        <a href="../files/src_ActionState.js.html#l1"><code>platypus.ActionState:1</code></a>
                                         </p>
                                 
                                 
@@ -282,6 +287,22 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_ActionState.recycle">ActionState.recycle</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_ActionState.recycle">ActionState.recycle</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_ActionState.setUp">ActionState.setUp</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_ActionState.setUp">ActionState.setUp</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_ActionState.setUp">ActionState.setUp</a>
                         
                                                     </li>
@@ -290,7 +311,31 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_recycle">recycle</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_recycle">recycle</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_resolve">resolve</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_resolve">resolve</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_resolve">resolve</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_update">update</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_update">update</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -309,7 +354,31 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_active">active</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_active">active</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_event">event</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_event">event</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_event">event</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_inputs">inputs</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_inputs">inputs</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -321,7 +390,31 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_states">states</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_states">states</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_stateSummary">stateSummary</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_stateSummary">stateSummary</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_stateSummary">stateSummary</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_trigger">trigger</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_trigger">trigger</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -333,7 +426,31 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_valid">valid</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_valid">valid</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_wasActive">wasActive</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_wasActive">wasActive</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_wasActive">wasActive</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_wasValid">wasValid</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_wasValid">wasValid</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -370,7 +487,115 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l158"><code>ActionState.recycle:158</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7597"><code>ActionState.recycle:7597</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.7.1</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">The</code>
+                                                                    <span class="type"><a href="../classes/platypus.ActionState.html" class="crosslink">platypus.ActionState</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>ActionState to be recycled.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_ActionState.recycle" class="method item">
+                                                <h3 class="name"><code>ActionState.recycle</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>The</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l158"><code>ActionState.recycle:158</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.7.1</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns an ActionState back to the cache. Prefer the ActionState's recycle method since it recycles property objects as well.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">The</code>
+                                                                    <span class="type"><a href="../classes/platypus.ActionState.html" class="crosslink">platypus.ActionState</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>ActionState to be recycled.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_ActionState.recycle" class="method item">
+                                                <h3 class="name"><code>ActionState.recycle</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>The</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7597"><code>ActionState.recycle:7597</code></a>
                                                     </p>
                                             
                                             
@@ -421,7 +646,93 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l151"><code>ActionState.setUp:151</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l7590"><code>ActionState.setUp:7590</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.7.1</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns an ActionState from cache or creates a new one if none are available.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="../classes/platypus.ActionState.html" class="crosslink">platypus.ActionState</a></span>:
+                                                                <p>The instantiated ActionState.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_ActionState.setUp" class="method item">
+                                                <h3 class="name"><code>ActionState.setUp</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="../classes/platypus.ActionState.html" class="crosslink">platypus.ActionState</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7590"><code>ActionState.setUp:7590</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.7.1</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Returns an ActionState from cache or creates a new one if none are available.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="../classes/platypus.ActionState.html" class="crosslink">platypus.ActionState</a></span>:
+                                                                <p>The instantiated ActionState.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_ActionState.setUp" class="method item">
+                                                <h3 class="name"><code>ActionState.setUp</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="../classes/platypus.ActionState.html" class="crosslink">platypus.ActionState</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l151"><code>ActionState.setUp:151</code></a>
                                                     </p>
                                             
                                             
@@ -461,7 +772,69 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l165"><code>recycle:165</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7604"><code>recycle:7604</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.7.1</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Relinquishes properties of the ActionState and recycles it.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_recycle" class="method item">
+                                                <h3 class="name"><code>recycle</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7604"><code>recycle:7604</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                        <p>Available since 0.7.1</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Relinquishes properties of the ActionState and recycles it.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_recycle" class="method item">
+                                                <h3 class="name"><code>recycle</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l165"><code>recycle:165</code></a>
                                                     </p>
                                             
                                             
@@ -492,7 +865,99 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l124"><code>resolve:124</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7563"><code>resolve:7563</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Triggers events on the Entity related to the ActionState's state. This is necessarily separate from the <code>update</code> method since triggered events could affect entity state. The messages have the following form and are only triggered if one of the values is <code>true</code>:</p>
+                                            <pre class="code prettyprint"><code>{
+                                                "triggered": true,
+                                                "pressed": true,
+                                                "released": false
+                                            }
+                                            </code></pre>
+                                            <p>Here is a mapping of the various event messages depending on the ActionState's state.</p>
+                                            <pre class="code prettyprint"><code>ActionState State:
+                                                 wasValid:  0 0 0 0  0 0 0 0  1 1 1 1  1 1 1 1
+                                                    valid:  0 0 0 0  1 1 1 1  0 0 0 0  1 1 1 1
+                                                wasActive:  0 0 1 1  0 0 1 1  0 0 1 1  0 0 1 1
+                                                   active:  0 1 0 1  0 1 0 1  0 1 0 1  0 1 0 1
+                                            Events:
+                                                triggered:  0 0 0 0  0 1 0 0  0 0 0 0  0 1 0 0
+                                                  pressed:  0 0 0 0  0 1 0 1  0 0 0 0  0 1 0 1
+                                                 released:  0 0 0 0  0 0 1 0  0 0 1 1  0 0 1 0</code></pre>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_resolve" class="method item">
+                                                <h3 class="name"><code>resolve</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l124"><code>resolve:124</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Triggers events on the Entity related to the ActionState's state. This is necessarily separate from the <code>update</code> method since triggered events could affect entity state. The messages have the following form and are only triggered if one of the values is <code>true</code>:</p>
+                                            <pre class="code prettyprint"><code>{
+                                                "triggered": true,
+                                                "pressed": true,
+                                                "released": false
+                                            }
+                                            </code></pre>
+                                            <p>Here is a mapping of the various event messages depending on the ActionState's state.</p>
+                                            <pre class="code prettyprint"><code>ActionState State:
+                                                 wasValid:  0 0 0 0  0 0 0 0  1 1 1 1  1 1 1 1
+                                                    valid:  0 0 0 0  1 1 1 1  0 0 0 0  1 1 1 1
+                                                wasActive:  0 0 1 1  0 0 1 1  0 0 1 1  0 0 1 1
+                                                   active:  0 1 0 1  0 1 0 1  0 1 0 1  0 1 0 1
+                                            Events:
+                                                triggered:  0 0 0 0  0 1 0 0  0 0 0 0  0 1 0 0
+                                                  pressed:  0 0 0 0  0 1 0 1  0 0 0 0  0 1 0 1
+                                                 released:  0 0 0 0  0 0 1 0  0 0 1 1  0 0 1 0</code></pre>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_resolve" class="method item">
+                                                <h3 class="name"><code>resolve</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7563"><code>resolve:7563</code></a>
                                                     </p>
                                             
                                             
@@ -547,7 +1012,137 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l101"><code>update:101</code></a>
+                                                    <a href="../files/src_ActionState.js.html#l101"><code>update:101</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Updates the state of the action by checking the state of the Entity and whether any inputs are active.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">state</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The Entity's <code>state</code> property to compare against the ActionState's valid state.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>:
+                                                                <p>Whether the ActionState is triggered, pressed, or released.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_update" class="method item">
+                                                <h3 class="name"><code>update</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>state</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7540"><code>update:7540</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Updates the state of the action by checking the state of the Entity and whether any inputs are active.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">state</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The Entity's <code>state</code> property to compare against the ActionState's valid state.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                                    <div class="returns">
+                                                        <h4>Returns:</h4>
+                                            
+                                                        <div class="returns-description">
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>:
+                                                                <p>Whether the ActionState is triggered, pressed, or released.</p>
+                                            
+                                                        </div>
+                                                    </div>
+                                            
+                                            </div>
+                                            <div id="method_update" class="method item">
+                                                <h3 class="name"><code>update</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>state</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                                    <span class="returns-inline">
+                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                                    </span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7540"><code>update:7540</code></a>
                                                     </p>
                                             
                                             
@@ -604,7 +1199,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l36"><code>active:36</code></a>
+                                                    <a href="../files/src_ActionState.js.html#l36"><code>active:36</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether any of the ActionState's inputs are active.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_active" class="property item">
+                                                <h3 class="name"><code>active</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7475"><code>active:7475</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether any of the ActionState's inputs are active.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_active" class="property item">
+                                                <h3 class="name"><code>active</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7475"><code>active:7475</code></a>
                                                     </p>
                                             
                                             
@@ -629,7 +1274,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l20"><code>event:20</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7459"><code>event:7459</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The name of the event to trigger on the Entity.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_event" class="property item">
+                                                <h3 class="name"><code>event</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7459"><code>event:7459</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The name of the event to trigger on the Entity.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_event" class="property item">
+                                                <h3 class="name"><code>event</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l20"><code>event:20</code></a>
                                                     </p>
                                             
                                             
@@ -654,7 +1349,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l76"><code>inputs:76</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l7515"><code>inputs:7515</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The list of input toggles to track control input.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_inputs" class="property item">
+                                                <h3 class="name"><code>inputs</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7515"><code>inputs:7515</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The list of input toggles to track control input.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_inputs" class="property item">
+                                                <h3 class="name"><code>inputs</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l76"><code>inputs:76</code></a>
                                                     </p>
                                             
                                             
@@ -679,7 +1424,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l68"><code>states:68</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7507"><code>states:7507</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The state of the Entity that is valid for this ActionState.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_states" class="property item">
+                                                <h3 class="name"><code>states</code></h3>
+                                                <span class="type"><a href="../classes/platypus.StateMap.html" class="crosslink">platypus.StateMap</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l68"><code>states:68</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The state of the Entity that is valid for this ActionState.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_states" class="property item">
+                                                <h3 class="name"><code>states</code></h3>
+                                                <span class="type"><a href="../classes/platypus.StateMap.html" class="crosslink">platypus.StateMap</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7507"><code>states:7507</code></a>
                                                     </p>
                                             
                                             
@@ -704,7 +1499,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l84"><code>stateSummary:84</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l7523"><code>stateSummary:7523</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The message that is passed to the Entity if the ActionState is active.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_stateSummary" class="property item">
+                                                <h3 class="name"><code>stateSummary</code></h3>
+                                                <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7523"><code>stateSummary:7523</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The message that is passed to the Entity if the ActionState is active.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_stateSummary" class="property item">
+                                                <h3 class="name"><code>stateSummary</code></h3>
+                                                <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l84"><code>stateSummary:84</code></a>
                                                     </p>
                                             
                                             
@@ -729,7 +1574,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l28"><code>trigger:28</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l7467"><code>trigger:7467</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The function to call if the ActionState is active.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_trigger" class="property item">
+                                                <h3 class="name"><code>trigger</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l28"><code>trigger:28</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The function to call if the ActionState is active.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_trigger" class="property item">
+                                                <h3 class="name"><code>trigger</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7467"><code>trigger:7467</code></a>
                                                     </p>
                                             
                                             
@@ -754,7 +1649,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l52"><code>valid:52</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l7491"><code>valid:7491</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether the Entity's state is valid for this ActionState.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_valid" class="property item">
+                                                <h3 class="name"><code>valid</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_ActionState.js.html#l52"><code>valid:52</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether the Entity's state is valid for this ActionState.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_valid" class="property item">
+                                                <h3 class="name"><code>valid</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7491"><code>valid:7491</code></a>
                                                     </p>
                                             
                                             
@@ -779,7 +1724,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l44"><code>wasActive:44</code></a>
+                                                    <a href="../files/src_ActionState.js.html#l44"><code>wasActive:44</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether any of the ActionState's inputs were active last update.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_wasActive" class="property item">
+                                                <h3 class="name"><code>wasActive</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7483"><code>wasActive:7483</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether any of the ActionState's inputs were active last update.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_wasActive" class="property item">
+                                                <h3 class="name"><code>wasActive</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7483"><code>wasActive:7483</code></a>
                                                     </p>
                                             
                                             
@@ -804,7 +1799,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/ActionState.js.html#l60"><code>wasValid:60</code></a>
+                                                    <a href="../files/src_ActionState.js.html#l60"><code>wasValid:60</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether the Entity's state was valid for this ActionState last update.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_wasValid" class="property item">
+                                                <h3 class="name"><code>wasValid</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l7499"><code>wasValid:7499</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether the Entity's state was valid for this ActionState last update.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="property_wasValid" class="property item">
+                                                <h3 class="name"><code>wasValid</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l7499"><code>wasValid:7499</code></a>
                                                     </p>
                                             
                                             

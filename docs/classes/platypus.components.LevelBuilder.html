@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.1 API Documentation : platypus.components.LevelBuilder</title>
+	<title>platypus v0.11.2 API Documentation : platypus.components.LevelBuilder</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.1</em>
+            <em>API Documentation for: 0.11.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -68,8 +68,10 @@
                                 <li><a href="../classes/platypus.components.LogicAngularMovement.html">platypus.components.LogicAngularMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicAttachment.html">platypus.components.LogicAttachment</a></li>
                                 <li><a href="../classes/platypus.components.LogicButton.html">platypus.components.LogicButton</a></li>
+                                <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -100,7 +102,10 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EventRender.html">platypus.EventRender</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Interactive.html">platypus.Interactive</a></li>
+                                <li><a href="../classes/platypus.Map.html">platypus.Map</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
                                 <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
@@ -156,7 +161,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/components_LevelBuilder.js.html#l1"><code>platypus.components.LevelBuilder:1</code></a>
+                                    Defined in: <a href="../files/src_components_LevelBuilder.js.html#l1"><code>platypus.components.LevelBuilder:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -192,43 +197,51 @@
                                                         <a href="#method_&#x27;scene-loaded&#x27;">&#x27;scene-loaded&#x27;</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;scene-loaded&#x27;">&#x27;scene-loaded&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;scene-loaded&#x27;">&#x27;scene-loaded&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_addEventListener">addEventListener</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_addMethod">addMethod</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_destroy">destroy</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_getAssetList">getAssetList</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_removeEventListener">removeEventListener</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_removeEventListeners">removeEventListeners</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_removeMethod">removeMethod</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_toJSON">toJSON</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_toString">toString</a>
                         
                                                     </li>
@@ -244,7 +257,31 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_levelPieces">levelPieces</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_levelPieces">levelPieces</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_levelTemplate">levelTemplate</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_levelTemplate">levelTemplate</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_levelTemplate">levelTemplate</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_useUniques">useUniques</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_useUniques">useUniques</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -259,6 +296,14 @@
                                             <h3>Events</h3>
                         
                                             <ul class="index-list events">
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;load-level&#x27;">&#x27;load-level&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;load-level&#x27;">&#x27;load-level&#x27;</a>
+                        
+                                                    </li>
                                                     <li class="index-item event">
                                                         <a href="#event_&#x27;load-level&#x27;">&#x27;load-level&#x27;</a>
                         
@@ -291,7 +336,113 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LevelBuilder.js.html#l216"><code>&#x27;scene-loaded&#x27;:216</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l17182"><code>&#x27;scene-loaded&#x27;:17182</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>When the scene has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">persistentData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The persistent data from the previous scene.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;scene-loaded&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;scene-loaded&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>persistentData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LevelBuilder.js.html#l216"><code>&#x27;scene-loaded&#x27;:216</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>When the scene has loaded, LevelBuilder compiles the level based on the template and pieces and sends it to the TiledLoader.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">persistentData</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The persistent data from the previous scene.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;scene-loaded&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;scene-loaded&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>persistentData</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l17171"><code>&#x27;scene-loaded&#x27;:17171</code></a>
                                                     </p>
                                             
                                             
@@ -349,9 +500,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_addEventListener">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5011"><code>addEventListener:5011</code></a>
                                                     </p>
                                             
                                             
@@ -359,7 +513,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method adds an event listener to the entity.
+                                                    <p>This method adds an event listener to the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -372,7 +527,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The event that this component should listen for.
+                                                                    <p>The event that this component should listen for.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -382,7 +538,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The handler for the event.
+                                                                    <p>The handler for the event.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -394,7 +551,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>:
-                                                                handler  A reference to the bound handler.
+                                                                <p>handler  A reference to the bound handler.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -422,9 +580,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l131"><code>addMethod:131</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_addMethod">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5030"><code>addMethod:5030</code></a>
                                                     </p>
                                             
                                             
@@ -432,7 +593,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method adds a method to the entity.
+                                                    <p>This method adds a method to the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -445,7 +607,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as <code>entity.turnYellow()</code>.
+                                                                    <p>The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as <code>entity.turnYellow()</code>.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -455,7 +618,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The function describing the method.
+                                                                    <p>The function describing the method.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -478,9 +642,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l54"><code>destroy:54</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_destroy">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4953"><code>destroy:4953</code></a>
                                                     </p>
                                             
                                             
@@ -488,7 +655,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+                                                    <p>This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.</p>
+                                            
                                                 </div>
                                             
                                             
@@ -522,9 +690,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_getAssetList">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5087"><code>getAssetList:5087</code></a>
                                                     </p>
                                             
                                             
@@ -532,7 +703,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
+                                                    <p>This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -545,7 +717,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The definition for the component.
+                                                                    <p>The definition for the component.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -555,7 +728,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The properties of the Entity.
+                                                                    <p>The properties of the Entity.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -565,7 +739,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The default properties of the Entity.
+                                                                    <p>The default properties of the Entity.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -577,7 +752,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
+                                                                <p>A list of the necessary assets to load.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -604,9 +780,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l199"><code>getLateAssetList:199</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_getLateAssetList">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5098"><code>getLateAssetList:5098</code></a>
                                                     </p>
                                             
                                             
@@ -614,7 +793,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
+                                                    <p>This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -627,7 +807,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    Scene data that affects the list of assets.
+                                                                    <p>Scene data that affects the list of assets.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -639,7 +820,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
+                                                                <p>A list of the necessary assets to load.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -667,9 +849,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_removeEventListener">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5049"><code>removeEventListener:5049</code></a>
                                                     </p>
                                             
                                             
@@ -677,7 +862,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method removes an event listener from the entity.
+                                                    <p>This method removes an event listener from the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -690,7 +876,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The event for which to remove a listener.
+                                                                    <p>The event for which to remove a listener.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -700,7 +887,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The listener to remove. If not supplied, all event listeners for the provided event are removed.
+                                                                    <p>The listener to remove. If not supplied, all event listeners for the provided event are removed.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -729,9 +917,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_removeEventListeners">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4984"><code>removeEventListeners:4984</code></a>
                                                     </p>
                                             
                                             
@@ -739,7 +930,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method removes multiple event listeners from the entity.
+                                                    <p>This method removes multiple event listeners from the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -753,7 +945,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The list of listeners to remove. If not supplied, all event listeners are removed.
+                                                                    <p>The list of listeners to remove. If not supplied, all event listeners are removed.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -782,9 +975,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_removeMethod">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5071"><code>removeMethod:5071</code></a>
                                                     </p>
                                             
                                             
@@ -792,7 +988,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method removes a method from the entity.
+                                                    <p>This method removes a method from the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -805,7 +1002,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The name of the method to be removed.
+                                                                    <p>The name of the method to be removed.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -830,9 +1028,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_toJSON">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l45"><code>toJSON:45</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_toJSON">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4944"><code>toJSON:4944</code></a>
                                                     </p>
                                             
                                             
@@ -841,7 +1042,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    Returns a JSON object describing the component.
+                                                    <p>Returns a JSON object describing the component.</p>
+                                            
                                                 </div>
                                             
                                             
@@ -850,7 +1052,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                                                Returns a JSON definition that can be used to recreate the component.
+                                                                <p>Returns a JSON definition that can be used to recreate the component.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -871,9 +1074,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_toString">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l35"><code>toString:35</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_toString">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4934"><code>toString:4934</code></a>
                                                     </p>
                                             
                                             
@@ -881,7 +1087,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    Returns a string describing the component.
+                                                    <p>Returns a string describing the component.</p>
+                                            
                                                 </div>
                                             
                                             
@@ -890,7 +1097,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
-                                                                Returns the component type as a string of the form "[Component ComponentType]".
+                                                                <p>Returns the component type as a string of the form "[Component ComponentType]".</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -911,7 +1119,69 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LevelBuilder.js.html#l191"><code>levelPieces:191</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l17157"><code>levelPieces:17157</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This is an object of key/value pairs listing the pieces that map to an id in the level template. The value can be specified as a string or array. A piece will be randomly chosen from an array when that idea is used. If levelPieces is not defined, ids in the template map directly to level names.</p>
+                                            <pre class="code prettyprint"><code> "levelPieces": {
+                                                 "start"  : "start-map",
+                                                 "end"      : "end-map",
+                                                 "forest" : ["forest-1", "forest-2", "forest-3"]
+                                             }</code></pre>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_levelPieces" class="property item">
+                                                <h3 class="name"><code>levelPieces</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l17146"><code>levelPieces:17146</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This is an object of key/value pairs listing the pieces that map to an id in the level template. The value can be specified as a string or array. A piece will be randomly chosen from an array when that idea is used. If levelPieces is not defined, ids in the template map directly to level names.</p>
+                                            <pre class="code prettyprint"><code> "levelPieces": {
+                                                 "start"  : "start-map",
+                                                 "end"      : "end-map",
+                                                 "forest" : ["forest-1", "forest-2", "forest-3"]
+                                             }</code></pre>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_levelPieces" class="property item">
+                                                <h3 class="name"><code>levelPieces</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LevelBuilder.js.html#l191"><code>levelPieces:191</code></a>
                                                     </p>
                                             
                                             
@@ -942,7 +1212,61 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LevelBuilder.js.html#l181"><code>levelTemplate:181</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l17147"><code>levelTemplate:17147</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.</p>
+                                            <pre class="code prettyprint"><code> "levelTemplate": [ ["start", "forest"], ["forest", "end"] ]</code></pre>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_levelTemplate" class="property item">
+                                                <h3 class="name"><code>levelTemplate</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l17136"><code>levelTemplate:17136</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.</p>
+                                            <pre class="code prettyprint"><code> "levelTemplate": [ ["start", "forest"], ["forest", "end"] ]</code></pre>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_levelTemplate" class="property item">
+                                                <h3 class="name"><code>levelTemplate</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LevelBuilder.js.html#l181"><code>levelTemplate:181</code></a>
                                                     </p>
                                             
                                             
@@ -969,7 +1293,59 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LevelBuilder.js.html#l173"><code>useUniques:173</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l17139"><code>useUniques:17139</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If true, no single map piece is used twice in the creation of the combined map.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> true</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_useUniques" class="property item">
+                                                <h3 class="name"><code>useUniques</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l17128"><code>useUniques:17128</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>If true, no single map piece is used twice in the creation of the combined map.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> true</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_useUniques" class="property item">
+                                                <h3 class="name"><code>useUniques</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LevelBuilder.js.html#l173"><code>useUniques:173</code></a>
                                                     </p>
                                             
                                             
@@ -1001,7 +1377,185 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LevelBuilder.js.html#l278"><code>&#x27;load-level&#x27;:278</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l17244"><code>&#x27;load-level&#x27;:17244</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">level</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>An object describing the level dimensions, tiles, and entities.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">persistentData</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The persistent data passed from the last scene. We add levelBuilder data to it to pass on.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                                <ul class="params-list">
+                                                                                    <li class="param">
+                                                                                        <code class="param-name">levelTemplate</code>
+                                                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                                        <div class="param-description">
+                                                                                            A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
+                                                                                        </div>
+                                                                                    </li>
+                                                                                    <li class="param">
+                                                                                        <code class="param-name">levelPieces</code>
+                                                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                                        <div class="param-description">
+                                                                                            An object of key/value pairs listing the pieces that map to an id in the level template.
+                                                                                        </div>
+                                                                                    </li>
+                                                                                    <li class="param">
+                                                                                        <code class="param-name">useUniques</code>
+                                                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                                                                        <div class="param-description">
+                                                                                            If true, no single map piece is used twice in the creation of the combined map.
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;load-level&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;load-level&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l17233"><code>&#x27;load-level&#x27;:17233</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Dispatched when the scene has loaded and the level has been composited so TileLoader can begin loading the level.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">data</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                     
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">level</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>An object describing the level dimensions, tiles, and entities.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">persistentData</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The persistent data passed from the last scene. We add levelBuilder data to it to pass on.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                                <ul class="params-list">
+                                                                                    <li class="param">
+                                                                                        <code class="param-name">levelTemplate</code>
+                                                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                                        <div class="param-description">
+                                                                                            A 1D or 2D array of level piece ids. The template defines how the pieces will be arranged and which pieces can be used where. The template must be rectangular in dimensions.
+                                                                                        </div>
+                                                                                    </li>
+                                                                                    <li class="param">
+                                                                                        <code class="param-name">levelPieces</code>
+                                                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
+                                            
+                                                                                        <div class="param-description">
+                                                                                            An object of key/value pairs listing the pieces that map to an id in the level template.
+                                                                                        </div>
+                                                                                    </li>
+                                                                                    <li class="param">
+                                                                                        <code class="param-name">useUniques</code>
+                                                                                        <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                                                                        <div class="param-description">
+                                                                                            If true, no single map piece is used twice in the creation of the combined map.
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;load-level&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;load-level&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LevelBuilder.js.html#l278"><code>&#x27;load-level&#x27;:278</code></a>
                                                     </p>
                                             
                                             

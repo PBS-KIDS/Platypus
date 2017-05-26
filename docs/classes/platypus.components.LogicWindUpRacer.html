@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.1 API Documentation : platypus.components.LogicWindUpRacer</title>
+	<title>platypus v0.11.2 API Documentation : platypus.components.LogicWindUpRacer</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.1</em>
+            <em>API Documentation for: 0.11.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -68,8 +68,10 @@
                                 <li><a href="../classes/platypus.components.LogicAngularMovement.html">platypus.components.LogicAngularMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicAttachment.html">platypus.components.LogicAttachment</a></li>
                                 <li><a href="../classes/platypus.components.LogicButton.html">platypus.components.LogicButton</a></li>
+                                <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -100,7 +102,10 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EventRender.html">platypus.EventRender</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Interactive.html">platypus.Interactive</a></li>
+                                <li><a href="../classes/platypus.Map.html">platypus.Map</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
                                 <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
@@ -156,7 +161,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/components_LogicWindUpRacer.js.html#l1"><code>platypus.components.LogicWindUpRacer:1</code></a>
+                                    Defined in: <a href="../files/src_components_LogicWindUpRacer.js.html#l1"><code>platypus.components.LogicWindUpRacer:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -192,7 +197,31 @@
                         
                                                     </li>
                                                     <li class="index-item method">
+                                                        <a href="#method_&#x27;handle-logic&#x27;">&#x27;handle-logic&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;handle-logic&#x27;">&#x27;handle-logic&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
                                                         <a href="#method_&#x27;hit-solid&#x27;">&#x27;hit-solid&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;hit-solid&#x27;">&#x27;hit-solid&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;hit-solid&#x27;">&#x27;hit-solid&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop-racing&#x27;">&#x27;stop-racing&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;stop-racing&#x27;">&#x27;stop-racing&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -203,43 +232,51 @@
                                                         <a href="#method_&#x27;wind-up&#x27;">&#x27;wind-up&#x27;</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;wind-up&#x27;">&#x27;wind-up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method">
+                                                        <a href="#method_&#x27;wind-up&#x27;">&#x27;wind-up&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_addEventListener">addEventListener</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_addMethod">addMethod</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_destroy">destroy</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_getAssetList">getAssetList</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_getLateAssetList">getLateAssetList</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_removeEventListener">removeEventListener</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_removeEventListeners">removeEventListeners</a>
                         
                                                     </li>
-                                                    <li class="index-item method private inherited">
+                                                    <li class="index-item method private inherited inherited">
                                                         <a href="#method_removeMethod">removeMethod</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_toJSON">toJSON</a>
                         
                                                     </li>
-                                                    <li class="index-item method inherited">
+                                                    <li class="index-item method inherited inherited">
                                                         <a href="#method_toString">toString</a>
                         
                                                     </li>
@@ -250,10 +287,6 @@
                                             <h3>Properties</h3>
                         
                                             <ul class="index-list properties">
-                                                    <li class="index-item property">
-                                                        <a href="#property_dragZ">dragZ</a>
-                        
-                                                    </li>
                                                     <li class="index-item property">
                                                         <a href="#property_inputs">inputs</a>
                         
@@ -267,11 +300,31 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_raceTime">raceTime</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_raceTime">raceTime</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_speed">speed</a>
                         
                                                     </li>
                                                     <li class="index-item property">
-                                                        <a href="#property_stickyClick">stickyClick</a>
+                                                        <a href="#property_speed">speed</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_speed">speed</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_windTime">windTime</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_windTime">windTime</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -291,6 +344,22 @@
                         
                                                     </li>
                                                     <li class="index-item event">
+                                                        <a href="#event_&#x27;blocked&#x27;">&#x27;blocked&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;blocked&#x27;">&#x27;blocked&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;racing&#x27;">&#x27;racing&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;racing&#x27;">&#x27;racing&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
                                                         <a href="#event_&#x27;racing&#x27;">&#x27;racing&#x27;</a>
                         
                                                     </li>
@@ -299,7 +368,31 @@
                         
                                                     </li>
                                                     <li class="index-item event">
+                                                        <a href="#event_&#x27;stopped-racing&#x27;">&#x27;stopped-racing&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;stopped-racing&#x27;">&#x27;stopped-racing&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
                                                         <a href="#event_&#x27;stopped-winding&#x27;">&#x27;stopped-winding&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;stopped-winding&#x27;">&#x27;stopped-winding&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;stopped-winding&#x27;">&#x27;stopped-winding&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;winding&#x27;">&#x27;winding&#x27;</a>
+                        
+                                                    </li>
+                                                    <li class="index-item event">
+                                                        <a href="#event_&#x27;winding&#x27;">&#x27;winding&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item event">
@@ -334,7 +427,113 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l63"><code>&#x27;handle-logic&#x27;:63</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20905"><code>&#x27;handle-logic&#x27;:20905</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On a <code>tick</code> logic message, the component updates its charging counter if necessary.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message.delta</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>To determine how much to charge, the component checks the length of the tick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-logic&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>message.delta</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l63"><code>&#x27;handle-logic&#x27;:63</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On a <code>tick</code> logic message, the component updates its charging counter if necessary.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message.delta</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>To determine how much to charge, the component checks the length of the tick.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;handle-logic&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;handle-logic&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>message.delta</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20871"><code>&#x27;handle-logic&#x27;:20871</code></a>
                                                     </p>
                                             
                                             
@@ -387,7 +586,113 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l149"><code>&#x27;hit-solid&#x27;:149</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20991"><code>&#x27;hit-solid&#x27;:20991</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On receiving this message, the entity stops racing.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">collision.x</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;hit-solid&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;hit-solid&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>collision.x</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l149"><code>&#x27;hit-solid&#x27;:149</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>On receiving this message, the entity stops racing.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">collision.x</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Either 1,0, or -1. 1 if we're colliding with an object on our right. -1 if on our left. 0 if not at all.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;hit-solid&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;hit-solid&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>collision.x</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20957"><code>&#x27;hit-solid&#x27;:20957</code></a>
                                                     </p>
                                             
                                             
@@ -434,7 +739,67 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l127"><code>&#x27;stop-racing&#x27;:127</code></a>
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l127"><code>&#x27;stop-racing&#x27;:127</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Causes the entity to stop racing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop-racing&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop-racing&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20969"><code>&#x27;stop-racing&#x27;:20969</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Causes the entity to stop racing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;stop-racing&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;stop-racing&#x27;</code></h3>
+                                            
+                                                    <span class="paren">()</span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20935"><code>&#x27;stop-racing&#x27;:20935</code></a>
                                                     </p>
                                             
                                             
@@ -470,7 +835,113 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l137"><code>&#x27;wind-up&#x27;:137</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l20945"><code>&#x27;wind-up&#x27;:20945</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Causes the entity to wind up for a race.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message.pressed</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>message</code> is included, the component checks the value of <code>pressed</code>: <code>false</code> causes winding to stop.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;wind-up&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;wind-up&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>message.pressed</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20979"><code>&#x27;wind-up&#x27;:20979</code></a>
+                                                    </p>
+                                            
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Causes the entity to wind up for a race.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Parameters:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">message.pressed</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>If <code>message</code> is included, the component checks the value of <code>pressed</code>: <code>false</code> causes winding to stop.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="method_&#x27;wind-up&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;wind-up&#x27;</code></h3>
+                                            
+                                                    <div class="args">
+                                                        <span class="paren">(</span><ul class="args-list inline commas">
+                                                            <li class="arg">
+                                                                    <code>message.pressed</code>
+                                                            </li>
+                                                        </ul><span class="paren">)</span>
+                                                    </div>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l137"><code>&#x27;wind-up&#x27;:137</code></a>
                                                     </p>
                                             
                                             
@@ -528,9 +999,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_addEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l112"><code>addEventListener:112</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_addEventListener">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5011"><code>addEventListener:5011</code></a>
                                                     </p>
                                             
                                             
@@ -538,7 +1012,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method adds an event listener to the entity.
+                                                    <p>This method adds an event listener to the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -551,7 +1026,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The event that this component should listen for.
+                                                                    <p>The event that this component should listen for.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -561,7 +1037,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The handler for the event.
+                                                                    <p>The handler for the event.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -573,7 +1050,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>:
-                                                                handler  A reference to the bound handler.
+                                                                <p>handler  A reference to the bound handler.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -601,9 +1079,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_addMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l131"><code>addMethod:131</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_addMethod">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5030"><code>addMethod:5030</code></a>
                                                     </p>
                                             
                                             
@@ -611,7 +1092,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method adds a method to the entity.
+                                                    <p>This method adds a method to the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -624,7 +1106,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as <code>entity.turnYellow()</code>.
+                                                                    <p>The name of the method. For example, if name is "turnYellow", the method is accessible on the entity as <code>entity.turnYellow()</code>.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -634,7 +1117,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The function describing the method.
+                                                                    <p>The function describing the method.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -657,9 +1141,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_destroy">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l54"><code>destroy:54</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_destroy">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4953"><code>destroy:4953</code></a>
                                                     </p>
                                             
                                             
@@ -667,7 +1154,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.
+                                                    <p>This method cleans up listeners and methods that this component added to the entity. It should never be called by the component itself. Call this.owner.removeComponent(this) instead.</p>
+                                            
                                                 </div>
                                             
                                             
@@ -701,9 +1189,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l188"><code>getAssetList:188</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_getAssetList">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5087"><code>getAssetList:5087</code></a>
                                                     </p>
                                             
                                             
@@ -711,7 +1202,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
+                                                    <p>This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -724,7 +1216,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The definition for the component.
+                                                                    <p>The definition for the component.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -734,7 +1227,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The properties of the Entity.
+                                                                    <p>The properties of the Entity.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -744,7 +1238,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The default properties of the Entity.
+                                                                    <p>The default properties of the Entity.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -756,7 +1251,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
+                                                                <p>A list of the necessary assets to load.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -783,9 +1279,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_getLateAssetList">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l199"><code>getLateAssetList:199</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_getLateAssetList">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5098"><code>getLateAssetList:5098</code></a>
                                                     </p>
                                             
                                             
@@ -793,7 +1292,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.
+                                                    <p>This method can be overwritten to provide the list of assets this component requires. This method is invoked when the list of game scenes is created to determine assets for each scene.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -806,7 +1306,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    Scene data that affects the list of assets.
+                                                                    <p>Scene data that affects the list of assets.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -818,7 +1319,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array" class="crosslink external" target="_blank">Array</a></span>:
-                                                                A list of the necessary assets to load.
+                                                                <p>A list of the necessary assets to load.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -846,9 +1348,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_removeEventListener">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l150"><code>removeEventListener:150</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_removeEventListener">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5049"><code>removeEventListener:5049</code></a>
                                                     </p>
                                             
                                             
@@ -856,7 +1361,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method removes an event listener from the entity.
+                                                    <p>This method removes an event listener from the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -869,7 +1375,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The event for which to remove a listener.
+                                                                    <p>The event for which to remove a listener.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -879,7 +1386,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The listener to remove. If not supplied, all event listeners for the provided event are removed.
+                                                                    <p>The listener to remove. If not supplied, all event listeners for the provided event are removed.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -908,9 +1416,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_removeEventListeners">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l85"><code>removeEventListeners:85</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_removeEventListeners">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4984"><code>removeEventListeners:4984</code></a>
                                                     </p>
                                             
                                             
@@ -918,7 +1429,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method removes multiple event listeners from the entity.
+                                                    <p>This method removes multiple event listeners from the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -932,7 +1444,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The list of listeners to remove. If not supplied, all event listeners are removed.
+                                                                    <p>The list of listeners to remove. If not supplied, all event listeners are removed.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -961,9 +1474,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_removeMethod">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l172"><code>removeMethod:172</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_removeMethod">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l5071"><code>removeMethod:5071</code></a>
                                                     </p>
                                             
                                             
@@ -971,7 +1487,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    This method removes a method from the entity.
+                                                    <p>This method removes a method from the entity.</p>
+                                            
                                                 </div>
                                             
                                                     <div class="params">
@@ -984,7 +1501,8 @@
                                             
                                             
                                                                 <div class="param-description">
-                                                                    The name of the method to be removed.
+                                                                    <p>The name of the method to be removed.</p>
+                                            
                                                                 </div>
                                             
                                                             </li>
@@ -1009,9 +1527,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_toJSON">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l45"><code>toJSON:45</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_toJSON">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4944"><code>toJSON:4944</code></a>
                                                     </p>
                                             
                                             
@@ -1020,7 +1541,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    Returns a JSON object describing the component.
+                                                    <p>Returns a JSON object describing the component.</p>
+                                            
                                                 </div>
                                             
                                             
@@ -1029,7 +1551,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>:
-                                                                Returns a JSON definition that can be used to recreate the component.
+                                                                <p>Returns a JSON definition that can be used to recreate the component.</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -1050,9 +1573,12 @@
                                             
                                             
                                                 <div class="meta">
-                                                            <p>Inherited from
-                                                            <a href="../classes/platypus.Component.html#method_toString">platypus.Component</a>:
-                                                    <a href="../files/Component.js.html#l35"><code>toString:35</code></a>
+                                                        <p>Inherited from
+                                                        <a href="../classes/platypus.Component.html#method_toString">
+                                                            platypus.Component
+                                                        </a>
+                                                        but overwritten in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l4934"><code>toString:4934</code></a>
                                                     </p>
                                             
                                             
@@ -1060,7 +1586,8 @@
                                                 </div>
                                             
                                                 <div class="description">
-                                                    Returns a string describing the component.
+                                                    <p>Returns a string describing the component.</p>
+                                            
                                                 </div>
                                             
                                             
@@ -1069,7 +1596,8 @@
                                             
                                                         <div class="returns-description">
                                                                     <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>:
-                                                                Returns the component type as a string of the form "[Component ComponentType]".
+                                                                <p>Returns the component type as a string of the form "[Component ComponentType]".</p>
+                                            
                                                         </div>
                                                     </div>
                                             
@@ -1079,33 +1607,6 @@
                                     <div id="properties" class="api-class-tabpanel">
                                         <h2 class="off-left">Properties</h2>
                         
-                                            <div id="property_dragZ" class="property item">
-                                                <h3 class="name"><code>dragZ</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
-                                            
-                                            
-                                            
-                                            
-                                            
-                                                <div class="meta">
-                                                            <p>
-                                                            Defined in
-                                                    <a href="../files/components_LogicDragDrop.js.html#l39"><code>dragZ:39</code></a>
-                                                    </p>
-                                            
-                                            
-                                                        <p>Available since 0.8.3</p>
-                                                </div>
-                                            
-                                                <div class="description">
-                                                    <p>Sets the z-order of the item while being dragged.</p>
-                                            
-                                                </div>
-                                            
-                                                    <p><strong>Default:</strong> 10000</p>
-                                            
-                                            
-                                            </div>
                                             <div id="property_inputs" class="property item">
                                                 <h3 class="name"><code>inputs</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
@@ -1117,7 +1618,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicStateMachine.js.html#l161"><code>inputs:161</code></a>
+                                                    <a href="../files/src_components_LogicStateMachine.js.html#l161"><code>inputs:161</code></a>
                                                     </p>
                                             
                                             
@@ -1152,7 +1653,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicStateMachine.js.html#l180"><code>outputs:180</code></a>
+                                                    <a href="../files/src_components_LogicStateMachine.js.html#l180"><code>outputs:180</code></a>
                                                     </p>
                                             
                                             
@@ -1194,7 +1695,59 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l26"><code>raceTime:26</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l20834"><code>raceTime:20834</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Time in milliseconds that entity will race before coming to a stop.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 5000</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_raceTime" class="property item">
+                                                <h3 class="name"><code>raceTime</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20868"><code>raceTime:20868</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Time in milliseconds that entity will race before coming to a stop.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 5000</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_raceTime" class="property item">
+                                                <h3 class="name"><code>raceTime</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l26"><code>raceTime:26</code></a>
                                                     </p>
                                             
                                             
@@ -1220,7 +1773,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l17"><code>speed:17</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20859"><code>speed:20859</code></a>
                                                     </p>
                                             
                                             
@@ -1235,9 +1788,9 @@
                                             
                                             
                                             </div>
-                                            <div id="property_stickyClick" class="property item">
-                                                <h3 class="name"><code>stickyClick</code></h3>
-                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            <div id="property_speed" class="property item">
+                                                <h3 class="name"><code>speed</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
                                             
                                             
                                             
@@ -1246,19 +1799,44 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicDragDrop.js.html#l49"><code>stickyClick:49</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l20825"><code>speed:20825</code></a>
                                                     </p>
                                             
                                             
-                                                        <p>Available since 0.8.3</p>
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>Sets whether a click-move should start the dragging behavior in addition to click-drag. This value is ignored for mobile devices.</p>
+                                                    <p>Velocity at which the entity should travel while racing.</p>
                                             
                                                 </div>
                                             
-                                                    <p><strong>Default:</strong> false</p>
+                                                    <p><strong>Default:</strong> 0.3</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_speed" class="property item">
+                                                <h3 class="name"><code>speed</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l17"><code>speed:17</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Velocity at which the entity should travel while racing.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0.3</p>
                                             
                                             
                                             </div>
@@ -1273,7 +1851,59 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l35"><code>windTime:35</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20877"><code>windTime:20877</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Time in milliseconds that entity needs to receive wind-up calls before racing can begin.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 500</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_windTime" class="property item">
+                                                <h3 class="name"><code>windTime</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l35"><code>windTime:35</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Time in milliseconds that entity needs to receive wind-up calls before racing can begin.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 500</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_windTime" class="property item">
+                                                <h3 class="name"><code>windTime</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20843"><code>windTime:20843</code></a>
                                                     </p>
                                             
                                             
@@ -1305,7 +1935,91 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l160"><code>&#x27;blocked&#x27;:160</code></a>
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l160"><code>&#x27;blocked&#x27;:160</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message is triggered if the entity collides while racing.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">collision</code>
+                                                                    <span class="type"><a href="../classes/platypus.CollisionData.html" class="crosslink">platypus.CollisionData</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Collision information from the entity or tile that blocked movement.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;blocked&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;blocked&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20968"><code>&#x27;blocked&#x27;:20968</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This message is triggered if the entity collides while racing.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">collision</code>
+                                                                    <span class="type"><a href="../classes/platypus.CollisionData.html" class="crosslink">platypus.CollisionData</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>Collision information from the entity or tile that blocked movement.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;blocked&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;blocked&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l21002"><code>&#x27;blocked&#x27;:21002</code></a>
                                                     </p>
                                             
                                             
@@ -1347,7 +2061,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l74"><code>&#x27;racing&#x27;:74</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20916"><code>&#x27;racing&#x27;:20916</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when winding is finished and the entity begins racing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;racing&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;racing&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l74"><code>&#x27;racing&#x27;:74</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when winding is finished and the entity begins racing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;racing&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;racing&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20882"><code>&#x27;racing&#x27;:20882</code></a>
                                                     </p>
                                             
                                             
@@ -1372,7 +2136,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l88"><code>&#x27;stopped-racing&#x27;:88</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l20896"><code>&#x27;stopped-racing&#x27;:20896</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when the entity stops racing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;stopped-racing&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;stopped-racing&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20930"><code>&#x27;stopped-racing&#x27;:20930</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when the entity stops racing.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;stopped-racing&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;stopped-racing&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l88"><code>&#x27;stopped-racing&#x27;:88</code></a>
                                                     </p>
                                             
                                             
@@ -1397,7 +2211,57 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l113"><code>&#x27;stopped-winding&#x27;:113</code></a>
+                                                    <a href="../files/lib_platypus.combined.js.html#l20921"><code>&#x27;stopped-winding&#x27;:20921</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when the entity stops winding.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;stopped-winding&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;stopped-winding&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20955"><code>&#x27;stopped-winding&#x27;:20955</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered when the entity stops winding.</p>
+                                            
+                                                </div>
+                                            
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;stopped-winding&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;stopped-winding&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l113"><code>&#x27;stopped-winding&#x27;:113</code></a>
                                                     </p>
                                             
                                             
@@ -1422,7 +2286,91 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/components_LogicWindUpRacer.js.html#l100"><code>&#x27;winding&#x27;:100</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l20942"><code>&#x27;winding&#x27;:20942</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered as the entity winds up.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">fraction</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The amount of progress that has been made from 0 to 1.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;winding&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;winding&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_LogicWindUpRacer.js.html#l100"><code>&#x27;winding&#x27;:100</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>This event is triggered as the entity winds up.</p>
+                                            
+                                                </div>
+                                            
+                                                    <div class="params">
+                                                        <h4>Event Payload:</h4>
+                                            
+                                                        <ul class="params-list">
+                                                            <li class="param">
+                                                                    <code class="param-name">fraction</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The amount of progress that has been made from 0 to 1.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                            
+                                            
+                                            </div>
+                                            <div id="event_&#x27;winding&#x27;" class="events item">
+                                                <h3 class="name"><code>&#x27;winding&#x27;</code></h3>
+                                                <span class="type"></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l20908"><code>&#x27;winding&#x27;:20908</code></a>
                                                     </p>
                                             
                                             

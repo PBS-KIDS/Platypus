@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.1 API Documentation : platypus.PlatypusPlugin</title>
+	<title>platypus v0.11.2 API Documentation : platypus.PlatypusPlugin</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.1</em>
+            <em>API Documentation for: 0.11.2</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -68,8 +68,10 @@
                                 <li><a href="../classes/platypus.components.LogicAngularMovement.html">platypus.components.LogicAngularMovement</a></li>
                                 <li><a href="../classes/platypus.components.LogicAttachment.html">platypus.components.LogicAttachment</a></li>
                                 <li><a href="../classes/platypus.components.LogicButton.html">platypus.components.LogicButton</a></li>
+                                <li><a href="../classes/platypus.components.LogicCarrier.html">platypus.components.LogicCarrier</a></li>
                                 <li><a href="../classes/platypus.components.LogicDestroyMe.html">platypus.components.LogicDestroyMe</a></li>
                                 <li><a href="../classes/platypus.components.LogicDirectionalMovement.html">platypus.components.LogicDirectionalMovement</a></li>
+                                <li><a href="../classes/platypus.components.LogicPortable.html">platypus.components.LogicPortable</a></li>
                                 <li><a href="../classes/platypus.components.LogicWindUpRacer.html">platypus.components.LogicWindUpRacer</a></li>
                                 <li><a href="../classes/platypus.components.Motion.html">platypus.components.Motion</a></li>
                                 <li><a href="../classes/platypus.components.Mover.html">platypus.components.Mover</a></li>
@@ -100,7 +102,10 @@
                                 <li><a href="../classes/platypus.Data.html">platypus.Data</a></li>
                                 <li><a href="../classes/platypus.DataMap.html">platypus.DataMap</a></li>
                                 <li><a href="../classes/platypus.Entity.html">platypus.Entity</a></li>
+                                <li><a href="../classes/platypus.EventRender.html">platypus.EventRender</a></li>
                                 <li><a href="../classes/platypus.Game.html">platypus.Game</a></li>
+                                <li><a href="../classes/platypus.Interactive.html">platypus.Interactive</a></li>
+                                <li><a href="../classes/platypus.Map.html">platypus.Map</a></li>
                                 <li><a href="../classes/platypus.Messenger.html">platypus.Messenger</a></li>
                                 <li><a href="../classes/platypus.PIXIAnimation.html">platypus.PIXIAnimation</a></li>
                                 <li><a href="../classes/platypus.PlatypusPlugin.html">platypus.PlatypusPlugin</a></li>
@@ -150,7 +155,7 @@
                         
                         
                                 <div class="foundat">
-                                    Defined in: <a href="../files/PlatypusPlugin.js.html#l1"><code>platypus.PlatypusPlugin:1</code></a>
+                                    Defined in: <a href="../files/src_PlatypusPlugin.js.html#l1"><code>platypus.PlatypusPlugin:1</code></a>
                                 </div>
                         
                                     Module: <a href="../modules/platypus.html">platypus</a>
@@ -170,7 +175,7 @@
                              "sounds": {} // Platypus uses the SpringRoll audio system and syntax for audio assets.
                          }
                         </code></pre>
-                        <p>The Platypus game instance is <code>app.platypus</code> on the SpringRoll Application and <code>platypus.game</code> within the platypus namespace.</p>
+                        <p>The Platypus game instance is <code>app.platypusGame</code> on the SpringRoll Application and <code>platypus.game</code> within the platypus namespace.</p>
                         
                         </div>
                         
@@ -193,6 +198,22 @@
                                             <ul class="index-list properties">
                                                     <li class="index-item property">
                                                         <a href="#property_options.author">options.author</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_options.author">options.author</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_options.author">options.author</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_options.hideHello">options.hideHello</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_options.hideHello">options.hideHello</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -220,7 +241,59 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/PlatypusPlugin.js.html#l180"><code>options.author:180</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l8657"><code>options.author:8657</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets credit for the game. Defaults to the "author" META tag if present on the document.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> &#x27;&#x27;</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_options.author" class="property item">
+                                                <h3 class="name"><code>options.author</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l8656"><code>options.author:8656</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Sets credit for the game. Defaults to the "author" META tag if present on the document.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> &#x27;&#x27;</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_options.author" class="property item">
+                                                <h3 class="name"><code>options.author</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_PlatypusPlugin.js.html#l180"><code>options.author:180</code></a>
                                                     </p>
                                             
                                             
@@ -246,7 +319,59 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/PlatypusPlugin.js.html#l188"><code>options.hideHello:188</code></a>
+                                                    <a href="../files/build_output_platypus.combined.js.html#l8665"><code>options.hideHello:8665</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Hides console hello for the game.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_options.hideHello" class="property item">
+                                                <h3 class="name"><code>options.hideHello</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/lib_platypus.combined.js.html#l8664"><code>options.hideHello:8664</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Hides console hello for the game.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_options.hideHello" class="property item">
+                                                <h3 class="name"><code>options.hideHello</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_PlatypusPlugin.js.html#l188"><code>options.hideHello:188</code></a>
                                                     </p>
                                             
                                             
