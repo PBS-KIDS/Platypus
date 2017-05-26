@@ -17,6 +17,7 @@
      * @event 'hit-by-*'
      * @param collision {Object}
      * @param collision.entity {Entity} The entity with which the collision occurred.
+     * @param collision.target {Entity} The entity that's receiving the collision event.
      * @param collision.type {String} The collision type of the other entity.
      * @param collision.shape {CollisionShape} This is the shape of the other entity that caused the collision.
      * @param collision.x {number} Returns -1, 0, or 1 indicating on which side of this entity the collision occurred: left, neither, or right respectively.
@@ -37,7 +38,7 @@
         },
         triggerMessage = {
             entity: null,
-            from: null,
+            target: null,
             type: null,
             x: 0,
             y: 0,
@@ -399,7 +400,7 @@
                     var msg = triggerMessage;
                     
                     msg.entity    = otherEntity;
-                    msg.from      = entity;
+                    msg.target    = entity;
                     msg.myType    = thisType;
                     msg.type      = thatType;
                     msg.x         = x;
@@ -410,7 +411,7 @@
                     
                     if (otherEntity) {
                         msg.entity    = entity;
-                        msg.from      = otherEntity;
+                        msg.target    = otherEntity;
                         msg.type      = thisType;
                         msg.myType    = thatType;
                         msg.x         = -x;
@@ -462,7 +463,7 @@
                     var msg = triggerMessage;
                     
                     msg.entity    = otherEntity;
-                    msg.from      = entity;
+                    msg.target    = entity;
                     msg.myType    = thisType;
                     msg.type      = thatType;
                     msg.x         = x;
@@ -473,7 +474,7 @@
                     
                     if (otherEntity) {
                         msg.entity    = entity;
-                        msg.from      = otherEntity;
+                        msg.target    = otherEntity;
                         msg.type      = thisType;
                         msg.myType    = thatType;
                         msg.x         = -x;
@@ -1034,7 +1035,7 @@
                                             if (shapes[l].collides(otherShapes[m])) {
                                                 //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                                 message.entity  = otherEntity;
-                                                message.from    = ent;
+                                                message.target  = ent;
                                                 message.type    = otherCollisionType;
                                                 message.myType  = collisionType;
                                                 message.shape   = otherShapes[m];
@@ -1092,7 +1093,7 @@
                                     if (shape.collides(otherShapes[m])) {
                                         //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                         message.entity  = otherEntity;
-                                        message.from    = null;
+                                        message.target  = null;
                                         message.type    = otherCollisionType;
                                         message.myType  = '';
                                         message.shape   = otherShapes[m];
@@ -1145,7 +1146,7 @@
                                     if (otherShapes[m].containsPoint(x, y)) {
                                         //TML - We're only reporting the first shape we hit even though there may be multiple that we could be hitting.
                                         message.entity  = otherEntity;
-                                        message.from    = null;
+                                        message.target  = null;
                                         message.type    = otherCollisionType;
                                         message.myType  = '';
                                         message.shape   = otherShapes[m];
@@ -1238,6 +1239,7 @@
              * @param shape {CollisionShape} The shape to check for collisions.
              * @param collisionTypes {Array of strings} The collision types to check against.
              * @return collisions {Array} This is a list of collision objects describing the soft collisions.
+             * @since 0.11.2
              */
             getShapeCollisions: function (shape, collisionTypes) {
                 var collisions = Array.setUp();
