@@ -160,6 +160,7 @@ platypus.CollisionShape = (function () {
      * @method moveXY
      * @param x {number} The x position to which the shape should be moved.
      * @param y {number} The y position to which the shape should be moved.
+     * @since 0.11.2
      */
     proto.moveXY = function (x, y) {
         this.x = x;
