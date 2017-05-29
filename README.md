@@ -23,11 +23,6 @@ Platypus uses:
 Platypus in action:
 Wild Kratts [Monkey Mayhem](http://pbskids.org/wildkratts/games/monkey-mayhem/)
 
-***
-[Code](https://github.com/PBS-KIDS/Platypus/) - [Wiki](https://github.com/PBS-KIDS/Platypus/wiki/) - [Docs](http://gopherwood.github.io/Platypus/)
-
-Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see licenses.txt), all assets in the example games are © Gopherwood Studios and/or © PBS KIDS.
-
 ## Building
 Platypus uses [Grunt](http://gruntjs.com/) to manage the build process. To export a release build for this library run:
 
@@ -61,3 +56,8 @@ The same as the NEXT process, but will not minify the source code. All code form
 * grunt docs - Build only the docs
 * grunt uglify - Build only the min files. (Will use NEXT as the version)
 * npm test - Run tests to verify game engine functionality.
+
+***
+[Code](https://github.com/PBS-KIDS/Platypus/) - [Wiki](https://github.com/PBS-KIDS/Platypus/wiki/) - [Docs](http://gopherwood.github.io/Platypus/)
+
+Platypus was developed by PBS KIDS and [Gopherwood Studios](http://gopherwoodstudios.com/). It is free to use (see licenses.txt), all assets in the example games are © Gopherwood Studios and/or © PBS KIDS.
