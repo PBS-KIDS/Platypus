@@ -13,37 +13,88 @@
         defaultHeight = 100,
         defaultWidth = 100,
         defaultZ = 10000,
-        types = {
-            "aabb": 0xff88ff,
-            "render": 0x0000ff,
-            "collision": 0xff00ff,
-            "group": 0x00ff00
-        },
-        createShape = function (shape, type, left, top, width, height, z) {
-            var newShape = null,
-                opacity = 0.1;
+        createShape = function (shape, color, left, top, width, height, z, isOutlined) {
+            var newShape = new Graphics().beginFill(color, 0.1);
+
+            if (isOutlined) {
+                newShape.lineStyle(2, color);
+            }
 
             switch (shape) {
             case 'rectangle':
-                newShape = new Graphics().beginFill(types[type], opacity).drawRect(left, top, width, height);
+                newShape.drawRect(left, top, width, height);
                 break;
             case 'circle':
-                newShape = new Graphics().beginFill(types[type], opacity).drawCircle(0, 0, width);
+                newShape.drawCircle(0, 0, width);
                 break;
             }
             newShape.z = z;
 
             return newShape;
+        },
+        standardizeColor = function (color) {
+            if (typeof color === 'string') {
+                return parseInt(color.replace('#', ''), 16);
+            } else {
+                return color;
+            }
         };
     
     return platypus.createComponentClass({
         
         id: 'RenderDebug',
+
+        properties: {
+            /**
+             * The color to use to highlight an entity's AABB. For example, use `"#ffffff"` or `0xffffff` to set as white.
+             *
+             * @property aabbColor
+             * @type Number|String
+             * @default 0xff88ff
+             * @since 0.11.3
+             */
+            aabbColor: 0xff88ff,
+
+            /**
+             * The color to use to highlight an entity's collision shape. For example, use `"#ffffff"` or `0xffffff` to set as white.
+             *
+             * @property collisionColor
+             * @type Number|String
+             * @default 0xff00ff
+             * @since 0.11.3
+             */
+            collisionColor: 0xff00ff,
+
+            /**
+             * The color to use to highlight the AABB for a group of entities attached to this entity. For example, use `"#ffffff"` or `0xffffff` to set as white.
+             *
+             * @property groupColor
+             * @type Number|String
+             * @default 0x00ff00
+             * @since 0.11.3
+             */
+            groupColor: 0x00ff00,
+
+            /**
+             * The color to use to highlight an entity. This property is only used if there is no `CollisionBasic` component attached to the entity: this component uses the entity's `width` and `height` properties if defined. For example, use `"#ffffff"` or `0xffffff` to set as white.
+             *
+             * @property renderColor
+             * @type Number|String
+             * @default 0x0000ff
+             * @since 0.11.3
+             */
+            renderColor: 0x0000ff
+        },
         
         initialize: function () {
             this.parentContainer = null;
             this.shapes = Array.setUp();
             this.isOutdated = true;
+
+            this.aabbColor = standardizeColor(this.aabbColor);
+            this.collisionColor = standardizeColor(this.collisionColor);
+            this.groupColor = standardizeColor(this.groupColor);
+            this.renderColor = standardizeColor(this.renderColor);
         },
         
         events: {// These are messages that this component listens for
@@ -100,8 +151,7 @@
                 if (this.owner.getCollisionGroupAABB) {
                     aabb = this.owner.getCollisionGroupAABB();
                     if (!this.groupShape) {
-                        this.groupShape = new Graphics().beginFill("rgba(255,255,0,0.2)").drawRect(offset, offset, 1, 1);
-                        this.groupShape.z = (this.owner.z || 0) + defaultZ;
+                        this.groupShape = createShape('rectangle', this.groupColor, offset, offset, 1, 1, (this.owner.z || 0) + defaultZ)
                         this.parentContainer.addChild(this.groupShape);
                     }
                     this.groupShape.scaleX = aabb.width;
@@ -145,20 +195,20 @@
                         height = this.initialHeight = aabb.height;
                         shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
                         
-                        shape  = createShape('rectangle', 'aabb', aabb.left - this.owner.x, aabb.top - this.owner.y, width, height, z--);
+                        shape  = createShape('rectangle', this.aabbColor, aabb.left - this.owner.x, aabb.top - this.owner.y, width, height, z--);
                         this.shapes.push(shape);
                         this.parentContainer.addChild(shape);
                         this.addInput(shape);
                         
                         for (i = 0; i < shapes.length; i++) {
-                            shape = createShape(shapes[i].type, 'collision', shapes[i].offsetX - shapes[i].width / 2, shapes[i].offsetY - shapes[i].height / 2, shapes[i].radius || shapes[i].width, shapes[i].height, z--);
+                            shape = createShape(shapes[i].type, this.collisionColor, shapes[i].offsetX - shapes[i].width / 2, shapes[i].offsetY - shapes[i].height / 2, shapes[i].radius || shapes[i].width, shapes[i].height, z--, true);
                             this.shapes.push(shape);
                             this.parentContainer.addChild(shape);
                             this.addInput(shape);
                         }
                     }
                 } else {
-                    shape = createShape('rectangle', 'render', -width / 2, -height / 2, width, height, z--);
+                    shape = createShape('rectangle', this.renderColor, -width / 2, -height / 2, width, height, z--);
                     this.shapes.push(shape);
                     this.parentContainer.addChild(shape);
                     this.addInput(shape);
