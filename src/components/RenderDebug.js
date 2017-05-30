@@ -13,11 +13,11 @@
         defaultHeight = 100,
         defaultWidth = 100,
         defaultZ = 10000,
-        createShape = function (shape, color, left, top, width, height, z, isOutlined) {
+        createShape = function (shape, color, left, top, width, height, z, outline) {
             var newShape = new Graphics().beginFill(color, 0.1);
 
-            if (isOutlined) {
-                newShape.lineStyle(2, color);
+            if (outline) {
+                newShape.lineStyle(outline, color);
             }
 
             switch (shape) {
@@ -177,6 +177,7 @@
                 var z        = (this.owner.z || 0) + defaultZ,
                     i        = 0,
                     j        = 0,
+                    lineWidth = 2,
                     width    = this.owner.width  = this.owner.width  || defaultWidth,
                     height   = this.owner.height = this.owner.height || defaultHeight,
                     shapes   = null,
@@ -201,7 +202,9 @@
                         this.addInput(shape);
                         
                         for (i = 0; i < shapes.length; i++) {
-                            shape = createShape(shapes[i].type, this.collisionColor, shapes[i].offsetX - shapes[i].width / 2, shapes[i].offsetY - shapes[i].height / 2, shapes[i].radius || shapes[i].width, shapes[i].height, z--, true);
+                            width = shapes[i].width - lineWidth;
+                            height = shapes[i].height - lineWidth;
+                            shape = createShape(shapes[i].type, this.collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth);
                             this.shapes.push(shape);
                             this.parentContainer.addChild(shape);
                             this.addInput(shape);
