@@ -10,9 +10,7 @@
     'use strict';
     
     var Graphics = include('PIXI.Graphics'),
-        defaultHeight = 100,
-        defaultWidth = 100,
-        defaultZ = 10000,
+        RenderContainer = include('platypus.components.RenderContainer'),
         createShape = function (shape, color, left, top, width, height, z, outline) {
             var newShape = new Graphics().beginFill(color, 0.1);
 
@@ -83,11 +81,40 @@
              * @default 0x0000ff
              * @since 0.11.3
              */
-            renderColor: 0x0000ff
+            renderColor: 0x0000ff,
+
+            /**
+             * The height of the entity.
+             *
+             * @property height
+             * @type Number
+             * @default 100
+             * @since 0.11.3
+             */
+            width: 100,
+
+            /**
+             * The width of the entity.
+             *
+             * @property width
+             * @type Number
+             * @default 100
+             * @since 0.11.3
+             */
+            height: 100,
+
+            /**
+             * The local offset in z-index for the rendered debug area.
+             *
+             * @property offsetZ
+             * @type Number
+             * @default 10000
+             * @since 0.11.3
+             */
+            offsetZ: 10000
         },
         
         initialize: function () {
-            this.parentContainer = null;
             this.shapes = Array.setUp();
             this.isOutdated = true;
 
@@ -99,42 +126,20 @@
         
         events: {// These are messages that this component listens for
             /**
-             * The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too.
-             *
-             * @method 'handle-render-load'
-             * @param handlerData {Object} Data from the render handler
-             * @param handlerData.container {PIXI.Container} The parent container.
-             */
-            "handle-render-load": function (handlerData) {
-                if (!platypus.game.settings.debug) {
-                    this.owner.removeComponent(this);
-                } else if (!this.parentContainer && handlerData && handlerData.container) {
-                    this.parentContainer = handlerData.container;
-                }
-            },
-            
-            /**
              * Repositions the pieces of the component in preparation for rendering
              *
              * @method 'handle-render'
-             * @param renderData {Object} Data from the render handler
-             * @param renderData.container {PIXI.Container} The parent container.
              */
-            "handle-render": function (renderData) {
-                var i = 0,
-                    aabb = null,
+            "handle-render": function () {
+                var aabb = null,
                     offset = -0.5;
 
-                if (!this.parentContainer) {
+                if (!this.owner.container) {
                     if (!platypus.game.settings.debug) {
                         this.owner.removeComponent(this);
                         return;
-                    } else if (renderData.container) {
-                        this.parentContainer = renderData.container;
-                    } else {
-                        platypus.debug.warn('No Container, removing render debug component from "' + this.owner.type + '".');
-                        this.owner.removeComponent(this);
-                        return;
+                    } else if (!this.owner.container) {
+                        this.owner.addComponent(new RenderContainer(this.owner, null));
                     }
                 }
 
@@ -143,21 +148,16 @@
                     this.isOutdated = false;
                 }
                 
-                for (i = 0; i < this.shapes.length; i++) {
-                    this.shapes[i].x = this.owner.x;
-                    this.shapes[i].y = this.owner.y;
-                }
-                
                 if (this.owner.getCollisionGroupAABB) {
                     aabb = this.owner.getCollisionGroupAABB();
                     if (!this.groupShape) {
-                        this.groupShape = createShape('rectangle', this.groupColor, offset, offset, 1, 1, (this.owner.z || 0) + defaultZ)
-                        this.parentContainer.addChild(this.groupShape);
+                        this.groupShape = createShape('rectangle', this.groupColor, offset, offset, 1, 1, this.offsetZ);
+                        this.owner.container.addChild(this.groupShape);
                     }
                     this.groupShape.scaleX = aabb.width;
                     this.groupShape.scaleY = aabb.height;
-                    this.groupShape.x      = aabb.x;
-                    this.groupShape.y      = aabb.y;
+                    this.groupShape.x      = aabb.x - this.owner.x;
+                    this.groupShape.y      = aabb.y - this.owner.y;
                 }
             },
             
@@ -174,31 +174,32 @@
         
         methods: {
             updateSprites: function () {
-                var z        = (this.owner.z || 0) + defaultZ,
+                var owner = this.owner,
+                    z        = this.offsetZ,
                     i        = 0,
                     j        = 0,
                     lineWidth = 2,
-                    width    = this.owner.width  = this.owner.width  || defaultWidth,
-                    height   = this.owner.height = this.owner.height || defaultHeight,
+                    width    = this.width,
+                    height   = this.height,
                     shapes   = null,
                     aabb     = null,
                     shape    = null;
 
                 for (i = 0; i < this.shapes.length; i++) {
-                    this.parentContainer.removeChild(this.shapes[i]);
+                    owner.container.removeChild(this.shapes[i]);
                 }
                 this.shapes.length = 0;
 
-                if (this.owner.getAABB) {
-                    for (j = 0; j < this.owner.collisionTypes.length; j++) {
-                        aabb   = this.owner.getAABB(this.owner.collisionTypes[j]);
+                if (owner.getAABB) {
+                    for (j = 0; j < owner.collisionTypes.length; j++) {
+                        aabb   = owner.getAABB(owner.collisionTypes[j]);
                         width  = this.initialWidth  = aabb.width;
                         height = this.initialHeight = aabb.height;
-                        shapes = this.owner.getShapes(this.owner.collisionTypes[j]);
+                        shapes = owner.getShapes(owner.collisionTypes[j]);
                         
-                        shape  = createShape('rectangle', this.aabbColor, aabb.left - this.owner.x, aabb.top - this.owner.y, width, height, z--);
+                        shape  = createShape('rectangle', this.aabbColor, aabb.left - owner.x, aabb.top - owner.y, width, height, z--);
                         this.shapes.push(shape);
-                        this.parentContainer.addChild(shape);
+                        owner.container.addChild(shape);
                         this.addInput(shape);
                         
                         for (i = 0; i < shapes.length; i++) {
@@ -206,16 +207,18 @@
                             height = shapes[i].height - lineWidth;
                             shape = createShape(shapes[i].type, this.collisionColor, shapes[i].offsetX - width / 2, shapes[i].offsetY - height / 2, (shapes[i].radius ? shapes[i].radius - lineWidth : width), height, z--, lineWidth);
                             this.shapes.push(shape);
-                            this.parentContainer.addChild(shape);
+                            owner.container.addChild(shape);
                             this.addInput(shape);
                         }
                     }
                 } else {
                     shape = createShape('rectangle', this.renderColor, -width / 2, -height / 2, width, height, z--);
                     this.shapes.push(shape);
-                    this.parentContainer.addChild(shape);
+                    owner.container.addChild(shape);
                     this.addInput(shape);
                 }
+
+                owner.container.reorder = true;
             },
             
             addInput: (function () {
@@ -239,10 +242,9 @@
                 var i = 0;
                 
                 for (i = 0; i < this.shapes.length; i++) {
-                    this.parentContainer.removeChild(this.shapes[i]);
+                    this.owner.container.removeChild(this.shapes[i]);
                 }
                 this.shapes.recycle();
-                this.parentContainer = null;
             }
         }
     });
