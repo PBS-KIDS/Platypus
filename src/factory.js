@@ -57,7 +57,7 @@
                 if (componentDefinition.properties) {
                     for (prop in componentDefinition.properties) {
                         if (componentDefinition.properties.hasOwnProperty(prop)) {
-                            if (typeof definition[prop] !== 'undefined') {
+                            if (definition && (typeof definition[prop] !== 'undefined')) {
                                 this[prop] = definition[prop];
                             } else if (typeof this.owner[prop] !== 'undefined') {
                                 this[prop] = this.owner[prop];
@@ -73,7 +73,7 @@
                     for (prop in componentDefinition.publicProperties) {
                         if (componentDefinition.publicProperties.hasOwnProperty(prop)) {
                             setupProperty(prop, this, owner);
-                            if (typeof definition[prop] !== 'undefined') {
+                            if (definition && (typeof definition[prop] !== 'undefined')) {
                                 this[prop] = definition[prop];
                             } else if (typeof this.owner[prop] !== 'undefined') {
                                 this[prop] = this.owner[prop];
@@ -89,7 +89,7 @@
                     for (func in componentDefinition.events) {
                         if (componentDefinition.events.hasOwnProperty(func)) {
                             this.addEventListener(func, componentDefinition.events[func], priority);
-                            if (definition.aliases) {
+                            if (definition && definition.aliases) {
                                 for (alias in definition.aliases) {
                                     if (definition.aliases.hasOwnProperty(alias) && (definition.aliases[alias] === func)) {
                                         this.addEventListener(alias, componentDefinition.events[func], priority);
@@ -104,7 +104,7 @@
                     for (func in componentDefinition.publicMethods) {
                         if (componentDefinition.publicMethods.hasOwnProperty(func)) {
                             name = func;
-                            if (definition.aliases) {
+                            if (definition && definition.aliases) {
                                 for (alias in definition.aliases) {
                                     if (definition.aliases.hasOwnProperty(alias) && (definition.aliases[alias] === func)) {
                                         name = alias;
