@@ -76,6 +76,43 @@
                 return arr;
             };
         }()),
+        finishedLoading = function (level, x, y, width, height, tileWidth, tileHeight, callback) {
+            var message = Data.setUp(
+                    "level", null,
+                    "world", AABB.setUp(),
+                    "tile", AABB.setUp(),
+                    "camera", null
+                );
+
+            /**
+             * Once finished loading the map, this message is triggered on the entity to notify other components of completion.
+             *
+             * @event 'world-loaded'
+             * @param message {platypus.Data} World data.
+             * @param message.level {Object} The Tiled level data used to load the level.
+             * @param message.width {number} The width of the world in world units.
+             * @param message.height {number} The height of the world in world units.
+             * @param message.tile {platypus.AABB} Dimensions of the world tiles.
+             * @param message.world {platypus.AABB} Dimensions of the world.
+             * @param message.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
+             */
+            message.level = level;
+            message.camera = this.followEntity; // TODO: in 0.9.0 this should probably be removed, using something like "child-entity-added" instead. Currently this is particular to TiledLoader and Camera and should be generalized. - DDD 3/15/2016
+            message.width = width;
+            message.height = height;
+            message.world.setBounds(x, y, x + width, y + height);
+            message.tile.setBounds(0, 0, tileWidth, tileHeight);
+            this.owner.triggerEvent('world-loaded', message);
+            message.world.recycle();
+            message.tile.recycle();
+            message.recycle();
+            
+            this.owner.removeComponent(this);
+
+            if (callback) {
+                callback();
+            }
+        },
         getPowerOfTen = function (amount) {
             var x = 1;
 
@@ -118,7 +155,8 @@
                     type: ''
                 },
                 props = null,
-                tileset = null;
+                tileset = null,
+                entityTilesetIndex = 0;
             
             if (gid !== -1) {
                 data.transform = entityTransformCheck(gid);
@@ -133,19 +171,34 @@
                 }
             }
             
-            if (tileset && tileset.tileproperties && tileset.tileproperties[gid - tileset.firstgid]) {
-                props = tileset.tileproperties[gid - tileset.firstgid];
+            if (tileset) {
+                entityTilesetIndex = gid - tileset.firstgid;
+                if (tileset.tileproperties && tileset.tileproperties[entityTilesetIndex]) {
+                    props = tileset.tileproperties[entityTilesetIndex];
+                }
+                if (tileset.tiles && tileset.tiles[entityTilesetIndex]) {
+                    data.type = tileset.tiles[entityTilesetIndex].type || '';
+                }
             }
 
             // Check Tiled data to find this object's type
-            if (obj.type !== '') {
-                data.type = obj.type;
-            } else if (obj.name !== '') {
-                data.type = obj.name;
-            } else if (props) {
-                data.type = props.entity || props.type || '';
+            data.type = obj.type || data.type;
+            // Deprecating the following methods in v0.11 due to better "type" property support in Tiled 1.0.0
+            if (data.type === '') {
+                if (obj.name) {
+                    data.type = obj.name;
+                    platypus.debug.warn('Component TiledLoader (loading "' + data.type + '"): Defining the entity type using the "name" property has been deprecated. Define the type using the object\'s "type" property in Tiled instead.');
+                } else if (props) {
+                    if (props.entity) {
+                        data.type = props.entity;
+                        platypus.debug.warn('Component TiledLoader (loading "' + data.type + '"): Defining the entity type using the "entity" property in the object properties has been deprecated. Define the type using the object\'s "type" property in Tiled instead.');
+                    } else if (props.type) {
+                        data.type = props.type;
+                        platypus.debug.warn('Component TiledLoader (loading "' + data.type + '"): Defining the entity type in the object properties has been deprecated. Define the type using the object\'s "type" property in Tiled instead.');
+                    }
+                }
             }
-            
+
             if (!data.type) { // undefined entity
                 return null;
             }
@@ -436,13 +489,17 @@
              * @method 'scene-loaded'
              * @param persistentData {Object} Data passed from the last scene into this one.
              * @param persistentData.level {Object} A level name or definition to load if the level is not already specified.
+             * @param holds {platypus.Data} An object that handles any holds on before making the scene live.
+             * @param holds.count {Number} The number of holds to wait for before triggering "scene-live"
+             * @param holds.release {Function} The method to trigger to let the scene loader know that one hold has been released.
              */
-            "scene-loaded": function (persistentData) {
+            "scene-loaded": function (persistentData, holds) {
                 if (!this.manuallyLoad) {
+                    holds.count += 1;
                     this.loadLevel({
                         level: this.level || persistentData.level,
                         persistentData: persistentData
-                    });
+                    }, holds.release);
                 }
             },
 
@@ -453,14 +510,15 @@
              * @param levelData {Object}
              * @param levelData.level {String|Object} The level to load.
              * @param [levelData.persistentData] {Object} Information passed from the last scene.
+             * @param callback {Function} The function to call once the level is loaded.
              */
-            "load-level": function (levelData) {
-                this.loadLevel(levelData);
+            "load-level": function (levelData, callback) {
+                this.loadLevel(levelData, callback);
             }
         },
 
         methods: {
-            createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer) {
+            createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress) {
                 var props = null,
                     width = layer.width,
                     height = layer.height,
@@ -601,6 +659,7 @@
 
                 if ((entityKind === 'render-layer') && (!this.separateTiles) && combineRenderLayer && (combineRenderLayer.tileHeight === tHeight) && (combineRenderLayer.tileWidth === tWidth) && (combineRenderLayer.columns === width) && (combineRenderLayer.rows === height)) {
                     combineRenderLayer.triggerEvent('add-tiles', renderTiles);
+                    this.updateLoadingProgress(progress);
                     return combineRenderLayer;
                 } else {
                     props = {};
@@ -616,7 +675,7 @@
                     }
                     return this.owner.addEntity(new Entity(tileDefinition, {
                         properties: props
-                    }));
+                    }), this.updateLoadingProgress.bind(this, progress));
                 }
             },
             
@@ -666,7 +725,7 @@
                 return tileLayer;
             },
             
-            loadLevel: function (levelData) {
+            loadLevel: function (levelData, callback) {
                 var actionLayerCollides = true,
                     layers = null,
                     level = null,
@@ -681,13 +740,7 @@
                     progress = Data.setUp('count', 0, 'progress', 0, 'total', 0),
                     width = 0,
                     x = 0,
-                    y = 0,
-                    message = Data.setUp(
-                        "level", null,
-                        "world", AABB.setUp(),
-                        "tile", AABB.setUp(),
-                        "camera", null
-                    );
+                    y = 0;
                 
                 //format level appropriately
                 if (typeof levelData.level === 'string') {
@@ -737,51 +790,27 @@
                     }
                 }
 
+                this.finishedLoading = finishedLoading.bind(this, level, x, y, width, height, tileWidth, tileHeight, callback);
+
                 for (i = 0; i < layers.length; i++) {
                     layerDefinition = layers[i];
                     switch (layerDefinition.type) {
                     case 'imagelayer':
-                        layer = this.createLayer('image-layer', this.convertImageLayer(layerDefinition, tileHeight, tileWidth), x, y, tileWidth, tileHeight, tilesets, images, layer);
+                        layer = this.createLayer('image-layer', this.convertImageLayer(layerDefinition, tileHeight, tileWidth), x, y, tileWidth, tileHeight, tilesets, images, layer, progress);
                         break;
                     case 'objectgroup':
                         this.setUpEntities(layerDefinition, x, y, tileWidth, tileHeight, tilesets, progress);
                         layer = null;
+                        this.updateLoadingProgress(progress);
                         break;
                     case 'tilelayer':
-                        layer = this.setupLayer(layerDefinition, actionLayerCollides, layer, x, y, tileWidth, tileHeight, tilesets, images);
+                        layer = this.setupLayer(layerDefinition, actionLayerCollides, layer, x, y, tileWidth, tileHeight, tilesets, images, progress);
                         break;
                     default:
-                        platypus.debug.warn('TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
+                        platypus.debug.warn('Component TiledLoader: Platypus does not support Tiled layers of type "' + layerDefinition.type + '". This layer will not be loaded.');
+                        this.updateLoadingProgress(progress);
                     }
-                    this.updateLoadingProgress(progress);
                 }
-                
-                progress.recycle();
-
-                /**
-                 * Once finished loading the map, this message is triggered on the entity to notify other components of completion.
-                 *
-                 * @event 'world-loaded'
-                 * @param message {platypus.Data} World data.
-                 * @param message.level {Object} The Tiled level data used to load the level.
-                 * @param message.width {number} The width of the world in world units.
-                 * @param message.height {number} The height of the world in world units.
-                 * @param message.tile {platypus.AABB} Dimensions of the world tiles.
-                 * @param message.world {platypus.AABB} Dimensions of the world.
-                 * @param message.camera {platypus.Entity} If a camera property is found on one of the loaded entities, this property will point to the entity on load that a world camera should focus on.
-                 */
-                message.level = level;
-                message.camera = this.followEntity; // TODO: in 0.9.0 this should probably be removed, using something like "child-entity-added" instead. Currently this is particular to TiledLoader and Camera and should be generalized. - DDD 3/15/2016
-                message.width = width;
-                message.height = height;
-                message.world.setBounds(x, y, x + width, y + height);
-                message.tile.setBounds(0, 0, tileWidth, tileHeight);
-                this.owner.triggerEvent('world-loaded', message);
-                message.world.recycle();
-                message.tile.recycle();
-                message.recycle();
-                
-                this.owner.removeComponent(this);
             },
             
             setUpEntities: function (layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, progress) {
@@ -1001,7 +1030,7 @@
                         properties.parent = this.owner;
                         entity = this.owner.addEntity(new Entity(entityDefinition, {
                             properties: properties
-                        }));
+                        }), this.updateLoadingProgress.bind(this, progress));
                         if (entity) {
                             if (entity.camera) {
                                 this.followEntity = {
@@ -1011,13 +1040,14 @@
                             }
                             this.owner.triggerEvent('entity-created', entity);
                         }
+                    } else {
+                        this.updateLoadingProgress(progress);
                     }
-                    this.updateLoadingProgress(progress);
                 }
                 this.layerZ += this.layerIncrement;
             },
 
-            setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images) {
+            setupLayer: function (layer, layerCollides, combineRenderLayer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, progress) {
                 var entity = 'render-layer'; // default
                 
                 // First determine which type of entity this layer should behave as:
@@ -1034,13 +1064,14 @@
                 }
 
                 if (entity === 'tile-layer' || (this.showCollisionTiles && platypus.game.settings.debug)) {
-                    this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer);
-                    return this.createLayer('render-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer);
+                    progress.count += 1; // to compensate for creating 2 layers. The "tile-layer" option should probably be deprecated as soon as support for Tiled's tile collision is added.
+                    this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
+                    return this.createLayer('render-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
                 } else if (entity === 'collision-layer') {
-                    this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer);
+                    this.createLayer('collision-layer', layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
                     return null;
                 } else {
-                    return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer);
+                    return this.createLayer(entity, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress);
                 }
             },
             
@@ -1059,6 +1090,11 @@
                  * @since 0.8.3
                  */
                 this.owner.triggerEvent('level-loading-progress', progress);
+
+                if (progress.count === progress.total) {
+                    progress.recycle();
+                    this.finishedLoading();
+                }
             },
 
             destroy: function () {
