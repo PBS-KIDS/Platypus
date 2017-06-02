@@ -84,6 +84,16 @@ platypus.Scene = (function () {
             
             return a;
         },
+        releaseHold = function () {
+            var holds = this.holds;
+
+            holds.count -= 1;
+            if (!holds.count) { // All holds have been released
+                this.sceneLive();
+                holds.recycle();
+                this.holds = null;
+            }
+        },
         unloadAssets = function (lateAssets) {
             this.app.unload(lateAssets);
             lateAssets.recycle();
@@ -102,9 +112,8 @@ platypus.Scene = (function () {
                 layerDefinition = false,
                 properties = null,
                 messages = null;
-
-            this.stillLoading = true;
-            this.stillEntering = true;
+                
+            this.holds = Data.setUp('count', 2, 'release', releaseHold.bind(this));
             this.storeMessages = true;
             this.storedMessages = Array.setUp();
             this.layers = Array.setUp();
@@ -147,6 +156,8 @@ platypus.Scene = (function () {
             }
 
             platypus.Async.setUp(layerInits, function () {
+                var holds = this.holds;
+
                 platypus.debug.olive('Scene loaded: ' + this.id);
                 
                 /**
@@ -154,16 +165,16 @@ platypus.Scene = (function () {
                  *
                  * @event 'scene-loaded'
                  * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                 * @param holds {platypus.Data} An object that handles any holds on before making the scene live.
+                 * @param holds.count {Number} The number of holds to wait for before triggering "scene-live"
+                 * @param holds.release {Function} The method to trigger to let the scene loader know that one hold has been released.
                  */
-                this.triggerOnChildren('scene-loaded', this.data);
+                this.triggerOnChildren('scene-loaded', this.data, holds);
                 
                 // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
                 PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
 
-                this.stillLoading = false;
-                if (!this.stillEntering) {
-                    this.sceneLive();
-                }
+                holds.release(); // Release initial hold. This triggers "scene-live" immediately if no holds have been placed by the "scene-loaded" event.
             }.bind(this));
 
             // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
@@ -202,8 +213,7 @@ platypus.Scene = (function () {
             this.stage = panel;
             this.layers = null;
             this.assets = definition.assets || null;
-            this.stillLoading = false;
-            this.stillEntering = false;
+            this.holds = null;
             
             // If the scene has dynamically added assets such as level data
             this.on('loading', loading.bind(this, definition));
@@ -221,10 +231,7 @@ platypus.Scene = (function () {
      * @method enterDone
      */
     proto.enterDone = function () {
-        this.stillEntering = false;
-        if (!this.stillLoading) {
-            this.sceneLive();
-        }
+        this.holds.release();
     };
 
     proto.sceneLive = function () {
@@ -275,7 +282,7 @@ platypus.Scene = (function () {
             });
         } else {
             for (i = 0; i < this.layers.length; i++) {
-                this.layers[i].trigger(eventId, event);
+                this.layers[i].trigger.apply(this.layers[i], arguments);
             }
         }
     };
