@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.2 API Documentation : src\factory.js</title>
+	<title>platypus v0.11.3 API Documentation : src\factory.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.2</em>
+            <em>API Documentation for: 0.11.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -213,7 +213,7 @@
                                         if (componentDefinition.properties) {
                                             for (prop in componentDefinition.properties) {
                                                 if (componentDefinition.properties.hasOwnProperty(prop)) {
-                                                    if (typeof definition[prop] !== &#x27;undefined&#x27;) {
+                                                    if (definition &amp;&amp; (typeof definition[prop] !== &#x27;undefined&#x27;)) {
                                                         this[prop] = definition[prop];
                                                     } else if (typeof this.owner[prop] !== &#x27;undefined&#x27;) {
                                                         this[prop] = this.owner[prop];
@@ -229,7 +229,7 @@
                                             for (prop in componentDefinition.publicProperties) {
                                                 if (componentDefinition.publicProperties.hasOwnProperty(prop)) {
                                                     setupProperty(prop, this, owner);
-                                                    if (typeof definition[prop] !== &#x27;undefined&#x27;) {
+                                                    if (definition &amp;&amp; (typeof definition[prop] !== &#x27;undefined&#x27;)) {
                                                         this[prop] = definition[prop];
                                                     } else if (typeof this.owner[prop] !== &#x27;undefined&#x27;) {
                                                         this[prop] = this.owner[prop];
@@ -245,7 +245,7 @@
                                             for (func in componentDefinition.events) {
                                                 if (componentDefinition.events.hasOwnProperty(func)) {
                                                     this.addEventListener(func, componentDefinition.events[func], priority);
-                                                    if (definition.aliases) {
+                                                    if (definition &amp;&amp; definition.aliases) {
                                                         for (alias in definition.aliases) {
                                                             if (definition.aliases.hasOwnProperty(alias) &amp;&amp; (definition.aliases[alias] === func)) {
                                                                 this.addEventListener(alias, componentDefinition.events[func], priority);
@@ -260,7 +260,7 @@
                                             for (func in componentDefinition.publicMethods) {
                                                 if (componentDefinition.publicMethods.hasOwnProperty(func)) {
                                                     name = func;
-                                                    if (definition.aliases) {
+                                                    if (definition &amp;&amp; definition.aliases) {
                                                         for (alias in definition.aliases) {
                                                             if (definition.aliases.hasOwnProperty(alias) &amp;&amp; (definition.aliases[alias] === func)) {
                                                                 name = alias;

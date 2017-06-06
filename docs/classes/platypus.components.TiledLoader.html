@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.2 API Documentation : platypus.components.TiledLoader</title>
+	<title>platypus v0.11.3 API Documentation : platypus.components.TiledLoader</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.2</em>
+            <em>API Documentation for: 0.11.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -355,6 +355,9 @@
                                                             <li class="arg">
                                                                     <code>levelData</code>
                                                             </li>
+                                                            <li class="arg">
+                                                                    <code>callback</code>
+                                                            </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
                                             
@@ -368,7 +371,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l449"><code>&#x27;load-level&#x27;:449</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l506"><code>&#x27;load-level&#x27;:506</code></a>
                                                     </p>
                                             
                                             
@@ -417,6 +420,17 @@
                                                                         </li>
                                                                     </ul>
                                                             </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">callback</code>
+                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>The function to call once the level is loaded.</p>
+                                            
+                                                                </div>
+                                            
+                                                            </li>
                                                         </ul>
                                                     </div>
                                             
@@ -429,6 +443,9 @@
                                                         <span class="paren">(</span><ul class="args-list inline commas">
                                                             <li class="arg">
                                                                     <code>persistentData</code>
+                                                            </li>
+                                                            <li class="arg">
+                                                                    <code>holds</code>
                                                             </li>
                                                         </ul><span class="paren">)</span>
                                                     </div>
@@ -443,7 +460,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l433"><code>&#x27;scene-loaded&#x27;:433</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l486"><code>&#x27;scene-loaded&#x27;:486</code></a>
                                                     </p>
                                             
                                             
@@ -476,6 +493,39 @@
                                             
                                                                             <div class="param-description">
                                                                                 <p>A level name or definition to load if the level is not already specified.</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                    </ul>
+                                                            </li>
+                                                            <li class="param">
+                                                                    <code class="param-name">holds</code>
+                                                                    <span class="type"><a href="../classes/platypus.Data.html" class="crosslink">platypus.Data</a></span>
+                                            
+                                            
+                                                                <div class="param-description">
+                                                                    <p>An object that handles any holds on before making the scene live.</p>
+                                            
+                                                                </div>
+                                            
+                                                                    <ul class="params-list">
+                                                                        <li class="param">
+                                                                                <code class="param-name">count</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The number of holds to wait for before triggering "scene-live"</p>
+                                            
+                                                                            </div>
+                                            
+                                                                        </li>
+                                                                        <li class="param">
+                                                                                <code class="param-name">release</code>
+                                                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
+                                            
+                                                                            <div class="param-description">
+                                                                                <p>The method to trigger to let the scene loader know that one hold has been released.</p>
                                             
                                                                             </div>
                                             
@@ -653,7 +703,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l1069"><code>decodeLayer:1069</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l1105"><code>decodeLayer:1105</code></a>
                                                     </p>
                                             
                                             
@@ -1142,7 +1192,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l397"><code>entityPositionX:397</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l450"><code>entityPositionX:450</code></a>
                                                     </p>
                                             
                                             
@@ -1168,7 +1218,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l406"><code>entityPositionY:406</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l459"><code>entityPositionY:459</code></a>
                                                     </p>
                                             
                                             
@@ -1194,7 +1244,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l331"><code>images:331</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l384"><code>images:384</code></a>
                                                     </p>
                                             
                                             
@@ -1220,7 +1270,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l388"><code>imagesScale:388</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l441"><code>imagesScale:441</code></a>
                                                     </p>
                                             
                                             
@@ -1246,7 +1296,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l340"><code>layerIncrement:340</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l393"><code>layerIncrement:393</code></a>
                                                     </p>
                                             
                                             
@@ -1272,7 +1322,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l370"><code>level:370</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l423"><code>level:423</code></a>
                                                     </p>
                                             
                                             
@@ -1298,7 +1348,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l415"><code>manuallyLoad:415</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l468"><code>manuallyLoad:468</code></a>
                                                     </p>
                                             
                                             
@@ -1324,7 +1374,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l312"><code>offsetMap:312</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l365"><code>offsetMap:365</code></a>
                                                     </p>
                                             
                                             
@@ -1351,7 +1401,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l349"><code>separateTiles:349</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l402"><code>separateTiles:402</code></a>
                                                     </p>
                                             
                                             
@@ -1377,7 +1427,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l322"><code>showCollisionTiles:322</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l375"><code>showCollisionTiles:375</code></a>
                                                     </p>
                                             
                                             
@@ -1403,7 +1453,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l358"><code>spriteSheet:358</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l411"><code>spriteSheet:411</code></a>
                                                     </p>
                                             
                                             
@@ -1430,7 +1480,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l379"><code>unitsPerPixel:379</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l432"><code>unitsPerPixel:432</code></a>
                                                     </p>
                                             
                                             
@@ -1462,7 +1512,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l1051"><code>&#x27;level-loading-progress&#x27;:1051</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l1082"><code>&#x27;level-loading-progress&#x27;:1082</code></a>
                                                     </p>
                                             
                                             
@@ -1537,7 +1587,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_TiledLoader.js.html#l761"><code>&#x27;world-loaded&#x27;:761</code></a>
+                                                    <a href="../files/src_components_TiledLoader.js.html#l87"><code>&#x27;world-loaded&#x27;:87</code></a>
                                                     </p>
                                             
                                             

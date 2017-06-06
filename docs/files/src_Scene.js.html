@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.2 API Documentation : src\Scene.js</title>
+	<title>platypus v0.11.3 API Documentation : src\Scene.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.2</em>
+            <em>API Documentation for: 0.11.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -240,6 +240,16 @@
                                     
                                     return a;
                                 },
+                                releaseHold = function () {
+                                    var holds = this.holds;
+                        
+                                    holds.count -= 1;
+                                    if (!holds.count) { // All holds have been released
+                                        this.sceneLive();
+                                        holds.recycle();
+                                        this.holds = null;
+                                    }
+                                },
                                 unloadAssets = function (lateAssets) {
                                     this.app.unload(lateAssets);
                                     lateAssets.recycle();
@@ -258,9 +268,8 @@
                                         layerDefinition = false,
                                         properties = null,
                                         messages = null;
-                        
-                                    this.stillLoading = true;
-                                    this.stillEntering = true;
+                                        
+                                    this.holds = Data.setUp(&#x27;count&#x27;, 2, &#x27;release&#x27;, releaseHold.bind(this));
                                     this.storeMessages = true;
                                     this.storedMessages = Array.setUp();
                                     this.layers = Array.setUp();
@@ -303,6 +312,8 @@
                                     }
                         
                                     platypus.Async.setUp(layerInits, function () {
+                                        var holds = this.holds;
+                        
                                         platypus.debug.olive(&#x27;Scene loaded: &#x27; + this.id);
                                         
                                         /**
@@ -310,16 +321,16 @@
                                          *
                                          * @event &#x27;scene-loaded&#x27;
                                          * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
+                                         * @param holds {platypus.Data} An object that handles any holds on before making the scene live.
+                                         * @param holds.count {Number} The number of holds to wait for before triggering &quot;scene-live&quot;
+                                         * @param holds.release {Function} The method to trigger to let the scene loader know that one hold has been released.
                                          */
-                                        this.triggerOnChildren(&#x27;scene-loaded&#x27;, this.data);
+                                        this.triggerOnChildren(&#x27;scene-loaded&#x27;, this.data, holds);
                                         
                                         // Go ahead and load base textures to the GPU to prevent intermittent lag later. - DDD 3/18/2016
                                         PIXIAnimation.preloadBaseTextures(this.app.display.renderer);
                         
-                                        this.stillLoading = false;
-                                        if (!this.stillEntering) {
-                                            this.sceneLive();
-                                        }
+                                        holds.release(); // Release initial hold. This triggers &quot;scene-live&quot; immediately if no holds have been placed by the &quot;scene-loaded&quot; event.
                                     }.bind(this));
                         
                                     // This allows the layer to gather messages that are triggered as it is loading and deliver them to all the layers once all the layers are in place.
@@ -358,8 +369,7 @@
                                     this.stage = panel;
                                     this.layers = null;
                                     this.assets = definition.assets || null;
-                                    this.stillLoading = false;
-                                    this.stillEntering = false;
+                                    this.holds = null;
                                     
                                     // If the scene has dynamically added assets such as level data
                                     this.on(&#x27;loading&#x27;, loading.bind(this, definition));
@@ -377,10 +387,7 @@
                              * @method enterDone
                              */
                             proto.enterDone = function () {
-                                this.stillEntering = false;
-                                if (!this.stillLoading) {
-                                    this.sceneLive();
-                                }
+                                this.holds.release();
                             };
                         
                             proto.sceneLive = function () {
@@ -431,7 +438,7 @@
                                     });
                                 } else {
                                     for (i = 0; i &lt; this.layers.length; i++) {
-                                        this.layers[i].trigger(eventId, event);
+                                        this.layers[i].trigger.apply(this.layers[i], arguments);
                                     }
                                 }
                             };

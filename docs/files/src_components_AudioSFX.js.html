@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.2 API Documentation : src\components\AudioSFX.js</title>
+	<title>platypus v0.11.3 API Documentation : src\components\AudioSFX.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.2</em>
+            <em>API Documentation for: 0.11.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -501,21 +501,45 @@
                                     /**
                                      * This message sets the volume of playing audio.
                                      *
-                                     * @method &#x27;set-volume&#x27;
-                                     * @param audioId {String} If an audioId is provided, that particular sound instance&#x27;s volume is set. Otherwise all audio volume is changed.
+                                     * @method &#x27;set-pan&#x27;
+                                     * @param pan {Number} A number from -1 to 1 that sets the pan.
+                                     * @param [soundId] {String} If an soundId is provided, that particular sound instance&#x27;s pan is set.
+                                     * @since 0.11.3
                                      */
-                                    &quot;set-volume&quot;: function (volume) {
-                                        var vol     = 0,
-                                            handler = function (clip) {
-                                                clip.volume = vol;
+                                    &quot;set-pan&quot;: function (pan, soundId) {
+                                        var id = soundId || &#x27;&#x27;,
+                                            handler = function (pan, clip) {
+                                                if (clip) {
+                                                    clip.pan = pan;
+                                                }
                                             };
                         
-                                        if (typeof volume === &#x27;number&#x27;) {
-                                            vol = volume;
-                                            this.getAllClips(handler);
-                                        } else if (volume.volume) {
-                                            vol = volume.volume;
-                                            this.handleClip(volume.soundId, handler);
+                                        if (soundId) {
+                                            this.handleClip(id, handler.bind(null, pan));
+                                        } else {
+                                            this.getAllClips(handler.bind(null, pan));
+                                        }
+                                    },
+                                     
+                                    /**
+                                     * This message sets the volume of playing audio.
+                                     *
+                                     * @method &#x27;set-volume&#x27;
+                                     * @param volume {Number} A number from 0 to 1 that sets the volume.
+                                     * @param [soundId] {String} If an soundId is provided, that particular sound instance&#x27;s volume is set. Otherwise all audio volume is changed.
+                                     */
+                                    &quot;set-volume&quot;: function (volume, soundId) {
+                                        var id = soundId || &#x27;&#x27;,
+                                            handler = function (vol, clip) {
+                                                if (clip) {
+                                                    clip.volume = vol;
+                                                }
+                                            };
+                        
+                                        if (soundId) {
+                                            this.handleClip(id, handler.bind(null, volume));
+                                        } else {
+                                            this.getAllClips(handler.bind(null, volume));
                                         }
                                     }
                                 },

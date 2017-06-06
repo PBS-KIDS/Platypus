@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.2",
+        "version": "0.11.3",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -3135,12 +3135,41 @@
             "line": 345,
             "description": "This message sets the volume of playing audio.",
             "itemtype": "method",
+            "name": "'set-pan'",
+            "params": [
+                {
+                    "name": "pan",
+                    "description": "A number from -1 to 1 that sets the pan.",
+                    "type": "Number"
+                },
+                {
+                    "name": "soundId",
+                    "description": "If an soundId is provided, that particular sound instance's pan is set.",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "since": "0.11.3",
+            "class": "platypus.components.AudioSFX",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\AudioSFX.js",
+            "line": 368,
+            "description": "This message sets the volume of playing audio.",
+            "itemtype": "method",
             "name": "'set-volume'",
             "params": [
                 {
-                    "name": "audioId",
-                    "description": "If an audioId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.",
-                    "type": "String"
+                    "name": "volume",
+                    "description": "A number from 0 to 1 that sets the volume.",
+                    "type": "Number"
+                },
+                {
+                    "name": "soundId",
+                    "description": "If an soundId is provided, that particular sound instance's volume is set. Otherwise all audio volume is changed.",
+                    "type": "String",
+                    "optional": true
                 }
             ],
             "class": "platypus.components.AudioSFX",
@@ -3148,7 +3177,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 460,
+            "line": 484,
             "description": "When a sound effect is finished playing, this event is triggered.",
             "itemtype": "event",
             "name": "clip-complete",
@@ -10271,7 +10300,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 380,
+            "line": 382,
             "description": "This event makes the sprite invisible.",
             "itemtype": "method",
             "name": "'hide-sprite'",
@@ -10280,7 +10309,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 389,
+            "line": 391,
             "description": "This event makes the sprite visible.",
             "itemtype": "method",
             "name": "'show-sprite'",
@@ -10289,7 +10318,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 398,
+            "line": 400,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -10305,7 +10334,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 424,
+            "line": 426,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -10314,53 +10343,110 @@
         },
         {
             "file": "src\\components\\RenderDebug.js",
-            "line": 50,
-            "description": "The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too.",
-            "itemtype": "method",
-            "name": "'handle-render-load'",
-            "params": [
-                {
-                    "name": "handlerData",
-                    "description": "Data from the render handler",
-                    "type": "Object",
-                    "props": [
-                        {
-                            "name": "container",
-                            "description": "The parent container.",
-                            "type": "PIXI.Container"
-                        }
-                    ]
-                }
-            ],
+            "line": 46,
+            "description": "The color to use to highlight an entity's AABB. For example, use `\"#ffffff\"` or `0xffffff` to set as white.",
+            "itemtype": "property",
+            "name": "aabbColor",
+            "type": "Number|String",
+            "default": "0xff88ff",
+            "since": "0.11.3",
             "class": "platypus.components.RenderDebug",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\RenderDebug.js",
-            "line": 65,
+            "line": 56,
+            "description": "The color to use to highlight an entity's collision shape. For example, use `\"#ffffff\"` or `0xffffff` to set as white.",
+            "itemtype": "property",
+            "name": "collisionColor",
+            "type": "Number|String",
+            "default": "0xff00ff",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 66,
+            "description": "The color to use to highlight the AABB for a group of entities attached to this entity. For example, use `\"#ffffff\"` or `0xffffff` to set as white.",
+            "itemtype": "property",
+            "name": "groupColor",
+            "type": "Number|String",
+            "default": "0x00ff00",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 76,
+            "description": "The color to use to highlight an entity. This property is only used if there is no `CollisionBasic` component attached to the entity: this component uses the entity's `width` and `height` properties if defined. For example, use `\"#ffffff\"` or `0xffffff` to set as white.",
+            "itemtype": "property",
+            "name": "renderColor",
+            "type": "Number|String",
+            "default": "0x0000ff",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 86,
+            "description": "The height of the entity.",
+            "itemtype": "property",
+            "name": "height",
+            "type": "Number",
+            "default": "100",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 96,
+            "description": "The width of the entity.",
+            "itemtype": "property",
+            "name": "width",
+            "type": "Number",
+            "default": "100",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 106,
+            "description": "The local offset in z-index for the rendered debug area.",
+            "itemtype": "property",
+            "name": "offsetZ",
+            "type": "Number",
+            "default": "10000",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 128,
+            "description": "Removes this component if not in a debug build.",
+            "itemtype": "method",
+            "name": "'load'",
+            "since": "0.11.3",
+            "class": "platypus.components.RenderDebug",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderDebug.js",
+            "line": 143,
             "description": "Repositions the pieces of the component in preparation for rendering",
             "itemtype": "method",
             "name": "'handle-render'",
-            "params": [
-                {
-                    "name": "renderData",
-                    "description": "Data from the render handler",
-                    "type": "Object",
-                    "props": [
-                        {
-                            "name": "container",
-                            "description": "The parent container.",
-                            "type": "PIXI.Container"
-                        }
-                    ]
-                }
-            ],
             "class": "platypus.components.RenderDebug",
             "namespace": "platypus.components"
         },
         {
             "file": "src\\components\\RenderDebug.js",
-            "line": 114,
+            "line": 170,
             "description": "On receiving this message, will re-orient itself on the next update.",
             "itemtype": "method",
             "name": "'orientation-updated'",
@@ -11653,193 +11739,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 312,
-            "description": "This causes the entire map to be offset automatically by an order of magnitude higher than the height and width of the world so that the number of digits below zero is constant throughout the world space. This fixes potential floating point issues when, for example, 97 is added to 928.0000000000001 giving 1025 since a significant digit was lost when going into the thousands.",
-            "itemtype": "property",
-            "name": "offsetMap",
-            "type": "Boolean",
-            "default": "false",
-            "since": "0.7.5",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 322,
-            "description": "If set to `true` and if the game is running in debug mode, this causes the collision layer to appear.",
-            "itemtype": "property",
-            "name": "showCollisionTiles",
-            "type": "Boolean",
-            "default": "false",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 331,
-            "description": "If specified, the referenced images are used as the game sprite sheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.",
-            "itemtype": "property",
-            "name": "images",
-            "type": "Array",
-            "default": "null",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 340,
-            "description": "Adds a number to each additional Tiled layer's z coordinate to maintain z-order. Defaults to 1000.",
-            "itemtype": "property",
-            "name": "layerIncrement",
-            "type": "number",
-            "default": "1000",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 349,
-            "description": "Keeps the tile maps in separate render layers. Default is 'false' to for better optimization.",
-            "itemtype": "property",
-            "name": "separateTiles",
-            "type": "boolean",
-            "default": "false",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 358,
-            "description": "If a particular sprite sheet should be used that's not defined by the level images themselves. This is useful for making uniquely-themed variations of the same level. This is overridden by `\"spriteSheet\": \"import\"` in the \"render-layer\" Entity definition, so be sure to remove that when setting this property.",
-            "itemtype": "property",
-            "name": "spriteSheet",
-            "type": "String | Object",
-            "default": "null",
-            "since": "0.6.6",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 370,
-            "description": "Specifies the JSON level to load. Available on the entity as `entity.level`.",
-            "itemtype": "property",
-            "name": "level",
-            "type": "String",
-            "default": "null",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 379,
-            "description": "Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit. Available on the entity as `entity.unitsPerPixel`.",
-            "itemtype": "property",
-            "name": "unitsPerPixel",
-            "type": "number",
-            "default": "1",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 388,
-            "description": "If images are provided, this property sets the scale of the art relative to world coordinates. Available on the entity as `entity.imagesScale`.",
-            "itemtype": "property",
-            "name": "imagesScale",
-            "type": "number",
-            "default": "1",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 397,
-            "description": "Can be \"left\", \"right\", or \"center\". Defines where entities registered X position should be when spawned. Available on the entity as `entity.entityPositionX`.",
-            "itemtype": "property",
-            "name": "entityPositionX",
-            "type": "String",
-            "default": "\"center\"",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 406,
-            "description": "Can be \"top\", \"bottom\", or \"center\". Defines where entities registered Y position should be when spawned. Available on the entity as `entity.entityPositionY`.",
-            "itemtype": "property",
-            "name": "entityPositionY",
-            "type": "String",
-            "default": "\"bottom\"",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 415,
-            "description": "Whether to wait for a \"load-level\" event before before loading. Available on the entity as `entity.manuallyLoad`.",
-            "itemtype": "property",
-            "name": "manuallyLoad",
-            "type": "boolean",
-            "default": "false",
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 433,
-            "description": "On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.",
-            "itemtype": "method",
-            "name": "'scene-loaded'",
-            "params": [
-                {
-                    "name": "persistentData",
-                    "description": "Data passed from the last scene into this one.",
-                    "type": "Object",
-                    "props": [
-                        {
-                            "name": "level",
-                            "description": "A level name or definition to load if the level is not already specified.",
-                            "type": "Object"
-                        }
-                    ]
-                }
-            ],
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 449,
-            "description": "If `manuallyLoad` is set, the component will wait for this message before loading the Tiled map JSON definition.",
-            "itemtype": "method",
-            "name": "'load-level'",
-            "params": [
-                {
-                    "name": "levelData",
-                    "description": "",
-                    "type": "Object",
-                    "props": [
-                        {
-                            "name": "level",
-                            "description": "The level to load.",
-                            "type": "String|Object"
-                        },
-                        {
-                            "name": "persistentData",
-                            "description": "Information passed from the last scene.",
-                            "type": "Object",
-                            "optional": true
-                        }
-                    ]
-                }
-            ],
-            "class": "platypus.components.TiledLoader",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\TiledLoader.js",
-            "line": 761,
+            "line": 87,
             "description": "Once finished loading the map, this message is triggered on the entity to notify other components of completion.",
             "itemtype": "event",
             "name": "'world-loaded'",
@@ -11887,7 +11787,215 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 1051,
+            "line": 365,
+            "description": "This causes the entire map to be offset automatically by an order of magnitude higher than the height and width of the world so that the number of digits below zero is constant throughout the world space. This fixes potential floating point issues when, for example, 97 is added to 928.0000000000001 giving 1025 since a significant digit was lost when going into the thousands.",
+            "itemtype": "property",
+            "name": "offsetMap",
+            "type": "Boolean",
+            "default": "false",
+            "since": "0.7.5",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 375,
+            "description": "If set to `true` and if the game is running in debug mode, this causes the collision layer to appear.",
+            "itemtype": "property",
+            "name": "showCollisionTiles",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 384,
+            "description": "If specified, the referenced images are used as the game sprite sheets instead of the images referenced in the Tiled map. This is useful for using different or better quality art from the art used in creating the Tiled map.",
+            "itemtype": "property",
+            "name": "images",
+            "type": "Array",
+            "default": "null",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 393,
+            "description": "Adds a number to each additional Tiled layer's z coordinate to maintain z-order. Defaults to 1000.",
+            "itemtype": "property",
+            "name": "layerIncrement",
+            "type": "number",
+            "default": "1000",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 402,
+            "description": "Keeps the tile maps in separate render layers. Default is 'false' to for better optimization.",
+            "itemtype": "property",
+            "name": "separateTiles",
+            "type": "boolean",
+            "default": "false",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 411,
+            "description": "If a particular sprite sheet should be used that's not defined by the level images themselves. This is useful for making uniquely-themed variations of the same level. This is overridden by `\"spriteSheet\": \"import\"` in the \"render-layer\" Entity definition, so be sure to remove that when setting this property.",
+            "itemtype": "property",
+            "name": "spriteSheet",
+            "type": "String | Object",
+            "default": "null",
+            "since": "0.6.6",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 423,
+            "description": "Specifies the JSON level to load. Available on the entity as `entity.level`.",
+            "itemtype": "property",
+            "name": "level",
+            "type": "String",
+            "default": "null",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 432,
+            "description": "Sets how many world units in width and height correspond to a single pixel in the Tiled map. Default is 1: One pixel is one world unit. Available on the entity as `entity.unitsPerPixel`.",
+            "itemtype": "property",
+            "name": "unitsPerPixel",
+            "type": "number",
+            "default": "1",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 441,
+            "description": "If images are provided, this property sets the scale of the art relative to world coordinates. Available on the entity as `entity.imagesScale`.",
+            "itemtype": "property",
+            "name": "imagesScale",
+            "type": "number",
+            "default": "1",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 450,
+            "description": "Can be \"left\", \"right\", or \"center\". Defines where entities registered X position should be when spawned. Available on the entity as `entity.entityPositionX`.",
+            "itemtype": "property",
+            "name": "entityPositionX",
+            "type": "String",
+            "default": "\"center\"",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 459,
+            "description": "Can be \"top\", \"bottom\", or \"center\". Defines where entities registered Y position should be when spawned. Available on the entity as `entity.entityPositionY`.",
+            "itemtype": "property",
+            "name": "entityPositionY",
+            "type": "String",
+            "default": "\"bottom\"",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 468,
+            "description": "Whether to wait for a \"load-level\" event before before loading. Available on the entity as `entity.manuallyLoad`.",
+            "itemtype": "property",
+            "name": "manuallyLoad",
+            "type": "boolean",
+            "default": "false",
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 486,
+            "description": "On receiving this message, the component commences loading the Tiled map JSON definition. Once finished, it removes itself from the entity's list of components.",
+            "itemtype": "method",
+            "name": "'scene-loaded'",
+            "params": [
+                {
+                    "name": "persistentData",
+                    "description": "Data passed from the last scene into this one.",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "level",
+                            "description": "A level name or definition to load if the level is not already specified.",
+                            "type": "Object"
+                        }
+                    ]
+                },
+                {
+                    "name": "holds",
+                    "description": "An object that handles any holds on before making the scene live.",
+                    "type": "platypus.Data",
+                    "props": [
+                        {
+                            "name": "count",
+                            "description": "The number of holds to wait for before triggering \"scene-live\"",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "release",
+                            "description": "The method to trigger to let the scene loader know that one hold has been released.",
+                            "type": "Function"
+                        }
+                    ]
+                }
+            ],
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 506,
+            "description": "If `manuallyLoad` is set, the component will wait for this message before loading the Tiled map JSON definition.",
+            "itemtype": "method",
+            "name": "'load-level'",
+            "params": [
+                {
+                    "name": "levelData",
+                    "description": "",
+                    "type": "Object",
+                    "props": [
+                        {
+                            "name": "level",
+                            "description": "The level to load.",
+                            "type": "String|Object"
+                        },
+                        {
+                            "name": "persistentData",
+                            "description": "Information passed from the last scene.",
+                            "type": "Object",
+                            "optional": true
+                        }
+                    ]
+                },
+                {
+                    "name": "callback",
+                    "description": "The function to call once the level is loaded.",
+                    "type": "Function"
+                }
+            ],
+            "class": "platypus.components.TiledLoader",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\TiledLoader.js",
+            "line": 1082,
             "description": "As a level is loaded, this event is triggered to show progress.",
             "itemtype": "event",
             "name": "'level-loading-progress'",
@@ -11921,7 +12029,7 @@
         },
         {
             "file": "src\\components\\TiledLoader.js",
-            "line": 1069,
+            "line": 1105,
             "description": "This method decodes a Tiled layer and sets its data to CSV format.",
             "itemtype": "method",
             "name": "decodeLayer",
@@ -14754,7 +14862,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 152,
+            "line": 163,
             "description": "This event is triggered on the layers once the Scene is finished loading.",
             "itemtype": "event",
             "name": "'scene-loaded'",
@@ -14763,6 +14871,23 @@
                     "name": "data",
                     "description": "A list of key-value pairs of data sent into this Scene from the previous Scene.",
                     "type": "Object"
+                },
+                {
+                    "name": "holds",
+                    "description": "An object that handles any holds on before making the scene live.",
+                    "type": "platypus.Data",
+                    "props": [
+                        {
+                            "name": "count",
+                            "description": "The number of holds to wait for before triggering \"scene-live\"",
+                            "type": "Number"
+                        },
+                        {
+                            "name": "release",
+                            "description": "The method to trigger to let the scene loader know that one hold has been released.",
+                            "type": "Function"
+                        }
+                    ]
                 }
             ],
             "class": "platypus.Scene",
@@ -14770,7 +14895,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 218,
+            "line": 228,
             "description": "Triggers \"scene-live\" on the Scene layers once the Scene is finished loading and the transition into the Scene has finished.",
             "itemtype": "method",
             "name": "enterDone",
@@ -14779,7 +14904,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 234,
+            "line": 241,
             "description": "This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.",
             "itemtype": "event",
             "name": "'scene-live'",
@@ -14795,7 +14920,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 243,
+            "line": 250,
             "description": "Triggers 'scene-ended' on the layer.",
             "itemtype": "method",
             "name": "exitStart",
@@ -14804,7 +14929,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 251,
+            "line": 258,
             "description": "This event is triggered on the layers once the Scene is over.",
             "itemtype": "event",
             "name": "'scene-ended'",
@@ -14821,7 +14946,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 261,
+            "line": 268,
             "description": "This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.",
             "itemtype": "method",
             "name": "triggerOnChildren",
@@ -14842,7 +14967,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 283,
+            "line": 290,
             "description": "This method will return the first entity it finds with a matching id.",
             "itemtype": "method",
             "name": "getEntityById",
@@ -14862,7 +14987,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 308,
+            "line": 315,
             "description": "This method will return all game entities that match the provided type.",
             "itemtype": "method",
             "name": "getEntitiesByType",
@@ -14882,7 +15007,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 333,
+            "line": 340,
             "description": "This method destroys all the layers in the scene.",
             "itemtype": "method",
             "name": "exit",
@@ -14891,7 +15016,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 350,
+            "line": 357,
             "description": "Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.",
             "itemtype": "method",
             "name": "getAssetList",
@@ -14911,7 +15036,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 378,
+            "line": 385,
             "description": "Returns all of the dynamic assets required for the Scene.",
             "itemtype": "method",
             "name": "getLateAssetList",

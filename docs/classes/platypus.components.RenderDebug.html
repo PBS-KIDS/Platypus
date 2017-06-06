@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.2 API Documentation : platypus.components.RenderDebug</title>
+	<title>platypus v0.11.3 API Documentation : platypus.components.RenderDebug</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.2</em>
+            <em>API Documentation for: 0.11.3</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -177,6 +177,7 @@
                                 <li class="api-class-tab index"><a href="#index">Index</a></li>
                         
                                     <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
+                                    <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
                             </ul>
                         
                             <div>
@@ -192,7 +193,7 @@
                         
                                                     </li>
                                                     <li class="index-item method">
-                                                        <a href="#method_&#x27;handle-render-load&#x27;">&#x27;handle-render-load&#x27;</a>
+                                                        <a href="#method_&#x27;load&#x27;">&#x27;load&#x27;</a>
                         
                                                     </li>
                                                     <li class="index-item method">
@@ -242,6 +243,40 @@
                                             </ul>
                                         </div>
                         
+                                        <div class="index-section properties">
+                                            <h3>Properties</h3>
+                        
+                                            <ul class="index-list properties">
+                                                    <li class="index-item property">
+                                                        <a href="#property_aabbColor">aabbColor</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_collisionColor">collisionColor</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_groupColor">groupColor</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_height">height</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_offsetZ">offsetZ</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_renderColor">renderColor</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_width">width</a>
+                        
+                                                    </li>
+                                            </ul>
+                                        </div>
                         
                         
                                 </div>
@@ -252,13 +287,7 @@
                                             <div id="method_&#x27;handle-render&#x27;" class="method item">
                                                 <h3 class="name"><code>&#x27;handle-render&#x27;</code></h3>
                                             
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>renderData</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
+                                                    <span class="paren">()</span>
                                             
                                             
                                             
@@ -270,7 +299,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderDebug.js.html#l65"><code>&#x27;handle-render&#x27;:65</code></a>
+                                                    <a href="../files/src_components_RenderDebug.js.html#l143"><code>&#x27;handle-render&#x27;:143</code></a>
                                                     </p>
                                             
                                             
@@ -282,48 +311,13 @@
                                             
                                                 </div>
                                             
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">renderData</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>Data from the render handler</p>
-                                            
-                                                                </div>
-                                            
-                                                                    <ul class="params-list">
-                                                                        <li class="param">
-                                                                                <code class="param-name">container</code>
-                                                                                <span class="type">PIXI.Container</span>
-                                            
-                                                                            <div class="param-description">
-                                                                                <p>The parent container.</p>
-                                            
-                                                                            </div>
-                                            
-                                                                        </li>
-                                                                    </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
                                             
                                             
                                             </div>
-                                            <div id="method_&#x27;handle-render-load&#x27;" class="method item">
-                                                <h3 class="name"><code>&#x27;handle-render-load&#x27;</code></h3>
+                                            <div id="method_&#x27;load&#x27;" class="method item">
+                                                <h3 class="name"><code>&#x27;load&#x27;</code></h3>
                                             
-                                                    <div class="args">
-                                                        <span class="paren">(</span><ul class="args-list inline commas">
-                                                            <li class="arg">
-                                                                    <code>handlerData</code>
-                                                            </li>
-                                                        </ul><span class="paren">)</span>
-                                                    </div>
+                                                    <span class="paren">()</span>
                                             
                                             
                                             
@@ -335,47 +329,19 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderDebug.js.html#l50"><code>&#x27;handle-render-load&#x27;:50</code></a>
+                                                    <a href="../files/src_components_RenderDebug.js.html#l128"><code>&#x27;load&#x27;:128</code></a>
                                                     </p>
                                             
                                             
                                             
+                                                        <p>Available since 0.11.3</p>
                                                 </div>
                                             
                                                 <div class="description">
-                                                    <p>The visual components are set up and added to the stage. Setting up mouse input stuff. The click-to-print-to-console functionality is set up too.</p>
+                                                    <p>Removes this component if not in a debug build.</p>
                                             
                                                 </div>
                                             
-                                                    <div class="params">
-                                                        <h4>Parameters:</h4>
-                                            
-                                                        <ul class="params-list">
-                                                            <li class="param">
-                                                                    <code class="param-name">handlerData</code>
-                                                                    <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object" class="crosslink external" target="_blank">Object</a></span>
-                                            
-                                            
-                                                                <div class="param-description">
-                                                                    <p>Data from the render handler</p>
-                                            
-                                                                </div>
-                                            
-                                                                    <ul class="params-list">
-                                                                        <li class="param">
-                                                                                <code class="param-name">container</code>
-                                                                                <span class="type">PIXI.Container</span>
-                                            
-                                                                            <div class="param-description">
-                                                                                <p>The parent container.</p>
-                                            
-                                                                            </div>
-                                            
-                                                                        </li>
-                                                                    </ul>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
                                             
                                             
                                             </div>
@@ -394,7 +360,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderDebug.js.html#l114"><code>&#x27;orientation-updated&#x27;:114</code></a>
+                                                    <a href="../files/src_components_RenderDebug.js.html#l170"><code>&#x27;orientation-updated&#x27;:170</code></a>
                                                     </p>
                                             
                                             
@@ -983,6 +949,199 @@
                                             </div>
                                     </div>
                         
+                                    <div id="properties" class="api-class-tabpanel">
+                                        <h2 class="off-left">Properties</h2>
+                        
+                                            <div id="property_aabbColor" class="property item">
+                                                <h3 class="name"><code>aabbColor</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l46"><code>aabbColor:46</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The color to use to highlight an entity's AABB. For example, use <code>"#ffffff"</code> or <code>0xffffff</code> to set as white.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0xff88ff</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_collisionColor" class="property item">
+                                                <h3 class="name"><code>collisionColor</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l56"><code>collisionColor:56</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The color to use to highlight an entity's collision shape. For example, use <code>"#ffffff"</code> or <code>0xffffff</code> to set as white.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0xff00ff</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_groupColor" class="property item">
+                                                <h3 class="name"><code>groupColor</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l66"><code>groupColor:66</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The color to use to highlight the AABB for a group of entities attached to this entity. For example, use <code>"#ffffff"</code> or <code>0xffffff</code> to set as white.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0x00ff00</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_height" class="property item">
+                                                <h3 class="name"><code>height</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l86"><code>height:86</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The height of the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 100</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_offsetZ" class="property item">
+                                                <h3 class="name"><code>offsetZ</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l106"><code>offsetZ:106</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The local offset in z-index for the rendered debug area.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 10000</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_renderColor" class="property item">
+                                                <h3 class="name"><code>renderColor</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a> | <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l76"><code>renderColor:76</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The color to use to highlight an entity. This property is only used if there is no <code>CollisionBasic</code> component attached to the entity: this component uses the entity's <code>width</code> and <code>height</code> properties if defined. For example, use <code>"#ffffff"</code> or <code>0xffffff</code> to set as white.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 0x0000ff</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_width" class="property item">
+                                                <h3 class="name"><code>width</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderDebug.js.html#l96"><code>width:96</code></a>
+                                                    </p>
+                                            
+                                            
+                                                        <p>Available since 0.11.3</p>
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>The width of the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> 100</p>
+                                            
+                                            
+                                            </div>
+                                    </div>
                         
                         
                             </div>

@@ -125,6 +125,12 @@
         },
         
         events: {// These are messages that this component listens for
+            /**
+             * Removes this component if not in a debug build.
+             *
+             * @method 'load'
+             * @since 0.11.3
+             */
             "load": function () {
                 if (!platypus.game.settings.debug) {
                     this.owner.removeComponent(this);
@@ -168,8 +174,7 @@
              */
             "orientation-updated": function () {
                 this.isOutdated = true;
-            }
-            
+            }            
         },
         
         methods: {
