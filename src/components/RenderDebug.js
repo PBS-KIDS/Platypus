@@ -125,6 +125,15 @@
         },
         
         events: {// These are messages that this component listens for
+            "load": function () {
+                if (!platypus.game.settings.debug) {
+                    this.owner.removeComponent(this);
+                    return;
+                } else if (!this.owner.container) {
+                    this.owner.addComponent(new RenderContainer(this.owner, null));
+                }
+            },
+
             /**
              * Repositions the pieces of the component in preparation for rendering
              *
@@ -133,15 +142,6 @@
             "handle-render": function () {
                 var aabb = null,
                     offset = -0.5;
-
-                if (!this.owner.container) {
-                    if (!platypus.game.settings.debug) {
-                        this.owner.removeComponent(this);
-                        return;
-                    } else if (!this.owner.container) {
-                        this.owner.addComponent(new RenderContainer(this.owner, null));
-                    }
-                }
 
                 if (this.isOutdated) {
                     this.updateSprites();

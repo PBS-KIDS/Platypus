@@ -369,9 +369,11 @@
              * @param renderData {Object} Data from the render handler
              * @param renderData.container {PIXI.Container} The parent container.
              */
-            "handle-render": function () {
+            "handle-render": function (renderData) {
                 if (!this.container) { // If this component's removal is pending
                     return;
+                } else if (!this.parentContainer && renderData && renderData.container) {
+                    this.addStage(renderData.container);
                 }
 
                 this.updateSprite(true);
