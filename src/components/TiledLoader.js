@@ -675,7 +675,7 @@
                     }
                     return this.owner.addEntity(new Entity(tileDefinition, {
                         properties: props
-                    }), this.updateLoadingProgress.bind(this, progress));
+                    }, this.updateLoadingProgress.bind(this, progress)));
                 }
             },
             
@@ -1030,7 +1030,7 @@
                         properties.parent = this.owner;
                         entity = this.owner.addEntity(new Entity(entityDefinition, {
                             properties: properties
-                        }), this.updateLoadingProgress.bind(this, progress));
+                        }, this.updateLoadingProgress.bind(this, progress)));
                         if (entity) {
                             if (entity.camera) {
                                 this.followEntity = {
