@@ -10,14 +10,14 @@
     'use strict';
 
     var AABB = include('platypus.AABB'),
-        Atlas = include('PIXI.spine.SpineRuntime.Atlas', false),
-        AtlasAttachmentParser = include('PIXI.spine.SpineRuntime.AtlasAttachmentParser', false),
+        TextureAtlas = include('PIXI.spine.core.TextureAtlas', false),
+        AtlasAttachmentLoader = include('PIXI.spine.core.AtlasAttachmentLoader', false),
         BaseTexture = include('PIXI.BaseTexture'),
         Data = include('platypus.Data'),
         EventRender = include('platypus.components.EventRender'),
         Graphics = include('PIXI.Graphics'),
         Matrix = include('PIXI.Matrix'),
-        SkeletonJsonParser = include('PIXI.spine.SpineRuntime.SkeletonJsonParser', false),
+        SkeletonJson = include('PIXI.spine.core.SkeletonJson', false),
         Spine = include('PIXI.spine.Spine', false),
         StateRender = include('platypus.components.StateRender'),
         tempMatrix = new Matrix(),
@@ -312,8 +312,8 @@
                     atlas = settings.atlases[this.atlas],
                     map = null,
                     skeleton = settings.skeletons[this.skeleton],
-                    spineAtlas = new Atlas(atlas, imageCallback),
-                    spineJsonParser = new SkeletonJsonParser(new AtlasAttachmentParser(spineAtlas)),
+                    spineAtlas = new TextureAtlas(atlas, imageCallback),
+                    spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
                     skeletonData = spineJsonParser.readSkeletonData(skeleton),
                     spine = this.spine = new Spine(skeletonData);
 
@@ -372,7 +372,7 @@
                 // play animation
                 if (animation) {
                     this.currentAnimation = animation;
-                    spine.state.setAnimationByName(0, animation, true);
+                    spine.state.setAnimation(0, animation, true);
                 }
             };
         }()),
@@ -476,9 +476,9 @@
             "stop-animation": function (animation) {
                 var spine = this.spine;
 
-                if (animation && spine.state.hasAnimationByName(animation)) {
+                if (animation && spine.state.hasAnimation(animation)) {
                     this.currentAnimation = animation;
-                    spine.state.setAnimationByName(0, animation, false);
+                    spine.state.setAnimation(0, animation, false);
                 }
 
                 this.paused = true;
@@ -494,9 +494,9 @@
             "play-animation": function (animation) {
                 var spine = this.spine;
 
-                if (animation && spine.state.hasAnimationByName(animation)) {
+                if (animation && spine.state.hasAnimation(animation)) {
                     this.currentAnimation = animation;
-                    spine.state.setAnimationByName(0, animation, true);
+                    spine.state.setAnimation(0, animation, true);
                 }
 
                 this.paused = false;
