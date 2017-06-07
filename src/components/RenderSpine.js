@@ -306,6 +306,7 @@
                 spine.state.addListener({
                     complete: animationEnded.bind(this)
                 });
+                spine.autoUpdate = false;
 
                 map = createAnimationMap(this.animationMap, skeleton.animations);
                 this.stateBased = map && this.stateBased;
@@ -389,6 +390,8 @@
                      * @param playing {Boolean} Whether the animation is in a playing or paused state.
                      */
                     this.owner.triggerEvent('update-animation', true);
+
+                    this.spine.update(renderData.delta / 1000);
                 }
             },
 
