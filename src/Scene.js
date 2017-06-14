@@ -351,6 +351,9 @@ platypus.Scene = (function () {
         this.layers.recycle();
         this.layers = null;
         
+        // Unload all base textures to prep for next scene
+        PIXIAnimation.unloadBaseTextures();
+
         platypus.game.currentScene = null;
     };
     

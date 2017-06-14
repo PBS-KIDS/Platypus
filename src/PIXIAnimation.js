@@ -474,6 +474,23 @@
         }
     };
     
+    /**
+     * This method cleans out all PIXIAnimation baseTextures at the end of a scene.
+     *
+     * @method PIXIAnimation.unloadBaseTextures
+     */
+    PIXIAnimation.unloadBaseTextures = function (renderer) {
+        var btCache = baseTextureCache,
+            key = '';
+        
+        for (key in btCache) {
+            if (btCache.hasOwnProperty(key) && btCache[key]) {
+                btCache[key].destroy();
+                btCache[key] = null;
+            }
+        }
+    };
+    
     PIXIAnimation.EmptySpriteSheet = {
         framerate: 60,
         frames: [],
