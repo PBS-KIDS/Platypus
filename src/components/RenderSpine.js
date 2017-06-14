@@ -289,6 +289,15 @@
                      * @param animation {String} The id of the animation that ended.
                      */
                     this.owner.triggerEvent('animation-ended', this.currentAnimation);
+                },
+                handleSpineEvent = function (entry, event) {
+                    var eventName = event.data.name;
+
+                    if (this.playAnimation(eventName)) {
+                        this.spine.update(0.000001);
+                    } else {
+                        this.owner.triggerEvent(eventName, event.data);
+                    }
                 };
             
             return function () {
@@ -304,6 +313,7 @@
                     spine = this.spine = new Spine(skeletonData);
 
                 spine.state.addListener({
+                    event: handleSpineEvent.bind(this),
                     complete: animationEnded.bind(this)
                 });
                 spine.autoUpdate = false;
@@ -460,9 +470,12 @@
                 if (animation && spine.state.hasAnimation(animation)) {
                     this.currentAnimation = animation;
                     spine.state.setAnimation(0, animation, true);
+                    this.paused = false;
+
+                    return true;
                 }
 
-                this.paused = false;
+                return false;
             },
 
             stopAnimation: function (animation) {
