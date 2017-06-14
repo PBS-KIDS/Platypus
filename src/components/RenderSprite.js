@@ -14,30 +14,7 @@
         EventRender = include('platypus.components.EventRender'),
         RenderContainer = include('platypus.components.RenderContainer'),
         PIXIAnimation = include('platypus.PIXIAnimation'),
-        Point = include('PIXI.Point'),
-        StateRender = include('platypus.components.StateRender'),
-        createPoint = function (value, defaultValue) {
-            var x = value,
-                y = value;
-
-            if (typeof value !== 'number') {
-                if (Array.isArray(value)) {
-                    x = value[0];
-                    y = value[1];
-                } else {
-                    x = value.x;
-                    y = value.y;
-                }
-                if (typeof x !== 'number') {
-                    x = defaultValue;
-                }
-                if (typeof y !== 'number') {
-                    y = defaultValue;
-                }
-            }
-
-            return new Point(x, y);
-        };
+        StateRender = include('platypus.components.StateRender');
     
     return platypus.createComponentClass({
         
@@ -400,8 +377,6 @@
                 this.sprite.x = this.offsetX;
                 this.sprite.y = this.offsetY;
                 this.sprite.z = this.offsetZ;
-                this.sprite.scale = createPoint(this.scale, 1);
-                this.sprite.skew = createPoint(this.skew, 0);
 
                 if (!this.owner.container) {
                     definition = Data.setUp(
