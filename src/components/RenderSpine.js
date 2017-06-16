@@ -295,9 +295,9 @@
 
                     if (this.playAnimation(eventName)) {
                         this.spine.update(0.000001);
-                    } else {
-                        this.owner.triggerEvent(eventName, event.data);
                     }
+
+                    this.owner.triggerEvent(eventName, event.data);
                 };
             
             return function () {
