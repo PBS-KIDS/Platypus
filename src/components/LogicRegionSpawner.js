@@ -122,8 +122,10 @@ This component spawns new entities within a given area at set intervals.
         
         methods: {
             destroy: function () {
-                this.regions.recycle();
-                this.usedRegions.recycle();
+                if (this.regions) {
+                    this.regions.recycle();
+                    this.usedRegions.recycle();
+                }
             }
         },
         
