@@ -362,13 +362,6 @@
                     }
                 }
                 
-                this.parentContainer = null;
-                this.wasVisible = this.visible;
-                this.lastX = this.owner.x;
-                this.lastY = this.owner.y;
-                this.camera = AABB.setUp();
-                this.isOnCamera = true;
-
                 /*
                  * PIXIAnimation created here:
                  */
