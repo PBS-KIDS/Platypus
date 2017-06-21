@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.3",
+        "version": "0.11.4",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -10493,7 +10493,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 68,
+            "line": 34,
             "description": "Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the skeleton definition using the animation names as the keys.\n\n \"animationMap\":{\n     \"standing\": \"default-animation\"  // On receiving a \"standing\" event, or when this.owner.state.standing === true, the \"default\" animation will begin playing.\n     \"ground,moving\": \"walking\",  // Comma separated values have a special meaning when evaluating \"state-changed\" messages. The above example will cause the \"walking\" animation to play ONLY if the entity's state includes both \"moving\" and \"ground\" equal to true.\n     \"ground,striking\": \"swing!\", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.\n     \"default\": \"default-animation\" // Optional. \"default\" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.\n }",
             "itemtype": "property",
             "name": "animationMap",
@@ -10504,7 +10504,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 84,
+            "line": 50,
             "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
             "itemtype": "property",
             "name": "mask",
@@ -10515,7 +10515,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 104,
+            "line": 70,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -10526,7 +10526,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 123,
+            "line": 89,
             "description": "Sets the transition time between animations. If a number is defined, the transition time applies to all animation changes. If an object is specified, the key value pairs should match this syntax where the first part of the key lists the animation currently playing and the second part of the key lists the animation being transitioned to:\n\n    {\n        \"jump:walk\": 0.4,\n        \"walk:jump\": 0.2\n    }",
             "itemtype": "property",
             "name": "mixTimes",
@@ -10537,8 +10537,32 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 137,
-            "description": "Optional. The offset of the z-index of the spine from the entity's z-index. Will default to 0.",
+            "line": 103,
+            "description": "The offset of the x-axis position of the sprite from the entity's x-axis position.",
+            "itemtype": "property",
+            "name": "offsetX",
+            "type": "Number",
+            "default": "0",
+            "since": "0.11.4",
+            "class": "platypus.components.RenderSpine",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderSpine.js",
+            "line": 113,
+            "description": "The offset of the y-axis position of the sprite from the entity's y-axis position.",
+            "itemtype": "property",
+            "name": "offsetY",
+            "type": "Number",
+            "default": "0",
+            "since": "0.11.4",
+            "class": "platypus.components.RenderSpine",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderSpine.js",
+            "line": 123,
+            "description": "The z-index relative to other render components on the entity.",
             "itemtype": "property",
             "name": "offsetZ",
             "type": "Number",
@@ -10548,7 +10572,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 146,
+            "line": 132,
             "description": "Text describing an atlas of graphic assets for the Spine animation or an asset id for the same.",
             "itemtype": "property",
             "name": "atlas",
@@ -10559,7 +10583,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 155,
+            "line": 141,
             "description": "A JSON structure defining a Spine skeleton and behaviors for the animation, or an asset id for the same.",
             "itemtype": "property",
             "name": "skeleton",
@@ -10570,7 +10594,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 164,
+            "line": 150,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -10581,7 +10605,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 173,
+            "line": 159,
             "description": "Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.",
             "itemtype": "property",
             "name": "eventBased",
@@ -10592,7 +10616,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 182,
+            "line": 168,
             "description": "Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.",
             "itemtype": "property",
             "name": "stateBased",
@@ -10603,7 +10627,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 193,
+            "line": 179,
             "description": "Prevents the spine from becoming invisible out of frame and losing mouse input connection.",
             "itemtype": "property",
             "name": "dragMode",
@@ -10614,7 +10638,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 202,
+            "line": 188,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -10625,7 +10649,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 211,
+            "line": 197,
             "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
@@ -10636,7 +10660,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 220,
+            "line": 206,
             "description": "Optional. The X swek factor of the sprite. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
@@ -10647,7 +10671,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 229,
+            "line": 215,
             "description": "Optional. The Y skew factor for the image. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
@@ -10658,7 +10682,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 238,
+            "line": 224,
             "description": "Optional. The rotation of the spine in degrees. All spines on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -10669,7 +10693,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 247,
+            "line": 233,
             "description": "Optional. The x position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "x",
@@ -10680,7 +10704,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 256,
+            "line": 242,
             "description": "Optional. The y position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "y",
@@ -10691,7 +10715,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 265,
+            "line": 251,
             "description": "Optional. The z position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "z",
@@ -10702,7 +10726,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 299,
+            "line": 285,
             "description": "This event fires each time an animation completes.",
             "itemtype": "event",
             "name": "'animation-ended'",
@@ -10718,46 +10742,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 381,
-            "description": "Listens for this event to determine whether this spine is visible.",
-            "itemtype": "method",
-            "name": "'camera-update'",
-            "params": [
-                {
-                    "name": "camera.viewport",
-                    "description": "Camera position and size.",
-                    "type": "platypus.AABB"
-                }
-            ],
-            "class": "platypus.components.RenderSpine",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\RenderSpine.js",
-            "line": 396,
-            "description": "A setup message used to add the spine to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
-            "itemtype": "method",
-            "name": "'handle-render-load'",
-            "params": [
-                {
-                    "name": "handlerData",
-                    "description": "Data from the render handler",
-                    "type": "Object",
-                    "props": [
-                        {
-                            "name": "container",
-                            "description": "The parent container.",
-                            "type": "PIXI.Container"
-                        }
-                    ]
-                }
-            ],
-            "class": "platypus.components.RenderSpine",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\RenderSpine.js",
-            "line": 410,
+            "line": 387,
             "description": "The render update message updates the spine.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10780,7 +10765,23 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 431,
+            "line": 396,
+            "description": "This event is triggered each tick to check for animation updates.",
+            "itemtype": "event",
+            "name": "'update-animation'",
+            "params": [
+                {
+                    "name": "playing",
+                    "description": "Whether the animation is in a playing or paused state.",
+                    "type": "Boolean"
+                }
+            ],
+            "class": "platypus.components.RenderSpine",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderSpine.js",
+            "line": 408,
             "description": "This sets the mix times.",
             "itemtype": "method",
             "name": "'set-mix-times'",
@@ -10796,7 +10797,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 441,
+            "line": 418,
             "description": "This event makes the spine invisible.",
             "itemtype": "method",
             "name": "'hide'",
@@ -10805,7 +10806,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 450,
+            "line": 427,
             "description": "This event makes the spine visible.",
             "itemtype": "method",
             "name": "'show'",
@@ -10814,23 +10815,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 459,
-            "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
-            "itemtype": "method",
-            "name": "'set-mask'",
-            "params": [
-                {
-                    "name": "mask",
-                    "description": "The mask. This can specified the same way as the 'mask' parameter on the component.",
-                    "type": "Object"
-                }
-            ],
-            "class": "platypus.components.RenderSpine",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\RenderSpine.js",
-            "line": 469,
+            "line": 436,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -10848,7 +10833,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 487,
+            "line": 447,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -10865,33 +10850,8 @@
             "namespace": "platypus.components"
         },
         {
-            "file": "src\\components\\RenderSpine.js",
-            "line": 517,
-            "description": "This event is triggered once the RenderSpine is ready to handle interactivity.",
-            "itemtype": "event",
-            "name": "'input-on'",
-            "class": "platypus.components.RenderSpine",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\RenderSpine.js",
-            "line": 608,
-            "description": "This event is triggered each tick to check for animation updates.",
-            "itemtype": "event",
-            "name": "'update-animation'",
-            "params": [
-                {
-                    "name": "playing",
-                    "description": "Whether the animation is in a playing or paused state.",
-                    "type": "Boolean"
-                }
-            ],
-            "class": "platypus.components.RenderSpine",
-            "namespace": "platypus.components"
-        },
-        {
             "file": "src\\components\\RenderSprite.js",
-            "line": 47,
+            "line": 24,
             "description": "spriteSheet can either be a String or an object. If a string, the spritesheet data will be loaded from the file with a matching name in the spritesheet folder. Otherwise the definition is in full here. That spritesheet data defines an EaselJS sprite sheet to use for rendering. See http://www.createjs.com/Docs/EaselJS/SpriteSheet.html for the full specification.\n\n \"spriteSheet\": 'hero-image'\n\n -OR-\n\n \"spriteSheet\": {\n\n     \"images\": [\"example0\", \"example1\"], //Can also define 'image' and give the\n     \"frames\": {\n         \"width\":  100,\n         \"height\": 100,\n         \"regY\":   100,\n         \"regX\":   50\n     },\n     \"animations\":{\n         \"default-animation\":[2],\n         \"walking\": {\"frames\": [0, 1, 2], \"speed\": 4},\n         \"swing\": {\"frames\": [3, 4, 5], \"speed\": 4}\n     }\n }\n\n -OR- an Array of the above (since 0.8.4)",
             "itemtype": "property",
             "name": "spriteSheet",
@@ -10902,7 +10862,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 78,
+            "line": 55,
             "description": "Optional. An object containg key-value pairs that define a mapping from triggered events or entity states to the animation that should play. The list is processed from top to bottom, so the most important actions should be listed first (for example, a jumping animation might take precedence over an idle animation). If not specified, an 1-to-1 animation map is created from the list of animations in the sprite sheet definition using the animation names as the keys.\n\n    \"animationMap\":{\n        \"standing\": \"default-animation\"  // On receiving a \"standing\" event, or when this.owner.state.standing === true, the \"default\" animation will begin playing.\n        \"ground,moving\": \"walking\",  // Comma separated values have a special meaning when evaluating \"state-changed\" messages. The above example will cause the \"walking\" animation to play ONLY if the entity's state includes both \"moving\" and \"ground\" equal to true.\n        \"ground,striking\": \"swing!\", // Putting an exclamation after an animation name causes this animation to complete before going to the next animation. This is useful for animations that would look poorly if interrupted.\n        \"default\": \"default-animation\" // Optional. \"default\" is a special property that matches all states. If none of the above states are valid for the entity, it will use the default animation listed here.\n    }\n\nThis data is used to create EventRender or StateRender components on the entity if the `eventBased` or `stateBased` properties are set to `true`.",
             "itemtype": "property",
             "name": "animationMap",
@@ -10913,7 +10873,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 96,
+            "line": 73,
             "description": "Optional. A mask definition that determines where the image should clip. A string can also be used to create more complex shapes via the PIXI graphics API like: \"mask\": \"r(10,20,40,40).dc(30,10,12)\". Defaults to no mask or, if simply set to true, a rectangle using the entity's dimensions.\n\n \"mask\": {\n     \"x\": 10,\n     \"y\": 10,\n     \"width\": 40,\n     \"height\": 40\n },\n\n -OR-\n\n \"mask\": \"r(10,20,40,40).dc(30,10,12)\"",
             "itemtype": "property",
             "name": "mask",
@@ -10924,7 +10884,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 116,
+            "line": 93,
             "description": "Defines whether the entity will respond to touch and click events. Setting this value will create an Interactive component on this entity with these properties. For example:\n\n \"interactive\": {\n     \"hover\": false,\n     \"hitArea\": {\n         \"x\": 10,\n         \"y\": 10,\n         \"width\": 40,\n         \"height\": 40\n     }\n }",
             "itemtype": "property",
             "name": "interactive",
@@ -10936,7 +10896,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 136,
+            "line": 113,
             "description": "The offset of the x-axis position of the sprite from the entity's x-axis position.",
             "itemtype": "property",
             "name": "offsetX",
@@ -10948,7 +10908,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 146,
+            "line": 123,
             "description": "The offset of the y-axis position of the sprite from the entity's y-axis position.",
             "itemtype": "property",
             "name": "offsetY",
@@ -10960,7 +10920,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 156,
+            "line": 133,
             "description": "The z-index relative to other render components on the entity.",
             "itemtype": "property",
             "name": "offsetZ",
@@ -10971,7 +10931,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 165,
+            "line": 142,
             "description": "Whether to restart a playing animation on event.",
             "itemtype": "property",
             "name": "restart",
@@ -10983,7 +10943,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 175,
+            "line": 152,
             "description": "Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.",
             "itemtype": "property",
             "name": "rotate",
@@ -10994,7 +10954,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 184,
+            "line": 161,
             "description": "Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.",
             "itemtype": "property",
             "name": "mirror",
@@ -11005,7 +10965,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 193,
+            "line": 170,
             "description": "Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.",
             "itemtype": "property",
             "name": "flip",
@@ -11016,7 +10976,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 202,
+            "line": 179,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -11027,7 +10987,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 211,
+            "line": 188,
             "description": "Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.",
             "itemtype": "property",
             "name": "eventBased",
@@ -11038,7 +10998,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 220,
+            "line": 197,
             "description": "Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.",
             "itemtype": "property",
             "name": "stateBased",
@@ -11049,7 +11009,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 229,
+            "line": 206,
             "description": "Optional. Whether this sprite should be cached into an entity with a `RenderTiles` component (like \"render-layer\"). The `RenderTiles` component must have its \"entityCache\" property set to `true`. Warning! This is a one-direction setting and will remove this component from the entity once the current frame has been cached.",
             "itemtype": "property",
             "name": "cache",
@@ -11060,7 +11020,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 238,
+            "line": 215,
             "description": "Optional. When using state-based animations, forces animations to complete before starting a new animation. Defaults to false.",
             "itemtype": "property",
             "name": "forcePlayThrough",
@@ -11071,7 +11031,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 247,
+            "line": 224,
             "description": "Optional. Ignores the opacity of the owner. Used when multiple RenderSprite components are on the same entity.",
             "itemtype": "property",
             "name": "ignoreOpacity",
@@ -11082,7 +11042,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 256,
+            "line": 233,
             "description": "The scaling factor for this component.",
             "itemtype": "property",
             "name": "scale",
@@ -11093,7 +11053,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 265,
+            "line": 242,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -11104,7 +11064,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 274,
+            "line": 251,
             "description": "Optional. The Y scaling factor for the entity. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
@@ -11115,7 +11075,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 283,
+            "line": 260,
             "description": "The skew factor for this component.",
             "itemtype": "property",
             "name": "skew",
@@ -11126,7 +11086,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 292,
+            "line": 269,
             "description": "Optional. The X skew factor of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
@@ -11137,7 +11097,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 301,
+            "line": 278,
             "description": "Optional. The Y skew factor for the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
@@ -11148,7 +11108,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 310,
+            "line": 287,
             "description": "Optional. The rotation of the sprite in degrees. All sprites on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -11159,7 +11119,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 342,
+            "line": 319,
             "description": "This event fires each time an animation completes.",
             "itemtype": "event",
             "name": "'animation-ended'",
@@ -11175,7 +11135,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 433,
+            "line": 401,
             "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -11198,7 +11158,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 442,
+            "line": 410,
             "description": "This event is triggered each tick to check for animation updates.",
             "itemtype": "event",
             "name": "'update-animation'",
@@ -11214,7 +11174,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 454,
+            "line": 422,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -11232,7 +11192,7 @@
         },
         {
             "file": "src\\components\\RenderSprite.js",
-            "line": 465,
+            "line": 433,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -14819,7 +14779,16 @@
         },
         {
             "file": "src\\PIXIAnimation.js",
-            "line": 487,
+            "line": 477,
+            "description": "This method cleans out all PIXIAnimation baseTextures at the end of a scene.",
+            "itemtype": "method",
+            "name": "PIXIAnimation.unloadBaseTextures",
+            "class": "platypus.PIXIAnimation",
+            "namespace": "platypus"
+        },
+        {
+            "file": "src\\PIXIAnimation.js",
+            "line": 504,
             "description": "This method formats a provided value into a valid PIXIAnimation Sprite Sheet. This includes accepting the EaselJS spec, strings mapping to Platypus sprite sheets, or arrays of either.",
             "itemtype": "method",
             "name": "formatSpriteSheet",
@@ -15016,7 +14985,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 357,
+            "line": 360,
             "description": "Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.",
             "itemtype": "method",
             "name": "getAssetList",
@@ -15036,7 +15005,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 385,
+            "line": 388,
             "description": "Returns all of the dynamic assets required for the Scene.",
             "itemtype": "method",
             "name": "getLateAssetList",

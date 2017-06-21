@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.3 API Documentation : src\components\RenderSpine.js</title>
+	<title>platypus v0.11.4 API Documentation : src\components\RenderSpine.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.3</em>
+            <em>API Documentation for: 0.11.4</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -165,49 +165,15 @@
                         (function () {
                             &#x27;use strict&#x27;;
                         
-                            var AABB = include(&#x27;platypus.AABB&#x27;),
-                                Atlas = include(&#x27;PIXI.spine.SpineRuntime.Atlas&#x27;, false),
-                                AtlasAttachmentParser = include(&#x27;PIXI.spine.SpineRuntime.AtlasAttachmentParser&#x27;, false),
+                            var TextureAtlas = include(&#x27;PIXI.spine.core.TextureAtlas&#x27;, false),
+                                AtlasAttachmentLoader = include(&#x27;PIXI.spine.core.AtlasAttachmentLoader&#x27;, false),
                                 BaseTexture = include(&#x27;PIXI.BaseTexture&#x27;),
                                 Data = include(&#x27;platypus.Data&#x27;),
                                 EventRender = include(&#x27;platypus.components.EventRender&#x27;),
-                                Graphics = include(&#x27;PIXI.Graphics&#x27;),
-                                Matrix = include(&#x27;PIXI.Matrix&#x27;),
-                                SkeletonJsonParser = include(&#x27;PIXI.spine.SpineRuntime.SkeletonJsonParser&#x27;, false),
+                                RenderContainer = include(&#x27;platypus.components.RenderContainer&#x27;),
+                                SkeletonJson = include(&#x27;PIXI.spine.core.SkeletonJson&#x27;, false),
                                 Spine = include(&#x27;PIXI.spine.Spine&#x27;, false),
-                                StateRender = include(&#x27;platypus.components.StateRender&#x27;),
-                                tempMatrix = new Matrix(),
-                                processGraphics = (function () {
-                                    var process = function (gfx, value) {
-                                        var i = 0,
-                                            paren  = value.indexOf(&#x27;(&#x27;),
-                                            func   = value.substring(0, paren),
-                                            values = value.substring(paren + 1, value.indexOf(&#x27;)&#x27;));
-                        
-                                        if (values.length) {
-                                            values = values.greenSplit(&#x27;,&#x27;);
-                                            i = values.length;
-                                            while (i--) {
-                                                values[i] = +values[i];
-                                            }
-                                            gfx[func].apply(gfx, values);
-                                            values.recycle();
-                                        } else {
-                                            gfx[func]();
-                                        }
-                                    };
-                        
-                                    return function (gfx, value) {
-                                        var i = 0,
-                                            arr = value.greenSplit(&#x27;.&#x27;);
-                        
-                                        for (i = 0; i &lt; arr.length; i++) {
-                                            process(gfx, arr[i]);
-                                        }
-                                        
-                                        arr.recycle();
-                                    };
-                                }());
+                                StateRender = include(&#x27;platypus.components.StateRender&#x27;);
                             
                             // If PIXI.spine is unavailable, this component doesn&#x27;t work.
                             if (!Spine) {
@@ -291,7 +257,27 @@
                                     mixTimes: 0,
                         
                                     /**
-                                     * Optional. The offset of the z-index of the spine from the entity&#x27;s z-index. Will default to 0.
+                                     * The offset of the x-axis position of the sprite from the entity&#x27;s x-axis position.
+                                     *
+                                     * @property offsetX
+                                     * @type Number
+                                     * @default 0
+                                     * @since 0.11.4
+                                     */
+                                    offsetX: 0,
+                        
+                                    /**
+                                     * The offset of the y-axis position of the sprite from the entity&#x27;s y-axis position.
+                                     *
+                                     * @property offsetY
+                                     * @type Number
+                                     * @default 0
+                                     * @since 0.11.4
+                                     */
+                                    offsetY: 0,
+                        
+                                    /**
+                                     * The z-index relative to other render components on the entity.
                                      *
                                      * @property offsetZ
                                      * @type Number
@@ -459,6 +445,15 @@
                                              * @param animation {String} The id of the animation that ended.
                                              */
                                             this.owner.triggerEvent(&#x27;animation-ended&#x27;, this.currentAnimation);
+                                        },
+                                        handleSpineEvent = function (entry, event) {
+                                            var eventName = event.data.name;
+                        
+                                            if (this.playAnimation(eventName)) {
+                                                this.spine.update(0.000001);
+                                            }
+                        
+                                            this.owner.triggerEvent(eventName, event.data);
                                         };
                                     
                                     return function () {
@@ -468,13 +463,16 @@
                                             atlas = settings.atlases[this.atlas],
                                             map = null,
                                             skeleton = settings.skeletons[this.skeleton],
-                                            spineAtlas = new Atlas(atlas, imageCallback),
-                                            spineJsonParser = new SkeletonJsonParser(new AtlasAttachmentParser(spineAtlas)),
+                                            spineAtlas = new TextureAtlas(atlas, imageCallback),
+                                            spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
                                             skeletonData = spineJsonParser.readSkeletonData(skeleton),
                                             spine = this.spine = new Spine(skeletonData);
                         
-                                        spine.transformMatrix = new Matrix();
-                                        spine.state.onComplete = animationEnded.bind(this);
+                                        spine.state.addListener({
+                                            event: handleSpineEvent.bind(this),
+                                            complete: animationEnded.bind(this)
+                                        });
+                                        spine.autoUpdate = false;
                         
                                         map = createAnimationMap(this.animationMap, skeleton.animations);
                                         this.stateBased = map &amp;&amp; this.stateBased;
@@ -502,24 +500,6 @@
                                             }
                                         }
                         
-                                        this.parentContainer = null;
-                                        this.wasVisible = this.visible;
-                                        this.lastX = this.owner.x;
-                                        this.lastY = this.owner.y;
-                                        this.camera = AABB.setUp();
-                                        this.affine = new Matrix();
-                                        this.isOnCamera = true;
-                        
-                                        if (this.interactive) {
-                                            definition = Data.setUp(
-                                                &#x27;container&#x27;, this.spine,
-                                                &#x27;hitArea&#x27;, this.interactive.hitArea,
-                                                &#x27;hover&#x27;, this.interactive.hover
-                                            );
-                                            this.owner.addComponent(new platypus.components.Interactive(this.owner, definition));
-                                            definition.recycle();
-                                        }
-                        
                                         // set up the mixes!
                                         if (this.mixTimes) {
                                             this.setMixTimes(this.mixTimes);
@@ -528,41 +508,38 @@
                                         // play animation
                                         if (animation) {
                                             this.currentAnimation = animation;
-                                            spine.state.setAnimationByName(0, animation, true);
+                                            spine.state.setAnimation(0, animation, true);
+                                        }
+                        
+                                        spine.x = this.offsetX;
+                                        spine.y = this.offsetY;
+                                        spine.z = this.offsetZ;
+                        
+                                        if (!this.owner.container) {
+                                            definition = Data.setUp(
+                                                &#x27;interactive&#x27;, this.interactive,
+                                                &#x27;mask&#x27;, this.mask,
+                                                &#x27;rotate&#x27;, this.rotate,
+                                                &#x27;mirror&#x27;, this.mirror,
+                                                &#x27;flip&#x27;, this.flip,
+                                                &#x27;visible&#x27;, this.visible,
+                                                &#x27;cache&#x27;, this.cache,
+                                                &#x27;ignoreOpacity&#x27;, this.ignoreOpacity,
+                                                &#x27;scaleX&#x27;, this.scaleX,
+                                                &#x27;scaleY&#x27;, this.scaleY,
+                                                &#x27;skewX&#x27;, this.skewX,
+                                                &#x27;skewY&#x27;, this.skewY,
+                                                &#x27;rotation&#x27;, this.rotation
+                                            );
+                                            this.owner.addComponent(new RenderContainer(this.owner, definition, this.addToContainer.bind(this)));
+                                            definition.recycle();
+                                        } else {
+                                            this.addToContainer();
                                         }
                                     };
                                 }()),
                         
                                 events: {
-                                    /**
-                                     * Listens for this event to determine whether this spine is visible.
-                                     *
-                                     * @method &#x27;camera-update&#x27;
-                                     * @param camera.viewport {platypus.AABB} Camera position and size.
-                                     */
-                                    &quot;camera-update&quot;: function (camera) {
-                                        this.camera.set(camera.viewport);
-                                        
-                                        // Set visiblity of sprite if within camera bounds
-                                        if (this.spine) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
-                                            this.checkCameraBounds();
-                                        }
-                                    },
-                        
-                                    /**
-                                     * A setup message used to add the spine to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn&#x27;t already have one.
-                                     *
-                                     * @method &#x27;handle-render-load&#x27;
-                                     * @param handlerData {Object} Data from the render handler
-                                     * @param handlerData.container {PIXI.Container} The parent container.
-                                     */
-                                    &quot;handle-render-load&quot;: function (handlerData) {
-                                        if (!this.parentContainer &amp;&amp; handlerData &amp;&amp; handlerData.container) {
-                                            this.addStage(handlerData.container);
-                                            this.updateSprite(true); // Initial set up in case position, etc is needed prior to the first &quot;render&quot; event.
-                                        }
-                                    },
-                        
                                     /**
                                      * The render update message updates the spine.
                                      *
@@ -571,17 +548,17 @@
                                      * @param renderData.container {PIXI.Container} The parent container.
                                      */
                                     &quot;handle-render&quot;: function (renderData) {
-                                        if (!this.spine) {
-                                            return;
-                                        }
+                                        if (this.spine) {
+                                            /**
+                                             * This event is triggered each tick to check for animation updates.
+                                             *
+                                             * @event &#x27;update-animation&#x27;
+                                             * @param playing {Boolean} Whether the animation is in a playing or paused state.
+                                             */
+                                            this.owner.triggerEvent(&#x27;update-animation&#x27;, true);
                         
-                                        if (!this.parentContainer &amp;&amp; !this.addStage(renderData.container)) {
-                                            platypus.debug.warn(&#x27;No PIXI Stage, removing render component from &quot;&#x27; + this.owner.type + &#x27;&quot;.&#x27;);
-                                            this.owner.removeComponent(this);
-                                            return;
+                                            this.spine.update(renderData.delta / 1000);
                                         }
-                        
-                                        this.updateSprite(true);
                                     },
                         
                                     /**
@@ -613,16 +590,6 @@
                                     },
                         
                                     /**
-                                     * Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.
-                                     *
-                                     * @method &#x27;set-mask&#x27;
-                                     * @param mask {Object} The mask. This can specified the same way as the &#x27;mask&#x27; parameter on the component.
-                                     */
-                                    &quot;set-mask&quot;: function (mask) {
-                                        this.setMask(mask);
-                                    },
-                                    
-                                    /**
                                      * Stops the sprite&#x27;s animation.
                                      *
                                      * @method &#x27;stop-animation&#x27;
@@ -630,14 +597,7 @@
                                      * @since 0.9.0
                                      */
                                     &quot;stop-animation&quot;: function (animation) {
-                                        var spine = this.spine;
-                        
-                                        if (animation &amp;&amp; spine.state.hasAnimationByName(animation)) {
-                                            this.currentAnimation = animation;
-                                            spine.state.setAnimationByName(0, animation, false);
-                                        }
-                        
-                                        this.paused = true;
+                                        this.stopAnimation(animation);
                                     },
                                     
                                     /**
@@ -648,42 +608,41 @@
                                      * @since 0.9.0
                                      */
                                     &quot;play-animation&quot;: function (animation) {
-                                        var spine = this.spine;
-                        
-                                        if (animation &amp;&amp; spine.state.hasAnimationByName(animation)) {
-                                            this.currentAnimation = animation;
-                                            spine.state.setAnimationByName(0, animation, true);
-                                        }
-                        
-                                        this.paused = false;
+                                        this.playAnimation(animation);
                                     }
                                 },
                         
                                 methods: {
-                                    addStage: function (stage) {
-                                        if (stage) {
-                                            this.parentContainer = stage;
-                                            this.parentContainer.addChild(this.spine);
+                                    addToContainer: function () {
+                                        var container = this.owner.container;
                         
-                                            //Handle mask
-                                            if (this.mask) {
-                                                this.setMask(this.mask);
-                                            }
-                        
-                                            /**
-                                             * This event is triggered once the RenderSpine is ready to handle interactivity.
-                                             *
-                                             * @event &#x27;input-on&#x27;
-                                             */
-                                            this.owner.triggerEvent(&#x27;input-on&#x27;);
-                                            return stage;
-                                        } else {
-                                            return null;
-                                        }
+                                        container.addChild(this.spine);
+                                        container.reorder = true;
                                     },
                                     
-                                    checkCameraBounds: function () {
-                                        this.isOnCamera = this.owner.parent.isOnCanvas(this.instance.getBounds(false));
+                                    playAnimation: function (animation) {
+                                        var spine = this.spine;
+                        
+                                        if (animation &amp;&amp; spine.state.hasAnimation(animation)) {
+                                            this.currentAnimation = animation;
+                                            spine.state.setAnimation(0, animation, true);
+                                            this.paused = false;
+                        
+                                            return true;
+                                        }
+                        
+                                        return false;
+                                    },
+                        
+                                    stopAnimation: function (animation) {
+                                        var spine = this.spine;
+                        
+                                        if (animation &amp;&amp; spine.state.hasAnimation(animation)) {
+                                            this.currentAnimation = animation;
+                                            spine.state.setAnimation(0, animation, false);
+                                        }
+                        
+                                        this.paused = true;
                                     },
                         
                                     setMixTimes: function (mixTimes) {
@@ -719,105 +678,9 @@
                                         this.mixTimes = stateData.animationToMixTime;
                                     },
                         
-                                    setMask: function (shape) {
-                                        var gfx = null;
-                                        
-                                        if (this.mask &amp;&amp; this.parentContainer) {
-                                            this.parentContainer.removeChild(this.mask);
-                                        }
-                                        
-                                        if (!shape) {
-                                            this.mask = this.container.mask = null;
-                                            return;
-                                        }
-                                        
-                                        if (shape instanceof Graphics) {
-                                            gfx = shape;
-                                        } else {
-                                            gfx = new Graphics();
-                                            gfx.beginFill(0x000000, 1);
-                                            if (typeof shape === &#x27;string&#x27;) {
-                                                processGraphics(gfx, shape);
-                                            } else if (shape.radius) {
-                                                gfx.dc(shape.x || 0, shape.y || 0, shape.radius);
-                                            } else if (shape.width &amp;&amp; shape.height) {
-                                                gfx.r(shape.x || 0, shape.y || 0, shape.width, shape.height);
-                                            }
-                                            gfx.endFill();
-                                        }
-                                        
-                                        gfx.isMask = true;
-                        
-                                        this.mask = this.container.mask = gfx;
-                        
-                                        if (this.parentContainer) {
-                                            this.parentContainer.addChild(this.mask);
-                                        }
-                                    },
-                        
-                                    updateSprite: function (playing) {
-                                        var spine = this.spine,
-                                            m = this.affine.copy(spine.transformMatrix),
-                                            o = null,
-                                            temp = Matrix.TEMP_MATRIX;
-                        
-                                        /**
-                                         * This event is triggered each tick to check for animation updates.
-                                         *
-                                         * @event &#x27;update-animation&#x27;
-                                         * @param playing {Boolean} Whether the animation is in a playing or paused state.
-                                         */
-                                        this.owner.triggerEvent(&#x27;update-animation&#x27;, playing);
-                        
-                                        if (spine.z !== (this.owner.z + this.offsetZ)) {
-                                            if (this.parentContainer) {
-                                                this.parentContainer.reorder = true;
-                                            }
-                                            spine.z = (this.owner.z + this.offsetZ);
-                                        }
-                        
-                                        if (typeof this.owner.opacity === &#x27;number&#x27;) {
-                                            spine.alpha = this.owner.opacity;
-                                        }
-                        
-                                        if (this.owner.orientationMatrix) { // This is a 3x3 2D matrix describing an affine transformation.
-                                            o = this.owner.orientationMatrix;
-                                            temp.tx = o[0][2];
-                                            temp.ty = o[1][2];
-                                            temp.a = o[0][0];
-                                            temp.b = o[1][0];
-                                            temp.c = o[0][1];
-                                            temp.d = o[1][1];
-                                            m.prepend(temp);
-                                        }
-                                        
-                                        temp.tx = this.owner.x;
-                                        temp.ty = this.owner.y;
-                                        temp.a = this.scaleX || 1;// * mirrored;
-                                        temp.b = this.owner.skewX || 0;
-                                        temp.c = this.owner.skewY || 0;
-                                        temp.d = this.scaleY || 1;// * flipped;
-                                        m.prepend(temp);
-                        
-                                        // Set isCameraOn of sprite if within camera bounds
-                                        if (((!this.wasVisible &amp;&amp; this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
-                                            //TODO: This check is running twice when an object is moving and the camera is moving.
-                                            //Find a way to remove the duplication!
-                                            this.checkCameraBounds();
-                                        }
-                                        this.lastX = this.owner.x;
-                                        this.lastY = this.owner.y;
-                                        this.wasVisible = this.visible;
-                                        this.spine.visible = (this.visible &amp;&amp; this.isOnCamera) || this.dragMode;
-                                    },
-                        
                                     destroy: function () {
-                                        this.camera.recycle();
-                                        if (this.parentContainer &amp;&amp; !this.spine.mouseTarget) {
-                                            this.parentContainer.removeChild(this.spine);
-                                            this.parentContainer = null;
-                                            this.spine.destroy();
-                                        }
+                                        this.owner.container.removeChild(this.spine);
+                                        this.spine.destroy();
                                         this.spine = null;
                                         this.mixTimes = null;
                                     }
