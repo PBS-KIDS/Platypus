@@ -26,8 +26,16 @@
             var sound      = '',
                 attributes = null,
                 completed  = function (data/*, cancelled*/) {
-                    if (data.audio) {
-                        this.onComplete(data.audio);
+                    if (data.audio && !this.owner.destroyed) {
+                        //clean up active clips
+                        this.removeClip(data.audio);
+                        
+                        /**
+                         * When a sound effect is finished playing, this event is triggered.
+                         *
+                         * @event clip-complete
+                         */
+                        this.owner.triggerEvent('clip-complete');
                     }
                     data.recycle();
                 };
@@ -473,20 +481,6 @@
                 
                 if (i >= 0) {
                     clips.greenSplice(i).stop();
-                }
-            },
-            
-            onComplete: function (data) {
-                if (!this.owner.destroyed) {
-                    //clean up active clips
-                    this.removeClip(data.audio);
-                    
-                    /**
-                     * When a sound effect is finished playing, this event is triggered.
-                     *
-                     * @event clip-complete
-                     */
-                    this.owner.triggerEvent('clip-complete');
                 }
             },
             
