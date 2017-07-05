@@ -184,7 +184,7 @@
                         }
                     }
 
-                    if (this.owner.triggerEventOnChildren) {
+                    if (!this.paused && this.owner.triggerEventOnChildren) {
                         /**
                          * Triggered every tick on the children entities.
                          *
