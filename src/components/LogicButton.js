@@ -9,7 +9,8 @@
 (function () {
     'use strict';
     
-    var Data = include('platypus.Data');
+    var AABB = include('platypus.AABB'),
+        Data = include('platypus.Data');
 
     return platypus.createComponentClass({
 
@@ -137,6 +138,12 @@
         initialize: function () {
             var state = this.owner.state;
             
+            this.aabb = AABB.setUp();
+            this.lastBottom = null;
+            this.lastLeft = null;
+            this.lastRight = null;
+            this.lastTop = null;
+
             this.state = state;
             state.set('disabled', this.disabled);
             state.set('released', !this.pressed);
@@ -150,6 +157,27 @@
 
         events: {
             /**
+             * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
+             *
+             * @method 'handle-logic'
+             * @since 0.11.4
+             */
+            "handle-logic": function () {
+                var bottom = this.bottom,
+                    left = this.left,
+                    right = this.right,
+                    top = this.top;
+
+                if ((this.lastBottom !== bottom) || (this.lastLeft !== left) || (this.lastRight !== right) || (this.lastTop !== top)) {
+                    this.updatePosition(this.aabb);
+                    this.lastBottom = bottom;
+                    this.lastLeft = left;
+                    this.lastRight = right;
+                    this.lastTop = top;
+                }
+            },
+
+            /**
              * This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.
              *
              * @method 'camera-update'
@@ -158,24 +186,8 @@
              * @since 0.9.0
              */
             "camera-update": function (camera) {
-                var bottom = this.bottom,
-                    left = this.left,
-                    owner = this.owner,
-                    right = this.right,
-                    top = this.top,
-                    vp = camera.viewport;
-
-                if (typeof left === 'number') {
-                    owner.x = vp.left + left;
-                } else if (typeof right === 'number') {
-                    owner.x = vp.right - right;
-                }
-
-                if (typeof top === 'number') {
-                    owner.y = vp.top + top;
-                } else if (typeof bottom === 'number') {
-                    owner.y = vp.bottom - bottom;
-                }
+                this.aabb.set(camera.viewport);
+                this.updatePosition(this.aabb);
             },
 
             /**
@@ -370,6 +382,26 @@
         },
         
         methods: {
+            updatePosition: function (vp) {
+                var bottom = this.bottom,
+                    left = this.left,
+                    owner = this.owner,
+                    right = this.right,
+                    top = this.top;
+
+                if (typeof left === 'number') {
+                    owner.x = vp.left + left;
+                } else if (typeof right === 'number') {
+                    owner.x = vp.right - right;
+                }
+
+                if (typeof top === 'number') {
+                    owner.y = vp.top + top;
+                } else if (typeof bottom === 'number') {
+                    owner.y = vp.bottom - bottom;
+                }
+            },
+
             updateStateAndTrigger: function (event) {
                 var message = null,
                     state = this.state,
@@ -399,6 +431,8 @@
             },
 
             destroy: function () {
+                this.aabb.recycle();
+                this.aabb = null;
                 this.owner.buttonMode = false;
                 this.state = null;
             }
