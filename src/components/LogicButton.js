@@ -160,7 +160,7 @@
              * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
              *
              * @method 'handle-logic'
-             * @since 0.11.4
+             * @since 0.11.5
              */
             "handle-logic": function () {
                 var bottom = this.bottom,
