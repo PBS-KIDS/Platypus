@@ -324,7 +324,7 @@
                         this.spine.update(0.000001);
                     }
 
-                    this.owner.triggerEvent(eventName, event.data);
+                    this.owner.trigger(eventName, event.data);
                 };
             
             return function () {

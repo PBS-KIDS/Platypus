@@ -43,10 +43,24 @@ platypus.Messenger = (function () {
         var args = null,
             i = 0,
             count = 0,
-            msg = message;
+            msg = message,
+            indexOf = 0,
+            splitEvents = null;
         
         if (typeof events === 'string') {
-            return this.triggerEvent.apply(this, arguments);
+            indexOf = events.indexOf(" ");
+            if (indexOf === -1) {
+                return this.triggerEvent.apply(this, arguments);
+            } else {
+                splitEvents = events.split(" ");
+                args = Array.prototype.greenSlice.call(arguments);
+                for (i = 0; i < splitEvents.length; i++) {
+                    args[0] = splitEvents[i];
+                    count += this.triggerEvent.apply(this, args);
+                }
+                args.recycle();
+                return count;
+            }
         } else if (Array.isArray(events)) {
             args = Array.prototype.greenSlice.call(arguments);
             for (i = 0; i < events.length; i++) {
