@@ -148,6 +148,33 @@
             skeleton: null,
 
             /**
+             * Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.
+             *
+             * @property rotate
+             * @type Boolean
+             * @default false
+             */
+            rotate: false,
+
+            /**
+             * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.
+             *
+             * @property mirror
+             * @type Boolean
+             * @default false
+             */
+            mirror: false,
+
+            /**
+             * Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.
+             *
+             * @property flip
+             * @type Boolean
+             * @default false
+             */
+            flip: false,
+
+            /**
              * Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.
              *
              * @property visible
