@@ -160,7 +160,7 @@
              * This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.
              *
              * @method 'handle-logic'
-             * @since 0.11.4
+             * @since 0.11.5
              */
             "handle-logic": function () {
                 var bottom = this.bottom,
@@ -215,7 +215,9 @@
                          * @since 0.9.1
                          */
                         this.updateStateAndTrigger('pressed');
-                        eventData.pixiEvent.stopPropagation();
+                        if (eventData && eventData.pixiEvent && eventData.pixiEvent.stopPropagation) { // ensure a properly formed event has been sent
+                            eventData.pixiEvent.stopPropagation();
+                        }
 
                         // Doing this prevents the call from reccurring.
                         if (this.useOnce && this.removeEventListener) {

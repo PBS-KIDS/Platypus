@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.4",
+        "version": "0.11.5",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -2929,7 +2929,16 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 95,
+            "line": 33,
+            "description": "When a sound effect is finished playing, this event is triggered.",
+            "itemtype": "event",
+            "name": "clip-complete",
+            "class": "platypus.components.AudioSFX",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\AudioSFX.js",
+            "line": 103,
             "description": "Use the audioMap property object to map messages triggered with audio clips to play. At least one audio mapping should be included for audio to play. Here is an example audioMap object:\n\n      {\n          \"message-triggered\": \"audio-id\",\n          // This simple form is useful to listen for \"message-triggered\" and play \"audio-id\" using default audio properties.\n\n          \"another-message\": {\n          // To specify audio properties, instead of mapping the message to an audio id string, map it to an object with one or more of the properties shown below. Many of these properties directly correspond to SoundJS play parameters.\n\n              \"sound\": \"another-audio-id\",\n              // Required. This is the audio clip to play when \"another-message\" is triggered.\n\n              \"interrupt\": \"none\",\n              // Optional. Can be \"any\", \"early\", \"late\", or \"none\". Determines how to handle the audio when it's already playing but a new play request is received. Default is \"any\".\n\n              \"delay\": 500,\n              // Optional. Time in milliseconds to wait before playing audio once the message is received. Default is 0.\n\n              \"offset\": 1500,\n              // Optional. Time in milliseconds determining where in the audio clip to begin playback. Default is 0.\n\n              \"length\": 2500,\n              // Optional. Time in milliseconds to play audio before stopping it. If 0 or not specified, play continues to the end of the audio clip.\n\n              \"loop\": 4,\n              // Optional. Determines how many more times to play the audio clip once it finishes. Set to -1 for an infinite loop. Default is 0.\n\n              \"volume\": 0.75,\n              // Optional. Used to specify how loud to play audio on a range from 0 (mute) to 1 (full volume). Default is 1.\n\n              \"pan\": -0.25\n              // Optional. Used to specify the pan of audio on a range of -1 (left) to 1 (right). Default is 0.\n          }\n      }",
             "itemtype": "property",
             "name": "audioMap",
@@ -2940,7 +2949,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 137,
+            "line": 145,
             "description": "Determines whether a sound that's started should play through completely regardless of entity state changes.",
             "itemtype": "property",
             "name": "forcePlayThrough",
@@ -2951,7 +2960,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 146,
+            "line": 154,
             "description": "Optional. Specifies whether this component should listen to events matching the animationMap to animate. Set this to true if the component should animate for on events.",
             "itemtype": "property",
             "name": "eventBased",
@@ -2963,7 +2972,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 156,
+            "line": 164,
             "description": "Optional. Specifies whether this component should listen to changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on this.owner.state.",
             "itemtype": "property",
             "name": "stateBased",
@@ -2975,7 +2984,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 191,
+            "line": 199,
             "description": "Listens for messages specified by the `audioMap` and on receiving them, begins playing corresponding audio clips. Audio play message can optionally include several parameters, many of which correspond with SoundJS play parameters.",
             "itemtype": "method",
             "name": "'*'",
@@ -3018,7 +3027,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 218,
+            "line": 226,
             "description": "On each `handle-render` message, this component checks its list of playing audio clips and stops any clips whose play length has been reached.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -3027,7 +3036,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 242,
+            "line": 250,
             "description": "This component listens for changes to the entity state and tests the current state of the entity against the audio map. If a match is found, the matching audio clip is played.",
             "itemtype": "method",
             "name": "'state-changed'",
@@ -3036,7 +3045,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 251,
+            "line": 259,
             "description": "On receiving this message, the audio will mute if unmuted, and unmute if muted.",
             "itemtype": "method",
             "name": "'toggle-mute'",
@@ -3052,7 +3061,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 271,
+            "line": 279,
             "description": "On receiving this message, audio will stop playing.",
             "itemtype": "method",
             "name": "'stop-audio'",
@@ -3068,7 +3077,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 287,
+            "line": 295,
             "description": "On receiving this message all audio will mute, or a particular sound instance will mute if an id is specified.",
             "itemtype": "method",
             "name": "'mute-audio'",
@@ -3084,7 +3093,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 302,
+            "line": 310,
             "description": "On receiving this message all audio will unmute, or a particular sound instance will unmute if an id is specified.",
             "itemtype": "method",
             "name": "'unmute-audio'",
@@ -3100,7 +3109,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 317,
+            "line": 325,
             "description": "On receiving this message all audio will pause, or a particular sound instance will pause if an id is specified.",
             "itemtype": "method",
             "name": "'pause-audio'",
@@ -3116,7 +3125,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 331,
+            "line": 339,
             "description": "On receiving this message all audio will unpause, or a particular sound instance will unpause if an id is specified.",
             "itemtype": "method",
             "name": "'unpause-audio'",
@@ -3132,7 +3141,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 345,
+            "line": 353,
             "description": "This message sets the volume of playing audio.",
             "itemtype": "method",
             "name": "'set-pan'",
@@ -3155,7 +3164,7 @@
         },
         {
             "file": "src\\components\\AudioSFX.js",
-            "line": 368,
+            "line": 376,
             "description": "This message sets the volume of playing audio.",
             "itemtype": "method",
             "name": "'set-volume'",
@@ -3172,15 +3181,6 @@
                     "optional": true
                 }
             ],
-            "class": "platypus.components.AudioSFX",
-            "namespace": "platypus.components"
-        },
-        {
-            "file": "src\\components\\AudioSFX.js",
-            "line": 484,
-            "description": "When a sound effect is finished playing, this event is triggered.",
-            "itemtype": "event",
-            "name": "clip-complete",
             "class": "platypus.components.AudioSFX",
             "namespace": "platypus.components"
         },
@@ -7305,7 +7305,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 19,
+            "line": 20,
             "description": "The event to trigger when pressed.",
             "itemtype": "property",
             "name": "onPress",
@@ -7316,7 +7316,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 28,
+            "line": 29,
             "description": "The event to trigger when released.",
             "itemtype": "property",
             "name": "onRelease",
@@ -7327,7 +7327,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 37,
+            "line": 38,
             "description": "The event to trigger when cancelled.",
             "itemtype": "property",
             "name": "onCancel",
@@ -7338,7 +7338,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 46,
+            "line": 47,
             "description": "The event to trigger when the user mouses over the button",
             "itemtype": "property",
             "name": "hoverAudio",
@@ -7350,7 +7350,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 56,
+            "line": 57,
             "description": "Whether this button's actions should be limited to the initial press/release.",
             "itemtype": "property",
             "name": "useOnce",
@@ -7361,7 +7361,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 65,
+            "line": 66,
             "description": "Whether this button should start disabled.",
             "itemtype": "property",
             "name": "disabled",
@@ -7372,7 +7372,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 74,
+            "line": 75,
             "description": "Determines whether this button should behave as a toggle.",
             "itemtype": "property",
             "name": "toggle",
@@ -7384,7 +7384,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 84,
+            "line": 85,
             "description": "Specifies whether the button starts off 'pressed'; typically only useful for toggle buttons.",
             "itemtype": "property",
             "name": "pressed",
@@ -7396,7 +7396,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 96,
+            "line": 97,
             "description": "This sets the distance in world units from the bottom of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.bottom`.",
             "itemtype": "property",
             "name": "bottom",
@@ -7408,7 +7408,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 106,
+            "line": 107,
             "description": "This sets the distance in world units from the left of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.left`.",
             "itemtype": "property",
             "name": "left",
@@ -7420,7 +7420,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 116,
+            "line": 117,
             "description": "This sets the distance in world units from the right of the camera's world viewport. If set, it will override the entity's x coordinate. This property is accessible on the entity as `entity.right`.",
             "itemtype": "property",
             "name": "right",
@@ -7432,7 +7432,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 126,
+            "line": 127,
             "description": "This sets the distance in world units from the top of the camera's world viewport. If set, it will override the entity's y coordinate. This property is accessible on the entity as `entity.top`.",
             "itemtype": "property",
             "name": "top",
@@ -7444,7 +7444,17 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 152,
+            "line": 159,
+            "description": "This component uses location updates to reposition the entity if its bottom, left, right, or top properties have been set.",
+            "itemtype": "method",
+            "name": "'handle-logic'",
+            "since": "0.11.5",
+            "class": "platypus.components.LogicButton",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\LogicButton.js",
+            "line": 180,
             "description": "This component listens for camera updates to reposition the entity if its bottom, left, right, or top properties have been set.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -7468,7 +7478,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 181,
+            "line": 193,
             "description": "Triggers events per the component's definition when a press is made.",
             "itemtype": "method",
             "name": "'mousedown'",
@@ -7477,7 +7487,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 195,
+            "line": 207,
             "description": "This event is triggered when the button is pressed to mimic keypress events. If the button is a toggle button, this only occurs on up-to-down.",
             "itemtype": "event",
             "name": "'pressed'",
@@ -7511,7 +7521,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 216,
+            "line": 228,
             "description": "Triggers events per the component's definition when a press is released.",
             "itemtype": "method",
             "name": "'pressup'",
@@ -7520,7 +7530,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 230,
+            "line": 242,
             "description": "This event is triggered when the button is pressed and the mouse/touch is dragged off-target before release.",
             "itemtype": "event",
             "name": "'cancelled'",
@@ -7554,7 +7564,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 254,
+            "line": 266,
             "description": "This event is triggered when the button is released, or on the down-to-up change for toggle buttons.",
             "itemtype": "event",
             "name": "'released'",
@@ -7588,7 +7598,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 282,
+            "line": 294,
             "description": "If a press moves over the button, it's not cancelled.",
             "itemtype": "method",
             "name": "'mouseover'",
@@ -7597,7 +7607,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 296,
+            "line": 308,
             "description": "If a press moves off of the button, it's cancelled.",
             "itemtype": "method",
             "name": "'mouseout'",
@@ -7606,7 +7616,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 307,
+            "line": 319,
             "description": "Disables the entity.",
             "itemtype": "method",
             "name": "'disable'",
@@ -7615,7 +7625,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 317,
+            "line": 329,
             "description": "Enables the entity.",
             "itemtype": "method",
             "name": "'enable'",
@@ -7624,7 +7634,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 327,
+            "line": 339,
             "description": "Toggles whether the entity is disabled.",
             "itemtype": "method",
             "name": "'toggle-disabled'",
@@ -7633,7 +7643,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 339,
+            "line": 351,
             "description": "Sets the entity's highlighted state to `true`.",
             "itemtype": "method",
             "name": "'highlight'",
@@ -7643,7 +7653,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 349,
+            "line": 361,
             "description": "Sets the entity's highlighted state to `false`.",
             "itemtype": "method",
             "name": "'unhighlight'",
@@ -7653,7 +7663,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 359,
+            "line": 371,
             "description": "Toggles the entity's highlighted state.",
             "itemtype": "method",
             "name": "'toggle-highlight'",
