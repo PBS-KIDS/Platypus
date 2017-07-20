@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.5 API Documentation : src\components\RenderSpine.js</title>
+	<title>platypus v0.11.6 API Documentation : src\components\RenderSpine.js</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.5</em>
+            <em>API Documentation for: 0.11.6</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -304,6 +304,33 @@
                                     skeleton: null,
                         
                                     /**
+                                     * Optional. Whether this object can be rotated. It&#x27;s rotational angle is set by setting the this.owner.rotation value on the entity.
+                                     *
+                                     * @property rotate
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    rotate: false,
+                        
+                                    /**
+                                     * Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.
+                                     *
+                                     * @property mirror
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    mirror: false,
+                        
+                                    /**
+                                     * Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be &gt; 180.
+                                     *
+                                     * @property flip
+                                     * @type Boolean
+                                     * @default false
+                                     */
+                                    flip: false,
+                        
+                                    /**
                                      * Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.
                                      *
                                      * @property visible
@@ -453,7 +480,7 @@
                                                 this.spine.update(0.000001);
                                             }
                         
-                                            this.owner.triggerEvent(eventName, event.data);
+                                            this.owner.trigger(eventName, event.data);
                                         };
                                     
                                     return function () {
