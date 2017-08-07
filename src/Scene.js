@@ -113,7 +113,7 @@ platypus.Scene = (function () {
                 properties = null,
                 messages = null;
                 
-            this.holds = Data.setUp('count', 2, 'release', releaseHold.bind(this));
+            this.holds = Data.setUp('count', 1, 'release', releaseHold.bind(this));
             this.storeMessages = true;
             this.storedMessages = Array.setUp();
             this.layers = Array.setUp();
@@ -225,21 +225,12 @@ platypus.Scene = (function () {
         },
         proto = extend(Scene, State);
         
-    /**
-     * Triggers "scene-live" on the Scene layers once the Scene is finished loading and the transition into the Scene has finished.
-     *
-     * @method enterDone
-     */
-    proto.enterDone = function () {
-        this.holds.release();
-    };
-
     proto.sceneLive = function () {
         platypus.game.currentScene = this;
         platypus.debug.olive('Scene live: ' + this.id);
         
         /**
-         * This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.
+         * This event is triggered on the layers once the Scene is finished loading.
          *
          * @event 'scene-live'
          * @param data {Object} A list of key-value pairs of data sent into this Scene from the previous Scene.
