@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.6",
+        "version": "0.11.7",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -14907,17 +14907,8 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 228,
-            "description": "Triggers \"scene-live\" on the Scene layers once the Scene is finished loading and the transition into the Scene has finished.",
-            "itemtype": "method",
-            "name": "enterDone",
-            "class": "platypus.Scene",
-            "namespace": "platypus"
-        },
-        {
-            "file": "src\\Scene.js",
-            "line": 241,
-            "description": "This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.",
+            "line": 232,
+            "description": "This event is triggered on the layers once the Scene is finished loading.",
             "itemtype": "event",
             "name": "'scene-live'",
             "params": [
@@ -14932,7 +14923,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 250,
+            "line": 241,
             "description": "Triggers 'scene-ended' on the layer.",
             "itemtype": "method",
             "name": "exitStart",
@@ -14941,7 +14932,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 258,
+            "line": 249,
             "description": "This event is triggered on the layers once the Scene is over.",
             "itemtype": "event",
             "name": "'scene-ended'",
@@ -14958,7 +14949,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 268,
+            "line": 259,
             "description": "This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.",
             "itemtype": "method",
             "name": "triggerOnChildren",
@@ -14979,7 +14970,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 290,
+            "line": 281,
             "description": "This method will return the first entity it finds with a matching id.",
             "itemtype": "method",
             "name": "getEntityById",
@@ -14999,7 +14990,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 315,
+            "line": 306,
             "description": "This method will return all game entities that match the provided type.",
             "itemtype": "method",
             "name": "getEntitiesByType",
@@ -15019,7 +15010,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 340,
+            "line": 331,
             "description": "This method destroys all the layers in the scene.",
             "itemtype": "method",
             "name": "exit",
@@ -15028,7 +15019,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 360,
+            "line": 351,
             "description": "Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.",
             "itemtype": "method",
             "name": "getAssetList",
@@ -15048,7 +15039,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 388,
+            "line": 379,
             "description": "Returns all of the dynamic assets required for the Scene.",
             "itemtype": "method",
             "name": "getLateAssetList",
