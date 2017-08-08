@@ -254,6 +254,7 @@
             this.lastY = this.owner.y;
             this.camera = AABB.setUp();
             this.isOnCamera = true;
+            this.needsCameraCheck = true;
 
             this._tint = null;
 
@@ -343,9 +344,7 @@
                 this.camera.set(camera.viewport);
                 
                 // Set visiblity of sprite if within camera bounds
-                if (this.container) { //TODO: At some point, may want to do this according to window viewport instead of world viewport so that native PIXI bounds checks across the whole stage can be used. - DDD 9-21-15
-                    this.checkCameraBounds();
-                }
+                this.needsCameraCheck = true;
             },
             
             /**
@@ -409,10 +408,6 @@
         },
         
         methods: {
-            checkCameraBounds: function () {
-                this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
-            },
-            
             addStage: function (stage) {
                 if (stage) {
                     this.parentContainer = stage;
@@ -469,6 +464,7 @@
                     if (this.container.reorder) {
                         this.container.reorder = false;
                         this.container.children.sort(sort);
+                        this.needsCameraCheck = true; // reorder is set when adding children, so force another camera check.
                     }
                     
                     if (this.mirror || this.flip) {
@@ -496,11 +492,14 @@
                     }
                     
                     // Set isCameraOn of sprite if within camera bounds
-                    if (this.container && ((!this.wasVisible && this.visible) || this.lastX !== this.owner.x || this.lastY !== this.owner.y)) {
-                        //TODO: This check is running twice when an object is moving and the camera is moving.
-                        //Find a way to remove the duplication!
-                        this.checkCameraBounds();
+                    if (!this.needsCameraCheck) {
+                        this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
                     }
+                    if (this.container && (this.needsCameraCheck || (!this.wasVisible && this.visible))) {
+                        this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
+                        this.needsCameraCheck = false;
+                    }
+                    
                     this.lastX = this.owner.x;
                     this.lastY = this.owner.y;
                     this.wasVisible = this.visible;
