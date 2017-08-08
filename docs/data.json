@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.5",
+        "version": "0.11.7",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -7521,7 +7521,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 228,
+            "line": 230,
             "description": "Triggers events per the component's definition when a press is released.",
             "itemtype": "method",
             "name": "'pressup'",
@@ -7530,7 +7530,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 242,
+            "line": 244,
             "description": "This event is triggered when the button is pressed and the mouse/touch is dragged off-target before release.",
             "itemtype": "event",
             "name": "'cancelled'",
@@ -7564,7 +7564,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 266,
+            "line": 268,
             "description": "This event is triggered when the button is released, or on the down-to-up change for toggle buttons.",
             "itemtype": "event",
             "name": "'released'",
@@ -7598,7 +7598,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 294,
+            "line": 296,
             "description": "If a press moves over the button, it's not cancelled.",
             "itemtype": "method",
             "name": "'mouseover'",
@@ -7607,7 +7607,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 308,
+            "line": 310,
             "description": "If a press moves off of the button, it's cancelled.",
             "itemtype": "method",
             "name": "'mouseout'",
@@ -7616,7 +7616,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 319,
+            "line": 321,
             "description": "Disables the entity.",
             "itemtype": "method",
             "name": "'disable'",
@@ -7625,7 +7625,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 329,
+            "line": 331,
             "description": "Enables the entity.",
             "itemtype": "method",
             "name": "'enable'",
@@ -7634,7 +7634,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 339,
+            "line": 341,
             "description": "Toggles whether the entity is disabled.",
             "itemtype": "method",
             "name": "'toggle-disabled'",
@@ -7643,7 +7643,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 351,
+            "line": 353,
             "description": "Sets the entity's highlighted state to `true`.",
             "itemtype": "method",
             "name": "'highlight'",
@@ -7653,7 +7653,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 361,
+            "line": 363,
             "description": "Sets the entity's highlighted state to `false`.",
             "itemtype": "method",
             "name": "'unhighlight'",
@@ -7663,7 +7663,7 @@
         },
         {
             "file": "src\\components\\LogicButton.js",
-            "line": 371,
+            "line": 373,
             "description": "Toggles the entity's highlighted state.",
             "itemtype": "method",
             "name": "'toggle-highlight'",
@@ -10605,6 +10605,39 @@
         {
             "file": "src\\components\\RenderSpine.js",
             "line": 150,
+            "description": "Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.",
+            "itemtype": "property",
+            "name": "rotate",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderSpine",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderSpine.js",
+            "line": 159,
+            "description": "Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be > 90  and < 270.",
+            "itemtype": "property",
+            "name": "mirror",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderSpine",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderSpine.js",
+            "line": 168,
+            "description": "Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be > 180.",
+            "itemtype": "property",
+            "name": "flip",
+            "type": "Boolean",
+            "default": "false",
+            "class": "platypus.components.RenderSpine",
+            "namespace": "platypus.components"
+        },
+        {
+            "file": "src\\components\\RenderSpine.js",
+            "line": 177,
             "description": "Optional. Whether this object is visible or not. To change the visible value dynamically set this.owner.state.visible to true or false.",
             "itemtype": "property",
             "name": "visible",
@@ -10615,7 +10648,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 159,
+            "line": 186,
             "description": "Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is `false`.",
             "itemtype": "property",
             "name": "eventBased",
@@ -10626,7 +10659,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 168,
+            "line": 195,
             "description": "Optional. Specifies whether this component should create a StateRender component to handle changes in the entity's state that match the animationMap to animate. Set this to true if the component should animate based on `this.owner.state`. Default is `true`.",
             "itemtype": "property",
             "name": "stateBased",
@@ -10637,7 +10670,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 179,
+            "line": 206,
             "description": "Prevents the spine from becoming invisible out of frame and losing mouse input connection.",
             "itemtype": "property",
             "name": "dragMode",
@@ -10648,7 +10681,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 188,
+            "line": 215,
             "description": "Optional. The X scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleX",
@@ -10659,7 +10692,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 197,
+            "line": 224,
             "description": "Optional. The Y scaling factor for the image. Defaults to 1.",
             "itemtype": "property",
             "name": "scaleY",
@@ -10670,7 +10703,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 206,
+            "line": 233,
             "description": "Optional. The X swek factor of the sprite. Defaults to 0.",
             "itemtype": "property",
             "name": "skewX",
@@ -10681,7 +10714,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 215,
+            "line": 242,
             "description": "Optional. The Y skew factor for the image. Defaults to 0.",
             "itemtype": "property",
             "name": "skewY",
@@ -10692,7 +10725,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 224,
+            "line": 251,
             "description": "Optional. The rotation of the spine in degrees. All spines on the same entity are rotated the same amount unless they ignore the rotation value by setting 'rotate' to false.",
             "itemtype": "property",
             "name": "rotation",
@@ -10703,7 +10736,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 233,
+            "line": 260,
             "description": "Optional. The x position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "x",
@@ -10714,7 +10747,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 242,
+            "line": 269,
             "description": "Optional. The y position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "y",
@@ -10725,7 +10758,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 251,
+            "line": 278,
             "description": "Optional. The z position of the entity. Defaults to 0.",
             "itemtype": "property",
             "name": "z",
@@ -10736,7 +10769,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 285,
+            "line": 312,
             "description": "This event fires each time an animation completes.",
             "itemtype": "event",
             "name": "'animation-ended'",
@@ -10752,7 +10785,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 387,
+            "line": 414,
             "description": "The render update message updates the spine.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10775,7 +10808,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 396,
+            "line": 423,
             "description": "This event is triggered each tick to check for animation updates.",
             "itemtype": "event",
             "name": "'update-animation'",
@@ -10791,7 +10824,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 408,
+            "line": 435,
             "description": "This sets the mix times.",
             "itemtype": "method",
             "name": "'set-mix-times'",
@@ -10807,7 +10840,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 418,
+            "line": 445,
             "description": "This event makes the spine invisible.",
             "itemtype": "method",
             "name": "'hide'",
@@ -10816,7 +10849,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 427,
+            "line": 454,
             "description": "This event makes the spine visible.",
             "itemtype": "method",
             "name": "'show'",
@@ -10825,7 +10858,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 436,
+            "line": 463,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -10843,7 +10876,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 447,
+            "line": 474,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
@@ -14537,7 +14570,7 @@
         },
         {
             "file": "src\\Messenger.js",
-            "line": 69,
+            "line": 83,
             "description": "This method is used by both internal components and external entities to trigger messages on this entity. When triggered, entity checks through bound handlers to run as appropriate. This method is identical to Spring Roll's [EventDispatcher.trigger](http://springroll.io/SpringRoll/docs/classes/springroll.EventDispatcher.html#method_trigger), but uses alternative Array methods to alleviate excessive GC.",
             "itemtype": "method",
             "name": "triggerEvent",
@@ -14571,7 +14604,7 @@
         },
         {
             "file": "src\\Messenger.js",
-            "line": 159,
+            "line": 173,
             "description": "This method returns all the messages that this entity is concerned about.",
             "itemtype": "method",
             "name": "getMessageIds",
@@ -14584,7 +14617,7 @@
         },
         {
             "file": "src\\Messenger.js",
-            "line": 169,
+            "line": 183,
             "description": "This method relinguishes Messenger properties",
             "itemtype": "method",
             "name": "destroy",
@@ -14874,17 +14907,8 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 228,
-            "description": "Triggers \"scene-live\" on the Scene layers once the Scene is finished loading and the transition into the Scene has finished.",
-            "itemtype": "method",
-            "name": "enterDone",
-            "class": "platypus.Scene",
-            "namespace": "platypus"
-        },
-        {
-            "file": "src\\Scene.js",
-            "line": 241,
-            "description": "This event is triggered on the layers once the Scene is finished loading and the transition into the Scene has finished.",
+            "line": 232,
+            "description": "This event is triggered on the layers once the Scene is finished loading.",
             "itemtype": "event",
             "name": "'scene-live'",
             "params": [
@@ -14899,7 +14923,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 250,
+            "line": 241,
             "description": "Triggers 'scene-ended' on the layer.",
             "itemtype": "method",
             "name": "exitStart",
@@ -14908,7 +14932,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 258,
+            "line": 249,
             "description": "This event is triggered on the layers once the Scene is over.",
             "itemtype": "event",
             "name": "'scene-ended'",
@@ -14925,7 +14949,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 268,
+            "line": 259,
             "description": "This method is used by external objects to trigger messages on the layers as well as internal entities broadcasting messages across the scope of the scene.",
             "itemtype": "method",
             "name": "triggerOnChildren",
@@ -14946,7 +14970,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 290,
+            "line": 281,
             "description": "This method will return the first entity it finds with a matching id.",
             "itemtype": "method",
             "name": "getEntityById",
@@ -14966,7 +14990,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 315,
+            "line": 306,
             "description": "This method will return all game entities that match the provided type.",
             "itemtype": "method",
             "name": "getEntitiesByType",
@@ -14986,7 +15010,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 340,
+            "line": 331,
             "description": "This method destroys all the layers in the scene.",
             "itemtype": "method",
             "name": "exit",
@@ -14995,7 +15019,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 360,
+            "line": 351,
             "description": "Returns all of the assets required for the Scene. This method calls the corresponding method on all entities to determine the list of assets. It ignores assets that have already been preloaded.",
             "itemtype": "method",
             "name": "getAssetList",
@@ -15015,7 +15039,7 @@
         },
         {
             "file": "src\\Scene.js",
-            "line": 388,
+            "line": 379,
             "description": "Returns all of the dynamic assets required for the Scene.",
             "itemtype": "method",
             "name": "getLateAssetList",

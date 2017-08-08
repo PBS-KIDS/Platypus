@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
     <link rel="shortcut icon" type="image/x-icon" href="../assets/favicon.ico">
     <script src="../assets/js/yui-source.js"></script>
-	<title>platypus v0.11.5 API Documentation : platypus.components.RenderSpine</title>
+	<title>platypus v0.11.7 API Documentation : platypus.components.RenderSpine</title>
 </head>
 <body class="yui3-skin-sam">
 
@@ -17,7 +17,7 @@
                 <h1><a href="https://github.com/PBS-KIDS/Platypus"><img src="..\assets\platypus-title.png" title="platypus"></a></h1>
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Documentation for: 0.11.5</em>
+            <em>API Documentation for: 0.11.7</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -277,11 +277,19 @@
                         
                                                     </li>
                                                     <li class="index-item property">
+                                                        <a href="#property_flip">flip</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
                                                         <a href="#property_interactive">interactive</a>
                         
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_mask">mask</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_mirror">mirror</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -298,6 +306,10 @@
                                                     </li>
                                                     <li class="index-item property">
                                                         <a href="#property_offsetZ">offsetZ</a>
+                        
+                                                    </li>
+                                                    <li class="index-item property">
+                                                        <a href="#property_rotate">rotate</a>
                         
                                                     </li>
                                                     <li class="index-item property">
@@ -388,7 +400,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l387"><code>&#x27;handle-render&#x27;:387</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l414"><code>&#x27;handle-render&#x27;:414</code></a>
                                                     </p>
                                             
                                             
@@ -447,7 +459,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l418"><code>&#x27;hide&#x27;:418</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l445"><code>&#x27;hide&#x27;:445</code></a>
                                                     </p>
                                             
                                             
@@ -483,7 +495,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l447"><code>&#x27;play-animation&#x27;:447</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l474"><code>&#x27;play-animation&#x27;:474</code></a>
                                                     </p>
                                             
                                             
@@ -538,7 +550,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l408"><code>&#x27;set-mix-times&#x27;:408</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l435"><code>&#x27;set-mix-times&#x27;:435</code></a>
                                                     </p>
                                             
                                             
@@ -585,7 +597,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l427"><code>&#x27;show&#x27;:427</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l454"><code>&#x27;show&#x27;:454</code></a>
                                                     </p>
                                             
                                             
@@ -621,7 +633,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l436"><code>&#x27;stop-animation&#x27;:436</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l463"><code>&#x27;stop-animation&#x27;:463</code></a>
                                                     </p>
                                             
                                             
@@ -1301,7 +1313,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l179"><code>dragMode:179</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l206"><code>dragMode:206</code></a>
                                                     </p>
                                             
                                             
@@ -1327,7 +1339,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l159"><code>eventBased:159</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l186"><code>eventBased:186</code></a>
                                                     </p>
                                             
                                             
@@ -1335,6 +1347,32 @@
                                             
                                                 <div class="description">
                                                     <p>Optional. Specifies whether this component should create an EventRender component to listen to events matching the animationMap to animate. Set this to true if the component should animate for on events. Default is <code>false</code>.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_flip" class="property item">
+                                                <h3 class="name"><code>flip</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l168"><code>flip:168</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this object can be flipped over Y. To flip it over Y set the this.owner.rotation to be &gt; 180.</p>
                                             
                                                 </div>
                                             
@@ -1408,6 +1446,32 @@
                                                 </div>
                                             
                                                     <p><strong>Default:</strong> null</p>
+                                            
+                                            
+                                            </div>
+                                            <div id="property_mirror" class="property item">
+                                                <h3 class="name"><code>mirror</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l159"><code>mirror:159</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Whether this object can be mirrored over X. To mirror it over X set the this.owner.rotation value to be &gt; 90  and &lt; 270.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
                                             
                                             
                                             </div>
@@ -1521,6 +1585,32 @@
                                             
                                             
                                             </div>
+                                            <div id="property_rotate" class="property item">
+                                                <h3 class="name"><code>rotate</code></h3>
+                                                <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Boolean" class="crosslink external" target="_blank">Boolean</a></span>
+                                            
+                                            
+                                            
+                                            
+                                            
+                                                <div class="meta">
+                                                            <p>
+                                                            Defined in
+                                                    <a href="../files/src_components_RenderSpine.js.html#l150"><code>rotate:150</code></a>
+                                                    </p>
+                                            
+                                            
+                                                </div>
+                                            
+                                                <div class="description">
+                                                    <p>Optional. Whether this object can be rotated. It's rotational angle is set by setting the this.owner.rotation value on the entity.</p>
+                                            
+                                                </div>
+                                            
+                                                    <p><strong>Default:</strong> false</p>
+                                            
+                                            
+                                            </div>
                                             <div id="property_rotation" class="property item">
                                                 <h3 class="name"><code>rotation</code></h3>
                                                 <span class="type"><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Number" class="crosslink external" target="_blank">Number</a></span>
@@ -1532,7 +1622,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l224"><code>rotation:224</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l251"><code>rotation:251</code></a>
                                                     </p>
                                             
                                             
@@ -1558,7 +1648,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l188"><code>scaleX:188</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l215"><code>scaleX:215</code></a>
                                                     </p>
                                             
                                             
@@ -1584,7 +1674,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l197"><code>scaleY:197</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l224"><code>scaleY:224</code></a>
                                                     </p>
                                             
                                             
@@ -1636,7 +1726,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l206"><code>skewX:206</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l233"><code>skewX:233</code></a>
                                                     </p>
                                             
                                             
@@ -1662,7 +1752,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l215"><code>skewY:215</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l242"><code>skewY:242</code></a>
                                                     </p>
                                             
                                             
@@ -1688,7 +1778,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l168"><code>stateBased:168</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l195"><code>stateBased:195</code></a>
                                                     </p>
                                             
                                             
@@ -1714,7 +1804,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l150"><code>visible:150</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l177"><code>visible:177</code></a>
                                                     </p>
                                             
                                             
@@ -1740,7 +1830,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l233"><code>x:233</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l260"><code>x:260</code></a>
                                                     </p>
                                             
                                             
@@ -1766,7 +1856,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l242"><code>y:242</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l269"><code>y:269</code></a>
                                                     </p>
                                             
                                             
@@ -1792,7 +1882,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l251"><code>z:251</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l278"><code>z:278</code></a>
                                                     </p>
                                             
                                             
@@ -1824,7 +1914,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l285"><code>&#x27;animation-ended&#x27;:285</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l312"><code>&#x27;animation-ended&#x27;:312</code></a>
                                                     </p>
                                             
                                             
@@ -1866,7 +1956,7 @@
                                                 <div class="meta">
                                                             <p>
                                                             Defined in
-                                                    <a href="../files/src_components_RenderSpine.js.html#l396"><code>&#x27;update-animation&#x27;:396</code></a>
+                                                    <a href="../files/src_components_RenderSpine.js.html#l423"><code>&#x27;update-animation&#x27;:423</code></a>
                                                     </p>
                                             
                                             
