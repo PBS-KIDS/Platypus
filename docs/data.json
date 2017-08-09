@@ -1,7 +1,7 @@
 {
     "project": {
         "name": "platypus",
-        "version": "0.11.7",
+        "version": "0.11.8",
         "description": "Platypus Docs",
         "url": "https://github.com/PBS-KIDS/Platypus",
         "logo": "assets/platypus-title.png"
@@ -10223,7 +10223,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 314,
+            "line": 315,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "method",
             "name": "'cache'",
@@ -10232,7 +10232,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 324,
+            "line": 325,
             "description": "On receiving a \"cache\" event, this component triggers \"cache-sprite\" to cache its rendering into the background. This is an optimization for static images to reduce render calls.",
             "itemtype": "event",
             "name": "'cache-sprite'",
@@ -10248,7 +10248,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 336,
+            "line": 337,
             "description": "Listens for this event to determine whether this sprite is visible.",
             "itemtype": "method",
             "name": "'camera-update'",
@@ -10264,7 +10264,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 351,
+            "line": 350,
             "description": "A setup message used to add the sprite to the stage. On receiving this message, the component sets its parent container to the stage contained in the message if it doesn't already have one.",
             "itemtype": "method",
             "name": "'handle-render-load'",
@@ -10287,7 +10287,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 365,
+            "line": 364,
             "description": "The render update message updates the sprite. If a sprite doesn't have a container, it's removed.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10310,7 +10310,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 382,
+            "line": 381,
             "description": "This event makes the sprite invisible.",
             "itemtype": "method",
             "name": "'hide-sprite'",
@@ -10319,7 +10319,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 391,
+            "line": 390,
             "description": "This event makes the sprite visible.",
             "itemtype": "method",
             "name": "'show-sprite'",
@@ -10328,7 +10328,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 400,
+            "line": 399,
             "description": "Defines the mask on the container/sprite. If no mask is specified, the mask is set to null.",
             "itemtype": "method",
             "name": "'set-mask'",
@@ -10344,7 +10344,7 @@
         },
         {
             "file": "src\\components\\RenderContainer.js",
-            "line": 426,
+            "line": 421,
             "description": "This event is triggered once the RenderSprite is ready to handle interactivity.",
             "itemtype": "event",
             "name": "'input-on'",
@@ -10769,7 +10769,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 312,
+            "line": 320,
             "description": "This event fires each time an animation completes.",
             "itemtype": "event",
             "name": "'animation-ended'",
@@ -10785,7 +10785,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 414,
+            "line": 424,
             "description": "The render update message updates the spine.",
             "itemtype": "method",
             "name": "'handle-render'",
@@ -10808,7 +10808,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 423,
+            "line": 433,
             "description": "This event is triggered each tick to check for animation updates.",
             "itemtype": "event",
             "name": "'update-animation'",
@@ -10824,7 +10824,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 435,
+            "line": 445,
             "description": "This sets the mix times.",
             "itemtype": "method",
             "name": "'set-mix-times'",
@@ -10840,7 +10840,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 445,
+            "line": 455,
             "description": "This event makes the spine invisible.",
             "itemtype": "method",
             "name": "'hide'",
@@ -10849,7 +10849,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 454,
+            "line": 464,
             "description": "This event makes the spine visible.",
             "itemtype": "method",
             "name": "'show'",
@@ -10858,7 +10858,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 463,
+            "line": 473,
             "description": "Stops the sprite's animation.",
             "itemtype": "method",
             "name": "'stop-animation'",
@@ -10876,7 +10876,7 @@
         },
         {
             "file": "src\\components\\RenderSpine.js",
-            "line": 474,
+            "line": 484,
             "description": "Starts the sprite's animation.",
             "itemtype": "method",
             "name": "'play-animation'",
