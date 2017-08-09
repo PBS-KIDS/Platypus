@@ -531,7 +531,7 @@
                         j = animations.length;
                         while (j--) {
                             if (i !== j) {
-                                stateData.setMixByName(animations[i].name, animations[j].name, mixTimes);
+                                stateData.setMix(animations[i].name, animations[j].name, mixTimes);
                             }
                         }
                     }
@@ -540,7 +540,7 @@
                         if (mixTimes.hasOwnProperty(key)) {
                             colon = key.indexOf(':');
                             if (colon >= 0) {
-                                stateData.setMixByName(key.substring(0, colon), key.substring(colon + 1), mixTimes[key]);
+                                stateData.setMix(key.substring(0, colon), key.substring(colon + 1), mixTimes[key]);
                             }
                         }
                     }
