@@ -304,9 +304,17 @@
                         return map;
                     }
                 },
-                imageCallback = function (line, callback) {
+                imageCallback = function (loadFinished, line, callback) {
                     // Not sure if this handles memory well - keeping it in for now.
-                    callback(BaseTexture.fromImage(line));
+                    var baseTexture = BaseTexture.fromImage(platypus.game.app.loader.cacheManager.prepare(line)); // Conform to SpringRoll's loading paths so that this matches and doesn't download the asset twice.
+
+                    callback(baseTexture);
+
+                    if (baseTexture.isLoading) {
+                        baseTexture.on('loaded', loadFinished);
+                    } else {
+                        loadFinished();
+                    }
                 },
                 animationEnded = function () {
                     /**
@@ -327,14 +335,14 @@
                     this.owner.trigger(eventName, event.data);
                 };
             
-            return function () {
+            return function (definition, callback) {
                 var animation = '',
                     definition = null,
                     settings = platypus.game.settings,
                     atlas = settings.atlases[this.atlas],
                     map = null,
                     skeleton = settings.skeletons[this.skeleton],
-                    spineAtlas = new TextureAtlas(atlas, imageCallback),
+                    spineAtlas = new TextureAtlas(atlas, imageCallback.bind(null, callback)),
                     spineJsonParser = new SkeletonJson(new AtlasAttachmentLoader(spineAtlas)),
                     skeletonData = spineJsonParser.readSkeletonData(skeleton),
                     spine = this.spine = new Spine(skeletonData);
@@ -407,6 +415,8 @@
                 } else {
                     this.addToContainer();
                 }
+
+                return true; //using callback
             };
         }()),
 
