@@ -204,7 +204,9 @@ platypus.Game = (function () {
             var id = '',
                 sceneInstance = null;
             
-            if (typeof scene === 'string') {
+            if (!scene) {
+                platypus.debug.warn('A scene id or scene definition must be provided to load a scene.');
+            } else if (typeof scene === 'string') {
                 this.app.states[scene].data = data; //sets data to send to next scene.
                 this.app.manager.state = scene;
             } else {
