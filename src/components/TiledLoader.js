@@ -267,11 +267,13 @@
             }
 
             if (level) {
-                level.tilesets = importTilesetData(level.tilesets);
+                if (level.tilesets) {
+                    level.tilesets = importTilesetData(level.tilesets);
+                }
 
                 if (level.assets) { // Property added by a previous parse (so that this algorithm isn't run on the same level multiple times)
                     assets.union(level.assets);
-                } else {
+                } else if (level.layers) {
                     for (i = 0; i < level.layers.length; i++) {
                         if (level.layers[i].type === 'objectgroup') {
                             for (j = 0; j < level.layers[i].objects.length; j++) {
@@ -444,6 +446,7 @@
              * @property imagesScale
              * @type number
              * @default 1
+             * @deprecated since v0.11.9
              */
             imagesScale: 1,
 
@@ -519,7 +522,8 @@
 
         methods: {
             createLayer: function (entityKind, layer, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tilesets, images, combineRenderLayer, progress) {
-                var props = null,
+                var lastSet = null,
+                    props = null,
                     width = layer.width,
                     height = layer.height,
                     tHeight = layer.tileheight || tileHeight,
@@ -528,9 +532,15 @@
                     newHeight = 0,
                     tileTypes = 0,
                     tileDefinition = JSON.parse(JSON.stringify(platypus.game.settings.entities[entityKind] || standardEntityLayers[entityKind])), //TODO: a bit of a hack to copy an object instead of overwrite values
-                    importAnimation = null,
-                    importCollision = null,
-                    importRender = null,
+                    importAnimation = {},
+                    importCollision = [],
+                    importFrames = [],
+                    importRender = [],
+                    importSpriteSheet = {
+                        images: (layer.image ? [layer.image] : images),
+                        frames: importFrames,
+                        animations: importAnimation
+                    },
                     renderTiles = false,
                     tileset = null,
                     jumpthroughs = null,
@@ -538,7 +548,45 @@
                     x = 0,
                     y = 0,
                     prop = "",
-                    data = null;
+                    data = null,
+                    createFrames = function (frames, index, tileset, modifier) {
+                        var margin = tileset.margin || 0,
+                            spacing = tileset.spacing || 0,
+                            tileWidth = tileset.tilewidth,
+                            tileHeight = tileset.tileheight,
+                            tileWidthHalf = tileWidth / 2,
+                            tileHeightHalf = tileHeight / 2,
+                            tileWidthSpace = tileWidth + spacing,
+                            tileHeightSpace = tileHeight + spacing,
+                            margin2 = margin * 2,
+                            marginSpace = margin2 - spacing,
+                            cols = tileset.columns || (((tileset.imagewidth / tileWidthSpace) + marginSpace) >> 0),
+                            rows = /* Tiled tileset def doesn't seem to have rows */ (((tileset.imageheight / tileHeightSpace) + marginSpace) >> 0),
+                            x = 0,
+                            y = 0;
+                        
+                        // deprecated unit/image resizing
+                        tileWidth = tileWidth * modifier;
+                        tileHeight = tileHeight * modifier;
+                        tileWidthHalf = tileWidthHalf * modifier;
+                        tileHeightHalf = tileHeightHalf * modifier;
+                        tileWidthSpace = tileWidthSpace * modifier;
+                        tileHeightSpace = tileHeightSpace * modifier;
+
+                        for (y = 0; y < rows; y++) {
+                            for (x = 0; x < cols; x++) {
+                                frames.push([
+                                    margin + x * tileWidthSpace,
+                                    margin + y * tileHeightSpace,
+                                    tileWidth,
+                                    tileHeight,
+                                    index,
+                                    tileWidthHalf,
+                                    tileHeightHalf
+                                ]);
+                            }
+                        }
+                    };
                 
                 this.decodeLayer(layer);
                 data = layer.data;
@@ -573,10 +621,6 @@
                     mergeAndFormatProperties(layer.properties, tileDefinition.properties);
                 }
 
-                importAnimation = {};
-                importCollision = [];
-                importRender = [];
-
                 if (entityKind === 'collision-layer') {
                     jumpthroughs = [];
                     for (x = 0; x < tilesets.length; x++) {
@@ -607,7 +651,12 @@
                 tileDefinition.properties.z = tileDefinition.properties.z || this.layerZ;
 
                 if (tilesets.length) {
-                    tileTypes = (tilesets[tilesets.length - 1].imagewidth / tWidth) * (tilesets[tilesets.length - 1].imageheight / tHeight) + tilesets[tilesets.length - 1].firstgid;
+                    for (x = 0; x < tilesets.length; x++) {
+                        createFrames(importFrames, x, tilesets[x], this.unitsPerPixel / this.imagesScale); // deprecate image resizing for v0.11.9
+                    }
+
+                    lastSet = tilesets[tilesets.length - 1];
+                    tileTypes = lastSet.firstgid + lastSet.tilecount;
                     for (x = -1; x < tileTypes; x++) {
                         importAnimation['tile' + x] = x;
                     }
@@ -630,16 +679,7 @@
                         renderTiles = tileDefinition.components[x];
                     }
                     if (tileDefinition.components[x].spriteSheet === 'import') {
-                        tileDefinition.components[x].spriteSheet = {
-                            images: (layer.image ? [layer.image] : images),
-                            frames: {
-                                width: tWidth * this.unitsPerPixel / this.imagesScale,
-                                height: tHeight * this.unitsPerPixel / this.imagesScale,
-                                regX: (tWidth * this.unitsPerPixel / this.imagesScale) / 2,
-                                regY: (tHeight * this.unitsPerPixel / this.imagesScale) / 2
-                            },
-                            animations: importAnimation
-                        };
+                        tileDefinition.components[x].spriteSheet = importSpriteSheet;
                     } else if (tileDefinition.components[x].spriteSheet) {
                         if (typeof tileDefinition.components[x].spriteSheet === 'string' && platypus.game.settings.spriteSheets[tileDefinition.components[x].spriteSheet]) {
                             tileDefinition.components[x].spriteSheet = platypus.game.settings.spriteSheets[tileDefinition.components[x].spriteSheet];
