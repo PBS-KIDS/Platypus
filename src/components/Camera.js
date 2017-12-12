@@ -454,7 +454,8 @@
                     msg.orientation    = worldCamera.orientation;
                     
                     // Transform the world to appear within camera
-                    this.world.setTransform((viewport.halfWidth - viewport.x) * msg.scaleX, (viewport.halfHeight - viewport.y) * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
+                    this.world.setTransform(-viewport.x, -viewport.y, 1, 1, 0);
+                    this.container.setTransform(viewport.halfWidth * msg.scaleX, viewport.halfHeight * msg.scaleY, msg.scaleX, msg.scaleY, msg.orientation);
                     this.container.visible = true;
 
                     /**
