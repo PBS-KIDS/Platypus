@@ -590,7 +590,9 @@
                 
                 this.decodeLayer(layer);
                 data = layer.data;
-                
+                mapOffsetX += layer.offsetx || 0;
+                mapOffsetY += layer.offsety || 0;
+
                 tileDefinition.properties = tileDefinition.properties || {};
 
                 //This builds in parallaxing support by allowing the addition of width and height properties into Tiled layers so they pan at a separate rate than other layers.
@@ -881,6 +883,9 @@
                     fallbackWidth = 0,
                     fallbackHeight = 0;
 
+                mapOffsetX += layer.offsetx || 0;
+                mapOffsetY += layer.offsety || 0;
+
                 entityPositionX = this.entityPositionX;
                 entityPositionY = this.entityPositionY;
 
@@ -1038,7 +1043,7 @@
 
                             if (entity.ellipse) {
                                 properties.shape = {};
-                                properties.shape.type = 'ellipse';
+                                properties.shape.type = 'circle';//'ellipse';
                                 properties.shape.width = properties.width * this.unitsPerPixel;
                                 properties.shape.height = properties.height * this.unitsPerPixel;
                             } else if (entity.width && entity.height) {
