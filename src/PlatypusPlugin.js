@@ -253,11 +253,11 @@
 
     // Clean-up when the application is destroyed
     plugin.teardown = function () {
-        if (this.platypus) { // May not exist if game failed to instantiate in preload.
+        if (this.platypusGame) { // May not exist if game failed to instantiate in preload.
             this.off('update', updateFunction);
             this.off('resize', resizeFunction);
-            this.platypus.destroy();
-            delete this.platypus;
+            this.platypusGame.destroy();
+            delete this.platypusGame;
         }
     };
     
