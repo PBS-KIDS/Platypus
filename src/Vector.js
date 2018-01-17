@@ -94,6 +94,8 @@ platypus.Vector = (function () {
     proto.set = function (x, y, z) {
         if (x && x.matrix) {                // Passing in a vector.
             return this.setVector(x, y);
+        } else if (x && (typeof x.x === 'number') && (typeof x.y === 'number')) { // Passing in a vector-like object.
+            return this.setXYZ(x.x, x.y, x.z);
         } else if (x && Array.isArray(x)) { // Passing in an array.
             return this.setArray(x, y);
         } else {                            // Passing in coordinates.
@@ -514,7 +516,9 @@ platypus.Vector = (function () {
             v3 = v1.getCrossProduct(v2),
             ang = 0;
         
-        if (v3.dot(normal) < 0) {
+        if (v3.magnitude() === 0) {
+            ang = 0;
+        } else if (v3.dot(normal) < 0) {
             ang = -Math.acos(v1.dot(v2));
         } else {
             ang =  Math.acos(v1.dot(v2));
