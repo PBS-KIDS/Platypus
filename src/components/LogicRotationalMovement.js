@@ -69,9 +69,7 @@ This component changes the (x, y) position of an object according to its current
         },
         events: {
             "handle-logic": function (resp) {
-                var state = this.state,
-                    vX = 0,
-                    vY = 0;
+                var state = this.state;
                 
                 if (this.turningRight) {
                     this.angle += this.degree * resp.delta / 15;
@@ -82,20 +80,21 @@ This component changes the (x, y) position of an object according to its current
                 }
                 
                 if (this.moving) {
-                    vX = polarToCartesianX(this.magnitude, this.angle);
-                    vY = polarToCartesianY(this.magnitude, this.angle);
+                    this.owner.x += (polarToCartesianX(this.magnitude, this.angle) * resp.delta);
+                    this.owner.y += (polarToCartesianY(this.magnitude, this.angle) * resp.delta);
                 }
-        
-                this.owner.x += (vX * resp.delta);
-                this.owner.y += (vY * resp.delta);
                 
                 state.set('moving', this.moving);
                 state.set('turningLeft', this.turningLeft);
                 state.set('turningRight', this.turningRight);
                 
-                if (this.owner.rotation !== this.angle) {
-                    this.owner.rotation = this.angle;
+                if (this.owner.orientation !== this.angle) {
+                    this.owner.orientation = this.angle * Math.PI / 180;
+                    this.owner.triggerEvent('orientation-updated');
                 }
+            },
+            "rotate": function (angleDelta) {
+                this.angle += angleDelta;
             },
             "turn-right": function (state) {
                 if (state) {
