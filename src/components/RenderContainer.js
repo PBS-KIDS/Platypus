@@ -19,6 +19,15 @@
         Interactive = include('platypus.components.Interactive'),
         Matrix = include('PIXI.Matrix'),
         pixiMatrix = new Matrix(),
+        castValue = function (color) {
+            if (color === null) {
+                return color;
+            }
+            if ((typeof color === 'string') && (color[0] === '#')) {
+                color = '0x' + color.substring(1);
+            }
+            return +color;
+        },
         processGraphics = (function () {
             var process = function (gfx, value) {
                 var i = 0,
@@ -208,10 +217,10 @@
             skewY: 0,
 
             /**
-             * Optional. The tint applied to the sprite. Defaults to no tint.
+             * Optional. The tint applied to the sprite. Tint may be specified by number or text. For example, to give the sprite a red tint, set to 0xff0000 or "#ff0000". Tint will be stored as a number even when set using text. Defaults to no tint.
              *
              * @property tint
-             * @type Number
+             * @type Number|String
              * @default null
              */
             tint: null,
@@ -246,7 +255,8 @@
         
         initialize: function () {
             var container = this.container = this.owner.container = new Container(),
-                definition = null;
+                definition = null,
+                initialTint = this.tint;
 
             this.parentContainer = null;
             this.wasVisible = this.visible;
@@ -266,12 +276,17 @@
                     }.bind(this),
                     set: function (value) {
                         var children = this.container.children,
-                            i = children.length;
+                            i = children.length,
+                            color = castValue(value);
+
+                        if (color === this._tint) {
+                            return;
+                        }
 
                         while (i--) {
-                            children[i].tint = value;
+                            children[i].tint = color;
                         }
-                        this._tint = value;
+                        this._tint = color;
                     }.bind(this)
                 });
             } else {
@@ -281,18 +296,27 @@
                     }.bind(this),
                     set: function (value) {
                         var filters = this.container.filters,
-                            matrix = null;
+                            matrix = null,
+                            color = castValue(value);
+
+                        if (color === this._tint) {
+                            return;
+                        }
 
                         if (!filters) {
                             filters = this.container.filters = Array.setUp(new ColorMatrixFilter());
                         }
                         matrix = filters[0].matrix;
-                        matrix[0] = (value & 0xff0000) / 0xff0000; // Red
-                        matrix[6] = (value & 0xff00) / 0xff00; // Green
-                        matrix[12] = (value & 0xff) / 0xff; // Blue
-                        this._tint = value;
+                        matrix[0] = (color & 0xff0000) / 0xff0000; // Red
+                        matrix[6] = (color & 0xff00) / 0xff00; // Green
+                        matrix[12] = (color & 0xff) / 0xff; // Blue
+                        this._tint = color;
                     }.bind(this)
                 });
+            }
+            
+            if (initialTint !== null) {
+                this.tint = initialTint; // feed initial tint through setter.
             }
 
             if (this.interactive) {
@@ -435,7 +459,7 @@
                     return a.z - b.z;
                 };
                 
-                return function () {
+                return function (uncached) {
                     var x = 0,
                         y = 0,
                         o = this.owner.orientationMatrix,
@@ -495,7 +519,7 @@
                     if (!this.needsCameraCheck) {
                         this.needsCameraCheck = (this.lastX !== this.owner.x) || (this.lastY !== this.owner.y);
                     }
-                    if (this.container && (this.needsCameraCheck || (!this.wasVisible && this.visible))) {
+                    if (uncached && this.container && (this.needsCameraCheck || (!this.wasVisible && this.visible))) {
                         this.isOnCamera = this.owner.parent.isOnCanvas(this.container.getBounds(false));
                         this.needsCameraCheck = false;
                     }

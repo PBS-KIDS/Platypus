@@ -88,6 +88,7 @@
 		"src/components/RenderProgress.js",
 		"src/components/RenderSpine.js",
 		"src/components/RenderSprite.js",
+		"src/components/RenderText.js",
 		"src/components/RenderTiles.js",
 		"src/components/SceneChanger.js",
 		"src/components/TiledLoader.js",
